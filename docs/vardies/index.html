@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Πρόγραμμα Βαρδιών</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Βάρδιες">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#2b3a67">
+<style>
+:root{--bg:#f1f3f8;--card:#fff;--ink:#1a2233;--muted:#647089;--line:#d8dde8;--pri:#2b3a67;--acc:#e0577a;--ok:#1d7a46;--bad:#c0392b;--warn:#a06a00;
+--P:#ffe08a;--Pi:#5c4500;--A:#ffb37a;--Ai:#5a2600;--N:#5b5fc7;--Ni:#fff;--R:#dff3e6;--Ri:#1d7a46;--Q:#ffd1dc}
+@media (prefers-color-scheme:dark){:root{--bg:#10131b;--card:#1a1f2b;--ink:#e6e9f0;--muted:#97a0b5;--line:#2c3344;--pri:#9fb2ff;--P:#6b5a1a;--Pi:#ffe9a6;--A:#6b3a14;--Ai:#ffd2b0;--N:#3f43a8;--R:#173326;--Ri:#7fdca2;--Q:#5a2232}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+header{position:sticky;top:0;z-index:8;background:#2b3a67;color:#fff;padding:calc(10px + env(safe-area-inset-top)) 14px 10px}
+header h1{margin:0;font-size:18px}header .s{font-size:12px;opacity:.8}
+main{max-width:1100px;margin:0 auto;padding:10px 10px calc(86px + env(safe-area-inset-bottom))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:10px 0}
+h2{font-size:16px;color:var(--pri);margin:2px 0 10px}
+label{display:flex;flex-direction:column;gap:3px;font-size:12.5px;color:var(--muted)}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;width:100%;min-width:0}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.btn{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:10px 14px;font-weight:600;cursor:pointer}
+.btn.p{background:var(--acc);border-color:var(--acc);color:#fff}.btn.d{color:var(--bad)}.btn.sm{padding:6px 10px;font-size:14px}
+.btn.big{width:100%;padding:15px;font-size:17px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.note{font-size:13px;color:var(--muted)}
+.person{display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid var(--line);padding:10px 2px;cursor:pointer}
+.person:last-child{border-bottom:0}
+.chips span{display:inline-block;font-size:12px;font-weight:700;padding:2px 7px;border-radius:8px;margin-left:3px}
+.c-P{background:var(--P);color:var(--Pi)}.c-A{background:var(--A);color:var(--Ai)}.c-N{background:var(--N);color:var(--Ni)}.c-R{background:var(--R);color:var(--Ri)}
+.seg{display:flex;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:3px;gap:3px}.seg button{flex:1;border:0;background:none;padding:8px 4px;border-radius:8px;font:600 13.5px system-ui;color:var(--muted);cursor:pointer}
+.seg button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.15)}
+.gridwrap{overflow:auto;border:1px solid var(--line);border-radius:12px;background:var(--card);max-height:70vh}
+table.g{border-collapse:separate;border-spacing:0;font-size:13px}
+table.g th,table.g td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);text-align:center;min-width:30px;height:32px;padding:0}
+table.g th{position:sticky;top:0;background:var(--card);z-index:2;font-size:11px;line-height:1.1;padding:3px 0}
+table.g th.we,table.g td.we{background-image:linear-gradient(rgba(224,87,122,.07),rgba(224,87,122,.07))}
+table.g .nm{position:sticky;left:0;background:var(--card);z-index:3;text-align:left;padding:0 8px;min-width:96px;max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+table.g th.nm{z-index:4}
+table.g td.cell{cursor:pointer;font-weight:800;user-select:none}
+td.P{background:var(--P);color:var(--Pi)}td.A{background:var(--A);color:var(--Ai)}td.N{background:var(--N);color:var(--Ni)}td.R{background:var(--R);color:var(--Ri)}
+td.q{box-shadow:inset 0 0 0 3px var(--acc)}td.lk::after{content:"•";font-size:9px;vertical-align:super}
+td.err{outline:2px solid var(--bad);outline-offset:-2px}
+tr.cov td{font-size:11px;font-weight:700;height:24px}tr.cov td.short{background:#fde2e1;color:var(--bad)}tr.cov td.okc{color:var(--muted)}
+.tot{font-size:12px;font-weight:700;padding:0 6px!important;white-space:nowrap}
+.val li{margin:4px 0;font-size:14px}.ok{color:var(--ok)}.bad{color:var(--bad)}.wrn{color:var(--warn)}
+.sum table{width:100%;border-collapse:collapse;font-size:14px}.sum th,.sum td{padding:7px 4px;border-bottom:1px solid var(--line);text-align:center}.sum td:first-child,.sum th:first-child{text-align:left}
+.nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;padding:6px 8px calc(6px + env(safe-area-inset-bottom));z-index:9}
+.nav button{flex:1;border:0;background:none;color:var(--muted);font:600 12px system-ui;padding:6px 2px;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer}
+.nav button b{font-size:20px;line-height:1}.nav button.on{color:var(--acc)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:flex-end;justify-content:center;z-index:20}.modal.on{display:flex}
+.modal .box{background:var(--card);width:100%;max-width:560px;max-height:90vh;overflow:auto;border-radius:16px 16px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom))}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:6px}.cal div{font-size:11px;text-align:center;color:var(--muted)}
+.cal button{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;padding:8px 0;font:600 14px system-ui;cursor:pointer}.cal button.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.chk{flex-direction:row;align-items:center;gap:8px;color:var(--ink);font-size:15px}.chk input{width:auto}
+.hide{display:none!important}
+#toast{position:fixed;left:50%;top:calc(64px + env(safe-area-inset-top));transform:translateX(-50%);background:#2b3a67;color:#fff;padding:9px 14px;border-radius:10px;font-size:14px;opacity:0;transition:.2s;pointer-events:none;z-index:30;max-width:90vw;text-align:center}#toast.show{opacity:1}
+</style>
+</head>
+<body>
+<header><h1>🗓 Πρόγραμμα Βαρδιών</h1><div class="s" id="hsub">Security · Π 07–15 · Α 15–23 · Ν 23–07</div></header>
+<main>
+<!-- ================= MONTH ================= -->
+<section id="v-month">
+  <div class="card">
+    <div class="g2"><label>Μήνας<input type="month" id="month"></label>
+      <div style="display:flex;align-items:flex-end"><button class="btn p" id="gen" style="width:100%">⚡ Φτιάξε πρόγραμμα</button></div></div>
+    <p class="note" id="feas" style="margin:8px 0 0"></p>
+  </div>
+  <div class="card" style="padding:10px">
+    <div class="seg" id="mode"><button data-m="req" class="on">🙋 Αιτήματα ρεπό</button><button data-m="edit">✎ Αλλαγή βάρδιας</button></div>
+    <p class="note" id="modeHint" style="margin:8px 2px"></p>
+    <div class="gridwrap"><table class="g" id="grid"></table></div>
+    <div class="row" style="margin-top:8px;font-size:12px"><span class="chips"><span class="c-P">Π 07-15</span><span class="c-A">Α 15-23</span><span class="c-N">Ν 23-07</span><span class="c-R">Ρ ρεπό</span></span>
+      <span class="note">🟥 περίγραμμα = ζήτησε ρεπό · • = κλειδωμένο από εσένα</span></div>
+  </div>
+  <div class="card">
+    <h2>✔ Έλεγχος προγράμματος</h2>
+    <ul class="val" id="val" style="padding-left:18px;margin:0"></ul>
+  </div>
+  <div class="card sum">
+    <h2>Ρεπό & βάρδιες ανά φύλακα</h2>
+    <div style="overflow-x:auto"><table id="sum"></table></div>
+    <div class="row" style="margin-top:12px"><button class="btn" id="xPdf">📄 PDF για εκτύπωση</button><button class="btn" id="xTxt">💬 Μήνυμα σε όλους</button><button class="btn" id="xCsv">📊 Excel</button><button class="btn d" id="clr">Καθαρισμός μήνα</button></div>
+  </div>
+</section>
+
+<!-- ================= STAFF ================= -->
+<section id="v-staff" class="hide">
+  <div class="card"><h2>Φύλακες</h2><div id="staffList"></div>
+    <button class="btn p big" id="addSt" style="margin-top:10px">+ Προσθήκη φύλακα</button></div>
+  <p class="note" style="padding:0 6px">Πάτα σε έναν φύλακα για στοιχεία, ποιες βάρδιες κάνει και ημέρες ρεπό που ζήτησε.</p>
+</section>
+
+<!-- ================= SETTINGS ================= -->
+<section id="v-set" class="hide">
+  <div class="card"><h2>Πόσοι φύλακες σε κάθε βάρδια</h2>
+    <div class="note" style="margin-bottom:6px">Καθημερινές</div>
+    <div class="g3"><label>Πρωί<input type="number" inputmode="numeric" data-need="wd.P"></label><label>Απόγευμα<input type="number" inputmode="numeric" data-need="wd.A"></label><label>Νύχτα<input type="number" inputmode="numeric" data-need="wd.N"></label></div>
+    <div class="note" style="margin:10px 0 6px">Σάββατο / Κυριακή</div>
+    <div class="g3"><label>Πρωί<input type="number" inputmode="numeric" data-need="we.P"></label><label>Απόγευμα<input type="number" inputmode="numeric" data-need="we.A"></label><label>Νύχτα<input type="number" inputmode="numeric" data-need="we.N"></label></div>
+  </div>
+  <div class="card"><h2>Κανόνες</h2>
+    <div class="g2"><label>Ελάχιστα ρεπό / μήνα<input type="number" inputmode="numeric" data-cfg="minOff"></label><label>Μέγιστα ρεπό / μήνα<input type="number" inputmode="numeric" data-cfg="maxOff"></label>
+    <label>Ελάχιστη ξεκούραση (ώρες)<input type="number" inputmode="numeric" data-cfg="minRest"></label><label>Μέγιστες συνεχόμενες μέρες δουλειάς<input type="number" inputmode="numeric" data-cfg="maxConsec"></label></div>
+    <p class="note">Με 8 ώρες ξεκούραση: μετά από <b>Νύχτα</b> δεν μπαίνει <b>Πρωί</b> την επόμενη μέρα (0 ώρες). Απόγευμα → Πρωί επιτρέπεται (ακριβώς 8 ώρες). Αν βάλεις 9+, κόβεται κι αυτό.</p>
+  </div>
+  <div class="card"><h2>Ώρες βαρδιών</h2>
+    <div class="g3"><label>Πρωί από<input type="number" data-sh="P.s"></label><label>Απόγευμα από<input type="number" data-sh="A.s"></label><label>Νύχτα από<input type="number" data-sh="N.s"></label>
+    <label>Πρωί έως<input type="number" data-sh="P.e"></label><label>Απόγευμα έως<input type="number" data-sh="A.e"></label><label>Νύχτα έως<input type="number" data-sh="N.e"></label></div>
+  </div>
+  <div class="card"><h2>Backup</h2><div class="row"><button class="btn" id="bExp">📤 Export</button><button class="btn" id="bImp">📥 Import</button></div>
+    <textarea id="bTa" rows="3" class="hide" style="margin-top:8px" placeholder="Επικόλλησε το backup και πάτα ξανά Import"></textarea>
+    <p class="note">Τα δεδομένα μένουν μόνο σε αυτό το κινητό.</p></div>
+</section>
+</main>
+<nav class="nav"><button data-v="month" class="on"><b>🗓</b>Πρόγραμμα</button><button data-v="staff"><b>👥</b>Φύλακες</button><button data-v="set"><b>⚙</b>Ρυθμίσεις</button></nav>
+
+<div class="modal" id="pm"><div class="box">
+  <div class="row" style="justify-content:space-between"><h2 style="margin:0" id="pmT">Φύλακας</h2><button class="btn sm" data-close>✕</button></div>
+  <div class="g2" style="margin-top:10px"><label>Ονοματεπώνυμο<input id="p_name"></label><label>Τηλέφωνο<input id="p_tel" inputmode="tel"></label></div>
+  <label style="margin-top:8px">Σημειώσεις<input id="p_note" placeholder="π.χ. ειδικότητα, ΑΜ, άδεια"></label>
+  <div style="margin-top:10px"><div class="note">Ποιες βάρδιες μπορεί να κάνει</div><div class="row" style="margin-top:4px">
+    <label class="chk"><input type="checkbox" id="p_P"> Πρωί</label><label class="chk"><input type="checkbox" id="p_A"> Απόγευμα</label><label class="chk"><input type="checkbox" id="p_N"> Νύχτα</label></div></div>
+  <div style="margin-top:12px"><div class="note">Ρεπό που ζήτησε τον <b id="pmM"></b> (πάτα τις μέρες)</div><div class="cal" id="pmCal"></div></div>
+  <div class="row" style="margin-top:14px"><button class="btn p" id="p_save">Αποθήκευση</button><button class="btn d" id="p_del">Διαγραφή</button></div>
+</div></div>
+<div id="toast"></div>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+function toast(m,ms=2200){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),ms);}
+const SH=["P","A","N"],GR={P:"Π",A:"Α",N:"Ν",R:"Ρ"},SHN={P:"Πρωί",A:"Απόγευμα",N:"Νύχτα"},WD=["Κ","Δ","Τ","Τ","Π","Π","Σ"],MN=["Ιανουάριος","Φεβρουάριος","Μάρτιος","Απρίλιος","Μάιος","Ιούνιος","Ιούλιος","Αύγουστος","Σεπτέμβριος","Οκτώβριος","Νοέμβριος","Δεκέμβριος"];
+let S;try{S=JSON.parse(localStorage.getItem("vardies_v1"));}catch(e){}
+if(!S||!S.staff)S={staff:[],cfg:{minOff:6,maxOff:8,minRest:8,maxConsec:6,need:{wd:{P:2,A:2,N:1},we:{P:2,A:2,N:1}},sh:{P:{s:7,e:15},A:{s:15,e:23},N:{s:23,e:7}}},months:{}};
+const save=()=>{try{localStorage.setItem("vardies_v1",JSON.stringify(S));}catch(e){toast("⚠ Δεν αποθηκεύτηκε");}};
+const C=()=>S.cfg;
+function nextMonth(){const d=new Date();d.setDate(1);d.setMonth(d.getMonth()+1);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");}
+let MK=nextMonth();
+const dim=k=>{const[y,m]=k.split("-").map(Number);return new Date(y,m,0).getDate();};
+const dow=(k,d)=>{const[y,m]=k.split("-").map(Number);return new Date(y,m-1,d+1).getDay();};
+const isWE=(k,d)=>{const w=dow(k,d);return w===0||w===6;};
+function M(k=MK){if(!S.months[k])S.months[k]={req:{},plan:{},lock:{}};return S.months[k];}
+const prevKey=k=>{const[y,m]=k.split("-").map(Number);const d=new Date(y,m-2,1);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");};
+function need(k,d){return C().need[isWE(k,d)?"we":"wd"];}
+function rest(a,b){ // shift a on day d, shift b on day d+1 → hours between
+  const sa=C().sh[a],sb=C().sh[b];const end=sa.e<=sa.s?sa.e+24:sa.e;return 24+sb.s-end;}
+const restOK=(a,b)=>!a||a==="R"||!b||b==="R"||rest(a,b)>=C().minRest;
+
+/* ================= SOLVER ================= */
+function solve(k){const D=dim(k),m=M(k),st=S.staff,cf=C(),pm=S.months[prevKey(k)];
+  const T=Array.from({length:D},(_,d)=>{const nd=need(k,d);return nd.P+nd.A+nd.N;}).reduce((a,b)=>a+b,0);
+  const tgt={};const per=T/Math.max(1,st.length);st.forEach(p=>{const avail=D-((m.req[p.id]||[]).length);tgt[p.id]=Math.max(D-cf.maxOff,Math.min(D-cf.minOff,avail,Math.round(per)));});
+  let best=null,bestPen=Infinity;const t0=performance.now();let it=0;
+  while(performance.now()-t0<1800||it<40){it++;
+    const plan={},cnt={},work={},consec={};
+    st.forEach(p=>{plan[p.id]=Array(D).fill("");cnt[p.id]={P:0,A:0,N:0};work[p.id]=0;
+      let c=0;const pp=pm&&pm.plan[p.id];if(pp){for(let i=pp.length-1;i>=0&&pp[i]&&pp[i]!=="R";i--)c++;}consec[p.id]=c;});
+    // locked cells first
+    st.forEach(p=>{(m.lock[p.id]||[]).forEach((v,d)=>{if(v&&m.plan[p.id]&&m.plan[p.id][d])plan[p.id][d]=m.plan[p.id][d];});});
+    st.forEach(p=>{work[p.id]=plan[p.id].filter(v=>SH.includes(v)).length;});
+    const prevShift=(p,d)=>d>0?plan[p.id][d-1]:(pm&&pm.plan[p.id]?pm.plan[p.id][pm.plan[p.id].length-1]:"");
+    let gaps=0;
+    for(let d=0;d<D;d++){const nd=need(k,d);
+      // count locked on this day
+      const have={P:0,A:0,N:0};st.forEach(p=>{const v=plan[p.id][d];if(SH.includes(v))have[v]++;});
+      const order=["N","P","A"].sort(()=>Math.random()-.5);if(Math.random()<.6){order.splice(order.indexOf("N"),1);order.unshift("N");}
+      for(const s of order){for(let i=have[s];i<nd[s];i++){
+        let bp=null,bs=-Infinity;
+        for(const p of st){if(plan[p.id][d])continue;if(!(p.allow||{P:1,A:1,N:1})[s])continue;if((m.req[p.id]||[]).includes(d))continue;
+          const pv=prevShift(p,d);if(!restOK(pv,s))continue;
+          if(work[p.id]>=D-cf.minOff)continue;if(consec[p.id]>=cf.maxConsec)continue;
+          // look ahead: if next day is locked to a shift, check rest
+          if(d<D-1&&plan[p.id][d+1]&&!restOK(s,plan[p.id][d+1]))continue;
+          const remDays=D-d,remNeed=tgt[p.id]-work[p.id];
+          let sc=remNeed/remDays*10;
+          const tot=cnt[p.id].P+cnt[p.id].A+cnt[p.id].N+1;sc-=cnt[p.id][s]/tot*4;
+          if(pv===s)sc+=1.5;else if(pv&&pv!=="R"&&SH.includes(pv))sc-=.5;
+          if(consec[p.id]>=cf.maxConsec-1)sc-=2;
+          if(s==="N"&&(m.req[p.id]||[]).includes(d+1))sc+=.5;
+          sc+=Math.random()*2.2;
+          if(sc>bs){bs=sc;bp=p;}}
+        if(bp){plan[bp.id][d]=s;cnt[bp.id][s]++;work[bp.id]++;}else gaps++;}}
+      st.forEach(p=>{const v=plan[p.id][d];if(SH.includes(v)){consec[p.id]=(consec[p.id]||0)+1;}else{plan[p.id][d]="R";consec[p.id]=0;}});
+      // recount locked shifts into counts
+    }
+    st.forEach(p=>{work[p.id]=plan[p.id].filter(v=>SH.includes(v)).length;cnt[p.id]={P:0,A:0,N:0};plan[p.id].forEach(v=>{if(SH.includes(v))cnt[p.id][v]++;});});
+    let pen=gaps*1000;
+    st.forEach(p=>{const off=D-work[p.id];if(off>cf.maxOff)pen+=(off-cf.maxOff)*60;if(off<cf.minOff)pen+=(cf.minOff-off)*200;
+      pen+=Math.abs(work[p.id]-tgt[p.id])*8;
+      const a=plan[p.id];for(let d=1;d<D-1;d++){if(a[d]!=="R"&&a[d-1]==="R"&&a[d+1]==="R")pen+=3;if(SH.includes(a[d])&&SH.includes(a[d-1])&&a[d]!==a[d-1])pen+=1;}});
+    const nAvg=st.length?st.reduce((x,p)=>x+cnt[p.id].N,0)/st.length:0;st.forEach(p=>{if((p.allow||{N:1}).N)pen+=Math.pow(cnt[p.id].N-nAvg,2)*2;});
+    const weOff=st.map(p=>plan[p.id].filter((v,d)=>v==="R"&&isWE(k,d)).length);const wa=weOff.reduce((a,b)=>a+b,0)/Math.max(1,weOff.length);weOff.forEach(x=>pen+=Math.pow(x-wa,2));
+    if(pen<bestPen){bestPen=pen;best=plan;}
+    if(it>4000)break;}
+  return{plan:best,iters:it};}
+
+/* ================= VALIDATION ================= */
+function validate(k){const D=dim(k),m=M(k),cf=C(),out=[],cellErr={},pm=S.months[prevKey(k)];const mark=(id,d)=>{cellErr[id+"_"+d]=1;};
+  const planned=S.staff.some(p=>m.plan[p.id]&&m.plan[p.id].some(Boolean));if(!planned)return{out:[],cellErr,planned};
+  let gap=[];for(let d=0;d<D;d++){const nd=need(k,d);SH.forEach(s=>{const h=S.staff.filter(p=>(m.plan[p.id]||[])[d]===s).length;if(h<nd[s])gap.push(`${d+1}/${k.slice(5)} ${SHN[s]}: ${h}/${nd[s]}`);});}
+  out.push(gap.length?["bad",`Λείπουν φύλακες σε ${gap.length} βάρδιες: ${gap.slice(0,8).join(" · ")}${gap.length>8?" …":""}`]:["ok","Όλες οι βάρδιες καλύπτονται"]);
+  let rv=[],rq=[],off=[],cs=[],al=[];
+  S.staff.forEach(p=>{const a=m.plan[p.id]||[];const w=a.filter(v=>SH.includes(v)).length,o=D-w;
+    if(o<cf.minOff||o>cf.maxOff)off.push(`${p.name} (${o})`);
+    let c=0;const pp=pm&&pm.plan[p.id];
+    for(let d=0;d<D;d++){const pv=d>0?a[d-1]:(pp?pp[pp.length-1]:"");if(SH.includes(a[d])&&!restOK(pv,a[d])){rv.push(`${p.name} ${d+1}/${k.slice(5)}`);mark(p.id,d);}
+      if(SH.includes(a[d])&&(m.req[p.id]||[]).includes(d)){rq.push(`${p.name} ${d+1}/${k.slice(5)}`);mark(p.id,d);}
+      if(SH.includes(a[d])&&!(p.allow||{P:1,A:1,N:1})[a[d]]){al.push(`${p.name} ${d+1}`);mark(p.id,d);}
+      c=SH.includes(a[d])?c+1:0;if(c>cf.maxConsec){cs.push(`${p.name} έως ${d+1}/${k.slice(5)}`);mark(p.id,d);}}});
+  out.push(rv.length?["bad",`Λιγότερες από ${cf.minRest} ώρες ξεκούραση: ${rv.join(", ")}`]:["ok",`Όλοι έχουν τουλάχιστον ${cf.minRest} ώρες ξεκούραση (καμία Νύχτα → Πρωί)`]);
+  out.push(rq.length?["bad",`Δουλεύουν σε μέρα που ζήτησαν ρεπό: ${rq.join(", ")}`]:["ok","Όλα τα αιτήματα ρεπό τηρούνται"]);
+  out.push(off.length?["wrn",`Ρεπό εκτός ${cf.minOff}–${cf.maxOff}: ${off.join(", ")}`]:["ok",`Όλοι έχουν ${cf.minOff}–${cf.maxOff} ρεπό`]);
+  out.push(cs.length?["wrn",`Πάνω από ${cf.maxConsec} μέρες συνεχόμενα: ${cs.join(", ")}`]:["ok",`Κανείς πάνω από ${cf.maxConsec} μέρες στη σειρά`]);
+  if(al.length)out.push(["wrn",`Βάρδια που δεν κάνει: ${al.join(", ")}`]);
+  return{out,cellErr,planned};}
+
+/* ================= RENDER MONTH ================= */
+let mode="req";
+$("#month").value=MK;$("#month").onchange=e=>{if(e.target.value){MK=e.target.value;rMonth();}};
+$("#mode").addEventListener("click",e=>{const b=e.target.closest("[data-m]");if(!b)return;mode=b.dataset.m;$$("#mode button").forEach(x=>x.classList.toggle("on",x===b));hint();});
+function hint(){$("#modeHint").innerHTML=mode==="req"?"Πάτα στη μέρα που κάποιος <b>ζήτησε ρεπό</b> (κόκκινο περίγραμμα). Μετά πάτα ⚡ Φτιάξε πρόγραμμα.":"Πάτα σε κελί για να αλλάξεις: Π → Α → Ν → Ρ. Η αλλαγή <b>κλειδώνει</b> (•) και κρατιέται αν ξαναπατήσεις ⚡.";}
+function feas(){const D=dim(MK),cf=C(),n=S.staff.length;let T=0;for(let d=0;d<D;d++){const x=need(MK,d);T+=x.P+x.A+x.N;}
+  const mn=n*(D-cf.maxOff),mx=n*(D-cf.minOff);let msg=`${MN[+MK.slice(5)-1]} ${MK.slice(0,4)}: ${D} μέρες · χρειάζονται <b>${T}</b> βάρδιες · ${n} φύλακες.`;
+  if(!n)msg+=" Πρόσθεσε φύλακες στο 👥.";else if(T>mx)msg+=` <span class="bad">⚠ Δεν φτάνουν: με ${cf.minOff} ρεπό ο καθένας βγαίνουν μόνο ${mx} βάρδιες. Χρειάζεσαι ~${Math.ceil(T/(D-cf.minOff))} φύλακες.</span>`;
+  else if(T<mn)msg+=` <span class="wrn">ℹ Περισσεύουν φύλακες: θα πάρουν πάνω από ${cf.maxOff} ρεπό (περίπου ${Math.round(D-T/n)}).</span>`;
+  else msg+=` <span class="ok">✔ Βγαίνει: ~${Math.round(D-T/n)} ρεπό ο καθένας.</span>`;$("#feas").innerHTML=msg;}
+function rMonth(){const k=MK,D=dim(k),m=M(k),V=validate(k);feas();hint();$("#hsub").textContent=`${MN[+k.slice(5)-1]} ${k.slice(0,4)} · ${S.staff.length} φύλακες`;
+  let h="<thead><tr><th class='nm'>Φύλακας</th>";for(let d=0;d<D;d++)h+=`<th class="${isWE(k,d)?"we":""}">${WD[dow(k,d)]}<br>${d+1}</th>`;h+="<th>Ρ</th></tr></thead><tbody>";
+  S.staff.forEach(p=>{const a=m.plan[p.id]||[],rq=m.req[p.id]||[],lk=m.lock[p.id]||[];h+=`<tr><td class="nm" data-p="${p.id}">${esc(p.name)}</td>`;
+    for(let d=0;d<D;d++){const v=a[d]||"";h+=`<td class="cell ${v} ${isWE(k,d)?"we":""} ${rq.includes(d)?"q":""} ${lk[d]?"lk":""} ${V.cellErr[p.id+"_"+d]?"err":""}" data-p="${p.id}" data-d="${d}">${GR[v]||""}</td>`;}
+    h+=`<td class="tot">${a.some(Boolean)?a.filter(v=>v==="R").length:"–"}</td></tr>`;});
+  if(S.staff.length&&V.planned){SH.forEach(s=>{h+=`<tr class="cov"><td class="nm">${SHN[s]}</td>`;for(let d=0;d<D;d++){const c=S.staff.filter(p=>(m.plan[p.id]||[])[d]===s).length,nd=need(k,d)[s];h+=`<td class="${c<nd?"short":"okc"}">${c}/${nd}</td>`;}h+="<td></td></tr>";});}
+  h+="</tbody>";$("#grid").innerHTML=h;
+  $("#val").innerHTML=V.planned?V.out.map(([c,t])=>`<li class="${c}">${c==="ok"?"✔":c==="bad"?"✗":"⚠"} ${esc(t)}</li>`).join(""):'<li class="note">Δεν έχει βγει πρόγραμμα ακόμα.</li>';
+  let s="<tr><th>Φύλακας</th><th>Π</th><th>Α</th><th>Ν</th><th>Ρεπό</th><th>Σ/Κ ρεπό</th></tr>";
+  S.staff.forEach(p=>{const a=m.plan[p.id]||[];const c=x=>a.filter(v=>v===x).length;s+=`<tr><td>${esc(p.name)}</td><td>${c("P")}</td><td>${c("A")}</td><td>${c("N")}</td><td><b>${c("R")}</b></td><td>${a.filter((v,d)=>v==="R"&&isWE(k,d)).length}</td></tr>`;});
+  $("#sum").innerHTML=s;}
+$("#grid").addEventListener("click",e=>{const td=e.target.closest("td");if(!td)return;const pid=td.dataset.p;if(!pid)return;
+  if(td.classList.contains("nm")){openP(pid);return;}const d=+td.dataset.d,m=M();
+  if(mode==="req"){const r=m.req[pid]=m.req[pid]||[];const i=r.indexOf(d);if(i>=0)r.splice(i,1);else{r.push(d);r.sort((a,b)=>a-b);}}
+  else{const a=m.plan[pid]=m.plan[pid]||Array(dim(MK)).fill("");const seq=["P","A","N","R"];a[d]=seq[(seq.indexOf(a[d])+1)%4];(m.lock[pid]=m.lock[pid]||[])[d]=1;}
+  save();rMonth();});
+$("#gen").onclick=()=>{if(!S.staff.length){toast("Πρόσθεσε πρώτα φύλακες (👥)");return;}const b=$("#gen");b.disabled=true;b.textContent="⏳ Υπολογισμός…";
+  setTimeout(()=>{const r=solve(MK),m=M();m.plan=r.plan;save();rMonth();b.disabled=false;b.textContent="⚡ Φτιάξε πρόγραμμα";
+    const V=validate(MK);toast(V.out.every(x=>x[0]==="ok")?"✔ Το πρόγραμμα βγήκε σωστό":"Βγήκε — δες τον έλεγχο από κάτω",2600);},50);};
+let clrA=0;$("#clr").onclick=e=>{if(!clrA){clrA=1;e.target.textContent="Σίγουρα;";setTimeout(()=>{clrA=0;e.target.textContent="Καθαρισμός μήνα";},3000);return;}
+  const m=M();m.plan={};m.lock={};clrA=0;e.target.textContent="Καθαρισμός μήνα";save();rMonth();toast("Καθαρίστηκε (τα αιτήματα ρεπό κρατήθηκαν)");};
+
+/* ================= STAFF ================= */
+function rStaff(){$("#staffList").innerHTML=S.staff.length?S.staff.map(p=>{const al=p.allow||{P:1,A:1,N:1};const rq=(M().req[p.id]||[]).length;
+  return`<div class="person" data-p="${p.id}"><div><b>${esc(p.name)}</b><div class="note">${esc(p.tel||"")}${p.note?" · "+esc(p.note):""}${rq?` · ${rq} αιτήματα ρεπό`:""}</div></div>
+   <div class="chips">${SH.map(s=>al[s]?`<span class="c-${s}">${GR[s]}</span>`:"").join("")}</div></div>`;}).join(""):'<p class="note">Κανένας φύλακας ακόμα.</p>';
+  $$("#staffList .person").forEach(e=>e.onclick=()=>openP(e.dataset.p));}
+let editP=null,tmpReq=[];
+function openP(id){const p=S.staff.find(x=>x.id===id)||{id:null,name:"",tel:"",note:"",allow:{P:1,A:1,N:1}};editP=p;
+  $("#pmT").textContent=p.id?p.name:"Νέος φύλακας";$("#p_name").value=p.name;$("#p_tel").value=p.tel||"";$("#p_note").value=p.note||"";
+  SH.forEach(s=>$("#p_"+s).checked=!!(p.allow||{P:1,A:1,N:1})[s]);$("#p_del").classList.toggle("hide",!p.id);
+  tmpReq=[...((p.id&&M().req[p.id])||[])];$("#pmM").textContent=`${MN[+MK.slice(5)-1]} ${MK.slice(0,4)}`;cal();$("#pm").classList.add("on");}
+function cal(){const D=dim(MK),f=(dow(MK,0)+6)%7;let h=["Δ","Τ","Τ","Π","Π","Σ","Κ"].map(x=>`<div>${x}</div>`).join("")+"<span></span>".repeat(f);
+  for(let d=0;d<D;d++)h+=`<button data-d="${d}" class="${tmpReq.includes(d)?"on":""}">${d+1}</button>`;$("#pmCal").innerHTML=h;
+  $$("#pmCal button").forEach(b=>b.onclick=()=>{const d=+b.dataset.d,i=tmpReq.indexOf(d);if(i>=0)tmpReq.splice(i,1);else tmpReq.push(d);b.classList.toggle("on");});}
+$("#pm").addEventListener("click",e=>{if(e.target.id==="pm"||e.target.hasAttribute("data-close"))$("#pm").classList.remove("on");});
+$("#addSt").onclick=()=>openP(null);
+$("#p_save").onclick=()=>{const name=$("#p_name").value.trim();if(!name){toast("Βάλε όνομα");return;}
+  let p=editP;if(!p.id){p.id=uid();S.staff.push(p);}p.name=name;p.tel=$("#p_tel").value.trim();p.note=$("#p_note").value.trim();p.allow={};SH.forEach(s=>p.allow[s]=$("#p_"+s).checked?1:0);
+  M().req[p.id]=tmpReq.sort((a,b)=>a-b);save();$("#pm").classList.remove("on");rStaff();rMonth();toast("Αποθηκεύτηκε");};
+let pdA=0;$("#p_del").onclick=e=>{if(!pdA){pdA=1;e.target.textContent="Σίγουρα;";setTimeout(()=>{pdA=0;e.target.textContent="Διαγραφή";},3000);return;}
+  S.staff=S.staff.filter(x=>x.id!==editP.id);pdA=0;e.target.textContent="Διαγραφή";save();$("#pm").classList.remove("on");rStaff();rMonth();};
+
+/* ================= SETTINGS ================= */
+function rSet(){$$("[data-need]").forEach(i=>{const[a,b]=i.dataset.need.split(".");i.value=C().need[a][b];});$$("[data-cfg]").forEach(i=>i.value=C()[i.dataset.cfg]);
+  $$("[data-sh]").forEach(i=>{const[a,b]=i.dataset.sh.split(".");i.value=C().sh[a][b];});}
+$$("[data-need]").forEach(i=>i.addEventListener("input",()=>{const[a,b]=i.dataset.need.split(".");C().need[a][b]=Math.max(0,parseInt(i.value)||0);save();}));
+$$("[data-cfg]").forEach(i=>i.addEventListener("input",()=>{C()[i.dataset.cfg]=Math.max(0,parseInt(i.value)||0);save();}));
+$$("[data-sh]").forEach(i=>i.addEventListener("input",()=>{const[a,b]=i.dataset.sh.split(".");C().sh[a][b]=Math.min(24,Math.max(0,parseInt(i.value)||0));save();}));
+$("#bExp").onclick=async()=>{const t=JSON.stringify(S);try{if(navigator.share){await navigator.share({title:"Βάρδιες backup",text:t});return;}await navigator.clipboard.writeText(t);toast("Αντιγράφηκε");}catch(e){}};
+$("#bImp").onclick=()=>{const ta=$("#bTa");if(ta.classList.contains("hide")||!ta.value.trim()){ta.classList.remove("hide");ta.focus();return;}
+  try{const d=JSON.parse(ta.value);if(!d.staff||!d.cfg)throw 0;S=d;save();ta.value="";ta.classList.add("hide");rAll();toast("Εισήχθη ✔");}catch(e){toast("Μη έγκυρο backup");}};
+
+/* ================= EXPORT ================= */
+function personText(p,k=MK){const m=M(k),a=m.plan[p.id]||[],D=dim(k);const days=s=>a.map((v,d)=>v===s?d+1:null).filter(Boolean).join(", ")||"–";
+  return`${p.name}\nΡεπό (${a.filter(v=>v==="R").length}): ${days("R")}\nΠρωί 07-15: ${days("P")}\nΑπόγευμα 15-23: ${days("A")}\nΝύχτα 23-07: ${days("N")}`;}
+$("#xTxt").onclick=async()=>{const t=`Πρόγραμμα βαρδιών ${MN[+MK.slice(5)-1]} ${MK.slice(0,4)}\n\n`+S.staff.map(p=>personText(p)).join("\n\n");
+  try{if(navigator.share){await navigator.share({title:"Πρόγραμμα βαρδιών",text:t});return;}await navigator.clipboard.writeText(t);toast("Αντιγράφηκε ✔");}catch(e){}};
+$("#xCsv").onclick=async()=>{const k=MK,D=dim(k),m=M(k);const rows=[["Φύλακας","Τηλέφωνο",...Array.from({length:D},(_,d)=>`${d+1} ${WD[dow(k,d)]}`),"Π","Α","Ν","Ρεπό"]];
+  S.staff.forEach(p=>{const a=m.plan[p.id]||[];const c=x=>a.filter(v=>v===x).length;rows.push([p.name,p.tel||"",...Array.from({length:D},(_,d)=>GR[a[d]]||""),c("P"),c("A"),c("N"),c("R")]);});
+  const csv="﻿"+rows.map(r=>r.map(x=>{x=String(x??"");return/[",\n]/.test(x)?'"'+x.replace(/"/g,'""')+'"':x;}).join(",")).join("\r\n");
+  await shareFile(new Blob([csv],{type:"text/csv"}),`Vardies_${k}.csv`);};
+async function shareFile(blob,name){const file=new File([blob],name,{type:blob.type});
+  try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:name});return;}}catch(e){return;}
+  const a=document.createElement("a");a.href=URL.createObjectURL(file);a.download=name;document.body.appendChild(a);a.click();a.remove();}
+function makePdf(pages,W,H,pw,ph){const enc=new TextEncoder(),ch=[],off=[];let len=0;const w=x=>{const b=typeof x==="string"?enc.encode(x):x;ch.push(b);len+=b.length;};
+  const obj=(i,f)=>{off[i]=len;w(`${i} 0 obj\n`);f();w("\nendobj\n");};const N=pages.length;w("%PDF-1.4\n");obj(1,()=>w("<< /Type /Catalog /Pages 2 0 R >>"));
+  obj(2,()=>w(`<< /Type /Pages /Count ${N} /Kids [${pages.map((p,i)=>`${3+i*3} 0 R`).join(" ")}] >>`));
+  pages.forEach((p,i)=>{const pg=3+i*3,cs=`q ${pw} 0 0 ${ph} 0 0 cm /Im0 Do Q`;obj(pg,()=>w(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pw} ${ph}] /Resources << /XObject << /Im0 ${pg+2} 0 R >> >> /Contents ${pg+1} 0 R >>`));
+    obj(pg+1,()=>w(`<< /Length ${cs.length} >>\nstream\n${cs}\nendstream`));obj(pg+2,()=>{w(`<< /Type /XObject /Subtype /Image /Width ${W} /Height ${H} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${p.length} >>\nstream\n`);w(p);w("\nendstream");});});
+  const x=len,t=3+N*3;w(`xref\n0 ${t}\n0000000000 65535 f \n`);for(let i=1;i<t;i++)w(String(off[i]).padStart(10,"0")+" 00000 n \n");w(`trailer\n<< /Size ${t} /Root 1 0 R >>\nstartxref\n${x}\n%%EOF`);
+  const o=new Uint8Array(len);let q=0;ch.forEach(c=>{o.set(c,q);q+=c.length;});return o;}
+$("#xPdf").onclick=async()=>{const k=MK,D=dim(k),m=M(k),st=S.staff;if(!st.length)return;
+  const W=2339,H=1654,M0=60,F="system-ui,-apple-system,sans-serif",nameW=300,totW=200,cw=(W-2*M0-nameW-totW)/D,perPage=Math.max(1,Math.floor((H-330)/48)),pages=[];
+  const col={P:"#ffe08a",A:"#ffb37a",N:"#5b5fc7",R:"#dff3e6"},tc={P:"#5c4500",A:"#5a2600",N:"#fff",R:"#1d7a46"};
+  for(let pi=0;pi<Math.ceil(st.length/perPage);pi++){const c=document.createElement("canvas");c.width=W;c.height=H;const g=c.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,W,H);
+    g.fillStyle="#2b3a67";g.font=`bold 46px ${F}`;g.fillText(`Πρόγραμμα Βαρδιών Security — ${MN[+k.slice(5)-1]} ${k.slice(0,4)}`,M0,90);
+    g.font=`26px ${F}`;g.fillStyle="#555";g.fillText(`Π = 07:00–15:00   ·   Α = 15:00–23:00   ·   Ν = 23:00–07:00   ·   Ρ = ρεπό`,M0,135);
+    let y=200;g.font=`bold 20px ${F}`;g.textAlign="center";
+    for(let d=0;d<D;d++){const x=M0+nameW+d*cw;if(isWE(k,d)){g.fillStyle="#fde8ee";g.fillRect(x,y-36,cw,36+48*Math.min(perPage,st.length-pi*perPage));}g.fillStyle="#333";g.fillText(WD[dow(k,d)],x+cw/2,y-14);g.fillText(d+1,x+cw/2,y+8);}
+    g.fillText("Π/Α/Ν",M0+nameW+D*cw+totW*0.35,y);g.fillText("Ρεπό",M0+nameW+D*cw+totW*0.82,y);y+=22;
+    st.slice(pi*perPage,(pi+1)*perPage).forEach((p,ri)=>{const a=m.plan[p.id]||[];g.textAlign="left";g.fillStyle="#1a2233";g.font=`bold 24px ${F}`;
+      let nm=p.name;while(g.measureText(nm).width>nameW-16&&nm.length>3)nm=nm.slice(0,-1);g.fillText(nm,M0+4,y+32);
+      for(let d=0;d<D;d++){const v=a[d],x=M0+nameW+d*cw;if(v){g.fillStyle=col[v];g.fillRect(x+1,y+3,cw-2,42);g.fillStyle=tc[v];g.font=`bold 24px ${F}`;g.textAlign="center";g.fillText(GR[v],x+cw/2,y+32);}
+        g.strokeStyle="#d8dde8";g.strokeRect(x,y,cw,48);}
+      const cn=s=>a.filter(v=>v===s).length;g.fillStyle="#1a2233";g.font=`22px ${F}`;g.textAlign="center";g.fillText(`${cn("P")}/${cn("A")}/${cn("N")}`,M0+nameW+D*cw+totW*0.35,y+32);
+      g.font=`bold 26px ${F}`;g.fillText(cn("R"),M0+nameW+D*cw+totW*0.82,y+32);g.strokeStyle="#d8dde8";g.beginPath();g.moveTo(M0,y+48);g.lineTo(W-M0,y+48);g.stroke();y+=48;});
+    g.textAlign="left";g.font=`20px ${F}`;g.fillStyle="#888";g.fillText(`Σελίδα ${pi+1}`,M0,H-40);
+    const d=c.toDataURL("image/jpeg",.85),b=atob(d.split(",")[1]),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);pages.push(u);}
+  await shareFile(new Blob([makePdf(pages,W,H,842,595)],{type:"application/pdf"}),`Vardies_${k}.pdf`);};
+
+/* ================= NAV ================= */
+$$(".nav button").forEach(b=>b.onclick=()=>{$$(".nav button").forEach(x=>x.classList.toggle("on",x===b));["month","staff","set"].forEach(v=>$("#v-"+v).classList.toggle("hide",v!==b.dataset.v));
+  if(b.dataset.v==="month")rMonth();if(b.dataset.v==="staff")rStaff();if(b.dataset.v==="set")rSet();window.scrollTo(0,0);});
+function rAll(){rStaff();rSet();rMonth();}
+rAll();
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>
