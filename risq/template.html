@@ -65,6 +65,11 @@ button{font:inherit;cursor:pointer}
 .nav button b{font-size:20px;line-height:1}.nav button.on{color:var(--acc)}
 .fl{border-left:4px solid var(--f);padding:8px 10px;margin:8px 0;background:var(--card);border-radius:10px;border:1px solid var(--line);border-left-width:4px;border-left-color:var(--f)}
 .hide{display:none!important}
+.mic{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:8px 12px;font-weight:600;font-size:14px}
+.mic.rec{background:var(--f);border-color:var(--f);color:#fff;animation:pl 1s infinite}@keyframes pl{50%{opacity:.6}}
+.ai{border:1px solid #6d4aff;background:#efeaff;color:#4b2fd1;border-radius:10px;padding:8px 12px;font-weight:700;font-size:14px}
+@media (prefers-color-scheme:dark){.ai{background:#241a4a;color:#c9bbff;border-color:#6d4aff}}
+.en{margin-top:8px}.en textarea{border-color:#6d4aff}.stale{color:var(--hr);font-size:12px}
 #toast{position:fixed;left:50%;top:calc(70px + env(safe-area-inset-top));transform:translateX(-50%);background:#1d3a5c;color:#fff;padding:9px 14px;border-radius:10px;font-size:14px;opacity:0;transition:.2s;pointer-events:none;z-index:20}
 #toast.show{opacity:1}
 </style>
@@ -79,6 +84,10 @@ button{font:inherit;cursor:pointer}
   <section id="v-list">
     <div class="card"><h2>Πώς δουλεύει</h2>
       <p class="note" style="margin:0">1. Νέα επιθεώρηση → όνομα πλοίου. 2. Διάλεξε χώρο (Bridge, Deck, ER…) και περπάτα τον. 3. Σε κάθε ερώτηση: <b>✓ OK</b>, <b>✗ Finding</b> (σημείωση + φωτογραφία) ή <b>N/A</b>. 4. Στο τέλος: <b>Findings → PDF</b>.<br>«ℹ Τι κοιτάει ο inspector» = πότε γράφεται finding. Λειτουργεί offline.</p></div>
+    <details class="card" id="aiCard"><summary style="font-weight:600;cursor:pointer">✨ Μετάφραση με Claude (API key)</summary>
+      <p class="note">Μιλάς/γράφεις ελληνικά → το ✨ English γράφει σωστό αγγλικό finding. Χρειάζεται internet και δικό σου key από console.anthropic.com. Το key μένει μόνο σε αυτό το κινητό.</p>
+      <label>API key<input id="apiKey" type="password" placeholder="sk-ant-..." autocomplete="off"></label>
+      <div class="row" style="margin-top:8px"><button class="btn" id="apiSave">Αποθήκευση</button><button class="btn" id="apiTest">Δοκιμή</button><span class="note" id="apiSt"></span></div></details>
     <button class="btn p" id="newIns" style="width:100%;padding:14px">+ Νέα επιθεώρηση</button>
     <div id="insList"></div>
   </section>
@@ -112,7 +121,7 @@ button{font:inherit;cursor:pointer}
   <!-- FINDINGS -->
   <section id="v-find" class="hide">
     <div class="card"><div class="row" style="justify-content:space-between"><h2 style="margin:0">Σύνοψη</h2></div><div id="sum" style="margin-top:8px"></div>
-      <div class="row" style="margin-top:12px"><button class="btn p" id="xPdf">📄 PDF report</button><button class="btn" id="xTxt">📤 Κείμενο</button><button class="btn" id="xCsv">📊 Excel</button></div></div>
+      <div class="row" style="margin-top:12px"><button class="btn p" id="xPdf">📄 PDF report</button><button class="btn ai" id="xAi">✨ Μετάφραση όλων</button><button class="btn" id="xTxt">📤 Κείμενο</button><button class="btn" id="xCsv">📊 Excel</button></div></div>
     <div id="flist"></div>
   </section>
 </main>
@@ -195,13 +204,22 @@ function qCard(ins,q){const el=document.createElement("article"),v=ins.st[q.id]|
   el.innerHTML=`<div class="qh"><span class="id">${esc(q.id)}</span>${q.h?'<span class="hrt">★ high-risk</span>':""}<span style="flex:1"></span><span>${esc(q.sn)}</span></div>
    <div class="t">${esc(q.g)}</div>${q.c.length?`<ul>${q.c.map(c=>`<li>${esc(c)}</li>`).join("")}</ul>`:""}
    <div class="ans"><button data-v="ok" class="${v==="ok"?"on":""}">✓ OK</button><button data-v="f" class="${v==="f"?"on":""}">✗ Finding</button><button data-v="na" class="${v==="na"?"on":""}">N/A</button></div>
-   <div class="fbox"><textarea rows="2" placeholder="Τι βρέθηκε / ενέργεια">${esc(ins.nt[q.id]||"")}</textarea>
-     <div class="row" style="margin-top:6px"><label class="cam">📷 Φωτογραφία<input type="file" accept="image/*" multiple style="display:none"></label></div><div class="ph"></div></div>
+   <div class="fbox"><textarea class="gr" rows="2" placeholder="Τι βρέθηκε (ελληνικά ή αγγλικά)">${esc(ins.nt[q.id]||"")}</textarea>
+     <div class="row" style="margin-top:6px"><button class="mic">🎤 Ομιλία</button><button class="ai">✨ English</button><label class="cam">📷<input type="file" accept="image/*" multiple style="display:none"></label></div>
+     <div class="en ${ins.en&&ins.en[q.id]?"":"hide"}"><div class="note">English (για το report) <span class="stale hide">⚠ άλλαξε το ελληνικό — ξαναπάτα ✨</span></div><textarea class="et" rows="3">${esc(ins.en&&ins.en[q.id]||"")}</textarea></div>
+     <div class="ph"></div></div>
    <details class="more"><summary>ℹ Τι κοιτάει ο inspector</summary><pre>${esc(q.x)}</pre><p class="note" style="margin:8px 0 0"><b>RISQ:</b> ${esc(q.o)}</p></details>`;
   el.querySelectorAll(".ans button").forEach(b=>b.onclick=()=>{const nv=ins.st[q.id]===b.dataset.v?"":b.dataset.v;if(nv)ins.st[q.id]=nv;else delete ins.st[q.id];save();
     el.className="q "+nv;el.querySelectorAll(".ans button").forEach(x=>x.classList.toggle("on",x.dataset.v===nv));hdr();
     if(nv==="f"){el.querySelector("textarea").focus();}else if(nv&&aflt==="open"){el.style.transition="opacity .3s";el.style.opacity=".3";setTimeout(()=>{el.remove();if(!$("#qs .q"))rArea();},350);}});
-  el.querySelector("textarea").oninput=e=>{ins.nt[q.id]=e.target.value;save();};
+  const ta=el.querySelector("textarea.gr"),et=el.querySelector("textarea.et"),enb=el.querySelector(".en"),stl=el.querySelector(".stale");
+  ins.en=ins.en||{};ins.ens=ins.ens||{};
+  const chk=()=>stl.classList.toggle("hide",!(ins.en[q.id]&&ins.ens[q.id]!==(ins.nt[q.id]||"")));chk();
+  ta.oninput=()=>{ins.nt[q.id]=ta.value;save();chk();};
+  et.oninput=()=>{ins.en[q.id]=et.value;ins.ens[q.id]=ins.nt[q.id]||"";save();chk();};
+  el.querySelector(".mic").onclick=e=>dictate(e.currentTarget,ta);
+  el.querySelector(".ai").onclick=async e=>{const b=e.currentTarget,t=b.textContent;b.disabled=true;b.textContent="⏳…";
+    try{await translateQ(ins,q);et.value=ins.en[q.id];enb.classList.remove("hide");chk();}catch(x){toast(x.message);}b.disabled=false;b.textContent=t;};
   el.querySelector("input[type=file]").onchange=async e=>{const fs=[...e.target.files];e.target.value="";for(const f of fs){try{const k="p_"+uid();await IDB.put(k,await fileToJpeg(f));(ins.ph[q.id]=ins.ph[q.id]||[]).push(k);}catch(x){toast("Σφάλμα φωτογραφίας");}}save();phs(el,ins,q);};
   phs(el,ins,q);return el;}
 async function phs(el,ins,q){const box=el.querySelector(".ph");box.innerHTML="";for(const k of ins.ph[q.id]||[]){const d=await IDB.get(k);if(!d)continue;const w=document.createElement("div");
@@ -218,14 +236,14 @@ function rFind(){const ins=I(),s=stats(ins),fl=findings(ins);
   const box=$("#flist");box.innerHTML=fl.length?"":'<div class="card note" style="text-align:center">Κανένα finding. 👍</div>';
   AREAS.forEach(([k,ic,nm])=>{const a=fl.filter(q=>q.a===k);if(!a.length)return;const h=document.createElement("h2");h.textContent=`${ic} ${nm} (${a.length})`;h.style.marginTop="16px";box.appendChild(h);
     a.forEach(q=>{const d=document.createElement("div");d.className="fl";d.innerHTML=`<div class="qh"><span class="id">${q.id}</span>${q.h?'<span class="hrt">★</span>':""}</div><div style="font-weight:600;margin:3px 0">${esc(q.g)}</div>
-      <div class="note" style="color:var(--ink)">${esc(ins.nt[q.id]||"— χωρίς σημείωση —")}</div><div class="ph"></div>`;
+      <div class="note" style="color:var(--ink)">${esc(rpt(ins,q)||"— χωρίς σημείωση —")}</div>${ins.en&&ins.en[q.id]&&ins.nt[q.id]?`<div class="note">🇬🇷 ${esc(ins.nt[q.id])}</div>`:""}<div class="ph"></div>`;
       d.onclick=e=>{if(e.target.tagName==="BUTTON")return;area=k;aflt="f";go("area");};box.appendChild(d);
       (async()=>{for(const p of ins.ph[q.id]||[]){const u=await IDB.get(p);if(u){const w=document.createElement("div");w.innerHTML=`<img src="${u}">`;d.querySelector(".ph").appendChild(w);}}})();});});}
 function fname(ins,ext){return`${(ins.vessel||"vessel").replace(/[^\w\-]+/g,"_")}_RISQ_${ins.date||""}.${ext}`;}
 $("#xTxt").onclick=()=>{const ins=I(),fl=findings(ins),s=stats(ins);let t=`RISQ 3.2 walk-round — ${ins.vessel}${ins.imo?" (IMO "+ins.imo+")":""}\n${ins.date||""}${ins.port?" · "+ins.port:""}${ins.by?" · "+ins.by:""}\nChecked ${s.d}/${s.n} · Findings ${fl.length}${ins.hr?" · high-risk only":""}\n`;
-  AREAS.forEach(([k,,nm])=>{const a=fl.filter(q=>q.a===k);if(!a.length)return;t+=`\n${nm.toUpperCase()}\n`;a.forEach(q=>t+=`• ${q.id}${q.h?" ★":""} ${q.g}\n  → ${ins.nt[q.id]||"-"}\n`);});shareText("RISQ findings "+ins.vessel,t);};
-$("#xCsv").onclick=()=>{const ins=I(),rows=[["Q","Area","Section","High-risk","Status","What to check","Note","Photos"]];
-  QS(ins).forEach(q=>rows.push([q.id,AN[q.a],q.s,q.h?"★":"",{ok:"OK",f:"FINDING",na:"N/A"}[ins.st[q.id]]||"",q.g,ins.nt[q.id]||"",(ins.ph[q.id]||[]).length]));
+  AREAS.forEach(([k,,nm])=>{const a=fl.filter(q=>q.a===k);if(!a.length)return;t+=`\n${nm.toUpperCase()}\n`;a.forEach(q=>t+=`• ${q.id}${q.h?" ★":""} ${q.g}\n  → ${rpt(ins,q)||"-"}\n`);});shareText("RISQ findings "+ins.vessel,t);};
+$("#xCsv").onclick=()=>{const ins=I(),rows=[["Q","Area","Section","High-risk","Status","What to check","Finding (EN)","Note (original)","Photos"]];
+  QS(ins).forEach(q=>rows.push([q.id,AN[q.a],q.s,q.h?"★":"",{ok:"OK",f:"FINDING",na:"N/A"}[ins.st[q.id]]||"",q.g,(ins.en&&ins.en[q.id])||"",ins.nt[q.id]||"",(ins.ph[q.id]||[]).length]));
   const csv="﻿"+rows.map(r=>r.map(x=>{x=String(x??"");return/[",\n]/.test(x)?'"'+x.replace(/"/g,'""')+'"':x;}).join(",")).join("\r\n");
   shareFiles([{name:fname(ins,"csv"),mime:"text/csv",dataUrl:"data:text/csv;base64,"+b64(new TextEncoder().encode(csv))}],"RISQ CSV");};
 function makePdf(pages){const enc=new TextEncoder(),ch=[],off=[];let len=0;const w=x=>{const b=typeof x==="string"?enc.encode(x):x;ch.push(b);len+=b.length;};
@@ -248,12 +266,38 @@ async function buildPdf(){const ins=I(),fl=findings(ins),s=stats(ins),W=1240,H=1
   for(const q of fl){const imgs=[];for(const k of (ins.ph[q.id]||[]).slice(0,3)){const d=await IDB.get(k);if(d)imgs.push(await loadImg(d));}
     const need=150+(imgs.length?330:0);if(y+need>H-90){ep();np();}
     y+=36;g.fillStyle="#b3261e";g.fillRect(M,y-26,6,need-40);g.fillStyle="#1d3a5c";g.font=`bold 22px ${F}`;g.fillText(`${q.id}${q.h?"  ★":""}   ${AN[q.a]}`,M+20,y);y+=32;
-    g.fillStyle="#14212e";g.font=`bold 21px ${F}`;wrap(q.g,M+20,W-2*M-30,28,2);g.font=`21px ${F}`;g.fillStyle="#333";wrap("→ "+(ins.nt[q.id]||"-"),M+20,W-2*M-30,28,4);
+    g.fillStyle="#14212e";g.font=`bold 21px ${F}`;wrap(q.g,M+20,W-2*M-30,28,2);g.font=`21px ${F}`;g.fillStyle="#333";wrap("→ "+(rpt(ins,q)||"-"),M+20,W-2*M-30,28,5);
     if(imgs.length){const bw=(W-2*M-30-20*(imgs.length-1))/Math.max(imgs.length,2),bh=310;let x=M+20;for(const im of imgs){const k=Math.min(bw/im.width,bh/im.height);g.drawImage(im,x,y+6,im.width*k,im.height*k);x+=bw+20;}y+=bh+16;}
     y+=10;}
   ep();return makePdf(pages);}
 $("#xPdf").onclick=async e=>{const b=e.target,t=b.textContent;b.disabled=true;b.textContent="⏳ PDF…";try{const p=await buildPdf();await shareFiles([{name:fname(I(),"pdf"),mime:"application/pdf",dataUrl:"data:application/pdf;base64,"+b64(p)}],"RISQ report");}
   catch(x){toast("Σφάλμα PDF");}b.disabled=false;b.textContent=t;};
+/* ---------- voice + Claude translation ---------- */
+const rpt=(ins,q)=>(ins.en&&ins.en[q.id])||ins.nt[q.id]||"";
+const KEYK="risq_api_key";const getKey=()=>{try{return localStorage.getItem(KEYK)||"";}catch(e){return"";}};
+$("#apiKey").value=getKey()?"••••••••":"";
+$("#apiSave").onclick=()=>{const v=$("#apiKey").value.trim();if(!v||v.startsWith("•"))return;try{localStorage.setItem(KEYK,v);}catch(e){}$("#apiKey").value="••••••••";$("#apiSt").textContent="✔ αποθηκεύτηκε";};
+$("#apiTest").onclick=async()=>{$("#apiSt").textContent="⏳";try{const r=await claude("Το σωσίβιο δακτύλιο της πρύμνης λείπει από τη βάση του.","5.1","Are lifebuoys in place and in good condition?");$("#apiSt").textContent="✔ "+r.slice(0,80);}catch(x){$("#apiSt").textContent="✗ "+x.message;}};
+async function claude(gr,qid,qtext){const key=getKey();if(!key)throw new Error("Βάλε API key (αρχική οθόνη → ✨)");if(!navigator.onLine)throw new Error("Χρειάζεται internet");
+  const sys="You are a senior RightShip RISQ 3.2 inspector writing the comment for an observed finding on a dry bulk carrier. Translate and rewrite the surveyor's note (usually Greek, sometimes mixed with English maritime terms) into ONE clear, factual English finding in professional inspection-report style: past tense, what was observed and where, objective, no blame, no recommendations unless stated in the note. Do not invent facts, numbers, locations or regulations that are not in the note. Keep it to 1-3 sentences. Output only the finding text.";
+  const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"content-type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+    body:JSON.stringify({model:"claude-haiku-5-5",max_tokens:400,system:sys,messages:[{role:"user",content:`RISQ question ${qid}: ${qtext}\n\nSurveyor's note:\n${gr}`}]})});
+  const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(r.status===401?"Λάθος API key":(j.error&&j.error.message)||("Σφάλμα "+r.status));
+  return (j.content||[]).filter(c=>c.type==="text").map(c=>c.text).join("").trim();}
+async function translateQ(ins,q){const gr=(ins.nt[q.id]||"").trim();if(!gr)throw new Error("Γράψε ή πες πρώτα την παρατήρηση");
+  ins.en=ins.en||{};ins.ens=ins.ens||{};ins.en[q.id]=await claude(gr,q.id,q.o);ins.ens[q.id]=ins.nt[q.id];save();}
+$("#xAi").onclick=async e=>{const ins=I(),b=e.currentTarget,todo=findings(ins).filter(q=>(ins.nt[q.id]||"").trim()&&!(ins.en&&ins.en[q.id]&&ins.ens[q.id]===ins.nt[q.id]));
+  if(!todo.length){toast("Όλα είναι ήδη στα αγγλικά");return;}b.disabled=true;let k=0;
+  try{for(const q of todo){b.textContent=`⏳ ${++k}/${todo.length}`;await translateQ(ins,q);}toast("✔ Μεταφράστηκαν "+k);}catch(x){toast(x.message);}b.disabled=false;b.textContent="✨ Μετάφραση όλων";rFind();};
+let REC=null;
+function dictate(btn,ta){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(REC){REC.stop();return;}
+  if(!SR){ta.focus();toast("Πάτα το 🎤 του πληκτρολογίου");return;}
+  const r=new SR();r.lang="el-GR";r.interimResults=true;r.continuous=true;const base=ta.value?ta.value.replace(/\s*$/," "):"";let fin="";
+  r.onresult=ev=>{let it="";for(let i=ev.resultIndex;i<ev.results.length;i++){const t=ev.results[i][0].transcript;if(ev.results[i].isFinal)fin+=t+" ";else it+=t;}ta.value=base+fin+it;ta.dispatchEvent(new Event("input"));};
+  r.onerror=ev=>{toast(ev.error==="not-allowed"?"Δώσε άδεια μικροφώνου":"Πάτα το 🎤 του πληκτρολογίου");if(ev.error!=="no-speech")ta.focus();};
+  r.onend=()=>{REC=null;btn.classList.remove("rec");btn.textContent="🎤 Ομιλία";};
+  try{r.start();REC=r;btn.classList.add("rec");btn.textContent="⏹ Stop";}catch(x){ta.focus();toast("Πάτα το 🎤 του πληκτρολογίου");}}
 go("list");
 /*SW*/
 </script>
