@@ -26,7 +26,7 @@ body{margin:0;font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-seri
 .top select{flex:1;background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:8px;padding:7px;font:inherit;min-width:0}
 .top select option{color:#000}
 .tabs{display:flex;margin-top:8px}
-.tabs button{flex:1;background:none;border:0;color:rgba(255,255,255,.7);padding:10px 2px;font:600 13px system-ui;border-bottom:3px solid transparent;cursor:pointer}
+.tabs button{flex:1;background:none;border:0;color:rgba(255,255,255,.7);padding:10px 1px;font:600 12.5px system-ui;border-bottom:3px solid transparent;cursor:pointer}
 .tabs button.on{color:#fff;border-bottom-color:#7fc1ff}
 main{max-width:900px;margin:0 auto;padding:8px 10px 110px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0}
@@ -95,6 +95,7 @@ th:first-child,td:first-child{text-align:left}
     <button data-tab="ut" class="on">UT Gauging</button>
     <button data-tab="steel">Steel Calc</button>
     <button data-tab="photo">📷 Photo</button>
+    <button data-tab="jobs">🧾 Jobs</button>
     <button data-tab="guide">Οδηγός</button>
   </nav>
 </div>
@@ -219,7 +220,7 @@ th:first-child,td:first-child{text-align:left}
     </div>
     <label style="margin-top:8px">Location / member<input id="ph_loc" placeholder="π.χ. No.4 CH P side shell Fr.88-90"></label>
     <div class="row" style="margin-top:10px">
-      <button class="p" id="ph_tosteel">→ Steel Calc</button><button id="ph_tout">→ UT φόρμα (L×W)</button><button id="ph_share">📤 Εικόνα</button>
+      <button class="p" id="ph_tojob">→ Steel Job</button><button id="ph_tosteel">→ Steel Calc</button><button id="ph_tout">→ UT φόρμα (L×W)</button><button id="ph_share">📤 Εικόνα</button>
     </div>
   </div>
   <div class="card">
@@ -229,6 +230,64 @@ th:first-child,td:first-child{text-align:left}
     <div id="ph_vis" style="margin-top:8px"></div>
   </div>
 </section>
+
+<!-- ================= JOBS ================= -->
+<section id="v-jobs" class="hide">
+  <div class="card">
+    <h2>🧾 Steel Jobs — συμφωνία με yard</h2>
+    <div class="kpis" id="jk"></div>
+    <div class="row" style="margin-top:10px"><button class="p" id="j_new">+ Νέο Steel Job</button>
+      <input id="j_search" placeholder="🔍 αναζήτηση" style="flex:1;min-width:120px;padding:7px 9px"></div>
+  </div>
+
+  <div class="card hide" id="j_ed">
+    <h2 id="j_title">Steel Job</h2>
+    <div id="j_photos" class="row" style="gap:6px"></div>
+    <div class="row" style="margin:8px 0">
+      <label style="flex-direction:row;align-items:center;gap:6px;background:var(--accent);color:#fff;padding:8px 12px;border-radius:8px;font-weight:600;font-size:14px;cursor:pointer">📷 Φωτογραφία
+        <input type="file" id="j_file" accept="image/*" multiple style="display:none"></label>
+      <span class="note">Πάτα 📐 σε μια φωτογραφία για μέτρηση L×W.</span>
+    </div>
+    <div class="g2">
+      <label>Location<input id="j_loc" list="locs" placeholder="π.χ. Main deck P side"></label>
+      <label>Frame / Position<input id="j_pos" placeholder="Fr.120-124"></label>
+    </div>
+    <label style="margin-top:8px">Member / Περιγραφή<input id="j_mem" placeholder="π.χ. Deck plating strake C"></label>
+    <div class="grid" style="margin-top:8px">
+      <label>Thk (mm)<input id="j_t" type="number" inputmode="decimal" step="any"></label>
+      <label>Grade<input id="j_grade" list="grades" placeholder="AH36"></label>
+      <label>L (m)<input id="j_L" type="number" inputmode="decimal" step="any"></label>
+      <label>W (m)<input id="j_W" type="number" inputmode="decimal" step="any"></label>
+      <label>Qty<input id="j_q" type="number" inputmode="decimal" step="any" value="1"></label>
+      <label>Μέτρηση με<select id="j_meth"><option value="tape">Μετροταινία</option><option value="photo">Φωτογραφία (εκτίμηση)</option><option value="drawing">Σχέδιο</option></select></label>
+      <label>Status<select id="j_st"><option>Agreed</option><option>Cropped</option><option>Fitted</option><option>Welded</option><option>Verified</option><option>Cancelled</option></select></label>
+      <label>Yard billed (kg)<input id="j_yard" type="number" inputmode="decimal" step="any" placeholder="από μπίλια"></label>
+    </div>
+    <label style="margin-top:8px">Σημειώσεις<input id="j_note" placeholder="π.χ. incl. 2 longitudinals HP200x10"></label>
+    <div id="j_kg" style="margin-top:8px"></div>
+    <div class="card" style="margin:10px 0 0;background:var(--bg)">
+      <div class="row" style="justify-content:space-between"><b style="color:var(--navy)">✍ Υπογραφή Steel Repair Manager</b></div>
+      <div id="j_sig" style="margin-top:6px"></div>
+      <div class="row" style="margin-top:6px"><input id="j_rep" placeholder="Όνομα Repair Manager" style="flex:1"><button id="j_sign">✍ Υπογραφή</button></div>
+    </div>
+    <datalist id="grades"><option>A</option><option>AH32</option><option>AH36</option><option>DH32</option><option>DH36</option><option>EH36</option></datalist>
+    <div class="row" style="margin-top:10px"><button class="p" id="j_save">Αποθήκευση</button><button id="j_cancel">Κλείσιμο</button><button class="d" id="j_del">Διαγραφή</button></div>
+  </div>
+
+  <div id="j_list"></div>
+  <div class="card">
+    <h2>Export για τη μπίλια</h2>
+    <div class="row"><button class="p" id="j_pdf">📄 PDF με φωτογραφίες</button><button id="j_csv">📊 Excel (CSV)</button><button id="j_imgs">🖼 Φωτογραφίες</button></div>
+    <p class="note">Οι φωτογραφίες αποθηκεύονται μέσα στην εφαρμογή σε web ανάλυση. Το backup JSON (⚙) δεν τις περιέχει· κράτα το PDF και τις φωτογραφίες σε email/Drive.</p>
+  </div>
+</section>
+
+<div class="modal" id="sigmodal"><div class="box">
+  <div class="row" style="justify-content:space-between"><b style="color:var(--navy)">✍ Υπογραφή</b><button class="sm" data-sclose>✕</button></div>
+  <p class="note" id="sig_txt"></p>
+  <canvas id="sig_cv" style="width:100%;height:200px;background:#fff;border:1px solid var(--line);border-radius:8px;touch-action:none;display:block"></canvas>
+  <div class="row" style="margin-top:8px"><button id="sig_clr">Καθαρισμός</button><button class="p" id="sig_ok">Αποδοχή υπογραφής</button></div>
+</div></div>
 
 <!-- ================= GUIDE ================= -->
 <section id="v-guide" class="hide">
@@ -397,7 +456,7 @@ $("#bimp").onclick=()=>{const ta=$("#bta");if(ta.classList.contains("hide")||!ta
 
 /* ---------- tabs ---------- */
 function setTab(t){S.tab=t;save();$$(".tabs button").forEach(b=>b.classList.toggle("on",b.dataset.tab===t));
-  ["ut","steel","photo","guide"].forEach(x=>$("#v-"+x).classList.toggle("hide",x!==t));if(t==="photo")setTimeout(phDraw,30);$("#sbar").classList.toggle("hide",t!=="steel");window.scrollTo(0,0);}
+  ["ut","steel","photo","jobs","guide"].forEach(x=>$("#v-"+x).classList.toggle("hide",x!==t));if(t==="photo")setTimeout(phDraw,30);if(t==="jobs")renderJobs();$("#sbar").classList.toggle("hide",t!=="steel");window.scrollTo(0,0);}
 $$(".tabs button").forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
 
 /* ---------- UT ---------- */
@@ -588,18 +647,197 @@ $("#ph_tosteel").onclick=()=>{if(!phLast){toast("Ολοκλήρωσε πρώτα
 $("#ph_tout").onclick=()=>{if(!phLast){toast("Ολοκλήρωσε πρώτα τα σημεία");return;}setTab("ut");
   $("#f_L").value=(phLast.L/1000).toFixed(2);$("#f_W").value=(phLast.Wd/1000).toFixed(2);if($("#ph_loc").value&&!$("#f_mem").value)$("#f_mem").value=$("#ph_loc").value;
   if(n($("#ph_t").value)&&!$("#f_t0").value)$("#f_t0").value=$("#ph_t").value;formLive();$("#fdims").classList.remove("hide");setTimeout(()=>$("#formcard").scrollIntoView({behavior:"smooth"}),80);toast("L×W πέρασαν στη φόρμα UT");};
-$("#ph_share").onclick=()=>{const cv=$("#ph_cv");if(!PH.img)return;
-  // web-size JPEG with the dims written on it
-  const o=document.createElement("canvas"),k=Math.min(1,1280/cv.width);o.width=cv.width*k;o.height=cv.height*k;const g=o.getContext("2d");g.drawImage(cv,0,0,o.width,o.height);
-  if(phLast){const txt=`${$("#ph_loc").value||""}  ≈ ${f(phLast.L/1000,2)} x ${f(phLast.Wd/1000,2)} m`;g.font="bold 26px system-ui";const w=g.measureText(txt).width;g.fillStyle="rgba(0,0,0,.65)";g.fillRect(10,o.height-50,w+24,40);g.fillStyle="#fff";g.fillText(txt,22,o.height-21);}
-  const data=o.toDataURL("image/jpeg",0.7);
-  if(window.AndroidBridge&&AndroidBridge.shareImage){AndroidBridge.shareImage(data,"steel-area.jpg");return;}
-  o.toBlob(b=>{const file=new File([b],"steel-area.jpg",{type:"image/jpeg"});
-    if(navigator.canShare&&navigator.canShare({files:[file]}))navigator.share({files:[file],title:"Steel area"}).catch(()=>{});
-    else{const w=window.open();if(w){w.document.write(`<img src="${data}" style="max-width:100%">`);}else toast("Κράτα πατημένο στην εικόνα για αποθήκευση");}},"image/jpeg",0.7);};
+$("#ph_share").onclick=()=>{if(!PH.img)return;shareFiles([{name:"steel-area.jpg",mime:"image/jpeg",dataUrl:phAnnotated()}],"Steel area");};
 phHint();
 
-function renderAll(){renderVsel();resetForm();renderUT();renderSteel();setTab(S.tab||"ut");}
+/* ---------- IndexedDB (photos & signatures) ---------- */
+const IDB={db:null,
+ open(){return this.db?Promise.resolve(this.db):new Promise((res,rej)=>{const r=indexedDB.open("hst",1);r.onupgradeneeded=()=>r.result.createObjectStore("b");r.onsuccess=()=>{this.db=r.result;res(this.db);};r.onerror=()=>rej(r.error);});},
+ async tx(mode,fn){const d=await this.open();return new Promise((res,rej)=>{const t=d.transaction("b",mode),st=t.objectStore("b"),q=fn(st);t.oncomplete=()=>res(q&&q.result);t.onerror=()=>rej(t.error);});},
+ put(k,v){return this.tx("readwrite",s=>s.put(v,k));},get(k){return this.tx("readonly",s=>s.get(k));},del(k){return this.tx("readwrite",s=>s.delete(k));}};
+function fileToJpeg(file,max=1280,q=0.72){return new Promise((res,rej)=>{const u=URL.createObjectURL(file),im=new Image();
+  im.onload=()=>{const k=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);
+    c.getContext("2d").drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);res(c.toDataURL("image/jpeg",q));};im.onerror=rej;im.src=u;});}
+function loadImg(src){return new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=src;});}
+function dataUrlToBlob(d){const[h,b]=d.split(","),m=h.match(/:(.*?);/)[1],bin=atob(b),a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return new Blob([a],{type:m});}
+function bytesToB64(u8){let s="";for(let i=0;i<u8.length;i+=0x8000)s+=String.fromCharCode.apply(null,u8.subarray(i,i+0x8000));return btoa(s);}
+async function shareFiles(files,title){ // files:[{name,mime,dataUrl}]
+  if(window.AndroidBridge&&AndroidBridge.shareFiles){AndroidBridge.shareFiles(JSON.stringify(files),title);return;}
+  const fl=files.map(f=>new File([dataUrlToBlob(f.dataUrl)],f.name,{type:f.mime}));
+  if(navigator.canShare&&navigator.canShare({files:fl})){try{await navigator.share({files:fl,title});}catch(e){}return;}
+  fl.forEach(f=>{const a=document.createElement("a");a.href=URL.createObjectURL(f);a.download=f.name;document.body.appendChild(a);a.click();a.remove();});
+  toast("Τα αρχεία κατέβηκαν");}
+
+/* ---------- Steel Jobs ---------- */
+const JOBS=()=>{const v=V();v.jobs=v.jobs||[];return v.jobs;};
+const jKg=j=>n(j.L)*n(j.W)*n(j.t)*n(j.q||1)*(n(ST().dens)||7.85);
+function sigChanged(j){if(!j.sig)return false;const s=j.sig.snap;return n(s.L)!==n(j.L)||n(s.W)!==n(j.W)||n(s.t)!==n(j.t)||n(s.q)!==n(j.q);}
+let JD=null,JNEW=false; // draft job in editor
+const JF={j_loc:"loc",j_pos:"pos",j_mem:"mem",j_t:"t",j_grade:"grade",j_L:"L",j_W:"W",j_q:"q",j_meth:"meth",j_st:"st",j_yard:"yard",j_note:"note",j_rep:"rep"};
+function jOpen(job,isNew){JD=JSON.parse(JSON.stringify(job));JNEW=isNew;$("#j_ed").classList.remove("hide");
+  Object.entries(JF).forEach(([id,k])=>$("#"+id).value=JD[k]??"");$("#j_title").textContent=`Steel Job #${JD.no}${isNew?" (νέο)":""}`;
+  $("#j_del").classList.toggle("hide",isNew);jPhotos();jLive();jSig();setTimeout(()=>$("#j_ed").scrollIntoView({behavior:"smooth"}),50);}
+function jRead(){Object.entries(JF).forEach(([id,k])=>JD[k]=$("#"+id).value.trim());}
+function jLive(){if(!JD)return;jRead();const kg=jKg(JD),y=JD.yard===""?null:n(JD.yard);
+  $("#j_kg").innerHTML=`<div class="thr"><span><b>${f(kg,0)} kg</b> = ${f(kg/1000,3)} t</span>${y!=null?`<span class="${y-kg>kg*n(ST().tol||5)/100?"pos":"mut"}">Yard ${f(y,0)} kg · Δ ${y-kg>0?"+":""}${f(y-kg,0)} kg</span>`:""}</div>`;jSig();}
+Object.keys(JF).forEach(id=>$("#"+id).addEventListener("input",jLive));
+async function jPhotos(){const box=$("#j_photos");box.innerHTML="";
+  for(const k of JD.photos){const d=await IDB.get(k);if(!d)continue;const el=document.createElement("div");el.style.cssText="position:relative";
+    el.innerHTML=`<img src="${d}" style="width:96px;height:96px;object-fit:cover;border-radius:8px;border:1px solid var(--line)">
+      <button class="sm" data-pm="${k}" style="position:absolute;left:2px;bottom:2px;padding:2px 6px">📐</button><button class="sm d" data-px="${k}" style="position:absolute;right:2px;top:2px;padding:2px 6px">✕</button>`;box.appendChild(el);}
+  if(!JD.photos.length)box.innerHTML='<span class="note">Καμία φωτογραφία ακόμα.</span>';}
+$("#j_file").onchange=async e=>{const fs=[...e.target.files];e.target.value="";if(!fs.length)return;toast("Επεξεργασία φωτογραφιών…");
+  for(const f of fs){try{const d=await fileToJpeg(f),k="ph_"+uid();await IDB.put(k,d);JD.photos.push(k);(JD._added=JD._added||[]).push(k);}catch(err){toast("Σφάλμα φωτογραφίας");}}
+  jPhotos();};
+$("#j_photos").addEventListener("click",async e=>{const x=e.target.closest("[data-px]"),m=e.target.closest("[data-pm]");
+  if(x){if(!x.dataset.arm){x.dataset.arm=1;x.textContent="?";setTimeout(()=>{if(x.isConnected){delete x.dataset.arm;x.textContent="✕";}},2500);return;}
+    JD.photos=JD.photos.filter(k=>k!==x.dataset.px);(JD._removed=JD._removed||[]).push(x.dataset.px);jPhotos();}
+  if(m){jRead();const d=await IDB.get(m.dataset.pm);const c=document.createElement("canvas"),im=await loadImg(d);c.width=im.width;c.height=im.height;c.getContext("2d").drawImage(im,0,0);
+    PH.img=c;PH.ref=[];PH.area=[];PH.job=true;$("#ph_work").style.display="";if(JD.t)$("#ph_t").value=JD.t;$("#ph_loc").value=[JD.loc,JD.pos,JD.mem].filter(Boolean).join(" ");
+    $("#ph_tojob").textContent=`→ Job #${JD.no}`;setTab("photo");phStep("ref");}});
+function jSig(){const box=$("#j_sig");if(!JD)return;if(!JD.sig){box.innerHTML='<span class="note">Δεν έχει υπογραφεί.</span>';return;}
+  const s=JD.sig,ch=sigChanged(JD);
+  IDB.get(s.key).then(d=>{box.innerHTML=`<div class="row" style="align-items:center"><img src="${d||""}" style="height:60px;background:#fff;border-radius:6px;border:1px solid var(--line)">
+    <div class="note" style="color:var(--ink)">${esc(s.name)}<br>${s.at}<br>Υπέγραψε: ${s.snap.L}×${s.snap.W} m × ${s.snap.t} mm × ${s.snap.q} = ${f(s.snap.kg,0)} kg</div></div>
+    ${ch?'<div class="light R" style="padding:8px;margin-top:6px">⚠ Τα μέτρα άλλαξαν μετά την υπογραφή — χρειάζεται νέα υπογραφή.</div>':""}`;});}
+async function jSave(close=true){jRead();if(!JD.loc&&!JD.mem){toast("Βάλε location ή περιγραφή");$("#j_loc").focus();return false;}
+  const list=JOBS(),i=list.findIndex(x=>x.id===JD.id);for(const k of JD._removed||[])await IDB.del(k).catch(()=>{});
+  delete JD._added;delete JD._removed;if(i<0)list.push(JD);else list[i]=JD;JD=JSON.parse(JSON.stringify(JD));JNEW=false;save();renderJobs();
+  if(close){$("#j_ed").classList.add("hide");JD=null;toast("Αποθηκεύτηκε");}else{$("#j_title").textContent=`Steel Job #${JD.no}`;$("#j_del").classList.remove("hide");}return true;}
+$("#j_save").onclick=()=>jSave(true);
+$("#j_cancel").onclick=async()=>{if(JD&&JD._added)for(const k of JD._added)await IDB.del(k).catch(()=>{});$("#j_ed").classList.add("hide");JD=null;};
+$("#j_del").onclick=async e=>{const b=e.target;if(!b.dataset.arm){b.dataset.arm=1;b.textContent="Σίγουρα;";setTimeout(()=>{delete b.dataset.arm;b.textContent="Διαγραφή";},3000);return;}
+  delete b.dataset.arm;b.textContent="Διαγραφή";const v=V();for(const k of JD.photos)await IDB.del(k).catch(()=>{});if(JD.sig)await IDB.del(JD.sig.key).catch(()=>{});
+  v.jobs=JOBS().filter(x=>x.id!==JD.id);save();$("#j_ed").classList.add("hide");JD=null;renderJobs();};
+$("#j_new").onclick=()=>{const no=JOBS().reduce((m,j)=>Math.max(m,j.no||0),0)+1;const last=JOBS()[JOBS().length-1]||{};
+  jOpen({id:uid(),no,created:new Date().toISOString(),loc:last.loc||"",pos:"",mem:"",t:"",grade:last.grade||"",L:"",W:"",q:1,meth:"tape",st:"Agreed",yard:"",note:"",rep:last.rep||"",photos:[],sig:null},true);};
+/* signature pad */
+const SIG={cv:$("#sig_cv"),drawn:false};
+function sigInit(){const cv=SIG.cv,dpr=window.devicePixelRatio||1;cv.width=cv.clientWidth*dpr;cv.height=cv.clientHeight*dpr;const g=cv.getContext("2d");
+  g.fillStyle="#fff";g.fillRect(0,0,cv.width,cv.height);g.strokeStyle="#0b1d3a";g.lineWidth=2.6*dpr;g.lineCap="round";g.lineJoin="round";SIG.drawn=false;}
+let sigLast=null;
+SIG.cv.addEventListener("pointerdown",e=>{e.preventDefault();SIG.cv.setPointerCapture(e.pointerId);const r=SIG.cv.getBoundingClientRect(),k=SIG.cv.width/r.width;sigLast=[(e.clientX-r.left)*k,(e.clientY-r.top)*k];});
+SIG.cv.addEventListener("pointermove",e=>{if(!sigLast)return;const r=SIG.cv.getBoundingClientRect(),k=SIG.cv.width/r.width,p=[(e.clientX-r.left)*k,(e.clientY-r.top)*k],g=SIG.cv.getContext("2d");
+  g.beginPath();g.moveTo(...sigLast);g.lineTo(...p);g.stroke();sigLast=p;SIG.drawn=true;});
+["pointerup","pointercancel"].forEach(ev=>SIG.cv.addEventListener(ev,()=>sigLast=null));
+$("#sig_clr").onclick=sigInit;
+$("#sigmodal").addEventListener("click",e=>{if(e.target.id==="sigmodal"||e.target.hasAttribute("data-sclose"))$("#sigmodal").classList.remove("on");});
+$("#j_sign").onclick=async()=>{jRead();if(!JD.rep){toast("Βάλε όνομα Repair Manager");$("#j_rep").focus();return;}
+  if(!(n(JD.L)&&n(JD.W)&&n(JD.t))){toast("Βάλε L, W και thickness πριν την υπογραφή");return;}
+  $("#sig_txt").innerHTML=`Ο/Η <b>${esc(JD.rep)}</b> επιβεβαιώνει το Steel Job #${JD.no}: ${esc([JD.loc,JD.pos,JD.mem].filter(Boolean).join(" / "))} — <b>${JD.L} × ${JD.W} m × ${JD.t} mm × ${JD.q||1} = ${f(jKg(JD),0)} kg</b>`;
+  $("#sigmodal").classList.add("on");setTimeout(sigInit,30);};
+$("#sig_ok").onclick=async()=>{if(!SIG.drawn){toast("Υπέγραψε στο πλαίσιο");return;}
+  const c=SIG.cv,o=document.createElement("canvas");o.width=600;o.height=Math.round(600*c.height/c.width);const g=o.getContext("2d");g.drawImage(c,0,0,o.width,o.height);
+  const key="sig_"+JD.id;await IDB.put(key,o.toDataURL("image/jpeg",0.8));
+  JD.sig={key,name:JD.rep,at:new Date().toLocaleString("en-GB"),snap:{L:JD.L,W:JD.W,t:JD.t,q:JD.q||1,kg:jKg(JD)}};
+  $("#sigmodal").classList.remove("on");await jSave(false);jSig();toast("Υπογράφηκε ✔");};
+/* list */
+async function renderJobs(){const list=JOBS(),q=($("#j_search").value||"").toLowerCase();
+  const act=list.filter(j=>j.st!=="Cancelled");const kg=act.reduce((a,j)=>a+jKg(j),0),yk=act.filter(j=>j.yard!=="").reduce((a,j)=>a+n(j.yard),0),ykc=act.filter(j=>j.yard!=="").reduce((a,j)=>a+jKg(j),0);
+  const signed=act.filter(j=>j.sig&&!sigChanged(j)).length;
+  $("#jk").innerHTML=`<div class="kpi"><b>${act.length}</b>Jobs</div><div class="kpi"><b>${f(kg/1000,2)}</b>t agreed</div><div class="kpi OK"><b>${signed}/${act.length}</b>Signed</div>
+    <div class="kpi ${yk-ykc>0?"R":""}"><b>${yk?(yk-ykc>0?"+":"")+f((yk-ykc)/1000,2):"–"}</b>Yard Δ t</div>`;
+  const rows=list.filter(j=>!q||[j.loc,j.pos,j.mem,j.note,j.no].join(" ").toLowerCase().includes(q)).sort((a,b)=>b.no-a.no);
+  const box=$("#j_list");box.innerHTML="";
+  for(const j of rows){const el=document.createElement("div");const ch=sigChanged(j),y=j.yard===""?null:n(j.yard),k=jKg(j);
+    el.className="rec "+(j.st==="Cancelled"?"":ch||!j.sig?"S":"OK");el.dataset.id=j.id;el.style.cursor="pointer";
+    el.innerHTML=`<div class="h" style="gap:10px"><div class="th" style="width:64px;height:64px;flex:0 0 64px;border-radius:8px;background:var(--bg);overflow:hidden"></div>
+      <div style="flex:1;min-width:0"><div class="t">#${j.no} · ${esc(j.loc||"")}${j.pos?" · "+esc(j.pos):""}</div><div class="note">${esc(j.mem||"")}</div>
+      <div class="m">${j.L||"?"}×${j.W||"?"} m × ${j.t||"?"} mm${n(j.q)>1?" × "+j.q:""} = <b>${f(k,0)} kg</b>${y!=null?` · yard ${f(y,0)} (${y-k>0?"+":""}${f(y-k,0)})`:""}</div></div>
+      <div style="text-align:right"><span class="badge ${j.st==="Cancelled"?"":j.st==="Verified"?"b-OK":""}" style="border:1px solid var(--line)">${j.st}</span><div class="note" style="margin-top:4px">${j.sig?(ch?"⚠ re-sign":"✍ ✔"):"✍ –"}</div></div></div>`;
+    box.appendChild(el);if(j.photos[0])IDB.get(j.photos[0]).then(d=>{if(d)el.querySelector(".th").innerHTML=`<img src="${d}" style="width:100%;height:100%;object-fit:cover">`;});}
+  if(!rows.length)box.innerHTML='<p class="note" style="padding:0 4px">Δεν υπάρχουν jobs ακόμα. Πάτα «+ Νέο Steel Job» όταν συμφωνείς μια δουλειά με τον Repair Manager.</p>';}
+$("#j_list").addEventListener("click",e=>{const r=e.target.closest(".rec");if(!r)return;const j=JOBS().find(x=>x.id===r.dataset.id);if(j)jOpen(j,false);});
+$("#j_search").addEventListener("input",renderJobs);
+
+/* ---------- exports ---------- */
+function jDesc(j){return[j.loc,j.pos,j.mem].filter(Boolean).join(" / ");}
+$("#j_csv").onclick=()=>{const v=V(),rows=[["Job","Created","Location","Frame/Pos","Member","Grade","Thk mm","L m","W m","Qty","Agreed kg","Measured by","Status","Agreed with","Signed at","Signed kg","Changed after sign","Yard kg","Δ kg","Notes","Photos"]];
+  JOBS().slice().sort((a,b)=>a.no-b.no).forEach(j=>{const k=jKg(j);rows.push([j.no,(j.created||"").slice(0,10),j.loc,j.pos,j.mem,j.grade,j.t,j.L,j.W,j.q,k.toFixed(1),j.meth,j.st,j.sig?j.sig.name:"",j.sig?j.sig.at:"",j.sig?j.sig.snap.kg.toFixed(1):"",sigChanged(j)?"YES":"",j.yard,j.yard===""?"":(n(j.yard)-k).toFixed(1),j.note,j.photos.map((p,i)=>`JOB-${String(j.no).padStart(3,"0")}_${i+1}.jpg`).join(" ")]);});
+  const csv="﻿"+rows.map(r=>r.map(x=>{x=String(x??"");return/[",;\n]/.test(x)?'"'+x.replace(/"/g,'""')+'"':x;}).join(",")).join("\r\n");
+  const name=`${v.name.replace(/[^\w\-]+/g,"_")}_Steel_Jobs.csv`;
+  shareFiles([{name,mime:"text/csv",dataUrl:"data:text/csv;base64,"+bytesToB64(new TextEncoder().encode(csv))}],name);};
+$("#j_imgs").onclick=async()=>{const files=[];for(const j of JOBS().slice().sort((a,b)=>a.no-b.no))for(let i=0;i<j.photos.length;i++){const d=await IDB.get(j.photos[i]);
+  if(d)files.push({name:`JOB-${String(j.no).padStart(3,"0")}_${i+1}.jpg`,mime:"image/jpeg",dataUrl:d});}
+  if(!files.length){toast("Δεν υπάρχουν φωτογραφίες");return;}shareFiles(files,V().name+" steel photos");};
+/* minimal PDF writer: one JPEG image per A4 page */
+function makePdf(pages){const enc=new TextEncoder(),chunks=[],offs=[];let len=0;const w=x=>{const b=typeof x==="string"?enc.encode(x):x;chunks.push(b);len+=b.length;};
+  const obj=(i,body)=>{offs[i]=len;w(`${i} 0 obj\n`);body();w("\nendobj\n");};const N=pages.length;
+  w("%PDF-1.4\n%\xE2\xE3\xCF\xD3\n");obj(1,()=>w("<< /Type /Catalog /Pages 2 0 R >>"));
+  obj(2,()=>w(`<< /Type /Pages /Count ${N} /Kids [${pages.map((p,i)=>`${3+i*3} 0 R`).join(" ")}] >>`));
+  pages.forEach((p,i)=>{const pg=3+i*3,ct=pg+1,im=pg+2,cs=`q 595 0 0 842 0 0 cm /Im0 Do Q`;
+    obj(pg,()=>w(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /XObject << /Im0 ${im} 0 R >> >> /Contents ${ct} 0 R >>`));
+    obj(ct,()=>{w(`<< /Length ${cs.length} >>\nstream\n${cs}\nendstream`);});
+    obj(im,()=>{w(`<< /Type /XObject /Subtype /Image /Width ${p.w} /Height ${p.h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${p.jpg.length} >>\nstream\n`);w(p.jpg);w("\nendstream");});});
+  const xref=len,tot=3+N*3;w(`xref\n0 ${tot}\n0000000000 65535 f \n`);for(let i=1;i<tot;i++)w(String(offs[i]).padStart(10,"0")+" 00000 n \n");
+  w(`trailer\n<< /Size ${tot} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`);const out=new Uint8Array(len);let o=0;chunks.forEach(c=>{out.set(c,o);o+=c.length;});return out;}
+async function buildReport(){const v=V(),jobs=JOBS().slice().sort((a,b)=>a.no-b.no),W=1240,H=1754,M=70,pages=[];let cv,g,pn=0;
+  const today=new Date().toLocaleDateString("en-GB");
+  const newPage=()=>{cv=document.createElement("canvas");cv.width=W;cv.height=H;g=cv.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,W,H);pn++;
+    g.fillStyle="#0F3A5C";g.fillRect(0,0,W,110);g.fillStyle="#fff";g.font="bold 34px system-ui,sans-serif";g.fillText("STEEL RENEWAL — AGREED JOBS",M,52);
+    g.font="22px system-ui,sans-serif";g.fillText(`${v.name}${v.imo?"  ·  IMO "+v.imo:""}${v.cls?"  ·  Class "+v.cls:""}`,M,88);g.textAlign="right";g.fillText(today,W-M,52);g.textAlign="left";
+    g.fillStyle="#666";g.font="18px system-ui,sans-serif";g.fillText(`Hull Steel Toolkit · Page ${pn}`,M,H-35);};
+  const endPage=()=>pages.push(cv.toDataURL("image/jpeg",0.82));
+  const fit=(t,mw)=>{t=String(t??"");if(g.measureText(t).width<=mw)return t;while(t&&g.measureText(t+"…").width>mw)t=t.slice(0,-1);return t+"…";};
+  const act=jobs.filter(j=>j.st!=="Cancelled"),tk=act.reduce((a,j)=>a+jKg(j),0),yj=act.filter(j=>j.yard!==""),yk=yj.reduce((a,j)=>a+n(j.yard),0),yc=yj.reduce((a,j)=>a+jKg(j),0);
+  // summary
+  newPage();let y=170;g.fillStyle="#14212b";g.font="bold 26px system-ui,sans-serif";g.fillText("Summary",M,y);y+=40;g.font="22px system-ui,sans-serif";
+  [[`Agreed jobs: ${act.length}${jobs.length-act.length?` (+${jobs.length-act.length} cancelled)`:""}`,`Agreed steel: ${f(tk/1000,3)} t`],
+   [`Signed by yard: ${act.filter(j=>j.sig&&!sigChanged(j)).length} / ${act.length}`,yj.length?`Yard billed (${yj.length} jobs): ${f(yk/1000,3)} t  ·  Δ ${yk-yc>0?"+":""}${f((yk-yc)/1000,3)} t`:"Yard billed: –"]]
+   .forEach(r=>{g.fillText(r[0],M,y);g.fillText(r[1],M+520,y);y+=34;});
+  y+=20;const cols=[["#",50],["Location / member",420],["Thk",70],["L×W×Q (m)",190],["kg",90],["Status",110],["Signed",90],["Yard kg",90]],rowH=40;
+  const head=()=>{g.fillStyle="#e8eef4";g.fillRect(M,y-28,W-2*M,rowH);g.fillStyle="#0F3A5C";g.font="bold 19px system-ui,sans-serif";let x=M+8;cols.forEach(c=>{g.fillText(c[0],x,y);x+=c[1];});y+=rowH;};
+  head();g.font="19px system-ui,sans-serif";
+  jobs.forEach((j,i)=>{if(y>H-120){endPage();newPage();y=170;head();g.font="19px system-ui,sans-serif";}
+    const k=jKg(j),ch=sigChanged(j);if(i%2){g.fillStyle="#f6f8fa";g.fillRect(M,y-28,W-2*M,rowH);}
+    g.fillStyle=j.st==="Cancelled"?"#999":"#14212b";let x=M+8;
+    const cells=[j.no,jDesc(j),j.t,`${j.L}×${j.W}×${j.q||1}`,f(k,0),j.st,j.sig?(ch?"CHANGED":"YES"):"NO",j.yard===""?"–":f(n(j.yard),0)];
+    cells.forEach((c,ci)=>{if(ci===6)g.fillStyle=j.sig&&!ch?"#1d7a46":"#b3261e";if(ci===7&&j.yard!==""&&n(j.yard)-k>k*n(ST().tol||5)/100)g.fillStyle="#b3261e";
+      g.fillText(fit(c,cols[ci][1]-12),x,y);g.fillStyle=j.st==="Cancelled"?"#999":"#14212b";x+=cols[ci][1];});y+=rowH;});
+  g.fillStyle="#0F3A5C";g.fillRect(M,y-28,W-2*M,3);y+=14;g.font="bold 21px system-ui,sans-serif";g.fillText(`TOTAL AGREED: ${f(tk,0)} kg  (${f(tk/1000,3)} t)`,M+8,y);
+  g.font="17px system-ui,sans-serif";g.fillStyle="#666";y+=36;g.fillText(`Weights: L × W × thk × qty × ${n(ST().dens)||7.85} t/m³. Each job below carries photos and the yard Steel Repair Manager's signature.`,M,y);
+  endPage();
+  // job pages (2 per page)
+  const half=(H-170)/2;let slot=0;
+  for(const j of jobs){if(slot===0)newPage();const top=130+slot*half,k=jKg(j);
+    g.strokeStyle="#d6dee5";g.lineWidth=2;g.strokeRect(M,top,W-2*M,half-30);
+    const imgs=[];for(const pk of j.photos.slice(0,3)){const d=await IDB.get(pk);if(d)imgs.push(await loadImg(d));}
+    const pw=600,ph=half-70,px=M+15,py=top+15;g.fillStyle="#eef1f4";g.fillRect(px,py,pw,ph);
+    const draw=(im,x,y0,w,h)=>{const s=Math.min(w/im.width,h/im.height),dw=im.width*s,dh=im.height*s;g.drawImage(im,x+(w-dw)/2,y0+(h-dh)/2,dw,dh);};
+    if(imgs.length===1)draw(imgs[0],px,py,pw,ph);else if(imgs.length>1){const mh=ph*0.66;draw(imgs[0],px,py,pw,mh);const sw=pw/(imgs.length-1);imgs.slice(1).forEach((im,i)=>draw(im,px+i*sw,py+mh+6,sw-6,ph-mh-6));}
+    else{g.fillStyle="#999";g.font="20px system-ui,sans-serif";g.fillText("No photo",px+240,py+ph/2);}
+    let tx=px+pw+30,ty=top+50;const tw=W-M-15-tx;g.fillStyle="#0F3A5C";g.font="bold 30px system-ui,sans-serif";g.fillText(`JOB #${j.no}`,tx,ty);
+    g.font="18px system-ui,sans-serif";g.fillStyle="#666";g.textAlign="right";g.fillText(j.st,W-M-25,ty);g.textAlign="left";ty+=40;
+    const line=(lab,val,b)=>{g.fillStyle="#666";g.font="17px system-ui,sans-serif";g.fillText(lab,tx,ty);g.fillStyle="#14212b";g.font=(b?"bold ":"")+"20px system-ui,sans-serif";g.fillText(fit(val,tw-130),tx+130,ty);ty+=32;};
+    line("Location",j.loc);line("Frame/Pos",j.pos);line("Member",j.mem);line("Thk / Grade",`${j.t} mm ${j.grade||""}`);line("L × W × Qty",`${j.L} × ${j.W} m × ${j.q||1}`);
+    line("Agreed",`${f(k,0)} kg`,true);line("Measured",{tape:"Tape",photo:"Photo estimate",drawing:"Drawing"}[j.meth]||"");
+    if(j.yard!=="")line("Yard billed",`${f(n(j.yard),0)} kg (Δ ${n(j.yard)-k>0?"+":""}${f(n(j.yard)-k,0)})`,true);if(j.note)line("Notes",j.note);
+    ty+=6;g.fillStyle="#666";g.font="17px system-ui,sans-serif";g.fillText("Agreed by yard Steel Repair Manager:",tx,ty);ty+=10;
+    if(j.sig){const d=await IDB.get(j.sig.key);if(d){const si=await loadImg(d),sw=Math.min(tw,320),sh=sw*si.height/si.width;g.drawImage(si,tx,ty,sw,sh);g.strokeStyle="#d6dee5";g.strokeRect(tx,ty,sw,sh);ty+=sh+26;}
+      g.fillStyle="#14212b";g.font="bold 18px system-ui,sans-serif";g.fillText(fit(`${j.sig.name} · ${j.sig.at}`,tw),tx,ty);ty+=24;
+      g.font="16px system-ui,sans-serif";g.fillText(fit(`Signed for ${j.sig.snap.L}×${j.sig.snap.W} m × ${j.sig.snap.t} mm × ${j.sig.snap.q} = ${f(j.sig.snap.kg,0)} kg`,tw),tx,ty);
+      if(sigChanged(j)){ty+=24;g.fillStyle="#b3261e";g.font="bold 16px system-ui,sans-serif";g.fillText("⚠ Dimensions changed after signature",tx,ty);}}
+    else{ty+=24;g.fillStyle="#b3261e";g.font="bold 18px system-ui,sans-serif";g.fillText("NOT SIGNED",tx,ty);}
+    slot++;if(slot===2){endPage();slot=0;}}
+  if(slot)endPage();
+  const imgs=[];for(const d of pages){const b=atob(d.split(",")[1]),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);imgs.push({jpg:u,w:W,h:H});}
+  return makePdf(imgs);}
+$("#j_pdf").onclick=async e=>{if(!JOBS().length){toast("Δεν υπάρχουν jobs");return;}const b=e.target;b.disabled=true;const t=b.textContent;b.textContent="⏳ Δημιουργία PDF…";
+  try{const pdf=await buildReport(),v=V(),name=`${v.name.replace(/[^\w\-]+/g,"_")}_Steel_Jobs_${new Date().toISOString().slice(0,10)}.pdf`;
+    await shareFiles([{name,mime:"application/pdf",dataUrl:"data:application/pdf;base64,"+bytesToB64(pdf)}],name);}
+  catch(err){toast("Σφάλμα PDF: "+err.message);}b.disabled=false;b.textContent=t;};
+/* photo-tab → job */
+function phAnnotated(){const cv=$("#ph_cv"),o=document.createElement("canvas"),k=Math.min(1,1280/cv.width);o.width=cv.width*k;o.height=cv.height*k;const g=o.getContext("2d");g.drawImage(cv,0,0,o.width,o.height);
+  if(phLast){const txt=`${$("#ph_loc").value||""}  ≈ ${f(phLast.L/1000,2)} x ${f(phLast.Wd/1000,2)} m`;g.font="bold 26px system-ui";const w=g.measureText(txt).width;g.fillStyle="rgba(0,0,0,.65)";g.fillRect(10,o.height-50,w+24,40);g.fillStyle="#fff";g.fillText(txt,22,o.height-21);}
+  return o.toDataURL("image/jpeg",0.72);}
+$("#ph_tojob").onclick=async()=>{if(!phLast){toast("Ολοκλήρωσε πρώτα τα σημεία");return;}const L=(phLast.L/1000).toFixed(2),W=(phLast.Wd/1000).toFixed(2),ann=phAnnotated(),k="ph_"+uid();
+  await IDB.put(k,ann);
+  if(PH.job&&JD){JD.L=L;JD.W=W;if(n($("#ph_t").value))JD.t=$("#ph_t").value;JD.meth="photo";JD.photos.push(k);(JD._added=JD._added||[]).push(k);PH.job=false;$("#ph_tojob").textContent="→ Steel Job";
+    setTab("jobs");Object.entries(JF).forEach(([id,kk])=>$("#"+id).value=JD[kk]??"");jPhotos();jLive();$("#j_ed").classList.remove("hide");setTimeout(()=>$("#j_ed").scrollIntoView({behavior:"smooth"}),80);toast("Τα μέτρα πέρασαν στο job");}
+  else{setTab("jobs");$("#j_new").click();JD.L=L;JD.W=W;JD.t=$("#ph_t").value;JD.mem=$("#ph_loc").value;JD.meth="photo";JD.photos.push(k);JD._added=[k];
+    Object.entries(JF).forEach(([id,kk])=>$("#"+id).value=JD[kk]??"");jPhotos();jLive();toast("Νέο job από τη φωτογραφία");}};
+
+function renderAll(){renderVsel();resetForm();renderUT();renderSteel();$("#j_ed").classList.add("hide");JD=null;renderJobs();setTab(S.tab||"ut");}
 renderAll();
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 </script>

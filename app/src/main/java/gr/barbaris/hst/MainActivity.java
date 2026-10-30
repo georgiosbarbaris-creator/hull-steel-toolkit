@@ -19,6 +19,9 @@ import androidx.core.content.FileProvider;
 import androidx.webkit.WebViewAssetLoader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class MainActivity extends Activity {
     private static final int PICK = 41;
@@ -112,6 +115,43 @@ public class MainActivity extends Activity {
                 i.putExtra(Intent.EXTRA_SUBJECT, title);
                 i.putExtra(Intent.EXTRA_TEXT, text);
                 startActivity(Intent.createChooser(i, title));
+            });
+        }
+
+        /** files = JSON [{name, mime, dataUrl}] → PDF / CSV / photos to Email, WhatsApp, Drive */
+        @JavascriptInterface
+        public void shareFiles(final String json, final String title) {
+            runOnUiThread(() -> {
+                try {
+                    JSONArray a = new JSONArray(json);
+                    File dir = new File(getCacheDir(), "out");
+                    dir.mkdirs();
+                    ArrayList<Uri> uris = new ArrayList<>();
+                    String mime = null;
+                    for (int i = 0; i < a.length(); i++) {
+                        JSONObject o = a.getJSONObject(i);
+                        String d = o.getString("dataUrl");
+                        File f = new File(dir, o.getString("name").replaceAll("[\\\\/:*?\"<>|]", "_"));
+                        try (FileOutputStream out = new FileOutputStream(f)) {
+                            out.write(Base64.decode(d.substring(d.indexOf(',') + 1), Base64.DEFAULT));
+                        }
+                        uris.add(FileProvider.getUriForFile(MainActivity.this, getPackageName() + ".files", f));
+                        String m = o.optString("mime", "*/*");
+                        mime = (mime == null || mime.equals(m)) ? m : "*/*";
+                    }
+                    Intent i;
+                    if (uris.size() == 1) {
+                        i = new Intent(Intent.ACTION_SEND);
+                        i.putExtra(Intent.EXTRA_STREAM, uris.get(0));
+                    } else {
+                        i = new Intent(Intent.ACTION_SEND_MULTIPLE);
+                        i.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                    }
+                    i.setType(mime == null ? "*/*" : mime);
+                    i.putExtra(Intent.EXTRA_SUBJECT, title);
+                    i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    startActivity(Intent.createChooser(i, title));
+                } catch (Exception ignored) {}
             });
         }
 
