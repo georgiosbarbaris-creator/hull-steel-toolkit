@@ -6,8 +6,8 @@ android {
         applicationId = "gr.barbaris.hst"
         minSdk = 26
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.1"
     }
     buildTypes { release { isMinifyEnabled = false } }
     compileOptions {
@@ -15,4 +15,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 }
-dependencies { implementation("androidx.webkit:webkit:1.11.0") }
+dependencies {
+    implementation("androidx.webkit:webkit:1.11.0")
+    implementation("androidx.core:core:1.13.1")
+}

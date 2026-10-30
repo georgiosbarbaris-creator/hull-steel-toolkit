@@ -18,7 +18,7 @@ body{margin:0;font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-seri
 .top select{flex:1;background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:8px;padding:7px;font:inherit;min-width:0}
 .top select option{color:#000}
 .tabs{display:flex;margin-top:8px}
-.tabs button{flex:1;background:none;border:0;color:rgba(255,255,255,.7);padding:10px 4px;font:600 14px system-ui;border-bottom:3px solid transparent;cursor:pointer}
+.tabs button{flex:1;background:none;border:0;color:rgba(255,255,255,.7);padding:10px 2px;font:600 13px system-ui;border-bottom:3px solid transparent;cursor:pointer}
 .tabs button.on{color:#fff;border-bottom-color:#7fc1ff}
 main{max-width:900px;margin:0 auto;padding:8px 10px 110px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0}
@@ -86,6 +86,7 @@ th:first-child,td:first-child{text-align:left}
   <nav class="tabs">
     <button data-tab="ut" class="on">UT Gauging</button>
     <button data-tab="steel">Steel Calc</button>
+    <button data-tab="photo">📷 Photo</button>
     <button data-tab="guide">Οδηγός</button>
   </nav>
 </div>
@@ -179,6 +180,48 @@ th:first-child,td:first-child{text-align:left}
   </div>
 </section>
 
+<!-- ================= PHOTO ================= -->
+<section id="v-photo" class="hide">
+  <div class="card">
+    <h2>📷 Μέτρηση από φωτογραφία</h2>
+    <p class="note" style="margin-top:0">Φωτογράφισε όσο πιο κάθετα γίνεται. Στην ίδια επιφάνεια πρέπει να φαίνεται κάτι με γνωστές διαστάσεις, π.χ. frame spacing × longitudinal spacing από το σχέδιο, ή ένα μέτρο.</p>
+    <div class="row">
+      <label class="p" style="flex-direction:row;align-items:center;gap:6px;background:var(--accent);color:#fff;padding:9px 12px;border-radius:8px;font-weight:600;font-size:15px;cursor:pointer">📷 Φωτογραφία / Αρχείο
+        <input type="file" id="ph_file" accept="image/*" style="display:none"></label>
+      <button id="ph_reset" class="sm">↺ Σημεία από την αρχή</button>
+    </div>
+  </div>
+  <div class="card" id="ph_work" style="display:none">
+    <div class="g2">
+      <label>Αναφορά<select id="ph_mode"><option value="rect">Ορθογώνιο γνωστό (4 σημεία)</option><option value="line">Γραμμή γνωστή (2 σημεία)</option></select></label>
+      <div id="ph_refin" class="g2">
+        <label>Πλάτος (mm)<input id="ph_rw" type="number" inputmode="decimal" placeholder="π.χ. 800"></label>
+        <label>Ύψος (mm)<input id="ph_rh" type="number" inputmode="decimal" placeholder="π.χ. 850"></label>
+      </div>
+    </div>
+    <div class="row filters" style="margin:10px 0 6px" id="ph_steps">
+      <button class="sm on" data-step="ref">1. Αναφορά</button><button class="sm" data-step="area">2. Περιοχή αλλαγής</button>
+    </div>
+    <div class="note" id="ph_hint"></div>
+    <div style="position:relative;margin-top:6px"><canvas id="ph_cv" style="width:100%;touch-action:none;border-radius:8px;background:#000;display:block"></canvas></div>
+    <div id="ph_res" style="margin-top:10px"></div>
+    <div class="g2" style="margin-top:8px">
+      <label>Περιθώριο κάθε πλευρά (mm)<input id="ph_marg" type="number" inputmode="decimal" value="0"></label>
+      <label>Original thk (mm)<input id="ph_t" type="number" inputmode="decimal" step="any"></label>
+    </div>
+    <label style="margin-top:8px">Location / member<input id="ph_loc" placeholder="π.χ. No.4 CH P side shell Fr.88-90"></label>
+    <div class="row" style="margin-top:10px">
+      <button class="p" id="ph_tosteel">→ Steel Calc</button><button id="ph_tout">→ UT φόρμα (L×W)</button><button id="ph_share">📤 Εικόνα</button>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Οπτική κατάσταση (χωρίς UT)</h2>
+    <p class="note" style="margin-top:0">Η φωτογραφία δεν δείχνει πάχος. Η απόφαση για αλλαγή βγαίνει από το UT. Εξαίρεση είναι τα ελαττώματα που βλέπεις με το μάτι και που, κατά κανόνα, οδηγούν σε renewal.</p>
+    <div id="ph_chk"></div>
+    <div id="ph_vis" style="margin-top:8px"></div>
+  </div>
+</section>
+
 <!-- ================= GUIDE ================= -->
 <section id="v-guide" class="hide">
   <div class="card guide">
@@ -226,8 +269,16 @@ th:first-child,td:first-child{text-align:left}
       <li>Οι περιοχές με S μπαίνουν στη λίστα παρακολούθησης για το επόμενο survey.</li>
       <li>Για pitting, grooving, edge corrosion και BC hold frames (IACS UR S31) ισχύουν ειδικά κριτήρια της κλάσης. Σημείωσέ τα στις Σημειώσεις.</li>
     </ul>
+    <h3>📷 Μέτρηση από φωτογραφία</h3>
+    <ol>
+      <li>Φωτογράφισε όσο πιο κάθετα στην επιφάνεια γίνεται, με την περιοχή και ένα γνωστό ορθογώνιο στο ίδιο κάδρο. Καλή αναφορά είναι τα frames και τα longitudinals, γιατί το spacing τους υπάρχει στο midship section.</li>
+      <li><b>Αναφορά:</b> πάτα τις 4 γωνίες με τη σειρά Π-Α → Π-Δ → Κ-Δ → Κ-Α και βάλε πλάτος × ύψος σε mm. Η εφαρμογή διορθώνει την προοπτική.</li>
+      <li><b>Περιοχή αλλαγής:</b> πάτα τις 4 γωνίες με την ίδια σειρά. Για να διορθώσεις ένα σημείο το σέρνεις· ο μεγεθυντικός φακός βοηθά στην ακρίβεια.</li>
+      <li>Η περιοχή πρέπει να είναι <b>στο ίδιο επίπεδο</b> με την αναφορά. Η ακρίβεια είναι περίπου ±5–10%: αρκεί για έλεγχο της μπίλιας, αλλά για παραγγελία χάλυβα μετράς με μετροταινία.</li>
+      <li>Τα αποτελέσματα στέλνονται → Steel Calc ή → UT φόρμα. Η εικόνα μοιράζεται σε web ανάλυση.</li>
+    </ol>
     <h3>Backup</h3>
-    <p>Όλα τα δεδομένα μένουν μόνο στο κινητό. Κάνε backup τακτικά από ⚙ → Backup.</p>
+    <p>Οι φωτογραφίες δεν αποθηκεύονται μέσα στην εφαρμογή· στείλε την εικόνα (📤) αν τη χρειάζεσαι. Όλα τα υπόλοιπα δεδομένα μένουν μόνο στο κινητό. Κάνε backup τακτικά από ⚙ → Backup.</p>
   </div>
 </section>
 </main>
@@ -338,7 +389,7 @@ $("#bimp").onclick=()=>{const ta=$("#bta");if(ta.classList.contains("hide")||!ta
 
 /* ---------- tabs ---------- */
 function setTab(t){S.tab=t;save();$$(".tabs button").forEach(b=>b.classList.toggle("on",b.dataset.tab===t));
-  ["ut","steel","guide"].forEach(x=>$("#v-"+x).classList.toggle("hide",x!==t));$("#sbar").classList.toggle("hide",t!=="steel");window.scrollTo(0,0);}
+  ["ut","steel","photo","guide"].forEach(x=>$("#v-"+x).classList.toggle("hide",x!==t));if(t==="photo")setTimeout(phDraw,30);$("#sbar").classList.toggle("hide",t!=="steel");window.scrollTo(0,0);}
 $$(".tabs button").forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
 
 /* ---------- UT ---------- */
@@ -457,6 +508,88 @@ $("#stxt").onclick=()=>{const{T}=stTot(),{p,yp,cur}=pr(),st=ST(),v=V();let s=`St
   share("Steel summary "+v.name,s);};
 let clr=0;$("#sclear").onclick=e=>{if(!clr){clr=1;e.target.textContent="Σίγουρα;";setTimeout(()=>{clr=0;e.target.textContent="Καθαρισμός";},3000);return;}
   ST().items=[];clr=0;e.target.textContent="Καθαρισμός";save();renderSteel();};
+
+/* ---------- PHOTO MEASURE ---------- */
+const PH={img:null,ref:[],area:[],step:"ref",drag:-1,loupe:null};
+const VIS=[["hole","Τρύπα / διάτρηση (holed)","R"],["crack","Ρωγμή / fracture","R"],["buckle","Σοβαρό buckling / παραμόρφωση","R"],
+ ["detach","Αποκόλληση stiffener / bracket","R"],["groove","Grooving στις ραφές / edge corrosion","U"],["pit","Έντονο pitting","U"],
+ ["scale","Βαρύ scale / delamination","U"],["coat","Χαλασμένο coating, γενική σκουριά","U"],["dent","Ελαφριά παραμόρφωση / indent","U"]];
+$("#ph_chk").innerHTML=VIS.map(v=>`<label style="flex-direction:row;align-items:center;gap:8px;font-size:14px;color:var(--ink);margin:6px 0"><input type="checkbox" data-vis="${v[0]}" style="width:auto"> ${v[1]}</label>`).join("");
+function visEval(){const on=VIS.filter(v=>$(`[data-vis="${v[0]}"]`).checked);let st=null,msg="";
+  if(on.some(v=>v[2]==="R")){st="R";msg="Ορατή βλάβη που κατά κανόνα θέλει crop & renew ανεξάρτητα από το UT (επιβεβαίωση με τον class surveyor). Μέτρησε την έκταση με τη φωτογραφία.";}
+  else if(on.length){st="S";msg="Ύποπτη περιοχή: <b>κάνε UT</b> (πύκνωσε τα readings) για να αποφασιστεί αν θέλει αλλαγή.";}
+  $("#ph_vis").innerHTML=st?`<div class="light ${st}"><b class="big">${st==="R"?"RENEW (οπτικά)":"UT REQUIRED"}</b>${msg}</div>`:"";}
+$("#ph_chk").addEventListener("change",visEval);
+function needRef(){return $("#ph_mode").value==="rect"?4:2;}
+function phHint(){const r=needRef();
+  $("#ph_hint").innerHTML=PH.step==="ref"?(r===4?`Πάτα τις 4 γωνίες της αναφοράς με σειρά: <b>πάνω-αριστερά → πάνω-δεξιά → κάτω-δεξιά → κάτω-αριστερά</b> (${PH.ref.length}/4)`:`Πάτα τις 2 άκρες της γνωστής γραμμής (${PH.ref.length}/2)`)
+   :`Πάτα τις 4 γωνίες της περιοχής αλλαγής με την ίδια σειρά (${PH.area.length}/4). Σύρε ένα σημείο για να το διορθώσεις.`;}
+$("#ph_mode").onchange=()=>{$("#ph_rh").closest("label").style.display=$("#ph_mode").value==="rect"?"":"none";
+  $("#ph_rw").closest("label").firstChild.textContent=$("#ph_mode").value==="rect"?"Πλάτος (mm)":"Μήκος (mm)";PH.ref=[];phStep("ref");};
+$("#ph_steps").addEventListener("click",e=>{const b=e.target.closest("[data-step]");if(b)phStep(b.dataset.step);});
+function phStep(s){PH.step=s;$$("#ph_steps [data-step]").forEach(b=>b.classList.toggle("on",b.dataset.step===s));phHint();phDraw();phCalc();}
+$("#ph_reset").onclick=()=>{PH.ref=[];PH.area=[];phStep("ref");};
+$("#ph_file").onchange=e=>{const f=e.target.files[0];if(!f)return;const u=URL.createObjectURL(f),im=new Image();
+  im.onload=()=>{const M=1600,k=Math.min(1,M/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);
+    c.getContext("2d").drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);PH.img=c;PH.ref=[];PH.area=[];$("#ph_work").style.display="";phStep("ref");
+    setTimeout(()=>$("#ph_work").scrollIntoView({behavior:"smooth"}),50);};im.src=u;e.target.value="";};
+function phDraw(){const cv=$("#ph_cv");if(!PH.img)return;const w=cv.clientWidth||600,dpr=window.devicePixelRatio||1,h=w*PH.img.height/PH.img.width;
+  cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);cv.style.height=h+"px";const g=cv.getContext("2d"),s=cv.width/PH.img.width;
+  g.drawImage(PH.img,0,0,cv.width,cv.height);
+  const poly=(pts,col,closed)=>{if(!pts.length)return;g.lineWidth=2.5*dpr;g.strokeStyle=col;g.fillStyle=col+"33";g.beginPath();pts.forEach((p,i)=>i?g.lineTo(p[0]*s,p[1]*s):g.moveTo(p[0]*s,p[1]*s));
+    if(closed&&pts.length>2){g.closePath();g.fill();}g.stroke();pts.forEach((p,i)=>{g.beginPath();g.arc(p[0]*s,p[1]*s,7*dpr,0,7);g.fillStyle=col;g.fill();g.fillStyle="#fff";g.font=`bold ${10*dpr}px system-ui`;g.textAlign="center";g.textBaseline="middle";g.fillText(i+1,p[0]*s,p[1]*s);});};
+  poly(PH.ref,"#2f8cff",needRef()===4);poly(PH.area,"#ff3b30",true);
+  if(PH.loupe){const[p,set]=PH.loupe,R=55*dpr,Z=3,cx=R+8*dpr,cy=R+8*dpr;g.save();g.beginPath();g.arc(cx,cy,R,0,7);g.clip();
+    g.drawImage(PH.img,p[0]-R/(Z*s),p[1]-R/(Z*s),2*R/(Z*s),2*R/(Z*s),cx-R,cy-R,2*R,2*R);g.restore();g.strokeStyle="#fff";g.lineWidth=2*dpr;g.beginPath();g.arc(cx,cy,R,0,7);g.stroke();
+    g.strokeStyle=set==="ref"?"#2f8cff":"#ff3b30";g.beginPath();g.moveTo(cx-12*dpr,cy);g.lineTo(cx+12*dpr,cy);g.moveTo(cx,cy-12*dpr);g.lineTo(cx,cy+12*dpr);g.stroke();}}
+function phPt(e){const cv=$("#ph_cv"),r=cv.getBoundingClientRect(),k=PH.img.width/r.width;return[(e.clientX-r.left)*k,(e.clientY-r.top)*k,k];}
+const phCv=$("#ph_cv");
+phCv.addEventListener("pointerdown",e=>{if(!PH.img)return;e.preventDefault();phCv.setPointerCapture(e.pointerId);const[x,y,k]=phPt(e),set=PH[PH.step];
+  let best=-1,bd=28*k;set.forEach((p,i)=>{const d=Math.hypot(p[0]-x,p[1]-y);if(d<bd){bd=d;best=i;}});
+  if(best<0){const max=PH.step==="ref"?needRef():4;if(set.length>=max)return;set.push([x,y]);best=set.length-1;}
+  PH.drag=best;PH.loupe=[set[best],PH.step];phDraw();phHint();});
+phCv.addEventListener("pointermove",e=>{if(PH.drag<0)return;const[x,y]=phPt(e),p=PH[PH.step][PH.drag];p[0]=x;p[1]=y;PH.loupe=[p,PH.step];phDraw();phCalc();});
+const phUp=()=>{if(PH.drag<0)return;PH.drag=-1;PH.loupe=null;phDraw();phCalc();phHint();
+  if(PH.step==="ref"&&PH.ref.length===needRef()&&!PH.area.length)setTimeout(()=>phStep("area"),250);};
+phCv.addEventListener("pointerup",phUp);phCv.addEventListener("pointercancel",phUp);
+window.addEventListener("resize",phDraw);
+function homog(src,dst){const A=[],b=[];for(let i=0;i<4;i++){const[x,y]=src[i],[X,Y]=dst[i];
+  A.push([x,y,1,0,0,0,-x*X,-y*X]);b.push(X);A.push([0,0,0,x,y,1,-x*Y,-y*Y]);b.push(Y);}
+  for(let c=0;c<8;c++){let m=c;for(let r=c+1;r<8;r++)if(Math.abs(A[r][c])>Math.abs(A[m][c]))m=r;[A[c],A[m]]=[A[m],A[c]];[b[c],b[m]]=[b[m],b[c]];
+    if(Math.abs(A[c][c])<1e-12)return null;for(let r=0;r<8;r++)if(r!==c){const f=A[r][c]/A[c][c];for(let k=c;k<8;k++)A[r][k]-=f*A[c][k];b[r]-=f*b[c];}}
+  const h=b.map((v,i)=>v/A[i][i]);return p=>{const w=h[6]*p[0]+h[7]*p[1]+1;return[(h[0]*p[0]+h[1]*p[1]+h[2])/w,(h[3]*p[0]+h[4]*p[1]+h[5])/w];};}
+function phWorld(){const mode=$("#ph_mode").value,rw=n($("#ph_rw").value),rh=n($("#ph_rh").value);
+  if(PH.ref.length<needRef()||PH.area.length<4||!rw||(mode==="rect"&&!rh))return null;
+  let map;if(mode==="rect"){map=homog(PH.ref,[[0,0],[rw,0],[rw,rh],[0,rh]]);if(!map)return null;}
+  else{const px=Math.hypot(PH.ref[1][0]-PH.ref[0][0],PH.ref[1][1]-PH.ref[0][1]);if(!px)return null;const k=rw/px;map=p=>[p[0]*k,p[1]*k];}
+  const W=PH.area.map(map),d=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
+  const top=d(W[0],W[1]),right=d(W[1],W[2]),bot=d(W[2],W[3]),left=d(W[3],W[0]);
+  let ar=0;for(let i=0;i<4;i++){const a=W[i],b=W[(i+1)%4];ar+=a[0]*b[1]-b[0]*a[1];}ar=Math.abs(ar)/2;
+  const m=n($("#ph_marg").value),L=(top+bot)/2+2*m,Wd=(left+right)/2+2*m;return{top,right,bot,left,ar,L,Wd,m,mode};}
+let phLast=null;
+function phCalc(){const r=phWorld();phLast=r;if(!r){$("#ph_res").innerHTML=PH.img?`<p class="note">${!n($("#ph_rw").value)?"Βάλε τις διαστάσεις της αναφοράς. ":""}Τα αποτελέσματα εμφανίζονται όταν οριστούν όλα τα σημεία.</p>`:"";return;}
+  const t=n($("#ph_t").value),dens=n(ST().dens)||7.85,kg=r.L/1000*r.Wd/1000*t*dens,skew=Math.max(Math.abs(r.top-r.bot)/Math.max(r.top,r.bot),Math.abs(r.left-r.right)/Math.max(r.left,r.right));
+  $("#ph_res").innerHTML=`<div class="light OK" style="color:var(--ink);background:var(--bg);border:1px solid var(--line)">
+   <b class="big" style="color:var(--navy)">≈ ${f(r.L/1000,2)} × ${f(r.Wd/1000,2)} m</b>
+   Insert (μέσος όρος απέναντι πλευρών${r.m?` + ${r.m} mm περιθώριο`:""}) · Εμβαδόν περιοχής ≈ ${f(r.ar/1e6,2)} m²${t?` · Βάρος ≈ <b>${f(kg,0)} kg</b>`:""}
+   <div class="thr"><span>Πάνω ${f(r.top,0)}</span><span>Δεξιά ${f(r.right,0)}</span><span>Κάτω ${f(r.bot,0)}</span><span>Αριστερά ${f(r.left,0)} mm</span></div>
+   <div class="note" style="margin-top:6px">Εκτίμηση ±5–10%${r.mode==="line"?" (με γραμμή: μόνο αν η λήψη είναι κάθετη)":""}. Για παραγγελία/μπίλια επιβεβαίωσε με μετροταινία.${skew>0.25?" ⚠ Οι απέναντι πλευρές διαφέρουν πολύ: έλεγξε τη σειρά των σημείων.":""}</div></div>`;}
+["ph_rw","ph_rh","ph_marg","ph_t"].forEach(id=>$("#"+id).addEventListener("input",phCalc));
+$("#ph_tosteel").onclick=()=>{if(!phLast){toast("Ολοκλήρωσε πρώτα τα σημεία");return;}const t=$("#ph_t").value;if(!n(t)){toast("Βάλε original thickness");$("#ph_t").focus();return;}
+  ST().items.push({id:uid(),type:"plate",desc:($("#ph_loc").value||"Photo estimate")+" (photo)",L:(phLast.L/1000).toFixed(2),W:(phLast.Wd/1000).toFixed(2),t,qty:1,yard:"",yunit:"kg"});save();renderSteel();toast("Προστέθηκε στο Steel Calc");};
+$("#ph_tout").onclick=()=>{if(!phLast){toast("Ολοκλήρωσε πρώτα τα σημεία");return;}setTab("ut");
+  $("#f_L").value=(phLast.L/1000).toFixed(2);$("#f_W").value=(phLast.Wd/1000).toFixed(2);if($("#ph_loc").value&&!$("#f_mem").value)$("#f_mem").value=$("#ph_loc").value;
+  if(n($("#ph_t").value)&&!$("#f_t0").value)$("#f_t0").value=$("#ph_t").value;formLive();$("#fdims").classList.remove("hide");setTimeout(()=>$("#formcard").scrollIntoView({behavior:"smooth"}),80);toast("L×W πέρασαν στη φόρμα UT");};
+$("#ph_share").onclick=()=>{const cv=$("#ph_cv");if(!PH.img)return;
+  // web-size JPEG with the dims written on it
+  const o=document.createElement("canvas"),k=Math.min(1,1280/cv.width);o.width=cv.width*k;o.height=cv.height*k;const g=o.getContext("2d");g.drawImage(cv,0,0,o.width,o.height);
+  if(phLast){const txt=`${$("#ph_loc").value||""}  ≈ ${f(phLast.L/1000,2)} x ${f(phLast.Wd/1000,2)} m`;g.font="bold 26px system-ui";const w=g.measureText(txt).width;g.fillStyle="rgba(0,0,0,.65)";g.fillRect(10,o.height-50,w+24,40);g.fillStyle="#fff";g.fillText(txt,22,o.height-21);}
+  const data=o.toDataURL("image/jpeg",0.7);
+  if(window.AndroidBridge&&AndroidBridge.shareImage){AndroidBridge.shareImage(data,"steel-area.jpg");return;}
+  o.toBlob(b=>{const file=new File([b],"steel-area.jpg",{type:"image/jpeg"});
+    if(navigator.canShare&&navigator.canShare({files:[file]}))navigator.share({files:[file],title:"Steel area"}).catch(()=>{});
+    else{const w=window.open();if(w){w.document.write(`<img src="${data}" style="max-width:100%">`);}else toast("Κράτα πατημένο στην εικόνα για αποθήκευση");}},"image/jpeg",0.7);};
+phHint();
 
 function renderAll(){renderVsel();resetForm();renderUT();renderSteel();setTab(S.tab||"ut");}
 renderAll();
