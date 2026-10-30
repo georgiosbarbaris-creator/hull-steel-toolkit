@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hull Steel Toolkit</title>
+<style>
+:root{--bg:#f3f5f7;--card:#fff;--ink:#14212b;--muted:#5d6b77;--line:#d6dee5;--navy:#0f3a5c;--accent:#1f6fb2;
+--ok:#1d7a46;--okb:#e3f4ea;--s:#9a6700;--sb:#fff3d1;--r:#b3261e;--rb:#fde4e1}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1418;--card:#182028;--ink:#e6edf3;--muted:#93a1ad;--line:#2b3742;--navy:#9cc7ef;--accent:#4f9de0;
+--ok:#5cc98a;--okb:#16301f;--s:#e3b341;--sb:#3a2f10;--r:#ff8a80;--rb:#3d1a18}}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+.top{position:sticky;top:0;z-index:5;background:var(--navy);color:#fff;padding:10px 12px 0}
+@media (prefers-color-scheme:dark){.top{background:#0b2740}}
+.top .bar{display:flex;gap:8px;align-items:center}
+.top h1{font-size:16px;margin:0;flex:0 0 auto}
+.top select{flex:1;background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:8px;padding:7px;font:inherit;min-width:0}
+.top select option{color:#000}
+.tabs{display:flex;margin-top:8px}
+.tabs button{flex:1;background:none;border:0;color:rgba(255,255,255,.7);padding:10px 4px;font:600 14px system-ui;border-bottom:3px solid transparent;cursor:pointer}
+.tabs button.on{color:#fff;border-bottom-color:#7fc1ff}
+main{max-width:900px;margin:0 auto;padding:8px 10px 110px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0}
+.card h2{margin:0 0 10px;font-size:15px;color:var(--navy)}
+.grid{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(130px,1fr))}
+.g2{display:grid;gap:8px;grid-template-columns:1fr 1fr}
+label{display:flex;flex-direction:column;font-size:12px;color:var(--muted);gap:3px}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px;min-width:0;width:100%}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);border-color:transparent}
+button{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:9px 12px;cursor:pointer}
+button.p{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+button.d{color:var(--r)}
+button.sm{padding:5px 9px;font-size:13px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.note{font-size:12px;color:var(--muted)}
+.badge{display:inline-block;font:700 12px system-ui;padding:3px 9px;border-radius:12px}
+.b-OK{background:var(--okb);color:var(--ok)}.b-S{background:var(--sb);color:var(--s)}.b-R{background:var(--rb);color:var(--r)}
+.light{border-radius:12px;padding:14px;margin-top:10px;font-size:14px}
+.light.OK{background:var(--okb);color:var(--ok)}.light.S{background:var(--sb);color:var(--s)}.light.R{background:var(--rb);color:var(--r)}
+.light b.big{display:block;font-size:20px;margin-bottom:4px}
+.thr{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;font-size:13px}
+.thr span{background:var(--bg);border:1px solid var(--line);padding:4px 8px;border-radius:8px}
+.rec{border:1px solid var(--line);border-left:5px solid var(--line);border-radius:10px;padding:10px;margin:8px 0;background:var(--card)}
+.rec.OK{border-left-color:var(--ok)}.rec.S{border-left-color:var(--s)}.rec.R{border-left-color:var(--r)}
+.rec .h{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.rec .t{font-weight:600}
+.rec .m{font-size:13px;color:var(--muted);margin-top:4px;font-variant-numeric:tabular-nums}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.kpi{background:var(--bg);border-radius:10px;padding:8px;text-align:center;font-size:12px;color:var(--muted)}
+.kpi b{display:block;font-size:20px;color:var(--ink)}
+.kpi.S b{color:var(--s)}.kpi.R b{color:var(--r)}.kpi.OK b{color:var(--ok)}
+.filters button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:6px;border-bottom:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums}
+th:first-child,td:first-child{text-align:left}
+.tw{overflow-x:auto}
+.item{border:1px solid var(--line);border-radius:10px;padding:10px;margin:8px 0;background:var(--card)}
+.item-head{display:flex;gap:6px;align-items:center;margin-bottom:8px}
+.item-head .no{font-weight:700;color:var(--navy);min-width:22px}
+.item-head input{flex:1}
+.res{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;font-size:13px;padding-top:8px;border-top:1px dashed var(--line)}
+.pos{color:var(--r)}.neg{color:var(--ok)}.mut{color:var(--muted)}
+.flag{font-size:11px;padding:1px 6px;border-radius:10px;border:1px solid currentColor;white-space:nowrap}
+.sumbar{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:2px solid var(--accent);padding:8px 12px;z-index:4}
+.sumbar .in{max-width:900px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.sumbar .k{font-size:11px;color:var(--muted)}.sumbar .k b{display:block;font-size:15px;color:var(--ink)}
+.guide h3{font-size:14px;color:var(--navy);margin:14px 0 4px}
+.guide p,.guide li{font-size:14px}
+.guide ul,.guide ol{padding-left:20px;margin:4px 0}
+#toast{position:fixed;left:50%;top:70px;transform:translateX(-50%);background:#0f3a5c;color:#fff;padding:9px 14px;border-radius:8px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20}
+#toast.show{opacity:1}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:flex-end;justify-content:center;z-index:15}
+.modal.on{display:flex}
+.modal .box{background:var(--card);width:100%;max-width:640px;max-height:88vh;overflow:auto;border-radius:16px 16px 0 0;padding:14px}
+.hide{display:none!important}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="bar">
+    <h1>⚓ HST</h1>
+    <select id="vsel"></select>
+    <button class="sm" id="vedit" style="background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.25)">⚙</button>
+  </div>
+  <nav class="tabs">
+    <button data-tab="ut" class="on">UT Gauging</button>
+    <button data-tab="steel">Steel Calc</button>
+    <button data-tab="guide">Οδηγός</button>
+  </nav>
+</div>
+
+<main>
+<!-- ================= UT ================= -->
+<section id="v-ut">
+  <div class="card">
+    <h2>⚡ Quick check (χωρίς αποθήκευση)</h2>
+    <div class="g2">
+      <label>Member category<select id="qcat"></select></label>
+      <label>Original thk (mm)<input id="qt0" type="number" inputmode="decimal" step="any"></label>
+    </div>
+    <label style="margin-top:8px">Readings (mm) — χώρισε με κενό<input id="qrd" inputmode="decimal" placeholder="π.χ. 10.8 11.0 10.6"></label>
+    <div id="qres"></div>
+  </div>
+
+  <div class="card" id="formcard">
+    <h2 id="ftitle">➕ Νέα μέτρηση</h2>
+    <div class="g2">
+      <label>Location (Hold/Tank)<input id="f_loc" list="locs" placeholder="π.χ. No.3 CH / No.2 TST P"></label>
+      <label>Frame / Position<input id="f_pos" placeholder="π.χ. Fr.120-124"></label>
+    </div>
+    <label style="margin-top:8px">Member / Strake<input id="f_mem" placeholder="π.χ. Side shell strake F, P side"></label>
+    <div class="g2" style="margin-top:8px">
+      <label>Category<select id="f_cat"></select></label>
+      <label>Original thk (mm)<input id="f_t0" type="number" inputmode="decimal" step="any"></label>
+    </div>
+    <label style="margin-top:8px">Readings (mm) — χώρισε με κενό<input id="f_rd" inputmode="decimal" placeholder="10.8 11.0 10.6 10.9"></label>
+    <details style="margin-top:8px"><summary class="note">Προχωρημένα: renewal thk από σχέδιο (CSR) / ειδικό όριο %</summary>
+      <div class="g2" style="margin-top:8px">
+        <label>Renewal thk t<sub>ren</sub> (mm)<input id="f_tren" type="number" inputmode="decimal" step="any" placeholder="από TM drawing"></label>
+        <label>Allowable % (override)<input id="f_allow" type="number" inputmode="decimal" step="any" placeholder="αλλιώς από κατηγορία"></label>
+      </div>
+    </details>
+    <div id="fres"></div>
+    <div id="fdims" class="g2 hide" style="margin-top:8px">
+      <label>Renewal length (m)<input id="f_L" type="number" inputmode="decimal" step="any"></label>
+      <label>Renewal width (m)<input id="f_W" type="number" inputmode="decimal" step="any"></label>
+    </div>
+    <label style="margin-top:8px">Σημειώσεις<input id="f_note" placeholder="pitting, grooving, coating condition..."></label>
+    <div class="row" style="margin-top:10px">
+      <button class="p" id="fsave">Αποθήκευση</button>
+      <button id="fcancel" class="hide">Ακύρωση</button>
+      <span class="note">Το Location/Frame/Category μένουν για την επόμενη μέτρηση.</span>
+    </div>
+    <datalist id="locs"></datalist>
+  </div>
+
+  <div class="card">
+    <h2>Αποτελέσματα πλοίου</h2>
+    <div class="kpis" id="utk"></div>
+    <div class="row filters" style="margin-top:10px" id="filt">
+      <button class="sm on" data-f="all">Όλα</button><button class="sm" data-f="R">Renew</button><button class="sm" data-f="S">Substantial</button><button class="sm" data-f="OK">OK</button>
+      <input id="search" placeholder="🔍 location/member" style="flex:1;min-width:120px;padding:6px 9px">
+    </div>
+    <div id="ulist"></div>
+    <div class="row" style="margin-top:10px">
+      <button id="rep">📤 Report (S & R)</button>
+      <button id="csv">📤 CSV όλων</button>
+      <button id="r2s">→ Όλα τα Renew στο Steel Calc</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= STEEL ================= -->
+<section id="v-steel" class="hide">
+  <div class="card">
+    <h2>Ρυθμίσεις τιμής</h2>
+    <div class="grid">
+      <label>Τιμή / t (Owners')<input id="s_price" type="number" inputmode="decimal" step="any"></label>
+      <label>Τιμή / t (Yard)<input id="s_yprice" type="number" inputmode="decimal" step="any" placeholder="ίδια αν κενό"></label>
+      <label>Νόμισμα<select id="s_cur"><option>USD</option><option>EUR</option><option>CNY</option></select></label>
+      <label>Density t/m³<input id="s_dens" type="number" inputmode="decimal" step="0.01"></label>
+      <label>Allowance %<input id="s_allow" type="number" inputmode="decimal" step="any"></label>
+      <label>Tolerance flag %<input id="s_tol" type="number" inputmode="decimal" step="any"></label>
+    </div>
+    <p class="note">Plate: L×W (m) × t (mm). Angle: A×B×t (mm) × L (m), εμβαδόν t·(A+B−t). Flat bar: W×t (mm) × L (m). Other: kg/m × L.</p>
+  </div>
+  <div class="row">
+    <button class="p" data-add="plate">+ Plate</button><button class="p" data-add="angle">+ Angle</button>
+    <button class="p" data-add="flat">+ Flat bar</button><button data-add="other">+ Other kg/m</button>
+  </div>
+  <div id="items"></div>
+  <div class="card">
+    <h2>Σύνοψη ανά τύπο</h2>
+    <div class="tw"><table id="sumtable"></table></div>
+    <div class="row" style="margin-top:10px">
+      <button id="scsv">📤 Πίνακας (Excel)</button><button id="stxt">📤 Σύνοψη (email)</button><button class="d" id="sclear">Καθαρισμός</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= GUIDE ================= -->
+<section id="v-guide" class="hide">
+  <div class="card guide">
+    <h2>Πώς δουλεύει η εκτίμηση</h2>
+    <p>Για κάθε μέτρηση η εφαρμογή βρίσκει το <b>diminution %</b> = (t<sub>orig</sub> − t<sub>meas</sub>) / t<sub>orig</sub>. Το t<sub>meas</sub> είναι ο μέσος όρος των readings, ή το min αν το επιλέξεις στις ρυθμίσεις του πλοίου. Μετά το συγκρίνει με το <b>allowable diminution</b> της κατηγορίας.</p>
+    <ul>
+      <li><span class="badge b-OK">OK</span> diminution &lt; 75% του allowable</li>
+      <li><span class="badge b-S">S — Substantial corrosion</span> από 75% έως 100% του allowable (ορισμός IACS UR Z10). Δεν κόβεται, αλλά μπαίνει σε επιπλέον thickness measurements στα επόμενα annual/intermediate surveys (ESP).</li>
+      <li><span class="badge b-R">R — Renew</span> το diminution ξεπερνά το allowable: crop & renew.</li>
+    </ul>
+    <p><b>CSR πλοία (BC/OT):</b> αν το σχέδιο δίνει renewal thickness t<sub>ren</sub>, βάλ' το στα «Προχωρημένα». Renew αν t ≤ t<sub>ren</sub> και Substantial αν t ≤ t<sub>ren</sub> + 0.5 mm.</p>
+    <p class="note">⚠ Τα default % είναι ενδεικτικά. Πριν από κάθε πλοίο βάλε τα όρια της κλάσης του (⚙ → Allowable %), όπως φαίνονται στο προηγούμενο TM report ή στους κανονισμούς της κλάσης. Η τελική απόφαση είναι του class surveyor.</p>
+
+    <h3>1. Πριν ανέβεις</h3>
+    <ul>
+      <li>Προηγούμενο TM report, Survey Status / Condition of Class, ESP file (Executive Hull Summary).</li>
+      <li>Shell expansion, midship section, construction drawings με τα original thicknesses.</li>
+      <li>Allowable diminution της κλάσης για κάθε κατηγορία → ⚙ στην εφαρμογή.</li>
+      <li>Λίστα με τις γνωστές περιοχές substantial corrosion από το προηγούμενο TM.</li>
+    </ul>
+    <h3>2. Εξοπλισμός</h3>
+    <ul>
+      <li>UT gauge με multiple-echo (μετρά μέσα από coating), calibration block, couplant, ανταλλακτικές μπαταρίες.</li>
+      <li>Scraper/wire brush, μαρκαδόρος, φακός, gas detector, άδεια για enclosed space entry.</li>
+      <li>Αν ο gauge είναι single-echo, αφαιρείς πρώτα το coating μέχρι γυμνό μέταλλο.</li>
+    </ul>
+    <h3>3. Πώς μετράς</h3>
+    <ol>
+      <li>Calibration στην αρχή κάθε session και κάθε φορά που αλλάζεις χώρο ή θερμοκρασία.</li>
+      <li>Για κάθε plate παίρνεις 3–5 readings σε καθαρό σημείο. Τα pits δεν μπαίνουν στον μέσο όρο: τα σημειώνεις χωριστά (pitting/grooving).</li>
+      <li>Σε stiffeners μετράς web και flange χωριστά, γιατί έχουν διαφορετική κατηγορία και διαφορετικό όριο.</li>
+      <li>Δίνεις προτεραιότητα στα suspect areas: ballast tanks, πίσω από heating coils, bellmouths, κάτω από hatch coaming, γύρω από τα lower brackets των hold frames, τη ζώνη του double bottom κάτω από τα suction.</li>
+      <li>Όταν βγαίνει <b>S</b>, κάνεις πύκνωση των readings γύρω από το σημείο. Όταν βγαίνει <b>R</b>, οριοθετείς την περιοχή μέχρι εκεί που οι μετρήσεις επιστρέφουν σε OK και σημειώνεις L×W για το insert.</li>
+    </ol>
+    <h3>4. Από το R στο κόψιμο</h3>
+    <ul>
+      <li>Η έκταση του insert σταματά εκεί που η λαμαρίνα είναι πάλι OK. Τα όρια τα βάζεις σε welds/stiffeners όπου γίνεται.</li>
+      <li>Ελάχιστο μέγεθος insert και ακτίνα γωνιών κατά IACS Rec. 47 και τις απαιτήσεις της κλάσης. Συνήθως ~300 mm πλάτος, με στρογγυλεμένες γωνίες· επιβεβαίωσέ το με τον surveyor.</li>
+      <li>Το νέο φύλλο έχει το original thickness, ή μεγαλύτερο αν το εγκρίνει η κλάση, και ίδιο grade χάλυβα (AH32/AH36 κ.λπ.).</li>
+      <li>Πάτα <b>→ Steel Calc</b> και το renewal περνά αυτόματα στον υπολογισμό βάρους και κόστους. Εκεί το ελέγχεις με τη μπίλια του yard.</li>
+    </ul>
+    <h3>5. Μετά</h3>
+    <ul>
+      <li>Report S & R → στείλ' το στο γραφείο / στην κλάση. CSV → Excel.</li>
+      <li>Οι περιοχές με S μπαίνουν στη λίστα παρακολούθησης για το επόμενο survey.</li>
+      <li>Για pitting, grooving, edge corrosion και BC hold frames (IACS UR S31) ισχύουν ειδικά κριτήρια της κλάσης. Σημείωσέ τα στις Σημειώσεις.</li>
+    </ul>
+    <h3>Backup</h3>
+    <p>Όλα τα δεδομένα μένουν μόνο στο κινητό. Κάνε backup τακτικά από ⚙ → Backup.</p>
+  </div>
+</section>
+</main>
+
+<div class="sumbar hide" id="sbar"><div class="in" id="skpi"></div></div>
+
+<!-- Vessel modal -->
+<div class="modal" id="vmodal"><div class="box">
+  <div class="row" style="justify-content:space-between"><h2 style="margin:0;font-size:16px;color:var(--navy)">⚙ Πλοίο</h2><button class="sm" data-close>✕</button></div>
+  <div class="grid" style="margin-top:10px">
+    <label>Όνομα<input id="v_name"></label>
+    <label>IMO<input id="v_imo" inputmode="numeric"></label>
+    <label>Τύπος<input id="v_type" placeholder="Bulk carrier / Tanker"></label>
+    <label>Class<input id="v_cls" placeholder="BV / LR / DNV..."></label>
+    <label>Built<input id="v_built" inputmode="numeric"></label>
+    <label>Assessment basis<select id="v_basis"><option value="mean">Mean of readings</option><option value="min">Min reading</option></select></label>
+  </div>
+  <h3 style="font-size:14px;color:var(--navy);margin:14px 0 6px">Allowable diminution % ανά κατηγορία</h3>
+  <p class="note" style="margin-top:0">Βάλε τα όρια της κλάσης του πλοίου. Τα default είναι ενδεικτικά.</p>
+  <div class="grid" id="v_limits"></div>
+  <div class="row" style="margin-top:12px">
+    <button class="p" id="vsave">Αποθήκευση</button>
+    <button id="vnew">+ Νέο πλοίο</button>
+    <button class="d" id="vdel">Διαγραφή πλοίου</button>
+  </div>
+  <h3 style="font-size:14px;color:var(--navy);margin:16px 0 6px">Backup / Restore</h3>
+  <div class="row"><button id="bexp">📤 Export όλων (JSON)</button><button id="bimp">📥 Import</button></div>
+  <textarea id="bta" rows="4" class="hide" style="margin-top:8px" placeholder="Επικόλλησε εδώ το backup JSON και πάτα ξανά Import"></textarea>
+</div></div>
+<div id="toast"></div>
+
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const CATS=[
+ ["deck","Strength deck plating",20],["bottom","Bottom / bilge plating",20],["side","Side shell plating",20],
+ ["inner","Inner bottom plating",20],["hopper","Hopper / topside sloping plating",20],["lbhd","Longitudinal bulkhead plating",20],
+ ["tbhd","Transverse bulkhead plating",25],["hatch","Hatch coaming / cover plating",20],["web","Webs: frames, floors, girders",25],
+ ["stw","Stiffener / longitudinal web",25],["stf","Stiffener flange / face plate",20],["frame","Hold frames (BC)",25],["other","Other / local",30]];
+const CATN=Object.fromEntries(CATS.map(c=>[c[0],c[1]]));
+const STYPES={plate:{name:"Plate",fields:[["L","Length (m)"],["W","Width (m)"],["t","Thk (mm)"]]},
+ angle:{name:"Angle",fields:[["A","Leg A (mm)"],["B","Leg B (mm)"],["t","Thk (mm)"],["L","Length (m)"]]},
+ flat:{name:"Flat bar",fields:[["W","Width (mm)"],["t","Thk (mm)"],["L","Length (m)"]]},
+ other:{name:"Other",fields:[["kgm","kg/m"],["L","Length (m)"]]}};
+const n=v=>{const x=parseFloat(String(v??"").replace(",","."));return isFinite(x)?x:0};
+const f=(v,d=2)=>Number(v).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d});
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+function newVessel(name){return{id:uid(),name:name||"Νέο πλοίο",imo:"",type:"",cls:"",built:"",basis:"mean",
+ limits:Object.fromEntries(CATS.map(c=>[c[0],c[2]])),ut:[],steel:{items:[],price:"",yprice:"",cur:"USD",dens:7.85,allow:0,tol:5}};}
+let S;
+try{S=JSON.parse(localStorage.getItem("hst_v1"));}catch(e){}
+if(!S||!Array.isArray(S.vessels)||!S.vessels.length){S={cur:null,vessels:[newVessel("Πλοίο 1")],tab:"ut"};S.cur=S.vessels[0].id;}
+const V=()=>S.vessels.find(v=>v.id===S.cur)||S.vessels[0];
+function save(){try{localStorage.setItem("hst_v1",JSON.stringify(S));}catch(e){toast("⚠ Δεν αποθηκεύτηκε");}}
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),1800);}
+function share(title,text){
+  if(window.AndroidBridge&&AndroidBridge.share){AndroidBridge.share(title,text);return;}
+  if(navigator.clipboard)navigator.clipboard.writeText(text).then(()=>toast("Αντιγράφηκε ✔"),()=>fallbackCopy(text));else fallbackCopy(text);
+}
+function fallbackCopy(text){$("#bta").classList.remove("hide");openModal();$("#bta").value=text;$("#bta").select();toast("Επίλεξε & αντέγραψε");}
+
+/* ---------- assessment ---------- */
+function parseRd(s){return String(s||"").replace(/,/g,".").split(/[\s;\/]+/).map(parseFloat).filter(x=>isFinite(x)&&x>0);}
+function assess(r,v){
+  const vals=parseRd(r.rd),t0=n(r.t0);if(!vals.length||!t0)return null;
+  const mean=vals.reduce((a,b)=>a+b,0)/vals.length,min=Math.min(...vals),tb=v.basis==="min"?min:mean;
+  const dim=(t0-tb)/t0*100,dimMin=(t0-min)/t0*100;let tR,tS,allow=null,mode;
+  if(n(r.tren)>0){tR=n(r.tren);tS=tR+0.5;mode="CSR t_ren";}
+  else{allow=n(r.allow)||n(v.limits[r.cat])||25;tR=t0*(1-allow/100);tS=t0*(1-0.75*allow/100);mode=allow+"%";}
+  const status=n(r.tren)>0?(tb<=tR?"R":tb<=tS?"S":"OK"):(dim>allow?"R":dim>=0.75*allow?"S":"OK");
+  return{vals,mean,min,tb,dim,dimMin,tR,tS,allow,mode,status,localR:status!=="R"&&min<tR,margin:tb-tR};
+}
+const SNAME={OK:"OK",S:"SUBSTANTIAL",R:"RENEW"};
+function lightHTML(a){
+  if(!a)return"";
+  const msg={OK:"Εντός ορίων — δεν απαιτείται ενέργεια.",S:"Substantial corrosion — δεν κόβεται, αλλά μπαίνει σε παρακολούθηση στα επόμενα surveys. Πύκνωσε τα readings γύρω από το σημείο.",R:"Ξεπερνά το allowable — CROP & RENEW. Οριοθέτησε την έκταση και βάλε L×W."}[a.status];
+  return`<div class="light ${a.status}"><b class="big">${SNAME[a.status]}</b>${msg}
+   <div class="thr"><span>${a.vals.length} rd · mean ${f(a.mean)} · min ${f(a.min)} mm</span><span>Dim. ${f(a.dim,1)}%${a.allow!=null?" / allow "+a.allow+"%":""}</span>
+   <span>S ≤ ${f(a.tS)} mm</span><span>R ${a.allow!=null?"&lt;":"≤"} ${f(a.tR)} mm</span><span>Margin ${a.margin>=0?"+":""}${f(a.margin)} mm</span></div>
+   ${a.localR?`<div style="margin-top:6px">⚠ Κάποιο reading (min ${f(a.min)}) είναι κάτω από το όριο renew — έλεγξε για τοπικό pitting/grooving.</div>`:""}</div>`;
+}
+function thrHTML(cat,t0,v){ // show thresholds before readings
+  t0=n(t0);if(!t0)return"";const al=n(v.limits[cat]);
+  return`<div class="thr"><span>Όρια για ${f(t0,1)} mm (${al}%):</span><span style="color:var(--s)">S ≤ ${f(t0*(1-0.75*al/100))} mm</span><span style="color:var(--r)">R &lt; ${f(t0*(1-al/100))} mm</span></div>`;
+}
+
+/* ---------- vessel select & modal ---------- */
+function renderVsel(){$("#vsel").innerHTML=S.vessels.map(v=>`<option value="${v.id}"${v.id===S.cur?" selected":""}>${esc(v.name)}${v.imo?" · "+esc(v.imo):""}</option>`).join("");}
+$("#vsel").onchange=e=>{S.cur=e.target.value;save();renderAll();};
+function openModal(){const v=V();
+  ["name","imo","type","cls","built","basis"].forEach(k=>$("#v_"+k).value=v[k]||(k==="basis"?"mean":""));
+  $("#v_limits").innerHTML=CATS.map(c=>`<label>${c[1]}<input type="number" inputmode="decimal" step="any" data-lim="${c[0]}" value="${v.limits[c[0]]??c[2]}"></label>`).join("");
+  $("#vmodal").classList.add("on");}
+$("#vedit").onclick=()=>{$("#bta").classList.add("hide");openModal();};
+$("#vmodal").addEventListener("click",e=>{if(e.target.id==="vmodal"||e.target.hasAttribute("data-close"))$("#vmodal").classList.remove("on");});
+$("#vsave").onclick=()=>{const v=V();["name","imo","type","cls","built","basis"].forEach(k=>v[k]=$("#v_"+k).value.trim());
+  if(!v.name)v.name="Πλοίο";$$("[data-lim]").forEach(i=>v.limits[i.dataset.lim]=n(i.value));save();$("#vmodal").classList.remove("on");renderAll();toast("Αποθηκεύτηκε");};
+$("#vnew").onclick=()=>{const v=newVessel("Πλοίο "+(S.vessels.length+1));S.vessels.push(v);S.cur=v.id;save();renderAll();openModal();$("#v_name").select();};
+let delArm=0;$("#vdel").onclick=e=>{if(S.vessels.length<2){toast("Πρέπει να υπάρχει τουλάχιστον ένα πλοίο");return;}
+  if(!delArm){delArm=1;e.target.textContent="Σίγουρα; Πάτα ξανά";setTimeout(()=>{delArm=0;e.target.textContent="Διαγραφή πλοίου";},3000);return;}
+  S.vessels=S.vessels.filter(v=>v.id!==S.cur);S.cur=S.vessels[0].id;delArm=0;e.target.textContent="Διαγραφή πλοίου";save();$("#vmodal").classList.remove("on");renderAll();};
+$("#bexp").onclick=()=>share("HST backup "+new Date().toISOString().slice(0,10),JSON.stringify(S));
+$("#bimp").onclick=()=>{const ta=$("#bta");if(ta.classList.contains("hide")||!ta.value.trim()){ta.classList.remove("hide");ta.value="";ta.focus();toast("Επικόλλησε το backup και πάτα ξανά Import");return;}
+  try{const d=JSON.parse(ta.value);if(!Array.isArray(d.vessels))throw 0;
+    const ids=new Set(S.vessels.map(v=>v.id));let add=0;d.vessels.forEach(v=>{if(ids.has(v.id))v.id=uid();S.vessels.push(v);add++;});
+    save();ta.value="";ta.classList.add("hide");renderAll();toast(`Εισήχθησαν ${add} πλοία`);}catch(e){toast("Μη έγκυρο backup");}};
+
+/* ---------- tabs ---------- */
+function setTab(t){S.tab=t;save();$$(".tabs button").forEach(b=>b.classList.toggle("on",b.dataset.tab===t));
+  ["ut","steel","guide"].forEach(x=>$("#v-"+x).classList.toggle("hide",x!==t));$("#sbar").classList.toggle("hide",t!=="steel");window.scrollTo(0,0);}
+$$(".tabs button").forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
+
+/* ---------- UT ---------- */
+const catOpts=CATS.map(c=>`<option value="${c[0]}">${c[1]}</option>`).join("");
+$("#qcat").innerHTML=catOpts;$("#f_cat").innerHTML=catOpts;
+function quick(){const v=V(),r={cat:$("#qcat").value,t0:$("#qt0").value,rd:$("#qrd").value};const a=assess(r,v);
+  $("#qres").innerHTML=a?lightHTML(a):thrHTML(r.cat,r.t0,v);}
+["qcat","qt0","qrd"].forEach(id=>$("#"+id).addEventListener("input",quick));
+let editId=null;
+function formRec(){return{loc:$("#f_loc").value.trim(),pos:$("#f_pos").value.trim(),mem:$("#f_mem").value.trim(),cat:$("#f_cat").value,
+  t0:$("#f_t0").value,rd:$("#f_rd").value.trim(),tren:$("#f_tren").value,allow:$("#f_allow").value,L:$("#f_L").value,W:$("#f_W").value,note:$("#f_note").value.trim()};}
+function formLive(){const v=V(),r=formRec(),a=assess(r,v);$("#fres").innerHTML=a?lightHTML(a):thrHTML(r.cat,r.t0,v);
+  $("#fdims").classList.toggle("hide",!(a&&a.status==="R"));}
+["f_cat","f_t0","f_rd","f_tren","f_allow"].forEach(id=>$("#"+id).addEventListener("input",formLive));
+$("#fsave").onclick=()=>{const v=V(),r=formRec();
+  if(!n(r.t0)){toast("Βάλε original thickness");$("#f_t0").focus();return;}
+  if(!parseRd(r.rd).length){toast("Βάλε τουλάχιστον ένα reading");$("#f_rd").focus();return;}
+  if(editId){const o=v.ut.find(x=>x.id===editId);Object.assign(o,r);toast("Ενημερώθηκε");}
+  else{r.id=uid();r.date=new Date().toISOString().slice(0,10);v.ut.unshift(r);const a=assess(r,v);toast(a?SNAME[a.status]+" — αποθηκεύτηκε":"Αποθηκεύτηκε");}
+  save();resetForm();renderUT();};
+function resetForm(){editId=null;["f_mem","f_t0","f_rd","f_tren","f_allow","f_L","f_W","f_note"].forEach(id=>$("#"+id).value="");
+  $("#ftitle").textContent="➕ Νέα μέτρηση";$("#fsave").textContent="Αποθήκευση";$("#fcancel").classList.add("hide");$("#fres").innerHTML="";$("#fdims").classList.add("hide");}
+$("#fcancel").onclick=resetForm;
+let filt="all";
+$("#filt").addEventListener("click",e=>{const b=e.target.closest("[data-f]");if(!b)return;filt=b.dataset.f;$$("#filt [data-f]").forEach(x=>x.classList.toggle("on",x===b));renderUTList();});
+$("#search").addEventListener("input",renderUTList);
+function renderUT(){const v=V();
+  const c={OK:0,S:0,R:0};let rkg=0;v.ut.forEach(r=>{const a=assess(r,v);if(a){c[a.status]++;if(a.status==="R")rkg+=n(r.L)*n(r.W)*n(r.t0)*n(v.steel.dens||7.85);}});
+  $("#utk").innerHTML=`<div class="kpi"><b>${v.ut.length}</b>Μετρήσεις</div><div class="kpi OK"><b>${c.OK}</b>OK</div><div class="kpi S"><b>${c.S}</b>Substantial</div><div class="kpi R"><b>${c.R}</b>Renew${rkg?`<br>~${f(rkg/1000,2)} t`:""}</div>`;
+  $("#locs").innerHTML=[...new Set(v.ut.map(r=>r.loc).filter(Boolean))].map(l=>`<option value="${esc(l)}">`).join("");
+  renderUTList();quick();formLive();}
+function renderUTList(){const v=V(),q=$("#search").value.toLowerCase();
+  const rows=v.ut.map(r=>({r,a:assess(r,v)})).filter(({r,a})=>(filt==="all"||(a&&a.status===filt))&&(!q||(r.loc+" "+r.pos+" "+r.mem+" "+r.note).toLowerCase().includes(q)));
+  $("#ulist").innerHTML=rows.length?rows.map(({r,a})=>`<div class="rec ${a?a.status:""}" data-id="${r.id}">
+    <div class="h"><div><div class="t">${esc(r.loc||"—")}${r.pos?" · "+esc(r.pos):""}</div><div class="note">${esc(r.mem||"")} · ${CATN[r.cat]||""}</div></div>
+    ${a?`<span class="badge b-${a.status}">${SNAME[a.status]}</span>`:""}</div>
+    ${a?`<div class="m">t₀ ${f(n(r.t0),1)} · mean ${f(a.mean)} · min ${f(a.min)} · dim ${f(a.dim,1)}% (${a.mode}) · R${a.allow!=null?"<":"≤"}${f(a.tR)}${a.localR?" · ⚠ local":""}${a.status==="R"&&n(r.L)&&n(r.W)?` · ${r.L}×${r.W} m ≈ ${f(n(r.L)*n(r.W)*n(r.t0)*n(v.steel.dens||7.85),0)} kg`:""}</div>`:""}
+    ${r.note?`<div class="m">📝 ${esc(r.note)}</div>`:""}
+    <div class="row" style="margin-top:6px"><button class="sm" data-act="edit">✎ Edit</button><button class="sm" data-act="dup">⧉ Copy</button>
+    ${a&&a.status==="R"?`<button class="sm" data-act="steel">→ Steel Calc</button>`:""}<button class="sm d" data-act="del">✕</button></div></div>`).join("")
+    :`<p class="note">Καμία μέτρηση${filt!=="all"?" σε αυτό το φίλτρο":""}.</p>`;}
+$("#ulist").addEventListener("click",e=>{const b=e.target.closest("[data-act]");if(!b)return;const v=V(),id=b.closest(".rec").dataset.id,r=v.ut.find(x=>x.id===id);
+  if(b.dataset.act==="del"){if(b.dataset.arm){v.ut=v.ut.filter(x=>x.id!==id);save();renderUT();}else{b.dataset.arm=1;b.textContent="Σίγουρα;";setTimeout(()=>{if(b.isConnected){delete b.dataset.arm;b.textContent="✕";}},2500);}}
+  if(b.dataset.act==="edit"||b.dataset.act==="dup"){
+    const m={f_loc:"loc",f_pos:"pos",f_mem:"mem",f_cat:"cat",f_t0:"t0",f_rd:"rd",f_tren:"tren",f_allow:"allow",f_L:"L",f_W:"W",f_note:"note"};
+    Object.entries(m).forEach(([fid,k])=>$("#"+fid).value=r[k]??"");
+    if(b.dataset.act==="edit"){editId=id;$("#ftitle").textContent="✎ Επεξεργασία μέτρησης";$("#fsave").textContent="Ενημέρωση";$("#fcancel").classList.remove("hide");}
+    else{editId=null;$("#f_rd").value="";$("#ftitle").textContent="➕ Νέα μέτρηση (αντίγραφο)";}
+    formLive();$("#formcard").scrollIntoView({behavior:"smooth"});}
+  if(b.dataset.act==="steel"){toSteel([r]);}
+});
+function toSteel(recs){const v=V();let k=0,miss=0;
+  recs.forEach(r=>{if(!(n(r.L)&&n(r.W))){miss++;return;}
+    if(v.steel.items.some(i=>i.src===r.id)){return;}
+    v.steel.items.push({id:uid(),src:r.id,type:"plate",desc:[r.loc,r.pos,r.mem].filter(Boolean).join(" / "),L:r.L,W:r.W,t:r.t0,qty:1,yard:"",yunit:"kg"});k++;});
+  save();toast(`${k} item(s) στο Steel Calc${miss?` · ${miss} χωρίς L×W`:""}`);}
+$("#r2s").onclick=()=>{const v=V();toSteel(v.ut.filter(r=>{const a=assess(r,v);return a&&a.status==="R";}));};
+function hdr(v){return`${v.name}${v.imo?" (IMO "+v.imo+")":""}${v.cls?" · Class "+v.cls:""}\nUT assessment — ${new Date().toISOString().slice(0,10)} — basis: ${v.basis==="min"?"min reading":"mean of readings"}\n`;}
+$("#rep").onclick=()=>{const v=V();let s=hdr(v);const L={R:[],S:[]};
+  v.ut.forEach(r=>{const a=assess(r,v);if(a&&a.status!=="OK")L[a.status].push({r,a});});
+  ["R","S"].forEach(k=>{s+=`\n${k==="R"?"RENEW (crop & renew)":"SUBSTANTIAL CORROSION (monitor)"} — ${L[k].length}\n`;
+    L[k].forEach(({r,a},i)=>{s+=`${i+1}. ${[r.loc,r.pos,r.mem].filter(Boolean).join(" / ")} [${CATN[r.cat]}] t0 ${r.t0} mm, mean ${f(a.mean)}, min ${f(a.min)}, dim ${f(a.dim,1)}% (${a.mode})${k==="R"&&n(r.L)?`, renewal ${r.L}x${r.W} m`:""}${r.note?" — "+r.note:""}\n`;});});
+  share("UT report "+v.name,s);};
+$("#csv").onclick=()=>{const v=V();const rows=[["Date","Location","Frame/Pos","Member","Category","t0 mm","Readings","Mean","Min","Dim %","Criterion","S limit","R limit","Status","Renew L m","Renew W m","Notes"]];
+  v.ut.forEach(r=>{const a=assess(r,v);rows.push([r.date,r.loc,r.pos,r.mem,CATN[r.cat],r.t0,r.rd,a?a.mean.toFixed(2):"",a?a.min.toFixed(2):"",a?a.dim.toFixed(1):"",a?a.mode:"",a?a.tS.toFixed(2):"",a?a.tR.toFixed(2):"",a?SNAME[a.status]:"",r.L||"",r.W||"",r.note]);});
+  share("UT CSV "+v.name,rows.map(r=>r.map(x=>String(x??"").replace(/\t|\n/g," ")).join("\t")).join("\n"));};
+
+/* ---------- STEEL ---------- */
+const ST=()=>V().steel;
+function unitKg(it){const d=n(ST().dens)||7.85;
+  switch(it.type){case"plate":return n(it.L)*n(it.W)*n(it.t)*d;case"angle":{const t=n(it.t),a=n(it.A)+n(it.B)-t;return a>0?t*a*n(it.L)*d/1000:0;}
+  case"flat":return n(it.W)*n(it.t)*n(it.L)*d/1000;case"other":return n(it.kgm)*n(it.L);}return 0;}
+function sc(it){const u=unitKg(it),net=u*n(it.qty),tot=net*(1+n(ST().allow)/100);const y=it.yard===""||it.yard==null?null:n(it.yard)*(it.yunit==="t"?1000:1);
+  return{u,net,tot,y,diff:y==null?null:y-tot,pct:y==null||!tot?null:(y-tot)/tot*100};}
+function renderSteel(){const st=ST();["price","yprice","cur","dens","allow","tol"].forEach(k=>$("#s_"+k).value=st[k]??"");
+  const box=$("#items");box.innerHTML=st.items.length?"":'<div class="card note">Πρόσθεσε items ή στείλε τα Renew από το UT Gauging.</div>';
+  st.items.forEach((it,i)=>{const el=document.createElement("div");el.className="item";el.dataset.id=it.id;
+    el.innerHTML=`<div class="item-head"><span class="no">${i+1}</span><span class="flag">${STYPES[it.type].name}</span>
+      <input data-k="desc" placeholder="Bill item / location" value="${esc(it.desc)}"><button class="sm" data-dup>⧉</button><button class="sm d" data-del>✕</button></div>
+      <div class="grid">${STYPES[it.type].fields.map(([k,l])=>`<label>${l}<input type="number" inputmode="decimal" step="any" data-k="${k}" value="${esc(it[k])}"></label>`).join("")}
+      <label>Qty (pcs)<input type="number" inputmode="decimal" step="any" data-k="qty" value="${esc(it.qty)}"></label>
+      <label>Yard weight<input type="number" inputmode="decimal" step="any" data-k="yard" value="${esc(it.yard)}" placeholder="από bill"></label>
+      <label>Μονάδα<select data-k="yunit"><option value="kg"${it.yunit!=="t"?" selected":""}>kg</option><option value="t"${it.yunit==="t"?" selected":""}>t</option></select></label></div>
+      <div class="res"></div>`;box.appendChild(el);resItem(el,it);});
+  sumSteel();}
+function resItem(el,it){const c=sc(it),tol=n(ST().tol);let h=`<span>Unit <b>${f(c.u,1)} kg</b></span><span>Calc <b>${f(c.tot/1000,3)} t</b></span>`;
+  if(c.y!=null){const cls=c.pct>tol?"pos":c.pct<-tol?"neg":"mut";h+=`<span>Yard <b>${f(c.y/1000,3)} t</b></span><span class="${cls}">Δ <b>${c.diff>0?"+":""}${f(c.diff,1)} kg (${c.pct>0?"+":""}${f(c.pct,1)}%)</b>${c.pct>tol?" ⚠":""}</span>`;}
+  el.querySelector(".res").innerHTML=h;}
+function stTot(){const by={},T={tot:0,y:0,yc:0,nY:0};ST().items.forEach(it=>{const c=sc(it),k=STYPES[it.type].name;by[k]=by[k]||{tot:0,y:0,yc:0,cnt:0,q:0};
+  by[k].tot+=c.tot;by[k].cnt++;by[k].q+=n(it.qty);T.tot+=c.tot;if(c.y!=null){by[k].y+=c.y;by[k].yc+=c.tot;T.y+=c.y;T.yc+=c.tot;T.nY++;}});return{by,T};}
+function pr(){const st=ST(),p=n(st.price);return{p,yp:st.yprice===""||st.yprice==null?p:n(st.yprice),cur:st.cur||"USD"};}
+function sumSteel(){const{by,T}=stTot(),{p,yp,cur}=pr();
+  $("#skpi").innerHTML=`<div class="k">Calc<b>${f(T.tot/1000,3)} t</b></div><div class="k">Calc cost<b>${f(T.tot/1000*p,0)} ${cur}</b></div>`+
+   (T.nY?`<div class="k">Yard Δ (${T.nY})<b class="${T.y-T.yc>0?"pos":"neg"}">${T.y-T.yc>0?"+":""}${f((T.y-T.yc)/1000,3)} t</b></div>`:`<div class="k">Items<b>${ST().items.length}</b></div>`);
+  let t=`<tr><th>Type</th><th>Items</th><th>Qty</th><th>Calc t</th><th>Cost</th><th>Yard t</th><th>Δ t</th></tr>`;
+  Object.entries(by).forEach(([k,b])=>t+=`<tr><td>${k}</td><td>${b.cnt}</td><td>${f(b.q,0)}</td><td>${f(b.tot/1000,3)}</td><td>${f(b.tot/1000*p,0)}</td><td>${b.yc||b.y?f(b.y/1000,3):"–"}</td><td>${b.yc||b.y?f((b.y-b.yc)/1000,3):"–"}</td></tr>`);
+  t+=`<tr><th>Σύνολο</th><th>${ST().items.length}</th><th></th><th>${f(T.tot/1000,3)}</th><th>${f(T.tot/1000*p,0)}</th><th>${T.nY?f(T.y/1000,3):"–"}</th><th>${T.nY?f((T.y-T.yc)/1000,3):"–"}</th></tr>`;
+  if(T.nY)t+=`<tr><td colspan="7" class="note" style="text-align:left">Yard cost (${T.nY} items @ ${f(yp)}): ${f(T.y/1000*yp)} ${cur} · Calc cost ίδιων items: ${f(T.yc/1000*p)} ${cur}</td></tr>`;
+  $("#sumtable").innerHTML=t;}
+$$("[data-add]").forEach(b=>b.onclick=()=>{const it={id:uid(),type:b.dataset.add,desc:"",qty:1,yard:"",yunit:"kg"};STYPES[it.type].fields.forEach(([k])=>it[k]="");
+  ST().items.push(it);save();renderSteel();setTimeout(()=>{const e=$$(".item");e[e.length-1]?.scrollIntoView({behavior:"smooth",block:"center"});},50);});
+function onItem(e){const el=e.target.closest(".item"),k=e.target.dataset.k;if(!el||!k)return;const it=ST().items.find(x=>x.id===el.dataset.id);it[k]=e.target.value;save();resItem(el,it);sumSteel();}
+$("#items").addEventListener("input",onItem);$("#items").addEventListener("change",onItem);
+$("#items").addEventListener("click",e=>{const el=e.target.closest(".item");if(!el)return;const its=ST().items,i=its.findIndex(x=>x.id===el.dataset.id);
+  if(e.target.hasAttribute("data-del")){its.splice(i,1);save();renderSteel();}
+  if(e.target.hasAttribute("data-dup")){its.splice(i+1,0,Object.assign({},its[i],{id:uid(),src:null}));save();renderSteel();}});
+["price","yprice","cur","dens","allow","tol"].forEach(k=>$("#s_"+k).addEventListener("input",e=>{ST()[k]=e.target.value;save();$$(".item").forEach(el=>resItem(el,ST().items.find(x=>x.id===el.dataset.id)));sumSteel();}));
+function dims(it){switch(it.type){case"plate":return`${it.L} x ${it.W} m x ${it.t} mm`;case"angle":return`L ${it.A}x${it.B}x${it.t} mm x ${it.L} m`;case"flat":return`FB ${it.W}x${it.t} mm x ${it.L} m`;case"other":return`${it.kgm} kg/m x ${it.L} m`;}}
+$("#scsv").onclick=()=>{const{p}=pr();const rows=[["No","Type","Description","Dimensions","Qty","Unit kg","Calc kg","Calc t","Yard t","Δ kg","Δ %","Calc cost"]];
+  ST().items.forEach((it,i)=>{const c=sc(it);rows.push([i+1,STYPES[it.type].name,it.desc,dims(it),it.qty,c.u.toFixed(1),c.tot.toFixed(1),(c.tot/1000).toFixed(3),c.y==null?"":(c.y/1000).toFixed(3),c.diff==null?"":c.diff.toFixed(1),c.pct==null?"":c.pct.toFixed(1),(c.tot/1000*p).toFixed(2)]);});
+  share("Steel calc "+V().name,rows.map(r=>r.join("\t")).join("\n"));};
+$("#stxt").onclick=()=>{const{T}=stTot(),{p,yp,cur}=pr(),st=ST(),v=V();let s=`Steel renewal check — ${v.name}\nItems: ${st.items.length} | Density ${st.dens} t/m3${n(st.allow)?` | Allowance ${st.allow}%`:""}\n`;
+  s+=`Calculated: ${f(T.tot/1000,3)} t | @ ${f(p)} ${cur}/t = ${f(T.tot/1000*p)} ${cur}\n`;
+  if(T.nY){s+=`Yard billed (${T.nY} items): ${f(T.y/1000,3)} t | @ ${f(yp)} ${cur}/t = ${f(T.y/1000*yp)} ${cur}\nDifference: ${f((T.y-T.yc)/1000,3)} t\n\nItems over tolerance (${st.tol}%):\n`;
+    st.items.forEach((it,i)=>{const c=sc(it);if(c.pct!=null&&c.pct>n(st.tol))s+=`- #${i+1} ${it.desc||STYPES[it.type].name} (${dims(it)}): yard ${f(c.y,1)} kg vs calc ${f(c.tot,1)} kg (+${f(c.pct,1)}%)\n`;});}
+  share("Steel summary "+v.name,s);};
+let clr=0;$("#sclear").onclick=e=>{if(!clr){clr=1;e.target.textContent="Σίγουρα;";setTimeout(()=>{clr=0;e.target.textContent="Καθαρισμός";},3000);return;}
+  ST().items=[];clr=0;e.target.textContent="Καθαρισμός";save();renderSteel();};
+
+function renderAll(){renderVsel();resetForm();renderUT();renderSteel();setTab(S.tab||"ut");}
+renderAll();
+</script>
+</body>
+</html>
