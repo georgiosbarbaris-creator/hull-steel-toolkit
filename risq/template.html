@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>RISQ Walk-Round</title>
+<!--PWA-->
+<style>
+:root{--bg:#eef1f4;--card:#fff;--ink:#14212e;--muted:#5a6876;--line:#d3dae1;--navy:#1d3a5c;--acc:#c8551c;
+--ok:#22744a;--okb:#dff1e7;--f:#b3261e;--fb:#fbe2df;--na:#6b7480;--nab:#e7eaee;--hr:#9a6700;--hrb:#fff3d1}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1720;--card:#17222e;--ink:#e3e9ef;--muted:#97a5b3;--line:#2a3846;--navy:#8fb4dc;--acc:#ef8a55;
+--ok:#5cc58b;--okb:#173326;--f:#f08077;--fb:#3b1d1b;--na:#9aa4ae;--nab:#26303a;--hr:#e3b341;--hrb:#3a2f10}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+header{position:sticky;top:0;z-index:5;background:#1d3a5c;color:#fff;padding:calc(10px + env(safe-area-inset-top)) 14px 10px}
+header .r{display:flex;align-items:center;gap:10px}
+header h1{margin:0;font-size:17px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+header .sub{font-size:12px;opacity:.8}
+header button{background:rgba(255,255,255,.14);color:#fff;border:0;border-radius:8px;padding:7px 11px;font:600 15px system-ui}
+.bar{height:6px;background:rgba(255,255,255,.2);border-radius:4px;margin-top:8px;overflow:hidden}.bar i{display:block;height:100%;background:#7fd1a3}
+main{max-width:760px;margin:0 auto;padding:10px 12px calc(90px + env(safe-area-inset-bottom))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:10px 0}
+h2{font-size:15px;color:var(--navy);margin:4px 0 10px}
+.note{font-size:13px;color:var(--muted)}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;width:100%}
+label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+button{font:inherit;cursor:pointer}
+.btn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:10px 14px;font-weight:600}
+.btn.p{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.d{color:var(--f)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;text-align:left;color:var(--ink)}
+.tile b{display:block;font-size:17px;margin-bottom:4px}
+.tile .mini{height:5px;background:var(--nab);border-radius:3px;margin-top:8px;overflow:hidden}.tile .mini i{display:block;height:100%;background:var(--ok)}
+.tile .fc{color:var(--f);font-weight:700}
+.ins{display:flex;justify-content:space-between;align-items:center;gap:10px;cursor:pointer}
+.tog{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.sw{position:relative;width:50px;height:30px;flex:0 0 50px}.sw input{display:none}.sw span{position:absolute;inset:0;background:var(--nab);border-radius:20px;transition:.2s}
+.sw span:before{content:"";position:absolute;width:24px;height:24px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.sw input:checked+span{background:var(--hr)}.sw input:checked+span:before{transform:translateX(20px)}
+.seg{display:flex;background:var(--nab);border-radius:10px;padding:3px;gap:3px}.seg button{flex:1;border:0;background:none;padding:7px;border-radius:8px;font-weight:600;color:var(--muted);font-size:14px}
+.seg button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.15)}
+.q{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--line);border-radius:14px;padding:12px 14px;margin:10px 0}
+.q.ok{border-left-color:var(--ok)}.q.f{border-left-color:var(--f)}.q.na{border-left-color:var(--na);opacity:.75}
+.qh{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--muted)}
+.qh .id{font:700 13px ui-monospace,Menlo,monospace;color:var(--navy)}
+.hrt{background:var(--hrb);color:var(--hr);font-weight:700;padding:1px 7px;border-radius:10px}
+.q .t{font-weight:650;margin:6px 0}
+.q ul{margin:4px 0 8px;padding-left:20px;font-size:14px}.q li{margin:3px 0}
+.ans{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.ans button{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:11px 4px;font-weight:700;font-size:15px}
+.ans button.on[data-v=ok]{background:var(--ok);border-color:var(--ok);color:#fff}
+.ans button.on[data-v=f]{background:var(--f);border-color:var(--f);color:#fff}
+.ans button.on[data-v=na]{background:var(--na);border-color:var(--na);color:#fff}
+.more{margin-top:8px}.more summary{font-size:13px;color:var(--acc);font-weight:600;cursor:pointer;list-style:none}
+.more pre{white-space:pre-wrap;font:14px/1.45 system-ui,sans-serif;background:var(--bg);border-radius:10px;padding:10px;margin:8px 0 0}
+.fbox{margin-top:10px;display:none}.q.f .fbox{display:block}
+.ph{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}.ph div{position:relative}.ph img{width:76px;height:76px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
+.ph button{position:absolute;top:2px;right:2px;border:0;background:rgba(0,0,0,.6);color:#fff;border-radius:6px;font-size:12px;padding:1px 6px}
+.cam{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-weight:600;font-size:14px;color:var(--ink);cursor:pointer}
+.nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;padding:6px 8px calc(6px + env(safe-area-inset-bottom));z-index:6}
+.nav button{flex:1;border:0;background:none;color:var(--muted);font:600 12px system-ui;padding:6px 2px;display:flex;flex-direction:column;align-items:center;gap:2px}
+.nav button b{font-size:20px;line-height:1}.nav button.on{color:var(--acc)}
+.fl{border-left:4px solid var(--f);padding:8px 10px;margin:8px 0;background:var(--card);border-radius:10px;border:1px solid var(--line);border-left-width:4px;border-left-color:var(--f)}
+.hide{display:none!important}
+#toast{position:fixed;left:50%;top:calc(70px + env(safe-area-inset-top));transform:translateX(-50%);background:#1d3a5c;color:#fff;padding:9px 14px;border-radius:10px;font-size:14px;opacity:0;transition:.2s;pointer-events:none;z-index:20}
+#toast.show{opacity:1}
+</style>
+</head>
+<body>
+<header>
+  <div class="r"><button id="back" class="hide">‹</button><div style="flex:1;min-width:0"><h1 id="ttl">RISQ 3.2 Walk-Round</h1><div class="sub" id="sub"></div></div></div>
+  <div class="bar hide" id="pbar"><i id="pfill"></i></div>
+</header>
+<main>
+  <!-- LIST OF INSPECTIONS -->
+  <section id="v-list">
+    <div class="card"><h2>Πώς δουλεύει</h2>
+      <p class="note" style="margin:0">1. Νέα επιθεώρηση → όνομα πλοίου. 2. Διάλεξε χώρο (Bridge, Deck, ER…) και περπάτα τον. 3. Σε κάθε ερώτηση: <b>✓ OK</b>, <b>✗ Finding</b> (σημείωση + φωτογραφία) ή <b>N/A</b>. 4. Στο τέλος: <b>Findings → PDF</b>.<br>«ℹ Τι κοιτάει ο inspector» = πότε γράφεται finding. Λειτουργεί offline.</p></div>
+    <button class="btn p" id="newIns" style="width:100%;padding:14px">+ Νέα επιθεώρηση</button>
+    <div id="insList"></div>
+  </section>
+
+  <!-- NEW / EDIT INSPECTION -->
+  <section id="v-edit" class="hide">
+    <div class="card">
+      <h2>Στοιχεία επιθεώρησης</h2>
+      <div class="g2"><label>Πλοίο<input id="e_vessel"></label><label>IMO<input id="e_imo" inputmode="numeric"></label>
+      <label>Λιμάνι<input id="e_port"></label><label>Ημερομηνία<input id="e_date" type="date"></label></div>
+      <label style="margin-top:8px">Επιθεωρητής<input id="e_by"></label>
+      <details class="more"><summary>Section 1 — Vessel particulars (προαιρετικό)</summary><div id="e_s1" style="margin-top:8px"></div></details>
+      <div class="row" style="margin-top:12px"><button class="btn p" id="e_save">Αποθήκευση</button><button class="btn d hide" id="e_del">Διαγραφή</button></div>
+    </div>
+  </section>
+
+  <!-- INSPECTION HOME (areas) -->
+  <section id="v-home" class="hide">
+    <div class="card tog"><div><b>★ Μόνο high-risk</b><div class="note">Γρήγορη επιθεώρηση: οι ερωτήσεις με το μεγαλύτερο βάρος</div></div><label class="sw"><input type="checkbox" id="hrOnly"><span></span></label></div>
+    <div class="tiles" id="tiles"></div>
+    <div class="row" style="margin-top:12px"><button class="btn" id="editIns">✎ Στοιχεία</button></div>
+  </section>
+
+  <!-- AREA QUESTIONS -->
+  <section id="v-area" class="hide">
+    <div class="seg" id="aflt"><button data-f="open" class="on">Ανοιχτά</button><button data-f="all">Όλα</button><button data-f="f">Findings</button></div>
+    <div id="qs"></div>
+    <div class="row" style="justify-content:space-between;margin-top:6px"><button class="btn" id="prevA">‹ Προηγ. χώρος</button><button class="btn p" id="nextA">Επόμενος χώρος ›</button></div>
+  </section>
+
+  <!-- FINDINGS -->
+  <section id="v-find" class="hide">
+    <div class="card"><div class="row" style="justify-content:space-between"><h2 style="margin:0">Σύνοψη</h2></div><div id="sum" style="margin-top:8px"></div>
+      <div class="row" style="margin-top:12px"><button class="btn p" id="xPdf">📄 PDF report</button><button class="btn" id="xTxt">📤 Κείμενο</button><button class="btn" id="xCsv">📊 Excel</button></div></div>
+    <div id="flist"></div>
+  </section>
+</main>
+<nav class="nav hide" id="nav"><button data-go="home" class="on"><b>⌂</b>Χώροι</button><button data-go="find"><b>⚑</b>Findings</button><button data-go="list"><b>☰</b>Επιθεωρήσεις</button></nav>
+<div id="toast"></div>
+<script>
+const DATA=/*DATA*/;
+const AREAS=[["DOC","📋","Documents","Γραφείο Master / ship's office"],["BRG","🧭","Bridge","Γέφυρα, ECDIS, charts, GMDSS"],["LSA","🛟","LSA / FFE","Lifeboats, rafts, fire equipment"],
+ ["DECK","⚓","Deck & mooring","Mooring, cranes, ladders, pollution"],["HOLD","📦","Holds & hatches","Cargo holds, hatch covers, access"],["ER","⚙️","Engine room","Machinery, OWS, fire, steering"],["ACC","🛏","Accommodation","Galley, cabins, hospital, welfare"]];
+const AN=Object.fromEntries(AREAS.map(a=>[a[0],a[2]]));
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),1800);}
+let S;try{S=JSON.parse(localStorage.getItem("risq_wr_v2"));}catch(e){}if(!S||!Array.isArray(S.ins))S={ins:[]};
+function save(){try{localStorage.setItem("risq_wr_v2",JSON.stringify(S));}catch(e){toast("⚠ Δεν αποθηκεύτηκε");}}
+const IDB={db:null,open(){return this.db?Promise.resolve(this.db):new Promise((res,rej)=>{const r=indexedDB.open("risq",1);r.onupgradeneeded=()=>r.result.createObjectStore("b");r.onsuccess=()=>{this.db=r.result;res(this.db);};r.onerror=()=>rej(r.error);});},
+ async tx(m,fn){const d=await this.open();return new Promise((res,rej)=>{const t=d.transaction("b",m),q=fn(t.objectStore("b"));t.oncomplete=()=>res(q&&q.result);t.onerror=()=>rej(t.error);});},
+ put(k,v){return this.tx("readwrite",s=>s.put(v,k));},get(k){return this.tx("readonly",s=>s.get(k));},del(k){return this.tx("readwrite",s=>s.delete(k));}};
+function fileToJpeg(file,max=1280,q=.72){return new Promise((res,rej)=>{const u=URL.createObjectURL(file),im=new Image();im.onload=()=>{const k=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement("canvas");
+  c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);res(c.toDataURL("image/jpeg",q));};im.onerror=rej;im.src=u;});}
+const loadImg=src=>new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=src;});
+function b64(u8){let s="";for(let i=0;i<u8.length;i+=0x8000)s+=String.fromCharCode.apply(null,u8.subarray(i,i+0x8000));return btoa(s);}
+function d2blob(d){const[h,b]=d.split(","),m=h.match(/:(.*?);/)[1],bin=atob(b),a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return new Blob([a],{type:m});}
+async function shareFiles(files,title){if(window.AndroidBridge&&AndroidBridge.shareFiles){AndroidBridge.shareFiles(JSON.stringify(files),title);return;}
+  const fl=files.map(f=>new File([d2blob(f.dataUrl)],f.name,{type:f.mime}));
+  if(navigator.canShare&&navigator.canShare({files:fl})){try{await navigator.share({files:fl,title});}catch(e){}return;}
+  fl.forEach(f=>{const a=document.createElement("a");a.href=URL.createObjectURL(f);a.download=f.name;document.body.appendChild(a);a.click();a.remove();});toast("Κατέβηκε");}
+async function shareText(title,text){if(navigator.share){try{await navigator.share({title,text});return;}catch(e){return;}}
+  try{await navigator.clipboard.writeText(text);toast("Αντιγράφηκε ✔");}catch(e){toast("Δεν έγινε αντιγραφή");}}
+
+/* ---------- state ---------- */
+let cur=null,area=null,aflt="open",view="list";
+const I=()=>S.ins.find(x=>x.id===cur);
+const QS=ins=>DATA.q.filter(q=>!ins.hr||q.h);
+function stats(ins,a){const qs=QS(ins).filter(q=>!a||q.a===a);let d=0,f=0;qs.forEach(q=>{const v=ins.st[q.id];if(v)d++;if(v==="f")f++;});return{n:qs.length,d,f};}
+function go(v){view=v;["list","edit","home","area","find"].forEach(x=>$("#v-"+x).classList.toggle("hide",x!==v));
+  $("#nav").classList.toggle("hide",!cur||v==="list"||v==="edit");$$("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.go===v||(v==="area"&&b.dataset.go==="home")));
+  $("#back").classList.toggle("hide",v==="list");hdr();window.scrollTo(0,0);
+  ({list:rList,home:rHome,area:rArea,find:rFind,edit:()=>{}})[v]();}
+function hdr(){const ins=I();if(!ins||view==="list"){$("#ttl").textContent="RISQ 3.2 Walk-Round";$("#sub").textContent=`${DATA.q.length} ερωτήσεις · offline`;$("#pbar").classList.add("hide");return;}
+  const s=stats(ins);$("#ttl").textContent=view==="area"?AN[area]:ins.vessel;$("#sub").textContent=`${ins.vessel}${ins.port?" · "+ins.port:""} · ${s.d}/${s.n} · ${s.f} findings${ins.hr?" · ★":""}`;
+  $("#pbar").classList.remove("hide");$("#pfill").style.width=(s.n?s.d/s.n*100:0)+"%";}
+$("#back").onclick=()=>go(view==="area"||view==="find"?"home":view==="home"?"list":cur&&view==="edit"&&I()?"home":"list");
+$$("#nav button").forEach(b=>b.onclick=()=>{if(b.dataset.go==="list")cur=null;go(b.dataset.go);});
+
+/* ---------- list ---------- */
+function rList(){const box=$("#insList");box.innerHTML=S.ins.length?"":'<p class="note" style="text-align:center;margin-top:20px">Καμία επιθεώρηση ακόμα.</p>';
+  S.ins.slice().reverse().forEach(ins=>{const s=stats(ins),d=document.createElement("div");d.className="card ins";
+    d.innerHTML=`<div><b>${esc(ins.vessel)}</b><div class="note">${esc(ins.date||"")}${ins.port?" · "+esc(ins.port):""}${ins.hr?" · ★ high-risk":""}</div></div>
+      <div style="text-align:right"><b>${Math.round(s.n?s.d/s.n*100:0)}%</b><div class="note" style="color:${s.f?"var(--f)":""}">${s.f} findings</div></div>`;
+    d.onclick=()=>{cur=ins.id;go("home");};box.appendChild(d);});}
+$("#newIns").onclick=()=>{cur=null;openEdit({});};
+function openEdit(ins){$("#e_vessel").value=ins.vessel||"";$("#e_imo").value=ins.imo||"";$("#e_port").value=ins.port||"";$("#e_date").value=ins.date||new Date().toISOString().slice(0,10);$("#e_by").value=ins.by||"";
+  $("#e_s1").innerHTML=DATA.s1.map(p=>`<label style="margin:6px 0">${esc(p.id)} ${esc(p.q)}<input data-s1="${esc(p.id)}" value="${esc((ins.s1||{})[p.id]||"")}"></label>`).join("");
+  $("#e_del").classList.toggle("hide",!ins.id);go("edit");$("#ttl").textContent=ins.id?"Στοιχεία":"Νέα επιθεώρηση";}
+$("#editIns").onclick=()=>openEdit(I());
+$("#e_save").onclick=()=>{const v=$("#e_vessel").value.trim();if(!v){toast("Βάλε όνομα πλοίου");$("#e_vessel").focus();return;}
+  let ins=I();if(!ins){ins={id:uid(),st:{},nt:{},ph:{},hr:false,s1:{}};S.ins.push(ins);cur=ins.id;}
+  Object.assign(ins,{vessel:v,imo:$("#e_imo").value.trim(),port:$("#e_port").value.trim(),date:$("#e_date").value,by:$("#e_by").value.trim()});
+  $$("[data-s1]").forEach(i=>ins.s1[i.dataset.s1]=i.value.trim());save();go("home");};
+let delArm=0;$("#e_del").onclick=async e=>{if(!delArm){delArm=1;e.target.textContent="Σίγουρα; Πάτα ξανά";setTimeout(()=>{delArm=0;e.target.textContent="Διαγραφή";},3000);return;}
+  const ins=I();for(const k of Object.values(ins.ph).flat())await IDB.del(k).catch(()=>{});S.ins=S.ins.filter(x=>x.id!==cur);cur=null;save();delArm=0;e.target.textContent="Διαγραφή";go("list");};
+
+/* ---------- home ---------- */
+$("#hrOnly").onchange=e=>{I().hr=e.target.checked;save();rHome();hdr();};
+function rHome(){const ins=I();$("#hrOnly").checked=!!ins.hr;
+  $("#tiles").innerHTML=AREAS.map(([k,ic,nm,ds])=>{const s=stats(ins,k);return`<button class="tile" data-a="${k}"><b>${ic} ${nm}</b><div class="note">${ds}</div>
+    <div class="note" style="margin-top:6px">${s.d}/${s.n}${s.f?` · <span class="fc">${s.f} ✗</span>`:""}${s.d===s.n&&s.n?" ✓":""}</div><div class="mini"><i style="width:${s.n?s.d/s.n*100:0}%"></i></div></button>`;}).join("");
+  $$("#tiles .tile").forEach(t=>t.onclick=()=>{area=t.dataset.a;aflt=stats(ins,area).d===stats(ins,area).n?"all":"open";go("area");});}
+
+/* ---------- area ---------- */
+$("#aflt").addEventListener("click",e=>{const b=e.target.closest("[data-f]");if(!b)return;aflt=b.dataset.f;rArea();});
+function rArea(){const ins=I();$$("#aflt button").forEach(b=>b.classList.toggle("on",b.dataset.f===aflt));
+  const qs=QS(ins).filter(q=>q.a===area).filter(q=>aflt==="all"||(aflt==="open"?!ins.st[q.id]:ins.st[q.id]==="f"));
+  const box=$("#qs");box.innerHTML=qs.length?"":`<div class="card" style="text-align:center">${aflt==="open"?"✓ Όλα τα σημεία του χώρου ελέγχθηκαν.":"Τίποτα εδώ."}</div>`;
+  qs.forEach(q=>box.appendChild(qCard(ins,q)));
+  const i=AREAS.findIndex(a=>a[0]===area);$("#prevA").style.visibility=i>0?"":"hidden";$("#nextA").textContent=i<AREAS.length-1?`${AREAS[i+1][2]} ›`:"Findings ›";}
+function qCard(ins,q){const el=document.createElement("article"),v=ins.st[q.id]||"";el.className="q "+v;el.dataset.id=q.id;
+  el.innerHTML=`<div class="qh"><span class="id">${esc(q.id)}</span>${q.h?'<span class="hrt">★ high-risk</span>':""}<span style="flex:1"></span><span>${esc(q.sn)}</span></div>
+   <div class="t">${esc(q.g)}</div>${q.c.length?`<ul>${q.c.map(c=>`<li>${esc(c)}</li>`).join("")}</ul>`:""}
+   <div class="ans"><button data-v="ok" class="${v==="ok"?"on":""}">✓ OK</button><button data-v="f" class="${v==="f"?"on":""}">✗ Finding</button><button data-v="na" class="${v==="na"?"on":""}">N/A</button></div>
+   <div class="fbox"><textarea rows="2" placeholder="Τι βρέθηκε / ενέργεια">${esc(ins.nt[q.id]||"")}</textarea>
+     <div class="row" style="margin-top:6px"><label class="cam">📷 Φωτογραφία<input type="file" accept="image/*" multiple style="display:none"></label></div><div class="ph"></div></div>
+   <details class="more"><summary>ℹ Τι κοιτάει ο inspector</summary><pre>${esc(q.x)}</pre><p class="note" style="margin:8px 0 0"><b>RISQ:</b> ${esc(q.o)}</p></details>`;
+  el.querySelectorAll(".ans button").forEach(b=>b.onclick=()=>{const nv=ins.st[q.id]===b.dataset.v?"":b.dataset.v;if(nv)ins.st[q.id]=nv;else delete ins.st[q.id];save();
+    el.className="q "+nv;el.querySelectorAll(".ans button").forEach(x=>x.classList.toggle("on",x.dataset.v===nv));hdr();
+    if(nv==="f"){el.querySelector("textarea").focus();}else if(nv&&aflt==="open"){el.style.transition="opacity .3s";el.style.opacity=".3";setTimeout(()=>{el.remove();if(!$("#qs .q"))rArea();},350);}});
+  el.querySelector("textarea").oninput=e=>{ins.nt[q.id]=e.target.value;save();};
+  el.querySelector("input[type=file]").onchange=async e=>{const fs=[...e.target.files];e.target.value="";for(const f of fs){try{const k="p_"+uid();await IDB.put(k,await fileToJpeg(f));(ins.ph[q.id]=ins.ph[q.id]||[]).push(k);}catch(x){toast("Σφάλμα φωτογραφίας");}}save();phs(el,ins,q);};
+  phs(el,ins,q);return el;}
+async function phs(el,ins,q){const box=el.querySelector(".ph");box.innerHTML="";for(const k of ins.ph[q.id]||[]){const d=await IDB.get(k);if(!d)continue;const w=document.createElement("div");
+  w.innerHTML=`<img src="${d}"><button>✕</button>`;w.querySelector("button").onclick=async()=>{ins.ph[q.id]=ins.ph[q.id].filter(x=>x!==k);await IDB.del(k).catch(()=>{});save();phs(el,ins,q);};box.appendChild(w);}}
+$("#prevA").onclick=()=>{const i=AREAS.findIndex(a=>a[0]===area);area=AREAS[i-1][0];aflt="open";go("area");};
+$("#nextA").onclick=()=>{const i=AREAS.findIndex(a=>a[0]===area);if(i<AREAS.length-1){area=AREAS[i+1][0];aflt="open";go("area");}else go("find");};
+
+/* ---------- findings ---------- */
+const findings=ins=>DATA.q.filter(q=>ins.st[q.id]==="f");
+function rFind(){const ins=I(),s=stats(ins),fl=findings(ins);
+  $("#sum").innerHTML=`<div class="tiles" style="grid-template-columns:repeat(3,1fr)"><div class="tile"><b>${s.d}/${s.n}</b><span class="note">ελέγχθηκαν</span></div>
+    <div class="tile"><b style="color:var(--f)">${fl.length}</b><span class="note">findings</span></div><div class="tile"><b style="color:var(--hr)">${fl.filter(q=>q.h).length}</b><span class="note">★ high-risk</span></div></div>
+    ${s.n-s.d?`<p class="note">⚠ ${s.n-s.d} ερωτήσεις δεν έχουν απαντηθεί ακόμα.</p>`:""}`;
+  const box=$("#flist");box.innerHTML=fl.length?"":'<div class="card note" style="text-align:center">Κανένα finding. 👍</div>';
+  AREAS.forEach(([k,ic,nm])=>{const a=fl.filter(q=>q.a===k);if(!a.length)return;const h=document.createElement("h2");h.textContent=`${ic} ${nm} (${a.length})`;h.style.marginTop="16px";box.appendChild(h);
+    a.forEach(q=>{const d=document.createElement("div");d.className="fl";d.innerHTML=`<div class="qh"><span class="id">${q.id}</span>${q.h?'<span class="hrt">★</span>':""}</div><div style="font-weight:600;margin:3px 0">${esc(q.g)}</div>
+      <div class="note" style="color:var(--ink)">${esc(ins.nt[q.id]||"— χωρίς σημείωση —")}</div><div class="ph"></div>`;
+      d.onclick=e=>{if(e.target.tagName==="BUTTON")return;area=k;aflt="f";go("area");};box.appendChild(d);
+      (async()=>{for(const p of ins.ph[q.id]||[]){const u=await IDB.get(p);if(u){const w=document.createElement("div");w.innerHTML=`<img src="${u}">`;d.querySelector(".ph").appendChild(w);}}})();});});}
+function fname(ins,ext){return`${(ins.vessel||"vessel").replace(/[^\w\-]+/g,"_")}_RISQ_${ins.date||""}.${ext}`;}
+$("#xTxt").onclick=()=>{const ins=I(),fl=findings(ins),s=stats(ins);let t=`RISQ 3.2 walk-round — ${ins.vessel}${ins.imo?" (IMO "+ins.imo+")":""}\n${ins.date||""}${ins.port?" · "+ins.port:""}${ins.by?" · "+ins.by:""}\nChecked ${s.d}/${s.n} · Findings ${fl.length}${ins.hr?" · high-risk only":""}\n`;
+  AREAS.forEach(([k,,nm])=>{const a=fl.filter(q=>q.a===k);if(!a.length)return;t+=`\n${nm.toUpperCase()}\n`;a.forEach(q=>t+=`• ${q.id}${q.h?" ★":""} ${q.g}\n  → ${ins.nt[q.id]||"-"}\n`);});shareText("RISQ findings "+ins.vessel,t);};
+$("#xCsv").onclick=()=>{const ins=I(),rows=[["Q","Area","Section","High-risk","Status","What to check","Note","Photos"]];
+  QS(ins).forEach(q=>rows.push([q.id,AN[q.a],q.s,q.h?"★":"",{ok:"OK",f:"FINDING",na:"N/A"}[ins.st[q.id]]||"",q.g,ins.nt[q.id]||"",(ins.ph[q.id]||[]).length]));
+  const csv="﻿"+rows.map(r=>r.map(x=>{x=String(x??"");return/[",\n]/.test(x)?'"'+x.replace(/"/g,'""')+'"':x;}).join(",")).join("\r\n");
+  shareFiles([{name:fname(ins,"csv"),mime:"text/csv",dataUrl:"data:text/csv;base64,"+b64(new TextEncoder().encode(csv))}],"RISQ CSV");};
+function makePdf(pages){const enc=new TextEncoder(),ch=[],off=[];let len=0;const w=x=>{const b=typeof x==="string"?enc.encode(x):x;ch.push(b);len+=b.length;};
+  const obj=(i,f)=>{off[i]=len;w(`${i} 0 obj\n`);f();w("\nendobj\n");};const N=pages.length;w("%PDF-1.4\n");obj(1,()=>w("<< /Type /Catalog /Pages 2 0 R >>"));
+  obj(2,()=>w(`<< /Type /Pages /Count ${N} /Kids [${pages.map((p,i)=>`${3+i*3} 0 R`).join(" ")}] >>`));
+  pages.forEach((p,i)=>{const pg=3+i*3,cs="q 595 0 0 842 0 0 cm /Im0 Do Q";obj(pg,()=>w(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /XObject << /Im0 ${pg+2} 0 R >> >> /Contents ${pg+1} 0 R >>`));
+    obj(pg+1,()=>w(`<< /Length ${cs.length} >>\nstream\n${cs}\nendstream`));obj(pg+2,()=>{w(`<< /Type /XObject /Subtype /Image /Width ${p.w} /Height ${p.h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${p.jpg.length} >>\nstream\n`);w(p.jpg);w("\nendstream");});});
+  const x=len,t=3+N*3;w(`xref\n0 ${t}\n0000000000 65535 f \n`);for(let i=1;i<t;i++)w(String(off[i]).padStart(10,"0")+" 00000 n \n");w(`trailer\n<< /Size ${t} /Root 1 0 R >>\nstartxref\n${x}\n%%EOF`);
+  const o=new Uint8Array(len);let p=0;ch.forEach(c=>{o.set(c,p);p+=c.length;});return o;}
+async function buildPdf(){const ins=I(),fl=findings(ins),s=stats(ins),W=1240,H=1754,M=70,F="system-ui,-apple-system,sans-serif",pages=[];let c,g,pn=0,y;
+  const np=()=>{c=document.createElement("canvas");c.width=W;c.height=H;g=c.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,W,H);pn++;g.fillStyle="#1d3a5c";g.fillRect(0,0,W,110);
+    g.fillStyle="#fff";g.font=`bold 34px ${F}`;g.fillText("RISQ 3.2 WALK-ROUND — FINDINGS",M,52);g.font=`22px ${F}`;g.fillText(`${ins.vessel}${ins.imo?"  ·  IMO "+ins.imo:""}${ins.port?"  ·  "+ins.port:""}`,M,88);
+    g.textAlign="right";g.fillText(ins.date||"",W-M,52);g.textAlign="left";g.fillStyle="#777";g.font=`18px ${F}`;g.fillText(`Page ${pn}${ins.by?"  ·  "+ins.by:""}`,M,H-35);y=165;};
+  const ep=()=>{const d=c.toDataURL("image/jpeg",.82),b=atob(d.split(",")[1]),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);pages.push({jpg:u,w:W,h:H});};
+  const wrap=(t,x,mw,lh,max=99)=>{const ws=String(t||"").split(/\s+/);let line="",n=0;for(const w of ws){const tt=line?line+" "+w:w;if(g.measureText(tt).width>mw&&line){g.fillText(line,x,y);y+=lh;line=w;if(++n>=max)return;}else line=tt;}if(line){g.fillText(line,x,y);y+=lh;}};
+  np();g.fillStyle="#14212e";g.font=`bold 28px ${F}`;g.fillText("Summary",M,y);y+=44;g.font=`22px ${F}`;
+  g.fillText(`Checked: ${s.d} / ${s.n}${ins.hr?" (high-risk only)":""}     Findings: ${fl.length}     ★ High-risk findings: ${fl.filter(q=>q.h).length}`,M,y);y+=50;
+  AREAS.forEach(([k,,nm])=>{const a=stats(ins,k);g.fillStyle="#14212e";g.fillText(nm,M,y);g.fillText(`${a.d}/${a.n}`,M+380,y);g.fillStyle=a.f?"#b3261e":"#22744a";g.fillText(a.f?`${a.f} findings`:"no findings",M+520,y);y+=36;});
+  y+=30;g.fillStyle="#1d3a5c";g.font=`bold 26px ${F}`;g.fillText("Findings",M,y);y+=14;
+  for(const q of fl){const imgs=[];for(const k of (ins.ph[q.id]||[]).slice(0,3)){const d=await IDB.get(k);if(d)imgs.push(await loadImg(d));}
+    const need=150+(imgs.length?330:0);if(y+need>H-90){ep();np();}
+    y+=36;g.fillStyle="#b3261e";g.fillRect(M,y-26,6,need-40);g.fillStyle="#1d3a5c";g.font=`bold 22px ${F}`;g.fillText(`${q.id}${q.h?"  ★":""}   ${AN[q.a]}`,M+20,y);y+=32;
+    g.fillStyle="#14212e";g.font=`bold 21px ${F}`;wrap(q.g,M+20,W-2*M-30,28,2);g.font=`21px ${F}`;g.fillStyle="#333";wrap("→ "+(ins.nt[q.id]||"-"),M+20,W-2*M-30,28,4);
+    if(imgs.length){const bw=(W-2*M-30-20*(imgs.length-1))/Math.max(imgs.length,2),bh=310;let x=M+20;for(const im of imgs){const k=Math.min(bw/im.width,bh/im.height);g.drawImage(im,x,y+6,im.width*k,im.height*k);x+=bw+20;}y+=bh+16;}
+    y+=10;}
+  ep();return makePdf(pages);}
+$("#xPdf").onclick=async e=>{const b=e.target,t=b.textContent;b.disabled=true;b.textContent="⏳ PDF…";try{const p=await buildPdf();await shareFiles([{name:fname(I(),"pdf"),mime:"application/pdf",dataUrl:"data:application/pdf;base64,"+b64(p)}],"RISQ report");}
+  catch(x){toast("Σφάλμα PDF");}b.disabled=false;b.textContent=t;};
+go("list");
+/*SW*/
+</script>
+</body>
+</html>
