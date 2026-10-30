@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bunker Calc</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Bunker Calc">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#0c2340">
+<style>
+:root{--bg:#eef1f5;--card:#fff;--ink:#132033;--muted:#5d6b7b;--line:#d5dce4;--navy:#0c2340;--acc:#e07a1f;--ok:#1d7a46;--bad:#b3261e;--warn:#9a6700}
+@media (prefers-color-scheme:dark){:root{--bg:#0d1520;--card:#162231;--ink:#e4ebf2;--muted:#95a3b2;--line:#2a3848;--navy:#9cc3ea;--acc:#f0954a;--ok:#5cc98a;--bad:#ff8a80;--warn:#e3b341}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+header{position:sticky;top:0;z-index:5;background:#0c2340;color:#fff;padding:calc(10px + env(safe-area-inset-top)) 14px 10px}
+header h1{margin:0;font-size:18px}header .s{font-size:12px;opacity:.75}
+main{max-width:760px;margin:0 auto;padding:10px 12px calc(84px + env(safe-area-inset-bottom))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:10px 0}
+h2{font-size:15px;color:var(--navy);margin:2px 0 10px}
+label{display:flex;flex-direction:column;gap:3px;font-size:12.5px;color:var(--muted)}
+input,select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;width:100%;min-width:0}
+input:focus,select:focus{outline:2px solid var(--acc);border-color:transparent}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.btn{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:10px 14px;font-weight:600;cursor:pointer}
+.btn.p{background:var(--acc);border-color:var(--acc);color:#fff}.btn.d{color:var(--bad)}.btn.sm{padding:6px 10px;font-size:14px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.res{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:10px}
+.k{background:var(--bg);border-radius:10px;padding:10px}.k span{display:block;font-size:12px;color:var(--muted)}.k b{font-size:20px;font-variant-numeric:tabular-nums}
+.k.big{grid-column:1/-1;background:#0c2340;color:#fff}.k.big span{color:#b9c9dc}.k.big b{font-size:28px}
+.note{font-size:13px;color:var(--muted)}
+.tank{border:1px solid var(--line);border-radius:12px;padding:10px;margin:8px 0;background:var(--card)}
+.tank .h{display:flex;gap:6px;align-items:center;margin-bottom:6px}.tank .h input{flex:1;font-weight:600}
+.tank .o{display:flex;gap:12px;flex-wrap:wrap;font-size:13px;margin-top:6px;color:var(--muted);font-variant-numeric:tabular-nums}.tank .o b{color:var(--ink)}
+table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}th,td{padding:7px 5px;border-bottom:1px solid var(--line);text-align:right}th:first-child,td:first-child{text-align:left}
+.pos{color:var(--bad)}.neg{color:var(--ok)}.wrn{color:var(--warn)}
+.nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;padding:6px 8px calc(6px + env(safe-area-inset-bottom));z-index:6}
+.nav button{flex:1;border:0;background:none;color:var(--muted);font:600 12px system-ui;padding:6px 2px;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer}
+.nav button b{font-size:20px;line-height:1}.nav button.on{color:var(--acc)}
+.hide{display:none!important}
+.info p,.info li{font-size:14.5px}.info code{background:var(--bg);padding:1px 5px;border-radius:5px}
+.sv{display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+#toast{position:fixed;left:50%;top:calc(64px + env(safe-area-inset-top));transform:translateX(-50%);background:#0c2340;color:#fff;padding:9px 14px;border-radius:10px;font-size:14px;opacity:0;transition:.2s;pointer-events:none;z-index:20}#toast.show{opacity:1}
+</style>
+</head>
+<body>
+<header><h1>⛽ Bunker Calc</h1><div class="s">ASTM D1250 · Table 54B / 56 / 53B · offline</div></header>
+<main>
+<!-- QUICK -->
+<section id="v-quick">
+  <div class="card">
+    <h2>Γρήγορος υπολογισμός</h2>
+    <div class="g2">
+      <label>Density @15°C (kg/m³)<input id="q_d" type="number" inputmode="decimal" step="any" placeholder="π.χ. 991.0"></label>
+      <label>Θερμοκρασία (°C)<input id="q_t" type="number" inputmode="decimal" step="any" placeholder="π.χ. 45.5"></label>
+      <label>Observed volume (m³)<input id="q_v" type="number" inputmode="decimal" step="any" placeholder="π.χ. 512.340"></label>
+      <label>VCF δεκαδικά<select id="q_r"><option value="4">4 (Tables 1980)</option><option value="5">5</option></select></label>
+    </div>
+    <div class="res" id="q_res"></div>
+  </div>
+  <div class="card">
+    <h2>Density σε θερμοκρασία → @15°C (Table 53B)</h2>
+    <div class="g2">
+      <label>Observed density (kg/m³)<input id="h_d" type="number" inputmode="decimal" step="any" placeholder="π.χ. 975.4"></label>
+      <label>στους (°C)<input id="h_t" type="number" inputmode="decimal" step="any" placeholder="π.χ. 40"></label>
+    </div>
+    <label style="flex-direction:row;align-items:center;gap:8px;margin-top:8px;color:var(--ink)"><input type="checkbox" id="h_g" style="width:auto"> Γυάλινο hydrometer (διόρθωση γυαλιού)</label>
+    <div class="res" id="h_res"></div>
+  </div>
+</section>
+
+<!-- SURVEY -->
+<section id="v-survey" class="hide">
+  <div id="svList">
+    <button class="btn p" id="svNew" style="width:100%;padding:14px">+ Νέο bunker survey / ROB</button>
+    <div id="svItems"></div>
+  </div>
+  <div id="svEd" class="hide">
+    <div class="card">
+      <div class="row" style="justify-content:space-between"><h2 style="margin:0">Survey</h2><button class="btn sm" id="svBack">‹ Λίστα</button></div>
+      <div class="g2" style="margin-top:8px">
+        <label>Πλοίο<input data-h="vessel"></label><label>Λιμάνι<input data-h="port"></label>
+        <label>Ημερομηνία<input data-h="date" type="date"></label><label>Τύπος<select data-h="kind"><option>Bunker delivery</option><option>ROB</option><option>Off-hire / On-hire</option></select></label>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Grades</h2>
+      <div id="grades"></div>
+      <button class="btn sm" id="gAdd">+ Grade</button>
+      <p class="note">Density @15 από το BDN ή το εργαστήριο. Το BDN quantity χρειάζεται για τη σύγκριση.</p>
+    </div>
+    <div class="card">
+      <div class="row" style="justify-content:space-between"><h2 style="margin:0">Tanks</h2><button class="btn sm p" id="tAdd">+ Tank</button></div>
+      <p class="note" style="margin:6px 0 0">Volume = από sounding table, <b>μετά</b> τις διορθώσεις trim/list.</p>
+      <div id="tanks"></div>
+    </div>
+    <div class="card">
+      <h2>Αποτέλεσμα</h2>
+      <div class="tw" style="overflow-x:auto"><table id="sumT"></table></div>
+      <div class="row" style="margin-top:12px"><button class="btn" id="xTxt">📤 Report (κείμενο)</button><button class="btn" id="xCsv">📊 Excel</button><button class="btn d" id="svDel">Διαγραφή</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- INFO -->
+<section id="v-info" class="hide">
+  <div class="card info">
+    <h2>Πώς υπολογίζεται (S10)</h2>
+    <p>Το καύσιμο <b>φουσκώνει όταν ζεσταίνεται</b>. Γι' αυτό τα m³ που βλέπεις στη δεξαμενή τα «γυρνάμε» στους 15°C, τη θερμοκρασία αναφοράς όπου όλοι μετράνε το ίδιο.</p>
+    <ol>
+      <li><b>VCF</b> (Table 54B): πόσο «ξεφουσκώνει» στους 15°C. Π.χ. 0.9760 σημαίνει ότι 100 m³ στους 50°C είναι 97.60 m³ στους 15°C.</li>
+      <li><b>GSV</b> = Observed volume × VCF (m³ @15°C).</li>
+      <li><b>WCF</b> (Table 56) = Density@15 (kg/l) − 0.0011. Το −0.0011 είναι η άνωση του αέρα, γιατί το βάρος μετριέται «στον αέρα».</li>
+      <li><b>Metric tons in air</b> = GSV × WCF.</li>
+    </ol>
+    <h2 style="margin-top:14px">Τύποι (ASTM D1250-80, generalized products)</h2>
+    <p><code>α15 = K0/ρ15² + K1/ρ15</code><br><code>VCF = exp(−α15·Δt·(1 + 0.8·α15·Δt))</code>, Δt = t − 15</p>
+    <table><tr><th>Density @15 kg/m³</th><th>K0</th><th>K1</th></tr>
+      <tr><td>838.3–1075 (Fuel oils)</td><td>186.9696</td><td>0.4862</td></tr>
+      <tr><td>787.5–838.3 (Jet / MGO light)</td><td>594.5418</td><td>0</td></tr>
+      <tr><td>770.4–787.5 (Transition)</td><td colspan="2">α = −0.00336312 + 2680.3206/ρ²</td></tr>
+      <tr><td>653–770.4 (Gasolines)</td><td>346.4228</td><td>0.4388</td></tr></table>
+    <p class="note">Table 53B: η density @15 βγαίνει με επανάληψη, ρ15 = ρt / VCF(ρ15, t), μέχρι να σταθεροποιηθεί. Με γυάλινο hydrometer εφαρμόζεται και η διόρθωση γυαλιού: 1 − 0.000023·Δt − 0.00000002·Δt².</p>
+    <h2 style="margin-top:14px">Στην πράξη</h2>
+    <ul>
+      <li>Μέτρα <b>πριν και μετά</b> στις ίδιες δεξαμενές. Παραληφθέν = μετά − πριν, για κάθε grade.</li>
+      <li>Τα trim/list corrections γίνονται από τα sounding tables του πλοίου, πριν μπει το volume εδώ.</li>
+      <li>Διαφορά πάνω από ~0.5% από το BDN: note of protest / letter of protest πριν υπογράψεις το BDN, και κράτα τα δείγματα (MARPOL sample).</li>
+      <li>Οι πίνακες του 1980 δίνουν VCF με 4 δεκαδικά. Αν ο supplier χρησιμοποιεί άλλη έκδοση (2004/5 δεκαδικά), άλλαξε τη ρύθμιση στον γρήγορο υπολογισμό.</li>
+    </ul>
+    <p class="note">Τα αποτελέσματα είναι υπολογισμός με τους τύπους του προτύπου. Σε αμφισβήτηση ισχύουν οι επίσημοι πίνακες και ο ανεξάρτητος surveyor.</p>
+  </div>
+</section>
+</main>
+<nav class="nav"><button data-v="quick" class="on"><b>🧮</b>Υπολογισμός</button><button data-v="survey"><b>🛢</b>Survey</button><button data-v="info"><b>ⓘ</b>Τύποι</button></nav>
+<div id="toast"></div>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const n=v=>{const x=parseFloat(String(v??"").replace(",","."));return isFinite(x)?x:NaN};
+const f=(v,d)=>isFinite(v)?Number(v).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d}):"–";
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),1800);}
+
+/* ---------- ASTM D1250-80 Table 54B / 53B / 56 ---------- */
+function alpha(r){ // r = density @15 kg/m3
+  if(r>=838.3127)return 186.9696/(r*r)+0.4862/r;
+  if(r>=787.5195)return 594.5418/(r*r);
+  if(r>=770.3520)return -0.00336312+2680.3206/(r*r);
+  return 346.4228/(r*r)+0.4388/r;}
+function vcf(r15,t,dec=4){if(!(r15>=610&&r15<=1075.5)||!isFinite(t))return NaN;const a=alpha(r15),dt=t-15;const v=Math.exp(-a*dt*(1+0.8*a*dt));const m=10**dec;return Math.round(v*m)/m;}
+function d15(rt,t,glass){if(!isFinite(rt)||!isFinite(t))return NaN;const dt=t-15;let r=glass?rt*(1-0.000023*dt-0.00000002*dt*dt):rt;let x=r;
+  for(let i=0;i<50;i++){const a=alpha(x),v=Math.exp(-a*dt*(1+0.8*a*dt)),nx=r/v;if(Math.abs(nx-x)<1e-6){x=nx;break;}x=nx;}return Math.round(x*10)/10;}
+const wcf=r15=>Math.round((r15/1000-0.0011)*10000)/10000;
+
+/* ---------- quick ---------- */
+let DEC=4;try{DEC=+localStorage.getItem("bk_dec")||4;}catch(e){}$("#q_r").value=DEC;
+function quick(){DEC=+$("#q_r").value;try{localStorage.setItem("bk_dec",DEC);}catch(e){}
+  const d=n($("#q_d").value),t=n($("#q_t").value),v=n($("#q_v").value);let h="";
+  if(isFinite(d)&&(d<610||d>1075.5))h=`<div class="k" style="grid-column:1/-1"><span>⚠</span>Density εκτός ορίων 610–1075 kg/m³</div>`;
+  else if(isFinite(d)&&isFinite(t)){const V=vcf(d,t,DEC),W=wcf(d);h+=`<div class="k"><span>VCF (54B)</span><b>${f(V,DEC)}</b></div><div class="k"><span>WCF (56)</span><b>${f(W,4)}</b></div>`;
+    if(isFinite(v)){const g=v*V;h+=`<div class="k"><span>GSV @15°C</span><b>${f(g,3)} m³</b></div><div class="k big"><span>Metric tons in air</span><b>${f(g*W,3)} MT</b></div>`;}
+    h+=`<div class="k" style="grid-column:1/-1"><span>Αντίστροφα: 1 MT =</span><b style="font-size:16px">${f(1/W,4)} m³ @15 · ${f(1/(W*V),4)} m³ @${t}°C</b></div>`;}
+  $("#q_res").innerHTML=h;}
+["q_d","q_t","q_v","q_r"].forEach(id=>$("#"+id).addEventListener("input",quick));
+function hyd(){const r=d15(n($("#h_d").value),n($("#h_t").value),$("#h_g").checked);$("#h_res").innerHTML=isFinite(r)?`<div class="k big"><span>Density @15°C</span><b>${f(r,1)} kg/m³</b></div><div class="k"><span>σε kg/l</span><b>${f(r/1000,4)}</b></div><div class="k"><span>WCF</span><b>${f(wcf(r),4)}</b></div>`:"";}
+["h_d","h_t","h_g"].forEach(id=>$("#"+id).addEventListener("input",hyd));
+
+/* ---------- surveys ---------- */
+let S;try{S=JSON.parse(localStorage.getItem("bk_v1"));}catch(e){}if(!S||!Array.isArray(S.sv))S={sv:[]};
+const save=()=>{try{localStorage.setItem("bk_v1",JSON.stringify(S));}catch(e){}};
+let cur=null;const SV=()=>S.sv.find(x=>x.id===cur);
+function calcTank(sv,tk){const g=sv.grades.find(x=>x.id===tk.g)||{};const d=n(g.d),t=n(tk.t),v=n(tk.v);const V=vcf(d,t,sv.dec||4),W=wcf(d);const gsv=v*V;return{V,W,gsv,mt:gsv*W,g};}
+function rList(){$("#svItems").innerHTML=S.sv.slice().reverse().map(sv=>{const tot=sv.tanks.reduce((a,t)=>{const c=calcTank(sv,t);return a+(isFinite(c.mt)?c.mt:0);},0);
+  return`<div class="card sv" data-id="${sv.id}"><div><b>${esc(sv.vessel||"—")}</b><div class="note">${esc(sv.kind)} · ${esc(sv.port||"")} · ${esc(sv.date||"")}</div></div><b>${f(tot,3)} MT</b></div>`;}).join("")||'<p class="note" style="text-align:center">Κανένα survey ακόμα.</p>';
+  $$("#svItems .sv").forEach(e=>e.onclick=()=>open(e.dataset.id));}
+$("#svNew").onclick=()=>{const g={id:uid(),name:"VLSFO",d:"",bdn:""};const sv={id:uid(),vessel:"",port:"",date:new Date().toISOString().slice(0,10),kind:"Bunker delivery",dec:DEC,grades:[g],tanks:[{id:uid(),name:"",g:g.id,v:"",t:""}]};S.sv.push(sv);save();open(sv.id);};
+function open(id){cur=id;$("#svList").classList.add("hide");$("#svEd").classList.remove("hide");const sv=SV();$$("[data-h]").forEach(i=>i.value=sv[i.dataset.h]||"");rEd();window.scrollTo(0,0);}
+$("#svBack").onclick=()=>{cur=null;$("#svEd").classList.add("hide");$("#svList").classList.remove("hide");rList();};
+$$("[data-h]").forEach(i=>i.addEventListener("input",()=>{SV()[i.dataset.h]=i.value;save();}));
+function rEd(){const sv=SV();
+  $("#grades").innerHTML=sv.grades.map(g=>`<div class="g3" data-g="${g.id}" style="margin-bottom:8px"><label>Grade<input data-k="name" value="${esc(g.name)}" list="gl"></label>
+    <label>Density @15<input data-k="d" type="number" inputmode="decimal" step="any" value="${esc(g.d)}"></label><label>BDN (MT)<input data-k="bdn" type="number" inputmode="decimal" step="any" value="${esc(g.bdn)}"></label></div>`).join("")+
+    '<datalist id="gl"><option>HSFO</option><option>VLSFO</option><option>ULSFO</option><option>MGO</option><option>MDO</option></datalist>';
+  $$("#grades [data-g]").forEach(r=>r.addEventListener("input",e=>{const g=sv.grades.find(x=>x.id===r.dataset.g);g[e.target.dataset.k]=e.target.value;save();if(e.target.dataset.k==="name")rTanks();else{rTanksOut();rSum();}}));
+  rTanks();}
+function rTanks(){const sv=SV();$("#tanks").innerHTML=sv.tanks.map((t,i)=>`<div class="tank" data-t="${t.id}"><div class="h"><input data-k="name" placeholder="Tank, π.χ. No.2 FOT (P)" value="${esc(t.name)}"><button class="btn sm d" data-del>✕</button></div>
+    <div class="g3"><label>Grade<select data-k="g">${sv.grades.map(g=>`<option value="${g.id}"${g.id===t.g?" selected":""}>${esc(g.name||"—")}</option>`).join("")}</select></label>
+    <label>Volume m³<input data-k="v" type="number" inputmode="decimal" step="any" value="${esc(t.v)}"></label><label>Temp °C<input data-k="t" type="number" inputmode="decimal" step="any" value="${esc(t.t)}"></label></div><div class="o"></div></div>`).join("");
+  $$("#tanks .tank").forEach(el=>{const t=sv.tanks.find(x=>x.id===el.dataset.t);
+    el.addEventListener("input",e=>{const k=e.target.dataset.k;if(!k)return;t[k]=e.target.value;save();tOut(el,sv,t);rSum();});
+    el.querySelector("[data-del]").onclick=ev=>{const b=ev.currentTarget;if(!b.dataset.a){b.dataset.a=1;b.textContent="?";setTimeout(()=>{if(b.isConnected){delete b.dataset.a;b.textContent="✕";}},2500);return;}sv.tanks=sv.tanks.filter(x=>x!==t);save();rTanks();};tOut(el,sv,t);});
+  rSum();}
+function tOut(el,sv,t){const c=calcTank(sv,t);el.querySelector(".o").innerHTML=isFinite(c.mt)?`<span>VCF <b>${f(c.V,sv.dec||4)}</b></span><span>WCF <b>${f(c.W,4)}</b></span><span>GSV <b>${f(c.gsv,3)}</b> m³</span><span><b>${f(c.mt,3)} MT</b></span>`:'<span>Συμπλήρωσε density (grade), volume, temp</span>';}
+function rTanksOut(){const sv=SV();$$("#tanks .tank").forEach(el=>tOut(el,sv,sv.tanks.find(x=>x.id===el.dataset.t)));}
+$("#tAdd").onclick=()=>{const sv=SV();const last=sv.tanks[sv.tanks.length-1];sv.tanks.push({id:uid(),name:"",g:last?last.g:sv.grades[0].id,v:"",t:last?last.t:""});save();rTanks();};
+$("#gAdd").onclick=()=>{SV().grades.push({id:uid(),name:"MGO",d:"",bdn:""});save();rEd();};
+function totals(sv){return sv.grades.map(g=>{let v=0,gs=0,mt=0,k=0;sv.tanks.filter(t=>t.g===g.id).forEach(t=>{const c=calcTank(sv,t);if(isFinite(c.mt)){v+=n(t.v);gs+=c.gsv;mt+=c.mt;k++;}});
+  const b=n(g.bdn);return{g,k,v,gs,mt,b,dm:isFinite(b)?mt-b:NaN,dp:isFinite(b)&&b?(mt-b)/b*100:NaN};});}
+function rSum(){const sv=SV();let h="<tr><th>Grade</th><th>Tanks</th><th>Obs m³</th><th>GSV m³</th><th>MT</th><th>BDN</th><th>Δ MT</th><th>Δ %</th></tr>";
+  totals(sv).forEach(r=>{const c=!isFinite(r.dp)?"":Math.abs(r.dp)>0.5?"pos":Math.abs(r.dp)>0.3?"wrn":"neg";
+    h+=`<tr><td><b>${esc(r.g.name)}</b></td><td>${r.k}</td><td>${f(r.v,3)}</td><td>${f(r.gs,3)}</td><td><b>${f(r.mt,3)}</b></td><td>${isFinite(r.b)?f(r.b,3):"–"}</td><td class="${c}">${isFinite(r.dm)?(r.dm>0?"+":"")+f(r.dm,3):"–"}</td><td class="${c}">${isFinite(r.dp)?(r.dp>0?"+":"")+f(r.dp,2):"–"}</td></tr>`;});
+  $("#sumT").innerHTML=h;}
+async function share(title,text,file){try{if(file&&navigator.canShare){const fl=new File([new Blob([text],{type:file.mime})],file.name,{type:file.mime});if(navigator.canShare({files:[fl]})){await navigator.share({files:[fl],title});return;}}
+  if(navigator.share){await navigator.share({title,text});return;}await navigator.clipboard.writeText(text);toast("Αντιγράφηκε ✔");}catch(e){}}
+$("#xTxt").onclick=()=>{const sv=SV();let t=`BUNKER ${sv.kind.toUpperCase()} — ${sv.vessel||""}\n${sv.port||""} · ${sv.date||""} · ASTM D1250 Table 54B/56 (VCF ${sv.dec||4} dec.)\n\n`;
+  sv.tanks.forEach(tk=>{const c=calcTank(sv,tk);t+=`${tk.name||"Tank"} [${c.g.name||""}]: ${tk.v} m³ @ ${tk.t}°C · VCF ${f(c.V,sv.dec||4)} · GSV ${f(c.gsv,3)} · ${f(c.mt,3)} MT\n`;});
+  t+="\n";totals(sv).forEach(r=>{t+=`${r.g.name}: density@15 ${r.g.d} · ${f(r.mt,3)} MT${isFinite(r.b)?` · BDN ${f(r.b,3)} · Δ ${r.dm>0?"+":""}${f(r.dm,3)} MT (${r.dp>0?"+":""}${f(r.dp,2)}%)`:""}\n`;});share("Bunker "+(sv.vessel||""),t);};
+$("#xCsv").onclick=()=>{const sv=SV(),rows=[["Tank","Grade","Density15","Volume m3","Temp C","VCF","GSV m3","WCF","MT"]];
+  sv.tanks.forEach(tk=>{const c=calcTank(sv,tk);rows.push([tk.name,c.g.name,c.g.d,tk.v,tk.t,c.V,c.gsv.toFixed(3),c.W,c.mt.toFixed(3)]);});
+  totals(sv).forEach(r=>rows.push(["TOTAL "+r.g.name,"","","" ,"","",r.gs.toFixed(3),"",r.mt.toFixed(3),"BDN",r.g.bdn,"Δ",isFinite(r.dm)?r.dm.toFixed(3):""]));
+  const csv="﻿"+rows.map(r=>r.map(x=>{x=String(x??"");return/[",\n]/.test(x)?'"'+x.replace(/"/g,'""')+'"':x;}).join(",")).join("\r\n");
+  share("Bunker CSV",csv,{name:`${(sv.vessel||"bunker").replace(/[^\w\-]+/g,"_")}_${sv.date}.csv`,mime:"text/csv"});};
+let dA=0;$("#svDel").onclick=e=>{if(!dA){dA=1;e.target.textContent="Σίγουρα;";setTimeout(()=>{dA=0;e.target.textContent="Διαγραφή";},3000);return;}S.sv=S.sv.filter(x=>x.id!==cur);save();dA=0;e.target.textContent="Διαγραφή";$("#svBack").click();};
+
+/* ---------- nav ---------- */
+$$(".nav button").forEach(b=>b.onclick=()=>{$$(".nav button").forEach(x=>x.classList.toggle("on",x===b));["quick","survey","info"].forEach(v=>$("#v-"+v).classList.toggle("hide",v!==b.dataset.v));if(b.dataset.v==="survey"&&!cur)rList();window.scrollTo(0,0);});
+rList();
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>
