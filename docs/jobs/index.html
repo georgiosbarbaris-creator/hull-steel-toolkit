@@ -60,6 +60,8 @@ input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:
   <div id="vList"></div>
   <button class="btn p big" id="vAdd">+ Πλοίο</button>
   <div class="row" style="margin-top:8px"><label class="btn" style="flex:1;text-align:center;cursor:pointer">📥 Εισαγωγή δουλειών<input type="file" accept=".json,application/json,text/plain" id="impF" style="display:none"></label><button class="btn" id="bkExp">💾 Backup</button></div>
+  <div class="row" style="margin-top:8px"><button class="btn" id="impL" style="flex:1">🔗 Επικόλληση link δουλειών</button></div>
+  <div class="card hide" id="impBox"><label>Επικόλλησε εδώ το link (κράτα πατημένο → Paste)<textarea id="impT" rows="3" style="width:100%"></textarea></label><div class="row" style="margin-top:8px"><button class="btn p" id="impGo" style="flex:1">Εισαγωγή</button><button class="btn" id="impX">Άκυρο</button></div></div>
   <div class="card"><h2>Πώς δουλεύει</h2><p class="note" style="margin:0">1. Πλοίο → <b>+</b> για νέα δουλειά (φωτό, τι, πού, πότε). 2. <b>🚶 Walk-round</b>: σε πάει χώρο-χώρο, σου δείχνει τι είναι ανοιχτό εκεί και τι να κοιτάξεις. 3. Όταν κλείσει: <b>Done + φωτό after</b>. 4. <b>📅 Υπενθυμίσεις</b> → στο ημερολόγιο του κινητού. 5. <b>📄 Job Order List</b> PDF για πλοίο/γραφείο.</p></div>
   <details class="card"><summary style="font-weight:600;cursor:pointer">✨ Αγγλικά με Claude (API key)</summary><p class="note">Ίδιο key με την εφαρμογή RISQ — αν το έβαλες εκεί, δουλεύει και εδώ.</p>
     <label>API key<input id="apiKey" type="password" placeholder="sk-ant-..." autocomplete="off"></label><div class="row" style="margin-top:8px"><button class="btn" id="apiSave">Αποθήκευση</button><span class="note" id="apiSt"></span></div></details>
@@ -268,10 +270,14 @@ $("#impF").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(!f)
     if(o.app==="jobs-backup"&&o.data&&o.data.v){S=o.data;save();rHome();toast("✔ Backup επανήλθε (χωρίς φωτό)",3000);return;}
     const[n,sk]=importJobs(o);rHome();toast(`✔ ${n} δουλειές μπήκαν${sk?` · ${sk} υπήρχαν ήδη`:""}`,3500);}
   catch(x){toast("⚠ Λάθος αρχείο",3000);}};
+async function impCode(code){const b=Uint8Array.from(atob(code.replace(/-/g,"+").replace(/_/g,"/")),c=>c.charCodeAt(0));
+  const t=await new Response(new Blob([b]).stream().pipeThrough(new DecompressionStream("deflate-raw"))).text();return importJobs(JSON.parse(t));}
+$("#impL").onclick=async()=>{$("#impBox").classList.remove("hide");try{const c=await navigator.clipboard.readText();if(c&&c.includes("#imp="))$("#impT").value=c;}catch(e){}$("#impT").focus();};
+$("#impX").onclick=()=>{$("#impBox").classList.add("hide");$("#impT").value="";};
+$("#impGo").onclick=async()=>{const m=$("#impT").value.match(/#imp=([A-Za-z0-9_-]+)/);if(!m){toast("⚠ Δεν βρήκα link δουλειών",3000);return;}
+  try{const[n,sk]=await impCode(m[1]);$("#impX").onclick();rHome();toast(`✔ ${n} δουλειές μπήκαν${sk?` · ${sk} υπήρχαν ήδη`:""}`,4000);}catch(x){toast("⚠ Το link δεν διαβάστηκε",3000);}};
 (async()=>{const m=location.hash.match(/^#imp=([A-Za-z0-9_-]+)/);if(!m)return;history.replaceState(null,"",location.pathname);
-  try{const b=Uint8Array.from(atob(m[1].replace(/-/g,"+").replace(/_/g,"/")),c=>c.charCodeAt(0));
-    const t=await new Response(new Blob([b]).stream().pipeThrough(new DecompressionStream("deflate-raw"))).text();
-    const[n,sk]=importJobs(JSON.parse(t));go("home");toast(`✔ ${n} δουλειές μπήκαν${sk?` · ${sk} υπήρχαν ήδη`:""}`,4000);}
+  try{const[n,sk]=await impCode(m[1]);go("home");toast(`✔ ${n} δουλειές μπήκαν${sk?` · ${sk} υπήρχαν ήδη`:""}`,4000);}
   catch(x){toast("⚠ Το link δεν διαβάστηκε",3000);}})();
 $("#bkExp").onclick=()=>shareFile(new Blob([JSON.stringify({app:"jobs-backup",date:today(),data:S})],{type:"application/json"}),`Job_Orders_backup_${today()}.json`);
 
