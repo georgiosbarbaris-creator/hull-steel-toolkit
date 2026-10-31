@@ -59,6 +59,7 @@ input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:
 <section id="v-home">
   <div id="vList"></div>
   <button class="btn p big" id="vAdd">+ Πλοίο</button>
+  <div class="row" style="margin-top:8px"><label class="btn" style="flex:1;text-align:center;cursor:pointer">📥 Εισαγωγή δουλειών<input type="file" accept=".json,application/json,text/plain" id="impF" style="display:none"></label><button class="btn" id="bkExp">💾 Backup</button></div>
   <div class="card"><h2>Πώς δουλεύει</h2><p class="note" style="margin:0">1. Πλοίο → <b>+</b> για νέα δουλειά (φωτό, τι, πού, πότε). 2. <b>🚶 Walk-round</b>: σε πάει χώρο-χώρο, σου δείχνει τι είναι ανοιχτό εκεί και τι να κοιτάξεις. 3. Όταν κλείσει: <b>Done + φωτό after</b>. 4. <b>📅 Υπενθυμίσεις</b> → στο ημερολόγιο του κινητού. 5. <b>📄 Job Order List</b> PDF για πλοίο/γραφείο.</p></div>
   <details class="card"><summary style="font-weight:600;cursor:pointer">✨ Αγγλικά με Claude (API key)</summary><p class="note">Ίδιο key με την εφαρμογή RISQ — αν το έβαλες εκεί, δουλεύει και εδώ.</p>
     <label>API key<input id="apiKey" type="password" placeholder="sk-ant-..." autocomplete="off"></label><div class="row" style="margin-top:8px"><button class="btn" id="apiSave">Αποθήκευση</button><span class="note" id="apiSt"></span></div></details>
@@ -247,6 +248,27 @@ function icsShare(list,name){const v=V(),st=new Date().toISOString().replace(/[-
   t+="END:VCALENDAR\r\n";const n=(t.match(/BEGIN:VEVENT/g)||[]).length;if(!n){toast("Καμία ανοιχτή δουλειά με due date");return;}
   shareFile(new Blob([t],{type:"text/calendar"}),name.replace(/[^\w#.\-]+/g,"_"));toast(`${n} υπενθυμίσεις → «Προσθήκη όλων» στο Ημερολόγιο`,3500);}
 $("#xIcs").onclick=()=>icsShare(items(cv),`${V().name}_jobs.ics`);
+
+/* ---------- import / backup ---------- */
+const A_OK=AREAS.map(a=>a[0]),ok=(v,l,d)=>l.includes(v)?v:d;
+function importJobs(o){let n=0,sk=0;const list=o.vessels||[{vessel:o.vessel,items:o.items}];
+  for(const g of list){const name=String(g.vessel||"").trim().toUpperCase();if(!name||!Array.isArray(g.items))continue;
+    let v=S.v.find(x=>x.name===name);if(!v){v={id:uid(),name};S.v.push(v);}
+    let no=items(v.id).reduce((m,i)=>Math.max(m,i.no||0),0);
+    for(const j of g.items){const t=String(j.title||"").trim();if(!t)continue;
+      if(items(v.id).some(i=>i.title===t&&(i.ref||"")===(j.ref||""))){sk++;continue;}
+      const st=ok(j.st,["Open","In progress","Done"],"Open");
+      S.it.push({id:uid(),vid:v.id,no:++no,title:t,desc:j.desc||"",en:j.en||"",area:ok(j.area,A_OK,"OTH"),phase:ok(j.phase,PHASES,"Yard / DD"),
+        prio:ok(j.prio,["Normal","High","Critical"],"Normal"),resp:ok(j.resp,["Crew","Yard","Maker / Service","Office"],"Crew"),
+        src:j.src||"Own inspection",ref:j.ref||"",given:j.given||today(),due:j.due||"",st,closed:st==="Done"?(j.closed||today()):"",
+        photos:[],after:[],spares:j.spares||"",log:[{t:today(),x:"Εισαγωγή"+(o.source?" · "+o.source:"")}]});n++;}}
+  save();return[n,sk];}
+$("#impF").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(!f)return;
+  try{const o=JSON.parse(await f.text());
+    if(o.app==="jobs-backup"&&o.data&&o.data.v){S=o.data;save();rHome();toast("✔ Backup επανήλθε (χωρίς φωτό)",3000);return;}
+    const[n,sk]=importJobs(o);rHome();toast(`✔ ${n} δουλειές μπήκαν${sk?` · ${sk} υπήρχαν ήδη`:""}`,3500);}
+  catch(x){toast("⚠ Λάθος αρχείο",3000);}};
+$("#bkExp").onclick=()=>shareFile(new Blob([JSON.stringify({app:"jobs-backup",date:today(),data:S})],{type:"application/json"}),`Job_Orders_backup_${today()}.json`);
 
 /* ---------- exports ---------- */
 $("#xTxt").onclick=()=>{const v=V(),op=items(cv).filter(i=>i.st!=="Done").sort(srt);let t=`JOB ORDER LIST — ${v.name} — ${fd(today())}\nOpen: ${op.length}\n`;
