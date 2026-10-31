@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ταμείο</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Ταμείο">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#14432f">
+<meta name="robots" content="noindex">
+<style>
+:root{--bg:#eef2ef;--card:#fff;--ink:#14231c;--muted:#5e6f66;--line:#d3ddd7;--pri:#14432f;--acc:#1f8a5b;--ok:#1d7a46;--bad:#c0392b;--wrn:#9a6700;--gold:#b8860b}
+@media (prefers-color-scheme:dark){:root{--bg:#0d1511;--card:#16211b;--ink:#e3ece7;--muted:#93a69b;--line:#293a31;--pri:#8fd6b0;--acc:#3cc287;--ok:#5cc98a;--bad:#ff8a80;--wrn:#e3b341;--gold:#e3b341}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+header{position:sticky;top:0;z-index:8;background:#14432f;color:#fff;padding:calc(10px + env(safe-area-inset-top)) 14px 10px;display:flex;align-items:center;gap:10px}
+header h1{margin:0;font-size:18px;flex:1}header input{background:rgba(255,255,255,.15);border:0;color:#fff;border-radius:8px;padding:6px 8px;font:600 15px system-ui;width:auto}
+main{max-width:720px;margin:0 auto;padding:10px 12px calc(96px + env(safe-area-inset-bottom))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin:10px 0}
+h2{font-size:15px;color:var(--pri);margin:2px 0 10px}
+label{display:flex;flex-direction:column;gap:3px;font-size:12.5px;color:var(--muted)}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;width:100%;min-width:0}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.btn{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:10px 14px;font-weight:600;cursor:pointer}
+.btn.p{background:var(--acc);border-color:var(--acc);color:#fff}.btn.d{color:var(--bad)}.btn.sm{padding:6px 10px;font-size:14px}.btn.big{width:100%;padding:15px;font-size:17px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.note{font-size:13px;color:var(--muted)}
+.hero{background:linear-gradient(135deg,#14432f,#1f8a5b);color:#fff;border-radius:18px;padding:16px;margin:10px 0}
+.hero .l{font-size:13px;opacity:.85}.hero .v{font-size:34px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.1}
+.hero .sub{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.hero .sub div{background:rgba(255,255,255,.13);border-radius:12px;padding:8px 10px}.hero .sub b{display:block;font-size:18px}
+.pk{display:grid;grid-template-columns:1fr 1fr;gap:10px}.pk .card{margin:0}
+.pk .t{font-size:13px;color:var(--muted)}.pk .n{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums}
+.bar{height:8px;background:var(--bg);border-radius:6px;overflow:hidden;margin-top:6px}.bar i{display:block;height:100%;background:var(--acc)}.bar i.o{background:var(--bad)}.bar i.w{background:var(--wrn)}
+.cat{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14.5px}.cat:last-child{border-bottom:0}
+.cat .nm{flex:1;min-width:0}.cat .am{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tx{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);cursor:pointer}.tx:last-child{border-bottom:0}
+.tx .ic{width:40px;height:40px;border-radius:10px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:20px;flex:0 0 40px;overflow:hidden}.tx .ic img{width:100%;height:100%;object-fit:cover}
+.tx .b{flex:1;min-width:0}.tx .a{font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}.tx .a.in{color:var(--ok)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}.chips button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:20px;padding:8px 12px;font:600 14px system-ui;cursor:pointer}
+.chips button.on{background:var(--pri);border-color:var(--pri);color:var(--card)}
+.seg{display:flex;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:3px;gap:3px}.seg button{flex:1;border:0;background:none;padding:9px 4px;border-radius:8px;font:600 14px system-ui;color:var(--muted);cursor:pointer}
+.seg button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.15)}
+.amt{font-size:34px;font-weight:800;text-align:center;padding:14px}
+.fab{position:fixed;right:18px;bottom:calc(76px + env(safe-area-inset-bottom));width:62px;height:62px;border-radius:50%;background:var(--acc);color:#fff;border:0;font-size:34px;box-shadow:0 4px 14px rgba(0,0,0,.25);z-index:7;cursor:pointer}
+.nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;padding:6px 8px calc(6px + env(safe-area-inset-bottom));z-index:9}
+.nav button{flex:1;border:0;background:none;color:var(--muted);font:600 12px system-ui;padding:6px 2px;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer}
+.nav button b{font-size:20px;line-height:1}.nav button.on{color:var(--acc)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:flex-end;justify-content:center;z-index:20}.modal.on{display:flex}
+.modal .box{background:var(--card);width:100%;max-width:560px;max-height:92vh;overflow:auto;border-radius:18px 18px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom))}
+.ed{display:grid;grid-template-columns:1fr 90px 92px 30px;gap:6px;align-items:center;margin:6px 0}.ed input,.ed select{padding:8px}
+.pos{color:var(--ok)}.neg{color:var(--bad)}
+table.h{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}table.h th,table.h td{padding:7px 4px;border-bottom:1px solid var(--line);text-align:right}table.h th:first-child,table.h td:first-child{text-align:left}
+#lock{position:fixed;inset:0;background:#14432f;color:#fff;z-index:50;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+#lock input{width:180px;text-align:center;font-size:28px;letter-spacing:8px;background:rgba(255,255,255,.15);border:0;color:#fff}
+.hide{display:none!important}
+#toast{position:fixed;left:50%;top:calc(64px + env(safe-area-inset-top));transform:translateX(-50%);background:#14432f;color:#fff;padding:9px 14px;border-radius:10px;font-size:14px;opacity:0;transition:.2s;pointer-events:none;z-index:60;max-width:90vw;text-align:center}#toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div id="lock"><div style="font-size:40px">🔒</div><div>Ταμείο</div><input id="pinIn" type="password" inputmode="numeric" maxlength="6" autocomplete="off"></div>
+<header><h1>💰 Ταμείο</h1><input type="month" id="month"></header>
+<main>
+<!-- MONTH -->
+<section id="v-month">
+  <div class="hero"><div class="l">Στην άκρη αυτόν τον μήνα</div><div class="v" id="hAside">–</div>
+    <div class="sub"><div><span class="l">Εκτίμηση τέλους μήνα</span><b id="hEst">–</b></div><div><span class="l">Σύνολο στην άκρη</span><b id="hCum">–</b></div></div><div class="l" style="margin-top:8px">Πλάνο: <b id="hPlan">–</b> τον μήνα</div></div>
+  <div id="fixedCard" class="card hide"><div class="row" style="justify-content:space-between"><div><b>Πάγια του μήνα</b><div class="note" id="fixedTxt"></div></div><button class="btn p sm" id="applyFixed">Πέρασέ τα</button></div></div>
+  <div class="pk"><div class="card"><div class="t">🏦 Τράπεζα</div><div class="n" id="pBank">–</div><div class="note" id="pBankT"></div><div class="bar"><i id="bBank"></i></div></div>
+    <div class="card"><div class="t">💶 Μετρητά</div><div class="n" id="pCash">–</div><div class="note" id="pCashT"></div><div class="bar"><i id="bCash"></i></div></div></div>
+  <div class="card"><h2>Κατηγορίες (ξοδεύτηκαν / budget)</h2><div id="cats"></div></div>
+  <div class="card"><div class="row" style="justify-content:space-between"><h2 style="margin:0">Κινήσεις μήνα</h2><button class="btn sm" id="addInc">+ Έσοδο</button></div><div id="txl"></div></div>
+</section>
+<!-- HISTORY -->
+<section id="v-hist" class="hide">
+  <div class="card"><h2>📈 Σύνολο στην άκρη ανά μήνα</h2><canvas id="chart" style="width:100%;height:200px"></canvas></div>
+  <div class="card" style="overflow-x:auto"><table class="h" id="htab"></table></div>
+  <div class="card" id="proj"></div>
+  <div class="row"><button class="btn" id="xCsv">📊 Excel</button><button class="btn" id="xTxt">💬 Σύνοψη</button></div>
+</section>
+<!-- SETTINGS -->
+<section id="v-set" class="hide">
+  <div class="card"><h2>Έσοδα κάθε μήνα</h2><div id="incEd"></div><button class="btn sm" id="incAdd">+ Έσοδο</button>
+    <div class="g2" style="margin-top:10px"><label>Εκτός έδρας (€/ημέρα)<input id="travel" type="number" inputmode="decimal"></label><label>Δώρα/bonus τον χρόνο (€)<input id="bonus" type="number" inputmode="decimal"></label></div></div>
+  <div class="card"><h2>Κατηγορίες εξόδων & budget μήνα</h2><p class="note" style="margin-top:0">Πάγιο = μπαίνει αυτόματα κάθε μήνα με ένα πάτημα.</p><div id="catEd"></div><button class="btn sm" id="catAdd">+ Κατηγορία</button></div>
+  <div class="card"><h2>Ετήσια έξοδα (κουμπαράς)</h2><p class="note" style="margin-top:0">Π.χ. ασφάλεια αυτοκινήτου, τέλη κυκλοφορίας. Βλέπεις πόσα να κρατάς κάθε μήνα.</p><div id="annEd"></div><button class="btn sm" id="annAdd">+ Ετήσιο</button></div>
+  <div class="card"><h2>Αρχικά</h2><div class="g2"><label>Ποσό που ήδη έχω στην άκρη (€)<input id="startBal" type="number" inputmode="decimal"></label><label>Από μήνα<input id="startMonth" type="month"></label></div>
+    <label style="margin-top:8px">Στόχος αποταμίευσης (€)<input id="goal" type="number" inputmode="decimal"></label></div>
+  <div class="card"><h2>🔒 Κλείδωμα</h2><div class="row"><input id="pinSet" type="password" inputmode="numeric" maxlength="6" placeholder="PIN 4–6 ψηφία" style="flex:1"><button class="btn sm" id="pinSave">Ορισμός</button><button class="btn sm d" id="pinDel">Χωρίς PIN</button></div></div>
+  <div class="card"><h2>Backup / Εισαγωγή</h2><div class="row"><button class="btn" id="bExp">📤 Backup</button><button class="btn" id="bImp">📥 Εισαγωγή</button></div>
+    <textarea id="bTa" rows="4" class="hide" style="margin-top:8px" placeholder="Επικόλλησε backup ή κωδικό αρχικών στοιχείων και πάτα ξανά Εισαγωγή"></textarea>
+    <p class="note">Τα στοιχεία μένουν μόνο σε αυτό το κινητό. Κάνε backup κάθε μήνα (π.χ. στείλ' το στο email σου).</p></div>
+</section>
+</main>
+<button class="fab" id="fab">+</button>
+<nav class="nav"><button data-v="month" class="on"><b>🏠</b>Μήνας</button><button data-v="hist"><b>📈</b>Σύνολα</button><button data-v="set"><b>⚙</b>Ρυθμίσεις</button></nav>
+
+<div class="modal" id="txm"><div class="box">
+  <div class="row" style="justify-content:space-between"><h2 style="margin:0" id="txT">Νέο έξοδο</h2><button class="btn sm" data-close>✕</button></div>
+  <div class="seg" id="txType" style="margin-top:10px"><button data-t="exp" class="on">Έξοδο</button><button data-t="inc">Έσοδο</button></div>
+  <input id="txAmt" class="amt" type="number" inputmode="decimal" placeholder="0,00 €" style="margin-top:10px">
+  <div id="travelBox" class="hide row" style="margin:6px 0"><span class="note">Εκτός έδρας:</span><input id="txDays" type="number" inputmode="numeric" placeholder="ημέρες" style="width:90px"><span class="note" id="travelHint"></span></div>
+  <div class="note" style="margin:8px 0 4px">Κατηγορία</div><div class="chips" id="txCats"></div>
+  <div class="seg" id="txPay" style="margin-top:10px"><button data-p="cash" class="on">💶 Μετρητά</button><button data-p="bank">🏦 Τράπεζα/Κάρτα</button></div>
+  <div class="g2" style="margin-top:10px"><label>Ημερομηνία<input id="txDate" type="date"></label><label>Σημείωση<input id="txNote" placeholder="π.χ. Lidl"></label></div>
+  <div class="row" style="margin-top:10px"><label class="btn" style="flex-direction:row;cursor:pointer">📷 Απόδειξη<input type="file" accept="image/*" id="txPhoto" style="display:none"></label><div id="txPh"></div></div>
+  <div class="row" style="margin-top:14px"><button class="btn p" id="txSave" style="flex:1">Αποθήκευση</button><button class="btn d hide" id="txDel">🗑</button></div>
+</div></div>
+<div class="modal" id="phm"><div class="box"><div class="row" style="justify-content:flex-end"><button class="btn sm" data-close>✕</button></div><img id="phBig" style="width:100%;border-radius:10px"></div></div>
+<div id="toast"></div>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const n=v=>{const x=parseFloat(String(v??"").replace(",","."));return isFinite(x)?x:0};
+const eu=(v,d=0)=>(v<0?"−":"")+Math.abs(v).toLocaleString("el-GR",{minimumFractionDigits:d,maximumFractionDigits:d})+" €";
+function toast(m,ms=2000){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),ms);}
+const today=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");};
+const MN=["Ιαν","Φεβ","Μάρ","Απρ","Μάι","Ιούν","Ιούλ","Αύγ","Σεπ","Οκτ","Νοέ","Δεκ"],mName=k=>MN[+k.slice(5)-1]+" "+k.slice(2,4);
+const addM=(k,i)=>{const[y,m]=k.split("-").map(Number);const d=new Date(y,m-1+i,1);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");};
+const ICON={"Δάνειο":"🏠","Επένδυση":"📈","Ασφάλεια Ζωής":"🛡","Netflix":"🎬","COSMOTE":"📱","iCloud":"☁️","YouTube":"▶️","CapCut":"✂️","Ρεύμα":"💡","ChatGPT":"🤖","Claude":"🤖","Νερό":"💧","Βενζίνες":"⛽","Σούπερ μάρκετ":"🛒","Φαγητό":"🍽","Βόλτες":"🎉","Ενοίκιο":"🔑"};
+const ic=c=>c.icon||ICON[c.name]||(/ενοίκ/i.test(c.name)?"🔑":"💸");
+let S;try{S=JSON.parse(localStorage.getItem("tameio_v1"));}catch(e){}
+if(!S||!S.cats)S={cats:[],inc:[],ann:[],tx:[],fixedDone:{},travel:0,bonus:0,start:0,startMonth:today().slice(0,7),goal:0,pin:""};
+const save=()=>{try{localStorage.setItem("tameio_v1",JSON.stringify(S));}catch(e){toast("⚠ Δεν αποθηκεύτηκε");}};
+const IDB={db:null,open(){return this.db?Promise.resolve(this.db):new Promise((res,rej)=>{const r=indexedDB.open("tameio",1);r.onupgradeneeded=()=>r.result.createObjectStore("b");r.onsuccess=()=>{this.db=r.result;res(this.db);};r.onerror=()=>rej(r.error);});},
+ async tx(m,fn){const d=await this.open();return new Promise((res,rej)=>{const t=d.transaction("b",m),q=fn(t.objectStore("b"));t.oncomplete=()=>res(q&&q.result);t.onerror=()=>rej(t.error);});},
+ put(k,v){return this.tx("readwrite",s=>s.put(v,k));},get(k){return this.tx("readonly",s=>s.get(k));},del(k){return this.tx("readwrite",s=>s.delete(k));}};
+function fileToJpeg(file,max=1100,q=.65){return new Promise((res,rej)=>{const u=URL.createObjectURL(file),im=new Image();im.onload=()=>{const k=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement("canvas");
+  c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);res(c.toDataURL("image/jpeg",q));};im.onerror=rej;im.src=u;});}
+
+/* ---------- calculations ---------- */
+let MK=today().slice(0,7);
+const txM=k=>S.tx.filter(t=>t.date.slice(0,7)===k);
+const pocketInc=p=>S.inc.filter(i=>i.pay===p).reduce((a,i)=>a+n(i.amt),0);
+function month(k){const tx=txM(k),inc={bank:pocketInc("bank"),cash:pocketInc("cash")},exp={bank:0,cash:0};
+  tx.forEach(t=>{if(t.type==="inc")inc[t.pay]+=n(t.amt);else exp[t.pay]+=n(t.amt);});
+  const I=inc.bank+inc.cash,E=exp.bank+exp.cash;return{inc,exp,I,E,aside:I-E,has:tx.length>0};}
+const planAside=()=>S.inc.reduce((a,i)=>a+n(i.amt),0)-S.cats.reduce((a,c)=>a+n(c.budget),0)-S.ann.reduce((a,x)=>a+n(x.amt),0)/12;
+function months(){const now=today().slice(0,7),out=[];let k=S.startMonth||now;const last=[now,...S.tx.map(t=>t.date.slice(0,7))].sort().pop();for(let i=0;i<240&&k<=last;i++){out.push(k);k=addM(k,1);}return out;}
+function cumTo(k){let c=n(S.start);months().forEach(m=>{if(m<=k)c+=month(m).aside;});return c;}
+
+/* ---------- month view ---------- */
+$("#month").value=MK;$("#month").onchange=e=>{if(e.target.value){MK=e.target.value;rMonth();}};
+function rMonth(){const m=month(MK),cum=cumTo(MK);
+  const tx0=txM(MK);let est=m.I;S.cats.forEach(c=>{const sp=tx0.filter(t=>t.type!=="inc"&&t.cat===c.id).reduce((a,t)=>a+n(t.amt),0);est-=Math.max(sp,c.fixed&&S.fixedDone[MK]?sp:n(c.budget));});
+  tx0.filter(t=>t.type!=="inc"&&!S.cats.some(c=>c.id===t.cat)).forEach(t=>est-=n(t.amt));$("#hEst").textContent=eu(est);
+  $("#hAside").textContent=eu(m.aside);$("#hAside").style.color=m.aside<0?"#ffb3ab":"";$("#hCum").textContent=eu(cum);$("#hPlan").textContent=eu(planAside());
+  const pocket=(p,el,tl,bl)=>{const left=m.inc[p]-m.exp[p],pct=m.inc[p]?m.exp[p]/m.inc[p]*100:0;$(el).textContent=eu(left);$(el).className="n "+(left<0?"neg":"");
+    $(tl).textContent=`${eu(m.exp[p])} ξοδεύτηκαν από ${eu(m.inc[p])}`;$(bl).style.width=Math.min(100,pct)+"%";$(bl).className=pct>100?"o":pct>85?"w":"";};
+  pocket("bank","#pBank","#pBankT","#bBank");pocket("cash","#pCash","#pCashT","#bCash");
+  const fixed=S.cats.filter(c=>c.fixed&&n(c.budget));const done=S.fixedDone[MK];
+  $("#fixedCard").classList.toggle("hide",!fixed.length||!!done);$("#fixedTxt").textContent=`${fixed.length} πάγια · ${eu(fixed.reduce((a,c)=>a+n(c.budget),0))} (${fixed.map(c=>c.name).slice(0,4).join(", ")}${fixed.length>4?"…":""})`;
+  const tx=txM(MK);
+  $("#cats").innerHTML=S.cats.map(c=>{const sp=tx.filter(t=>t.type!=="inc"&&t.cat===c.id).reduce((a,t)=>a+n(t.amt),0),b=n(c.budget),pct=b?sp/b*100:0;
+    return`<div class="cat"><div class="nm">${ic(c)} ${esc(c.name)} <span class="note">${c.fixed?"πάγιο":""} ${c.pay==="bank"?"🏦":"💶"}</span><div class="bar"><i class="${c.fixed?"":pct>100?"o":pct>85?"w":""}" style="width:${Math.min(100,pct)}%"></i></div></div>
+      <div class="am"><b>${eu(sp)}</b><div class="note">${b?"/ "+eu(b):""}${b&&!c.fixed?` · ${b-sp>=0?"μένουν "+eu(b-sp):"πάνω "+eu(sp-b)}`:""}</div></div></div>`;}).join("")||'<p class="note">Πρόσθεσε κατηγορίες στις ⚙ Ρυθμίσεις ή κάνε Εισαγωγή αρχικών.</p>';
+  const cn=id=>S.cats.find(c=>c.id===id);
+  $("#txl").innerHTML=tx.sort((a,b)=>b.date.localeCompare(a.date)||b.ts-a.ts).map(t=>{const c=cn(t.cat);return`<div class="tx" data-t="${t.id}"><div class="ic">${t.type==="inc"?"💵":c?ic(c):"💸"}</div>
+    <div class="b"><div>${esc(t.type==="inc"?(t.note||"Έσοδο"):(c?c.name:"—"))}${t.fixed?' <span class="note">πάγιο</span>':""}</div><div class="note">${t.date.slice(8,10)}/${t.date.slice(5,7)} · ${t.pay==="bank"?"🏦":"💶"}${t.note&&t.type!=="inc"?" · "+esc(t.note):""}${t.photo?" · 🧾":""}</div></div>
+    <div class="a ${t.type==="inc"?"in":""}">${t.type==="inc"?"+":"−"}${eu(n(t.amt),n(t.amt)%1?2:0)}</div></div>`;}).join("")||'<p class="note">Καμία κίνηση. Πάτα + για έξοδο.</p>';
+  $$("#txl .tx").forEach(el=>{const t=S.tx.find(x=>x.id===el.dataset.t);if(t.photo)IDB.get(t.photo).then(d=>{if(d)el.querySelector(".ic").innerHTML=`<img src="${d}">`;});el.onclick=()=>openTx(t);});}
+$("#applyFixed").onclick=()=>{const d=MK+"-01";S.cats.filter(c=>c.fixed&&n(c.budget)).forEach(c=>S.tx.push({id:uid(),ts:Date.now(),type:"exp",date:d,amt:n(c.budget),cat:c.id,pay:c.pay,note:"",fixed:1}));
+  S.fixedDone[MK]=1;save();rMonth();toast("Τα πάγια πέρασαν ✔");};
+
+/* ---------- transaction modal ---------- */
+let T=null;
+function openTx(t,type){T=t?JSON.parse(JSON.stringify(t)):{id:null,type:type||"exp",amt:"",cat:(S.cats.find(c=>!c.fixed)||S.cats[0]||{}).id,pay:type==="inc"?"bank":"cash",date:MK===today().slice(0,7)?today():MK+"-01",note:"",photo:null};
+  $("#txT").textContent=t?"Κίνηση":(T.type==="inc"?"Νέο έσοδο":"Νέο έξοδο");$("#txAmt").value=T.amt;$("#txDate").value=T.date;$("#txNote").value=T.note||"";$("#txDel").classList.toggle("hide",!t);$("#txDays").value="";rTx();$("#txm").classList.add("on");
+  if(!t)setTimeout(()=>$("#txAmt").focus(),150);}
+function rTx(){$$("#txType button").forEach(b=>b.classList.toggle("on",b.dataset.t===T.type));$$("#txPay button").forEach(b=>b.classList.toggle("on",b.dataset.p===T.pay));
+  $("#txCats").parentElement;$("#txCats").classList.toggle("hide",T.type==="inc");$("#txCats").previousElementSibling.classList.toggle("hide",T.type==="inc");
+  $("#txCats").innerHTML=S.cats.map(c=>`<button data-c="${c.id}" class="${c.id===T.cat?"on":""}">${ic(c)} ${esc(c.name)}</button>`).join("");
+  $$("#txCats button").forEach(b=>b.onclick=()=>{T.cat=b.dataset.c;const c=S.cats.find(x=>x.id===T.cat);if(c&&!T.id)T.pay=c.pay;rTx();});
+  $("#travelBox").classList.toggle("hide",T.type!=="inc"||!n(S.travel));$("#travelHint").textContent=`× ${eu(n(S.travel))}`;
+  $("#txPh").innerHTML="";if(T.photo)IDB.get(T.photo).then(d=>{if(d)$("#txPh").innerHTML=`<img src="${d}" style="height:52px;border-radius:8px" onclick="big('${T.photo}')">`;});}
+$("#txType").onclick=e=>{const b=e.target.closest("[data-t]");if(!b)return;T.type=b.dataset.t;if(T.type==="inc"&&!T.id)T.pay="bank";rTx();};
+$("#txPay").onclick=e=>{const b=e.target.closest("[data-p]");if(!b)return;T.pay=b.dataset.p;rTx();};
+$("#txDays").oninput=()=>{const d=n($("#txDays").value);if(d){$("#txAmt").value=d*n(S.travel);$("#txNote").value=`Εκτός έδρας ${d} ημ.`;}};
+$("#txPhoto").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(!f)return;const k="r_"+uid();await IDB.put(k,await fileToJpeg(f));T.photo=k;rTx();};
+window.big=async k=>{const d=await IDB.get(k);if(d){$("#phBig").src=d;$("#phm").classList.add("on");}};
+$("#txSave").onclick=()=>{const a=n($("#txAmt").value);if(!a){toast("Βάλε ποσό");$("#txAmt").focus();return;}if(T.type==="exp"&&!T.cat){toast("Διάλεξε κατηγορία");return;}
+  Object.assign(T,{amt:a,date:$("#txDate").value||today(),note:$("#txNote").value.trim()});
+  if(T.id){const i=S.tx.findIndex(x=>x.id===T.id);S.tx[i]=T;}else{T.id=uid();T.ts=Date.now();S.tx.push(T);}save();$("#txm").classList.remove("on");rMonth();toast("Αποθηκεύτηκε ✔");};
+let tdA=0;$("#txDel").onclick=async e=>{if(!tdA){tdA=1;e.target.textContent="Σίγουρα;";setTimeout(()=>{tdA=0;e.target.textContent="🗑";},3000);return;}
+  if(T.photo)await IDB.del(T.photo).catch(()=>{});S.tx=S.tx.filter(x=>x.id!==T.id);tdA=0;e.target.textContent="🗑";save();$("#txm").classList.remove("on");rMonth();};
+$$(".modal").forEach(m=>m.addEventListener("click",e=>{if(e.target===m||e.target.hasAttribute("data-close"))m.classList.remove("on");}));
+$("#fab").onclick=()=>openTx(null,"exp");$("#addInc").onclick=()=>openTx(null,"inc");
+
+/* ---------- history ---------- */
+function rHist(){const ms=months();let c=n(S.start);const rows=ms.map(k=>{const m=month(k);c+=m.aside;return{k,m,c};});
+  $("#htab").innerHTML="<tr><th>Μήνας</th><th>Έσοδα</th><th>Έξοδα</th><th>Στην άκρη</th><th>Σύνολο</th></tr>"+rows.slice().reverse().map(r=>`<tr><td>${mName(r.k)}</td><td>${eu(r.m.I)}</td><td>${eu(r.m.E)}</td><td class="${r.m.aside<0?"neg":"pos"}"><b>${eu(r.m.aside)}</b></td><td><b>${eu(r.c)}</b></td></tr>`).join("");
+  const cur=today().slice(0,7),pa=planAside(),now=n(S.start)+rows.filter(r=>r.k<cur).reduce((a,r)=>a+r.m.aside,0),ann=S.ann.reduce((a,x)=>a+n(x.amt),0),year=pa*12+n(S.bonus);
+  const g=n(S.goal),toGoal=g&&pa>0?Math.ceil(Math.max(0,g-now)/pa):null;
+  $("#proj").innerHTML=`<h2>🔮 Πρόβλεψη</h2><div class="cat"><div class="nm">Πλάνο στην άκρη / μήνα</div><div class="am"><b>${eu(pa)}</b></div></div>
+    <div class="cat"><div class="nm">× 12 μήνες + δώρα ${eu(n(S.bonus))}</div><div class="am"><b>${eu(year)}</b></div></div>
+    ${ann?`<div class="cat"><div class="nm">Μέσα: κουμπαράς ετήσιων (${S.ann.map(x=>esc(x.name)).join(", ")})</div><div class="am">${eu(ann/12)}/μήνα</div></div>`:""}
+    <div class="cat"><div class="nm">Μέχρι τον προηγούμενο μήνα έχεις</div><div class="am"><b>${eu(now)}</b></div></div><div class="cat"><div class="nm">Σε 12 μήνες θα έχεις περίπου</div><div class="am"><b class="pos">${eu(now+year)}</b></div></div>
+    ${g?`<div class="cat"><div class="nm">Στόχος ${eu(g)}</div><div class="am">${now>=g?"✔ πιάστηκε":toGoal!==null?`σε ~${toGoal} μήνες`:"–"}</div></div><div class="bar"><i style="width:${Math.min(100,now/g*100)}%"></i></div>`:""}`;
+  const cv=$("#chart"),dpr=devicePixelRatio||1,W=cv.clientWidth,H=200;cv.width=W*dpr;cv.height=H*dpr;const x=cv.getContext("2d");x.scale(dpr,dpr);x.clearRect(0,0,W,H);
+  if(!rows.length)return;const vals=[n(S.start),...rows.map(r=>r.c)],mx=Math.max(...vals,1),mn=Math.min(0,...vals),P=30,sx=(W-P-10)/Math.max(1,vals.length-1),sy=v=>H-22-(v-mn)/(mx-mn||1)*(H-40);
+  x.strokeStyle=getComputedStyle(document.body).getPropertyValue("--line");x.beginPath();x.moveTo(P,sy(0));x.lineTo(W-10,sy(0));x.stroke();
+  x.strokeStyle="#1f8a5b";x.lineWidth=3;x.beginPath();vals.forEach((v,i)=>{const X=P+i*sx,Y=sy(v);i?x.lineTo(X,Y):x.moveTo(X,Y);});x.stroke();
+  x.fillStyle="#1f8a5b";vals.forEach((v,i)=>{x.beginPath();x.arc(P+i*sx,sy(v),3.5,0,7);x.fill();});
+  x.fillStyle=getComputedStyle(document.body).getPropertyValue("--muted");x.font="11px system-ui";x.fillText(eu(mx),2,12);rows.forEach((r,i)=>{if(rows.length<=12||i%3===0)x.fillText(mName(r.k).split(" ")[0],P+(i+1)*sx-10,H-6);});}
+async function shareText(t,title){try{if(navigator.share){await navigator.share({title,text:t});return;}await navigator.clipboard.writeText(t);toast("Αντιγράφηκε ✔");}catch(e){}}
+$("#xTxt").onclick=()=>{let c=n(S.start),t="Ταμείο — σύνοψη\n";months().forEach(k=>{const m=month(k);c+=m.aside;t+=`${mName(k)}: έσοδα ${eu(m.I)}, έξοδα ${eu(m.E)}, στην άκρη ${eu(m.aside)}, σύνολο ${eu(c)}\n`;});shareText(t,"Ταμείο");};
+$("#xCsv").onclick=async()=>{const cn=id=>(S.cats.find(c=>c.id===id)||{}).name||"";const rows=[["Ημερομηνία","Τύπος","Κατηγορία","Ποσό","Πληρωμή","Σημείωση","Πάγιο"]];
+  S.tx.slice().sort((a,b)=>a.date.localeCompare(b.date)).forEach(t=>rows.push([t.date,t.type==="inc"?"Έσοδο":"Έξοδο",t.type==="inc"?"":cn(t.cat),String(n(t.amt)).replace(".",","),t.pay==="bank"?"Τράπεζα":"Μετρητά",t.note||"",t.fixed?"ναι":""]));
+  const csv="﻿"+rows.map(r=>r.map(x=>{x=String(x??"");return/[";\n]/.test(x)?'"'+x.replace(/"/g,'""')+'"':x;}).join(";")).join("\r\n");
+  const file=new File([csv],"Tameio.csv",{type:"text/csv"});try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:"Tameio.csv"});return;}}catch(e){return;}
+  const a=document.createElement("a");a.href=URL.createObjectURL(file);a.download="Tameio.csv";a.click();};
+
+/* ---------- settings ---------- */
+function rSet(){
+  $("#incEd").innerHTML=S.inc.map((i,k)=>`<div class="ed" data-i="${k}"><input data-f="name" value="${esc(i.name)}"><input data-f="amt" type="number" inputmode="decimal" value="${i.amt}"><select data-f="pay"><option value="bank"${i.pay==="bank"?" selected":""}>🏦 Τράπ.</option><option value="cash"${i.pay==="cash"?" selected":""}>💶 Μετρ.</option></select><button class="btn sm d" data-x>✕</button></div>`).join("");
+  $("#catEd").innerHTML=S.cats.map((c,k)=>`<div class="ed" data-c="${k}" style="grid-template-columns:1fr 80px 74px 64px 30px"><input data-f="name" value="${esc(c.name)}"><input data-f="budget" type="number" inputmode="decimal" value="${c.budget}" placeholder="budget">
+    <select data-f="pay"><option value="bank"${c.pay==="bank"?" selected":""}>🏦</option><option value="cash"${c.pay==="cash"?" selected":""}>💶</option></select>
+    <label style="flex-direction:row;align-items:center;gap:4px;font-size:12px"><input type="checkbox" data-f="fixed" style="width:auto"${c.fixed?" checked":""}>πάγιο</label><button class="btn sm d" data-x>✕</button></div>`).join("");
+  $("#annEd").innerHTML=S.ann.map((a,k)=>`<div class="ed" data-a="${k}" style="grid-template-columns:1fr 90px 90px 30px"><input data-f="name" value="${esc(a.name)}"><input data-f="amt" type="number" inputmode="decimal" value="${a.amt}" placeholder="€/χρόνο"><span class="note">${eu(n(a.amt)/12)}/μήνα</span><button class="btn sm d" data-x>✕</button></div>`).join("");
+  $("#travel").value=S.travel||"";$("#bonus").value=S.bonus||"";$("#startBal").value=S.start||"";$("#startMonth").value=S.startMonth||"";$("#goal").value=S.goal||"";}
+function bindEd(sel,arr,attr){$(sel).addEventListener("input",e=>{const r=e.target.closest(`[${attr}]`),f=e.target.dataset.f;if(!r||!f)return;const o=arr()[+r.getAttribute(attr)];o[f]=e.target.type==="checkbox"?(e.target.checked?1:0):e.target.value;save();});
+  $(sel).addEventListener("click",e=>{const x=e.target.closest("[data-x]");if(!x)return;const r=x.closest(`[${attr}]`);arr().splice(+r.getAttribute(attr),1);save();rSet();});}
+$("#catEd").addEventListener("change",e=>{if(e.target.type==="checkbox"){const r=e.target.closest("[data-c]");S.cats[+r.dataset.c].fixed=e.target.checked?1:0;save();}});
+bindEd("#incEd",()=>S.inc,"data-i");bindEd("#catEd",()=>S.cats,"data-c");bindEd("#annEd",()=>S.ann,"data-a");
+$("#incAdd").onclick=()=>{S.inc.push({id:uid(),name:"Έσοδο",amt:0,pay:"bank"});save();rSet();};
+$("#catAdd").onclick=()=>{S.cats.push({id:uid(),name:"Νέα κατηγορία",budget:0,pay:"cash",fixed:0});save();rSet();};
+$("#annAdd").onclick=()=>{S.ann.push({id:uid(),name:"Ετήσιο",amt:0});save();rSet();};
+[["travel","travel"],["bonus","bonus"],["startBal","start"],["startMonth","startMonth"],["goal","goal"]].forEach(([id,k])=>$("#"+id).addEventListener("input",e=>{S[k]=e.target.value;save();}));
+$("#pinSave").onclick=()=>{const p=$("#pinSet").value.trim();if(!/^\d{4,6}$/.test(p)){toast("PIN 4–6 ψηφία");return;}S.pin=p;save();$("#pinSet").value="";toast("PIN ορίστηκε 🔒");};
+$("#pinDel").onclick=()=>{S.pin="";save();toast("Χωρίς PIN");};
+$("#bExp").onclick=()=>shareText(JSON.stringify(S),"Ταμείο backup "+today());
+$("#bImp").onclick=()=>{const ta=$("#bTa");if(ta.classList.contains("hide")||!ta.value.trim()){ta.classList.remove("hide");ta.focus();return;}
+  let t=ta.value.trim();try{if(!t.startsWith("{")){const m=t.match(/TAMEIO:([A-Za-z0-9+/=]+)/);t=decodeURIComponent(escape(atob(m?m[1]:t)));}const d=JSON.parse(t);
+    if(d.seed){S.inc=d.inc.map(x=>({id:uid(),...x}));S.cats=d.cats.map(x=>({id:uid(),...x}));S.ann=(d.ann||[]).map(x=>({id:uid(),...x}));S.travel=d.travel||S.travel;S.bonus=d.bonus||S.bonus;toast("Αρχικά στοιχεία μπήκαν ✔");}
+    else{if(!d.cats)throw 0;S=d;toast("Backup επανήλθε ✔");}save();ta.value="";ta.classList.add("hide");rSet();rMonth();}catch(e){toast("Μη έγκυρο κείμενο");}};
+
+/* ---------- nav & lock ---------- */
+let view="month";
+$$(".nav button").forEach(b=>b.onclick=()=>{view=b.dataset.v;$$(".nav button").forEach(x=>x.classList.toggle("on",x===b));["month","hist","set"].forEach(v=>$("#v-"+v).classList.toggle("hide",v!==view));
+  $("#fab").classList.toggle("hide",view!=="month");({month:rMonth,hist:rHist,set:rSet})[view]();window.scrollTo(0,0);});
+function lock(){if(!S.pin)return;$("#lock").style.display="flex";$("#pinIn").value="";setTimeout(()=>$("#pinIn").focus(),200);}
+$("#pinIn").oninput=e=>{if(e.target.value===S.pin){$("#lock").style.display="none";}else if(e.target.value.length>=S.pin.length){e.target.value="";toast("Λάθος PIN");}};
+document.addEventListener("visibilitychange",()=>{if(document.hidden&&S.pin)lock();});
+lock();rMonth();
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>
