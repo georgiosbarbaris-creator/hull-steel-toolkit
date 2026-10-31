@@ -268,6 +268,11 @@ $("#impF").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(!f)
     if(o.app==="jobs-backup"&&o.data&&o.data.v){S=o.data;save();rHome();toast("✔ Backup επανήλθε (χωρίς φωτό)",3000);return;}
     const[n,sk]=importJobs(o);rHome();toast(`✔ ${n} δουλειές μπήκαν${sk?` · ${sk} υπήρχαν ήδη`:""}`,3500);}
   catch(x){toast("⚠ Λάθος αρχείο",3000);}};
+(async()=>{const m=location.hash.match(/^#imp=([A-Za-z0-9_-]+)/);if(!m)return;history.replaceState(null,"",location.pathname);
+  try{const b=Uint8Array.from(atob(m[1].replace(/-/g,"+").replace(/_/g,"/")),c=>c.charCodeAt(0));
+    const t=await new Response(new Blob([b]).stream().pipeThrough(new DecompressionStream("deflate-raw"))).text();
+    const[n,sk]=importJobs(JSON.parse(t));go("home");toast(`✔ ${n} δουλειές μπήκαν${sk?` · ${sk} υπήρχαν ήδη`:""}`,4000);}
+  catch(x){toast("⚠ Το link δεν διαβάστηκε",3000);}})();
 $("#bkExp").onclick=()=>shareFile(new Blob([JSON.stringify({app:"jobs-backup",date:today(),data:S})],{type:"application/json"}),`Job_Orders_backup_${today()}.json`);
 
 /* ---------- exports ---------- */
