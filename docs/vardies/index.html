@@ -65,6 +65,12 @@ td.qw{box-shadow:inset 0 0 0 3px #2e8b57}
 .cal button.R{background:var(--acc);border-color:var(--acc);color:#fff}.cal button.W{background:#2e8b57;border-color:#2e8b57;color:#fff}
 .cal button.P{background:var(--P);color:var(--Pi)}.cal button.A{background:var(--A);color:var(--Ai)}.cal button.N{background:var(--N);color:var(--Ni)}
 .cal button small{display:block;font-size:9px;font-weight:700;line-height:1}
+table.g td.cell{-webkit-touch-callout:none;-webkit-user-select:none}
+.undo{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:8px 12px;font:700 15px system-ui;cursor:pointer}.undo:disabled{opacity:.35}
+.brush{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.brush button{border:2px solid transparent;border-radius:9px;padding:7px 10px;font:700 13px system-ui;cursor:pointer;background:var(--bg);color:var(--ink)}
+.brush button.on{border-color:var(--ink)}.brush .bR{background:var(--acc);color:#fff}.brush .bW{background:#2e8b57;color:#fff}.brush .bP{background:var(--P);color:var(--Pi)}.brush .bA{background:var(--A);color:var(--Ai)}.brush .bN{background:var(--N);color:var(--Ni)}
+.brush .bL{background:#cfe3ff;color:#0b3d91}.brush .bS{background:#f3d1ff;color:#6a1b7a}
+.cal button.L{background:#cfe3ff;color:#0b3d91}.cal button.S{background:#f3d1ff;color:#6a1b7a}
 .legend{display:flex;gap:6px;flex-wrap:wrap;font-size:12px;margin:6px 0}.legend span{padding:2px 7px;border-radius:8px;font-weight:700}
 </style>
 </head>
@@ -80,7 +86,7 @@ td.qw{box-shadow:inset 0 0 0 3px #2e8b57}
     <div class="row" style="margin-top:8px"><button class="btn sm" id="impReq">📥 Αιτήματα φυλάκων</button><button class="btn sm" id="sendLink">🔗 Link αιτήματος στους φύλακες</button></div>
   </div>
   <div class="card" style="padding:10px">
-    <div class="seg" id="mode"><button data-m="req" class="on">🙋 Αίτημα</button><button data-m="leave">🏖 Άδεια</button><button data-m="edit">✎ Αλλαγή</button></div>
+    <div class="row" style="flex-wrap:nowrap"><div class="seg" id="mode" style="flex:1"><button data-m="req" class="on">🙋 Αίτημα</button><button data-m="leave">🏖 Άδεια</button><button data-m="edit">✎ Αλλαγή</button></div><button class="undo" id="undo" title="Αναίρεση">↶</button></div>
     <p class="note" id="modeHint" style="margin:8px 2px"></p>
     <div class="gridwrap"><table class="g" id="grid"></table></div>
     <div class="legend"><span class="c-P">Π 07-15</span><span class="c-A">Α 15-23</span><span class="c-N">Ν 23-07</span><span class="c-R">Ρ ρεπό</span><span class="c-L">ΑΔ άδεια</span><span class="c-S">ΑΣ ασθένεια</span></div>
@@ -101,7 +107,7 @@ td.qw{box-shadow:inset 0 0 0 3px #2e8b57}
 <section id="v-staff" class="hide">
   <div class="card"><h2>Φύλακες</h2><div id="staffList"></div>
     <button class="btn p big" id="addSt" style="margin-top:10px">+ Προσθήκη φύλακα</button></div>
-  <p class="note" style="padding:0 6px">Πάτα σε έναν φύλακα για στοιχεία, ποιες βάρδιες κάνει, αιτήματα και άδειες.</p>
+  <p class="note" style="padding:0 6px">Πάτα σε έναν φύλακα: στοιχεία, ποιες βάρδιες κάνει, και <b>αιτήματα</b> (ρεπό, θέλει δουλειά, Πρωί/Απόγευμα/Νύχτα) ή <b>άδειες</b> για τον μήνα.</p>
 </section>
 
 <!-- ================= SETTINGS ================= -->
@@ -150,8 +156,9 @@ td.qw{box-shadow:inset 0 0 0 3px #2e8b57}
   <label style="margin-top:8px">Σημειώσεις<input id="p_note" placeholder="π.χ. ειδικότητα, ΑΜ"></label>
   <div style="margin-top:10px"><div class="note">Ποιες βάρδιες μπορεί να κάνει</div><div class="row" style="margin-top:4px">
     <label class="chk"><input type="checkbox" id="p_P"> Πρωί</label><label class="chk"><input type="checkbox" id="p_A"> Απόγευμα</label><label class="chk"><input type="checkbox" id="p_N"> Νύχτα</label></div></div>
-  <div style="margin-top:12px"><div class="seg" id="pmMode"><button data-m="req" class="on">🙋 Αιτήματα</button><button data-m="leave">🏖 Άδειες</button></div>
-    <div class="note" style="margin-top:6px" id="pmHint"></div><div class="cal" id="pmCal"></div></div>
+  <div style="margin-top:12px"><div class="note" id="pmHint"></div>
+    <div class="brush" id="brush"><button data-b="R" class="bR on">Ρεπό</button><button data-b="W" class="bW">Θέλει δουλειά</button><button data-b="P" class="bP">Πρωί</button><button data-b="A" class="bA">Απόγευμα</button><button data-b="N" class="bN">Νύχτα</button><button data-b="L" class="bL">Άδεια</button><button data-b="S" class="bS">Ασθένεια</button><button data-b="X">🧽 Σβήσιμο</button></div>
+    <div class="cal" id="pmCal" style="margin-top:8px"></div><div id="pmSum" class="note" style="margin-top:8px;color:var(--ink)"></div></div>
   <div class="row" style="margin-top:14px"><button class="btn p" id="p_save">Αποθήκευση</button><button class="btn d" id="p_del">Διαγραφή</button></div>
 </div></div>
 
@@ -260,9 +267,9 @@ function validate(k){const D=dim(k),m=M(k),cf=C(),out=[],cellErr={},pm=S.months[
 let mode="req";
 $("#month").value=MK;$("#month").onchange=e=>{if(e.target.value){MK=e.target.value;rMonth();}};
 $("#mode").addEventListener("click",e=>{const b=e.target.closest("[data-m]");if(!b)return;mode=b.dataset.m;$$("#mode button").forEach(x=>x.classList.toggle("on",x===b));hint();});
-function hint(){$("#modeHint").innerHTML={req:"Πάτα μέρα: <b>Ρεπό → Θέλω δουλειά → Πρωί → Απόγευμα → Νύχτα → τίποτα</b>. Μετά ⚡ Φτιάξε πρόγραμμα.",
-  leave:"Πάτα μέρα: <b>ΑΔ άδεια → ΑΣ ασθένεια → τίποτα</b>. Για ασθένεια μέσα στον μήνα: βάλε ΑΣ και ξαναπάτα ⚡ (οι κλειδωμένες αλλαγές μένουν).",
-  edit:"Πάτα κελί: Π → Α → Ν → Ρ. Η αλλαγή <b>κλειδώνει</b> (•) και κρατιέται αν ξαναπατήσεις ⚡."}[mode];}
+function hint(){$("#modeHint").innerHTML={req:"Πάτα μέρα: <b>Ρεπό → Θέλω δουλειά → Πρωί → Απόγευμα → Νύχτα → τίποτα</b>. Μετά ⚡ Φτιάξε πρόγραμμα. <b>Κράτα πατημένο</b> = σβήσιμο · ↶ = αναίρεση.",
+  leave:"Πάτα μέρα: <b>ΑΔ άδεια → ΑΣ ασθένεια → τίποτα</b>. Για ασθένεια μέσα στον μήνα: βάλε ΑΣ και ξαναπάτα ⚡ (οι κλειδωμένες αλλαγές μένουν). <b>Κράτα πατημένο</b> = σβήσιμο.",
+  edit:"Πάτα κελί: Π → Α → Ν → Ρ. Η αλλαγή <b>κλειδώνει</b> (•) και κρατιέται αν ξαναπατήσεις ⚡. <b>Κράτα πατημένο</b> = κενό κελί · ↶ = αναίρεση."}[mode];}
 function feas(){const D=dim(MK),cf=C(),m=M(),n=S.staff.length;let T=0;for(let d=0;d<D;d++){const x=need(MK,d);T+=x.P+x.A+x.N;}
   let mn=0,mx=0;S.staff.forEach(p=>{const[a,b,L]=offRange(m,p.id,D);mn+=D-L-b;mx+=D-L-a;});
   let msg=`${mName(MK)}: ${D} μέρες · χρειάζονται <b>${T}</b> βάρδιες · ${n} φύλακες.`;
@@ -283,17 +290,35 @@ function rMonth(){const k=MK,D=dim(k),m=M(k),V=validate(k);feas();hint();$("#hsu
     s+=`<tr><td>${esc(p.name)}</td><td>${c("P")}</td><td>${c("A")}</td><td>${c("N")}</td><td><b>${c("R")}</b></td><td>${c("L")+c("S")||"–"}</td><td>${a.filter((v,d)=>v==="R"&&isWE(k,d)).length}</td><td>${tot?`${ok}/${tot}`:"–"}</td></tr>`;});
   $("#sum").innerHTML=s;}
 const cyc=(seq,v)=>seq[(seq.indexOf(v||"")+1)%seq.length];
+/* undo */
+const HIST=[];function snap(){HIST.push(JSON.stringify(S));if(HIST.length>40)HIST.shift();updUndo();}
+function updUndo(){const b=$("#undo");if(b)b.disabled=!HIST.length;}
+$("#undo").onclick=()=>{if(!HIST.length)return;S=JSON.parse(HIST.pop());save();rAll();updUndo();toast("↶ Αναιρέθηκε");};
+/* long press = clear cell */
+let lpT=null,lpAt=0,lpXY=null;
+$("#grid").addEventListener("pointerdown",e=>{const td=e.target.closest("td.cell");if(!td)return;lpXY=[e.clientX,e.clientY];clearTimeout(lpT);
+  lpT=setTimeout(()=>{lpAt=Date.now();clearCell(td.dataset.p,+td.dataset.d);if(navigator.vibrate)try{navigator.vibrate(30);}catch(x){}},550);});
+["pointerup","pointercancel","pointerleave"].forEach(ev=>$("#grid").addEventListener(ev,()=>clearTimeout(lpT)));
+$("#grid").addEventListener("pointermove",e=>{if(lpXY&&Math.hypot(e.clientX-lpXY[0],e.clientY-lpXY[1])>10)clearTimeout(lpT);});
+$("#grid").addEventListener("contextmenu",e=>{if(e.target.closest("td.cell"))e.preventDefault();});
+function clearCell(pid,d){const m=M();snap();
+  if(mode==="req"){if(m.req[pid])delete m.req[pid][d];}
+  else if(mode==="leave"){if(m.leave[pid])delete m.leave[pid][d];const a=m.plan[pid];if(a&&(a[d]==="L"||a[d]==="S"))a[d]="";}
+  else{const a=m.plan[pid];if(a)a[d]="";if(m.lock[pid])m.lock[pid][d]=0;}
+  save();rMonth();toast("Σβήστηκε");}
 $("#grid").addEventListener("click",e=>{const td=e.target.closest("td");if(!td)return;const pid=td.dataset.p;if(!pid)return;
+  if(Date.now()-lpAt<500)return;
   if(td.classList.contains("nm")){openP(pid);return;}const d=+td.dataset.d,m=M(),D=dim(MK);
+  if(mode==="edit"&&lv(m,pid,d)){toast("Έχει άδεια — άλλαξέ τη από το 🏖");return;}snap();
   if(mode==="req"){const o=m.req[pid]=m.req[pid]||{};o[d]=cyc(RQSEQ,o[d]);if(!o[d])delete o[d];}
   else if(mode==="leave"){const o=m.leave[pid]=m.leave[pid]||{};o[d]=cyc(LVSEQ,o[d]);const a=m.plan[pid];if(!o[d]){delete o[d];if(a&&(a[d]==="L"||a[d]==="S"))a[d]="R";}else if(a)a[d]=o[d];}
   else{if(lv(m,pid,d)){toast("Έχει άδεια — άλλαξέ τη από το 🏖");return;}const a=m.plan[pid]=m.plan[pid]||Array(D).fill("");a[d]=cyc(["P","A","N","R"],a[d]||"R");(m.lock[pid]=m.lock[pid]||[])[d]=1;}
   save();rMonth();});
 $("#gen").onclick=()=>{if(!S.staff.length){toast("Πρόσθεσε πρώτα φύλακες (👥)");return;}const b=$("#gen");b.disabled=true;b.textContent="⏳ Υπολογισμός…";
-  setTimeout(()=>{const r=solve(MK),m=M();m.plan=r.plan;save();rMonth();b.disabled=false;b.textContent="⚡ Φτιάξε πρόγραμμα";
+  snap();setTimeout(()=>{const r=solve(MK),m=M();m.plan=r.plan;save();rMonth();b.disabled=false;b.textContent="⚡ Φτιάξε πρόγραμμα";
     const V=validate(MK);toast(V.out.every(x=>x[0]==="ok")?"✔ Το πρόγραμμα βγήκε σωστό":"Βγήκε — δες τον έλεγχο από κάτω",2800);},50);};
 let clrA=0;$("#clr").onclick=e=>{if(!clrA){clrA=1;e.target.textContent="Σίγουρα;";setTimeout(()=>{clrA=0;e.target.textContent="Καθαρισμός μήνα";},3000);return;}
-  const m=M();m.plan={};m.lock={};clrA=0;e.target.textContent="Καθαρισμός μήνα";save();rMonth();toast("Καθαρίστηκε (αιτήματα & άδειες κρατήθηκαν)");};
+  snap();const m=M();m.plan={};m.lock={};clrA=0;e.target.textContent="Καθαρισμός μήνα";save();rMonth();toast("Καθαρίστηκε (αιτήματα & άδειες κρατήθηκαν)");};
 
 /* ================= STAFF ================= */
 function rStaff(){const m=M(),D=dim(MK);$("#staffList").innerHTML=S.staff.length?S.staff.map(p=>{const al=p.allow||{P:1,A:1,N:1};const nr=Object.values(m.req[p.id]||{}).filter(Boolean).length,nl=leaveN(m,p.id,D);
@@ -304,21 +329,25 @@ let editP=null,tmpReq={},tmpLv={},pmMode="req";
 function openP(id){const p=S.staff.find(x=>x.id===id)||{id:null,name:"",tel:"",note:"",allow:{P:1,A:1,N:1}};editP=p;const m=M();
   $("#pmT").textContent=p.id?p.name:"Νέος φύλακας";$("#p_name").value=p.name;$("#p_tel").value=p.tel||"";$("#p_note").value=p.note||"";
   SH.forEach(s=>$("#p_"+s).checked=!!(p.allow||{P:1,A:1,N:1})[s]);$("#p_del").classList.toggle("hide",!p.id);
-  tmpReq={...((p.id&&m.req[p.id])||{})};tmpLv={...((p.id&&m.leave[p.id])||{})};pmMode="req";$$("#pmMode button").forEach(b=>b.classList.toggle("on",b.dataset.m==="req"));cal();$("#pm").classList.add("on");}
-$("#pmMode").addEventListener("click",e=>{const b=e.target.closest("[data-m]");if(!b)return;pmMode=b.dataset.m;$$("#pmMode button").forEach(x=>x.classList.toggle("on",x===b));cal();});
+  tmpReq={...((p.id&&m.req[p.id])||{})};tmpLv={...((p.id&&m.leave[p.id])||{})};cal();$("#pm").classList.add("on");}
+let brush="R";$("#brush").addEventListener("click",e=>{const b=e.target.closest("[data-b]");if(!b)return;brush=b.dataset.b;$$("#brush button").forEach(x=>x.classList.toggle("on",x===b));});
 function calHTML(k,get){const D=dim(k),f=(dow(k,0)+6)%7;let h=["Δ","Τ","Τ","Π","Π","Σ","Κ"].map(x=>`<div>${x}</div>`).join("")+"<span></span>".repeat(f);
   for(let d=0;d<D;d++){const[c,l]=get(d);h+=`<button data-d="${d}" class="${c}">${d+1}${l?`<small>${l}</small>`:""}</button>`;}return h;}
-function cal(){$("#pmHint").innerHTML=(pmMode==="req"?"Αιτήματα":"Άδειες")+` για ${mName(MK)} — `+(pmMode==="req"?"πάτα: Ρεπό → Δουλειά → Π → Α → Ν":"πάτα: ΑΔ άδεια → ΑΣ ασθένεια");
-  $("#pmCal").innerHTML=calHTML(MK,d=>pmMode==="req"?[tmpReq[d]||"",tmpReq[d]?RQ[tmpReq[d]]:""]:[tmpLv[d]?"on":"",tmpLv[d]?GR[tmpLv[d]]:""]);
-  $$("#pmCal button").forEach(b=>b.onclick=()=>{const d=+b.dataset.d;if(pmMode==="req"){tmpReq[d]=cyc(RQSEQ,tmpReq[d]);if(!tmpReq[d])delete tmpReq[d];}else{tmpLv[d]=cyc(LVSEQ,tmpLv[d]);if(!tmpLv[d])delete tmpLv[d];}cal();});}
+function cal(){$("#pmHint").innerHTML=`Αιτήματα & άδειες για <b>${mName(MK)}</b>: διάλεξε τι θέλει και πάτα τις μέρες (ξαναπάτημα = σβήσιμο).`;
+  $("#pmCal").innerHTML=calHTML(MK,d=>tmpLv[d]?[tmpLv[d],GR[tmpLv[d]]]:[tmpReq[d]||"",tmpReq[d]?RQ[tmpReq[d]]:""]);
+  $$("#pmCal button").forEach(b=>b.onclick=()=>{const d=+b.dataset.d,cur=tmpLv[d]||tmpReq[d]||"";delete tmpLv[d];delete tmpReq[d];
+    if(brush!=="X"&&brush!==cur){if(brush==="L"||brush==="S")tmpLv[d]=brush;else tmpReq[d]=brush;}cal();});
+  const by=(o,c)=>Object.keys(o).filter(d=>o[d]===c).map(d=>+d+1).sort((a,b)=>a-b).join(", ");
+  $("#pmSum").innerHTML=[["R",tmpReq],["W",tmpReq],["P",tmpReq],["A",tmpReq],["N",tmpReq]].map(([c,o])=>by(o,c)?`<div><b>${RQL[c]}:</b> ${by(o,c)}</div>`:"").join("")+
+    (by(tmpLv,"L")?`<div><b>Άδεια:</b> ${by(tmpLv,"L")}</div>`:"")+(by(tmpLv,"S")?`<div><b>Ασθένεια:</b> ${by(tmpLv,"S")}</div>`:"");}
 $("#pm").addEventListener("click",e=>{if(e.target.id==="pm"||e.target.hasAttribute("data-close"))$("#pm").classList.remove("on");});
 $("#addSt").onclick=()=>openP(null);
-$("#p_save").onclick=()=>{const name=$("#p_name").value.trim();if(!name){toast("Βάλε όνομα");return;}const m=M();
+$("#p_save").onclick=()=>{const name=$("#p_name").value.trim();if(!name){toast("Βάλε όνομα");return;}snap();const m=M();
   let p=editP;if(!p.id){p.id=uid();S.staff.push(p);}p.name=name;p.tel=$("#p_tel").value.trim();p.note=$("#p_note").value.trim();p.allow={};SH.forEach(s=>p.allow[s]=$("#p_"+s).checked?1:0);
   m.req[p.id]=tmpReq;m.leave[p.id]=tmpLv;const a=m.plan[p.id];if(a){for(let d=0;d<a.length;d++){if(tmpLv[d])a[d]=tmpLv[d];else if(a[d]==="L"||a[d]==="S")a[d]="R";}}
   save();$("#pm").classList.remove("on");rStaff();rMonth();toast("Αποθηκεύτηκε");};
 let pdA=0;$("#p_del").onclick=e=>{if(!pdA){pdA=1;e.target.textContent="Σίγουρα;";setTimeout(()=>{pdA=0;e.target.textContent="Διαγραφή";},3000);return;}
-  S.staff=S.staff.filter(x=>x.id!==editP.id);pdA=0;e.target.textContent="Διαγραφή";save();$("#pm").classList.remove("on");rStaff();rMonth();};
+  snap();S.staff=S.staff.filter(x=>x.id!==editP.id);pdA=0;e.target.textContent="Διαγραφή";save();$("#pm").classList.remove("on");rStaff();rMonth();};
 
 /* ================= GUARD REQUESTS ================= */
 const b64e=s=>btoa(unescape(encodeURIComponent(s))),b64d=s=>decodeURIComponent(escape(atob(s)));
@@ -329,7 +358,7 @@ $("#sendLink").onclick=()=>{const url=location.href.split("#")[0]+"#aitima";
 $("#impReq").onclick=()=>{$("#imTa").value="";$("#im").classList.add("on");setTimeout(()=>$("#imTa").focus(),100);};
 $("#im").addEventListener("click",e=>{if(e.target.id==="im"||e.target.hasAttribute("data-close"))$("#im").classList.remove("on");});
 $("#imGo").onclick=()=>{const t=$("#imTa").value,codes=[...t.matchAll(/\[VRD\]([A-Za-z0-9+/=]+)/g)].map(x=>x[1]);if(!codes.length){toast("Δεν βρέθηκε αίτημα στο κείμενο");return;}
-  const msg=[];codes.forEach(c=>{try{const o=JSON.parse(b64d(c));let p=S.staff.find(x=>norm(x.name)===norm(o.n));let isNew=false;
+  snap();const msg=[];codes.forEach(c=>{try{const o=JSON.parse(b64d(c));let p=S.staff.find(x=>norm(x.name)===norm(o.n));let isNew=false;
       if(!p){p={id:uid(),name:o.n,tel:"",note:"",allow:{P:1,A:1,N:1}};S.staff.push(p);isNew=true;}
       const m=M(o.m);m.req[p.id]={};Object.entries(o.r||{}).forEach(([d,v])=>{if(RQSEQ.includes(v)&&v)m.req[p.id][d]=v;});if(o.t)p.note=(p.note?p.note+" · ":"")+o.t;
       msg.push(`${o.n}: ${Object.keys(o.r||{}).length} μέρες (${mName(o.m)})${isNew?" — νέος φύλακας":""}`);}catch(e){msg.push("1 μήνυμα χαλασμένο");}});
@@ -399,7 +428,7 @@ $("#xPdf").onclick=async()=>{const k=MK,D=dim(k),m=M(k),st=S.staff;if(!st.length
 /* ================= NAV ================= */
 $$(".nav button").forEach(b=>b.onclick=()=>{$$(".nav button").forEach(x=>x.classList.toggle("on",x===b));["month","staff","set"].forEach(v=>$("#v-"+v).classList.toggle("hide",v!==b.dataset.v));
   if(b.dataset.v==="month")rMonth();if(b.dataset.v==="staff")rStaff();if(b.dataset.v==="set")rSet();window.scrollTo(0,0);});
-function rAll(){rStaff();rSet();rMonth();}
+function rAll(){rStaff();rSet();rMonth();updUndo();}
 if(location.hash==="#aitima")gInit();else rAll();
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 </script>
