@@ -65,6 +65,8 @@ button{font:inherit;cursor:pointer}
 .nav button b{font-size:20px;line-height:1}.nav button.on{color:var(--acc)}
 .fl{border-left:4px solid var(--f);padding:8px 10px;margin:8px 0;background:var(--card);border-radius:10px;border:1px solid var(--line);border-left-width:4px;border-left-color:var(--f)}
 .hide{display:none!important}
+.ff{background:var(--fb);border-radius:10px;padding:8px 10px;margin:4px 0 10px;font-size:14px}.ff b{color:var(--f);font-size:13px}.ff ul{margin:4px 0 0;padding-left:18px}.ff li{margin:2px 0}
+.lk{font-size:12px;font-weight:700;color:var(--navy);margin-top:4px}.hot{background:var(--fb);color:var(--f);font-weight:700;padding:1px 7px;border-radius:10px}
 .mic{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:8px 12px;font-weight:600;font-size:14px}
 .mic.rec{background:var(--f);border-color:var(--f);color:#fff;animation:pl 1s infinite}@keyframes pl{50%{opacity:.6}}
 .ai{border:1px solid #6d4aff;background:#efeaff;color:#4b2fd1;border-radius:10px;padding:8px 12px;font-weight:700;font-size:14px}
@@ -84,6 +86,7 @@ button{font:inherit;cursor:pointer}
   <section id="v-list">
     <div class="card"><h2>Πώς δουλεύει</h2>
       <p class="note" style="margin:0">1. Νέα επιθεώρηση → όνομα πλοίου. 2. Διάλεξε χώρο (Bridge, Deck, ER…) και περπάτα τον. 3. Σε κάθε ερώτηση: <b>✓ OK</b>, <b>✗ Finding</b> (σημείωση + φωτογραφία) ή <b>N/A</b>. 4. Στο τέλος: <b>Findings → PDF</b>.<br>«ℹ Τι κοιτάει ο inspector» = πότε γράφεται finding. Λειτουργεί offline.</p></div>
+    <div class="card"><h2>🔥 Τι πιάνουν πιο συχνά (RightShip 2025)</h2><p class="note" style="margin:0">Enclosed space (4.5) · Lifeboats/rescue boat & davits (4.18) · Hatch covers (9A) · Machinery: boilers, em'cy generator, compressors (13) · Pilot ladders (4.37) · Mooring lines & winch brakes (10.4/10.5/10.15) · PPE (4.11) · Deck lights (14.9) · Safe access (4.35) · MPX & manoeuvring data (3.3/3.6).<br>Ξεκίνα κάθε χώρο με το φίλτρο <b>🔥 Συχνά</b>. Όριο για καλή βαθμολογία: κάτω από ~20 findings.</p></div>
     <details class="card" id="aiCard"><summary style="font-weight:600;cursor:pointer">✨ Μετάφραση με Claude (API key)</summary>
       <p class="note">Μιλάς/γράφεις ελληνικά → το ✨ English γράφει σωστό αγγλικό finding. Χρειάζεται internet και δικό σου key από console.anthropic.com. Το key μένει μόνο σε αυτό το κινητό.</p>
       <label>API key<input id="apiKey" type="password" placeholder="sk-ant-..." autocomplete="off"></label>
@@ -113,7 +116,7 @@ button{font:inherit;cursor:pointer}
 
   <!-- AREA QUESTIONS -->
   <section id="v-area" class="hide">
-    <div class="seg" id="aflt"><button data-f="open" class="on">Ανοιχτά</button><button data-f="all">Όλα</button><button data-f="f">Findings</button></div>
+    <div class="seg" id="aflt"><button data-f="open" class="on">Ανοιχτά</button><button data-f="hot">🔥 Συχνά</button><button data-f="all">Όλα</button><button data-f="f">Findings</button></div>
     <div id="qs"></div>
     <div class="row" style="justify-content:space-between;margin-top:6px"><button class="btn" id="prevA">‹ Προηγ. χώρος</button><button class="btn p" id="nextA">Επόμενος χώρος ›</button></div>
   </section>
@@ -188,21 +191,23 @@ let delArm=0;$("#e_del").onclick=async e=>{if(!delArm){delArm=1;e.target.textCon
 
 /* ---------- home ---------- */
 $("#hrOnly").onchange=e=>{I().hr=e.target.checked;save();rHome();hdr();};
+const hotOpen=(ins,a)=>QS(ins).filter(q=>q.a===a&&q.f&&!ins.st[q.id]).length;
 function rHome(){const ins=I();$("#hrOnly").checked=!!ins.hr;
   $("#tiles").innerHTML=AREAS.map(([k,ic,nm,ds])=>{const s=stats(ins,k);return`<button class="tile" data-a="${k}"><b>${ic} ${nm}</b><div class="note">${ds}</div>
-    <div class="note" style="margin-top:6px">${s.d}/${s.n}${s.f?` · <span class="fc">${s.f} ✗</span>`:""}${s.d===s.n&&s.n?" ✓":""}</div><div class="mini"><i style="width:${s.n?s.d/s.n*100:0}%"></i></div></button>`;}).join("");
+    <div class="note" style="margin-top:6px">${s.d}/${s.n}${s.f?` · <span class="fc">${s.f} ✗</span>`:""}${hotOpen(ins,k)?` · 🔥${hotOpen(ins,k)}`:""}${s.d===s.n&&s.n?" ✓":""}</div><div class="mini"><i style="width:${s.n?s.d/s.n*100:0}%"></i></div></button>`;}).join("");
   $$("#tiles .tile").forEach(t=>t.onclick=()=>{area=t.dataset.a;aflt=stats(ins,area).d===stats(ins,area).n?"all":"open";go("area");});}
 
 /* ---------- area ---------- */
 $("#aflt").addEventListener("click",e=>{const b=e.target.closest("[data-f]");if(!b)return;aflt=b.dataset.f;rArea();});
 function rArea(){const ins=I();$$("#aflt button").forEach(b=>b.classList.toggle("on",b.dataset.f===aflt));
-  const qs=QS(ins).filter(q=>q.a===area).filter(q=>aflt==="all"||(aflt==="open"?!ins.st[q.id]:ins.st[q.id]==="f"));
+  const qs=QS(ins).filter(q=>q.a===area).filter(q=>aflt==="all"||(aflt==="open"?!ins.st[q.id]:aflt==="hot"?(q.f&&!ins.st[q.id]):ins.st[q.id]==="f"));
   const box=$("#qs");box.innerHTML=qs.length?"":`<div class="card" style="text-align:center">${aflt==="open"?"✓ Όλα τα σημεία του χώρου ελέγχθηκαν.":"Τίποτα εδώ."}</div>`;
   qs.forEach(q=>box.appendChild(qCard(ins,q)));
   const i=AREAS.findIndex(a=>a[0]===area);$("#prevA").style.visibility=i>0?"":"hidden";$("#nextA").textContent=i<AREAS.length-1?`${AREAS[i+1][2]} ›`:"Findings ›";}
 function qCard(ins,q){const el=document.createElement("article"),v=ins.st[q.id]||"";el.className="q "+v;el.dataset.id=q.id;
-  el.innerHTML=`<div class="qh"><span class="id">${esc(q.id)}</span>${q.h?'<span class="hrt">★ high-risk</span>':""}<span style="flex:1"></span><span>${esc(q.sn)}</span></div>
-   <div class="t">${esc(q.g)}</div>${q.c.length?`<ul>${q.c.map(c=>`<li>${esc(c)}</li>`).join("")}</ul>`:""}
+  el.innerHTML=`<div class="qh"><span class="id">${esc(q.id)}</span>${q.h?'<span class="hrt">★ high-risk</span>':""}${q.f?'<span class="hot">🔥</span>':""}<span style="flex:1"></span><span>${esc(q.sn)}</span></div>
+   <div class="t">${esc(q.g)}</div>${q.c.length?`<div class="lk">👀 Κοίτα:</div><ul>${q.c.map(c=>`<li>${esc(c)}</li>`).join("")}</ul>`:""}
+   ${q.f?`<div class="ff"><b>🔥 Έτσι το γράφουν οι inspectors:</b><ul>${q.f.map(c=>`<li>${esc(c)}</li>`).join("")}</ul></div>`:""}
    <div class="ans"><button data-v="ok" class="${v==="ok"?"on":""}">✓ OK</button><button data-v="f" class="${v==="f"?"on":""}">✗ Finding</button><button data-v="na" class="${v==="na"?"on":""}">N/A</button></div>
    <div class="fbox"><textarea class="gr" rows="2" placeholder="Τι βρέθηκε (ελληνικά ή αγγλικά)">${esc(ins.nt[q.id]||"")}</textarea>
      <div class="row" style="margin-top:6px"><button class="mic">🎤 Ομιλία</button><button class="ai">✨ English</button><label class="cam">📷<input type="file" accept="image/*" multiple style="display:none"></label></div>
