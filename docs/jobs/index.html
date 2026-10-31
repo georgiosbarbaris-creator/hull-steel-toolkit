@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Job Orders</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Job Orders">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#123b3a">
+<style>
+:root{--bg:#eef2f1;--card:#fff;--ink:#14231f;--muted:#5d6e69;--line:#d4ddda;--pri:#123b3a;--acc:#0f8b7d;--ok:#1d7a46;--okb:#e0f3e8;--bad:#c0392b;--badb:#fde4e1;--wrn:#9a6700;--wrnb:#fff3d1}
+@media (prefers-color-scheme:dark){:root{--bg:#0d1514;--card:#16211f;--ink:#e3ece9;--muted:#93a6a0;--line:#293935;--pri:#8fd6cb;--acc:#3cc2b1;--ok:#5cc98a;--okb:#173326;--bad:#ff8a80;--badb:#3d1a18;--wrn:#e3b341;--wrnb:#3a2f10}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+header{position:sticky;top:0;z-index:8;background:#123b3a;color:#fff;padding:calc(10px + env(safe-area-inset-top)) 14px 10px;display:flex;gap:10px;align-items:center}
+header button{background:rgba(255,255,255,.15);color:#fff;border:0;border-radius:8px;padding:7px 12px;font:700 16px system-ui}
+header .t{flex:1;min-width:0}header h1{margin:0;font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}header .s{font-size:12px;opacity:.8}
+main{max-width:760px;margin:0 auto;padding:10px 12px calc(30px + env(safe-area-inset-bottom))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:10px 0}
+h2{font-size:15px;color:var(--pri);margin:2px 0 10px}
+label{display:flex;flex-direction:column;gap:3px;font-size:12.5px;color:var(--muted)}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;width:100%;min-width:0}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:10px 14px;font-weight:600;cursor:pointer}
+.btn.p{background:var(--acc);border-color:var(--acc);color:#fff}.btn.d{color:var(--bad)}.btn.sm{padding:6px 10px;font-size:14px}.btn.big{width:100%;padding:15px;font-size:17px}
+.ai{border-color:#6d4aff;background:#efeaff;color:#4b2fd1}@media (prefers-color-scheme:dark){.ai{background:#241a4a;color:#c9bbff}}
+.mic.rec{background:var(--bad);border-color:var(--bad);color:#fff}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.note{font-size:13px;color:var(--muted)}
+.vs{display:flex;justify-content:space-between;align-items:center;gap:10px;cursor:pointer}
+.kp{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}.kp span{font-size:12px;font-weight:700;padding:3px 8px;border-radius:10px;background:var(--bg)}
+.kp .o{background:var(--wrnb);color:var(--wrn)}.kp .x{background:var(--badb);color:var(--bad)}.kp .d{background:var(--okb);color:var(--ok)}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:2px 0 6px}.chips button{flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:20px;padding:7px 12px;font:600 13.5px system-ui;cursor:pointer}
+.chips button.on{background:var(--pri);border-color:var(--pri);color:var(--card)}
+.it{display:flex;gap:10px;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--line);border-radius:12px;padding:10px;margin:8px 0;cursor:pointer}
+.it.ov{border-left-color:var(--bad)}.it.soon{border-left-color:var(--wrn)}.it.dn{border-left-color:var(--ok);opacity:.7}.it.op{border-left-color:var(--acc)}
+.it .th{width:58px;height:58px;flex:0 0 58px;border-radius:8px;background:var(--bg);overflow:hidden}.it .th img{width:100%;height:100%;object-fit:cover}
+.it .b{flex:1;min-width:0}.it .tt{font-weight:650}.it .m{font-size:12.5px;color:var(--muted);margin-top:2px}
+.tag{display:inline-block;font-size:11px;font-weight:700;padding:1px 7px;border-radius:8px;background:var(--bg);margin-right:4px}
+.tag.c{background:var(--badb);color:var(--bad)}.tag.h{background:var(--wrnb);color:var(--wrn)}.tag.ov{background:var(--bad);color:#fff}
+.ph{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}.ph div{position:relative}.ph img{width:80px;height:80px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
+.ph button{position:absolute;top:2px;right:2px;border:0;background:rgba(0,0,0,.6);color:#fff;border-radius:6px;font-size:12px;padding:1px 6px}
+.cam{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-weight:600;font-size:14px;color:var(--ink);cursor:pointer;background:var(--card)}
+.qd button{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;padding:5px 9px;font:600 13px system-ui;cursor:pointer}
+.seg{display:flex;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:3px;gap:3px}.seg button{flex:1;border:0;background:none;padding:8px 2px;border-radius:8px;font:600 13.5px system-ui;color:var(--muted);cursor:pointer}
+.seg button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.15)}.seg.st button.on[data-v=Done]{background:var(--ok);color:#fff}
+.wr{background:var(--pri);color:var(--card);border-radius:14px;padding:14px;margin:10px 0}.wr h2{color:inherit;margin:0;font-size:19px}.wr .note{color:inherit;opacity:.8}
+.prog{height:6px;background:rgba(255,255,255,.25);border-radius:4px;margin-top:8px;overflow:hidden}.prog i{display:block;height:100%;background:#7fe0c9}
+.look li{font-size:14.5px;margin:4px 0}
+.fab{position:fixed;right:16px;bottom:calc(18px + env(safe-area-inset-bottom));width:60px;height:60px;border-radius:50%;background:var(--acc);color:#fff;border:0;font-size:32px;box-shadow:0 4px 14px rgba(0,0,0,.25);z-index:7;cursor:pointer}
+.hide{display:none!important}
+#toast{position:fixed;left:50%;top:calc(64px + env(safe-area-inset-top));transform:translateX(-50%);background:#123b3a;color:#fff;padding:9px 14px;border-radius:10px;font-size:14px;opacity:0;transition:.2s;pointer-events:none;z-index:30;max-width:90vw;text-align:center}#toast.show{opacity:1}
+</style>
+</head>
+<body>
+<header><button id="back" class="hide">‹</button><div class="t"><h1 id="ttl">Job Orders</h1><div class="s" id="sub">Outstandings ανά πλοίο · offline</div></div><button id="hdrBtn" class="hide">⚙</button></header>
+<main>
+<!-- HOME -->
+<section id="v-home">
+  <div id="vList"></div>
+  <button class="btn p big" id="vAdd">+ Πλοίο</button>
+  <div class="card"><h2>Πώς δουλεύει</h2><p class="note" style="margin:0">1. Πλοίο → <b>+</b> για νέα δουλειά (φωτό, τι, πού, πότε). 2. <b>🚶 Walk-round</b>: σε πάει χώρο-χώρο, σου δείχνει τι είναι ανοιχτό εκεί και τι να κοιτάξεις. 3. Όταν κλείσει: <b>Done + φωτό after</b>. 4. <b>📅 Υπενθυμίσεις</b> → στο ημερολόγιο του κινητού. 5. <b>📄 Job Order List</b> PDF για πλοίο/γραφείο.</p></div>
+  <details class="card"><summary style="font-weight:600;cursor:pointer">✨ Αγγλικά με Claude (API key)</summary><p class="note">Ίδιο key με την εφαρμογή RISQ — αν το έβαλες εκεί, δουλεύει και εδώ.</p>
+    <label>API key<input id="apiKey" type="password" placeholder="sk-ant-..." autocomplete="off"></label><div class="row" style="margin-top:8px"><button class="btn" id="apiSave">Αποθήκευση</button><span class="note" id="apiSt"></span></div></details>
+</section>
+
+<!-- VESSEL -->
+<section id="v-ves" class="hide">
+  <div class="row" style="margin-top:4px"><button class="btn p" id="wrStart" style="flex:1">🚶 Walk-round</button><button class="btn" id="xPdf">📄 Job Order List</button></div>
+  <div class="row" style="margin:8px 0"><button class="btn" id="xIcs" style="flex:1">📅 Υπενθυμίσεις στο κινητό</button><button class="btn" id="xTxt">💬</button><button class="btn" id="xCsv">📊</button></div>
+  <div class="chips" id="flt"></div>
+  <input id="q" placeholder="🔍 αναζήτηση" style="margin-bottom:4px">
+  <div id="iList"></div>
+  <button class="btn d sm" id="vDel" style="margin-top:20px">Διαγραφή πλοίου</button>
+</section>
+
+<!-- ITEM -->
+<section id="v-item" class="hide">
+  <div class="card">
+    <div class="note">Φωτογραφίες (πριν)</div><div class="ph" id="phB"></div>
+    <div class="row" style="margin-top:6px"><label class="cam">📷 Φωτογραφία<input type="file" accept="image/*" multiple id="fB" style="display:none"></label></div>
+    <label style="margin-top:10px">Τι πρέπει να γίνει<input id="i_title" placeholder="π.χ. Renew rescue boat painter"></label>
+    <label style="margin-top:8px">Λεπτομέρειες<textarea id="i_desc" rows="3" placeholder="Μίλα ή γράψε ελληνικά"></textarea></label>
+    <div class="row" style="margin-top:6px"><button class="btn sm mic" id="i_mic">🎤 Ομιλία</button><button class="btn sm ai" id="i_ai">✨ English</button></div>
+    <label style="margin-top:8px" id="enWrap">English (για Job Order List)<textarea id="i_en" rows="2"></textarea></label>
+  </div>
+  <div class="card">
+    <div class="g2"><label>Χώρος<select id="i_area"></select></label><label>Πότε<select id="i_phase"></select></label>
+      <label>Προτεραιότητα<select id="i_prio"><option>Normal</option><option>High</option><option>Critical</option></select></label><label>Υπεύθυνος<select id="i_resp"><option>Crew</option><option>Yard</option><option>Maker / Service</option><option>Office</option></select></label>
+      <label>Πηγή<select id="i_src"><option>Own inspection</option><option>RightShip</option><option>PSC</option><option>Class</option><option>Flag</option><option>Company / Audit</option><option>Master / C/E</option></select></label><label>Αναφορά<input id="i_ref" placeholder="π.χ. RS 154078 · 4.17"></label>
+      <label>Δόθηκε<input type="date" id="i_given"></label><label>Due date<input type="date" id="i_due"></label></div>
+    <div class="row qd" style="margin-top:6px"><span class="note">Due σε:</span><button data-dd="3">3 μέρες</button><button data-dd="7">1 εβδ.</button><button data-dd="14">2 εβδ.</button><button data-dd="30">1 μήνα</button><button data-dd="90">3 μήνες</button></div>
+    <label style="margin-top:8px">Spares / PO / σημείωση<input id="i_spares" placeholder="π.χ. PO 2026-118, ETA Vancouver"></label>
+  </div>
+  <div class="card">
+    <div class="note" style="margin-bottom:6px">Κατάσταση</div>
+    <div class="seg st" id="i_st"><button data-v="Open">Ανοιχτό</button><button data-v="In progress">Σε εξέλιξη</button><button data-v="Done">✓ Done</button></div>
+    <div id="doneBox" class="hide" style="margin-top:10px"><div class="g2"><label>Έκλεισε<input type="date" id="i_closed"></label><div></div></div>
+      <div class="note" style="margin-top:8px">Φωτογραφίες (μετά) — απόδειξη close-out</div><div class="ph" id="phA"></div>
+      <div class="row" style="margin-top:6px"><label class="cam">📷 After<input type="file" accept="image/*" multiple id="fA" style="display:none"></label></div></div>
+    <div class="note" style="margin-top:12px">Ιστορικό</div><div id="i_log" class="note" style="color:var(--ink)"></div>
+    <div class="row" style="margin-top:6px"><input id="i_logtxt" placeholder="Ενημέρωση, π.χ. spares παραγγέλθηκαν" style="flex:1"><button class="btn sm" id="i_logadd">+</button></div>
+  </div>
+  <div class="row"><button class="btn p" id="i_save" style="flex:1">Αποθήκευση</button><button class="btn" id="i_rem">📅</button><button class="btn d" id="i_del">🗑</button></div>
+</section>
+
+<!-- WALK-ROUND -->
+<section id="v-wr" class="hide">
+  <div class="wr"><div class="note" id="wrStep"></div><h2 id="wrArea"></h2><div class="prog"><i id="wrProg"></i></div></div>
+  <div class="card"><h2>👀 Τι να κοιτάξεις εδώ</h2><ul class="look" id="wrLook" style="padding-left:20px;margin:0"></ul></div>
+  <div id="wrOpen"></div>
+  <button class="btn p big" id="wrNew">📷 + Νέο εύρημα εδώ</button>
+  <div class="row" style="margin-top:10px"><button class="btn" id="wrPrev" style="flex:1">‹ Πίσω</button><button class="btn p" id="wrNext" style="flex:2">Επόμενος χώρος ›</button></div>
+</section>
+</main>
+<button class="fab hide" id="fab">+</button>
+<div id="toast"></div>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+function toast(m,ms=2000){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),ms);}
+const today=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");};
+const addDays=(s,n)=>{const d=new Date(s+"T12:00:00");d.setDate(d.getDate()+n);return d.toISOString().slice(0,10);};
+const daysTo=s=>s?Math.round((new Date(s+"T12:00:00")-new Date(today()+"T12:00:00"))/864e5):null;
+const fd=s=>s?s.slice(8,10)+"/"+s.slice(5,7)+"/"+s.slice(2,4):"–";
+const PHASES=["Yard / DD","After yard","At sea","Next port","Next DD"];
+const AREAS=[
+ ["BRG","🧭 Γέφυρα",["ECDIS/Radar/GMDSS λειτουργούν, alarms, BNWAS","Charts & publications updated, permits","Navigation lights, signal lamp, whistle","Emergency steering comms, VDR, SSAS"]],
+ ["ACC","🛏 Accommodation & galley",["Fire doors κλείνουν, self-closing","Galley: hood/filters καθαρά, fire blanket, deep fryer","Hospital, provisions temps, hygiene","Escape routes καθαρά, emergency lights"]],
+ ["LSA","🛟 LSA / FFE",["Lifeboats/rescue boat: engine, falls, hooks, release gear","Liferafts + HRU dates, embarkation ladders","Lifebuoys/lights/smoke, EEBDs, BA sets & air","Fire hoses/nozzles, extinguishers dates, fire dampers"]],
+ ["FWD","⚓ Forecastle & mooring fwd",["Windlass/brakes, chain stoppers, anchor marks","Mooring winches, ropes/tails condition","Fairleads/rollers free, pedestal bollards","Bosun store, paint locker CO2/fire, sounding pipes"]],
+ ["DECK","🚢 Main deck P/S",["Air vents/flaps, sounding pipe caps, closing devices","Deck corrosion, handrails, walkways, pilot ladder","Fire line/hydrants, valves, deck lighting","Oil spill kit/SOPEP, scuppers plugs"]],
+ ["HOLD","📦 Holds & hatch covers",["Hatch cover rubbers/compression bars, cleats, drains","Hold ladders, frames, bilge wells, sounding","Hatch cover hydraulics, leaks","Coating / steel damage, ventilators"]],
+ ["CRN","🏗 Cranes",["Wires & sheaves, limit switches, brakes","Hydraulic leaks, cabin, emergency stop","SWL marks, test certificates, grab"]],
+ ["AFT","⚓ Poop deck & mooring aft",["Mooring winches/brakes, ropes","Emergency towing arrangement","Provision crane, garbage store & segregation","Rescue boat area, liferaft aft"]],
+ ["ER","⚙️ Engine room",["Main engine/generators leaks, insulation, hot surfaces","OWS/15ppm, sludge/bilge, oil record","Fire: quick-closing valves, fixed system, ER fire pump","Purifier room, workshop, fuel leaks & save-alls"]],
+ ["STG","🔧 Steering gear & emergency",["Steering gear: oil, alarms, emergency instructions & comms","Emergency generator: start/test, fuel, auto start","Emergency fire pump, CO2 room, foam"]],
+ ["HULL","🌊 Hull & tanks",["Hull/draught marks, plimsoll, rudder/propeller (DD)","Ballast tanks, BWTS operation & records","Manholes, tank vents, coatings"]],
+ ["DOC","📋 Documents & certificates",["Certificates validity & surveys due","Class CoC / memoranda, PSC deficiencies","Crew certificates, drills, PMS overdue"]],
+ ["OTH","📌 Άλλο",[]]];
+const AN=Object.fromEntries(AREAS.map(a=>[a[0],a[1]]));
+let S;try{S=JSON.parse(localStorage.getItem("jobs_v1"));}catch(e){}if(!S||!S.v)S={v:[],it:[]};
+const save=()=>{try{localStorage.setItem("jobs_v1",JSON.stringify(S));}catch(e){toast("⚠ Δεν αποθηκεύτηκε");}};
+const IDB={db:null,open(){return this.db?Promise.resolve(this.db):new Promise((res,rej)=>{const r=indexedDB.open("jobs",1);r.onupgradeneeded=()=>r.result.createObjectStore("b");r.onsuccess=()=>{this.db=r.result;res(this.db);};r.onerror=()=>rej(r.error);});},
+ async tx(m,fn){const d=await this.open();return new Promise((res,rej)=>{const t=d.transaction("b",m),q=fn(t.objectStore("b"));t.oncomplete=()=>res(q&&q.result);t.onerror=()=>rej(t.error);});},
+ put(k,v){return this.tx("readwrite",s=>s.put(v,k));},get(k){return this.tx("readonly",s=>s.get(k));},del(k){return this.tx("readwrite",s=>s.delete(k));}};
+function fileToJpeg(file,max=1280,q=.72){return new Promise((res,rej)=>{const u=URL.createObjectURL(file),im=new Image();im.onload=()=>{const k=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement("canvas");
+  c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);res(c.toDataURL("image/jpeg",q));};im.onerror=rej;im.src=u;});}
+const loadImg=src=>new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=src;});
+async function shareFile(blob,name,text){const file=new File([blob],name,{type:blob.type});
+  try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:name});return;}}catch(e){return;}
+  const a=document.createElement("a");a.href=URL.createObjectURL(file);a.download=name;a.target="_blank";document.body.appendChild(a);a.click();a.remove();}
+async function shareText(t,title){try{if(navigator.share){await navigator.share({title,text:t});return;}await navigator.clipboard.writeText(t);toast("Αντιγράφηκε ✔");}catch(e){}}
+
+/* ---------- state & nav ---------- */
+let cv=null,ci=null,draft=null,flt="open",wrI=0,view="home",retWr=false;
+const V=()=>S.v.find(x=>x.id===cv);const items=vid=>S.it.filter(i=>i.vid===vid);
+function stat(i){if(i.st==="Done")return"dn";const d=daysTo(i.due);if(d!==null&&d<0)return"ov";if(d!==null&&d<=7)return"soon";return"op";}
+function go(v){view=v;["home","ves","item","wr"].forEach(x=>$("#v-"+x).classList.toggle("hide",x!==v));$("#back").classList.toggle("hide",v==="home");
+  $("#fab").classList.toggle("hide",v!=="ves");window.scrollTo(0,0);({home:rHome,ves:rVes,item:()=>{},wr:rWr})[v]();}
+$("#back").onclick=()=>{if(view==="item"){if(draft&&draft._new&&draft._tmp)draft._tmp.forEach(k=>IDB.del(k).catch(()=>{}));go(retWr?"wr":"ves");}else if(view==="wr")go("ves");else{cv=null;go("home");}};
+
+/* ---------- home ---------- */
+function rHome(){$("#ttl").textContent="Job Orders";$("#sub").textContent="Outstandings ανά πλοίο · offline";
+  $("#vList").innerHTML=S.v.map(v=>{const it=items(v.id),op=it.filter(i=>i.st!=="Done"),ov=op.filter(i=>stat(i)==="ov").length,so=op.filter(i=>stat(i)==="soon").length;
+    return`<div class="card vs" data-v="${v.id}"><div><b style="font-size:17px">${esc(v.name)}</b><div class="kp"><span class="o">${op.length} ανοιχτά</span>${ov?`<span class="x">${ov} overdue</span>`:""}${so?`<span>${so} σε 7 μέρες</span>`:""}<span class="d">${it.length-op.length} done</span></div></div><b style="font-size:22px;color:var(--muted)">›</b></div>`;}).join("")||'<p class="note" style="text-align:center">Πρόσθεσε το πρώτο πλοίο.</p>';
+  $$("#vList .vs").forEach(e=>e.onclick=()=>{cv=e.dataset.v;flt="open";go("ves");});}
+$("#vAdd").onclick=()=>{if($("#vNew")){$("#vNew input").focus();return;}const d=document.createElement("div");d.className="card";d.id="vNew";
+  d.innerHTML=`<label>Όνομα πλοίου<input placeholder="π.χ. AGIA YPOMONI"></label><div class="row" style="margin-top:8px"><button class="btn p">Προσθήκη</button><button class="btn">Άκυρο</button></div>`;
+  $("#vList").appendChild(d);const inp=d.querySelector("input");inp.focus();
+  d.querySelectorAll("button")[0].onclick=()=>{const n=inp.value.trim().toUpperCase();if(!n)return;S.v.push({id:uid(),name:n});save();rHome();};d.querySelectorAll("button")[1].onclick=()=>d.remove();};
+
+/* ---------- vessel ---------- */
+const FL=[["open","Ανοιχτά"],["ov","⚠ Overdue"],["soon","Σε 7 μέρες"],...PHASES.map(p=>["ph:"+p,p]),["hi","High/Critical"],["done","✓ Done"],["all","Όλα"]];
+function rVes(){const v=V();$("#ttl").textContent=v.name;const it=items(v.id),op=it.filter(i=>i.st!=="Done");
+  $("#sub").textContent=`${op.length} ανοιχτά · ${op.filter(i=>stat(i)==="ov").length} overdue · ${it.length-op.length} done`;
+  $("#flt").innerHTML=FL.map(([k,l])=>{const c=fil(it,k).length;return(c||k==="open"||k===flt)?`<button data-f="${k}" class="${k===flt?"on":""}">${l} ${c}</button>`:"";}).join("");
+  $$("#flt button").forEach(b=>b.onclick=()=>{flt=b.dataset.f;rVes();});rList();}
+function fil(it,k){if(k==="all")return it;if(k==="done")return it.filter(i=>i.st==="Done");const op=it.filter(i=>i.st!=="Done");
+  if(k==="open")return op;if(k==="ov")return op.filter(i=>stat(i)==="ov");if(k==="soon")return op.filter(i=>stat(i)==="soon");if(k==="hi")return op.filter(i=>i.prio!=="Normal");if(k.startsWith("ph:"))return op.filter(i=>i.phase===k.slice(3));return op;}
+const srt=(a,b)=>{const so={ov:0,soon:1,op:2,dn:3},pr={Critical:0,High:1,Normal:2};return so[stat(a)]-so[stat(b)]||(a.due||"9").localeCompare(b.due||"9")||pr[a.prio]-pr[b.prio]||a.no-b.no;};
+function card(i){const s=stat(i),d=daysTo(i.due);return`<div class="it ${s}" data-i="${i.id}"><div class="th"></div><div class="b"><div class="tt">#${i.no} ${esc(i.title||"(χωρίς τίτλο)")}</div>
+  <div class="m">${i.prio!=="Normal"?`<span class="tag ${i.prio==="Critical"?"c":"h"}">${i.prio}</span>`:""}${s==="ov"?`<span class="tag ov">${-d} μέρες overdue</span>`:""}${esc(AN[i.area]||"")} · ${esc(i.phase)} · ${esc(i.resp)}</div>
+  <div class="m">Δόθηκε ${fd(i.given)} · Due <b>${fd(i.due)}</b>${s==="soon"?` (σε ${d} μ.)`:""}${i.st==="In progress"?" · ⏳ σε εξέλιξη":""}${i.st==="Done"?` · ✓ ${fd(i.closed)}`:""}</div></div></div>`;}
+function thumbs(box){$$(box+" .it").forEach(el=>{const i=S.it.find(x=>x.id===el.dataset.i);const k=(i.after&&i.after[0])&&i.st==="Done"?i.after[0]:(i.photos||[])[0];if(k)IDB.get(k).then(d=>{if(d)el.querySelector(".th").innerHTML=`<img src="${d}">`;});
+  el.onclick=()=>{retWr=view==="wr";openItem(i.id);};});}
+function rList(){const q=$("#q").value.toLowerCase();const it=fil(items(cv),flt).filter(i=>!q||[i.title,i.desc,i.en,i.ref,i.spares,AN[i.area],"#"+i.no].join(" ").toLowerCase().includes(q)).sort(srt);
+  $("#iList").innerHTML=it.map(card).join("")||'<p class="note" style="text-align:center;margin-top:16px">Τίποτα εδώ. Πάτα + για νέα δουλειά.</p>';thumbs("#iList");}
+$("#q").oninput=rList;
+$("#fab").onclick=()=>{retWr=false;newItem();};
+let vdA=0;$("#vDel").onclick=async e=>{if(!vdA){vdA=1;e.target.textContent="Σίγουρα; Σβήνει όλες τις δουλειές";setTimeout(()=>{vdA=0;e.target.textContent="Διαγραφή πλοίου";},3500);return;}
+  for(const i of items(cv))for(const k of [...(i.photos||[]),...(i.after||[])])await IDB.del(k).catch(()=>{});S.it=S.it.filter(i=>i.vid!==cv);S.v=S.v.filter(x=>x.id!==cv);cv=null;save();go("home");};
+
+/* ---------- item ---------- */
+$("#i_area").innerHTML=AREAS.map(a=>`<option value="${a[0]}">${a[1]}</option>`).join("");$("#i_phase").innerHTML=PHASES.map(p=>`<option>${p}</option>`).join("");
+function newItem(area){const its=items(cv),last=its[its.length-1];const no=its.reduce((m,i)=>Math.max(m,i.no||0),0)+1;
+  draft={id:uid(),vid:cv,no,title:"",desc:"",en:"",area:area||(last?last.area:"DECK"),phase:last?last.phase:"After yard",prio:"Normal",resp:"Crew",src:"Own inspection",ref:"",given:today(),due:"",st:"Open",closed:"",photos:[],after:[],spares:"",log:[],_new:true,_tmp:[]};
+  fillItem();go("item");$("#ttl").textContent=`${V().name} · νέα δουλειά #${no}`;}
+function openItem(id){draft=JSON.parse(JSON.stringify(S.it.find(i=>i.id===id)));draft._tmp=[];fillItem();go("item");$("#ttl").textContent=`${V().name} · #${draft.no}`;}
+const F={i_title:"title",i_desc:"desc",i_en:"en",i_area:"area",i_phase:"phase",i_prio:"prio",i_resp:"resp",i_src:"src",i_ref:"ref",i_given:"given",i_due:"due",i_spares:"spares",i_closed:"closed"};
+function fillItem(){Object.entries(F).forEach(([id,k])=>$("#"+id).value=draft[k]||"");$("#i_del").classList.toggle("hide",!!draft._new);stSeg();phs("B");phs("A");logR();$("#enWrap").classList.toggle("hide",!draft.en);}
+function readItem(){Object.entries(F).forEach(([id,k])=>draft[k]=$("#"+id).value.trim());}
+function stSeg(){$$("#i_st button").forEach(b=>b.classList.toggle("on",b.dataset.v===draft.st));$("#doneBox").classList.toggle("hide",draft.st!=="Done");}
+$("#i_st").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;readItem();const was=draft.st;draft.st=b.dataset.v;
+  if(draft.st==="Done"&&!draft.closed){draft.closed=today();$("#i_closed").value=draft.closed;}if(was!==draft.st)draft.log.push({t:today(),x:"Status → "+draft.st});stSeg();logR();});
+$$(".qd [data-dd]").forEach(b=>b.onclick=()=>{$("#i_due").value=addDays($("#i_given").value||today(),+b.dataset.dd);});
+async function phs(w){const arr=w==="B"?draft.photos:draft.after,box=$("#ph"+w);box.innerHTML="";for(const k of arr){const d=await IDB.get(k);if(!d)continue;const el=document.createElement("div");
+  el.innerHTML=`<img src="${d}"><button>✕</button>`;el.querySelector("button").onclick=()=>{const i=arr.indexOf(k);if(i>=0)arr.splice(i,1);(draft._rm=draft._rm||[]).push(k);phs(w);};box.appendChild(el);}}
+async function addPh(e,w){const fs=[...e.target.files];e.target.value="";for(const f of fs){try{const k="p_"+uid();await IDB.put(k,await fileToJpeg(f));(w==="B"?draft.photos:draft.after).push(k);draft._tmp.push(k);}catch(x){toast("Σφάλμα φωτογραφίας");}}phs(w);}
+$("#fB").onchange=e=>addPh(e,"B");$("#fA").onchange=e=>addPh(e,"A");
+function logR(){$("#i_log").innerHTML=(draft.log||[]).map(l=>`<div>• ${fd(l.t)} — ${esc(l.x)}</div>`).join("")||"<span class='note'>—</span>";}
+$("#i_logadd").onclick=()=>{const x=$("#i_logtxt").value.trim();if(!x)return;draft.log.push({t:today(),x});$("#i_logtxt").value="";logR();};
+$("#i_save").onclick=async()=>{readItem();if(!draft.title&&!draft.desc){toast("Γράψε τι πρέπει να γίνει");$("#i_title").focus();return;}
+  if(!draft.title)draft.title=draft.desc.split(/\n|\.\s/)[0].slice(0,70);
+  for(const k of draft._rm||[])await IDB.del(k).catch(()=>{});const isNew=draft._new;delete draft._new;delete draft._tmp;delete draft._rm;
+  if(isNew){draft.log.push({t:today(),x:"Δημιουργήθηκε"});S.it.push(draft);}else{const i=S.it.findIndex(x=>x.id===draft.id);S.it[i]=draft;}save();
+  toast(isNew?`Αποθηκεύτηκε #${draft.no}`:"Ενημερώθηκε");draft=null;go(retWr?"wr":"ves");};
+let idA=0;$("#i_del").onclick=async e=>{if(!idA){idA=1;e.target.textContent="Σίγουρα;";setTimeout(()=>{idA=0;e.target.textContent="🗑";},3000);return;}
+  for(const k of [...draft.photos,...draft.after])await IDB.del(k).catch(()=>{});S.it=S.it.filter(i=>i.id!==draft.id);save();idA=0;e.target.textContent="🗑";draft=null;go(retWr?"wr":"ves");};
+$("#i_rem").onclick=()=>{readItem();if(!draft.due){toast("Βάλε πρώτα due date");return;}icsShare([draft],`${V().name}_#${draft.no}.ics`);};
+
+/* ---------- walk-round ---------- */
+$("#wrStart").onclick=()=>{wrI=0;go("wr");};
+function rWr(){const a=AREAS[wrI],v=V();$("#ttl").textContent=`${v.name} · Walk-round`;$("#sub").textContent=`Χώρος ${wrI+1} από ${AREAS.length}`;
+  $("#wrStep").textContent=`Χώρος ${wrI+1} / ${AREAS.length}`;$("#wrArea").textContent=a[1];$("#wrProg").style.width=((wrI+1)/AREAS.length*100)+"%";
+  $("#wrLook").innerHTML=a[2].map(x=>`<li>${esc(x)}</li>`).join("")||"<li class='note'>Ό,τι άλλο δεις.</li>";
+  const op=items(cv).filter(i=>i.area===a[0]&&i.st!=="Done").sort(srt);
+  $("#wrOpen").innerHTML=op.length?`<h2 style="margin:16px 4px 4px">Ανοιχτά εδώ (${op.length}) — έλεγξέ τα</h2>`+op.map(i=>card(i)+`<div class="row" style="margin:-4px 0 10px 4px"><button class="btn sm" data-ok="${i.id}">✓ Έκλεισε</button><button class="btn sm" data-pr="${i.id}">⏳ Σε εξέλιξη</button><button class="btn sm" data-st="${i.id}">Ακόμα ανοιχτό</button></div>`).join(""):`<p class="note" style="margin:12px 4px">Κανένα ανοιχτό θέμα σε αυτόν τον χώρο.</p>`;
+  thumbs("#wrOpen");
+  $$("#wrOpen [data-ok]").forEach(b=>b.onclick=()=>{retWr=true;openItem(b.dataset.ok);draft.st="Done";draft.closed=today();draft.log.push({t:today(),x:"Status → Done (walk-round)"});fillItem();toast("Βάλε φωτό after και Αποθήκευση");setTimeout(()=>$("#doneBox").scrollIntoView({behavior:"smooth"}),100);});
+  $$("#wrOpen [data-pr]").forEach(b=>b.onclick=()=>{const i=S.it.find(x=>x.id===b.dataset.pr);i.st="In progress";i.log.push({t:today(),x:"Σε εξέλιξη (walk-round)"});save();rWr();toast("Σημειώθηκε");});
+  $$("#wrOpen [data-st]").forEach(b=>b.onclick=()=>{const i=S.it.find(x=>x.id===b.dataset.st);i.log.push({t:today(),x:"Ελέγχθηκε — ακόμα ανοιχτό"});save();b.textContent="✔ σημειώθηκε";b.disabled=true;});
+  $("#wrPrev").style.visibility=wrI?"":"hidden";$("#wrNext").textContent=wrI<AREAS.length-1?`${AREAS[wrI+1][1]} ›`:"✓ Τέλος walk-round";}
+$("#wrPrev").onclick=()=>{wrI--;rWr();window.scrollTo(0,0);};
+$("#wrNext").onclick=()=>{if(wrI<AREAS.length-1){wrI++;rWr();window.scrollTo(0,0);}else{toast("Walk-round ολοκληρώθηκε ✔");flt="open";go("ves");}};
+$("#wrNew").onclick=()=>{retWr=true;newItem(AREAS[wrI][0]);setTimeout(()=>$("#fB").click(),150);};
+
+/* ---------- reminders (.ics) ---------- */
+function icsEsc(s){return String(s||"").replace(/\\/g,"\\\\").replace(/;/g,"\\;").replace(/,/g,"\\,").replace(/\n/g,"\\n");}
+function icsShare(list,name){const v=V(),st=new Date().toISOString().replace(/[-:]/g,"").slice(0,15)+"Z";
+  let t="BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Job Orders//EN\r\nCALSCALE:GREGORIAN\r\n";
+  list.filter(i=>i.due&&i.st!=="Done").forEach(i=>{const dd=i.due<today()?today():i.due,d=dd.replace(/-/g,""),e=addDays(dd,1).replace(/-/g,"");
+    t+=`BEGIN:VEVENT\r\nUID:${i.id}@jobs-${v.id}\r\nDTSTAMP:${st}\r\nDTSTART;VALUE=DATE:${d}\r\nDTEND;VALUE=DATE:${e}\r\nSUMMARY:${icsEsc(`[${v.name}] #${i.no} ${i.title}`)}\r\n`+
+      `DESCRIPTION:${icsEsc(`${i.en||i.desc||""}\nΧώρος: ${AN[i.area]} · ${i.phase} · ${i.resp} · ${i.prio}${i.ref?"\nRef: "+i.ref:""}${i.spares?"\n"+i.spares:""}\nΔόθηκε: ${fd(i.given)}`)}\r\n`+
+      `BEGIN:VALARM\r\nACTION:DISPLAY\r\nDESCRIPTION:${icsEsc(`[${v.name}] #${i.no} due αύριο`)}\r\nTRIGGER:-PT15H\r\nEND:VALARM\r\nBEGIN:VALARM\r\nACTION:DISPLAY\r\nDESCRIPTION:${icsEsc(`[${v.name}] #${i.no} due σήμερα`)}\r\nTRIGGER:PT9H\r\nEND:VALARM\r\nEND:VEVENT\r\n`;});
+  t+="END:VCALENDAR\r\n";const n=(t.match(/BEGIN:VEVENT/g)||[]).length;if(!n){toast("Καμία ανοιχτή δουλειά με due date");return;}
+  shareFile(new Blob([t],{type:"text/calendar"}),name.replace(/[^\w#.\-]+/g,"_"));toast(`${n} υπενθυμίσεις → «Προσθήκη όλων» στο Ημερολόγιο`,3500);}
+$("#xIcs").onclick=()=>icsShare(items(cv),`${V().name}_jobs.ics`);
+
+/* ---------- exports ---------- */
+$("#xTxt").onclick=()=>{const v=V(),op=items(cv).filter(i=>i.st!=="Done").sort(srt);let t=`JOB ORDER LIST — ${v.name} — ${fd(today())}\nOpen: ${op.length}\n`;
+  PHASES.forEach(p=>{const a=op.filter(i=>i.phase===p);if(!a.length)return;t+=`\n${p.toUpperCase()}\n`;a.forEach(i=>t+=`#${i.no} ${i.title}${i.prio!=="Normal"?" ["+i.prio+"]":""}\n   ${AN[i.area]} · ${i.resp} · due ${fd(i.due)}${stat(i)==="ov"?" ⚠ OVERDUE":""}${i.en?"\n   "+i.en:""}\n`);});shareText(t,"Job Orders "+v.name);};
+$("#xCsv").onclick=()=>{const v=V(),rows=[["No","Title","Description (EN)","Description","Area","Phase","Priority","Responsible","Source","Ref","Given","Due","Status","Closed","Spares/PO","Photos before","Photos after"]];
+  items(cv).sort((a,b)=>a.no-b.no).forEach(i=>rows.push([i.no,i.title,i.en,i.desc,AN[i.area],i.phase,i.prio,i.resp,i.src,i.ref,i.given,i.due,i.st,i.closed,i.spares,i.photos.length,i.after.length]));
+  const csv="\ufeff"+rows.map(r=>r.map(x=>{x=String(x??"");return/[",\n]/.test(x)?'"'+x.replace(/"/g,'""')+'"':x;}).join(",")).join("\r\n");shareFile(new Blob([csv],{type:"text/csv"}),`${v.name}_Job_Orders.csv`);};
+function makePdf(pages){const enc=new TextEncoder(),ch=[],off=[];let len=0;const w=x=>{const b=typeof x==="string"?enc.encode(x):x;ch.push(b);len+=b.length;};
+  const obj=(i,f)=>{off[i]=len;w(`${i} 0 obj\n`);f();w("\nendobj\n");};const N=pages.length;w("%PDF-1.4\n");obj(1,()=>w("<< /Type /Catalog /Pages 2 0 R >>"));
+  obj(2,()=>w(`<< /Type /Pages /Count ${N} /Kids [${pages.map((p,i)=>`${3+i*3} 0 R`).join(" ")}] >>`));
+  pages.forEach((p,i)=>{const pg=3+i*3,cs="q 595 0 0 842 0 0 cm /Im0 Do Q";obj(pg,()=>w(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /XObject << /Im0 ${pg+2} 0 R >> >> /Contents ${pg+1} 0 R >>`));
+    obj(pg+1,()=>w(`<< /Length ${cs.length} >>\nstream\n${cs}\nendstream`));obj(pg+2,()=>{w(`<< /Type /XObject /Subtype /Image /Width 1240 /Height 1754 /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${p.length} >>\nstream\n`);w(p);w("\nendstream");});});
+  const x=len,t=3+N*3;w(`xref\n0 ${t}\n0000000000 65535 f \n`);for(let i=1;i<t;i++)w(String(off[i]).padStart(10,"0")+" 00000 n \n");w(`trailer\n<< /Size ${t} /Root 1 0 R >>\nstartxref\n${x}\n%%EOF`);
+  const o=new Uint8Array(len);let q=0;ch.forEach(c=>{o.set(c,q);q+=c.length;});return o;}
+$("#xPdf").onclick=async e=>{const b=e.currentTarget,tx=b.textContent;b.disabled=true;b.textContent="⏳ PDF…";
+  try{const v=V(),all=items(cv).sort(srt),op=all.filter(i=>i.st!=="Done"),dn=all.filter(i=>i.st==="Done"),W=1240,H=1754,M=60,Fn="system-ui,-apple-system,sans-serif",pages=[];let c,g,y,pn=0;
+    const np=()=>{c=document.createElement("canvas");c.width=W;c.height=H;g=c.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,W,H);pn++;g.fillStyle="#123b3a";g.fillRect(0,0,W,100);
+      g.fillStyle="#fff";g.font=`bold 34px ${Fn}`;g.fillText(`JOB ORDER LIST — ${v.name}`,M,50);g.font=`20px ${Fn}`;g.fillText(`${fd(today())}  ·  Open ${op.length}  ·  Overdue ${op.filter(i=>stat(i)==="ov").length}  ·  Done ${dn.length}`,M,82);
+      g.fillStyle="#888";g.font=`17px ${Fn}`;g.fillText(`Page ${pn}`,M,H-30);y=140;};
+    const ep=()=>{const d=c.toDataURL("image/jpeg",.82),bb=atob(d.split(",")[1]),u=new Uint8Array(bb.length);for(let i=0;i<bb.length;i++)u[i]=bb.charCodeAt(i);pages.push(u);};
+    const fit=(t,mw)=>{t=String(t||"");if(g.measureText(t).width<=mw)return t;while(t&&g.measureText(t+"…").width>mw)t=t.slice(0,-1);return t+"…";};
+    const cols=[["#",50],["Job",470],["Area",190],["Resp.",110],["Given",100],["Due",110],["Status",90]];
+    const head=()=>{g.fillStyle="#e3eeec";g.fillRect(M,y-26,W-2*M,36);g.fillStyle="#123b3a";g.font=`bold 17px ${Fn}`;let x=M+6;cols.forEach(cc=>{g.fillText(cc[0],x,y);x+=cc[1];});y+=36;};
+    np();for(const [ttl,list] of [...PHASES.map(p=>[p,op.filter(i=>i.phase===p)]),["DONE",dn]]){if(!list.length)continue;if(y>H-160){ep();np();}
+      g.fillStyle="#123b3a";g.font=`bold 22px ${Fn}`;g.fillText(`${ttl} (${list.length})`,M,y+6);y+=40;head();
+      list.forEach((i,k)=>{if(y>H-80){ep();np();head();}if(k%2){g.fillStyle="#f5f8f7";g.fillRect(M,y-24,W-2*M,34);}const s=stat(i);g.font=`16px ${Fn}`;g.fillStyle="#14231f";let x=M+6;
+        [i.no,(i.prio!=="Normal"?`[${i.prio}] `:"")+(i.en||i.title),AN[i.area].replace(/^\S+\s/,""),i.resp,fd(i.given),fd(i.due)+(s==="ov"?" ⚠":""),i.st==="In progress"?"In prog.":i.st].forEach((t,ci)=>{
+          g.fillStyle=ci===5&&s==="ov"?"#c0392b":ci===6&&i.st==="Done"?"#1d7a46":"#14231f";g.fillText(fit(t,cols[ci][1]-10),x,y);x+=cols[ci][1];});y+=34;});y+=20;}
+    ep();
+    // detail pages with photos (open items first, then done) – 2 per page
+    let slot=0;for(const i of [...op,...dn].filter(i=>i.photos.length||i.after.length)){if(slot===0)np();const top=130+slot*800;g.strokeStyle="#d4ddda";g.lineWidth=2;g.strokeRect(M,top,W-2*M,770);
+      g.fillStyle="#123b3a";g.font=`bold 26px ${Fn}`;g.fillText(fit(`#${i.no}  ${i.title}`,W-2*M-40),M+20,top+42);g.font=`17px ${Fn}`;g.fillStyle="#555";
+      g.fillText(fit(`${AN[i.area].replace(/^\S+\s/,"")} · ${i.phase} · ${i.resp} · ${i.prio} · Given ${fd(i.given)} · Due ${fd(i.due)} · ${i.st}${i.closed?" "+fd(i.closed):""}`,W-2*M-40),M+20,top+72);
+      g.fillStyle="#14231f";g.font=`17px ${Fn}`;g.fillText(fit(i.en||i.desc,W-2*M-40),M+20,top+100);
+      const sets=[["BEFORE",i.photos.slice(0,2)],["AFTER",i.after.slice(0,2)]].filter(s=>s[1].length);const bw=(W-2*M-40-20*(sets.length-1))/sets.length;let x=M+20;
+      for(const [lab,ks] of sets){g.fillStyle=lab==="AFTER"?"#1d7a46":"#c0392b";g.font=`bold 18px ${Fn}`;g.fillText(lab,x,top+140);const ih=(600-10*(ks.length-1))/ks.length;let yy=top+152;
+        for(const k of ks){const d=await IDB.get(k);if(d){const im=await loadImg(d),s=Math.min(bw/im.width,ih/im.height);g.drawImage(im,x,yy,im.width*s,im.height*s);}yy+=ih+10;}x+=bw+20;}
+      slot++;if(slot===2){ep();slot=0;}}
+    if(slot)ep();await shareFile(new Blob([makePdf(pages)],{type:"application/pdf"}),`${v.name}_Job_Order_List_${today()}.pdf`.replace(/\s+/g,"_"));}
+  catch(x){toast("Σφάλμα PDF");}b.disabled=false;b.textContent=tx;};
+
+/* ---------- voice + Claude EN (shared key with RISQ app) ---------- */
+const KEYK="risq_api_key";const getKey=()=>{try{return localStorage.getItem(KEYK)||"";}catch(e){return"";}};
+$("#apiKey").value=getKey()?"••••••••":"";$("#apiSave").onclick=()=>{const v=$("#apiKey").value.trim();if(!v||v.startsWith("•"))return;try{localStorage.setItem(KEYK,v);}catch(e){}$("#apiKey").value="••••••••";$("#apiSt").textContent="✔";};
+$("#i_ai").onclick=async e=>{readItem();const gr=(draft.desc||draft.title).trim();if(!gr){toast("Γράψε ή πες πρώτα");return;}const key=getKey();if(!key){toast("Βάλε API key στην αρχική οθόνη");return;}if(!navigator.onLine){toast("Χρειάζεται internet");return;}
+  const b=e.currentTarget;b.disabled=true;b.textContent="⏳…";
+  try{const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"content-type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+      body:JSON.stringify({model:"claude-haiku-5-5",max_tokens:400,system:"You are a marine superintendent writing a ship's job order list. Rewrite the note (usually Greek with English maritime terms) as a short, clear English job order line: imperative or factual, what is to be done and where, using correct shipboard terminology. Do not invent facts, sizes, makers or dates. Reply as JSON: {\"title\":\"max 8 words\",\"text\":\"1-2 sentences\"} and nothing else.",
+      messages:[{role:"user",content:`Area: ${AN[draft.area]}\nNote: ${gr}`}]})});
+    const j=await r.json();if(!r.ok)throw new Error(r.status===401?"Λάθος API key":(j.error&&j.error.message)||r.status);
+    const t=(j.content||[]).map(c=>c.text||"").join("").trim();let o;try{o=JSON.parse(t.replace(/^```(json)?|```$/g,""));}catch(x){o={text:t};}
+    draft.en=o.text||t;$("#i_en").value=draft.en;$("#enWrap").classList.remove("hide");if(o.title&&!$("#i_title").value.trim())$("#i_title").value=o.title;}
+  catch(x){toast(x.message||"Σφάλμα");}b.disabled=false;b.textContent="✨ English";};
+let REC=null;$("#i_mic").onclick=e=>{const btn=e.currentTarget,ta=$("#i_desc"),SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(REC){REC.stop();return;}
+  if(!SR){ta.focus();toast("Πάτα το 🎤 του πληκτρολογίου");return;}const r=new SR();r.lang="el-GR";r.interimResults=true;r.continuous=true;const base=ta.value?ta.value.replace(/\s*$/," "):"";let fin="";
+  r.onresult=ev=>{let it="";for(let i=ev.resultIndex;i<ev.results.length;i++){const t=ev.results[i][0].transcript;if(ev.results[i].isFinal)fin+=t+" ";else it+=t;}ta.value=base+fin+it;};
+  r.onerror=ev=>{toast(ev.error==="not-allowed"?"Δώσε άδεια μικροφώνου":"Πάτα το 🎤 του πληκτρολογίου");ta.focus();};r.onend=()=>{REC=null;btn.classList.remove("rec");btn.textContent="🎤 Ομιλία";};
+  try{r.start();REC=r;btn.classList.add("rec");btn.textContent="⏹ Stop";}catch(x){ta.focus();toast("Πάτα το 🎤 του πληκτρολογίου");}};
+
+go("home");
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>
