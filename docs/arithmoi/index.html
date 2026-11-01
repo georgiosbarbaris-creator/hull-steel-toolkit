@@ -17,6 +17,8 @@ header h1{margin:0;font-size:19px}header p{margin:2px 0 0;font-size:12.5px;opaci
 main{padding:14px;max-width:760px;margin:0 auto}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
 label{display:block;font-size:13px;color:var(--muted);margin:8px 0 3px}
+select{width:100%;font:inherit;padding:11px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
+.meter{height:10px;background:var(--bg);border-radius:6px;overflow:hidden;margin:6px 0}.meter i{display:block;height:100%;background:linear-gradient(90deg,#b8860b,#7a4fd1)}
 input{width:100%;font:inherit;padding:11px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 button{font:inherit;border:0;border-radius:10px;padding:11px 14px;background:var(--pri);color:var(--card);font-weight:600;cursor:pointer}
@@ -68,6 +70,18 @@ table{border-collapse:collapse;width:100%;font-size:14px}td,th{border:1px solid 
  <div id="out"></div>
 </section>
 
+<section class="view" id="v-love">
+ <div class="card"><h2>💞 Ταίριασμα</h2><p class="muted" style="margin:0">Σύγκρινε δύο ανθρώπους: σύντροφο, φίλο, συνεργάτη. Διάλεξε από τα αποθηκευμένα ή γράψε τα στοιχεία.</p></div>
+ <div class="card" style="margin-bottom:8px"><div class="ttl">👤 Πρόσωπο Α</div>
+  <label>Από αποθηκευμένα</label><select id="asel" class="psel"></select>
+  <div class="g2"><div><label>Όνομα</label><input id="afn"></div><div><label>Μεσαίο</label><input id="amn"></div></div>
+  <div class="g2"><div><label>Επώνυμο</label><input id="aln"></div><div><label>Γέννηση</label><input id="abd" type="date"></div></div></div><div class="card" style="margin-bottom:8px"><div class="ttl">👤 Πρόσωπο Β</div>
+  <label>Από αποθηκευμένα</label><select id="bsel" class="psel"></select>
+  <div class="g2"><div><label>Όνομα</label><input id="bfn"></div><div><label>Μεσαίο</label><input id="bmn"></div></div>
+  <div class="g2"><div><label>Επώνυμο</label><input id="bln"></div><div><label>Γέννηση</label><input id="bbd" type="date"></div></div></div>
+ <div class="row" style="margin-bottom:12px"><button class="acc" id="cmp">Σύγκρινε</button></div>
+ <div id="cmpOut"></div>
+</section>
 <section class="view" id="v-people"><div class="card"><h2>👥 Αποθηκευμένα πρόσωπα</h2><div id="people"></div></div></section>
 
 <section class="view" id="v-help">
@@ -104,6 +118,7 @@ table{border-collapse:collapse;width:100%;font-size:14px}td,th{border:1px solid 
 
 <nav>
  <button data-v="calc" class="on"><b>🔢</b>Υπολογισμός</button>
+ <button data-v="love"><b>💞</b>Ταίριασμα</button>
  <button data-v="people"><b>👥</b>Πρόσωπα</button>
  <button data-v="help"><b>📖</b>Οδηγός</button>
 </nav>
@@ -340,13 +355,62 @@ $("people").onclick=e=>{const o=e.target.closest("[data-open]"),d=e.target.close
  if(o){const p=people[+o.dataset.open];$("fn").value=p.fn;$("mn").value=p.mn;$("ln").value=p.ln;$("bd").value=p.bd;show("calc");run()}
  if(d){const p=people[+d.dataset.del];if(d.dataset.sure){people.splice(+d.dataset.del,1);store.set("ar_people",people);drawPeople()}else{d.dataset.sure=1;d.textContent="Σίγουρα;"}}};
 
+
+// ---------- ΤΑΙΡΙΑΣΜΑ ----------
+const CM={"1-1":3,"1-2":3,"1-3":5,"1-4":2,"1-5":5,"1-6":3,"1-7":4,"1-8":2,"1-9":4,"2-2":4,"2-3":3,"2-4":5,"2-5":2,"2-6":5,"2-7":3,"2-8":5,"2-9":4,"3-3":4,"3-4":2,"3-5":5,"3-6":5,"3-7":2,"3-8":3,"3-9":5,"4-4":4,"4-5":1,"4-6":4,"4-7":5,"4-8":5,"4-9":2,"5-5":3,"5-6":2,"5-7":5,"5-8":3,"5-9":3,"6-6":4,"6-7":2,"6-8":4,"6-9":5,"7-7":4,"7-8":2,"7-9":3,"8-8":3,"8-9":2,"9-9":4};
+const cm=(a,b)=>{a=single(a);b=single(b);return CM[Math.min(a,b)+"-"+Math.max(a,b)]};
+const REL={1:["πρωτοβουλία, κατεύθυνση, θάρρος","χώρο, σεβασμό στην ανεξαρτησία του, να μη τον ελέγχουν"],
+2:["τρυφερότητα, υπομονή, ευαισθησία","σταθερότητα, ζεστασιά, λόγια αγάπης"],
+3:["χαρά, χιούμορ, έκφραση","κουβέντα, παρέα, να τον θαυμάζουν"],
+4:["ασφάλεια, συνέπεια, πρακτική στήριξη","αξιοπιστία, πρόγραμμα, ειλικρίνεια"],
+5:["περιπέτεια, πάθος, φρεσκάδα","ελευθερία, ποικιλία, όχι ζήλια"],
+6:["φροντίδα, σπίτι, αφοσίωση","εκτίμηση, οικογένεια, αρμονία"],
+7:["βάθος, σοφία, πιστότητα στην ουσία","μοναχικό χρόνο, πνευματική επαφή, ησυχία"],
+8:["δύναμη, προστασία, υλική ασφάλεια","σεβασμό, κοινούς στόχους, αναγνώριση"],
+9:["γενναιοδωρία, κατανόηση, ευρύτητα","ιδανικά, συμπόνια, κοινό όραμα"]};
+const LV={5:["Φυσικό ταίριασμα","Ρέει εύκολα· οι δύο ενέργειες συμπληρώνονται."],4:["Καλό ταίριασμα","Ταιριάζουν, με μικρές προσαρμογές."],3:["Ουδέτερο","Μπορεί να δουλέψει με κατανόηση και κουβέντα."],2:["Θέλει δουλειά","Διαφορετικοί ρυθμοί· χρειάζεται συνειδητή προσπάθεια."],1:["Δύσκολο","Αντίθετες ανάγκες· η σχέση γίνεται σχολείο για τους δύο."]};
+const AREAS=[["lp","Πορεία Ζωής","ο δρόμος της ζωής",35],["su","Ψυχή","οι βαθιές επιθυμίες",30],["ex","Πεπρωμένο","ταλέντα & τρόπος δράσης",20],["pe","Προσωπικότητα","η πρώτη εντύπωση",15]];
+const val=(r,k)=>k==="lp"?r.lp:r[k].n;
+function sideData(k){return{fn:$(k+"fn").value.trim(),mn:$(k+"mn").value.trim(),ln:$(k+"ln").value.trim(),bd:$(k+"bd").value}}
+function fillSel(){const o=`<option value="">— διάλεξε —</option>`+people.map((p,i)=>`<option value="${i}">${esc([p.fn,p.mn,p.ln].filter(Boolean).join(" "))}</option>`).join("");
+ ["a","b"].forEach(k=>{$(k+"sel").innerHTML=o;$(k+"sel").onchange=()=>{const p=people[+$(k+"sel").value];if(!p)return;["fn","mn","ln","bd"].forEach(f=>$(k+f).value=p[f]||"")}});
+ if(!$("afn").value&&$("fn").value){["fn","mn","ln","bd"].forEach(f=>$("a"+f).value=$(f).value)}}
+$("cmp").onclick=()=>{const A=sideData("a"),B=sideData("b");
+ if(!A.fn||!A.ln||!A.bd||!B.fn||!B.ln||!B.bd){$("cmpOut").innerHTML=`<div class="card">Συμπλήρωσε όνομα, επώνυμο και γέννηση και για τους δύο.</div>`;return}
+ const ra=compute(A.fn,A.mn,A.ln,A.bd,today()),rb=compute(B.fn,B.mn,B.ln,B.bd,today());
+ const na=A.fn,nb=B.fn;let tot=0;
+ const rows=AREAS.map(([k,t,d,w])=>{const x=val(ra,k),y=val(rb,k),c=cm(x,y);tot+=c*w;return{k,t,d,x,y,c}});
+ const pct=Math.round(tot/5);
+ // διασταυρούμενα: ψυχή του ενός με πορεία του άλλου
+ const x1=cm(ra.su.n,rb.lp),x2=cm(rb.su.n,ra.lp);
+ const lvl=pct>=85?5:pct>=70?4:pct>=55?3:pct>=40?2:1;
+ const same=AREAS.filter(([k])=>single(val(ra,k))===single(val(rb,k))).map(a=>a[1]);
+ let h=`<div class="card" style="background:linear-gradient(135deg,#5a1a3a,#7a4fd1);color:#fff;border:0;text-align:center">
+ <div style="font-size:15px;opacity:.9">${esc(na)} 💞 ${esc(nb)}</div><div style="font-size:46px;font-weight:800;color:#ffd27a">${pct}%</div>
+ <div style="font-weight:700">${LV[lvl][0]}</div><div style="opacity:.85;font-size:14px">${LV[lvl][1]}</div></div>`;
+ h+=`<div class="card"><h2>Ανά αριθμό</h2>${rows.map(r=>`<div style="margin-bottom:10px"><div class="row" style="justify-content:space-between"><b>${r.t}</b><span><b style="color:var(--hi)">${r.x}</b> & <b style="color:var(--hi)">${r.y}</b></span></div>
+ <div class="meter"><i style="width:${r.c*20}%"></i></div><div class="muted">${r.d} · ${LV[r.c][0]}: ${N[single(r.x)].a.replace(/^Ο /,"")} × ${N[single(r.y)].a.replace(/^Ο /,"")}</div></div>`).join("")}
+ ${same.length?`<p class="pm">✨ Κοινοί αριθμοί σε: <b>${same.join(", ")}</b>. Εκεί καταλαβαίνεστε χωρίς λόγια.</p>`:""}</div>`;
+ const g=(r)=>single(r.lp);
+ h+=`<div class="card"><h2>Τι φέρνει ο καθένας</h2>
+ <p class="pm"><b>${esc(na)}</b> (Πορεία ${ra.lp}) φέρνει <b>${REL[g(ra)][0]}</b> και χρειάζεται ${REL[g(ra)][1]}.</p>
+ <p class="pm"><b>${esc(nb)}</b> (Πορεία ${rb.lp}) φέρνει <b>${REL[g(rb)][0]}</b> και χρειάζεται ${REL[g(rb)][1]}.</p>
+ <h3>Καρδιά με καρδιά</h3>
+ <p class="pm"><b>${esc(na)}</b> (Ψυχή ${ra.su.n}) λαχταρά: ${REL[single(ra.su.n)][1]}.<br><b>${esc(nb)}</b> (Ψυχή ${rb.su.n}) λαχταρά: ${REL[single(rb.su.n)][1]}.</p>
+ <p class="pm">Πορεία ${esc(nb)} → Ψυχή ${esc(na)}: <b>${x1>=4?"ταιριάζει καλά":x1===3?"μέτρια":"θέλει προσπάθεια"}</b><br>Πορεία ${esc(na)} → Ψυχή ${esc(nb)}: <b>${x2>=4?"ταιριάζει καλά":x2===3?"μέτρια":"θέλει προσπάθεια"}</b></p></div>`;
+ h+=`<div class="card"><h2>Οι χρονιές σας τώρα</h2><div class="grid3" style="grid-template-columns:1fr 1fr"><div class="mini"><div class="n">${ra.py}</div><div class="l">${esc(na)} · ${N[ra.py].a}</div></div><div class="mini"><div class="n">${rb.py}</div><div class="l">${esc(nb)} · ${N[rb.py].a}</div></div></div>
+ <p class="pm" style="margin-top:8px">${ra.py===rb.py?"Είστε στην ίδια φάση του κύκλου: κοινός ρυθμός, κοινά θέματα φέτος.":Math.abs(ra.py-rb.py)<=1||Math.abs(ra.py-rb.py)===8?"Κοντινές φάσεις: εύκολα συγχρονίζεστε.":"Διαφορετικές φάσεις: ο ένας θέλει «"+N[ra.py].mo.toLowerCase().replace(/\.$/,"")+"», ο άλλος «"+N[rb.py].mo.toLowerCase().replace(/\.$/,"")+"». Δώστε χώρο ο ένας στον άλλο."}</p></div>`;
+ h+=`<p class="muted" style="padding:0 6px">Το ταίριασμα είναι παιχνίδι αυτογνωσίας, όχι ετυμηγορία. Καμία σχέση δεν κρίνεται από αριθμούς.</p>`;
+ $("cmpOut").innerHTML=h;$("cmpOut").scrollIntoView({behavior:"smooth"});
+};
+
 // ---------- ΠΙΝΑΚΑΣ ----------
 (function(){const rows=[[],[],[]];Object.entries(ISO).forEach(([c,v],i)=>rows[Math.floor(i/9)].push([c,v]));
  $("tbl").innerHTML=`<table><tr><th>Αξία</th>${[1,2,3,4,5,6,7,8,9].map(i=>`<th>${i}</th>`).join("")}</tr>${rows.map(r=>`<tr><th>${r[0][1]>=100?"×100":r[0][1]>=10?"×10":"×1"}</th>${r.map(([c])=>`<td style="${"ϛϟϡ".includes(c)?"color:var(--muted);text-decoration:line-through":"font-weight:700"}">${c}</td>`).join("")}</tr>`).join("")}</table>`})();
 
 // ---------- ΠΛΟΗΓΗΣΗ ----------
 document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>show(b.dataset.v));
-function show(v){document.querySelectorAll(".view").forEach(x=>x.classList.toggle("on",x.id==="v-"+v));document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x.dataset.v===v));if(v==="people")drawPeople();scrollTo(0,0)}
+function show(v){document.querySelectorAll(".view").forEach(x=>x.classList.toggle("on",x.id==="v-"+v));document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x.dataset.v===v));if(v==="people")drawPeople();if(v==="love")fillSel();scrollTo(0,0)}
 document.querySelectorAll("#v-calc input").forEach(i=>i.addEventListener("keydown",e=>{if(e.key==="Enter")run()}));
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 </script>
