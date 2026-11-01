@@ -134,6 +134,17 @@ details summary{cursor:pointer;font-weight:600;font-size:14px;color:var(--acc);p
  </div>
 
  <div class="card">
+  <h2>🔧 Ποια ταχύτητα;</h2>
+  <div class="g2"><label>Έδαφος<select id="gTerr"></select></label><label>Κιβώτιο<select id="gAuto"><option value="auto">Όπως το όχημα</option><option value="man">Manual</option><option value="at">Αυτόματο</option></select></label></div>
+  <h3>Ιδανική σχέση ανά κλίση</h3>
+  <div class="scroll"><table id="gBest"></table></div>
+  <h3>Όλες οι σχέσεις</h3>
+  <div class="scroll"><table id="gTbl"></table></div>
+  <div class="note" id="gNote" style="margin-top:6px"></div>
+  <div class="why" id="gWhy"></div>
+ </div>
+
+ <div class="card">
   <h2>📐 Γεωμετρία <span class="tag" id="geoTag"></span></h2>
   <div class="scroll"><table id="geoTbl"></table></div>
   <svg class="svg" id="vehSvg" viewBox="0 0 360 150"></svg>
@@ -316,6 +327,8 @@ details summary{cursor:pointer;font-weight:600;font-size:14px;color:var(--acc);p
   <label>GVW kg<input id="e_gvw" type="number" inputmode="decimal"></label>
   <label>Κενό βάρος kg<input id="e_curb" type="number" inputmode="decimal"></label>
  </div>
+ <label style="margin-top:8px">Σχέσεις κιβωτίου 1η, 2η, 3η… (με κόμμα)<input id="e_gears" placeholder="4.529, 2.464, 1.490, 1.000, 0.881"></label>
+ <label class="ck" style="margin-top:8px"><input type="checkbox" id="e_auto"> Αυτόματο κιβώτιο</label>
  <label style="margin-top:8px">Σημείωση<input id="e_note"></label>
  <div class="note" style="margin-top:6px">Χωρίς κοντές (π.χ. Panda, Ignis): iA = 1. Η γεωμετρία (γωνίες, wading) διορθώνεται στην καρτέλα Όχημα → Γεωμετρία.</div>
  <div class="row" style="margin-top:12px;justify-content:flex-end">
@@ -332,23 +345,23 @@ const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}
 
 /* ---- terrains: mu = adhesion, fr = rolling resistance, air/airFr = aired-down gain, mt/ht = tyre type factor, psi = start pressure ---- */
 const TERR=[
- {id:"asd",n:"Άσφαλτος στεγνή",mu:.85,fr:.007,air:1,airFr:1,mt:1,ht:1,psi:"Πλακέτα (30–38)"},
- {id:"asw",n:"Άσφαλτος βρεγμένη",mu:.55,fr:.015,air:1,airFr:1,mt:.95,ht:1,psi:"Πλακέτα (30–38)"},
- {id:"con",n:"Τσιμέντο / μπετό",mu:.80,fr:.011,air:1,airFr:1,mt:1,ht:1,psi:"Πλακέτα (30–38)"},
- {id:"pav",n:"Πλακόστρωτο / κακός δρόμος",mu:.65,fr:.032,air:1,airFr:1,mt:1,ht:1,psi:"28–34"},
- {id:"grv",n:"Χαλίκι",mu:.55,fr:.03,air:1.05,airFr:.9,mt:1.05,ht:.9,psi:"26–32"},
- {id:"drt",n:"Χωματόδρομος στεγνός",mu:.65,fr:.04,air:1.05,airFr:.95,mt:1.05,ht:.92,psi:"28–34"},
- {id:"drw",n:"Χώμα βρεγμένο / λασπωμένο",mu:.40,fr:.08,air:1.1,airFr:.9,mt:1.15,ht:.8,psi:"22–28"},
- {id:"mud",n:"Λάσπη βαθιά",mu:.25,fr:.20,air:1.15,airFr:.85,mt:1.25,ht:.7,psi:"18–22"},
- {id:"gsd",n:"Χόρτο στεγνό",mu:.45,fr:.06,air:1.05,airFr:1,mt:1.05,ht:.9,psi:"24–30"},
- {id:"gsw",n:"Χόρτο βρεγμένο",mu:.25,fr:.07,air:1.1,airFr:1,mt:1.15,ht:.8,psi:"22–26"},
- {id:"sdh",n:"Άμμος σφιχτή / βρεγμένη",mu:.55,fr:.06,air:1.1,airFr:.8,mt:1,ht:.95,psi:"20–26"},
- {id:"sdl",n:"Άμμος χαλαρή / αμμόλοφος",mu:.35,fr:.18,air:1.3,airFr:.6,mt:1,ht:.9,psi:"15–18"},
- {id:"snp",n:"Χιόνι πατημένο",mu:.25,fr:.03,air:1.05,airFr:1,mt:1.1,ht:.85,psi:"Πλακέτα −10%"},
- {id:"snd",n:"Χιόνι βαθύ / φρέσκο",mu:.20,fr:.12,air:1.15,airFr:.8,mt:1.15,ht:.8,psi:"18–22"},
- {id:"ice",n:"Πάγος",mu:.08,fr:.015,air:1,airFr:1,mt:1,ht:1,psi:"Πλακέτα (αλυσίδες)"},
- {id:"rkd",n:"Βράχος στεγνός",mu:.85,fr:.03,air:1.1,airFr:1,mt:1.05,ht:.9,psi:"22–28"},
- {id:"rkw",n:"Βράχος βρεγμένος",mu:.50,fr:.03,air:1.1,airFr:1,mt:1.05,ht:.85,psi:"22–28"}
+ {id:"asd",vmin:0,vmax:40,n:"Άσφαλτος στεγνή",mu:.85,fr:.007,air:1,airFr:1,mt:1,ht:1,psi:"Πλακέτα (30–38)"},
+ {id:"asw",vmin:0,vmax:30,n:"Άσφαλτος βρεγμένη",mu:.55,fr:.015,air:1,airFr:1,mt:.95,ht:1,psi:"Πλακέτα (30–38)"},
+ {id:"con",vmin:0,vmax:40,n:"Τσιμέντο / μπετό",mu:.80,fr:.011,air:1,airFr:1,mt:1,ht:1,psi:"Πλακέτα (30–38)"},
+ {id:"pav",vmin:0,vmax:25,n:"Πλακόστρωτο / κακός δρόμος",mu:.65,fr:.032,air:1,airFr:1,mt:1,ht:1,psi:"28–34"},
+ {id:"grv",vmin:3,vmax:15,n:"Χαλίκι",mu:.55,fr:.03,air:1.05,airFr:.9,mt:1.05,ht:.9,psi:"26–32"},
+ {id:"drt",vmin:3,vmax:15,n:"Χωματόδρομος στεγνός",mu:.65,fr:.04,air:1.05,airFr:.95,mt:1.05,ht:.92,psi:"28–34"},
+ {id:"drw",vmin:5,vmax:15,n:"Χώμα βρεγμένο / λασπωμένο",mu:.40,fr:.08,air:1.1,airFr:.9,mt:1.15,ht:.8,psi:"22–28"},
+ {id:"mud",vmin:8,vmax:20,n:"Λάσπη βαθιά",mu:.25,fr:.20,air:1.15,airFr:.85,mt:1.25,ht:.7,psi:"18–22"},
+ {id:"gsd",vmin:3,vmax:15,n:"Χόρτο στεγνό",mu:.45,fr:.06,air:1.05,airFr:1,mt:1.05,ht:.9,psi:"24–30"},
+ {id:"gsw",vmin:5,vmax:15,n:"Χόρτο βρεγμένο",mu:.25,fr:.07,air:1.1,airFr:1,mt:1.15,ht:.8,psi:"22–26"},
+ {id:"sdh",vmin:8,vmax:25,n:"Άμμος σφιχτή / βρεγμένη",mu:.55,fr:.06,air:1.1,airFr:.8,mt:1,ht:.95,psi:"20–26"},
+ {id:"sdl",vmin:10,vmax:25,n:"Άμμος χαλαρή / αμμόλοφος",mu:.35,fr:.18,air:1.3,airFr:.6,mt:1,ht:.9,psi:"15–18"},
+ {id:"snp",vmin:3,vmax:15,n:"Χιόνι πατημένο",mu:.25,fr:.03,air:1.05,airFr:1,mt:1.1,ht:.85,psi:"Πλακέτα −10%"},
+ {id:"snd",vmin:6,vmax:15,n:"Χιόνι βαθύ / φρέσκο",mu:.20,fr:.12,air:1.15,airFr:.8,mt:1.15,ht:.8,psi:"18–22"},
+ {id:"ice",vmin:0,vmax:8,n:"Πάγος",mu:.08,fr:.015,air:1,airFr:1,mt:1,ht:1,psi:"Πλακέτα (αλυσίδες)"},
+ {id:"rkd",vmin:0,vmax:6,n:"Βράχος στεγνός",mu:.85,fr:.03,air:1.1,airFr:1,mt:1.05,ht:.9,psi:"22–28"},
+ {id:"rkw",vmin:0,vmax:5,n:"Βράχος βρεγμένος",mu:.50,fr:.03,air:1.1,airFr:1,mt:1.05,ht:.85,psi:"22–28"}
 ];
 const BED={rock:{n:"πέτρες",mu:.5},gravel:{n:"χαλίκι",mu:.45},sand:{n:"άμμος",mu:.35},mud:{n:"λάσπη",mu:.2}};
 const GEO_DEF={track:1.55,h:1.85,cg:null,roofh:null,wb:2700,clr:220,app:30,dep:25,brk:null,wade:500,side:null};
@@ -357,7 +370,7 @@ const GEO_KEYS=["track","h","cg","roofh","wb","clr","app","dep","brk","wade","si
 /* ---- state ---- */
 let S=Object.assign({vid:"x0",wmode:"gvw",load:200,roof:0,curb:null,tmode:"db",tw:265,ta:70,trim:16,tin:33,tType:"at",air:false,lift:0,snork:false,snorkH:1000,drive:"4wd",diff:"open",gear:"low",method:"excel",uneven:false,
  pTerr:"drt",pSlope:30,pUnit:"pct",pDir:"up",pSide:0,pFlat:true,pUneven:false,pStep:0,pRut:0,pHump:0,pDitch:0,pSnow:0,pWater:0,pBed:"rock",pFlow:"0",pStick:10,
- cTerr:"drt",cSort:"fin",cUneven:false,cmp:[]},LS.get("grade_state",{}));
+ gTerr:"drt",gAuto:"auto",cTerr:"drt",cSort:"fin",cUneven:false,cmp:[]},LS.get("grade_state",{}));
 let CUSTOM=LS.get("grade_custom",[]), OVER=LS.get("grade_over",{}), GEO=LS.get("grade_geo",{});
 const save=()=>{LS.set("grade_state",S);LS.set("grade_custom",CUSTOM);LS.set("grade_over",OVER);LS.set("grade_geo",GEO)};
 
@@ -392,6 +405,33 @@ function calc(v,t,o){o=o||S;
  const gp=100*(g.mu*k-g.fr), gd=Math.atan(gp/100)*DEG;
  const fin=Math.min(e.pct,gp);
  return {r,m,ia,cr,F,W,x,mu:g.mu,fr:g.fr,k,eng:e,gripPct:gp,gripDeg:gd,fin,finDeg:Math.atan(fin/100)*DEG,lim:e.pct<gp?"eng":"grip"}}
+
+/* ---- gears ---- */
+function gearsOf(v){if(v.gears&&v.gears.length)return {g:v.gears.slice(),src:v.gs||"mine"};
+ const m=v.name.match(/(aut|man)\.?\s*(\d+)/i);const n=m?Math.max(4,Math.min(10,+m[2])):5;
+ const q=Math.pow(v.ig,1/(n-2)),g=[];for(let i=0;i<n-1;i++)g.push(Math.round(v.ig/Math.pow(q,i)*1000)/1000);g.push(0.8);return {g,src:"est"}}
+function isAuto(v,o){o=o||S;if(o.gAuto==="man")return false;if(o.gAuto==="at")return true;if(v.auto!=null)return v.auto;return /aut/i.test(v.name)}
+function rpmT(v){const n=String(v.rpm||"").match(/\d+/g);if(!n)return 2000;const a=n.map(Number).filter(x=>x>500);if(!a.length)return 2000;return a.length>1?(a[0]+a[1])/2:a[0]}
+function gearRows(v,o){o=o||S;const r=radius(v,o),W=mass(v,o)*G,gs=gearsOf(v).g,rp=rpmT(v),rows=[];
+ const ranges=v.ia>1?[["L",v.ia],["H",1]]:[["",1]];
+ for(const [rn,ia] of ranges)gs.forEach((g,i)=>{const tot=g*v.iv*ia,F=v.tq*v.eff*tot/r,x=F/W;
+  rows.push({lab:`${i+1}η${rn?" "+rn:""}`,i,low:rn==="L",g,tot,F,x,vT:rp*2*Math.PI*r*3.6/(60*tot),vI:800*2*Math.PI*r*3.6/(60*tot)})});
+ return rows}
+function needX(th,fr,method){const t=th*RAD;return method==="exact"?Math.sin(t)+fr*Math.cos(t):Math.tan(t)+fr}
+function bestGear(v,o,t,th,dir){o=o||S;const rows=gearRows(v,o),fr=grip(t,o).fr;
+ if(dir==="down"){const tgt=th>25?4:th>15?6:th>8?10:15;
+  const lows=rows.filter(r=>r.low||v.ia<=1);const c=lows.filter(r=>r.vI<=tgt);const b=c.length?c[c.length-1]:lows[0];
+  return {row:b,s:c.length?"ok":"wrn",tgt,why:c.length?`Στο ρελαντί κατεβαίνει με ~${f(b.vI,1)} km/h. Το φρένο κινητήρα κρατάει και δεν χρειάζεται πεντάλ.`:`Ακόμα και η ${b.lab} κατεβαίνει πιο γρήγορα από ${tgt} km/h. Βοήθα με φρένο ή HDC.`}}
+ const req=needX(th,fr,o.method);
+ const ok=rows.filter(r=>r.x>=req*1.3&&r.vT<=t.vmax);
+ if(ok.length){let b=ok.reduce((a,c)=>c.vT>a.vT?c:a);
+  const lowFirst=ok.filter(r=>r.low&&r.vT<=t.vmax);if(th>=15&&lowFirst.length)b=lowFirst.reduce((a,c)=>c.vT>a.vT?c:a);
+  return {row:b,s:"ok",req,why:`Έχει ${f((b.x/req-1)*100,0)}% περιθώριο δύναμης και στη ροπή πας ~${f(b.vT,0)} km/h${t.vmin>5&&b.vT<t.vmin?" (λίγο αργά για ορμή σε αυτό το έδαφος)":""}.`}}
+ const strong=rows.filter(r=>r.x>=req*1.3);if(strong.length){const b=strong.reduce((a,c)=>c.vT<a.vT?c:a);
+  return {row:b,s:"ok",req,why:`Δύναμη υπάρχει (${f((b.x/req-1)*100,0)}% περιθώριο), αλλά στη ροπή πας ~${f(b.vT,0)} km/h, πιο γρήγορα από το ιδανικό (${t.vmax} km/h). Κράτα το γκάζι χαμηλά: ανεβαίνει και με λιγότερες στροφές.`}}
+ const m=rows.filter(r=>r.x>=req);if(m.length){const b=m.reduce((a,c)=>c.x<a.x?c:a);const lo=rows.reduce((a,c)=>c.x>a.x?c:a);
+  return {row:lo,s:"wrn",req,why:`Οριακά: μόνο με τις πιο κοντές σχέσεις, χωρίς περιθώριο. Μην αλλάξεις ταχύτητα στη μέση.`}}
+ return {row:null,s:"bad",req,why:"Καμία σχέση δεν έχει αρκετή δύναμη για αυτή την κλίση."}}
 
 /* ---- geometry ---- */
 function geoBase(v){const g=Object.assign({},GEO_DEF);const m=v.geo||{},u=GEO[v.id]||{};
@@ -484,7 +524,7 @@ function syncInputs(){
  for(const k of GEO_KEYS){const el=$("#g_"+k);if(document.activeElement===el)continue;
   if(k==="cg")el.value=u.cg!=null&&u.cg!==""?u.cg:"";else if(k==="brk")el.value=u.brk!=null&&u.brk!==""?u.brk:(v.geo&&v.geo.brk!=null?v.geo.brk:"");else if(k==="side")el.value=u.side!=null&&u.side!==""?u.side:(v.geo&&v.geo.side||"");else el.value=g[k];
   el.placeholder=k==="cg"?"≈ "+f(g.cg,2):k==="brk"?"≈ "+f(g.brk,1):""}
- for(const k of ["pTerr","pSlope","pUnit","pDir","pSide","pStep","pRut","pHump","pDitch","pSnow","pWater","pBed","pFlow","pStick","cTerr","cSort"])setVal(k,S[k]);
+ for(const k of ["gTerr","gAuto","pTerr","pSlope","pUnit","pDir","pSide","pStep","pRut","pHump","pDitch","pSnow","pWater","pBed","pFlow","pStick","cTerr","cSort"])setVal(k,S[k]);
  $("#pFlat").checked=S.pFlat;$("#pUneven").checked=S.pUneven;$("#cUneven").checked=S.cUneven;
  $("#stickBox").classList.toggle("hide",S.pFlow!=="stick");
 }
@@ -522,7 +562,19 @@ function renderVeh(){
   `<tr><td>Στατική ανατροπή (SSF ${f(sd.ssf,2)})</td><td colspan="${mod?2:1}">${f(sd.tip,0)}°</td></tr>`+
   `<tr><td><b>Ασφαλής πλάγια</b>${sd.maker?` (κατασκευαστής ${sd.maker}°)`:""}</td><td colspan="${mod?2:1}"><b>${f(sd.safeTip,0)}°</b> <span class="note">σε χώμα γλιστράει πλάγια στις ${f(sd.slide,0)}°</span></td></tr>`;
  $("#geoTag").textContent=v.geo?"κατασκευαστής":(GEO[v.id]?"δικές σου τιμές":"γενικές τιμές — βάλε τις δικές σου");
+ renderGears(v);
  $("#vehSvg").innerHTML=svgSide(v,S,0,0)+`<text x="8" y="16">προσέγγιση ${f(e.app,0)}° · ράμπα ${f(e.brk,0)}° · έξοδος ${f(e.dep,0)}°</text>`;
+}
+
+function renderGears(v){const t=terr(S.gTerr),gi=gearsOf(v),au=isAuto(v),rows=gearRows(v,S),fr=grip(t,S).fr,c=calc(v,t,S);
+ const slopes=[5,10,20,30,40,50,60,70,80].filter(p=>p<=Math.max(30,Math.ceil(c.gripPct/10)*10+10));
+ $("#gBest").innerHTML=`<tr><th>Κλίση</th><th>⬆ Ανηφόρα</th><th>⬇ Κατηφόρα</th></tr>`+slopes.map(p=>{const th=Math.atan(p/100)*DEG;const up=bestGear(v,S,t,th,"up"),dn=bestGear(v,S,t,th,"down");
+  const gripOK=p<=c.gripPct;const upTxt=!gripOK?'<span class="bad">🛞 γλιστράει</span>':up.row?`<b class="${up.s==="ok"?"":"wrn"}">${up.row.lab}</b> <span class="note">${f(up.row.vT,0)} km/h</span>`:'<span class="bad">⚙️ δεν φτάνει</span>';
+  const dnOK=Math.tan(th*RAD)<=c.mu*0.9;const dnTxt=!dnOK?'<span class="bad">🛞 γλιστράει</span>':`<b>${dn.row.lab}</b> <span class="note">${f(dn.row.vI,1)} km/h</span>`;
+  return `<tr><td>${p}% <span class="note">${f(th,0)}°</span></td><td>${upTxt}</td><td>${dnTxt}</td></tr>`}).join("");
+ $("#gTbl").innerHTML=`<tr><th>Σχέση</th><th>Κιβ.</th><th>Συνολική</th><th>⚙️ max %</th><th>km/h ροπή</th><th>km/h ρελαντί</th></tr>`+rows.map(r=>{const e=engPct(r.x,fr,S.method);return `<tr${r.low?"":' style="opacity:.75"'}><td><b>${r.lab}</b></td><td>${f(r.g,3)}</td><td>${f(r.tot,1)}</td><td>${e.pct>300?"300+":f(e.pct,0)}</td><td>${f(r.vT,1)}</td><td>${f(r.vI,1)}</td></tr>`}).join("");
+ $("#gNote").innerHTML=(gi.src==="src"?"Σχέσεις κιβωτίου από spec κατασκευαστή.":gi.src==="mem"?"Σχέσεις κιβωτίου από τη βάση Claude (από μνήμη, έλεγξέ τες).":gi.src==="est"?'<span class="wrn">Σχέσεις 2η και πάνω = εκτίμηση από την 1η. Βάλε τις πραγματικές στη Βάση → ✏️.</span>':"Δικές σου σχέσεις.")+` Ροπή στις ~${f(rpmT(v),0)} rpm, ρελαντί 800 rpm.`;
+ $("#gWhy").innerHTML=`<b>Πώς διαλέγω:</b> παίρνω τη <b>μακρύτερη</b> σχέση που έχει τουλάχιστον <b>30% παραπάνω δύναμη</b> από όση θέλει η κλίση, ώστε να μη χρειαστεί να αλλάξεις στη μέση, και που δεν σε πάει πιο γρήγορα από ${t.vmax} km/h σε ${t.n.toLowerCase()}. Η μακρύτερη σχέση δίνει λιγότερη ροπή στις ρόδες, άρα λιγότερο σπινάρισμα σε γλιστερό. Στην κατηφόρα διαλέγω σχέση που στο ρελαντί κατεβαίνει αργά (≤4 km/h πάνω από 25°, ≤6 km/h για 15–25°).<br>${au?"<b>Αυτόματο:</b> βάλε Low και κλείδωσε τη σχέση με το χειροκίνητο (M/S ή L/2). Ο μετατροπέας ροπής δίνει επιπλέον δύναμη στο ξεκίνημα, οπότε είναι πιο ανεκτικό από το manual.":"<b>Manual:</b> διάλεξε τη σχέση <b>πριν</b> την ανηφόρα και μην αλλάξεις μέσα της. Αν σβήσει: φρένο, μίζα σε ταχύτητα αν το επιτρέπει το εγχειρίδιο, ή όπισθεν κάτω ίσια."} Σε άμμο, λάσπη και βαθύ χιόνι θέλεις <b>ορμή</b> (${t.vmin?`τουλάχιστον ~${t.vmin} km/h`:"σταθερή ταχύτητα"}). Σε βράχια θέλεις <b>αργά και σταθερά</b> (1η–2η L).`;
 }
 
 /* ---- will I pass ---- */
@@ -547,6 +599,8 @@ function renderPass(){
    const engB=c.cr>=40?"ok":c.cr>=25?"wrn":"bad";
    chk.push({s:engB,t:"⚙️ Φρένο κινητήρα",d:`Crawl ratio ${f(c.cr,0)}:1${S.gear!=="low"?" — βάλε Low":""}.`,w:engB==="ok"?"Κατεβαίνει μόνο του, σιγά σιγά.":engB==="wrn"?"Θα θέλει και λίγο φρένο.":"Χαμηλό: θα κατεβαίνεις με τα φρένα."});
   }
+  const bg=bestGear(v,o,t,th,S.pDir);
+  chk.unshift({s:bg.s,t:"🔧 Ταχύτητα",d:bg.row?`Βάλε <b>${bg.row.lab}</b>${isAuto(v,o)?" (Low, κλειδωμένη σχέση)":""} · ${S.pDir==="up"?`~${f(bg.row.vT,0)} km/h στη ροπή`:`~${f(bg.row.vI,1)} km/h στο ρελαντί`}.`:"—",w:bg.why});
   draw.push(svgSide(v,o,S.pDir==="up"?th:-th,0));
  }
  const side=num(S.pSide);
@@ -643,6 +697,7 @@ function renderDb(){const q=$("#dbSearch").value.trim().toLowerCase();const vs=a
 let edId=null;const EF=["name","tq","rpm","eff","ig","iv","ia","r","gvw","curb","note"];
 function openEd(id){edId=id;const v=id?getV(id):{name:"",tq:"",rpm:"",eff:0.8,ig:"",iv:"",ia:"",r:"",gvw:"",curb:"",note:""};
  EF.forEach(k=>$("#e_"+k).value=v[k]==null?"":v[k]);
+ $("#e_gears").value=v.gears?v.gears.join(", "):(id?gearsOf(v).src==="est"?"":gearsOf(v).g.join(", "):"");$("#e_auto").checked=id?isAuto(v,{gAuto:"auto"}):false;
  $("#dlgT").textContent=id?(v.src==="mine"?"Επεξεργασία":"Διόρθωση (κρατάω το αρχικό)"):"Νέο όχημα";
  $("#e_del").textContent=id&&v.src!=="mine"?"Επαναφορά αρχικού":"Διαγραφή";
  $("#e_del").classList.toggle("hide",!id||(v.src!=="mine"&&!OVER[id]));
@@ -652,6 +707,8 @@ $("#e_save").onclick=()=>{const o={};for(const k of EF){const x=$("#e_"+k).value
  for(const k of ["tq","eff","ig","iv","ia","r","gvw"])if(!(o[k]>0)){alert("Συμπλήρωσε: ροπή, η, iG, iV, iA, ακτίνα, GVW");return}
  if(!o.name){alert("Βάλε όνομα");return}
  if(o.curb==null)delete o.curb;
+ const gs=$("#e_gears").value.split(/[,;\s]+/).map(Number).filter(x=>x>0);if(gs.length){o.gears=gs;o.gs="mine"}
+ o.auto=$("#e_auto").checked;
  const cur=edId?getV(edId):null;
  if(!edId){o.id="m"+Date.now();o.src="mine";CUSTOM.push(o);S.vid=o.id}
  else if(cur.src==="mine"){Object.assign(CUSTOM.find(v=>v.id===edId),o)}
@@ -671,7 +728,7 @@ $("#air").onchange=e=>{S.air=e.target.checked;render()};$("#snork").onchange=e=>
 $("#uneven").onchange=e=>{S.uneven=e.target.checked;S.pUneven=S.uneven;S.cUneven=S.uneven;render()};
 for(const k of GEO_KEYS)$("#g_"+k).oninput=e=>{const v=getV(S.vid);const u=GEO[v.id]||{};const x=e.target.value;if(x==="")delete u[k];else u[k]=+x;GEO[v.id]=u;render()};
 $("#geoReset").onclick=()=>{delete GEO[S.vid];render()};
-for(const k of ["pTerr","pUnit","pDir","pFlow","pBed","cTerr","cSort"])$("#"+k).onchange=e=>{S[k]=e.target.value;render()};
+for(const k of ["pTerr","pUnit","pDir","pFlow","pBed","cTerr","cSort","gTerr","gAuto"])$("#"+k).onchange=e=>{S[k]=e.target.value;render()};
 for(const k of ["pSlope","pSide","pStep","pRut","pHump","pDitch","pSnow","pWater","pStick"])$("#"+k).oninput=e=>{S[k]=e.target.value;render()};
 $("#pFlat").onchange=e=>{S.pFlat=e.target.checked;render()};$("#pUneven").onchange=e=>{S.pUneven=e.target.checked;render()};$("#cUneven").onchange=e=>{S.cUneven=e.target.checked;render()};
 $("#cSearch").oninput=renderPick;$("#dbSearch").oninput=renderDb;
@@ -679,7 +736,7 @@ function go(t){$$(".nav button").forEach(b=>b.classList.toggle("on",b.dataset.t=
 $$(".nav button").forEach(b=>b.onclick=()=>go(b.dataset.t));
 
 function render(){syncInputs();renderVeh();renderPass();renderCmp();renderDb();save()}
-$("#pTerr").innerHTML=terrOpts();$("#cTerr").innerHTML=terrOpts();
+$("#pTerr").innerHTML=terrOpts();$("#gTerr").innerHTML=terrOpts();$("#cTerr").innerHTML=terrOpts();
 $("#terrInfo").innerHTML=`<tr><th>Έδαφος</th><th>μ</th><th>fr</th><th>Air down</th><th>M/T</th></tr>`+TERR.map(t=>`<tr><td>${t.n}</td><td>${t.mu}</td><td>${t.fr}</td><td>${t.air>1?"+"+Math.round((t.air-1)*100)+"%":"—"}</td><td>${t.mt>1?"+"+Math.round((t.mt-1)*100)+"%":"—"}</td></tr>`).join("");
 $("#psiTbl").innerHTML=`<tr><th>Έδαφος</th><th>psi</th></tr>`+TERR.map(t=>`<tr><td>${t.n}</td><td>${t.psi}</td></tr>`).join("");
 $("#slopeTbl").innerHTML=`<tr><th>%</th><th>μοίρες</th><th>Σαν τι</th></tr>`+[[10,"ράμπα πάρκινγκ"],[20,"απότομος δρόμος χωριού"],[30,"απότομος χωματόδρομος"],[50,"δύσκολο, χρειάζεται κοντές"],[70,"πολύ απότομο, όριο για τα περισσότερα"],[100,"45°: σαν σκάλα"]].map(([p,s])=>`<tr><td>${p}%</td><td>${f(Math.atan(p/100)*DEG,1)}°</td><td>${s}</td></tr>`).join("");
