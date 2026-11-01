@@ -55,7 +55,7 @@ ol,ul{padding-left:20px;margin:6px 0}
 </style>
 </head>
 <body>
-<header><h1>🔑 Λέξεις-Διακόπτες</h1><p>Switchwords κατά James T. Mangan — γράψε τι θέλεις, πάρε τη λέξη σου</p></header>
+<header><button id="lng" style="float:right;background:rgba(255,255,255,.15);color:#fff;padding:6px 10px;font-size:13px"></button><h1>🔑 Λέξεις-Διακόπτες</h1><p>Switchwords κατά James T. Mangan — γράψε τι θέλεις, πάρε τη λέξη σου</p></header>
 
 <main>
 <!-- ΑΝΑΖΗΤΗΣΗ -->
@@ -92,13 +92,13 @@ ol,ul{padding-left:20px;margin:6px 0}
   <h3>Τα βήματα</h3>
   <ol>
    <li>Γράψε με απλά λόγια τι θέλεις (ή διάλεξε από τη Λίστα).</li>
-   <li>Πάρε τη λέξη. Λέγεται <b>στα αγγλικά</b> — έτσι τη δίνει ο Mangan· η μετάφραση δεν «ανάβει» τον ίδιο διακόπτη.</li>
+   <li>Πάρε τη λέξη. Η εφαρμογή σού τη δίνει <b>στα ελληνικά</b>, διαλεγμένη για να «χτυπάει» σε ελληνικό μυαλό (όχι πάντα κατά λέξη — π.χ. TAKE → ΤΙΜΟΝΙ, CONSIDER → ΜΑΣΤΟΡΑΣ). Το πρωτότυπο του Mangan φαίνεται μικρό από κάτω· με το κουμπί ΕΛ/EN πάνω δεξιά αλλάζεις.</li>
    <li>Πες τη φωναχτά, ψιθυριστά ή από μέσα σου. Δεν χρειάζεται να «πιστέψεις» — μόνο να την πεις.</li>
    <li>Επανάληψη: 10, 28 ή 108 φορές (πάτα «Επανάληψη» για μετρητή). Ή γράψε τη σε χαρτάκι, κινητό, οθόνη.</li>
-   <li>Συνδύασε λέξεις σε φράση: π.χ. <b>TOGETHER-DIVINE-COUNT</b>.</li>
+   <li>Συνδύασε λέξεις σε φράση: π.χ. <b>ΜΑΖΙ-ΘΕΪΚΑ-ΜΕΤΡΑ</b> (TOGETHER-DIVINE-COUNT).</li>
   </ol>
-  <h3>Η κύρια λέξη: TOGETHER</h3>
-  <p>Για τον Mangan, το <b>TOGETHER</b> είναι ο «αρχικός διακόπτης»: ενώνει τον εαυτό και μπαίνει μπροστά σε οποιαδήποτε άλλη λέξη για να τη δυναμώσει. Το <b>DIVINE</b> πολλαπλασιάζει την ένταση.</p>
+  <h3>Η κύρια λέξη: ΜΑΖΙ (TOGETHER)</h3>
+  <p>Για τον Mangan, το <b>ΜΑΖΙ</b> (TOGETHER) είναι ο «αρχικός διακόπτης»: ενώνει τον εαυτό και μπαίνει μπροστά σε οποιαδήποτε άλλη λέξη για να τη δυναμώσει. Το <b>ΘΕΪΚΑ</b> (DIVINE) πολλαπλασιάζει την ένταση.</p>
   <h3>Μικρά μυστικά</h3>
   <ul>
    <li>Λέγε τη λέξη τη στιγμή που χρειάζεσαι — πριν τη σκάλα, πριν το meeting, πριν τη γραφή.</li>
@@ -252,11 +252,15 @@ const D=[
 ["SPEND","σπεντ","Ντύνεσαι καλύτερα","A","ντυσ,ρουχ,εμφανισ"],
 ["COPY","κόπι","Καλό γούστο· γονιμότητα","A","γουστ,γονιμ,εγκυμ"]
 ];
+const GR={"TOGETHER": "ΜΑΖΙ", "DIVINE": "ΘΕΪΚΑ", "DIVINE-LIGHT": "ΘΕΪΚΟ-ΦΩΣ", "COUNT": "ΜΕΤΡΑ", "FIND": "ΘΗΣΑΥΡΟΣ", "ADD": "ΠΡΟΣΘΕΣΕ", "CANCEL": "ΑΚΥΡΟ", "WASTE": "ΑΡΧΟΝΤΙΑ", "SUFFER": "ΑΝΤΕΧΩ", "GIVE": "ΔΩΣΕ", "FOR": "ΜΠΡΟΣΤΑ", "SCHEME": "ΣΧΕΔΙΟ", "RIDICULOUS": "ΘΕΑΜΑ", "PERSONAL": "ΠΡΟΣΩΠΙΚΟ", "SOPHISTICATE": "ΦΙΝΕΤΣΑ", "TAKE": "ΤΙΜΟΝΙ", "DONE": "ΕΓΙΝΕ", "DO": "ΚΑΝΕ", "NOW": "ΤΩΡΑ", "GO": "ΠΑΜΕ", "NEXT": "ΕΠΟΜΕΝΟ", "ATTENTION": "ΠΡΟΣΟΧΗ", "DIVINE-ORDER": "ΘΕΪΚΗ-ΤΑΞΗ", "PHASE": "ΡΥΘΜΟΣ", "PUT": "ΧΤΙΣΕ", "CLIMB": "ΑΝΕΒΑ", "FIGHT": "ΑΓΩΝΑΣ", "FIFTY-THREE": "ΠΕΝΗΝΤΑ-ΤΡΙΑ", "CONSIDER": "ΜΑΣΤΟΡΑΣ", "TAP": "ΑΝΑΝΕΩΣΕ", "ON": "ΑΝΑΨΕ", "GIGGLE": "ΚΕΦΙ", "CARE": "ΦΡΟΝΤΙΔΑ", "JUDGE": "ΚΡΙΣΗ", "WATCH": "ΠΑΡΑΤΗΡΗΣΕ", "CUTE": "ΕΞΥΠΝΑ", "HELP": "ΒΟΗΘΕΙΑ", "POINT": "ΣΗΜΑΔΙ", "CRYSTAL": "ΚΡΥΣΤΑΛΛΟ", "AROUND": "ΓΥΡΩ", "UNMASK": "ΞΕΣΚΕΠΑΣΕ", "WAIT": "ΠΕΡΙΜΕΝΕ", "ROOT": "ΡΙΖΑ", "REACH": "ΦΤΑΣΕ", "RESCIND": "ΑΝΑΙΡΕΣΗ", "WHET": "ΑΚΟΝΙ", "LISTEN": "ΑΚΟΥ", "BETWEEN": "ΑΝΑΜΕΣΑ", "SHOW": "ΣΕΒΑΣ", "SAGE": "ΞΟΡΚΙ", "GUARD": "ΦΥΛΑΚΑΣ", "MASK": "ΑΣΠΙΔΑ", "FOREVER": "ΓΙΑ-ΠΑΝΤΑ", "HALFWAY": "ΜΙΣΟΣ-ΔΡΟΜΟΣ", "BE": "ΕΙΜΑΙ", "ALONE": "ΜΟΝΟΣ", "CRISP": "ΦΡΕΣΚΟ", "MOVE": "ΚΙΝΗΣΗ", "HORSE": "ΑΛΟΓΟ", "CONTINUE": "ΣΥΝΕΧΙΣΕ", "BUBBLE": "ΦΟΥΣΚΑ", "FULL": "ΓΕΜΑΤΟ", "CHANGE": "ΑΛΛΑΞΕ", "SWIVEL": "ΣΤΡΙΨΕ", "LEARN": "ΜΑΘΕ", "OFF": "ΣΒΗΣΕ", "SAVE": "ΣΩΣΕ", "CUT": "ΚΟΨΕ", "TINY": "ΜΙΚΡΟ", "HO": "ΧΑΛΑΡΑ", "BLUFF": "ΜΠΛΟΦΑ", "COVER": "ΚΑΛΥΨΕ", "UP": "ΠΑΝΩ", "LIGHT": "ΦΩΣ", "CLEAR": "ΚΑΘΑΡΟ", "OVER": "ΠΕΡΑΣΕ", "ELATE": "ΑΝΑΤΑΣΗ", "TOMORROW": "ΑΥΡΙΟ", "THANKS": "ΕΥΧΑΡΙΣΤΩ", "FORGIVE": "ΣΥΓΧΩΡΩ", "SWING": "ΤΟΛΜΗ", "DUCK": "ΓΛΙΣΤΡΑ", "OPEN": "ΑΝΟΙΞΕ", "SLOW": "ΣΙΓΑ", "QUIET": "ΗΣΥΧΙΑ", "STRETCH": "ΑΠΛΩΣΕ", "ADJUST": "ΙΣΟΡΡΟΠΙΑ", "HOLD": "ΚΡΑΤΑ", "HORSESHOE": "ΠΕΤΑΛΟ", "DEDICATE": "ΑΦΙΕΡΩΣΗ", "REVERSE": "ΓΥΡΝΑ", "POSTPONE": "ΑΣΤΟ", "CHARM": "ΓΟΗΤΕΙΑ", "BRING": "ΦΕΡΕ", "LOVE": "ΑΓΑΠΗ", "HOLE": "ΕΛΞΗ", "WITH": "ΜΕ", "CONCEDE": "ΥΠΟΧΩΡΗΣΕ", "CONFESS": "ΟΜΟΛΟΓΗΣΕ", "SHUT": "ΚΛΕΙΣΕ", "CROWD": "ΠΕΙΘΑΡΧΙΑ", "CIRCULATE": "ΚΥΚΛΟΦΟΡΗΣΕ", "CHLORINE": "ΣΜΙΞΕ", "CHUCKLE": "ΓΕΛΙΟ", "SWEET": "ΓΛΥΚΑ", "MAGNANIMITY": "ΜΕΓΑΛΟΨΥΧΙΑ", "OFFER": "ΠΡΟΣΦΕΡΕ", "BOW": "ΥΠΟΚΛΙΣΗ", "DOWN": "ΚΑΤΩ", "REJOICE": "ΧΑΙΡΟΜΑΙ", "MONA-LISA": "ΧΑΜΟΓΕΛΟ", "RESTORE": "ΑΠΟΚΑΤΑΣΤΑΣΗ", "UNCLE": "ΕΝΩΣΗ", "WOMB": "ΑΓΚΑΛΙΑ", "LIMIT": "ΟΡΙΟ", "OIL": "ΛΑΔΙ", "ACT": "ΛΟΓΟΣ", "CLASSIC": "ΚΛΑΣΙΚΟ", "CURVE": "ΚΑΜΠΥΛΗ", "PRAISE": "ΕΠΑΙΝΟΣ", "SPEND": "ΚΟΜΨΑ", "COPY": "ΓΟΥΣΤΟ"};
 // Ετοιμες φράσεις (συνδυασμοί)
-const PH=[["TOGETHER-DIVINE-COUNT","Αφθονία χρημάτων"],["TOGETHER-REACH","Βρες ό,τι έχασες / λύση"],["TOGETHER-HO","Χαλάρωση τώρα"],["TOGETHER-GIGGLE","Γράψιμο με κέφι"],["TOGETHER-GUARD","Ασφαλές ταξίδι"],["TOGETHER-DONE","Τέλειωσε τη δουλειά"],["TOGETHER-UP","Πάνω η διάθεση"],["DIVINE-ORDER","Οργάνωση / συγύρισμα"]];
+const PH=[["TOGETHER+DIVINE+COUNT","Αφθονία χρημάτων"],["TOGETHER+REACH","Βρες ό,τι έχασες / λύση"],["TOGETHER+HO","Χαλάρωση τώρα"],["TOGETHER+GIGGLE","Γράψιμο με κέφι"],["TOGETHER+GUARD","Ασφαλές ταξίδι"],["TOGETHER+DONE","Τέλειωσε τη δουλειά"],["TOGETHER+UP","Πάνω η διάθεση"],["DIVINE-ORDER","Οργάνωση / συγύρισμα"]];
 
 const norm=s=>s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/ς/g,"σ");
-const IDX=D.map(d=>({w:d[0],p:d[1],m:d[2],c:d[3],k:d[4].split(",").map(norm).filter(Boolean)}));
+let lang=(()=>{try{return localStorage.getItem("sw_lang")||"el"}catch(e){return "el"}})();
+const IDX=D.map(d=>({w:d[0],g:GR[d[0]],p:d[1],m:d[2],c:d[3],k:d[4].split(",").map(norm).filter(Boolean)}));
+const tr=k=>k.split("+").map(w=>lang==="el"?(GR[w]||w):w).join("-");
+const sub=k=>k.split("+").map(w=>lang==="el"?w:(GR[w]||w)).join("-");
 const $=id=>document.getElementById(id);
 const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
@@ -265,19 +269,19 @@ let favs=store.get("sw_favs",[]),hist=store.get("sw_hist",[]);
 function search(q){
  const t=" "+norm(q)+" ";
  const sc=IDX.map(e=>{let s=0;for(const k of e.k){if(t.includes(k))s+=k.length+(k.includes(" ")?4:0)}
-  if(t.includes(norm(e.w).replace("-"," ")))s+=10;return{e,s}}).filter(x=>x.s>0).sort((a,b)=>b.s-a.s);
+  if(t.includes(norm(e.w).replace("-"," ")))s+=10;if(t.includes(" "+norm(e.g).replace("-"," ")+" "))s+=10;return{e,s}}).filter(x=>x.s>0).sort((a,b)=>b.s-a.s);
  return sc.slice(0,5).map(x=>x.e);
 }
 function card(e,big){
  const on=favs.includes(e.w);
  return `<div class="card"><div class="cat">${C[e.c]}</div>
- <div class="row" style="justify-content:space-between"><div><span class="word">${e.w}</span><span class="pron">(${e.p})</span></div>
+ <div class="row" style="justify-content:space-between"><div><span class="word">${tr(e.w)}</span><span class="pron">${lang==="el"?e.w+" · "+e.p:e.g+" · "+e.p}</span></div>
  <button class="star" data-fav="${e.w}">${on?"★":"☆"}</button></div>
  <div class="mean">${esc(e.m)}</div>
  <div class="row"><button data-rep="${e.w}">🔁 Επανάληψη</button><button class="ghost" data-say="${e.w}">🔊</button><button class="ghost" data-copy="${e.w}">📋</button></div></div>`;
 }
 function phraseCard(w,label){
- return `<div class="card phrase"><div class="cat" style="color:#ffd27a">Φράση-διακόπτης</div><div class="word">${w}</div>
+ return `<div class="card phrase"><div class="cat" style="color:#ffd27a">Φράση-διακόπτης</div><div class="word">${tr(w)}</div><div style="opacity:.7;font-size:13px">${sub(w)}</div>
  <div class="mean" style="opacity:.9">${esc(label)}</div>
  <div class="row"><button class="acc" data-rep="${w}">🔁 Επανάληψη</button><button class="ghost" style="color:#fff;border-color:rgba(255,255,255,.3)" data-say="${w}">🔊</button><button class="ghost" style="color:#fff;border-color:rgba(255,255,255,.3)" data-copy="${w}">📋</button></div></div>`;
 }
@@ -289,7 +293,7 @@ function run(){
   h=`<div class="card"><b>Δεν βρήκα κάτι συγκεκριμένο.</b><p class="muted">Δοκίμασε πιο απλά λόγια (π.χ. «άγχος», «χρήματα», «ύπνος»), ή χρησιμοποίησε τη γενική λέξη:</p></div>`+card(IDX.find(e=>e.w==="TOGETHER"))+card(IDX.find(e=>e.w==="CHARM"));
  }else{
   const main=r.filter(e=>e.w!=="TOGETHER");
-  const ph=main.length?"TOGETHER-"+main.slice(0,main.length>1&&r.length>1?2:1).map(e=>e.w).join("-"):"TOGETHER";
+  const ph=main.length?"TOGETHER+"+main.slice(0,main.length>1&&r.length>1?2:1).map(e=>e.w).join("+"):"TOGETHER";
   h=phraseCard(ph,"Πες την όλη μαζί, σαν μία λέξη. Ή χρησιμοποίησε μόνο την πρώτη λέξη από κάτω.")+r.map(e=>card(e)).join("");
  }
  $("res").innerHTML=h;
@@ -308,16 +312,16 @@ $("cats").onclick=e=>{const b=e.target.closest("[data-c]");if(b){curCat=b.datase
 $("filter").oninput=drawList;
 function drawList(){
  const f=norm($("filter").value.trim());
- const L=IDX.filter(e=>(!curCat||e.c===curCat)&&(!f||norm(e.w+" "+e.m+" "+e.p).includes(f)||e.k.some(k=>f.includes(k)||k.includes(f)))).sort((a,b)=>a.w.localeCompare(b.w));
+ const L=IDX.filter(e=>(!curCat||e.c===curCat)&&(!f||norm(e.w+" "+e.g+" "+e.m+" "+e.p).includes(f)||e.k.some(k=>f.includes(k)||k.includes(f)))).sort((a,b)=>tr(a.w).localeCompare(tr(b.w),"el"));
  [...$("cats").children].forEach(b=>b.style.borderColor=b.dataset.c===curCat?"var(--acc)":"");
- $("all").innerHTML=L.length?L.map(e=>`<div class="list-item"><div><span class="w">${e.w}</span> <span class="muted">(${e.p})</span><div class="muted" style="color:var(--ink)">${esc(e.m)}</div></div>
+ $("all").innerHTML=L.length?L.map(e=>`<div class="list-item"><div><span class="w">${tr(e.w)}</span> <span class="muted">${lang==="el"?e.w:e.g} · ${e.p}</span><div class="muted" style="color:var(--ink)">${esc(e.m)}</div></div>
  <div style="display:flex;flex-direction:column;gap:4px"><button class="star" data-fav="${e.w}">${favs.includes(e.w)?"★":"☆"}</button><button class="ghost" style="padding:6px 8px" data-rep="${e.w}">🔁</button></div></div>`).join(""):`<div class="empty">Τίποτα με αυτό το φίλτρο</div>`;
 }
 function drawFav(){
  const F=favs.map(w=>IDX.find(e=>e.w===w)||{w,p:"",m:"Δική σου φράση",c:"S"});
- $("favs").innerHTML=F.length?F.map(e=>`<div class="list-item"><div><span class="w">${e.w}</span> <span class="muted">${e.p?"("+e.p+")":""}</span><div class="muted">${esc(e.m)}</div></div>
+ $("favs").innerHTML=F.length?F.map(e=>`<div class="list-item"><div><span class="w">${tr(e.w)}</span> <span class="muted">${sub(e.w)}</span><div class="muted">${esc(e.m)}</div></div>
  <div style="display:flex;gap:4px"><button class="ghost" style="padding:6px 8px" data-rep="${e.w}">🔁</button><button class="star" data-fav="${e.w}">★</button></div></div>`).join(""):`<div class="empty">Πάτα ☆ σε μια λέξη για να μπει εδώ.</div>`;
- $("hist").innerHTML=hist.length?hist.slice(0,12).map(h=>`<div class="list-item"><div><div>${esc(h.q)}</div><div class="muted">→ <b>${h.w}</b></div></div><button class="ghost" style="padding:6px 8px" data-again="${esc(h.q)}">↻</button></div>`).join(""):`<div class="empty">Ακόμα τίποτα.</div>`;
+ $("hist").innerHTML=hist.length?hist.slice(0,12).map(h=>`<div class="list-item"><div><div>${esc(h.q)}</div><div class="muted">→ <b>${tr(h.w)}</b></div></div><button class="ghost" style="padding:6px 8px" data-again="${esc(h.q)}">↻</button></div>`).join(""):`<div class="empty">Ακόμα τίποτα.</div>`;
 }
 
 // Πλοήγηση
@@ -337,12 +341,12 @@ document.addEventListener("click",e=>{
 });
 
 // Ομιλία (αγγλική προφορά)
-function say(w){try{const u=new SpeechSynthesisUtterance(w.replace(/-/g," ").toLowerCase());u.lang="en-US";u.rate=.85;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
+function say(w){try{const u=new SpeechSynthesisUtterance(tr(w).replace(/-/g," ").toLocaleLowerCase(lang==="el"?"el":"en"));u.lang=lang==="el"?"el-GR":"en-US";u.rate=.85;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
 
 // Μετρητής επαναλήψεων
 let cnt=0,target=108,cur="";
-function pronOf(w){return w.split("-").map(p=>{const e=IDX.find(x=>x.w===p)||IDX.find(x=>x.w.startsWith(p));return e?e.p.split("-")[0]:p}).join("-")}
-function openCounter(w){cur=w;cnt=0;$("cWord").textContent=w;const e=IDX.find(x=>x.w===w);$("cPron").textContent="("+(e?e.p:pronOf(w))+")";upd();$("counter").classList.add("on")}
+
+function openCounter(w){cur=w;cnt=0;$("cWord").textContent=tr(w);$("cPron").textContent=sub(w);upd();$("counter").classList.add("on")}
 function upd(){$("tap").firstChild.nodeValue=cnt;$("barI").style.width=Math.min(100,cnt/target*100)+"%";
  [...$("targets").children].forEach(b=>b.classList.toggle("on",+b.dataset.t===target));
  if(cnt>=target)$("tap").firstChild.nodeValue="✓ "+cnt;}
@@ -352,6 +356,8 @@ $("reset").onclick=()=>{cnt=0;upd()};
 $("say").onclick=()=>say(cur);
 $("close").onclick=()=>$("counter").classList.remove("on");
 
+function setLang(l){lang=l;try{localStorage.setItem("sw_lang",l)}catch(e){}$("lng").textContent=l==="el"?"ΕΛ → EN":"EN → ΕΛ";if($("q").value.trim())run();drawList();drawFav();}
+$("lng").onclick=()=>setLang(lang==="el"?"en":"el");setLang(lang);
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 </script>
 </body>
