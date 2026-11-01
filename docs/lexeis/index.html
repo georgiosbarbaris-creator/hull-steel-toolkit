@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Λέξεις-Διακόπτες</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Λέξεις">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#0c2340">
+<style>
+:root{--bg:#eef1f5;--card:#fff;--ink:#132033;--muted:#5d6b7b;--line:#d5dce4;--navy:#0c2340;--acc:#e07a1f;--ok:#1d7a46;--gold:#b8860b}
+@media (prefers-color-scheme:dark){:root{--bg:#0d1520;--card:#162231;--ink:#e4ebf2;--muted:#95a3b2;--line:#2a3848;--navy:#9cc3ea;--acc:#f0954a;--ok:#5cc98a;--gold:#e3b341}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font:16px/1.45 -apple-system,system-ui,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+header{background:#0c2340;color:#fff;padding:calc(12px + env(safe-area-inset-top)) 16px 12px;position:sticky;top:0;z-index:5}
+header h1{margin:0;font-size:19px}header p{margin:2px 0 0;font-size:12.5px;opacity:.8}
+main{padding:14px;max-width:720px;margin:0 auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+textarea,input[type=search]{width:100%;font:inherit;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
+textarea{min-height:84px;resize:vertical}
+button{font:inherit;border:0;border-radius:10px;padding:11px 14px;background:var(--navy);color:var(--card);font-weight:600;cursor:pointer}
+button.ghost{background:transparent;color:var(--navy);border:1px solid var(--line)}
+button.acc{background:var(--acc);color:#fff}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.chip{background:var(--bg);border:1px solid var(--line);color:var(--ink);font-weight:500;padding:7px 11px;border-radius:999px;font-size:14px}
+.word{font-size:26px;font-weight:800;letter-spacing:.5px;color:var(--navy)}
+.pron{color:var(--muted);font-size:14px;margin-left:6px}
+.mean{margin:6px 0 10px}
+.muted{color:var(--muted);font-size:13.5px}
+.phrase{background:linear-gradient(135deg,#0c2340,#1d4e89);color:#fff;border:0}
+.phrase .word{color:#ffd27a;font-size:22px}
+.cat{font-size:12px;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:.6px}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom);z-index:6}
+nav button{flex:1;background:transparent;color:var(--muted);border-radius:0;padding:10px 4px;font-size:12px;font-weight:600}
+nav button b{display:block;font-size:20px}
+nav button.on{color:var(--acc)}
+.view{display:none}.view.on{display:block}
+.list-item{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.list-item:last-child{border:0}
+.list-item .w{font-weight:800;color:var(--navy)}
+.star{background:transparent;color:var(--gold);font-size:22px;padding:4px 8px}
+#counter{position:fixed;inset:0;background:#0c2340;color:#fff;z-index:20;display:none;flex-direction:column;align-items:center;justify-content:center;padding:calc(20px + env(safe-area-inset-top)) 20px calc(20px + env(safe-area-inset-bottom));text-align:center}
+#counter.on{display:flex}
+#cWord{font-size:clamp(30px,10vw,52px);font-weight:800;color:#ffd27a;word-break:break-word}
+#cPron{opacity:.8;margin-bottom:18px}
+#tap{width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.08);border:3px solid #ffd27a;color:#fff;font-size:54px;font-weight:800;margin:14px 0;user-select:none}
+#tap small{display:block;font-size:14px;font-weight:500;opacity:.8}
+#counter .row button{background:rgba(255,255,255,.12);color:#fff}
+#counter .row button.on{background:#ffd27a;color:#0c2340}
+.bar{height:6px;width:220px;background:rgba(255,255,255,.15);border-radius:4px;overflow:hidden}.bar i{display:block;height:100%;background:#ffd27a;width:0}
+h2{font-size:17px;margin:0 0 8px}h3{font-size:15px;margin:14px 0 4px}
+ol,ul{padding-left:20px;margin:6px 0}
+.empty{text-align:center;color:var(--muted);padding:24px 8px}
+</style>
+</head>
+<body>
+<header><h1>🔑 Λέξεις-Διακόπτες</h1><p>Switchwords κατά James T. Mangan — γράψε τι θέλεις, πάρε τη λέξη σου</p></header>
+
+<main>
+<!-- ΑΝΑΖΗΤΗΣΗ -->
+<section class="view on" id="v-find">
+ <div class="card">
+  <h2>Τι θέλεις;</h2>
+  <textarea id="q" placeholder="π.χ. να φύγει το άγχος πριν την επιθεώρηση, να βρω τα κλειδιά μου, να γράψω το βιβλίο…"></textarea>
+  <div class="row" style="margin-top:10px"><button class="acc" id="go">Βρες τη λέξη</button><button class="ghost" id="clr">Καθαρισμός</button></div>
+  <div class="chips" id="quick"></div>
+ </div>
+ <div id="res"></div>
+</section>
+
+<!-- ΛΙΣΤΑ -->
+<section class="view" id="v-list">
+ <div class="card">
+  <input type="search" id="filter" placeholder="Φίλτρο: λέξη ή σημασία…">
+  <div class="chips" id="cats"></div>
+ </div>
+ <div class="card" id="all"></div>
+</section>
+
+<!-- ΑΓΑΠΗΜΕΝΑ -->
+<section class="view" id="v-fav">
+ <div class="card"><h2>⭐ Οι λέξεις μου</h2><div id="favs"></div></div>
+ <div class="card"><h2>🕘 Πρόσφατα</h2><div id="hist"></div></div>
+</section>
+
+<!-- ΟΔΗΓΟΣ -->
+<section class="view" id="v-help">
+ <div class="card">
+  <h2>Πώς δουλεύει</h2>
+  <p>Ο James T. Mangan (στο βιβλίο <i>The Secret of Perfect Living</i>, 1963) υποστήριξε ότι το συνειδητό και το υποσυνείδητο συχνά τραβάνε σε διαφορετική κατεύθυνση. Μια συγκεκριμένη, απλή λέξη λειτουργεί σαν «διακόπτης» που τα ευθυγραμμίζει, ώστε να κάνεις αυτό που θέλεις χωρίς εσωτερική αντίσταση.</p>
+  <h3>Τα βήματα</h3>
+  <ol>
+   <li>Γράψε με απλά λόγια τι θέλεις (ή διάλεξε από τη Λίστα).</li>
+   <li>Πάρε τη λέξη. Λέγεται <b>στα αγγλικά</b> — έτσι τη δίνει ο Mangan· η μετάφραση δεν «ανάβει» τον ίδιο διακόπτη.</li>
+   <li>Πες τη φωναχτά, ψιθυριστά ή από μέσα σου. Δεν χρειάζεται να «πιστέψεις» — μόνο να την πεις.</li>
+   <li>Επανάληψη: 10, 28 ή 108 φορές (πάτα «Επανάληψη» για μετρητή). Ή γράψε τη σε χαρτάκι, κινητό, οθόνη.</li>
+   <li>Συνδύασε λέξεις σε φράση: π.χ. <b>TOGETHER-DIVINE-COUNT</b>.</li>
+  </ol>
+  <h3>Η κύρια λέξη: TOGETHER</h3>
+  <p>Για τον Mangan, το <b>TOGETHER</b> είναι ο «αρχικός διακόπτης»: ενώνει τον εαυτό και μπαίνει μπροστά σε οποιαδήποτε άλλη λέξη για να τη δυναμώσει. Το <b>DIVINE</b> πολλαπλασιάζει την ένταση.</p>
+  <h3>Μικρά μυστικά</h3>
+  <ul>
+   <li>Λέγε τη λέξη τη στιγμή που χρειάζεσαι — πριν τη σκάλα, πριν το meeting, πριν τη γραφή.</li>
+   <li>Μία ή δύο λέξεις τη φορά· όχι λίστες.</li>
+   <li>Πρόσεχε πώς νιώθεις. Αν μια λέξη «κάθεται» καλά, κράτα τη στα ⭐.</li>
+  </ul>
+  <p class="muted">Σημείωση: δεν υπάρχει επιστημονική απόδειξη για τα switchwords. Λειτουργούν σαν εργαλείο αυτοϋποβολής και εστίασης — όπως ένα σύντομο mantra ή ένα «σημείο ελέγχου» στη βάρδια. Δεν αντικαθιστούν γιατρό ή επαγγελματική βοήθεια.</p>
+ </div>
+</section>
+</main>
+
+<nav>
+ <button data-v="find" class="on"><b>🔍</b>Βρες</button>
+ <button data-v="list"><b>📜</b>Λίστα</button>
+ <button data-v="fav"><b>⭐</b>Δικές μου</button>
+ <button data-v="help"><b>📖</b>Οδηγός</button>
+</nav>
+
+<div id="counter">
+ <div id="cWord"></div><div id="cPron"></div>
+ <div class="row" id="targets"><button data-t="10">10</button><button data-t="28">28</button><button data-t="108" class="on">108</button></div>
+ <button id="tap">0<small>πάτα σε κάθε επανάληψη</small></button>
+ <div class="bar"><i id="barI"></i></div>
+ <div class="row" style="margin-top:18px;justify-content:center"><button id="say">🔊 Άκου</button><button id="reset">↺ Μηδέν</button><button id="close">✕ Κλείσε</button></div>
+</div>
+
+<script>
+// [λέξη, προφορά, σημασία, κατηγορία, ρίζες-λέξεις για αναζήτηση]
+const C={M:"Χρήματα",H:"Υγεία & ενέργεια",E:"Συναισθήματα",R:"Σχέσεις",W:"Δουλειά & επιτυχία",N:"Νους & μάθηση",P:"Προστασία",B:"Συνήθειες",A:"Ομορφιά & εικόνα",S:"Πνεύμα"};
+const D=[
+["TOGETHER","τουγκέδερ","Η κύρια λέξη: να τα έχεις όλα «μαζεμένα», να πετυχαίνεις σε ό,τι κάνεις· μπαίνει μπροστά σε κάθε άλλη λέξη","S","ολα,γενικ,τελει,ενοτ,συγκεντρ,μαζι,master"],
+["DIVINE","ντιβάιν","Θαύματα και ασυνήθιστα επιτεύγματα· δυναμώνει την προσωπική ικανότητα","S","θαυμ,επιτευγ,ικανοτ,απιθαν"],
+["DIVINE-LIGHT","ντιβάιν-λάιτ","Πολλαπλασιάζει την ένταση· φώτιση· έντονη θετικότητα","S","φωτισ,θετικ,πνευματ,φως"],
+["COUNT","κάουντ","Να βγάζεις χρήματα· βοηθά και στο να κόψεις το κάπνισμα","M","χρημ,λεφτ,πλουτ,εσοδ,μισθ,κερδ,καπν,τσιγαρ,οικονομ,αφθον,εισοδ"],
+["FIND","φάιντ","Χτίζεις περιουσία","M","περιουσ,πλουτ,χρημ,λεφτ,επενδ,αφθον"],
+["ADD","εντ","Αυξάνεις ποσοστό· μεγαλώνεις ό,τι ήδη έχεις","M","αυξησ,μεγαλωσ,ποσοστ,περισσοτερ,προσθ"],
+["CANCEL","κάνσελ","Σβήνει αρνητικότητα, ανεπιθύμητες καταστάσεις και χρέη","E","αρνητ,χρε,σβησ,ακυρ,δανει,κακεσ σκεψ"],
+["WASTE","ουέιστ","Να δείχνεις άνεση και πλούτο","A","πλουσ,πολυτελ,εντυπωσ"],
+["SUFFER","σάφερ","Να «σηκώνεις» την επιτυχία και την ευημερία χωρίς να σε χαλάσουν","M","ευημερ,διαχειρ,σηκωσ επιτυχ"],
+["GIVE","γκιβ","Πωλήσεις· να βοηθάς τους άλλους","W","πουλ,πωλησ,βοηθησ αλλ,εθελοντ"],
+["FOR","φορ","Προώθηση","W","προωθ,διαφημ,marketing,προβολ,instagram,followers,ακολουθ"],
+["SCHEME","σκιμ","Διαφήμιση· σχεδιασμός· δημιουργία","W","σχεδιασ,διαφημ,design,λογοτυπ,ιστοσελ,site"],
+["RIDICULOUS","ριντίκιουλους","Δημοσιότητα· η προσοχή πέφτει πάνω σου","W","δημοσιοτ,viral,φημ,youtube,διασημ,προσοχη σε μενα"],
+["PERSONAL","πέρσοναλ","Επιτυχημένο έντυπο/newsletter· επιτυχία","W","επιτυχ,newsletter,blog,εντυπ,εφημερ"],
+["SOPHISTICATE","σοφίστικεϊτ","Ακόμη μεγαλύτερη επιτυχία· επιτυχημένο περιοδικό","W","μεγαλυτερ επιτυχ,περιοδικ,κλιμακ"],
+["TAKE","τέικ","Γίνεσαι καλός ηγέτης","W","ηγετ,ηγεσ,αρχηγ,καπετ,πλοιαρχ,ομαδ,διοικ,πληρωμ,manager,μανατζ,αφεντικ"],
+["DONE","νταν","Ολοκλήρωση· πιάνεις την προθεσμία· κρατάς απόφαση· θέληση","W","ολοκληρ,προθεσμ,deadline,τελειωσ,θελησ,αναφορ,report"],
+["DO","ντου","Τέλος στην αναβλητικότητα","W","αναβλητ,αναβολ,ξεκιν,να κανω"],
+["NOW","νάου","Τέλος στην αναβολή· κάνεις αμέσως το καλό που σκέφτηκες","W","αναβολ,αναβλητ,τωρα,αμεσ"],
+["GO","γκόου","Τέλος στην τεμπελιά· ξεκίνημα· πρόοδος","W","τεμπελ,ξεκιν,προοδ,βαρεμ,βαριεμ"],
+["NEXT","νεξτ","Βγάζεις πολλή σχολαστική δουλειά· επανάληψη","W","σχολαστ,πολλη δουλει,επαναλ,χαρτι,λιστ,γραφειοκρ"],
+["ATTENTION","ατένσιον","Λεπτομερής δουλειά· τέλος στις απροσεξίες","W","προσοχ,λεπτομερ,απροσεξ,λαθ,ελεγχ,επιθεωρ,checklist,psc,vetting,rightship"],
+["DIVINE-ORDER","ντιβάιν-όρντερ","Τάξη και οργάνωση: καθάρισμα, τακτοποίηση, πακετάρισμα, αποτελεσματικότητα","W","ταξη,οργανωσ,τακτοπ,καθαρισ,πακεταρ,βαλιτσ,αποτελεσματ,ακαταστ,αρχει,γραφει,συγυρ"],
+["PHASE","φέιζ","Στόχοι, ρουτίνα, πρόγραμμα· βελτίωση κατάστασης","W","στοχ,ρουτιν,προγραμ,σχεδι,βελτιωσ,πλανο"],
+["PUT","πουτ","Χτίζεις· επεκτείνεσαι","W","χτισ,επεκτ,κατασκευ,σπιτι,επιχειρ"],
+["CLIMB","κλάιμπ","Ανεβαίνεις· καλύτερη θέση και οπτική","W","ανεβ,προαγωγ,καριερ,θεση,εξελ"],
+["FIGHT","φάιτ","Νίκη σε ανταγωνιστικό παιχνίδι· δυναμώνει την πρόθεση","W","νικ,αγων,ανταγων,παιχνιδ,τουρνουα,magic,ματς"],
+["FIFTY-THREE","φίφτι-θρι","Πρώτη προτεραιότητα· αναλαμβάνεις ευθύνη","W","ευθυν,προτεραιοτ,αναλαβ"],
+["CONSIDER","κονσίντερ","Γίνεσαι καλός μηχανικός — φτιάχνεις πράγματα","W","μηχαν,επισκευ,φτιαξ,βλαβ,χαλασ,ζημι,κινητηρ,γεννητρ,αντλι"],
+["TAP","ταπ","Μετατροπή· προσαρμογή· ανακαίνιση","W","ανακαιν,μετατρ,μετασκευ,δεξαμεν,ναυπηγ,drydock,ταρσαν"],
+["ON","ον","Νέες ιδέες· βρίσκεις μεταφορικό μέσο· φιλοδοξία· παραγωγή","N","ιδε,δημιουργ,φιλοδοξ,μεταφορ,αυτοκιν,ταξι,παραγωγ,εφαρμογ,app"],
+["GIGGLE","γκίγκλ","Διάθεση για γράψιμο· απολαμβάνεις αυτό που κάνεις","N","γραψ,γραφ,συγγραφ,βιβλι,μυθιστορ,κειμεν,δοκιμ,απολαυσ"],
+["CARE","κέαρ","Απομνημόνευση· να θυμάσαι","N","θυμ,μνημ,απομνημ,ξεχν,αποστηθ"],
+["JUDGE","τζατζ","Αγάπη για διάβασμα· κατανόηση","N","διαβασ,κατανοησ,μελετ,σχολ,εξετασ"],
+["WATCH","ουότς","Μαθαίνεις και τελειοποιείς μια δεξιότητα","N","δεξιοτ,μαθ,εκπαιδ,τεχνικ,προπον,σεμιναρ,διδαξ"],
+["CUTE","κιουτ","Σκέψη γρήγορη και κοφτερή· εξυπνάδα","N","εξυπν,σκεψ,οξυν,ευφυ,κοφτερ"],
+["HELP","χελπ","Τέλος στην αναποφασιστικότητα· εστίαση","N","αναποφασ,αβεβαι,διλημ,εστιασ,συγκεντρ,δεν ξερω τι"],
+["POINT","πόιντ","Εστίαση και όραση· βρίσκεις κατεύθυνση· αποφασίζεις","N","ορασ,εστιασ,κατευθυνσ,αποφασ,δρομο μου"],
+["CRYSTAL","κρίσταλ","Ξεκαθαρίζει την κατάσταση· ματιά στο μέλλον","N","ξεκαθαρ,σαφ,μελλ,διαυγ,μπερδ"],
+["AROUND","αράουντ","Καλύτερη οπτική — βλέπεις όλη την εικόνα","N","οπτικ,προοπτικ,εικονα,δω καθαρα"],
+["UNMASK","ανμάσκ","Φέρνει στο φως· αποκαλύπτει","N","αποκαλ,αληθει,ψεμ,κρυφ,απατ"],
+["WAIT","ουέιτ","Μαθαίνεις ένα μυστικό","N","μυστικ,μαθω"],
+["ROOT","ρουτ","Σκάβεις· ανακαλύπτεις· αναπτύσσεσαι","N","ανακαλ,ριζ,κηπ,φυτ,ερευν"],
+["REACH","ριτς","Βρίσκεις χαμένα πράγματα και λύσεις σε προβλήματα· επισκευές","N","χαμεν,εχασα,να βρω,λυσ,προβλημ,κλειδ,ψαχν"],
+["RESCIND","ρισίντ","Αναιρείς και ξαναρχίζεις (σαν Ctrl+Z)","N","αναιρ,λαθος,ξαναρχ,επανεκκ,undo"],
+["WHET","ουέτ","Ακονίζει· εκλεπτύνει· τελειώνει το φινίρισμα","N","ακον,εκλεπτ,φινιρ,διορθ"],
+["LISTEN","λίσεν","Προαίσθηση· επαφή με τη φύση και τον εαυτό","S","προβλεψ,φυσ,ακουσ,camping,δασ,βουν"],
+["BETWEEN","μπιτουίν","Διαίσθηση· τηλεπάθεια","S","διαισθησ,τηλεπαθ,ενστικτ"],
+["SHOW","σόου","Ευλάβεια· ήθος· σεβασμός","S","σεβασμ,ηθο,ευλαβ,πιστ,αρετ"],
+["SAGE","σέιτζ","Διώχνει το κακό","P","κακο,αρνητικη ενεργ,βασκαν"],
+["GUARD","γκαρντ","Προστασία σώματος, ψυχής και περιουσίας· ασφάλεια","P","προστασ,ασφαλ,κινδυν,κλεψ,ταξιδ,θαλασσ,καιρ,φουρτουν,φυλαξ"],
+["MASK","μασκ","Σε προφυλάσσει από κακό","P","προφυλ,ασπιδ"],
+["FOREVER","φορέβερ","Κρατάς ένα μυστικό","P","εχεμυθ,εμπιστευτ,κρατησω μυστικ"],
+["HALFWAY","χάφγουεϊ","Ένας μεγάλος δρόμος μοιάζει μικρός","H","αποστασ,δρομ,οδηγ,μακρι,πτησ,overland,ταξιδ"],
+["BE","μπι","Γαλήνη και καλή υγεία· καλή φόρμα· τέλος στη μοναξιά· να μη σε αγγίζει η κοροϊδία","H","γαληνη,υγεια,υγιη,φορμα,μοναξ,κοροιδ,αθλη,σπορ"],
+["ALONE","αλόουν","Φροντίδα και αποθεραπεία του εαυτού","H","εαυτ,θεραπ,φροντιδα εαυτ,γιατρ,αναρρ"],
+["CRISP","κρισπ","Διώχνει την κούραση· φρεσκάδα, αναζωογόνηση","H","κουρασ,φρεσκ,αναζωογ,ξυπν,υπνηλ,ξενυχτ"],
+["MOVE","μουβ","Ενέργεια· τέλος στην αδράνεια","H","ενεργ,αδραν,γυμναστ,κινησ,κεφι"],
+["HORSE","χορς","Δύναμη και στιβαρότητα","H","δυναμ,γερ,ισχυ"],
+["CONTINUE","κοντίνιου","Αντοχή — να συνεχίζεις","H","αντοχ,συνεχ,τρεξ,κολυμπ,μαραθ"],
+["BUBBLE","μπάμπλ","Ξεπερνάς τα όρια· ενέργεια, ενθουσιασμός","H","ορι,ενθουσ,ξεπερ"],
+["FULL","φουλ","Στο μέγιστο· πέρα από τα όρια","H","μεγιστ,χωρητικ,φουλ"],
+["CHANGE","τσέιντζ","Διώχνει τον πόνο, σωματικό ή ψυχικό","H","πον,πονα,πληγ"],
+["SWIVEL","σουίβελ","Ανακούφιση της κοιλιάς (δυσκοιλιότητα/διάρροια)","H","δυσκοιλ,διαρρ,κοιλι,στομαχ,εντερ"],
+["LEARN","λερν","Νεανικότητα — νιώθεις και δείχνεις νέος","A","νεανικ,νεος,γηρατ,ρυτιδ,μεγαλωνω"],
+["OFF","οφ","Κόβεις μια ανεπιθύμητη συνήθεια· ύπνος","B","συνηθει,υπν,αυπν,κοιμ,εθισμ,κινητο"],
+["SAVE","σέιβ","Σταματάς το ποτό και άλλες κακές συνήθειες","B","αλκοολ,ποτο,μεθ,συνηθει,εθισμ"],
+["CUT","κατ","Μέτρο όταν σε τραβάει η υπερβολή· κόβεις δεσμούς","B","υπερβολ,μετρο,κοψ,λιγουρ,τσιμπολογ,φαγητ"],
+["TINY","τάινι","Ευγένεια· καλοσύνη· μικραίνει κάτι (ή τη σημασία του)","B","ευγεν,καλοσυν,μικρ,αδυνατ,κιλ,βαρος"],
+["HO","χόου","Χαλάρωση — πέφτει η ένταση","E","χαλαρ,ενταση,στρες,αγχ,ξεκουρ"],
+["BLUFF","μπλαφ","Διώχνει φόβο και νευρικότητα· φαντασία και όνειρα","E","φοβ,νευρικ,αγχ,τρακ,φαντασ,ονειρ"],
+["COVER","κάβερ","Ησυχάζει τη νευρικότητα και την εσωτερική ταραχή","E","νευρ,ταραχ,αγχ"],
+["UP","απ","Πάνω η διάθεση· φεύγουν οι μαύρες σκέψεις και η αίσθηση κατωτερότητας","E","διαθεσ,κεφ,μαυρ,κατωτερ,αυτοπεποιθ,πεσμεν,αυτοεκτιμ"],
+["LIGHT","λάιτ","Έμπνευση· ελαφραίνει το φορτίο και το άγχος","E","εμπνευσ,ελαφρ,φορτι,βαρι"],
+["CLEAR","κλίαρ","Διώχνει θυμό και μνησικακία","E","θυμ,οργ,μνησικ,εκνευρ"],
+["OVER","όουβερ","Τέλος στην απογοήτευση","E","απογοητ,ματαιωσ"],
+["ELATE","ιλέιτ","Μια αποτυχία γίνεται όφελος","E","αποτυχ,πισωγυρ,ατυχ,αναποδ,ευκαιρ"],
+["TOMORROW","τουμόροου","Διώχνει θλίψη και τύψεις","E","θλιψ,λυπ,στενοχ,πενθ"],
+["THANKS","θένκς","Σταματούν οι τύψεις και η ενοχή","E","ενοχ,τυψ,μετανι,μετανοι"],
+["FORGIVE","φοργκίβ","Σβήνει τύψεις και τη διάθεση για εκδίκηση","E","συγχωρ,εκδικ"],
+["SWING","σουίνγκ","Θάρρος· τόλμη","E","θαρρ,τολμ,κουραγ,δειλ"],
+["DUCK","ντακ","Λιγότερη υπερευαισθησία","E","ευαισθ,θιγ,προσβολ,πληγων"],
+["OPEN","όουπεν","Απελευθέρωση· κατανόηση· φεύγουν οι αναστολές","E","απελευθερ,κατανο,αναστολ,ντροπ,αναπν"],
+["SLOW","σλόου","Σοφία· υπομονή","E","υπομον,σοφ,βιασ,ανυπομον"],
+["QUIET","κουάιετ","Ησυχάζει το εγώ","E","εγω,σιωπ,ησυχ,διαλογ"],
+["STRETCH","στρετς","Κρατάει περισσότερο ένα ωραίο συναίσθημα· ανάπτυξη","E","παρατ,διαρκ,ευεξ,αναπτυξ,ευτυχ"],
+["ADJUST","ατζάστ","Ισορροπία· αντέχεις βάρος και δυσάρεστες συνθήκες","E","ισορροπ,αντεξ,αντεχ,δυσκολ,προσαρμ,δυσαρεστ"],
+["HOLD","χόουλντ","Χτίζεις χαρακτήρα","E","χαρακτηρ,αξιοπρεπ"],
+["HORSESHOE","χόρσσου","Μένεις σταθερός· γρήγορη και ασφαλής πρόοδος","E","σταθερ,επιμον,ψυχη"],
+["DEDICATE","ντέντικεϊτ","Σταματάς να γαντζώνεσαι","E","γαντζ,προσκολλ,κολλημ,εξαρτ"],
+["REVERSE","ριβέρς","Θάβεις μια κακία· σταματάς","E","κακια,πικρ"],
+["POSTPONE","ποστπόουν","Τέλος στα μούτρα — το αφήνεις να φύγει","E","μουτρ,κακιωσ,παρεξηγ"],
+["CHARM","τσαρμ","Εκδηλώνονται οι επιθυμίες της καρδιάς σου","S","επιθυμ,καρδι,ευχ,ποθ,ονειρ"],
+["BRING","μπρινγκ","Έρχεται αυτό που θέλεις — «να γίνει»","S","να ερθει,εκδηλωσ,παραδοσ,αποτελεσμ,να γινει,πραγματοπ,δουλει,εργασ"],
+["LOVE","λαβ","Αγάπη και αποδοχή","R","αγαπ,αποδοχ,ερωτ,σχεσ,συντροφ,γαμ"],
+["HOLE","χόουλ","Γίνεσαι ελκυστικός","R","ελκυστ,γοητ,ραντεβ,αρεσ"],
+["WITH","ουίθ","Αρμονία και συνεργασία με τους άλλους","R","αρμον,συνεργ,ομαδ,συναδελφ,συμφων,ταιρ"],
+["CONCEDE","κονσίντ","Σταματά ο καβγάς — συμφιλίωση","R","καβγ,τσακω,διαφων,συμφιλ,μαλω,αντιπαρ"],
+["CONFESS","κονφές","Τέλος στην επιθετικότητα","R","επιθετ,εχθρ"],
+["SHUT","σατ","Σταματάς να ψάχνεις μπελάδες","R","μπελα,φασαρ,προκλησ"],
+["CROWD","κράουντ","Υπακοή σε παιδιά, ζώα ή υφισταμένους","R","ανυπακ,υπακ,παιδι,σκυλ,ζω,υφισταμ,πληρωμ,ναυτ,πειθαρχ"],
+["CIRCULATE","σέρκιουλεϊτ","Τέλος στη μοναξιά· κυκλοφορείς ανάμεσα σε κόσμο","R","μοναξ,φιλ,παρεα,γνωρ,κοινων"],
+["CHLORINE","κλόριν","Δένεσαι με τους άλλους· κάνεις τη διαφορά","R","ενταξ,δεσιμο,διαφορα"],
+["CHUCKLE","τσάκλ","«Ανάβει» η προσωπικότητα και το χιούμορ","R","προσωπικοτ,χιουμορ,γελ,χαρισμ"],
+["SWEET","σουίτ","Γλυκός και φροντιστικός με τους άλλους","R","γλυκ,τρυφερ,φροντ"],
+["MAGNANIMITY","μαγκνανίμιτι","Γενναιοδωρία· τέλος στη μικροπρέπεια","R","γενναιοδωρ,μικροπρεπ,τσιγκουν"],
+["OFFER","όφερ","Διώχνει την απληστία","R","απληστ,πλεονεξ"],
+["BOW","μπάου","Διώχνει την αλαζονεία","R","αλαζον,εγωισμ,υπεροψ,ταπειν"],
+["DOWN","ντάουν","Σταματάς να καυχιέσαι","R","καυχ,μεγαλομαν"],
+["REJOICE","ριτζόις","Τέλος στη ζήλια","R","ζηλι,ζηλευ,φθον"],
+["MONA-LISA","μόνα-λίζα","Χαμόγελο· διώχνει μίσος και φθόνο","R","χαμογ,μισ,φθον"],
+["RESTORE","ριστόρ","Επαναφέρει δικαιοσύνη και εντιμότητα","R","δικαιοσυν,αδικ,τιμιοτ,εντιμ,δικη"],
+["UNCLE","άνκλ","Ενώνει ό,τι έχει διασπαστεί","R","διασπασ,χωρισ,ενωσ,οικογεν"],
+["WOMB","γουμ","Ασφάλεια, αγκαλιά, επανασύνδεση","R","ασφαλει,αγκαλ,ζεστασ,επανασυνδ"],
+["LIMIT","λίμιτ","Βάζεις όρια· δεν σε εκμεταλλεύονται· παίρνεις πίσω τον έλεγχο","R","ορια,εκμεταλλ,ελεγχ,πιεσ,λεω οχι"],
+["OIL","όιλ","Λιώνει την τριβή και την αντίσταση","R","τριβ,αντιστασ,συγκρουσ,εμποδ"],
+["ACT","ακτ","Μιλάς καλά μπροστά σε κόσμο· ομαλή μετάβαση","W","ομιλ,μιλησ,ρητορ,παρουσιασ,κοινο,μεταβασ,λογο,σκηνη,meeting,συσκεψ"],
+["CLASSIC","κλάσικ","Δείχνεις καλλιεργημένος και κομψός","A","κομψ,καλλιεργ,στυλ,φινετσ"],
+["CURVE","κερβ","Δημιουργείς ομορφιά","A","ομορφ,τεχν,ζωγραφ,αισθητ"],
+["PRAISE","πρέιζ","Ομορφιά· σταματάς την κριτική και το ψεγάδι","A","ομορφ,κριτικ,γκριν,ψεγαδ"],
+["SPEND","σπεντ","Ντύνεσαι καλύτερα","A","ντυσ,ρουχ,εμφανισ"],
+["COPY","κόπι","Καλό γούστο· γονιμότητα","A","γουστ,γονιμ,εγκυμ"]
+];
+// Ετοιμες φράσεις (συνδυασμοί)
+const PH=[["TOGETHER-DIVINE-COUNT","Αφθονία χρημάτων"],["TOGETHER-REACH","Βρες ό,τι έχασες / λύση"],["TOGETHER-HO","Χαλάρωση τώρα"],["TOGETHER-GIGGLE","Γράψιμο με κέφι"],["TOGETHER-GUARD","Ασφαλές ταξίδι"],["TOGETHER-DONE","Τέλειωσε τη δουλειά"],["TOGETHER-UP","Πάνω η διάθεση"],["DIVINE-ORDER","Οργάνωση / συγύρισμα"]];
+
+const norm=s=>s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/ς/g,"σ");
+const IDX=D.map(d=>({w:d[0],p:d[1],m:d[2],c:d[3],k:d[4].split(",").map(norm).filter(Boolean)}));
+const $=id=>document.getElementById(id);
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let favs=store.get("sw_favs",[]),hist=store.get("sw_hist",[]);
+
+function search(q){
+ const t=" "+norm(q)+" ";
+ const sc=IDX.map(e=>{let s=0;for(const k of e.k){if(t.includes(k))s+=k.length+(k.includes(" ")?4:0)}
+  if(t.includes(norm(e.w).replace("-"," ")))s+=10;return{e,s}}).filter(x=>x.s>0).sort((a,b)=>b.s-a.s);
+ return sc.slice(0,5).map(x=>x.e);
+}
+function card(e,big){
+ const on=favs.includes(e.w);
+ return `<div class="card"><div class="cat">${C[e.c]}</div>
+ <div class="row" style="justify-content:space-between"><div><span class="word">${e.w}</span><span class="pron">(${e.p})</span></div>
+ <button class="star" data-fav="${e.w}">${on?"★":"☆"}</button></div>
+ <div class="mean">${esc(e.m)}</div>
+ <div class="row"><button data-rep="${e.w}">🔁 Επανάληψη</button><button class="ghost" data-say="${e.w}">🔊</button><button class="ghost" data-copy="${e.w}">📋</button></div></div>`;
+}
+function phraseCard(w,label){
+ return `<div class="card phrase"><div class="cat" style="color:#ffd27a">Φράση-διακόπτης</div><div class="word">${w}</div>
+ <div class="mean" style="opacity:.9">${esc(label)}</div>
+ <div class="row"><button class="acc" data-rep="${w}">🔁 Επανάληψη</button><button class="ghost" style="color:#fff;border-color:rgba(255,255,255,.3)" data-say="${w}">🔊</button><button class="ghost" style="color:#fff;border-color:rgba(255,255,255,.3)" data-copy="${w}">📋</button></div></div>`;
+}
+function run(){
+ const q=$("q").value.trim();if(!q){$("res").innerHTML="";return}
+ const r=search(q);
+ let h="";
+ if(!r.length){
+  h=`<div class="card"><b>Δεν βρήκα κάτι συγκεκριμένο.</b><p class="muted">Δοκίμασε πιο απλά λόγια (π.χ. «άγχος», «χρήματα», «ύπνος»), ή χρησιμοποίησε τη γενική λέξη:</p></div>`+card(IDX.find(e=>e.w==="TOGETHER"))+card(IDX.find(e=>e.w==="CHARM"));
+ }else{
+  const main=r.filter(e=>e.w!=="TOGETHER");
+  const ph=main.length?"TOGETHER-"+main.slice(0,main.length>1&&r.length>1?2:1).map(e=>e.w).join("-"):"TOGETHER";
+  h=phraseCard(ph,"Πες την όλη μαζί, σαν μία λέξη. Ή χρησιμοποίησε μόνο την πρώτη λέξη από κάτω.")+r.map(e=>card(e)).join("");
+ }
+ $("res").innerHTML=h;
+ hist=[{q,w:r[0]?r[0].w:"TOGETHER",t:Date.now()},...hist.filter(x=>x.q!==q)].slice(0,30);store.set("sw_hist",hist);
+}
+$("go").onclick=run;
+$("q").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();run()}});
+$("clr").onclick=()=>{$("q").value="";$("res").innerHTML="";$("q").focus()};
+$("quick").innerHTML=PH.map(p=>`<button class="chip" data-ph="${p[0]}" data-l="${esc(p[1])}">${esc(p[1])}</button>`).join("");
+$("quick").onclick=e=>{const b=e.target.closest("[data-ph]");if(b){$("res").innerHTML=phraseCard(b.dataset.ph,b.dataset.l);}};
+
+// Λίστα
+let curCat="";
+$("cats").innerHTML=`<button class="chip" data-c="">Όλα</button>`+Object.entries(C).map(([k,v])=>`<button class="chip" data-c="${k}">${v}</button>`).join("");
+$("cats").onclick=e=>{const b=e.target.closest("[data-c]");if(b){curCat=b.dataset.c;drawList()}};
+$("filter").oninput=drawList;
+function drawList(){
+ const f=norm($("filter").value.trim());
+ const L=IDX.filter(e=>(!curCat||e.c===curCat)&&(!f||norm(e.w+" "+e.m+" "+e.p).includes(f)||e.k.some(k=>f.includes(k)||k.includes(f)))).sort((a,b)=>a.w.localeCompare(b.w));
+ [...$("cats").children].forEach(b=>b.style.borderColor=b.dataset.c===curCat?"var(--acc)":"");
+ $("all").innerHTML=L.length?L.map(e=>`<div class="list-item"><div><span class="w">${e.w}</span> <span class="muted">(${e.p})</span><div class="muted" style="color:var(--ink)">${esc(e.m)}</div></div>
+ <div style="display:flex;flex-direction:column;gap:4px"><button class="star" data-fav="${e.w}">${favs.includes(e.w)?"★":"☆"}</button><button class="ghost" style="padding:6px 8px" data-rep="${e.w}">🔁</button></div></div>`).join(""):`<div class="empty">Τίποτα με αυτό το φίλτρο</div>`;
+}
+function drawFav(){
+ const F=favs.map(w=>IDX.find(e=>e.w===w)||{w,p:"",m:"Δική σου φράση",c:"S"});
+ $("favs").innerHTML=F.length?F.map(e=>`<div class="list-item"><div><span class="w">${e.w}</span> <span class="muted">${e.p?"("+e.p+")":""}</span><div class="muted">${esc(e.m)}</div></div>
+ <div style="display:flex;gap:4px"><button class="ghost" style="padding:6px 8px" data-rep="${e.w}">🔁</button><button class="star" data-fav="${e.w}">★</button></div></div>`).join(""):`<div class="empty">Πάτα ☆ σε μια λέξη για να μπει εδώ.</div>`;
+ $("hist").innerHTML=hist.length?hist.slice(0,12).map(h=>`<div class="list-item"><div><div>${esc(h.q)}</div><div class="muted">→ <b>${h.w}</b></div></div><button class="ghost" style="padding:6px 8px" data-again="${esc(h.q)}">↻</button></div>`).join(""):`<div class="empty">Ακόμα τίποτα.</div>`;
+}
+
+// Πλοήγηση
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>show(b.dataset.v));
+function show(v){document.querySelectorAll(".view").forEach(x=>x.classList.toggle("on",x.id==="v-"+v));document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x.dataset.v===v));
+ if(v==="list")drawList();if(v==="fav")drawFav();scrollTo(0,0)}
+
+// Κουμπιά παντού
+document.addEventListener("click",e=>{
+ const t=e.target.closest("[data-fav],[data-rep],[data-say],[data-copy],[data-again]");if(!t)return;
+ if(t.dataset.fav){const w=t.dataset.fav;favs=favs.includes(w)?favs.filter(x=>x!==w):[...favs,w];store.set("sw_favs",favs);
+  document.querySelectorAll(`[data-fav="${w}"]`).forEach(b=>b.textContent=favs.includes(w)?"★":"☆");if($("v-fav").classList.contains("on"))drawFav();}
+ if(t.dataset.rep)openCounter(t.dataset.rep);
+ if(t.dataset.say)say(t.dataset.say);
+ if(t.dataset.copy){try{navigator.clipboard.writeText(t.dataset.copy).then(()=>{t.textContent="✓";setTimeout(()=>t.textContent="📋",1200)}).catch(()=>{})}catch(_){}}
+ if(t.dataset.again){$("q").value=t.dataset.again;show("find");run();}
+});
+
+// Ομιλία (αγγλική προφορά)
+function say(w){try{const u=new SpeechSynthesisUtterance(w.replace(/-/g," ").toLowerCase());u.lang="en-US";u.rate=.85;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
+
+// Μετρητής επαναλήψεων
+let cnt=0,target=108,cur="";
+function pronOf(w){return w.split("-").map(p=>{const e=IDX.find(x=>x.w===p)||IDX.find(x=>x.w.startsWith(p));return e?e.p.split("-")[0]:p}).join("-")}
+function openCounter(w){cur=w;cnt=0;$("cWord").textContent=w;const e=IDX.find(x=>x.w===w);$("cPron").textContent="("+(e?e.p:pronOf(w))+")";upd();$("counter").classList.add("on")}
+function upd(){$("tap").firstChild.nodeValue=cnt;$("barI").style.width=Math.min(100,cnt/target*100)+"%";
+ [...$("targets").children].forEach(b=>b.classList.toggle("on",+b.dataset.t===target));
+ if(cnt>=target)$("tap").firstChild.nodeValue="✓ "+cnt;}
+$("tap").onclick=()=>{cnt++;try{navigator.vibrate&&navigator.vibrate(cnt===target?[60,40,60]:12)}catch(e){}upd()};
+$("targets").onclick=e=>{const b=e.target.closest("[data-t]");if(b){target=+b.dataset.t;upd()}};
+$("reset").onclick=()=>{cnt=0;upd()};
+$("say").onclick=()=>say(cur);
+$("close").onclick=()=>$("counter").classList.remove("on");
+
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>
