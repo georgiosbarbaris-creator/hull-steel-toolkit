@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>iChing</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="iChing">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#7a1d16">
+<style>
+:root{--bg:#f4eee1;--card:#fffdf7;--ink:#1d1a16;--muted:#6f665a;--line:#e3d8c3;--red:#a8281e;--gold:#b8860b;--yang:#1d1a16}
+@media (prefers-color-scheme:dark){:root{--bg:#14110e;--card:#1f1a15;--ink:#efe7da;--muted:#a89c8a;--line:#3a3128;--red:#e0574a;--gold:#e3b341;--yang:#efe7da}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font:16px/1.55 -apple-system,system-ui,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+header{background:#7a1d16;color:#fff;padding:calc(12px + env(safe-area-inset-top)) 16px 12px;position:sticky;top:0;z-index:5}
+header h1{margin:0;font-size:20px;letter-spacing:.5px}header p{margin:1px 0 0;font-size:12.5px;opacity:.85}
+main{padding:14px;max-width:720px;margin:0 auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+textarea,input{width:100%;font:inherit;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
+textarea{min-height:76px;resize:vertical}
+button{font:inherit;border:0;border-radius:10px;padding:11px 14px;background:var(--red);color:#fff;font-weight:600;cursor:pointer}
+button.ghost{background:transparent;color:var(--red);border:1px solid var(--line)}
+button:disabled{opacity:.4}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+h2{font-size:17px;margin:0 0 8px}h3{font-size:15px;margin:14px 0 4px;color:var(--red)}
+.muted{color:var(--muted);font-size:13.5px}
+.coins{display:flex;gap:14px;justify-content:center;margin:12px 0 6px;perspective:600px}
+.coin{width:62px;height:62px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f3d27a,#b8860b 70%);border:3px solid #8a6408;position:relative;display:flex;align-items:center;justify-content:center;font-weight:800;color:#5a3d00;font-size:15px;transition:transform .6s}
+.coin::before{content:"";position:absolute;width:16px;height:16px;background:var(--card);border:2px solid #8a6408;transform:rotate(0)}
+.coin span{position:absolute;bottom:5px;font-size:11px}
+.coin.t{background:radial-gradient(circle at 35% 30%,#c9a37a,#7a5530 70%);border-color:#5a3a1a;color:#fff}
+.coin.flip{animation:flip .6s ease}
+@keyframes flip{0%{transform:rotateY(0) translateY(0)}50%{transform:rotateY(540deg) translateY(-30px)}100%{transform:rotateY(1080deg) translateY(0)}}
+.hexwrap{display:flex;gap:18px;justify-content:center;align-items:center;flex-wrap:wrap}
+.hex{display:flex;flex-direction:column-reverse;gap:7px;width:120px}
+.ln{height:13px;display:flex;justify-content:space-between;position:relative}
+.ln i{display:block;height:100%;background:var(--yang);border-radius:2px}
+.ln.yang i{width:100%}.ln.yin i{width:44%}
+.ln.ch i{background:var(--red)}
+.ln b{position:absolute;right:-22px;top:-5px;color:var(--red);font-size:15px}
+.ln.empty i{background:transparent;border:1.5px dashed var(--line);width:100%}
+.big{font-size:34px;font-weight:800;color:var(--red);line-height:1}
+.hname{font-size:19px;font-weight:800}.pin{color:var(--muted);font-style:italic}
+.answer{border:2px solid var(--gold);background:linear-gradient(180deg,rgba(184,134,11,.08),transparent)}
+.quote{border-left:3px solid var(--red);padding:2px 10px;margin:6px 0}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom);z-index:6}
+nav button{flex:1;background:transparent;color:var(--muted);border-radius:0;padding:10px 4px;font-size:12px;font-weight:600}
+nav button b{display:block;font-size:20px}nav button.on{color:var(--red)}
+.view{display:none}.view.on{display:block}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.cell{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 4px;text-align:center;cursor:pointer;color:var(--ink);font-weight:500}
+.cell .n{font-weight:800;color:var(--red)}.cell .s{font-size:11px;line-height:1.2;color:var(--muted)}
+.mini{display:flex;flex-direction:column-reverse;gap:2px;width:30px;margin:4px auto}.mini i{height:3px;background:var(--ink);display:block}.mini i.y{background:linear-gradient(90deg,var(--ink) 42%,transparent 42% 58%,var(--ink) 58%)}
+.list-item{padding:10px 0;border-bottom:1px solid var(--line)}.list-item:last-child{border:0}
+.tag{display:inline-block;font-size:11.5px;font-weight:700;background:var(--gold);color:#fff;border-radius:6px;padding:1px 6px;margin-left:4px}
+table{border-collapse:collapse;width:100%;font-size:14px}td,th{border:1px solid var(--line);padding:6px;text-align:left}
+</style>
+</head>
+<body>
+<header><h1>☯ iChing</h1><p>Το Βιβλίο των Αλλαγών · 易經</p><p style="font-size:11.5px;opacity:.65;margin-top:2px">Created by George Barbaris</p></header>
+<main>
+
+<section class="view on" id="v-cast">
+ <div class="card" id="qCard">
+  <h2>1 · Η ερώτησή σου</h2>
+  <textarea id="q" placeholder="π.χ. Τι πρέπει να ξέρω για τη νέα δουλειά; / Πώς να χειριστώ τη σχέση μου με …;"></textarea>
+  <p class="muted" style="margin:6px 0 0">Ηρέμησε, σκέψου καθαρά την ερώτηση. Καλύτερα ανοιχτή («τι», «πώς») παρά «ναι/όχι».</p>
+ </div>
+ <div class="card" id="castCard">
+  <h2>2 · Ρίξε τα 3 νομίσματα <span id="cnt" class="muted">(0/6)</span></h2>
+  <div class="coins"><div class="coin" id="c0"></div><div class="coin" id="c1"></div><div class="coin" id="c2"></div></div>
+  <div id="tossInfo" class="muted" style="text-align:center;min-height:22px"></div>
+  <div class="hexwrap" style="margin:12px 0"><div class="hex" id="build"></div></div>
+  <div class="row" style="justify-content:center"><button id="toss" style="font-size:17px;padding:14px 22px">🪙 Ρίξε τα νομίσματα</button></div>
+  <p class="muted" style="text-align:center;margin:8px 0 0">Οι γραμμές χτίζονται από κάτω προς τα πάνω.</p>
+ </div>
+ <div id="reading"></div>
+</section>
+
+<section class="view" id="v-journal"><div class="card"><h2>📔 Ημερολόγιο χρησμών</h2><div id="journal"></div></div></section>
+
+<section class="view" id="v-book">
+ <div class="card"><input id="bf" type="search" placeholder="Αναζήτηση: αριθμός ή όνομα (π.χ. 24, Επιστροφή)"></div>
+ <div class="card"><div class="grid" id="grid"></div></div>
+ <div id="bookOut"></div>
+</section>
+
+<section class="view" id="v-help">
+ <div class="card">
+  <h2>Τι είναι το I Ching</h2>
+  <p>Το <b>I Ching</b> (易經, «Βιβλίο των Αλλαγών») είναι από τα αρχαιότερα βιβλία του κόσμου, με ρίζες περίπου 3.000 χρόνων στην Κίνα. Μελετήθηκε από τον Κομφούκιο και τον Λάο Τσε και, στη Δύση, από τον Λάιμπνιτς και τον Γιουνγκ. Η βασική του ιδέα είναι ότι τίποτα δεν μένει ίδιο: όλα αλλάζουν, και ο σοφός διαβάζει την αλλαγή και κινείται μαζί της.</p>
+  <p>Περιέχει <b>64 εξάγραμμα</b>. Κάθε εξάγραμμο έχει 6 γραμμές, και κάθε γραμμή είναι είτε συνεχής (— γιανγκ, φως, δύναμη) είτε σπασμένη (- - γιν, σκιά, δεκτικότητα). Οι 3 κάτω γραμμές σχηματίζουν το κάτω τρίγραμμο (ο εσωτερικός κόσμος) και οι 3 πάνω το πάνω τρίγραμμο (ο εξωτερικός κόσμος).</p>
+ </div>
+ <div class="card">
+  <h2>Η μέθοδος των τριών νομισμάτων</h2>
+  <p>Ρίχνεις 3 νομίσματα 6 φορές. Η μία όψη μετράει <b>3</b> και η άλλη <b>2</b>. Το άθροισμα κάθε ρίψης δίνει μία γραμμή:</p>
+  <table><tr><th>Άθροισμα</th><th>Γραμμή</th></tr>
+  <tr><td>6 (2+2+2)</td><td>Γηραιό γιν - - <b style="color:var(--red)">×</b>, κινούμενη: γίνεται γιανγκ</td></tr>
+  <tr><td>7 (3+2+2)</td><td>Νέο γιανγκ — σταθερή</td></tr>
+  <tr><td>8 (3+3+2)</td><td>Νέο γιν - - σταθερή</td></tr>
+  <tr><td>9 (3+3+3)</td><td>Γηραιό γιανγκ — <b style="color:var(--red)">○</b>, κινούμενη: γίνεται γιν</td></tr></table>
+  <p>Οι <b>κινούμενες γραμμές</b> δείχνουν πού αλλάζει η κατάσταση. Αν υπάρχουν, μετατρέπονται στο αντίθετό τους και δημιουργούν το <b>δεύτερο εξάγραμμο</b>: πού οδηγεί η αλλαγή.</p>
+ </div>
+ <div class="card">
+  <h2>Πώς διαβάζεται η απάντηση</h2>
+  <p>Η εφαρμογή ακολουθεί τους κλασικούς κανόνες του Ζου Σι (Zhu Xi, 12ος αι.):</p>
+  <ul>
+   <li><b>0 κινούμενες γραμμές</b>: διαβάζεις την Κρίση του εξαγράμμου.</li>
+   <li><b>1</b>: διαβάζεις εκείνη τη γραμμή.</li>
+   <li><b>2</b>: διαβάζεις και τις δύο, με κύρια την πάνω.</li>
+   <li><b>3</b>: διαβάζεις τις Κρίσεις και των δύο εξαγράμμων, με κύριο το πρώτο.</li>
+   <li><b>4</b>: διαβάζεις τις 2 σταθερές γραμμές του δεύτερου εξαγράμμου, με κύρια την κάτω.</li>
+   <li><b>5</b>: διαβάζεις τη μία σταθερή γραμμή του δεύτερου.</li>
+   <li><b>6</b>: διαβάζεις την Κρίση του δεύτερου εξαγράμμου. Για το 1 και το 2 υπάρχει ειδικό κείμενο.</li>
+  </ul>
+  <p>Η <b>Κρίση</b> δίνει το νόημα της κατάστασης. Η <b>Εικόνα</b> λέει πώς θα έπραττε ο σοφός. Οι <b>γραμμές</b> δείχνουν τη θέση σου μέσα στην κατάσταση, από την αρχή (1η) μέχρι το τέλος (6η).</p>
+ </div>
+ <div class="card">
+  <h2>Συμβουλές</h2>
+  <ul>
+   <li>Μην ξαναρωτάς το ίδιο αμέσως. Το εξάγραμμο 4 το λέει: «όποιος ρωτά ξανά και ξανά, δεν παίρνει απάντηση».</li>
+   <li>Γράψε στο Ημερολόγιο τι έγινε τελικά. Με τον καιρό θα δεις πώς σου «μιλά» το βιβλίο.</li>
+   <li>Διάβασέ το ως καθρέφτη για σκέψη, όχι ως εντολή.</li>
+  </ul>
+  <p class="muted">Τα κείμενα είναι ελληνική απόδοση και ερμηνεία βασισμένη στην κλασική παράδοση (James Legge 1882, Richard Wilhelm 1924, κανόνες Zhu Xi). Το I Ching είναι εργαλείο στοχασμού και όχι πρόβλεψη με επιστημονική βάση. Δεν αντικαθιστά επαγγελματική, ιατρική ή νομική συμβουλή.</p>
+ </div>
+</section>
+</main>
+
+<nav>
+ <button data-v="cast" class="on"><b>🪙</b>Χρησμός</button>
+ <button data-v="journal"><b>📔</b>Ημερολόγιο</button>
+ <button data-v="book"><b>📖</b>Βιβλίο</button>
+ <button data-v="help"><b>☯</b>Οδηγός</button>
+</nav>
+
+<script src="data.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const IDX={};H.forEach((h,i)=>IDX[h[0]+h[1]]=i+1);
+const hexOf=bits=>IDX[bits.slice(3,6).join("")+bits.slice(0,3).join("")];
+const hx=n=>H[n-1];
+const ORD=["1η","2η","3η","4η","5η","6η"];
+const POS=["η αρχή, το πρώτο βήμα","το εσωτερικό κέντρο","το πέρασμα από μέσα προς τα έξω, η κρίσιμη στιγμή","το κατώφλι του εξωτερικού κόσμου, κοντά στην εξουσία","η θέση του ηγέτη, η κορυφή της επιρροής","το τέλος, η υπέρβαση"];
+const rnd=()=>{const a=new Uint32Array(1);crypto.getRandomValues(a);return a[0]%2};
+
+function hexHTML(vals,mark){ // vals: 6..9 or bits array via mark=false
+ return `<div class="hex">${vals.map(v=>{const yang=v===7||v===9||v===1,ch=mark&&(v===6||v===9);
+  return `<div class="ln ${yang?"yang":"yin"} ${ch?"ch":""}">${yang?"<i></i>":"<i></i><i></i>"}${ch?`<b>${v===9?"○":"×"}</b>`:""}</div>`}).join("")}</div>`}
+function miniHex(n){const h=hx(n);const b=(h[1]+h[0]).split("");return `<div class="mini">${b.map(x=>`<i class="${x==="1"?"":"y"}"></i>`).join("")}</div>`}
+function triLine(n){const h=hx(n),u=TRI[h[0]],l=TRI[h[1]];return `${u[0]} ${u[1]} πάνω από ${l[0]} ${l[1]} <span class="muted">(${l[2]} μέσα · ${u[2]} έξω)</span>`}
+function hexHead(n,label){const h=hx(n);return `<div class="muted">${label}</div><div class="row" style="gap:10px"><span class="big">${n}</span><div><div class="hname">${h[3]}</div><div class="pin">${h[2]}</div></div></div><div style="margin-top:4px;font-size:14px">${triLine(n)}</div>`}
+
+// ---------- ΡΙΨΗ ----------
+let cast=[],busy=false;
+function drawBuild(){const v=[...cast];while(v.length<6)v.push(0);
+ $("build").innerHTML=v.map(x=>x===0?`<div class="ln empty"><i></i></div>`:(()=>{const yang=x===7||x===9,ch=x===6||x===9;return `<div class="ln ${yang?"yang":"yin"} ${ch?"ch":""}">${yang?"<i></i>":"<i></i><i></i>"}${ch?`<b>${x===9?"○":"×"}</b>`:""}</div>`})()).join("");
+ $("cnt").textContent=`(${cast.length}/6)`;$("toss").textContent=cast.length===0?"🪙 Ρίξε τα νομίσματα":cast.length<6?`🪙 Ρίψη ${cast.length+1} από 6`:"✓ Ολοκληρώθηκε";$("toss").disabled=cast.length>=6;}
+const LBL={6:"6 · γηραιό γιν (κινούμενη) ×",7:"7 · γιανγκ —",8:"8 · γιν - -",9:"9 · γηραιό γιανγκ (κινούμενη) ○"};
+$("toss").onclick=()=>{if(busy||cast.length>=6)return;
+ if(cast.length===0&&!$("q").value.trim()){$("tossInfo").innerHTML="✍️ Γράψε πρώτα την ερώτησή σου (ή πάτα ξανά για γενικό χρησμό).";if(!$("toss").dataset.warned){$("toss").dataset.warned=1;return}}
+ busy=true;const c=[rnd(),rnd(),rnd()];
+ [0,1,2].forEach(i=>{const el=$("c"+i);el.classList.remove("flip");void el.offsetWidth;el.classList.add("flip");});
+ try{navigator.vibrate&&navigator.vibrate(30)}catch(e){}
+ setTimeout(()=>{c.forEach((x,i)=>{const el=$("c"+i);el.className="coin"+(x?"":" t");el.innerHTML=`<span>${x?3:2}</span>`});
+  const s=c.reduce((a,x)=>a+(x?3:2),0);cast.push(s);$("tossInfo").textContent=`${ORD[cast.length-1]} γραμμή: ${LBL[s]}`;drawBuild();busy=false;
+  if(cast.length===6)setTimeout(finish,500);},620);
+};
+function finish(){const q=$("q").value.trim();const e={id:Date.now(),t:new Date().toISOString(),q,v:[...cast],note:""};
+ const J=store.get("ic_journal",[]);J.unshift(e);store.set("ic_journal",J.slice(0,300));
+ $("reading").innerHTML=reading(e)+`<div class="row" style="justify-content:center;margin-bottom:14px"><button class="ghost" id="newQ">🔄 Νέα ερώτηση</button></div>`;
+ bindReading(e);$("newQ").onclick=reset;$("reading").scrollIntoView({behavior:"smooth"});}
+function reset(){cast=[];$("q").value="";$("reading").innerHTML="";$("tossInfo").textContent="";delete $("toss").dataset.warned;
+ [0,1,2].forEach(i=>{$("c"+i).className="coin";$("c"+i).innerHTML=""});drawBuild();scrollTo(0,0);}
+
+// ---------- ΑΝΑΓΝΩΣΗ (Zhu Xi) ----------
+function analyse(v){const b1=v.map(x=>x===7||x===9?1:0),b2=v.map(x=>x===6?1:x===9?0:(x===7?1:0));
+ const p=hexOf(b1),chg=v.map((x,i)=>x===6||x===9?i:-1).filter(i=>i>=0),r=chg.length?hexOf(b2):null;return{p,r,chg}}
+function answer(a){const P=hx(a.p),R=a.r?hx(a.r):null,c=a.chg,n=c.length;
+ const L=(h,num,i,main)=>`<div class="quote"><b>${num} · ${ORD[i]} γραμμή${main?' <span class="tag">ΚΥΡΙΑ</span>':""}</b><br>${h[6][i]}</div>`;
+ if(n===0)return{rule:"Καμία κινούμενη γραμμή: η κατάσταση είναι σταθερή. Η απάντηση είναι η Κρίση.",html:`<div class="quote">${P[4]}</div>`};
+ if(n===1)return{rule:"Μία κινούμενη γραμμή: εκείνη είναι η απάντηση.",html:L(P,a.p,c[0],true)};
+ if(n===2)return{rule:"Δύο κινούμενες γραμμές: διαβάζεις και τις δύο, με κύρια την πάνω.",html:L(P,a.p,c[1],true)+L(P,a.p,c[0])};
+ if(n===3)return{rule:"Τρεις κινούμενες γραμμές: η Κρίση του πρώτου εξαγράμμου (κύρια) και του δεύτερου.",html:`<div class="quote"><b>${a.p} · ${P[3]}</b> <span class="tag">ΚΥΡΙΑ</span><br>${P[4]}</div><div class="quote"><b>${a.r} · ${R[3]}</b><br>${R[4]}</div>`};
+ const st=[0,1,2,3,4,5].filter(i=>!c.includes(i));
+ if(n===4)return{rule:"Τέσσερις κινούμενες γραμμές: οι δύο σταθερές γραμμές του δεύτερου εξαγράμμου, με κύρια την κάτω.",html:L(R,a.r,st[0],true)+L(R,a.r,st[1])};
+ if(n===5)return{rule:"Πέντε κινούμενες γραμμές: η μόνη σταθερή γραμμή του δεύτερου εξαγράμμου.",html:L(R,a.r,st[0],true)};
+ if(P[7])return{rule:"Και οι έξι γραμμές κινούνται: ειδικό κείμενο.",html:`<div class="quote">${P[7]}</div><div class="quote"><b>${a.r} · ${R[3]}</b><br>${R[4]}</div>`};
+ return{rule:"Και οι έξι γραμμές κινούνται: η απάντηση είναι η Κρίση του δεύτερου εξαγράμμου.",html:`<div class="quote"><b>${a.r} · ${R[3]}</b><br>${R[4]}</div>`};}
+function reading(e){const a=analyse(e.v),P=hx(a.p),R=a.r?hx(a.r):null,ans=answer(a);
+ const d=new Date(e.t);
+ let h=`<div class="card" style="text-align:center">${e.q?`<div class="muted">Ερώτηση</div><div style="font-size:17px;font-weight:600;font-style:italic">«${esc(e.q)}»</div>`:`<div class="muted">Γενικός χρησμός</div>`}
+ <div class="muted" style="font-size:12px">${d.toLocaleDateString("el-GR",{day:"numeric",month:"long",year:"numeric"})} · ${d.toLocaleTimeString("el-GR",{hour:"2-digit",minute:"2-digit"})}</div>
+ <div class="hexwrap" style="margin-top:12px"><div>${hexHTML(e.v,true)}<div style="margin-top:6px;font-weight:800">${a.p}. ${P[3]}</div></div>
+ ${R?`<div style="font-size:26px;color:var(--red)">→</div><div>${hexHTML(e.v.map(x=>x===6?1:x===9?0:(x===7?1:0)).map(b=>b?7:8),false)}<div style="margin-top:6px;font-weight:800">${a.r}. ${R[3]}</div></div>`:""}</div></div>`;
+ h+=`<div class="card answer"><h2>🎯 Η απάντηση</h2><p class="muted" style="margin-top:0">${ans.rule}</p>${ans.html}
+ <div class="row" style="margin-top:10px"><button class="ghost" data-ai="${e.id}">✨ Ερμήνευσε για την ερώτησή μου</button></div><div class="aiOut"></div></div>`;
+ h+=`<div class="card">${hexHead(a.p,R?"Η τωρινή κατάσταση":"Το εξάγραμμό σου")}
+ <h3>Η Κρίση</h3><p style="margin:4px 0">${P[4]}</p><h3>Η Εικόνα</h3><p style="margin:4px 0;font-style:italic">${P[5]}</p>
+ ${a.chg.length?`<h3>Οι κινούμενες γραμμές</h3>${a.chg.map(i=>`<div class="quote"><b>${ORD[i]} γραμμή</b> <span class="muted">· ${POS[i]}</span><br>${P[6][i]}</div>`).join("")}`:""}</div>`;
+ if(R)h+=`<div class="card">${hexHead(a.r,"Πού οδηγεί η αλλαγή")}<h3>Η Κρίση</h3><p style="margin:4px 0">${R[4]}</p><h3>Η Εικόνα</h3><p style="margin:4px 0;font-style:italic">${R[5]}</p></div>`;
+ h+=`<div class="card"><h3 style="margin-top:0">📝 Σημείωση για το ημερολόγιο</h3><textarea data-note="${e.id}" placeholder="Τι σκέφτηκες, τι έγινε τελικά…">${esc(e.note)}</textarea></div>`;
+ return h;}
+function bindReading(e){
+ document.querySelectorAll(`[data-note="${e.id}"]`).forEach(t=>t.oninput=()=>{const J=store.get("ic_journal",[]);const x=J.find(j=>j.id===e.id);if(x){x.note=t.value;store.set("ic_journal",J)}});
+ document.querySelectorAll(`[data-ai="${e.id}"]`).forEach(b=>b.onclick=()=>ai(e,b.parentElement.nextElementSibling));}
+
+// ---------- CLAUDE ----------
+async function ai(e,out){let key="";try{key=localStorage.getItem("risq_api_key")||""}catch(x){}
+ if(!key){if(!out.querySelector("input")){out.innerHTML=`<label class="muted">Claude API key (μία φορά· μένει μόνο στο κινητό)</label><input type="password" placeholder="sk-ant-...">`;return}
+  key=out.querySelector("input").value.trim();if(!key)return;try{localStorage.setItem("risq_api_key",key)}catch(x){}}
+ const a=analyse(e.v),P=hx(a.p),R=a.r?hx(a.r):null,ans=answer(a);
+ out.innerHTML=`<p class="muted">✨ Ο Claude διαβάζει τον χρησμό…</p>`;
+ const tmp=document.createElement("div");tmp.innerHTML=ans.html;
+ const facts=`Ερώτηση: ${e.q||"(γενικός χρησμός)"}\nΕξάγραμμο ${a.p} «${P[3]}» (${P[2]}). Τρίγραμμα: ${TRI[P[1]][1]} κάτω, ${TRI[P[0]][1]} πάνω.\nΚρίση: ${P[4]}\nΕικόνα: ${P[5]}\nΚινούμενες γραμμές: ${a.chg.map(i=>(i+1)+": "+P[6][i]).join(" | ")||"καμία"}\n${R?`Μεταβαίνει στο ${a.r} «${R[3]}»: ${R[4]}`:""}\nΚύρια απάντηση (κανόνες Zhu Xi): ${ans.rule} ${tmp.innerText}`;
+ try{const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"content-type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+  body:JSON.stringify({model:"claude-haiku-5-5",max_tokens:900,system:"Είσαι σοφός, προσγειωμένος ερμηνευτής του I Ching και γράφεις στα ελληνικά. Εφάρμοσε τον χρησμό στη συγκεκριμένη ερώτηση: 2-3 σύντομες παράγραφοι σε δεύτερο πρόσωπο, με βάση την κύρια απάντηση, τις εικόνες του εξαγράμμου και την κατεύθυνση της αλλαγής. Δώσε πρακτική στάση και μία ερώτηση για στοχασμό. Μην επινοείς κείμενα του βιβλίου, μην υπόσχεσαι βέβαιες προβλέψεις, και για υγεία, νομικά ή οικονομικά θέματα πρότεινε και ειδικό. Μόνο το κείμενο.",messages:[{role:"user",content:facts}]})});
+  const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(r.status===401?"Λάθος API key":(j.error&&j.error.message)||("Σφάλμα "+r.status));
+  const txt=(j.content||[]).filter(c=>c.type==="text").map(c=>c.text).join("").trim();
+  out.innerHTML=`<h3>✨ Για την ερώτησή σου</h3>${txt.split(/\n\s*\n/).map(p=>`<p style="margin:4px 0 8px">${esc(p)}</p>`).join("")}`;
+  const J=store.get("ic_journal",[]);const x=J.find(q=>q.id===e.id);if(x){x.ai=txt;store.set("ic_journal",J)}
+ }catch(err){out.innerHTML=`<p class="muted">⚠️ ${esc(err.message)}${navigator.onLine?"":" (χρειάζεται internet)"}</p>`}}
+
+// ---------- ΗΜΕΡΟΛΟΓΙΟ ----------
+function drawJournal(){const J=store.get("ic_journal",[]);
+ $("journal").innerHTML=J.length?J.map(e=>{const a=analyse(e.v);return `<div class="list-item"><div class="row" style="justify-content:space-between;flex-wrap:nowrap"><div style="flex:1">
+ <div style="font-weight:600">${e.q?esc(e.q):"<i>Γενικός χρησμός</i>"}</div><div class="muted">${new Date(e.t).toLocaleDateString("el-GR")} · <b>${a.p}</b> ${hx(a.p)[3]}${a.r?` → <b>${a.r}</b> ${hx(a.r)[3]}`:""}</div>${e.note?`<div class="muted">📝 ${esc(e.note)}</div>`:""}</div>
+ <div class="row" style="flex-wrap:nowrap"><button class="ghost" style="padding:7px 10px" data-open="${e.id}">Άνοιγμα</button><button class="ghost" style="padding:7px 10px" data-del="${e.id}">🗑</button></div></div></div>`}).join(""):`<div class="muted" style="text-align:center;padding:20px">Οι χρησμοί σου θα αποθηκεύονται εδώ.</div>`}
+$("journal").onclick=ev=>{const o=ev.target.closest("[data-open]"),d=ev.target.closest("[data-del]");const J=store.get("ic_journal",[]);
+ if(o){const e=J.find(x=>x.id==o.dataset.open);show("cast");$("reading").innerHTML=reading(e)+(e.ai?"":"");bindReading(e);if(e.ai){const out=$("reading").querySelector(".aiOut");out.innerHTML=`<h3>✨ Για την ερώτησή σου</h3>${e.ai.split(/\n\s*\n/).map(p=>`<p style="margin:4px 0 8px">${esc(p)}</p>`).join("")}`}
+  setTimeout(()=>$("reading").scrollIntoView({behavior:"smooth"}),50)}
+ if(d){if(d.dataset.sure){store.set("ic_journal",J.filter(x=>x.id!=d.dataset.del));drawJournal()}else{d.dataset.sure=1;d.textContent="Σίγουρα;"}}};
+
+// ---------- ΒΙΒΛΙΟ ----------
+const norm=s=>s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
+function drawGrid(){const f=norm($("bf").value.trim());
+ $("grid").innerHTML=H.map((h,i)=>({h,n:i+1})).filter(({h,n})=>!f||String(n)===f||norm(h[3]+" "+h[2]).includes(f)).map(({h,n})=>`<div class="cell" data-h="${n}"><div class="n">${n}</div>${miniHex(n)}<div class="s">${h[3]}</div></div>`).join("")}
+$("bf").oninput=drawGrid;
+$("grid").onclick=ev=>{const c=ev.target.closest("[data-h]");if(!c)return;const n=+c.dataset.h,h=hx(n);
+ $("bookOut").innerHTML=`<div class="card"><div class="hexwrap" style="justify-content:flex-start">${hexHTML((h[1]+h[0]).split("").map(x=>x==="1"?7:8),false)}<div>${hexHead(n,"Εξάγραμμο")}</div></div>
+ <h3>Η Κρίση</h3><p style="margin:4px 0">${h[4]}</p><h3>Η Εικόνα</h3><p style="margin:4px 0;font-style:italic">${h[5]}</p>
+ <h3>Οι γραμμές</h3>${h[6].map((t,i)=>`<div class="quote"><b>${ORD[i]} γραμμή</b> <span class="muted">· ${POS[i]}</span><br>${t}</div>`).join("")}${h[7]?`<div class="quote"><b>Όλες οι γραμμές κινούνται</b><br>${h[7]}</div>`:""}</div>`;
+ $("bookOut").scrollIntoView({behavior:"smooth"})};
+
+// ---------- ΠΛΟΗΓΗΣΗ ----------
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>show(b.dataset.v));
+function show(v){document.querySelectorAll(".view").forEach(x=>x.classList.toggle("on",x.id==="v-"+v));document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x.dataset.v===v));
+ if(v==="journal")drawJournal();if(v==="book")drawGrid();scrollTo(0,0)}
+drawBuild();
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>
