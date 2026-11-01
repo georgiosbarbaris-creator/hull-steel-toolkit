@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Αριθμολογία Πυθαγόρα</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Αριθμολογία">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#2a1a4a">
+<style>
+:root{--bg:#f2eff7;--card:#fff;--ink:#1d1630;--muted:#6a6080;--line:#ddd6ea;--pri:#2a1a4a;--acc:#b8860b;--hi:#7a4fd1;--ok:#1d7a46}
+@media (prefers-color-scheme:dark){:root{--bg:#110d1c;--card:#1c1630;--ink:#ece6f8;--muted:#a59cbc;--line:#332a4c;--pri:#c9b8f0;--acc:#e3b341;--hi:#a98bf0;--ok:#5cc98a}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font:16px/1.5 -apple-system,system-ui,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+header{background:#2a1a4a;color:#fff;padding:calc(12px + env(safe-area-inset-top)) 16px 12px;position:sticky;top:0;z-index:5}
+header h1{margin:0;font-size:19px}header p{margin:2px 0 0;font-size:12.5px;opacity:.8}
+main{padding:14px;max-width:760px;margin:0 auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+label{display:block;font-size:13px;color:var(--muted);margin:8px 0 3px}
+input{width:100%;font:inherit;padding:11px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+button{font:inherit;border:0;border-radius:10px;padding:11px 14px;background:var(--pri);color:var(--card);font-weight:600;cursor:pointer}
+button.ghost{background:transparent;color:var(--pri);border:1px solid var(--line)}
+button.acc{background:var(--acc);color:#fff}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+h2{font-size:17px;margin:0 0 8px}h3{font-size:15px;margin:12px 0 4px}
+.num{display:flex;gap:12px;align-items:flex-start}
+.badge{min-width:58px;height:58px;border-radius:14px;background:linear-gradient(135deg,#2a1a4a,#5b3a9e);color:#ffd27a;font-size:28px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-direction:column;line-height:1}
+.badge small{font-size:10px;color:#fff;opacity:.8;font-weight:600;margin-top:3px}
+.ttl{font-weight:800;font-size:16px}.sub{color:var(--muted);font-size:13px}
+.arch{color:var(--acc);font-weight:700;font-size:13.5px}
+.calc{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;color:var(--muted);background:var(--bg);border-radius:8px;padding:6px 8px;margin-top:8px;word-break:break-word}
+details summary{cursor:pointer;color:var(--hi);font-weight:600;font-size:14px;margin-top:6px}
+.pm{font-size:14px;margin:4px 0}.pm b{color:var(--ok)}.pm i{font-style:normal;color:#b3261e}
+@media (prefers-color-scheme:dark){.pm i{color:#ff8a80}}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom);z-index:6}
+nav button{flex:1;background:transparent;color:var(--muted);border-radius:0;padding:10px 4px;font-size:12px;font-weight:600}
+nav button b{display:block;font-size:20px}nav button.on{color:var(--acc)}
+.view{display:none}.view.on{display:block}
+table{border-collapse:collapse;width:100%;font-size:14px}td,th{border:1px solid var(--line);padding:5px 6px;text-align:center}th{background:var(--bg)}
+.lt{display:inline-flex;flex-direction:column;align-items:center;margin:2px;padding:3px 5px;border-radius:7px;background:var(--bg);min-width:26px;font-weight:700}
+.lt small{font-weight:600;color:var(--muted);font-size:11px}.lt.v{background:#efe4ff;color:#5b3a9e}
+@media (prefers-color-scheme:dark){.lt.v{background:#3a2a60;color:#e6dbff}}
+.now{border:2px solid var(--acc)}
+.tag{display:inline-block;font-size:11.5px;font-weight:700;background:var(--acc);color:#fff;border-radius:6px;padding:1px 6px;margin-left:6px;vertical-align:middle}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mini{background:var(--bg);border-radius:12px;padding:10px;text-align:center}.mini .n{font-size:30px;font-weight:800;color:var(--hi)}.mini .l{font-size:12px;color:var(--muted)}
+.list-item{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);align-items:center}.list-item:last-child{border:0}
+.empty{text-align:center;color:var(--muted);padding:20px}
+.muted{color:var(--muted);font-size:13.5px}
+</style>
+</head>
+<body>
+<header><h1>🔺 Αριθμολογία Πυθαγόρα</h1><p>Ελληνική ισοψηφία · οι 5 βασικοί αριθμοί, κύκλοι και ερμηνείες</p></header>
+<main>
+
+<section class="view on" id="v-calc">
+ <div class="card">
+  <h2>Στοιχεία</h2>
+  <div class="g2"><div><label>Όνομα</label><input id="fn" autocomplete="off" placeholder="π.χ. Γεώργιος"></div>
+  <div><label>Μεσαίο όνομα (προαιρετικό)</label><input id="mn" autocomplete="off"></div></div>
+  <label>Επώνυμο</label><input id="ln" autocomplete="off" placeholder="όπως στη ληξιαρχική πράξη">
+  <div class="g2"><div><label>Ημερομηνία γέννησης</label><input id="bd" type="date"></div>
+  <div><label>Ημερομηνία αναφοράς</label><input id="rd" type="date"></div></div>
+  <p class="muted" style="margin:6px 0 0">Γράψε το όνομα <b>όπως δόθηκε στη γέννηση/βάπτιση</b>. Τόνοι και πεζά/κεφαλαία δεν πειράζουν.</p>
+  <div class="row" style="margin-top:10px"><button class="acc" id="go">Υπολόγισε</button><button class="ghost" id="save">💾 Αποθήκευση</button><button class="ghost" id="clr">Καθαρισμός</button></div>
+ </div>
+ <div id="out"></div>
+</section>
+
+<section class="view" id="v-people"><div class="card"><h2>👥 Αποθηκευμένα πρόσωπα</h2><div id="people"></div></div></section>
+
+<section class="view" id="v-help">
+ <div class="card">
+  <h2>Το αλφάβητο (ισοψηφία)</h2>
+  <p>Κάθε γράμμα παίρνει την αρχαία αριθμητική του αξία (Α=1, Ι=10, Ρ=100…) και την ανάγουμε σε ένα ψηφίο. Τα αρχαία ψηφία <b>ϛ (στίγμα, 6)</b>, <b>ϟ (κόππα, 90)</b> και <b>ϡ (σαμπί, 900)</b> δεν είναι γράμματα σήμερα, άρα μένουν κενά και ο μετρητής «πηδάει».</p>
+  <div id="tbl"></div>
+  <p class="muted">Φωνήεντα (για την Ψυχή): Α Ε Η Ι Ο Υ Ω. Σύμφωνα (για την Προσωπικότητα): όλα τα υπόλοιπα. Λατινικά γράμματα υπολογίζονται με τον κλασικό πυθαγόρειο πίνακα (A=1…I=9, J=1…).</p>
+  <p class="muted">Επειδή στο ελληνικό αλφάβητο μόνο τα Ξ, Χ δίνουν 6 και μόνο το Θ δίνει 9, τα «καρμικά μαθήματα» 6 και 9 εμφανίζονται συχνά· διάβασέ τα πιο χαλαρά.</p>
+ </div>
+ <div class="card">
+  <h2>Οι 5 βασικοί αριθμοί</h2>
+  <ol>
+   <li><b>Πορεία Ζωής</b>: από την ημερομηνία γέννησης. Ο δρόμος και τα μαθήματα της ζωής σου.</li>
+   <li><b>Πεπρωμένο (Έκφραση)</b>: από όλα τα γράμματα του ονόματος. Τα ταλέντα σου και τι ήρθες να κάνεις.</li>
+   <li><b>Ψυχή</b>: από τα φωνήεντα. Τι λαχταράς βαθιά μέσα σου.</li>
+   <li><b>Προσωπικότητα</b>: από τα σύμφωνα. Η εικόνα σου, όπως σε βλέπουν οι άλλοι.</li>
+   <li><b>Ολοκλήρωση (Ωρίμανση)</b>: Πορεία Ζωής + Πεπρωμένο. Πού καταλήγεις μετά τα 35–40.</li>
+  </ol>
+  <h3>Πώς γίνεται η αναγωγή</h3>
+  <p>Προσθέτουμε τα ψηφία μέχρι να μείνει ένα (π.χ. 38 → 3+8 = 11). Τα <b>11, 22, 33</b> είναι <b>κύριοι αριθμοί</b> και δεν τα ανάγουμε. Στην Πορεία Ζωής ανάγουμε χωριστά μήνα, ημέρα και έτος και μετά τα προσθέτουμε. Στο όνομα ανάγουμε κάθε όνομα χωριστά και μετά τα προσθέτουμε.</p>
+  <h3>Οι κύκλοι</h3>
+  <ul>
+   <li><b>Προσωπικό Έτος</b> = μήνας + ημέρα γέννησης + τρέχον έτος (κύκλος 1→9, αλλάζει την 1η Ιανουαρίου).</li>
+   <li><b>Προσωπικός Μήνας</b> = Προσωπικό Έτος + τρέχων μήνας. <b>Προσωπική Ημέρα</b> = Προσωπικός Μήνας + ημέρα.</li>
+   <li><b>Κορυφές & Προκλήσεις</b>: 4 περίοδοι της ζωής. Η πρώτη τελειώνει στα 36 μείον την Πορεία Ζωής και οι επόμενες κρατούν 9 χρόνια η καθεμία.</li>
+   <li><b>Καρμικά χρέη</b> (13, 14, 16, 19): εμφανίζονται όταν κάποιος βασικός αριθμός περνάει από αυτά τα ενδιάμεσα αθροίσματα.</li>
+   <li><b>Καρμικά μαθήματα</b>: ψηφία 1–9 που λείπουν από το όνομα. <b>Κρυφό πάθος</b>: το ψηφίο που εμφανίζεται περισσότερες φορές.</li>
+  </ul>
+  <p class="muted">Η αριθμολογία είναι παραδοσιακό σύστημα συμβολισμού και αυτογνωσίας, όχι επιστήμη. Χρησιμοποίησέ τη για στοχασμό, όχι για αποφάσεις ζωής.</p>
+ </div>
+</section>
+</main>
+
+<nav>
+ <button data-v="calc" class="on"><b>🔢</b>Υπολογισμός</button>
+ <button data-v="people"><b>👥</b>Πρόσωπα</button>
+ <button data-v="help"><b>📖</b>Οδηγός</button>
+</nav>
+
+<script>
+// ---------- ΑΛΦΑΒΗΤΟ (ισοψηφία ανηγμένη) ----------
+const GRV={"Α":1,"Β":2,"Γ":3,"Δ":4,"Ε":5,"Ζ":7,"Η":8,"Θ":9,"Ι":1,"Κ":2,"Λ":3,"Μ":4,"Ν":5,"Ξ":6,"Ο":7,"Π":8,"Ρ":1,"Σ":2,"Τ":3,"Υ":4,"Φ":5,"Χ":6,"Ψ":7,"Ω":8};
+const ISO={"Α":1,"Β":2,"Γ":3,"Δ":4,"Ε":5,"ϛ":6,"Ζ":7,"Η":8,"Θ":9,"Ι":10,"Κ":20,"Λ":30,"Μ":40,"Ν":50,"Ξ":60,"Ο":70,"Π":80,"ϟ":90,"Ρ":100,"Σ":200,"Τ":300,"Υ":400,"Φ":500,"Χ":600,"Ψ":700,"Ω":800,"ϡ":900};
+const GRVOW="ΑΕΗΙΟΥΩ",LAVOW="AEIOU";
+const latVal=c=>((c.charCodeAt(0)-65)%9)+1;
+const clean=s=>s.normalize("NFD").replace(/[̀-ͯ]/g,"").toUpperCase().replace(/ς/gi,"Σ");
+function letters(word){const out=[];for(const c of clean(word)){
+ if(GRV[c])out.push({c,v:GRV[c],vow:GRVOW.includes(c)});
+ else if(c>="A"&&c<="Z")out.push({c,v:latVal(c),vow:LAVOW.includes(c)});}return out}
+
+// ---------- ΑΝΑΓΩΓΗ ----------
+const KD=[13,14,16,19];
+const dsum=n=>String(n).split("").reduce((a,b)=>a+ +b,0);
+function red(n,master=true,trace){let t=[n];while(n>9&&!(master&&(n===11||n===22||n===33))){n=dsum(n);t.push(n)}
+ if(trace)trace.push(...t);return n}
+const single=n=>red(n,false);
+const debtIn=arr=>arr.filter(x=>KD.includes(x));
+
+// ---------- ΕΡΜΗΝΕΙΕΣ ----------
+const N={
+1:{a:"Ο Πρωτοπόρος",k:"Αρχή, ανεξαρτησία, ηγεσία, θέληση",p:"αποφασιστικότητα, θάρρος, αυτονομία, καινοτομία",m:"πείσμα, εγωκεντρισμός, ανυπομονησία, μοναξιά",
+ lp:"Ο δρόμος σου είναι να σταθείς στα πόδια σου και να ανοίξεις καινούργια μονοπάτια. Μαθαίνεις να εμπιστεύεσαι την κρίση σου και να ηγείσαι χωρίς να πατάς πάνω στους άλλους. Η ζωή θα σε φέρνει ξανά και ξανά σε θέσεις όπου πρέπει να αποφασίσεις μόνος.",
+ ex:"Έχεις το χάρισμα της πρωτοβουλίας: ξεκινάς αυτό που οι άλλοι απλώς σκέφτονται. Ταιριάζεις σε ρόλους ευθύνης, στη διοίκηση, στην επιχειρηματικότητα και σε ό,τι χρειάζεται τόλμη και καθαρή απόφαση.",
+ su:"Βαθιά μέσα σου θέλεις να είσαι ο εαυτός σου, ελεύθερος και πρώτος. Σε πνίγει να σε ελέγχουν. Νιώθεις πλήρης όταν δημιουργείς κάτι δικό σου.",
+ pe:"Οι άλλοι σε βλέπουν δυναμικό, σίγουρο και κάπως απόμακρο, κάποιον που ξέρει πού πάει. Εμπνέεις εμπιστοσύνη στην κρίση ανάγκης.",
+ ma:"Με τα χρόνια έρχεται όλο και περισσότερη ανεξαρτησία. Στο δεύτερο μισό της ζωής παίρνεις πλήρως το τιμόνι και χαράζεις τη δική σου ρότα.",
+ py:"Χρονιά νέων ξεκινημάτων. Ό,τι σπείρεις φέτος θα το θερίζεις για 9 χρόνια: νέα δουλειά, νέα σχέδια, πρωτοβουλίες. Τόλμησε.",
+ mo:"Ξεκίνα κάτι καινούργιο· πάρε πρωτοβουλία."},
+2:{a:"Ο Ειρηνοποιός",k:"Συνεργασία, ευαισθησία, διπλωματία, ισορροπία",p:"υπομονή, διαίσθηση, ευγένεια, ομαδικότητα",m:"αναποφασιστικότητα, υπερευαισθησία, εξάρτηση, φόβος σύγκρουσης",
+ lp:"Μαθαίνεις τη δύναμη της συνεργασίας και της λεπτότητας. Ο δρόμος σου περνά μέσα από σχέσεις, συνεργάτες και ομάδες. Η μεγάλη σου δύναμη είναι ότι ενώνεις αυτούς που άλλοι χωρίζουν.",
+ ex:"Ταλέντο στη μεσολάβηση, στη συμβουλευτική, στη λεπτομέρεια και στη στήριξη. Είσαι ο άνθρωπος που κάνει μια ομάδα να δουλεύει.",
+ su:"Λαχταράς αρμονία, αγάπη, έναν σύντροφο και γαλήνη στο σπίτι. Θέλεις να σε χρειάζονται και να σε εκτιμούν.",
+ pe:"Φαίνεσαι ήπιος, προσιτός και ευγενικός, άνθρωπος που τον εμπιστεύεσαι από την πρώτη στιγμή.",
+ ma:"Αργότερα η ζωή σε φέρνει σε ρόλο γέφυρας ανάμεσα σε ανθρώπους. Βρίσκεις γαλήνη στις σχέσεις και στις συνεργασίες.",
+ py:"Χρονιά υπομονής και συνεργασιών. Τα πράγματα ωριμάζουν αργά, οπότε καλλιέργησε σχέσεις και μην πιέζεις. Οι λεπτομέρειες μετράνε.",
+ mo:"Υπομονή, συνεργασία, διπλωματία."},
+3:{a:"Ο Δημιουργός",k:"Έκφραση, χαρά, επικοινωνία, δημιουργία",p:"αισιοδοξία, χιούμορ, λόγος, τέχνη, κοινωνικότητα",m:"διασκόρπιση, επιπολαιότητα, σπατάλη, δράμα",
+ lp:"Ήρθες να εκφραστείς, με λόγο, γραφή ή τέχνη. Η ζωή σου ανθίζει όταν μοιράζεσαι ιδέες και χαρά. Μαθαίνεις να ολοκληρώνεις αυτό που ξεκινάς.",
+ ex:"Χάρισμα στον λόγο και στη γραφή, στην παρουσίαση, στη διδασκαλία και στις τέχνες. Οι λέξεις σου πείθουν και φωτίζουν.",
+ su:"Θέλεις να χαίρεσαι, να δημιουργείς και να σε ακούν. Σε τρέφουν η ομορφιά, η παρέα και το γέλιο.",
+ pe:"Φαίνεσαι κεφάτος, γοητευτικός και ομιλητικός. Η παρέα σε θέλει.",
+ ma:"Στην ωριμότητα ανοίγει η δημιουργικότητα: έργα, βιβλία, διδασκαλία. Η χαρά σου γίνεται το έργο σου.",
+ py:"Χρονιά έκφρασης, κοινωνικότητας και δημιουργίας. Γράψε, μίλα, βγες έξω. Πρόσεχε μόνο να μη σκορπίζεις την ενέργειά σου.",
+ mo:"Έκφρασε, γράψε, κοινωνικοποιήσου."},
+4:{a:"Ο Χτίστης",k:"Τάξη, δουλειά, σταθερότητα, θεμέλια",p:"εργατικότητα, αξιοπιστία, οργάνωση, πρακτικό μυαλό",m:"ακαμψία, πείσμα, υπερεργασία, φόβος της αλλαγής",
+ lp:"Χτίζεις γερά θεμέλια με κόπο και σύστημα. Μαθαίνεις ότι η σταθερή, μεθοδική δουλειά φέρνει αποτέλεσμα που κρατάει. Τίποτα δεν σου χαρίζεται, αλλά ό,τι χτίζεις μένει.",
+ ex:"Ταλέντο στην οργάνωση, στα συστήματα, στην τεχνική, στη διαχείριση έργων και στον έλεγχο ποιότητας. Είσαι ο άνθρωπος της διαδικασίας.",
+ su:"Θέλεις ασφάλεια, τάξη και κάτι γερό να ακουμπάς: σπίτι, δουλειά, ανθρώπους που μένουν.",
+ pe:"Φαίνεσαι σοβαρός και αξιόπιστος, ένας «βράχος». Σε εμπιστεύονται με ευθύνες.",
+ ma:"Αργότερα έρχεται η σταθερότητα που έχτισες: ασφάλεια, κύρος και μια ζωή σε τάξη.",
+ py:"Χρονιά δουλειάς και θεμελίων. Οργάνωσε, πειθάρχησε, φρόντισε υγεία και οικονομικά. Ο κόπος φέτος θα πληρώσει αργότερα.",
+ mo:"Οργάνωση, δουλειά, τάξη."},
+5:{a:"Ο Ταξιδευτής",k:"Ελευθερία, αλλαγή, περιπέτεια, εμπειρία",p:"προσαρμοστικότητα, περιέργεια, επικοινωνία, θάρρος",m:"ανησυχία, ασυνέπεια, υπερβολές, βιασύνη",
+ lp:"Ο δρόμος σου είναι η εμπειρία: ταξίδια, αλλαγές, πολλοί άνθρωποι και τόποι. Μαθαίνεις να χρησιμοποιείς σωστά την ελευθερία, χωρίς να γίνεται φυγή.",
+ ex:"Ταλέντο στις πωλήσεις, στην επικοινωνία, στα ταξίδια, στα media και σε ό,τι κινείται γρήγορα. Προσαρμόζεσαι παντού.",
+ su:"Λαχταράς ελευθερία, κίνηση και νέα πράγματα. Η ρουτίνα σε φυλακίζει.",
+ pe:"Φαίνεσαι ζωντανός, ανήσυχος, ελκυστικός, πάντα με προορισμό.",
+ ma:"Η ωριμότητα φέρνει ελευθερία και νέες περιπέτειες. Δεν «κλείνεις» ποτέ, συνεχίζεις να εξερευνάς.",
+ py:"Χρονιά αλλαγών και ταξιδιών. Απρόοπτα, ευκαιρίες, μετακινήσεις. Μείνε ευέλικτος και απόφυγε τις υπερβολές.",
+ mo:"Αλλαγή, κίνηση, νέες εμπειρίες."},
+6:{a:"Ο Φροντιστής",k:"Ευθύνη, οικογένεια, αγάπη, υπηρεσία",p:"αφοσίωση, προστασία, δικαιοσύνη, αίσθηση ομορφιάς",m:"παρεμβατικότητα, τελειομανία, αυτοθυσία, ενοχές",
+ lp:"Ο δρόμος σου περνά από την ευθύνη για τους άλλους: οικογένεια, κοινότητα, ομάδα. Μαθαίνεις να φροντίζεις χωρίς να ελέγχεις και να δίνεις χωρίς να ξεχνάς τον εαυτό σου.",
+ ex:"Ταλέντο στη φροντίδα, στη διδασκαλία, στην υγεία, στο σπίτι και στην αισθητική. Οι άλλοι ακουμπάνε πάνω σου.",
+ su:"Θέλεις ένα ζεστό σπίτι, αγάπη και να είσαι χρήσιμος σε αυτούς που αγαπάς.",
+ pe:"Φαίνεσαι ζεστός, υπεύθυνος και προστατευτικός, ο «πατέρας» ή η «μητέρα» της ομάδας.",
+ ma:"Αργότερα γίνεσαι στήριγμα οικογένειας και κοινότητας. Βρίσκεις νόημα στην προσφορά.",
+ py:"Χρονιά οικογένειας και ευθυνών: σπίτι, σχέσεις, γάμος, μετακόμιση. Δίνε, αλλά χωρίς να χάνεσαι.",
+ mo:"Σπίτι, οικογένεια, ευθύνες."},
+7:{a:"Ο Σοφός",k:"Αναζήτηση, γνώση, ενδοσκόπηση, πνεύμα",p:"ανάλυση, βάθος, διαίσθηση, ακρίβεια",m:"απομόνωση, καχυποψία, ψυχρότητα, τελειομανία",
+ lp:"Ήρθες να ψάξεις την αλήθεια, με μελέτη, σιωπή και εμπειρία. Η ζωή σε σπρώχνει προς τα μέσα. Μαθαίνεις να εμπιστεύεσαι και τους άλλους, όχι μόνο το μυαλό σου.",
+ ex:"Ταλέντο στην έρευνα, στην ανάλυση, στη φιλοσοφία, στην επιθεώρηση και στην τεχνική ειδίκευση. Βλέπεις αυτό που κρύβεται.",
+ su:"Λαχταράς ησυχία, γνώση και νόημα. Χρειάζεσαι χρόνο μόνος για να γεμίσεις.",
+ pe:"Φαίνεσαι μυστηριώδης, σοβαρός, κάπως απόμακρος, ένας άνθρωπος με βάθος.",
+ ma:"Η ωριμότητα φέρνει σοφία και πνευματικότητα. Γίνεσαι δάσκαλος της γνώσης που κατέκτησες.",
+ py:"Εσωτερική χρονιά: μελέτη, ξεκούραση, αναθεώρηση. Μη βιάζεσαι και άκου τη διαίσθησή σου.",
+ mo:"Μελέτη, σκέψη, ησυχία."},
+8:{a:"Ο Άρχοντας",k:"Δύναμη, επιτυχία, χρήμα, εξουσία",p:"οργάνωση, φιλοδοξία, κρίση, αντοχή",m:"υλισμός, σκληρότητα, εργασιομανία, έλεγχος",
+ lp:"Μαθαίνεις να χειρίζεσαι δύναμη και χρήμα με δικαιοσύνη. Ο δρόμος σου έχει μεγάλες ευθύνες και μεγάλες ανταμοιβές. Πέφτεις και ξανασηκώνεσαι πιο δυνατός.",
+ ex:"Ταλέντο στη διοίκηση, στις επιχειρήσεις, στα οικονομικά και στη διαπραγμάτευση. Ξέρεις να κάνεις τα πράγματα να αποδίδουν.",
+ su:"Θέλεις επιτυχία, αναγνώριση και τον έλεγχο της ζωής σου.",
+ pe:"Φαίνεσαι δυνατός, επιβλητικός, επιτυχημένος. Έχεις «αέρα» αρχηγού.",
+ ma:"Αργότερα έρχονται υλική επιτυχία και κύρος, αρκεί να μείνεις δίκαιος.",
+ py:"Χρονιά συγκομιδής: επαγγελματική άνοδος, χρήματα, εξουσία. Δούλεψε σκληρά και δίκαια.",
+ mo:"Χρήματα, δουλειά, αποφάσεις ισχύος."},
+9:{a:"Ο Ανθρωπιστής",k:"Ολοκλήρωση, συμπόνια, σοφία, προσφορά",p:"γενναιοδωρία, ιδεαλισμός, ευρύτητα, τέχνη",m:"απογοήτευση, αυτοθυσία, προσκόλληση στο παρελθόν, εκρήξεις",
+ lp:"Ο δρόμος σου είναι η προσφορά στο σύνολο. Η ζωή σε μαθαίνει να αφήνεις, να συγχωρείς και να βλέπεις πέρα από το «εγώ».",
+ ex:"Ταλέντο στη διδασκαλία, στις τέχνες, στη θεραπεία και στο κοινωνικό έργο. Μιλάς σε πολλούς μαζί.",
+ su:"Λαχταράς να κάνεις τον κόσμο καλύτερο και να αφήσεις κάτι πίσω σου.",
+ pe:"Φαίνεσαι ευγενής, γενναιόδωρος, μια «μεγάλη ψυχή».",
+ ma:"Η ωριμότητα φέρνει σοφία και προσφορά. Δίνεις ό,τι έμαθες.",
+ py:"Χρονιά κλεισίματος κύκλου. Τελείωσε, καθάρισε, συγχώρεσε. Ετοιμάζεσαι για το νέο ξεκίνημα.",
+ mo:"Κλείσε εκκρεμότητες, άφησε, δώσε."},
+11:{a:"Ο Εμπνευσμένος · κύριος αριθμός",k:"Διαίσθηση, έμπνευση, όραμα (βάση 2)",p:"όραμα, ευαισθησία, χάρισμα, πνευματικότητα",m:"άγχος, νευρικότητα, ονειροπόληση, αυτοαμφισβήτηση",
+ lp:"Κύριος αριθμός: ήρθες να φέρεις έμπνευση στους άλλους. Έχεις υψηλή «τάση». Όταν δεν μπορείς να τη σηκώσεις, ζεις σαν 2, με ευαισθησία και συνεργασία. Όταν μπορείς, γίνεσαι φάρος.",
+ ex:"Χάρισμα να εμπνέεις, να διδάσκεις και να βλέπεις πριν από τους άλλους. Δυνατός ομιλητής και σύμβουλος.",
+ su:"Λαχταράς νόημα, φως, και να αγγίξεις ψυχές.",
+ pe:"Φαίνεσαι ξεχωριστός, «ηλεκτρισμένος», ευαίσθητος, με κάτι που δεν εξηγείται.",
+ ma:"Αργότερα γίνεσαι φάρος για άλλους: δάσκαλος, οδηγός, εμπνευστής."},
+22:{a:"Ο Μεγάλος Χτίστης · κύριος αριθμός",k:"Όραμα που γίνεται πράξη (βάση 4)",p:"μεγάλα έργα, πρακτική σοφία, ηγεσία",m:"πίεση, υπερβολικά βάρη, φόβος αποτυχίας",
+ lp:"Κύριος αριθμός: χτίζεις έργα που μένουν, για πολλούς. Ενώνεις όραμα και πράξη. Όταν το βάρος είναι μεγάλο, ζεις σαν 4, ως σταθερός και εργατικός χτίστης.",
+ ex:"Ταλέντο να κάνεις τα μεγάλα σχέδια πραγματικότητα: οργανισμούς, κατασκευές, συστήματα, στόλους.",
+ su:"Θέλεις να αφήσεις κάτι γερό και χρήσιμο στον κόσμο.",
+ pe:"Φαίνεσαι ικανός, σοβαρός, με κύρος, κάποιος που «σηκώνει» μεγάλα έργα.",
+ ma:"Αργότερα έρχεται το «μεγάλο έργο» της ζωής σου."},
+33:{a:"Ο Δάσκαλος της Αγάπης · κύριος αριθμός",k:"Ανιδιοτελής υπηρεσία, θεραπεία (βάση 6)",p:"συμπόνια, θεραπευτική δύναμη, διδασκαλία",m:"αυτοθυσία, βάρος ευθύνης, τελειομανία",
+ lp:"Σπάνιος κύριος αριθμός: η αγάπη ως διδασκαλία και θεραπεία. Συνήθως ζεις σαν 6 μέχρι να ωριμάσεις.",
+ ex:"Ταλέντο να θεραπεύεις, να διδάσκεις και να στηρίζεις με αγάπη.",
+ su:"Λαχταράς να υπηρετείς και να ανακουφίζεις.",
+ pe:"Φαίνεσαι στοργικός, σοφός, ένας άνθρωπος-καταφύγιο.",
+ ma:"Αργότερα γίνεσαι δάσκαλος και θεραπευτής για πολλούς."}
+};
+const CH={0:"Η πρόκληση της επιλογής: έχεις όλες τις δυνατότητες, άρα πρέπει να διαλέξεις και να δεσμευτείς.",1:"Να σταθείς στα πόδια σου και να υποστηρίξεις τη γνώμη σου, χωρίς να γίνεις αλαζόνας.",2:"Η υπερευαισθησία: να μη σε πληγώνει κάθε λέξη και να μη χάνεσαι μέσα στους άλλους.",3:"Να εκφράζεσαι ελεύθερα χωρίς να σκορπίζεσαι ή να κρύβεσαι πίσω από το αστείο.",4:"Πειθαρχία και υπομονή: να δουλεύεις μεθοδικά χωρίς να γίνεσαι άκαμπτος.",5:"Ελευθερία χωρίς υπερβολές: να αλλάζεις χωρίς να φεύγεις από τα πάντα.",6:"Ευθύνη χωρίς τελειομανία: να φροντίζεις χωρίς να ελέγχεις.",7:"Εμπιστοσύνη: να ανοίγεσαι και να μην κλείνεσαι στο καβούκι σου.",8:"Η σωστή σχέση με το χρήμα και την εξουσία: ούτε φόβος ούτε απληστία."};
+const KL={1:"Αυτοπεποίθηση και πρωτοβουλία: μάθε να αποφασίζεις μόνος.",2:"Υπομονή, συνεργασία και λεπτότητα.",3:"Έκφραση: μίλα, γράψε, μοιράσου τα συναισθήματά σου.",4:"Πειθαρχία, τάξη, συνέπεια στη δουλειά.",5:"Προσαρμοστικότητα: δέξου την αλλαγή χωρίς φόβο.",6:"Ευθύνη στις σχέσεις και στην οικογένεια.",7:"Εμπιστοσύνη και εσωτερική ζωή: πίστη πέρα από τη λογική.",8:"Διαχείριση χρήματος και εξουσίας.",9:"Συμπόνια και ευρύτητα: δες πέρα από τον εαυτό σου."};
+const KDT={13:"13/4: Η επιτυχία έρχεται μόνο με σκληρή, συστηματική δουλειά. Χωρίς «παράθυρα» και χωρίς συντομεύσεις.",14:"14/5: Μάθημα μετριοπάθειας: ελευθερία ναι, υπερβολές και ασυνέπεια όχι.",16:"16/7: Το «εγώ» δοκιμάζεται. Ξαφνικές ανατροπές γκρεμίζουν ό,τι είναι ψεύτικο, για να ξαναχτιστεί κάτι αληθινό, με ταπεινότητα.",19:"19/1: Μάθημα να μη χρησιμοποιείς τη δύναμη εγωιστικά και να δέχεσαι βοήθεια."};
+const PD={1:"Ξεκίνα κάτι",2:"Συνεργάσου",3:"Εκφράσου",4:"Δούλεψε",5:"Άλλαξε",6:"Φρόντισε",7:"Σκέψου",8:"Αποφάσισε",9:"Κλείσε"};
+
+// ---------- ΥΠΟΛΟΓΙΣΜΟΣ ----------
+function nameNum(parts,filter){
+ let tot=0,debts=[],lines=[];
+ for(const p of parts){const L=letters(p).filter(filter);if(!L.length)continue;
+  const s=L.reduce((a,b)=>a+b.v,0);const tr=[];const r=red(s,true,tr);debts.push(...debtIn(tr));
+  tot+=r;lines.push(`${clean(p)}: ${L.map(x=>x.v).join("+")} = ${tr.join("→")}`);}
+ const tr=[];const r=red(tot,true,tr);debts.push(...debtIn(tr));
+ lines.push(`Σύνολο: ${tot}${tr.length>1?" → "+tr.slice(1).join("→"):""}`);
+ return{n:r,lines,debts:[...new Set(debts)]};
+}
+function compute(fn,mn,ln,bd,rd){
+ const parts=[fn,mn,ln].map(s=>(s||"").trim()).filter(Boolean);
+ const [Y,M,D]=bd.split("-").map(Number);
+ const tm=[],td=[],ty=[];const m=red(M,true,tm),d=red(D,true,td),y=red(Y,true,ty);
+ const lt=[];const lp=red(m+d+y,true,lt);
+ const lpDebt=[...new Set([...debtIn(td),...debtIn(lt)])];
+ const lpCalc=`Μήνας ${tm.join("→")} · Ημέρα ${td.join("→")} · Έτος ${Y}→${ty.slice(1).join("→")||Y}\n${m}+${d}+${y} = ${lt.join("→")}`;
+ const ex=nameNum(parts,()=>true),su=nameNum(parts,x=>x.vow),pe=nameNum(parts,x=>!x.vow);
+ const mt=[];const ma=red(lp+ex.n,true,mt);
+ const bdn=red(D,true);
+ // κύκλοι
+ const [RY,RM,RD]=rd.split("-").map(Number);
+ const pyRaw=single(M)+single(D)+single(RY);const py=single(pyRaw);
+ const pm=single(py+RM),pdy=single(pm+RD);
+ // κορυφές & προκλήσεις
+ const sm=single(M),sd=single(D),sy=single(Y),lps=single(lp);
+ const pin=[red(sm+sd),red(sd+sy)];pin.push(red(single(pin[0])+single(pin[1])));pin.push(red(sm+sy));
+ const c1=Math.abs(sm-sd),c2=Math.abs(sd-sy),c3=Math.abs(c1-c2),c4=Math.abs(sm-sy);
+ const e1=36-lps;const ages=[[0,e1],[e1+1,e1+9],[e1+10,e1+18],[e1+19,null]];
+ let age=RY-Y-((RM<M||(RM===M&&RD<D))?1:0);
+ // γράμματα
+ const all=parts.flatMap(p=>letters(p));const cnt={};for(let i=1;i<=9;i++)cnt[i]=0;all.forEach(x=>cnt[x.v]++);
+ const missing=Object.keys(cnt).filter(k=>cnt[k]===0).map(Number);
+ const mx=Math.max(...Object.values(cnt));const hp=mx?Object.keys(cnt).filter(k=>cnt[k]===mx).map(Number):[];
+ const debts=[...new Set([...lpDebt,...ex.debts,...su.debts,...pe.debts,...(KD.includes(D)?[D]:[])])].sort();
+ return{parts,lp,lpCalc,ex,su,pe,ma,maCalc:`${lp} + ${ex.n} = ${mt.join("→")}`,bdn,D,py,pyRaw,pm,pdy,RY,RM,RD,pin,ch:[c1,c2,c3,c4],ages,age,cnt,missing,hp,debts,all};
+}
+
+// ---------- ΕΜΦΑΝΙΣΗ ----------
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const base=n=>n>9?` <small>(${n}/${single(n)})</small>`:"";
+function core(title,sub,n,key,calc){const x=N[n];
+ if(!x)return `<div class="card"><div class="ttl">${title}</div><p class="muted">Δεν υπάρχουν γράμματα για αυτόν τον αριθμό.</p></div>`;
+ return `<div class="card"><div class="num"><div class="badge">${n}<small>${n>9?"κύριος":""}</small></div><div style="flex:1">
+ <div class="ttl">${title}</div><div class="sub">${sub}</div><div class="arch">${x.a}</div>
+ <p style="margin:6px 0">${x[key]}</p>
+ <details><summary>Περισσότερα</summary><div class="pm"><b>＋ Δυνάμεις:</b> ${x.p}</div><div class="pm"><i>－ Σκιές:</i> ${x.m}</div><div class="pm">Λέξεις-κλειδιά: ${x.k}</div>
+ <div class="calc">${esc(calc).replace(/\n/g,"<br>")}</div></details></div></div></div>`}
+function render(r,name){
+ const ago=(a)=>a[1]==null?`από ${a[0]} και μετά`:`${a[0]}–${a[1]} ετών`;
+ const cur=i=>r.age>=r.ages[i][0]&&(r.ages[i][1]==null||r.age<=r.ages[i][1]);
+ let h=`<div class="card" style="background:linear-gradient(135deg,#2a1a4a,#5b3a9e);color:#fff;border:0"><div style="font-size:13px;opacity:.8">Αριθμολογικό προφίλ</div><div style="font-size:20px;font-weight:800">${esc(name)}</div><div style="opacity:.85;font-size:14px">Γέννηση ${r.D}/${$("bd").value.split("-")[1]}/${$("bd").value.split("-")[0]} · ηλικία ${r.age}</div>
+ <div class="row" style="margin-top:10px;gap:6px">${[["Πορεία",r.lp],["Πεπρωμ.",r.ex.n],["Ψυχή",r.su.n],["Προσωπ.",r.pe.n],["Ολοκλ.",r.ma]].map(([l,n])=>`<div style="background:rgba(255,255,255,.12);border-radius:10px;padding:6px 10px;text-align:center"><div style="font-size:22px;font-weight:800;color:#ffd27a">${n}</div><div style="font-size:11px">${l}</div></div>`).join("")}</div></div>`;
+ h+=`<h2 style="margin:16px 4px 8px">① Οι 5 βασικοί αριθμοί</h2>`;
+ h+=core("1 · Πορεία Ζωής","Ο δρόμος σου · από την ημερομηνία γέννησης",r.lp,"lp",r.lpCalc);
+ h+=core("2 · Πεπρωμένο (Έκφραση)","Τα ταλέντα σου · όλα τα γράμματα του ονόματος",r.ex.n,"ex",r.ex.lines.join("\n"));
+ h+=core("3 · Ψυχή","Τι λαχταράς · τα φωνήεντα",r.su.n,"su",r.su.lines.join("\n"));
+ h+=core("4 · Προσωπικότητα","Η εικόνα σου στους άλλους · τα σύμφωνα",r.pe.n,"pe",r.pe.lines.join("\n"));
+ h+=core("5 · Ολοκλήρωση","Πού καταλήγεις · ενεργοποιείται μετά τα 35–40",r.ma,"ma",r.maCalc);
+ h+=`<div class="card"><div class="num"><div class="badge" style="background:linear-gradient(135deg,#6b4a0b,#b8860b)">${r.bdn}</div><div style="flex:1"><div class="ttl">+ Αριθμός Γενεθλίων</div><div class="sub">Ένα ειδικό ταλέντο · από την ημέρα (${r.D})</div><p style="margin:6px 0">${N[r.bdn].a}: ${N[r.bdn].k.toLowerCase()}. Ένα δώρο που σε βοηθά να βαδίσεις την Πορεία Ζωής σου.</p></div></div></div>`;
+ // Σήμερα
+ h+=`<h2 style="margin:16px 4px 8px">② Τώρα · ${r.RD}/${r.RM}/${r.RY}</h2><div class="card"><div class="grid3">
+ <div class="mini"><div class="n">${r.py}</div><div class="l">Προσωπικό Έτος ${r.RY}</div></div>
+ <div class="mini"><div class="n">${r.pm}</div><div class="l">Προσωπικός Μήνας</div></div>
+ <div class="mini"><div class="n">${r.pdy}</div><div class="l">Προσωπική Ημέρα</div></div></div>
+ <h3>Έτος ${r.py}: ${N[r.py].a}</h3><p style="margin:4px 0">${N[r.py].py}</p>
+ ${[11,22].includes(r.pyRaw)?`<p class="muted">Το άθροισμα βγήκε ${r.pyRaw} (κύριος αριθμός): χρονιά με έντονη ένταση και έμπνευση.</p>`:""}
+ <h3>Μήνας ${r.pm}</h3><p style="margin:4px 0">${N[r.pm].mo}</p>
+ <h3>Σήμερα ${r.pdy}</h3><p style="margin:4px 0">${PD[r.pdy]}.</p>
+ <details><summary>Ο κύκλος των 9 ετών</summary>${Array.from({length:9},(_,i)=>{const yr=r.RY-((r.py-1))+i;const n=i+1;return `<div class="pm" ${n===r.py?'style="font-weight:700"':""}>${yr}: <b>${n}</b> · ${N[n].mo}${n===r.py?' <span class="tag">ΤΩΡΑ</span>':""}</div>`}).join("")}</details></div>`;
+ // Κορυφές
+ h+=`<h2 style="margin:16px 4px 8px">③ Κορυφές & Προκλήσεις</h2><div class="card"><p class="muted" style="margin-top:0">Τέσσερις μεγάλες περίοδοι της ζωής. Η <b>Κορυφή</b> είναι η ευκαιρία της περιόδου και η <b>Πρόκληση</b> το μάθημά της.</p>`;
+ for(let i=0;i<4;i++){const p=r.pin[i],c=r.ch[i];h+=`<div class="card ${cur(i)?"now":""}" style="margin-bottom:8px"><div class="ttl">${i+1}η περίοδος · ${ago(r.ages[i])}${cur(i)?'<span class="tag">ΤΩΡΑ</span>':""}</div>
+ <div class="pm">🏔 Κορυφή <b>${p}</b>: ${N[p].a}: ${N[p].k.toLowerCase()}.</div><div class="pm">⚓ Πρόκληση <b>${c}</b>: ${CH[c]}</div></div>`}
+ h+=`</div>`;
+ // Καρμικά
+ h+=`<h2 style="margin:16px 4px 8px">④ Καρμικά & κρυφά</h2><div class="card">
+ <h3 style="margin-top:0">Καρμικά χρέη</h3>${r.debts.length?r.debts.map(d=>`<div class="pm">• ${KDT[d]}</div>`).join(""):`<div class="pm">Κανένα καρμικό χρέος (13, 14, 16, 19) στους βασικούς αριθμούς.</div>`}
+ <h3>Καρμικά μαθήματα (ψηφία που λείπουν από το όνομα)</h3>${r.missing.length?r.missing.map(k=>`<div class="pm">• <b>${k}</b>: ${KL[k]}</div>`).join(""):`<div class="pm">Δεν λείπει κανένα ψηφίο: ισορροπημένο όνομα.</div>`}
+ <h3>Κρυφό πάθος</h3><div class="pm">${r.hp.map(k=>`<b>${k}</b> (${N[k].a}): ${N[k].k.toLowerCase()}`).join(" · ")}</div>
+ <h3>Πόσες φορές βγαίνει κάθε ψηφίο</h3><table><tr>${[1,2,3,4,5,6,7,8,9].map(i=>`<th>${i}</th>`).join("")}</tr><tr>${[1,2,3,4,5,6,7,8,9].map(i=>`<td>${r.cnt[i]||"–"}</td>`).join("")}</tr></table></div>`;
+ // Γράμματα
+ h+=`<h2 style="margin:16px 4px 8px">⑤ Ανάλυση γραμμάτων</h2><div class="card">${r.parts.map(p=>`<div style="margin-bottom:6px">${letters(p).map(x=>`<span class="lt ${x.vow?"v":""}">${x.c}<small>${x.v}</small></span>`).join("")}</div>`).join("")}
+ <p class="muted">Μωβ: φωνήεντα (Ψυχή) · γκρι: σύμφωνα (Προσωπικότητα)</p></div>`;
+ return h;
+}
+function run(){
+ const fn=$("fn").value.trim(),ln=$("ln").value.trim(),bd=$("bd").value;
+ if(!fn||!ln||!bd){$("out").innerHTML=`<div class="card">Συμπλήρωσε όνομα, επώνυμο και ημερομηνία γέννησης.</div>`;return}
+ if(!letters(fn+ln).length){$("out").innerHTML=`<div class="card">Το όνομα δεν έχει γράμματα που αναγνωρίζω.</div>`;return}
+ const r=compute(fn,$("mn").value,ln,bd,$("rd").value||today());
+ $("out").innerHTML=render(r,[fn,$("mn").value.trim(),ln].filter(Boolean).join(" "));
+ $("out").scrollIntoView({behavior:"smooth"});
+}
+const today=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+$("rd").value=today();
+$("go").onclick=run;
+$("clr").onclick=()=>{["fn","mn","ln","bd"].forEach(i=>$(i).value="");$("rd").value=today();$("out").innerHTML=""};
+
+// ---------- ΠΡΟΣΩΠΑ ----------
+const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let people=store.get("ar_people",[]);
+$("save").onclick=()=>{const p={fn:$("fn").value.trim(),mn:$("mn").value.trim(),ln:$("ln").value.trim(),bd:$("bd").value};if(!p.fn||!p.ln||!p.bd)return;
+ people=[p,...people.filter(x=>!(x.fn===p.fn&&x.mn===p.mn&&x.ln===p.ln&&x.bd===p.bd))];store.set("ar_people",people);$("save").textContent="✓ Αποθηκεύτηκε";setTimeout(()=>$("save").textContent="💾 Αποθήκευση",1400)};
+function drawPeople(){$("people").innerHTML=people.length?people.map((p,i)=>{const r=compute(p.fn,p.mn,p.ln,p.bd,today());
+ return `<div class="list-item"><div><b>${esc([p.fn,p.mn,p.ln].filter(Boolean).join(" "))}</b><div class="muted">${p.bd.split("-").reverse().join("/")} · ${r.lp}/${r.ex.n}/${r.su.n}/${r.pe.n}/${r.ma} · Έτος ${r.py}</div></div>
+ <div class="row" style="flex-wrap:nowrap"><button class="ghost" style="padding:7px 10px" data-open="${i}">Άνοιγμα</button><button class="ghost" style="padding:7px 10px" data-del="${i}">🗑</button></div></div>`}).join(""):`<div class="empty">Υπολόγισε κάποιον και πάτα «Αποθήκευση».</div>`}
+$("people").onclick=e=>{const o=e.target.closest("[data-open]"),d=e.target.closest("[data-del]");
+ if(o){const p=people[+o.dataset.open];$("fn").value=p.fn;$("mn").value=p.mn;$("ln").value=p.ln;$("bd").value=p.bd;show("calc");run()}
+ if(d){const p=people[+d.dataset.del];if(d.dataset.sure){people.splice(+d.dataset.del,1);store.set("ar_people",people);drawPeople()}else{d.dataset.sure=1;d.textContent="Σίγουρα;"}}};
+
+// ---------- ΠΙΝΑΚΑΣ ----------
+(function(){const rows=[[],[],[]];Object.entries(ISO).forEach(([c,v],i)=>rows[Math.floor(i/9)].push([c,v]));
+ $("tbl").innerHTML=`<table><tr><th>Αξία</th>${[1,2,3,4,5,6,7,8,9].map(i=>`<th>${i}</th>`).join("")}</tr>${rows.map(r=>`<tr><th>${r[0][1]>=100?"×100":r[0][1]>=10?"×10":"×1"}</th>${r.map(([c])=>`<td style="${"ϛϟϡ".includes(c)?"color:var(--muted);text-decoration:line-through":"font-weight:700"}">${c}</td>`).join("")}</tr>`).join("")}</table>`})();
+
+// ---------- ΠΛΟΗΓΗΣΗ ----------
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>show(b.dataset.v));
+function show(v){document.querySelectorAll(".view").forEach(x=>x.classList.toggle("on",x.id==="v-"+v));document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x.dataset.v===v));if(v==="people")drawPeople();scrollTo(0,0)}
+document.querySelectorAll("#v-calc input").forEach(i=>i.addEventListener("keydown",e=>{if(e.key==="Enter")run()}));
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>
