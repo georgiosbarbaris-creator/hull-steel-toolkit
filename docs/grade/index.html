@@ -243,6 +243,22 @@ details summary{cursor:pointer;font-weight:600;font-size:14px;color:var(--acc);p
  </div>
 </section>
 
+<!-- ============ TIPS ============ -->
+<section id="t-tips" class="hide">
+ <div class="card">
+  <h2>🛞 Πόσο ξεφουσκώνω;</h2>
+  <div class="g2"><label>Πίεση πλακέτας (δρόμου)<input id="psiRoad" type="number" inputmode="decimal"></label><label>Μονάδα<select id="psiUnit"><option value="psi">psi</option><option value="bar">bar</option></select></label></div>
+  <label class="ck" style="margin-top:8px"><input type="checkbox" id="psiMT"> M/T ελαστικά ή πολύ φορτωμένο (+2–4 psi)</label>
+  <div class="scroll" style="margin-top:8px"><table id="psiCalc"></table></div>
+  <div class="note" style="margin-top:6px">Ποσοστά από οδηγούς Cooper Tires, CarsGuide και Isuzu (άμμος −30 έως −50%). Είναι αρχικές τιμές: δοκίμασε και διόρθωσε. Χωρίς beadlock μην πας κάτω από ~12 psi (0,8 bar).</div>
+ </div>
+ <div class="card">
+  <div class="row"><input id="tipSearch" placeholder="🔎 Ψάξε tip (π.χ. άμμος, μπλοκέ, βίντσι)" style="flex:1"></div>
+  <div class="row" id="tipCats" style="margin-top:8px"></div>
+ </div>
+ <div id="tipList"></div>
+</section>
+
 <!-- ============ GUIDE ============ -->
 <section id="t-info" class="hide">
  <div class="card info">
@@ -310,6 +326,7 @@ details summary{cursor:pointer;font-weight:600;font-size:14px;color:var(--acc);p
  <button data-t="pass"><b>🤔</b>Θα περάσω;</button>
  <button data-t="cmp"><b>⚖️</b>Σύγκριση</button>
  <button data-t="db"><b>📚</b>Βάση</button>
+ <button data-t="tips"><b>💡</b>Tips</button>
  <button data-t="info"><b>ⓘ</b>Οδηγός</button>
 </nav>
 
@@ -337,6 +354,7 @@ details summary{cursor:pointer;font-weight:600;font-size:14px;color:var(--acc);p
 </div></dialog>
 
 <script src="data.js"></script>
+<script src="tips.js"></script>
 <script>
 "use strict";
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
@@ -370,7 +388,7 @@ const GEO_KEYS=["track","h","cg","roofh","wb","clr","app","dep","brk","wade","si
 /* ---- state ---- */
 let S=Object.assign({vid:"x0",wmode:"gvw",load:200,roof:0,curb:null,tmode:"db",tw:265,ta:70,trim:16,tin:33,tType:"at",air:false,lift:0,snork:false,snorkH:1000,drive:"4wd",diff:"open",gear:"low",method:"excel",uneven:false,
  pTerr:"drt",pSlope:30,pUnit:"pct",pDir:"up",pSide:0,pFlat:true,pUneven:false,pStep:0,pRut:0,pHump:0,pDitch:0,pSnow:0,pWater:0,pBed:"rock",pFlow:"0",pStick:10,
- gTerr:"drt",gAuto:"auto",cTerr:"drt",cSort:"fin",cUneven:false,cmp:[]},LS.get("grade_state",{}));
+ gTerr:"drt",gAuto:"auto",psiRoad:32,psiUnit:"psi",psiMT:false,tipCat:"",cTerr:"drt",cSort:"fin",cUneven:false,cmp:[]},LS.get("grade_state",{}));
 let CUSTOM=LS.get("grade_custom",[]), OVER=LS.get("grade_over",{}), GEO=LS.get("grade_geo",{});
 const save=()=>{LS.set("grade_state",S);LS.set("grade_custom",CUSTOM);LS.set("grade_over",OVER);LS.set("grade_geo",GEO)};
 
@@ -524,8 +542,8 @@ function syncInputs(){
  for(const k of GEO_KEYS){const el=$("#g_"+k);if(document.activeElement===el)continue;
   if(k==="cg")el.value=u.cg!=null&&u.cg!==""?u.cg:"";else if(k==="brk")el.value=u.brk!=null&&u.brk!==""?u.brk:(v.geo&&v.geo.brk!=null?v.geo.brk:"");else if(k==="side")el.value=u.side!=null&&u.side!==""?u.side:(v.geo&&v.geo.side||"");else el.value=g[k];
   el.placeholder=k==="cg"?"≈ "+f(g.cg,2):k==="brk"?"≈ "+f(g.brk,1):""}
- for(const k of ["gTerr","gAuto","pTerr","pSlope","pUnit","pDir","pSide","pStep","pRut","pHump","pDitch","pSnow","pWater","pBed","pFlow","pStick","cTerr","cSort"])setVal(k,S[k]);
- $("#pFlat").checked=S.pFlat;$("#pUneven").checked=S.pUneven;$("#cUneven").checked=S.cUneven;
+ for(const k of ["psiRoad","psiUnit","gTerr","gAuto","pTerr","pSlope","pUnit","pDir","pSide","pStep","pRut","pHump","pDitch","pSnow","pWater","pBed","pFlow","pStick","cTerr","cSort"])setVal(k,S[k]);
+ $("#pFlat").checked=S.pFlat;$("#psiMT").checked=S.psiMT;$("#pUneven").checked=S.pUneven;$("#cUneven").checked=S.cUneven;
  $("#stickBox").classList.toggle("hide",S.pFlow!=="stick");
 }
 
@@ -576,6 +594,18 @@ function renderGears(v){const t=terr(S.gTerr),gi=gearsOf(v),au=isAuto(v),rows=ge
  $("#gNote").innerHTML=(gi.src==="src"?"Σχέσεις κιβωτίου από spec κατασκευαστή.":gi.src==="mem"?"Σχέσεις κιβωτίου από τη βάση Claude (από μνήμη, έλεγξέ τες).":gi.src==="est"?'<span class="wrn">Σχέσεις 2η και πάνω = εκτίμηση από την 1η. Βάλε τις πραγματικές στη Βάση → ✏️.</span>':"Δικές σου σχέσεις.")+` Ροπή στις ~${f(rpmT(v),0)} rpm, ρελαντί 800 rpm.`;
  $("#gWhy").innerHTML=`<b>Πώς διαλέγω:</b> παίρνω τη <b>μακρύτερη</b> σχέση που έχει τουλάχιστον <b>30% παραπάνω δύναμη</b> από όση θέλει η κλίση, ώστε να μη χρειαστεί να αλλάξεις στη μέση, και που δεν σε πάει πιο γρήγορα από ${t.vmax} km/h σε ${t.n.toLowerCase()}. Η μακρύτερη σχέση δίνει λιγότερη ροπή στις ρόδες, άρα λιγότερο σπινάρισμα σε γλιστερό. Στην κατηφόρα διαλέγω σχέση που στο ρελαντί κατεβαίνει αργά (≤4 km/h πάνω από 25°, ≤6 km/h για 15–25°).<br>${au?"<b>Αυτόματο:</b> βάλε Low και κλείδωσε τη σχέση με το χειροκίνητο (M/S ή L/2). Ο μετατροπέας ροπής δίνει επιπλέον δύναμη στο ξεκίνημα, οπότε είναι πιο ανεκτικό από το manual.":"<b>Manual:</b> διάλεξε τη σχέση <b>πριν</b> την ανηφόρα και μην αλλάξεις μέσα της. Αν σβήσει: φρένο, μίζα σε ταχύτητα αν το επιτρέπει το εγχειρίδιο, ή όπισθεν κάτω ίσια."} Σε άμμο, λάσπη και βαθύ χιόνι θέλεις <b>ορμή</b> (${t.vmin?`τουλάχιστον ~${t.vmin} km/h`:"σταθερή ταχύτητα"}). Σε βράχια θέλεις <b>αργά και σταθερά</b> (1η–2η L).`;
 }
+
+const PSI_PCT=[["Άσφαλτος / δρόμος",1,"όλες"],["Γρήγορο χαλίκι, χωματόδρομος",.85,"≤ 70 km/h"],["Κυματισμένος / τραχύς χωματόδρομος",.8,"≤ 60 km/h"],["Βράχια",.7,"βάδην"],["Λάσπη ρηχή (με πάτο)",.75,"≤ 30 km/h"],["Λάσπη βαθιά",.6,"≤ 20 km/h"],["Χιόνι φρέσκο",.6,"≤ 30 km/h"],["Άμμος σφιχτή / παραλία",.65,"≤ 40 km/h"],["Άμμος μαλακή / αμμόλοφοι",.5,"≤ 30 km/h"],["Ξεκόλλημα στην άμμο",.4,"βάδην, για λίγο"]];
+function renderTips(){const u=S.psiUnit,road=num(S.psiRoad)*(u==="bar"?14.5:1),add=S.psiMT?3:0;
+ $("#psiCalc").innerHTML=`<tr><th>Τερέν</th><th>%</th><th>psi</th><th>bar</th><th>Ταχύτητα</th></tr>`+PSI_PCT.map(([n,p,v])=>{let x=p===1?road:Math.max(12,road*p+add);return `<tr><td>${n}</td><td>${Math.round(p*100)}%</td><td><b>${f(x,0)}</b></td><td>${f(x/14.5,1)}</td><td class="note">${v}</td></tr>`}).join("");
+ const cats=[...new Set(TIPS.map(t=>t.c))];
+ $("#tipCats").innerHTML=`<button class="btn sm ${S.tipCat?"":"p"}" data-c="">Όλα</button>`+cats.map(c=>`<button class="btn sm ${S.tipCat===c?"p":""}" data-c="${c}">${c}</button>`).join("");
+ $$("#tipCats [data-c]").forEach(b=>b.onclick=()=>{S.tipCat=b.dataset.c;render()});
+ const q=$("#tipSearch").value.trim().toLowerCase();let n=0;
+ $("#tipList").innerHTML=TIPS.filter(t=>!S.tipCat||t.c===S.tipCat).map(t=>{const it=t.i.filter(x=>!q||x.toLowerCase().includes(q)||t.c.toLowerCase().includes(q)||t.t.toLowerCase().includes(q));if(!it.length)return "";n+=it.length;
+  return `<div class="card"><h2>${t.c} <span class="note">· ${t.t}</span></h2>${it.map(x=>`<div style="font-size:14.5px;margin:7px 0;padding-left:14px;text-indent:-14px">• ${x}</div>`).join("")}</div>`}).join("")||'<div class="card note">Δεν βρέθηκε tip.</div>';
+}
+function terrTips(id,k){const out=[];for(const t of TIPS.slice().sort((a,b)=>(a.c.includes("Μπλοκέ")?1:0)-(b.c.includes("Μπλοκέ")?1:0)))if(t.terr.includes(id))out.push(...t.i.slice(0,k).map(x=>`<span class="note">${t.c}:</span> ${x}`));return out}
 
 /* ---- will I pass ---- */
 function st(ratio){return ratio>=1.25?"ok":ratio>=1?"wrn":"bad"}
@@ -649,7 +679,8 @@ function renderPass(){
  if(side>0&&num(S.roof)>0)tips.push(`Κατέβασε φορτίο από την οροφή: τα ${f(num(S.roof),0)} kg ψηλά ανεβάζουν το κέντρο βάρους.`);
  tips.push(`Πίεση για ${t.n.toLowerCase()}: <b>${t.psi} psi</b> (αρχική τιμή).`);
  if(o.uneven&&S.diff==="open")tips.push("Σε σταυρώσεις διάλεξε γραμμή που κρατάει και τις 4 ρόδες κάτω.");
- tips.push("Περπάτα πρώτα το σημείο, έχε έτοιμο recovery gear και μην πας μόνος.");
+ tips.push(...terrTips(t.id,2).slice(0,6));
+ tips.push("Περπάτα πρώτα το σημείο, έχε έτοιμο recovery gear και μην πας μόνος. Περισσότερα στην καρτέλα 💡 Tips.");
  $("#passOut").innerHTML=`<div class="verdict v-${all}">${big}</div>
   ${draw.length?`<div class="card">${draw.map(d=>`<svg class="svg" viewBox="0 0 360 ${d.includes("ανατροπή")?160:150}">${d}</svg>`).join("")}</div>`:""}
   <div class="card"><div class="note">${esc(t.n)}${th>0?` · ${S.pDir==="up"?"ανηφόρα":"κατηφόρα"} ${f(th,1)}° = ${f(tn*100,0)}%`:""}</div>${chk.map(c=>`<div class="chk"><div class="ic">${ICON[c.s]}</div><div class="t"><b>${c.t}</b><span>${c.d}</span>${c.w?`<i>👉 ${c.w}</i>`:""}</div></div>`).join("")}</div>
@@ -731,11 +762,12 @@ $("#geoReset").onclick=()=>{delete GEO[S.vid];render()};
 for(const k of ["pTerr","pUnit","pDir","pFlow","pBed","cTerr","cSort","gTerr","gAuto"])$("#"+k).onchange=e=>{S[k]=e.target.value;render()};
 for(const k of ["pSlope","pSide","pStep","pRut","pHump","pDitch","pSnow","pWater","pStick"])$("#"+k).oninput=e=>{S[k]=e.target.value;render()};
 $("#pFlat").onchange=e=>{S.pFlat=e.target.checked;render()};$("#pUneven").onchange=e=>{S.pUneven=e.target.checked;render()};$("#cUneven").onchange=e=>{S.cUneven=e.target.checked;render()};
-$("#cSearch").oninput=renderPick;$("#dbSearch").oninput=renderDb;
+$("#cSearch").oninput=renderPick;$("#tipSearch").oninput=renderTips;
+$("#psiRoad").oninput=e=>{S.psiRoad=e.target.value;render()};$("#psiUnit").onchange=e=>{const old=S.psiUnit;S.psiUnit=e.target.value;if(old!==S.psiUnit)S.psiRoad=Math.round((S.psiUnit==="bar"?num(S.psiRoad)/14.5:num(S.psiRoad)*14.5)*10)/10;render()};$("#psiMT").onchange=e=>{S.psiMT=e.target.checked;render()};$("#dbSearch").oninput=renderDb;
 function go(t){$$(".nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===t));$$("main>section").forEach(s=>s.classList.toggle("hide",s.id!=="t-"+t));window.scrollTo(0,0)}
 $$(".nav button").forEach(b=>b.onclick=()=>go(b.dataset.t));
 
-function render(){syncInputs();renderVeh();renderPass();renderCmp();renderDb();save()}
+function render(){syncInputs();renderTips();renderVeh();renderPass();renderCmp();renderDb();save()}
 $("#pTerr").innerHTML=terrOpts();$("#gTerr").innerHTML=terrOpts();$("#cTerr").innerHTML=terrOpts();
 $("#terrInfo").innerHTML=`<tr><th>Έδαφος</th><th>μ</th><th>fr</th><th>Air down</th><th>M/T</th></tr>`+TERR.map(t=>`<tr><td>${t.n}</td><td>${t.mu}</td><td>${t.fr}</td><td>${t.air>1?"+"+Math.round((t.air-1)*100)+"%":"—"}</td><td>${t.mt>1?"+"+Math.round((t.mt-1)*100)+"%":"—"}</td></tr>`).join("");
 $("#psiTbl").innerHTML=`<tr><th>Έδαφος</th><th>psi</th></tr>`+TERR.map(t=>`<tr><td>${t.n}</td><td>${t.psi}</td></tr>`).join("");
