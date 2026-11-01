@@ -101,6 +101,7 @@ table{border-collapse:collapse;width:100%;font-size:14px}td,th{border:1px solid 
    <li><b>Προσωπικότητα</b>: από τα σύμφωνα. Η εικόνα σου, όπως σε βλέπουν οι άλλοι.</li>
    <li><b>Ολοκλήρωση (Ωρίμανση)</b>: Πορεία Ζωής + Πεπρωμένο. Πού καταλήγεις μετά τα 35–40.</li>
   </ol>
+  <p><b>Η λέξη σου</b>: μία λέξη-σύμβολο από τον συνδυασμό Πορείας Ζωής × Ψυχής (81 συνδυασμοί).</p>
   <h3>Πώς γίνεται η αναγωγή</h3>
   <p>Προσθέτουμε τα ψηφία μέχρι να μείνει ένα (π.χ. 38 → 3+8 = 11). Τα <b>11, 22, 33</b> είναι <b>κύριοι αριθμοί</b> και δεν τα ανάγουμε. Στην Πορεία Ζωής ανάγουμε χωριστά μήνα, ημέρα και έτος και μετά τα προσθέτουμε. Στο όνομα ανάγουμε κάθε όνομα χωριστά και μετά τα προσθέτουμε.</p>
   <h3>Οι κύκλοι</h3>
@@ -246,6 +247,8 @@ const PD={1:"Ξεκίνα κάτι",2:"Συνεργάσου",3:"Εκφράσου
 // ---------- ΣΥΝΘΕΣΗ ΠΡΟΦΙΛ ----------
 const nm=n=>N[n].a.replace(/^Ο /,"").replace(/ · .*/,"");
 const FAM=[[[1,5,7],"του νου και της ανεξαρτησίας","σκέφτεσαι, ψάχνεις και θέλεις να χαράζεις μόνος τη ρότα σου"],[[3,6,9],"της καρδιάς και της δημιουργίας","νιώθεις, εκφράζεσαι και δίνεσαι στους άλλους"],[[2,4,8],"της πράξης και της ύλης","χτίζεις, οργανώνεις και φέρνεις απτά αποτελέσματα"]];
+const WORD=[["Αιχμή", "Πλώρη", "Σπίθα", "Σημαία", "Άνεμος", "Ασπίδα", "Πυξίδα", "Σκήπτρο", "Δάδα"], ["Κρίκος", "Λιμάνι", "Μελωδία", "Άγκυρα", "Πανί", "Φωλιά", "Καθρέφτης", "Ζυγός", "Γέφυρα"], ["Φλόγα", "Τραγούδι", "Πυροτέχνημα", "Ψηφιδωτό", "Χορός", "Γιορτή", "Ποίημα", "Σκηνή", "Ίρις"], ["Κολόνα", "Κυψέλη", "Εργαστήρι", "Βράχος", "Δρόμος", "Εστία", "Βιβλιοθήκη", "Οχυρό", "Ναός"], ["Αετός", "Δελφίνι", "Ταξίδι", "Καραβάνι", "Θύελλα", "Νόστος", "Ορίζοντας", "Ρεύμα", "Οδύσσεια"], ["Βελανιδιά", "Αγκαλιά", "Κήπος", "Τζάκι", "Καταφύγιο", "Καρδιά", "Μύρο", "Στέγη", "Πηγή"], ["Κορυφή", "Λίμνη", "Μύθος", "Ρίζα", "Αστρολάβος", "Κερί", "Σιωπή", "Κλειδί", "Φάρος"], ["Στέμμα", "Πλοηγός", "Θέατρο", "Θησαυρός", "Μηχανή", "Ακρόπολη", "Πύργος", "Τιτάνας", "Κολοσσός"], ["Λάβαρο", "Περιστέρι", "Ωδή", "Κιβωτός", "Πέλαγος", "Ελιά", "Αστέρι", "Ήλιος", "Ωκεανός"]];
+const word=r=>WORD[single(r.lp)-1][single(r.su.n)-1];
 let lastR=null,lastName="";
 const q=n=>`το <b>${n}</b> («${nm(n)}»)`;
 const KLs={1:"αυτοπεποίθηση",2:"υπομονή και συνεργασία",3:"την έκφραση",4:"πειθαρχία και τάξη",5:"προσαρμοστικότητα",6:"ευθύνη στις σχέσεις",7:"εμπιστοσύνη",8:"διαχείριση χρήματος και εξουσίας",9:"συμπόνια"};
@@ -291,7 +294,9 @@ function synth(r,name){
  const one=`Δρόμος: ${nm(r.lp)} · Χέρια: ${nm(r.ex.n)} · Καρδιά: ${nm(r.su.n)} · Πρόσωπο: ${nm(r.pe.n)} · Ωρίμανση: ${nm(r.ma)}`;
  return `<h2 style="margin:16px 4px 8px">⑥ Το αριθμολογικό προφίλ</h2><div class="card" style="border:2px solid var(--acc)">
  <div style="text-align:center"><div class="muted">Αριθμολογική υπογραφή</div><div style="font-size:20px;font-weight:800">${esc(name)}</div>
- <div style="font-size:26px;font-weight:800;color:var(--hi);letter-spacing:2px">${sig}</div><p style="font-style:italic;margin:6px 0 4px;font-size:14px">${one}</p></div>
+ <div class="muted" style="margin-top:8px">Η λέξη σου</div><div style="font-size:38px;font-weight:800;color:var(--acc);line-height:1.1">${word(r)}</div>
+ <div class="muted" style="font-size:12.5px">από τον δρόμο ${r.lp} («${nm(r.lp)}») και την καρδιά ${r.su.n} («${nm(r.su.n)}»)</div>
+ <div style="font-size:22px;font-weight:800;color:var(--hi);letter-spacing:2px;margin-top:8px">${sig}</div><p style="font-style:italic;margin:6px 0 4px;font-size:14px">${one}</p></div>
  ${P.map(([h,x])=>`<h3>${h}</h3><p style="margin:4px 0 8px">${x}</p>`).join("")}
  <div class="row" style="margin-top:10px"><button class="ghost" id="aiBtn">✨ Γράψε το με Claude (πιο προσωπικό)</button><button class="ghost" id="cpBtn">📋 Αντιγραφή</button></div>
  <div id="aiKey" style="display:none;margin-top:8px"><label>Claude API key (μία φορά· μένει μόνο στο κινητό)</label><input id="aiKeyIn" type="password" placeholder="sk-ant-..."></div>
@@ -362,7 +367,7 @@ function core(title,sub,n,key,calc){const x=N[n];
 function render(r,name){
  const ago=(a)=>a[1]==null?`από ${a[0]} και μετά`:`${a[0]}–${a[1]} ετών`;
  const cur=i=>r.age>=r.ages[i][0]&&(r.ages[i][1]==null||r.age<=r.ages[i][1]);
- let h=`<div class="card" style="background:linear-gradient(135deg,#2a1a4a,#5b3a9e);color:#fff;border:0"><div style="font-size:13px;opacity:.8">Αριθμολογικό προφίλ</div><div style="font-size:20px;font-weight:800">${esc(name)}</div><div style="opacity:.85;font-size:14px">Γέννηση ${r.D} ${MNg[+$("bd").value.split("-")[1]-1]} ${$("bd").value.split("-")[0]} · ηλικία ${r.age}</div>
+ let h=`<div class="card" style="background:linear-gradient(135deg,#2a1a4a,#5b3a9e);color:#fff;border:0"><div style="font-size:13px;opacity:.8">Αριθμολογικό προφίλ</div><div style="font-size:20px;font-weight:800">${esc(name)} <span style="color:#ffd27a">· ${word(r)}</span></div><div style="opacity:.85;font-size:14px">Γέννηση ${r.D} ${MNg[+$("bd").value.split("-")[1]-1]} ${$("bd").value.split("-")[0]} · ηλικία ${r.age}</div>
  <div class="row" style="margin-top:10px;gap:6px">${[["Πορεία",r.lp],["Πεπρωμ.",r.ex.n],["Ψυχή",r.su.n],["Προσωπ.",r.pe.n],["Ολοκλ.",r.ma]].map(([l,n])=>`<div style="background:rgba(255,255,255,.12);border-radius:10px;padding:6px 10px;text-align:center"><div style="font-size:22px;font-weight:800;color:#ffd27a">${n}</div><div style="font-size:11px">${l}</div></div>`).join("")}</div></div>`;
  h+=`<h2 style="margin:16px 4px 8px">① Οι 5 βασικοί αριθμοί</h2>`;
  h+=core("1 · Πορεία Ζωής","Ο δρόμος σου · από την ημερομηνία γέννησης",r.lp,"lp",r.lpCalc);
@@ -420,7 +425,7 @@ let people=store.get("ar_people",[]);
 $("save").onclick=()=>{const p={fn:$("fn").value.trim(),mn:$("mn").value.trim(),ln:$("ln").value.trim(),bd:$("bd").value};if(!p.fn||!p.ln||!p.bd)return;
  people=[p,...people.filter(x=>!(x.fn===p.fn&&x.mn===p.mn&&x.ln===p.ln&&x.bd===p.bd))];store.set("ar_people",people);$("save").textContent="✓ Αποθηκεύτηκε";setTimeout(()=>$("save").textContent="💾 Αποθήκευση",1400)};
 function drawPeople(){$("people").innerHTML=people.length?people.map((p,i)=>{const r=compute(p.fn,p.mn,p.ln,p.bd,today());
- return `<div class="list-item"><div><b>${esc([p.fn,p.mn,p.ln].filter(Boolean).join(" "))}</b><div class="muted">${p.bd.split("-").reverse().join("/")} · ${r.lp}/${r.ex.n}/${r.su.n}/${r.pe.n}/${r.ma} · Έτος ${r.py}</div></div>
+ return `<div class="list-item"><div><b>${esc([p.fn,p.mn,p.ln].filter(Boolean).join(" "))}</b> <span style="color:var(--acc);font-weight:700">· ${word(r)}</span><div class="muted">${p.bd.split("-").reverse().join("/")} · ${r.lp}/${r.ex.n}/${r.su.n}/${r.pe.n}/${r.ma} · Έτος ${r.py}</div></div>
  <div class="row" style="flex-wrap:nowrap"><button class="ghost" style="padding:7px 10px" data-open="${i}">Άνοιγμα</button><button class="ghost" style="padding:7px 10px" data-del="${i}">🗑</button></div></div>`}).join(""):`<div class="empty">Υπολόγισε κάποιον και πάτα «Αποθήκευση».</div>`}
 $("people").onclick=e=>{const o=e.target.closest("[data-open]"),d=e.target.closest("[data-del]");
  if(o){const p=people[+o.dataset.open];$("fn").value=p.fn;$("mn").value=p.mn;$("ln").value=p.ln;$("bd").value=p.bd;show("calc");run()}
