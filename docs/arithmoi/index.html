@@ -242,6 +242,74 @@ const MN=["Ιανουάριος","Φεβρουάριος","Μάρτιος","Απ
 const MNg=["Ιανουαρίου","Φεβρουαρίου","Μαρτίου","Απριλίου","Μαΐου","Ιουνίου","Ιουλίου","Αυγούστου","Σεπτεμβρίου","Οκτωβρίου","Νοεμβρίου","Δεκεμβρίου"];
 const PD={1:"Ξεκίνα κάτι",2:"Συνεργάσου",3:"Εκφράσου",4:"Δούλεψε",5:"Άλλαξε",6:"Φρόντισε",7:"Σκέψου",8:"Αποφάσισε",9:"Κλείσε"};
 
+
+// ---------- ΣΥΝΘΕΣΗ ΠΡΟΦΙΛ ----------
+const nm=n=>N[n].a.replace(/^Ο /,"").replace(/ · .*/,"");
+const FAM=[[[1,5,7],"του νου και της ανεξαρτησίας","σκέφτεσαι, ψάχνεις και θέλεις να χαράζεις μόνος τη ρότα σου"],[[3,6,9],"της καρδιάς και της δημιουργίας","νιώθεις, εκφράζεσαι και δίνεσαι στους άλλους"],[[2,4,8],"της πράξης και της ύλης","χτίζεις, οργανώνεις και φέρνεις απτά αποτελέσματα"]];
+let lastR=null,lastName="";
+const q=n=>`το <b>${n}</b> («${nm(n)}»)`;
+const KLs={1:"αυτοπεποίθηση",2:"υπομονή και συνεργασία",3:"την έκφραση",4:"πειθαρχία και τάξη",5:"προσαρμοστικότητα",6:"ευθύνη στις σχέσεις",7:"εμπιστοσύνη",8:"διαχείριση χρήματος και εξουσίας",9:"συμπόνια"};
+const andJ=a=>a.length<2?a.join(""):a.slice(0,-1).join(", ")+" και "+a[a.length-1];
+function synth(r,name){
+ const lp=single(r.lp),ex=single(r.ex.n),su=single(r.su.n),pe=single(r.pe.n),ma=single(r.ma);
+ const core=[lp,ex,su,pe,ma,single(r.bdn)];
+ const P=[];
+ // 1. πυρήνας
+ let t=`Στον πυρήνα σου είσαι <b>${nm(r.lp)}</b> (Πορεία ${r.lp}): ${N[r.lp].k.toLowerCase()}. Για να βαδίσεις αυτόν τον δρόμο, η ζωή σού έδωσε για εργαλείο ${q(r.ex.n)}: ${N[r.ex.n].p}. `;
+ const a=cm(lp,ex);
+ t+=lp===ex?"Ο δρόμος και τα ταλέντα σου είναι το ίδιο πράγμα, μια διπλή, καθαρή ενέργεια: ό,τι κάνεις καλά είναι ακριβώς αυτό που ήρθες να κάνεις.":a>=4?"Ο δρόμος και τα ταλέντα σου δουλεύουν μαζί: ό,τι σου βγαίνει φυσικά είναι αυτό που χρειάζεται η πορεία σου.":a===3?"Ο δρόμος και τα ταλέντα σου συνεννοούνται, αλλά θέλει να τα συντονίζεις συνειδητά.":"Ο δρόμος σου ζητά άλλα από αυτά που σου βγαίνουν αυθόρμητα. Εκεί βρίσκεται η μεγάλη σου άσκηση, και από εκεί θα βγει η μεγάλη σου ωρίμανση.";
+ P.push(["🧭 Ο πυρήνας",t]);
+ // 2. μέσα / έξω
+ const b=cm(su,pe);
+ t=`Μέσα σου λαχταράς ${REL[su][1]}, γιατί η ψυχή σου είναι <b>${nm(r.su.n)}</b> (${r.su.n}). Οι άλλοι όμως, με την πρώτη ματιά, βλέπουν ${q(r.pe.n)}. ${N[r.pe.n].pe.replace(/^Οι άλλοι σε βλέπουν/,"Σε βλέπουν")} `;
+ t+=su===pe?"Αυτό που δείχνεις είναι ακριβώς αυτό που είσαι· σπάνια ειλικρίνεια.":b>=4?"Η εικόνα σου και η καρδιά σου ταιριάζουν· όποιος σε γνωρίσει καλύτερα δεν θα απογοητευτεί.":b===3?"Όποιος περάσει την πρώτη εικόνα θα βρει έναν άλλον, πιο βαθύ άνθρωπο.":"Γι' αυτό συχνά σε παρεξηγούν: η εικόνα σου κρύβει την καρδιά σου. Άφησε τους κοντινούς σου να δουν τι λαχταράς πραγματικά.";
+ P.push(["❤️ Μέσα κι έξω",t]);
+ // 3. κυρίαρχες ενέργειες
+ const fc=FAM.map(([g])=>core.filter(n=>g.includes(n)).length);const fi=fc.indexOf(Math.max(...fc));
+ const rep={};core.forEach(n=>rep[n]=(rep[n]||0)+1);const top=Object.entries(rep).filter(([,c])=>c>=2).sort((x,y)=>y[1]-x[1]);
+ t=`Οι αριθμοί σου γέρνουν προς την πλευρά ${FAM[fi][1]}: ${FAM[fi][2]}. `;
+ if(top.length)t+=top.map(([n,c])=>`Το <b>${n}</b> εμφανίζεται ${c} φορές στο προφίλ σου, άρα ${N[n].k.toLowerCase()} είναι ο τόνος της ζωής σου.`).join(" ")+" ";
+ const masters=[["Πορεία",r.lp],["Πεπρωμένο",r.ex.n],["Ψυχή",r.su.n],["Προσωπικότητα",r.pe.n],["Ολοκλήρωση",r.ma]].filter(([,n])=>n>9);
+ if(masters.length)t+=`Έχεις κύριο αριθμό (${masters.map(([l,n])=>l+" "+n).join(", ")}): υψηλή τάση και μεγαλύτερες απαιτήσεις, αλλά και μεγαλύτερο δυναμικό από το συνηθισμένο. `;
+ if(r.hp.length)t+=`Το κρυφό σου πάθος είναι το <b>${r.hp.join(" και ")}</b> (${r.hp.map(k=>nm(k)).join(", ")}), μια δύναμη που ξεχειλίζει από το ίδιο σου το όνομα.`;
+ P.push(["⚡ Οι κυρίαρχες ενέργειες",t]);
+ // 4. μαθήματα
+ const cur=r.ages.findIndex(a=>r.age>=a[0]&&(a[1]==null||r.age<=a[1]));
+ t=`Η μεγαλύτερη δύναμή σου: ${N[lp].p.split(", ").slice(0,2).join(" και ")}. Η μεγαλύτερη παγίδα σου: ${andJ([...new Set([N[su].m.split(", ")[0],N[lp].m.split(", ")[0]])])}. `;
+ if(r.debts.length)t+=`Κουβαλάς καρμικό χρέος ${r.debts.join(", ")}: ${r.debts.map(d=>KDT[d].split(": ")[1].split(".")[0].toLowerCase()).join("· ")}. `;
+ const kl=r.missing.filter(k=>k!==6&&k!==9);if(kl.length)t+=`Από το όνομά σου ${kl.length>1?"λείπουν τα":"λείπει το"} ${andJ(kl.map(String))}, άρα η ζωή θα σου ζητήσει να καλλιεργήσεις ${andJ(kl.map(k=>KLs[k]))}.`;
+ P.push(["⚓ Τα μαθήματά σου",t]);
+ // 5. τώρα
+ const cp=cur>=0?r.pin[cur]:null,cc=cur>=0?r.ch[cur]:null;
+ t=cp!=null?`Βρίσκεσαι στην ${cur+1}η μεγάλη περίοδο της ζωής σου, με κορυφή το <b>${cp}</b> (${nm(cp)}) και πρόκληση το ${cc}. ${CH[cc]} `:"";
+ t+=`Το ${r.RY} είναι για σένα <b>Προσωπικό Έτος ${r.py}</b>. ${N[r.py].py}`;
+ P.push(["⏳ Πού βρίσκεσαι τώρα",t]);
+ // 6. ωρίμανση
+ t=`Με την ωριμότητα, όλα αυτά συγκλίνουν στο <b>${r.ma}</b> («${nm(r.ma)}»). ${N[r.ma].ma} Και το δώρο της ημέρας γέννησής σου, ${q(r.bdn)}, σε συνοδεύει σε όλη τη διαδρομή.`;
+ P.push(["🌅 Η ωρίμανση",t]);
+ const sig=`${r.lp}·${r.ex.n}·${r.su.n}·${r.pe.n}·${r.ma}`;
+ const one=`Δρόμος: ${nm(r.lp)} · Χέρια: ${nm(r.ex.n)} · Καρδιά: ${nm(r.su.n)} · Πρόσωπο: ${nm(r.pe.n)} · Ωρίμανση: ${nm(r.ma)}`;
+ return `<h2 style="margin:16px 4px 8px">⑥ Το αριθμολογικό προφίλ</h2><div class="card" style="border:2px solid var(--acc)">
+ <div style="text-align:center"><div class="muted">Αριθμολογική υπογραφή</div><div style="font-size:20px;font-weight:800">${esc(name)}</div>
+ <div style="font-size:26px;font-weight:800;color:var(--hi);letter-spacing:2px">${sig}</div><p style="font-style:italic;margin:6px 0 4px;font-size:14px">${one}</p></div>
+ ${P.map(([h,x])=>`<h3>${h}</h3><p style="margin:4px 0 8px">${x}</p>`).join("")}
+ <div class="row" style="margin-top:10px"><button class="ghost" id="aiBtn">✨ Γράψε το με Claude (πιο προσωπικό)</button><button class="ghost" id="cpBtn">📋 Αντιγραφή</button></div>
+ <div id="aiKey" style="display:none;margin-top:8px"><label>Claude API key (μία φορά· μένει μόνο στο κινητό)</label><input id="aiKeyIn" type="password" placeholder="sk-ant-..."></div>
+ <div id="aiOut"></div></div>`;
+}
+async function aiProfile(){
+ const r=lastR;if(!r)return;let key="";try{key=localStorage.getItem("risq_api_key")||""}catch(e){}
+ if(!key){const v=$("aiKeyIn").value.trim();if(!v){$("aiKey").style.display="block";$("aiKeyIn").focus();return}key=v;try{localStorage.setItem("risq_api_key",v)}catch(e){}}
+ $("aiOut").innerHTML=`<p class="muted">✨ Γράφει…</p>`;
+ const facts=`Όνομα: ${lastName}. Ηλικία ${r.age}. Πορεία Ζωής ${r.lp} (${N[r.lp].a}), Πεπρωμένο ${r.ex.n} (${N[r.ex.n].a}), Ψυχή ${r.su.n} (${N[r.su.n].a}), Προσωπικότητα ${r.pe.n} (${N[r.pe.n].a}), Ολοκλήρωση ${r.ma} (${N[r.ma].a}), Γενέθλια ${r.bdn}. Κρυφό πάθος ${r.hp.join(",")}. Καρμικά χρέη: ${r.debts.join(",")||"κανένα"}. Ψηφία που λείπουν: ${r.missing.join(",")||"κανένα"}. Τωρινή κορυφή/πρόκληση: ${(()=>{const i=r.ages.findIndex(a=>r.age>=a[0]&&(a[1]==null||r.age<=a[1]));return i>=0?r.pin[i]+"/"+r.ch[i]:"-"})()}. Προσωπικό έτος ${r.RY}: ${r.py}.\n\nΠρόχειρη σύνθεση:\n${document.querySelector("#synth")?.innerText||""}`;
+ try{const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"content-type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+  body:JSON.stringify({model:"claude-haiku-5-5",max_tokens:1200,system:"Είσαι έμπειρος αριθμολόγος που γράφει στα ελληνικά. Γράψε ένα ενιαίο, ζεστό και ξεχωριστό αριθμολογικό προφίλ (220-300 λέξεις) σε δεύτερο πρόσωπο, που δένει ΟΛΟΥΣ τους αριθμούς σε μία ταυτότητα: πώς αλληλεπιδρούν, πού συγκρούονται, τι σημαίνουν μαζί. Όχι λίστες, όχι επικεφαλίδες, 3-4 παράγραφοι, και στο τέλος μία φράση-υπογραφή σε εισαγωγικά. Μην επινοείς αριθμούς. Μην κάνεις προβλέψεις για υγεία, θάνατο ή χρήματα. Μόνο το κείμενο.",messages:[{role:"user",content:facts}]})});
+  const j=await res.json().catch(()=>({}));if(!res.ok)throw new Error(res.status===401?"Λάθος API key":(j.error&&j.error.message)||("Σφάλμα "+res.status));
+  const txt=(j.content||[]).filter(c=>c.type==="text").map(c=>c.text).join("").trim();
+  $("aiOut").innerHTML=`<h3>✨ Η εκδοχή του Claude</h3>${txt.split(/\n\s*\n/).map(p=>`<p style="margin:4px 0 8px">${esc(p)}</p>`).join("")}`;
+ }catch(e){$("aiOut").innerHTML=`<p class="muted">⚠️ ${esc(e.message)}${navigator.onLine?"":" (χρειάζεται internet)"}</p>`}
+}
+
 // ---------- ΥΠΟΛΟΓΙΣΜΟΣ ----------
 function nameNum(parts,filter){
  let tot=0,debts=[],lines=[];
@@ -335,7 +403,10 @@ function run(){
  if(!fn||!ln||!bd){$("out").innerHTML=`<div class="card">Συμπλήρωσε όνομα, επώνυμο και ημερομηνία γέννησης.</div>`;return}
  if(!letters(fn+ln).length){$("out").innerHTML=`<div class="card">Το όνομα δεν έχει γράμματα που αναγνωρίζω.</div>`;return}
  const r=compute(fn,$("mn").value,ln,bd,$("rd").value||today());
- $("out").innerHTML=render(r,[fn,$("mn").value.trim(),ln].filter(Boolean).join(" "));
+ const full=[fn,$("mn").value.trim(),ln].filter(Boolean).join(" ");lastR=r;lastName=full;
+ $("out").innerHTML=render(r,full)+`<div id="synth">${synth(r,full)}</div>`;
+ $("aiBtn").onclick=aiProfile;
+ $("cpBtn").onclick=()=>{try{navigator.clipboard.writeText($("synth").innerText).then(()=>{$("cpBtn").textContent="✓ Αντιγράφηκε"}).catch(()=>{})}catch(e){}};
  $("out").scrollIntoView({behavior:"smooth"});
 }
 const today=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
