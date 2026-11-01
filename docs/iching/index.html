@@ -71,7 +71,7 @@ table{border-collapse:collapse;width:100%;font-size:14px}td,th{border:1px solid 
   <div class="coins"><div class="coin" id="c0"></div><div class="coin" id="c1"></div><div class="coin" id="c2"></div></div>
   <div id="tossInfo" class="muted" style="text-align:center;min-height:22px"></div>
   <div class="hexwrap" style="margin:12px 0"><div class="hex" id="build"></div></div>
-  <div class="row" style="justify-content:center"><button id="toss" style="font-size:17px;padding:14px 22px">🪙 Ρίξε τα νομίσματα</button></div>
+  <div class="row" style="justify-content:center"><button id="toss" style="font-size:17px;padding:14px 22px">🪙 Ρίξε τα νομίσματα</button><button class="ghost" id="clr" style="font-size:15px;padding:14px 16px">🧹 Καθαρισμός</button></div>
   <p class="muted" style="text-align:center;margin:8px 0 0">Οι γραμμές χτίζονται από κάτω προς τα πάνω.</p>
  </div>
  <div id="reading"></div>
@@ -172,7 +172,10 @@ function finish(){const q=$("q").value.trim();const e={id:Date.now(),t:new Date(
  const J=store.get("ic_journal",[]);J.unshift(e);store.set("ic_journal",J.slice(0,300));
  $("reading").innerHTML=reading(e)+`<div class="row" style="justify-content:center;margin-bottom:14px"><button class="ghost" id="newQ">🔄 Νέα ερώτηση</button></div>`;
  bindReading(e);$("newQ").onclick=reset;$("reading").scrollIntoView({behavior:"smooth"});}
-function reset(){cast=[];$("q").value="";$("reading").innerHTML="";$("tossInfo").textContent="";delete $("toss").dataset.warned;
+$("clr").onclick=()=>{if((cast.length||$("q").value.trim())&&!confirmClear())return;reset()};
+function confirmClear(){const b=$("clr");if(b.dataset.sure){delete b.dataset.sure;b.textContent="🧹 Καθαρισμός";return true}
+ b.dataset.sure=1;b.textContent="❓ Σίγουρα; πάτα ξανά";setTimeout(()=>{if(b.dataset.sure){delete b.dataset.sure;b.textContent="🧹 Καθαρισμός"}},3000);return false}
+function reset(){cast=[];busy=false;$("q").value="";$("reading").innerHTML="";$("tossInfo").textContent="";delete $("toss").dataset.warned;
  [0,1,2].forEach(i=>{$("c"+i).className="coin";$("c"+i).innerHTML=""});drawBuild();scrollTo(0,0);}
 
 // ---------- ΑΝΑΓΝΩΣΗ (Zhu Xi) ----------
@@ -217,11 +220,20 @@ async function ai(e,out){let key="";try{key=localStorage.getItem("risq_api_key")
  const facts=`Ερώτηση: ${e.q||"(γενικός χρησμός)"}\nΕξάγραμμο ${a.p} «${P[3]}» (${P[2]}). Τρίγραμμα: ${TRI[P[1]][1]} κάτω, ${TRI[P[0]][1]} πάνω.\nΚρίση: ${P[4]}\nΕικόνα: ${P[5]}\nΚινούμενες γραμμές: ${a.chg.map(i=>(i+1)+": "+P[6][i]).join(" | ")||"καμία"}\n${R?`Μεταβαίνει στο ${a.r} «${R[3]}»: ${R[4]}`:""}\nΚύρια απάντηση (κανόνες Zhu Xi): ${ans.rule} ${tmp.innerText}`;
  try{const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"content-type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
   body:JSON.stringify({model:"claude-haiku-5-5",max_tokens:900,system:"Είσαι σοφός, προσγειωμένος ερμηνευτής του I Ching και γράφεις στα ελληνικά. Εφάρμοσε τον χρησμό στη συγκεκριμένη ερώτηση: 2-3 σύντομες παράγραφοι σε δεύτερο πρόσωπο, με βάση την κύρια απάντηση, τις εικόνες του εξαγράμμου και την κατεύθυνση της αλλαγής. Δώσε πρακτική στάση και μία ερώτηση για στοχασμό. Μην επινοείς κείμενα του βιβλίου, μην υπόσχεσαι βέβαιες προβλέψεις, και για υγεία, νομικά ή οικονομικά θέματα πρότεινε και ειδικό. Μόνο το κείμενο.",messages:[{role:"user",content:facts}]})});
-  const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(r.status===401?"Λάθος API key":(j.error&&j.error.message)||("Σφάλμα "+r.status));
+  const j=await r.json().catch(()=>({}));if(!r.ok){const m=(j.error&&j.error.message)||"";const err=new Error(
+   r.status===401?"Το API key δεν είναι έγκυρο (401). Βάλε νέο key από console.anthropic.com → API Keys.":
+   /credit balance/i.test(m)?"Ο λογαριασμός API δεν έχει υπόλοιπο. Στο console.anthropic.com → Billing βάλε credits (π.χ. 5$).":
+   r.status===403?"Το key δεν έχει δικαίωμα (403): "+m:
+   r.status===404?"Το μοντέλο δεν βρέθηκε (404): "+m:
+   r.status===429?"Πολλά αιτήματα ή όριο λογαριασμού (429). Δοκίμασε σε λίγο. "+m:
+   r.status===529||r.status>=500?"Ο server της Anthropic είναι φορτωμένος ("+r.status+"). Δοκίμασε ξανά σε λίγο.":
+   "Σφάλμα "+r.status+": "+m);err.keyIssue=r.status===401||r.status===403||/credit balance/i.test(m);throw err}
   const txt=(j.content||[]).filter(c=>c.type==="text").map(c=>c.text).join("").trim();
   out.innerHTML=`<h3>✨ Για την ερώτησή σου</h3>${txt.split(/\n\s*\n/).map(p=>`<p style="margin:4px 0 8px">${esc(p)}</p>`).join("")}`;
   const J=store.get("ic_journal",[]);const x=J.find(q=>q.id===e.id);if(x){x.ai=txt;store.set("ic_journal",J)}
- }catch(err){out.innerHTML=`<p class="muted">⚠️ ${esc(err.message)}${navigator.onLine?"":" (χρειάζεται internet)"}</p>`}}
+ }catch(err){const net=err instanceof TypeError;
+  out.innerHTML=`<p class="muted">⚠️ ${esc(net?"Δεν έγινε σύνδεση με το API. Έλεγξε το internet.":err.message)}</p><div class="row"><button class="ghost" data-rk>🔑 Αλλαγή API key</button></div>`;
+  out.querySelector("[data-rk]").onclick=()=>{try{localStorage.removeItem("risq_api_key")}catch(x){}out.innerHTML="";ai(e,out)}}}
 
 // ---------- ΗΜΕΡΟΛΟΓΙΟ ----------
 function drawJournal(){const J=store.get("ic_journal",[]);
