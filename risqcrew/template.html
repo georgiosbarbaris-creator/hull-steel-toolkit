@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>RISQ Crew</title>
+<!--PWA-->
+<style>
+:root{--bg:#eef1f4;--card:#fff;--ink:#14212e;--muted:#5a6876;--line:#d3dae1;--navy:#1d3a5c;--acc:#c8551c;
+--ok:#22744a;--okb:#dff1e7;--f:#b3261e;--fb:#fbe2df;--na:#6b7480;--nab:#e7eaee;--hr:#9a6700;--hrb:#fff3d1}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1720;--card:#17222e;--ink:#e3e9ef;--muted:#97a5b3;--line:#2a3846;--navy:#8fb4dc;--acc:#ef8a55;
+--ok:#5cc58b;--okb:#173326;--f:#f08077;--fb:#3b1d1b;--na:#9aa4ae;--nab:#26303a;--hr:#e3b341;--hrb:#3a2f10}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+header{position:sticky;top:0;z-index:5;background:#1d3a5c;color:#fff;padding:calc(10px + env(safe-area-inset-top)) 14px 10px}
+header .r{display:flex;align-items:center;gap:10px}
+header h1{margin:0;font-size:17px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+header .sub{font-size:12px;opacity:.8}
+header button{background:rgba(255,255,255,.14);color:#fff;border:0;border-radius:8px;padding:7px 11px;font:600 15px system-ui}
+.bar{height:6px;background:rgba(255,255,255,.2);border-radius:4px;margin-top:8px;overflow:hidden}.bar i{display:block;height:100%;background:#7fd1a3}
+main{max-width:760px;margin:0 auto;padding:10px 12px calc(90px + env(safe-area-inset-bottom))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:10px 0}
+h2{font-size:15px;color:var(--navy);margin:4px 0 10px}
+.note{font-size:13px;color:var(--muted)}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;width:100%}
+label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+button{font:inherit;cursor:pointer}
+.btn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:10px 14px;font-weight:600}
+.btn.p{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.d{color:var(--f)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;text-align:left;color:var(--ink)}
+.tile b{display:block;font-size:17px;margin-bottom:4px}
+.tile .mini{height:5px;background:var(--nab);border-radius:3px;margin-top:8px;overflow:hidden}.tile .mini i{display:block;height:100%;background:var(--ok)}
+.tile .fc{color:var(--f);font-weight:700}
+.ins{display:flex;justify-content:space-between;align-items:center;gap:10px;cursor:pointer}
+.tog{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.sw{position:relative;width:50px;height:30px;flex:0 0 50px}.sw input{display:none}.sw span{position:absolute;inset:0;background:var(--nab);border-radius:20px;transition:.2s}
+.sw span:before{content:"";position:absolute;width:24px;height:24px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.sw input:checked+span{background:var(--hr)}.sw input:checked+span:before{transform:translateX(20px)}
+.seg{display:flex;background:var(--nab);border-radius:10px;padding:3px;gap:3px}.seg button{flex:1;border:0;background:none;padding:7px;border-radius:8px;font-weight:600;color:var(--muted);font-size:14px}
+.seg button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.15)}
+.q{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--line);border-radius:14px;padding:12px 14px;margin:10px 0}
+.q.ok{border-left-color:var(--ok)}.q.f{border-left-color:var(--f)}.q.na{border-left-color:var(--na);opacity:.75}
+.qh{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--muted)}
+.qh .id{font:700 13px ui-monospace,Menlo,monospace;color:var(--navy)}
+.hrt{background:var(--hrb);color:var(--hr);font-weight:700;padding:1px 7px;border-radius:10px}
+.q .t{font-weight:650;margin:6px 0}
+.q ul{margin:4px 0 8px;padding-left:20px;font-size:14px}.q li{margin:3px 0}
+.ans{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.ans button{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:11px 4px;font-weight:700;font-size:15px}
+.ans button.on[data-v=ok]{background:var(--ok);border-color:var(--ok);color:#fff}
+.ans button.on[data-v=f]{background:var(--f);border-color:var(--f);color:#fff}
+.ans button.on[data-v=na]{background:var(--na);border-color:var(--na);color:#fff}
+.more{margin-top:8px}.more summary{font-size:13px;color:var(--acc);font-weight:600;cursor:pointer;list-style:none}
+.more pre{white-space:pre-wrap;font:14px/1.45 system-ui,sans-serif;background:var(--bg);border-radius:10px;padding:10px;margin:8px 0 0}
+.fbox{margin-top:10px;display:none}.q.f .fbox{display:block}
+.ph{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}.ph div{position:relative}.ph img{width:76px;height:76px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
+.ph button{position:absolute;top:2px;right:2px;border:0;background:rgba(0,0,0,.6);color:#fff;border-radius:6px;font-size:12px;padding:1px 6px}
+.cam{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-weight:600;font-size:14px;color:var(--ink);cursor:pointer}
+.nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;padding:6px 8px calc(6px + env(safe-area-inset-bottom));z-index:6}
+.nav button{flex:1;border:0;background:none;color:var(--muted);font:600 12px system-ui;padding:6px 2px;display:flex;flex-direction:column;align-items:center;gap:2px}
+.nav button b{font-size:20px;line-height:1}.nav button.on{color:var(--acc)}
+.fl{border-left:4px solid var(--f);padding:8px 10px;margin:8px 0;background:var(--card);border-radius:10px;border:1px solid var(--line);border-left-width:4px;border-left-color:var(--f)}
+.hide{display:none!important}
+.ff{background:var(--fb);border-radius:10px;padding:8px 10px;margin:4px 0 10px;font-size:14px}.ff b{color:var(--f);font-size:13px}.ff ul{margin:4px 0 0;padding-left:18px}.ff li{margin:2px 0}
+.lk{font-size:12px;font-weight:700;color:var(--navy);margin-top:4px}.hot{background:var(--fb);color:var(--f);font-weight:700;padding:1px 7px;border-radius:10px}
+.mic{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:8px 12px;font-weight:600;font-size:14px}
+.mic.rec{background:var(--f);border-color:var(--f);color:#fff;animation:pl 1s infinite}@keyframes pl{50%{opacity:.6}}
+#toast{position:fixed;left:50%;top:calc(70px + env(safe-area-inset-top));transform:translateX(-50%);background:#1d3a5c;color:#fff;padding:9px 14px;border-radius:10px;font-size:14px;opacity:0;transition:.2s;pointer-events:none;z-index:20}
+#toast.show{opacity:1}
+.tools{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tools button{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 10px;text-align:left;color:var(--ink);font:600 14px system-ui}
+.tools button small{display:block;font-weight:400;color:var(--muted);font-size:12px;margin-top:2px}
+.sev{display:flex;gap:4px;margin:8px 0 4px;align-items:center;font-size:13px;color:var(--muted)}
+.sev button{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:5px 10px;font-weight:700;font-size:13px}
+.sev button.on[data-s=L]{background:#5b8f6f;border-color:#5b8f6f;color:#fff}.sev button.on[data-s=M]{background:#c88a12;border-color:#c88a12;color:#fff}.sev button.on[data-s=H]{background:var(--f);border-color:var(--f);color:#fff}
+.co{margin-top:8px;border:1px dashed var(--line);border-radius:10px;padding:8px}.co summary{font-weight:700;color:var(--ok);cursor:pointer;font-size:14px}
+.co label{margin-top:6px}.co textarea{font-size:14px}
+.big{font-size:28px;font-weight:800}.vt{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}.vt td,.vt th{border:1px solid var(--line);padding:6px;text-align:center}
+.v12{background:var(--okb);color:var(--ok);font-weight:700}.v9{background:#eef6d9;color:#5b7a12;font-weight:700}.v6{background:var(--hrb);color:var(--hr);font-weight:700}.v3{background:#fde3cf;color:#a5490f;font-weight:700}.vU{background:var(--fb);color:var(--f);font-weight:700}
+.pg h3{margin:14px 0 6px;font-size:15px}.pg ul{padding-left:20px;margin:6px 0}.pg li{margin:4px 0}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--line);font-size:15px}.chk input{width:22px;height:22px;flex:0 0 22px;margin-top:1px}
+.qa{border-bottom:1px solid var(--line);padding:10px 0}.qa .who{font-size:12px;color:var(--acc);font-weight:700}.qa .ans2{display:none;background:var(--okb);border-radius:8px;padding:8px;margin-top:6px;font-size:14px}.qa.open .ans2{display:block}
+header{background:#0e5a5a}#toast{background:#0e5a5a}
+.lng{background:rgba(255,255,255,.18)!important;font:700 13px system-ui!important;padding:7px 10px!important;letter-spacing:.5px}
+.cred{text-align:center;font-size:12px;color:var(--muted);margin:22px 0 6px}
+</style>
+</head>
+<body>
+<header>
+  <div class="r"><button id="back" class="hide">‹</button><div style="flex:1;min-width:0"><h1 id="ttl">RISQ Crew</h1><div class="sub" id="sub"></div></div><button class="lng" id="lng">EN</button></div>
+  <div class="bar hide" id="pbar"><i id="pfill"></i></div>
+</header>
+<main>
+  <!-- LIST -->
+  <section id="v-list">
+    <div class="card"><h2 data-t="howT"></h2><p class="note" style="margin:0" data-th="howX"></p></div>
+    <div class="card"><h2 data-t="toolsT"></h2>
+      <div class="tools">
+        <button data-pg="mind"><span data-t="pg_mind"></span><small data-t="pg_mind_s"></small></button>
+        <button data-pg="crew"><span data-t="pg_crew"></span><small data-t="pg_crew_s"></small></button>
+        <button data-pg="drill"><span data-t="pg_drill"></span><small data-t="pg_drill_s"></small></button>
+        <button data-pg="docs"><span data-t="pg_docs"></span><small data-t="pg_docs_s"></small></button>
+      </div>
+      <p class="note" style="margin:10px 0 0" data-th="target"></p></div>
+    <button class="btn p" id="newIns" style="width:100%;padding:14px" data-t="newIns"></button>
+    <div id="insList"></div>
+    <p class="cred">Created by George Barbaris</p>
+  </section>
+
+  <!-- NEW / EDIT -->
+  <section id="v-edit" class="hide">
+    <div class="card">
+      <h2 data-t="detT"></h2>
+      <div class="g2"><label><span data-t="vessel"></span><input id="e_vessel"></label><label>IMO<input id="e_imo" inputmode="numeric"></label>
+      <label><span data-t="port"></span><input id="e_port"></label><label><span data-t="date"></span><input id="e_date" type="date"></label></div>
+      <label style="margin-top:8px"><span data-t="by"></span><input id="e_by"></label>
+      <details class="more"><summary data-t="s1"></summary><div id="e_s1" style="margin-top:8px"></div></details>
+      <div class="row" style="margin-top:12px"><button class="btn p" id="e_save" data-t="save"></button><button class="btn d hide" id="e_del" data-t="del"></button></div>
+    </div>
+  </section>
+
+  <!-- HOME (areas) -->
+  <section id="v-home" class="hide">
+    <div class="card tog"><div><b data-t="hrOnly"></b><div class="note" data-t="hrOnlyX"></div></div><label class="sw"><input type="checkbox" id="hrOnly"><span></span></label></div>
+    <div class="tiles" id="tiles"></div>
+    <div class="row" style="margin-top:12px"><button class="btn" id="editIns" data-t="details"></button><button class="btn" id="docsIns" data-t="docs72"></button><button class="btn" id="drillIns" data-t="pg_drill"></button></div>
+  </section>
+
+  <!-- PAGES -->
+  <section id="v-page" class="hide"><div id="pg" class="pg"></div></section>
+
+  <!-- AREA -->
+  <section id="v-area" class="hide">
+    <div class="seg" id="aflt"><button data-f="open" class="on" data-t="f_open"></button><button data-f="hot" data-t="f_hot"></button><button data-f="all" data-t="f_all"></button><button data-f="f">✗</button></div>
+    <div id="qs"></div>
+    <div class="row" style="justify-content:space-between;margin-top:6px"><button class="btn" id="prevA" data-t="prevA"></button><button class="btn p" id="nextA"></button></div>
+  </section>
+
+  <!-- FINDINGS -->
+  <section id="v-find" class="hide">
+    <div class="card"><h2 style="margin:0" data-t="sumT"></h2><div id="sum" style="margin-top:8px"></div>
+      <div class="row" style="margin-top:12px"><button class="btn p" id="xPdf">📄 PDF report</button><button class="btn" id="xTxt" data-t="xTxt"></button><button class="btn" id="xCsv">📊 Excel</button></div></div>
+    <div class="card" id="valid"></div>
+    <div class="card"><h2>✅ Close-out (RightShip format)</h2><p class="note" style="margin-top:0" data-t="coX"></p>
+      <div class="row"><button class="btn p" id="xCo">📑 Close-out PDF</button></div></div>
+    <div id="flist"></div>
+  </section>
+</main>
+<nav class="nav hide" id="nav"><button data-go="home" class="on"><b>⌂</b><span data-t="n_home"></span></button><button data-go="find"><b>⚑</b>Findings</button><button data-go="list"><b>☰</b><span data-t="n_list"></span></button></nav>
+<div id="toast"></div>
+<script>
+const DATA=/*DATA*/;
+const X=/*EXTRA*/;const QM=Object.fromEntries(DATA.q.map(q=>[q.id,q]));const HI=new Set(X.hi);
+/* ---------- language ---------- */
+const TT={en:{
+ sub:"{n} questions · offline",howT:"How it works",
+ howX:"1. <b>+ New check</b> → vessel name. 2. Choose an area (Bridge, Deck, ER…) and walk it. 3. For each question: <b>✓ OK</b>, <b>✗ Finding</b> (note + photo) or <b>N/A</b>. 4. At the end: <b>Findings → PDF</b>.<br>«ℹ What the inspector looks for» = when he writes a finding. Works offline.",
+ toolsT:"🛡 Get ready for RightShip",pg_mind:"🧠 How the inspector thinks",pg_mind_s:"12 rules he follows",pg_crew:"👷 Crew briefing",pg_crew_s:"Card for each rank",
+ pg_drill:"🎤 Interview drill",pg_drill_s:"Questions & right answers",pg_docs:"📁 Documents 72h",pg_docs_s:"Upload list for hybrid",
+ target:"Target for 12-month validity: <b>≤23 low/medium, max 1 High, good close-out</b>. Sections 3 & 13: ~4 findings = 1 High.",
+ newIns:"+ New check",none:"No checks yet.",detT:"Check details",newT:"New check",vessel:"Vessel",port:"Port",date:"Date",by:"Checked by",s1:"Section 1 — Vessel particulars (optional)",
+ save:"Save",del:"Delete",sure:"Sure? Tap again",needV:"Enter vessel name",hrOnly:"★ High-risk only",hrOnlyX:"Quick check: the questions with the most weight",details:"✎ Details",docs72:"📁 Documents 72h",
+ f_open:"Open",f_hot:"🔥 Common",f_all:"All",allDone:"✓ All points in this area are checked.",nothing:"Nothing here.",prevA:"‹ Previous area",
+ look:"👀 Check:",hot:"🔥 How inspectors write it:",info:"ℹ What the inspector looks for",ph:"What did you find? (write in English – it goes in the report)",speak:"🎤 Speak",stop:"⏹ Stop",
+ sev:"Severity:",hiQ:"RightShip high-risk question",rcX:"Root cause (not «human error»)",caX:"Corrective action – responsible rank – date",pmX:"Preventive measure – responsible rank – date",
+ sumT:"Summary",checked:"checked",notAns:"⚠ {n} questions not answered yet.",xTxt:"📤 Text",noF:"No findings. 👍",noNote:"— no note —",
+ coX:"One PDF for all findings, in report order. For each finding fill «✅ Close-out»: explanation, immediate cause, root cause, corrective action, preventive measure (responsible rank + date) and photos before/after.",
+ n_home:"Areas",n_list:"Checks",photoErr:"Photo error",dl:"Downloaded",copied:"Copied ✔",noCopy:"Could not copy",notSaved:"⚠ Not saved",mic:"Allow the microphone",kbd:"Use the 🎤 on the keyboard",pdfErr:"PDF error",noFind:"No findings",
+ vT:"🎯 RightShip validity forecast",vLM:"Low+Medium",vH:"High (with clustering)",vCo:"Close-out",vGood:"Good",vAvg:"Average",vPoor:"Poor",vVal:"Validity",vM:"{m} months",
+ vTipH:"Reduce the Highs: every High closed before the inspector comes wins months.",vTipLM:"More than 23 low/medium ({n}): close {k} to go under the limit.",vTipS:"Section {s}: {n} findings — the 4th counts as +1 High (clustering).",
+ vOk:"✅ With a good close-out you get 12 months.",vNote:"Change the severity inside each finding (Low/Med/High). Default: High for the RightShip high-risk list (4.5, 4.18, 9A.13, 13.33, 4.37, 10.4, 4.11). Forecast from the published validity matrix; RightShip also does a peer review.",
+ crewX:"Cards for each rank. Send them to the ship or read them at the briefing. The number is the RISQ question.",crewAll:"📤 All cards",
+ drillX:"Ask the crew like the inspector does. Tap a question to see the right answer. An officer who hesitates = finding.",drillSh:"📤 Send to ship",
+ docsX:"Hybrid inspection: documents are uploaded to RightShip at least 72 hours before. One file per request, correct name, valid.",docsKeep:"Ticks are saved in this check.",docsOpen:"Open a check to keep ✔.",docsSh:"📤 List to ship",
+ A:{DOC:"Master's office / ship's office",BRG:"Bridge, ECDIS, charts, GMDSS",LSA:"Lifeboats, rafts, fire equipment",DECK:"Mooring, cranes, ladders, pollution",HOLD:"Cargo holds, hatch covers, access",ER:"Machinery, OWS, fire, steering",ACC:"Galley, cabins, hospital, welfare"}},
+fil:{
+ sub:"{n} tanong · offline",howT:"Paano gamitin",
+ howX:"1. <b>+ Bagong check</b> → pangalan ng barko. 2. Pumili ng area (Bridge, Deck, ER…) at ikutin ito. 3. Sa bawat tanong: <b>✓ OK</b>, <b>✗ Finding</b> (note + picture) o <b>N/A</b>. 4. Sa dulo: <b>Findings → PDF</b>.<br>«ℹ Ano ang hinahanap ng inspector» = kailan siya nagsusulat ng finding. Gumagana kahit walang internet.",
+ toolsT:"🛡 Paghahanda para sa RightShip",pg_mind:"🧠 Paano mag-isip ang inspector",pg_mind_s:"12 patakaran na sinusunod niya",pg_crew:"👷 Crew briefing",pg_crew_s:"Card para sa bawat rank",
+ pg_drill:"🎤 Interview drill",pg_drill_s:"Mga tanong at tamang sagot",pg_docs:"📁 Mga dokumento 72h",pg_docs_s:"Listahan para sa hybrid upload",
+ target:"Target para sa 12 buwang validity: <b>≤23 low/medium, hindi hihigit sa 1 High, at maayos na close-out</b>. Sections 3 at 13: ~4 findings = 1 High.",
+ newIns:"+ Bagong check",none:"Wala pang check.",detT:"Detalye ng check",newT:"Bagong check",vessel:"Barko",port:"Pantalan",date:"Petsa",by:"Nag-check",s1:"Section 1 — Vessel particulars (opsyonal)",
+ save:"I-save",del:"Burahin",sure:"Sigurado ka? Pindutin ulit",needV:"Ilagay ang pangalan ng barko",hrOnly:"★ High-risk lang",hrOnlyX:"Mabilis na check: ang mga tanong na pinakamabigat",details:"✎ Detalye",docs72:"📁 Dokumento 72h",
+ f_open:"Bukas",f_hot:"🔥 Madalas",f_all:"Lahat",allDone:"✓ Na-check na ang lahat sa area na ito.",nothing:"Wala rito.",prevA:"‹ Nakaraang area",
+ look:"👀 Tingnan:",hot:"🔥 Ganito isinusulat ng inspector:",info:"ℹ Ano ang hinahanap ng inspector",ph:"Ano ang nakita mo? (isulat sa English – ilalagay ito sa report)",speak:"🎤 Magsalita",stop:"⏹ Stop",
+ sev:"Severity:",hiQ:"RightShip high-risk na tanong",rcX:"Root cause (hindi «human error»)",caX:"Corrective action – responsableng rank – petsa",pmX:"Preventive measure – responsableng rank – petsa",
+ sumT:"Buod",checked:"na-check",notAns:"⚠ {n} tanong ang hindi pa nasasagot.",xTxt:"📤 Text",noF:"Walang finding. 👍",noNote:"— walang note —",
+ coX:"Isang PDF para sa lahat ng findings, ayon sa pagkakasunod sa report. Sa bawat finding, punan ang «✅ Close-out»: explanation, immediate cause, root cause, corrective action, preventive measure (responsableng rank + petsa) at mga picture before/after.",
+ n_home:"Mga Area",n_list:"Mga Check",photoErr:"Error sa picture",dl:"Na-download",copied:"Nakopya ✔",noCopy:"Hindi nakopya",notSaved:"⚠ Hindi na-save",mic:"Payagan ang mikropono",kbd:"Gamitin ang 🎤 ng keyboard",pdfErr:"Error sa PDF",noFind:"Walang findings",
+ vT:"🎯 Tantiya ng RightShip validity",vLM:"Low+Medium",vH:"High (kasama ang clustering)",vCo:"Close-out",vGood:"Maganda",vAvg:"Katamtaman",vPoor:"Mahina",vVal:"Validity",vM:"{m} buwan",
+ vTipH:"Bawasan ang High: bawat High na naisara bago dumating ang inspector ay dagdag na buwan.",vTipLM:"Higit sa 23 low/medium ({n}): isara ang {k} para bumaba sa limit.",vTipS:"Section {s}: {n} findings — ang ika-4 ay bibilangin na +1 High (clustering).",
+ vOk:"✅ Kung maayos ang close-out, 12 buwan ang makukuha mo.",vNote:"Palitan ang severity sa loob ng bawat finding (Low/Med/High). Default: High para sa RightShip high-risk list (4.5, 4.18, 9A.13, 13.33, 4.37, 10.4, 4.11). Tantiya batay sa published validity matrix; may peer review din ang RightShip.",
+ crewX:"Card para sa bawat rank. Ipadala sa barko o basahin sa briefing. Ang numero ay ang RISQ question.",crewAll:"📤 Lahat ng card",
+ drillX:"Magtanong sa crew gaya ng ginagawa ng inspector. Pindutin ang tanong para makita ang tamang sagot. Officer na nag-aalangan sumagot = finding.",drillSh:"📤 Ipadala sa barko",
+ docsX:"Hybrid inspection: ina-upload ang mga dokumento sa RightShip hindi bababa sa 72 oras bago. Isang file bawat request, tamang pangalan, valid.",docsKeep:"Naka-save ang ✔ sa check na ito.",docsOpen:"Magbukas ng check para ma-save ang ✔.",docsSh:"📤 Ipadala ang listahan",
+ A:{DOC:"Opisina ng Master / ship's office",BRG:"Bridge, ECDIS, charts, GMDSS",LSA:"Lifeboat, liferaft, fire equipment",DECK:"Mooring, crane, ladder, polusyon",HOLD:"Cargo holds, hatch covers, daanan",ER:"Makina, OWS, sunog, steering",ACC:"Galley, cabin, hospital, welfare"}}};
+let L="en";try{L=localStorage.getItem("risqc_lang")==="fil"?"fil":"en";}catch(e){}
+const t=(k,v)=>{let s=(TT[L][k]??TT.en[k]??k);if(v)for(const a in v)s=s.split("{"+a+"}").join(v[a]);return s;};
+const F=L2=>L2==="fil";
+const qg=q=>F(L)?(q.fg||q.eg):q.eg, qc=q=>F(L)?(q.fc||q.c):q.c, qx=q=>F(L)?(q.fx||q.ex):q.ex, qf=q=>F(L)?(q.ff||q.f):q.f;
+function applyLang(){document.documentElement.lang=F(L)?"fil":"en";$("#lng").textContent=F(L)?"FIL":"EN";
+  $$("[data-t]").forEach(e=>e.textContent=t(e.dataset.t));$$("[data-th]").forEach(e=>e.innerHTML=t(e.dataset.th));}
+const AREAS=[["DOC","📋","Documents"],["BRG","🧭","Bridge"],["LSA","🛟","LSA / FFE"],["DECK","⚓","Deck & mooring"],["HOLD","📦","Holds & hatches"],["ER","⚙️","Engine room"],["ACC","🛏","Accommodation"]];
+const AN=Object.fromEntries(AREAS.map(a=>[a[0],a[2]]));
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+function toast(m){const e=$("#toast");e.textContent=m;e.classList.add("show");clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove("show"),1800);}
+const SK="risqc_v1";let S;try{S=JSON.parse(localStorage.getItem(SK));}catch(e){}if(!S||!Array.isArray(S.ins))S={ins:[]};
+function save(){try{localStorage.setItem(SK,JSON.stringify(S));}catch(e){toast(t("notSaved"));}}
+const IDB={db:null,open(){return this.db?Promise.resolve(this.db):new Promise((res,rej)=>{const r=indexedDB.open("risqc",1);r.onupgradeneeded=()=>r.result.createObjectStore("b");r.onsuccess=()=>{this.db=r.result;res(this.db);};r.onerror=()=>rej(r.error);});},
+ async tx(m,fn){const d=await this.open();return new Promise((res,rej)=>{const x=d.transaction("b",m),q=fn(x.objectStore("b"));x.oncomplete=()=>res(q&&q.result);x.onerror=()=>rej(x.error);});},
+ put(k,v){return this.tx("readwrite",s=>s.put(v,k));},get(k){return this.tx("readonly",s=>s.get(k));},del(k){return this.tx("readwrite",s=>s.delete(k));}};
+function fileToJpeg(file,max=1280,q=.72){return new Promise((res,rej)=>{const u=URL.createObjectURL(file),im=new Image();im.onload=()=>{const k=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement("canvas");
+  c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);res(c.toDataURL("image/jpeg",q));};im.onerror=rej;im.src=u;});}
+const loadImg=src=>new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=src;});
+function b64(u8){let s="";for(let i=0;i<u8.length;i+=0x8000)s+=String.fromCharCode.apply(null,u8.subarray(i,i+0x8000));return btoa(s);}
+function d2blob(d){const[h,b]=d.split(","),m=h.match(/:(.*?);/)[1],bin=atob(b),a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return new Blob([a],{type:m});}
+async function shareFiles(files,title){if(window.AndroidBridge&&AndroidBridge.shareFiles){AndroidBridge.shareFiles(JSON.stringify(files),title);return;}
+  const fl=files.map(f=>new File([d2blob(f.dataUrl)],f.name,{type:f.mime}));
+  if(navigator.canShare&&navigator.canShare({files:fl})){try{await navigator.share({files:fl,title});}catch(e){}return;}
+  fl.forEach(f=>{const a=document.createElement("a");a.href=URL.createObjectURL(f);a.download=f.name;document.body.appendChild(a);a.click();a.remove();});toast(t("dl"));}
+async function shareText(title,text){if(navigator.share){try{await navigator.share({title,text});return;}catch(e){return;}}
+  try{await navigator.clipboard.writeText(text);toast(t("copied"));}catch(e){toast(t("noCopy"));}}
+
+/* ---------- state ---------- */
+let cur=null,area=null,aflt="open",view="list",page=null,pageFrom="list";
+const I=()=>S.ins.find(x=>x.id===cur);
+const QS=ins=>DATA.q.filter(q=>!ins.hr||q.h);
+function stats(ins,a){const qs=QS(ins).filter(q=>!a||q.a===a);let d=0,f=0;qs.forEach(q=>{const v=ins.st[q.id];if(v)d++;if(v==="f")f++;});return{n:qs.length,d,f};}
+function go(v){view=v;["list","edit","home","area","find","page"].forEach(x=>$("#v-"+x).classList.toggle("hide",x!==v));
+  $("#nav").classList.toggle("hide",!cur||v==="list"||v==="edit"||v==="page"&&pageFrom==="list");$$("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.go===v||(v==="area"&&b.dataset.go==="home")));
+  $("#back").classList.toggle("hide",v==="list");hdr();window.scrollTo(0,0);
+  ({list:rList,home:rHome,area:rArea,find:rFind,edit:()=>{},page:rPage})[v]();}
+function hdr(){const ins=I();if(view==="page"){$("#ttl").textContent=t("pg_"+page);$("#sub").textContent=ins&&pageFrom!=="list"?ins.vessel:"RISQ Crew";$("#pbar").classList.add("hide");return;}
+  if(view==="edit"){$("#ttl").textContent=ins?t("detT"):t("newT");$("#sub").textContent="RISQ Crew";$("#pbar").classList.add("hide");return;}
+  if(!ins||view==="list"){$("#ttl").textContent="RISQ Crew";$("#sub").textContent=t("sub",{n:DATA.q.length});$("#pbar").classList.add("hide");return;}
+  const s=stats(ins);$("#ttl").textContent=view==="area"?AN[area]:ins.vessel;$("#sub").textContent=`${ins.vessel}${ins.port?" · "+ins.port:""} · ${s.d}/${s.n} · ${s.f} findings${ins.hr?" · ★":""}`;
+  $("#pbar").classList.remove("hide");$("#pfill").style.width=(s.n?s.d/s.n*100:0)+"%";}
+$("#back").onclick=()=>{if(view==="page"){if(pageFrom==="list")cur=null;go(pageFrom);return;}go(view==="area"||view==="find"?"home":view==="home"?"list":cur&&view==="edit"&&I()?"home":"list");};
+$$("#nav button").forEach(b=>b.onclick=()=>{if(b.dataset.go==="list")cur=null;go(b.dataset.go);});
+$("#lng").onclick=()=>{L=F(L)?"en":"fil";try{localStorage.setItem("risqc_lang",L);}catch(e){}applyLang();
+  if(view==="edit"){const ins=I();hdr();$("#e_del").textContent=t("del");if(!ins)$("#ttl").textContent=t("newT");return;}const y=window.scrollY;go(view);window.scrollTo(0,y);};
+
+/* ---------- list ---------- */
+function rList(){const box=$("#insList");box.innerHTML=S.ins.length?"":`<p class="note" style="text-align:center;margin-top:20px">${t("none")}</p>`;
+  S.ins.slice().reverse().forEach(ins=>{const s=stats(ins),d=document.createElement("div");d.className="card ins";
+    d.innerHTML=`<div><b>${esc(ins.vessel)}</b><div class="note">${esc(ins.date||"")}${ins.port?" · "+esc(ins.port):""}${ins.hr?" · ★ high-risk":""}</div></div>
+      <div style="text-align:right"><b>${Math.round(s.n?s.d/s.n*100:0)}%</b><div class="note" style="color:${s.f?"var(--f)":""}">${s.f} findings</div></div>`;
+    d.onclick=()=>{cur=ins.id;go("home");};box.appendChild(d);});}
+$("#newIns").onclick=()=>{cur=null;openEdit({});};
+function openEdit(ins){$("#e_vessel").value=ins.vessel||"";$("#e_imo").value=ins.imo||"";$("#e_port").value=ins.port||"";$("#e_date").value=ins.date||new Date().toISOString().slice(0,10);$("#e_by").value=ins.by||"";
+  $("#e_s1").innerHTML=DATA.s1.map(p=>`<label style="margin:6px 0">${esc(p.id)} ${esc(p.q)}<input data-s1="${esc(p.id)}" value="${esc((ins.s1||{})[p.id]||"")}"></label>`).join("");
+  $("#e_del").classList.toggle("hide",!ins.id);go("edit");}
+$("#editIns").onclick=()=>openEdit(I());
+$("#e_save").onclick=()=>{const v=$("#e_vessel").value.trim();if(!v){toast(t("needV"));$("#e_vessel").focus();return;}
+  let ins=I();if(!ins){ins={id:uid(),st:{},nt:{},ph:{},hr:false,s1:{}};S.ins.push(ins);cur=ins.id;}
+  Object.assign(ins,{vessel:v,imo:$("#e_imo").value.trim(),port:$("#e_port").value.trim(),date:$("#e_date").value,by:$("#e_by").value.trim()});
+  $$("[data-s1]").forEach(i=>ins.s1[i.dataset.s1]=i.value.trim());save();go("home");};
+let delArm=0;$("#e_del").onclick=async e=>{if(!delArm){delArm=1;e.target.textContent=t("sure");setTimeout(()=>{delArm=0;e.target.textContent=t("del");},3000);return;}
+  const ins=I();for(const k of [...Object.values(ins.ph).flat(),...Object.values(ins.pa||{}).flat()])await IDB.del(k).catch(()=>{});S.ins=S.ins.filter(x=>x.id!==cur);cur=null;save();delArm=0;e.target.textContent=t("del");go("list");};
+
+/* ---------- home ---------- */
+$("#hrOnly").onchange=e=>{I().hr=e.target.checked;save();rHome();hdr();};
+const hotOpen=(ins,a)=>QS(ins).filter(q=>q.a===a&&q.f&&!ins.st[q.id]).length;
+function rHome(){const ins=I();$("#hrOnly").checked=!!ins.hr;
+  $("#tiles").innerHTML=AREAS.map(([k,ic,nm])=>{const s=stats(ins,k);return`<button class="tile" data-a="${k}"><b>${ic} ${nm}</b><div class="note">${esc(t("A")[k])}</div>
+    <div class="note" style="margin-top:6px">${s.d}/${s.n}${s.f?` · <span class="fc">${s.f} ✗</span>`:""}${hotOpen(ins,k)?` · 🔥${hotOpen(ins,k)}`:""}${s.d===s.n&&s.n?" ✓":""}</div><div class="mini"><i style="width:${s.n?s.d/s.n*100:0}%"></i></div></button>`;}).join("");
+  $$("#tiles .tile").forEach(x=>x.onclick=()=>{area=x.dataset.a;aflt=stats(ins,area).d===stats(ins,area).n?"all":"open";go("area");});}
+
+/* ---------- area ---------- */
+$("#aflt").addEventListener("click",e=>{const b=e.target.closest("[data-f]");if(!b)return;aflt=b.dataset.f;rArea();});
+function rArea(){const ins=I();$$("#aflt button").forEach(b=>b.classList.toggle("on",b.dataset.f===aflt));
+  const qs=QS(ins).filter(q=>q.a===area).filter(q=>aflt==="all"||(aflt==="open"?!ins.st[q.id]:aflt==="hot"?(q.f&&!ins.st[q.id]):ins.st[q.id]==="f"));
+  const box=$("#qs");box.innerHTML=qs.length?"":`<div class="card" style="text-align:center">${aflt==="open"?t("allDone"):t("nothing")}</div>`;
+  qs.forEach(q=>box.appendChild(qCard(ins,q)));
+  const i=AREAS.findIndex(a=>a[0]===area);$("#prevA").style.visibility=i>0?"":"hidden";$("#nextA").textContent=i<AREAS.length-1?`${AREAS[i+1][2]} ›`:"Findings ›";}
+function qCard(ins,q){const el=document.createElement("article"),v=ins.st[q.id]||"",C=qc(q),FF=qf(q);el.className="q "+v;el.dataset.id=q.id;
+  el.innerHTML=`<div class="qh"><span class="id">${esc(q.id)}</span>${q.h?'<span class="hrt">★ high-risk</span>':""}${q.f?'<span class="hot">🔥</span>':""}<span style="flex:1"></span><span>${esc(q.sn)}</span></div>
+   <div class="t">${esc(qg(q))}</div>${C&&C.length?`<div class="lk">${t("look")}</div><ul>${C.map(c=>`<li>${esc(c)}</li>`).join("")}</ul>`:""}
+   ${FF&&FF.length?`<div class="ff"><b>${t("hot")}</b><ul>${FF.map(c=>`<li>${esc(c)}</li>`).join("")}</ul></div>`:""}
+   <div class="ans"><button data-v="ok" class="${v==="ok"?"on":""}">✓ OK</button><button data-v="f" class="${v==="f"?"on":""}">✗ Finding</button><button data-v="na" class="${v==="na"?"on":""}">N/A</button></div>
+   <div class="fbox"><textarea class="gr" rows="3" placeholder="${esc(t("ph"))}">${esc(ins.nt[q.id]||"")}</textarea>
+     <div class="row" style="margin-top:6px"><button class="mic">${t("speak")}</button><label class="cam">📷<input type="file" accept="image/*" multiple style="display:none"></label></div>
+     <div class="ph"></div>
+     <div class="sev">${t("sev")} <button data-s="L">Low</button><button data-s="M">Med</button><button data-s="H">High</button><span class="note" style="margin-left:4px">${HI.has(q.id)?t("hiQ"):""}</span></div>
+     <details class="co"><summary>✅ Close-out</summary>
+       <label>Explanation<textarea data-co="ex" rows="2"></textarea></label>
+       <label>Immediate cause<textarea data-co="ic" rows="2"></textarea></label>
+       <label>${t("rcX")}<textarea data-co="rc" rows="2"></textarea></label>
+       <label>${t("caX")}<textarea data-co="ca" rows="3"></textarea></label>
+       <label>${t("pmX")}<textarea data-co="pm" rows="3"></textarea></label>
+       <div class="row" style="margin-top:6px"><label class="cam">📷 After<input type="file" accept="image/*" multiple style="display:none" class="afterIn"></label></div>
+       <div class="ph pha"></div></details></div>
+   <details class="more"><summary>${t("info")}</summary><pre>${esc(qx(q))}</pre><p class="note" style="margin:8px 0 0"><b>RISQ:</b> ${esc(q.o)}</p></details>`;
+  el.querySelectorAll(".ans button").forEach(b=>b.onclick=()=>{const nv=ins.st[q.id]===b.dataset.v?"":b.dataset.v;if(nv)ins.st[q.id]=nv;else delete ins.st[q.id];save();
+    el.className="q "+nv;el.querySelectorAll(".ans button").forEach(x=>x.classList.toggle("on",x.dataset.v===nv));hdr();
+    if(nv==="f"){el.querySelector("textarea").focus();}else if(nv&&aflt==="open"){el.style.transition="opacity .3s";el.style.opacity=".3";setTimeout(()=>{el.remove();if(!$("#qs .q"))rArea();},350);}});
+  const ta=el.querySelector("textarea.gr");ta.oninput=()=>{ins.nt[q.id]=ta.value;save();};
+  el.querySelector(".mic").onclick=e=>dictate(e.currentTarget,ta);
+  el.querySelector(".fbox > .row input[type=file]").onchange=async e=>{const fs=[...e.target.files];e.target.value="";for(const f of fs){try{const k="p_"+uid();await IDB.put(k,await fileToJpeg(f));(ins.ph[q.id]=ins.ph[q.id]||[]).push(k);}catch(x){toast(t("photoErr"));}}save();phs(el,ins,q);};
+  ins.sv=ins.sv||{};const sv=el.querySelectorAll(".sev button");const shs=()=>sv.forEach(b=>b.classList.toggle("on",b.dataset.s===sevOf(ins,q)));shs();
+  sv.forEach(b=>b.onclick=()=>{ins.sv[q.id]=b.dataset.s;save();shs();});
+  ins.co=ins.co||{};el.querySelectorAll("[data-co]").forEach(x=>{x.value=(ins.co[q.id]||{})[x.dataset.co]||"";x.oninput=()=>{(ins.co[q.id]=ins.co[q.id]||{})[x.dataset.co]=x.value;save();};});
+  el.querySelector(".afterIn").onchange=async e=>{const fs=[...e.target.files];e.target.value="";ins.pa=ins.pa||{};for(const f of fs){try{const k="p_"+uid();await IDB.put(k,await fileToJpeg(f));(ins.pa[q.id]=ins.pa[q.id]||[]).push(k);}catch(x){toast(t("photoErr"));}}save();phs(el,ins,q,1);};
+  phs(el,ins,q);phs(el,ins,q,1);return el;}
+const sevOf=(ins,q)=>(ins.sv&&ins.sv[q.id])||(HI.has(q.id)?"H":"M");
+async function phs(el,ins,q,after){const P=after?(ins.pa=ins.pa||{}):ins.ph,box=el.querySelector(after?".pha":".ph");if(!box)return;box.innerHTML="";for(const k of P[q.id]||[]){const d=await IDB.get(k);if(!d)continue;const w=document.createElement("div");
+  w.innerHTML=`<img src="${d}"><button>✕</button>`;w.querySelector("button").onclick=async()=>{P[q.id]=P[q.id].filter(x=>x!==k);await IDB.del(k).catch(()=>{});save();phs(el,ins,q,after);};box.appendChild(w);}}
+$("#prevA").onclick=()=>{const i=AREAS.findIndex(a=>a[0]===area);area=AREAS[i-1][0];aflt="open";go("area");};
+$("#nextA").onclick=()=>{const i=AREAS.findIndex(a=>a[0]===area);if(i<AREAS.length-1){area=AREAS[i+1][0];aflt="open";go("area");}else go("find");};
+
+/* ---------- findings ---------- */
+const findings=ins=>DATA.q.filter(q=>ins.st[q.id]==="f");
+const rpt=(ins,q)=>ins.nt[q.id]||"";
+function rFind(){const ins=I(),s=stats(ins),fl=findings(ins);
+  $("#sum").innerHTML=`<div class="tiles" style="grid-template-columns:repeat(3,1fr)"><div class="tile"><b>${s.d}/${s.n}</b><span class="note">${t("checked")}</span></div>
+    <div class="tile"><b style="color:var(--f)">${fl.length}</b><span class="note">findings</span></div><div class="tile"><b style="color:var(--hr)">${fl.filter(q=>q.h).length}</b><span class="note">★ high-risk</span></div></div>
+    ${s.n-s.d?`<p class="note">${t("notAns",{n:s.n-s.d})}</p>`:""}`;
+  rValid(ins,fl);
+  const box=$("#flist");box.innerHTML=fl.length?"":`<div class="card note" style="text-align:center">${t("noF")}</div>`;
+  AREAS.forEach(([k,ic,nm])=>{const a=fl.filter(q=>q.a===k);if(!a.length)return;const h=document.createElement("h2");h.textContent=`${ic} ${nm} (${a.length})`;h.style.marginTop="16px";box.appendChild(h);
+    a.forEach(q=>{const d=document.createElement("div");d.className="fl";d.innerHTML=`<div class="qh"><span class="id">${q.id}</span>${q.h?'<span class="hrt">★</span>':""}<span style="font-weight:700;color:${{H:"var(--f)",M:"#c88a12",L:"#5b8f6f"}[sevOf(ins,q)]}">${{H:"High",M:"Medium",L:"Low"}[sevOf(ins,q)]}</span>${ins.co&&ins.co[q.id]&&ins.co[q.id].rc?'<span class="note">✅ close-out</span>':""}</div><div style="font-weight:600;margin:3px 0">${esc(qg(q))}</div>
+      <div class="note" style="color:var(--ink)">${esc(rpt(ins,q)||t("noNote"))}</div><div class="ph"></div>`;
+      d.onclick=()=>{area=k;aflt="f";go("area");};box.appendChild(d);
+      (async()=>{for(const p of ins.ph[q.id]||[]){const u=await IDB.get(p);if(u){const w=document.createElement("div");w.innerHTML=`<img src="${u}">`;d.querySelector(".ph").appendChild(w);}}})();});});}
+function fname(ins,ext){return`${(ins.vessel||"vessel").replace(/[^\w\-]+/g,"_")}_RISQ_Crew_${ins.date||""}.${ext}`;}
+$("#xTxt").onclick=()=>{const ins=I(),fl=findings(ins),s=stats(ins);let x=`RISQ 3.2 crew walk-round — ${ins.vessel}${ins.imo?" (IMO "+ins.imo+")":""}\n${ins.date||""}${ins.port?" · "+ins.port:""}${ins.by?" · "+ins.by:""}\nChecked ${s.d}/${s.n} · Findings ${fl.length}${ins.hr?" · high-risk only":""}\n`;
+  AREAS.forEach(([k,,nm])=>{const a=fl.filter(q=>q.a===k);if(!a.length)return;x+=`\n${nm.toUpperCase()}\n`;a.forEach(q=>x+=`• ${q.id}${q.h?" ★":""} ${q.eg}\n  → ${rpt(ins,q)||"-"}\n`);});shareText("RISQ findings "+ins.vessel,x);};
+$("#xCsv").onclick=()=>{const ins=I(),rows=[["Q","Area","Section","High-risk","Status","What to check","Finding","Severity","Photos"]];
+  QS(ins).forEach(q=>rows.push([q.id,AN[q.a],q.s,q.h?"★":"",{ok:"OK",f:"FINDING",na:"N/A"}[ins.st[q.id]]||"",q.eg,ins.nt[q.id]||"",ins.st[q.id]==="f"?sevOf(ins,q):"",(ins.ph[q.id]||[]).length]));
+  const csv="﻿"+rows.map(r=>r.map(x=>{x=String(x??"");return/[",\n]/.test(x)?'"'+x.replace(/"/g,'""')+'"':x;}).join(",")).join("\r\n");
+  shareFiles([{name:fname(ins,"csv"),mime:"text/csv",dataUrl:"data:text/csv;base64,"+b64(new TextEncoder().encode(csv))}],"RISQ CSV");};
+function makePdf(pages){const enc=new TextEncoder(),ch=[],off=[];let len=0;const w=x=>{const b=typeof x==="string"?enc.encode(x):x;ch.push(b);len+=b.length;};
+  const obj=(i,f)=>{off[i]=len;w(`${i} 0 obj\n`);f();w("\nendobj\n");};const N=pages.length;w("%PDF-1.4\n");obj(1,()=>w("<< /Type /Catalog /Pages 2 0 R >>"));
+  obj(2,()=>w(`<< /Type /Pages /Count ${N} /Kids [${pages.map((p,i)=>`${3+i*3} 0 R`).join(" ")}] >>`));
+  pages.forEach((p,i)=>{const pg=3+i*3,cs="q 595 0 0 842 0 0 cm /Im0 Do Q";obj(pg,()=>w(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /XObject << /Im0 ${pg+2} 0 R >> >> /Contents ${pg+1} 0 R >>`));
+    obj(pg+1,()=>w(`<< /Length ${cs.length} >>\nstream\n${cs}\nendstream`));obj(pg+2,()=>{w(`<< /Type /XObject /Subtype /Image /Width ${p.w} /Height ${p.h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${p.jpg.length} >>\nstream\n`);w(p.jpg);w("\nendstream");});});
+  const x=len,n=3+N*3;w(`xref\n0 ${n}\n0000000000 65535 f \n`);for(let i=1;i<n;i++)w(String(off[i]).padStart(10,"0")+" 00000 n \n");w(`trailer\n<< /Size ${n} /Root 1 0 R >>\nstartxref\n${x}\n%%EOF`);
+  const o=new Uint8Array(len);let p=0;ch.forEach(c=>{o.set(c,p);p+=c.length;});return o;}
+const HC="#0e5a5a";
+function pdfKit(title,sub){const W=1240,H=1754,M=70,FN="system-ui,-apple-system,sans-serif",K={W,H,M,FN,pages:[],pn:0,c:null,g:null,y:0};
+  K.np=()=>{K.c=document.createElement("canvas");K.c.width=W;K.c.height=H;const g=K.g=K.c.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,W,H);K.pn++;g.fillStyle=HC;g.fillRect(0,0,W,110);
+    g.fillStyle="#fff";g.font=`bold 32px ${FN}`;g.fillText(title,M,52);g.font=`22px ${FN}`;g.fillText(sub,M,88);g.fillStyle="#777";g.font=`18px ${FN}`;g.fillText(`Page ${K.pn}`,M,H-35);g.textAlign="right";g.fillText("RISQ Crew · Created by George Barbaris",W-M,H-35);g.textAlign="left";K.y=165;};
+  K.ep=()=>{const d=K.c.toDataURL("image/jpeg",.8),b=atob(d.split(",")[1]),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);K.pages.push({jpg:u,w:W,h:H});};
+  K.lines=(s,mw)=>{const out=[];String(s||"").split("\n").forEach(par=>{let line="";par.split(/\s+/).forEach(w=>{const tt=line?line+" "+w:w;if(K.g.measureText(tt).width>mw&&line){out.push(line);line=w;}else line=tt;});out.push(line);});return out;};
+  K.imgs=async(keys,lab)=>{const ims=[];for(const k of (keys||[]).slice(0,3)){const d=await IDB.get(k);if(d)ims.push(await loadImg(d));}if(!ims.length)return;if(K.y+300>H-80){K.ep();K.np();}const g=K.g;
+    if(lab){g.font=`bold 18px ${FN}`;g.fillStyle="#555";g.fillText(lab,M+20,K.y);K.y+=8;}const bw=(W-2*M-40-20*2)/3,bh=250;let x=M+20;for(const im of ims){const k=Math.min(bw/im.width,bh/im.height);g.drawImage(im,x,K.y,im.width*k,im.height*k);x+=bw+20;}K.y+=bh+20;};
+  return K;}
+const vsub=ins=>`${ins.vessel}${ins.imo?"  ·  IMO "+ins.imo:""}${ins.port?"  ·  "+ins.port:""}${ins.date?"  ·  "+ins.date:""}`;
+async function buildPdf(){const ins=I(),fl=findings(ins),s=stats(ins),K=pdfKit("RISQ 3.2 CREW WALK-ROUND — FINDINGS",vsub(ins)),{W,H,M,FN}=K;K.np();let g=K.g;
+  g.fillStyle="#14212e";g.font=`bold 28px ${FN}`;g.fillText("Summary",M,K.y);K.y+=44;g.font=`22px ${FN}`;
+  g.fillText(`Checked: ${s.d} / ${s.n}${ins.hr?" (high-risk only)":""}     Findings: ${fl.length}     ★ High-risk findings: ${fl.filter(q=>q.h).length}${ins.by?"     By: "+ins.by:""}`,M,K.y);K.y+=50;
+  AREAS.forEach(([k,,nm])=>{const a=stats(ins,k);g.fillStyle="#14212e";g.fillText(nm,M,K.y);g.fillText(`${a.d}/${a.n}`,M+380,K.y);g.fillStyle=a.f?"#b3261e":"#22744a";g.fillText(a.f?`${a.f} findings`:"no findings",M+520,K.y);K.y+=36;});
+  K.y+=30;g.fillStyle=HC;g.font=`bold 26px ${FN}`;g.fillText("Findings",M,K.y);K.y+=50;
+  for(const q of fl){g=K.g;g.font=`21px ${FN}`;const ln=K.lines("→ "+(rpt(ins,q)||"-"),W-2*M-30).slice(0,8),hasI=(ins.ph[q.id]||[]).length,need=120+ln.length*28+(hasI?270:0);
+    if(K.y+need>H-80){K.ep();K.np();g=K.g;}const y0=K.y;
+    g.fillStyle=HC;g.font=`bold 22px ${FN}`;g.fillText(`${q.id}${q.h?"  ★":""}   ${AN[q.a]}   ·   ${{H:"High",M:"Medium",L:"Low"}[sevOf(ins,q)]}`,M+20,K.y);K.y+=32;
+    g.fillStyle="#14212e";g.font=`bold 21px ${FN}`;K.lines(q.eg,W-2*M-30).slice(0,2).forEach(l=>{g.fillText(l,M+20,K.y);K.y+=28;});
+    g.font=`21px ${FN}`;g.fillStyle="#333";ln.forEach(l=>{g.fillText(l,M+20,K.y);K.y+=28;});K.y+=6;
+    await K.imgs(ins.ph[q.id]);g=K.g;{g.fillStyle="#b3261e";g.fillRect(M,Math.max(y0-24,140),6,K.y-Math.max(y0-24,140)-10);}K.y+=24;}
+  K.ep();return makePdf(K.pages);}
+$("#xPdf").onclick=async e=>{const b=e.currentTarget,x=b.textContent;b.disabled=true;b.textContent="⏳ PDF…";try{const p=await buildPdf();await shareFiles([{name:fname(I(),"pdf"),mime:"application/pdf",dataUrl:"data:application/pdf;base64,"+b64(p)}],"RISQ report");}
+  catch(err){console.error(err);toast(t("pdfErr"));}b.disabled=false;b.textContent=x;};
+async function buildCoPdf(){const ins=I(),fl=findings(ins),K=pdfKit("RIGHTSHIP INSPECTION — CLOSE-OUT SUBMISSION",vsub(ins)),{W,H,M,FN}=K;K.np();let g=K.g;
+  const para=(lab,s,col)=>{if(!String(s||"").trim())return;g=K.g;g.font=`bold 20px ${FN}`;if(K.y+60>H-80){K.ep();K.np();g=K.g;}g.fillStyle=col||HC;g.font=`bold 20px ${FN}`;g.fillText(lab,M+20,K.y);K.y+=28;g.font=`20px ${FN}`;g.fillStyle="#222";
+    for(const l of K.lines(s,W-2*M-40)){if(K.y>H-80){K.ep();K.np();g=K.g;g.font=`20px ${FN}`;g.fillStyle="#222";}g.fillText(l,M+20,K.y);K.y+=27;}K.y+=8;};
+  g.fillStyle="#14212e";g.font=`22px ${FN}`;g.fillText(`Number of findings: ${fl.length}    Prepared by: ${ins.by||"Master"}    Reviewed by: ____________________`,M,K.y);K.y+=50;
+  for(const q of fl){const o=(ins.co&&ins.co[q.id])||{};if(K.y+200>H-80){K.ep();K.np();}g=K.g;
+    g.fillStyle="#b3261e";g.fillRect(M,K.y-24,8,34);g.fillStyle=HC;g.font=`bold 24px ${FN}`;g.fillText(`RISQ ${q.id}   ·   Severity: ${{H:"High",M:"Medium",L:"Low"}[sevOf(ins,q)]}`,M+20,K.y);K.y+=34;
+    g.font=`italic 19px ${FN}`;g.fillStyle="#555";for(const l of K.lines(q.o,W-2*M-40)){g.fillText(l,M+20,K.y);K.y+=25;}K.y+=6;
+    para("Finding",rpt(ins,q),"#b3261e");para("Explanation",o.ex);para("Immediate cause",o.ic);para("Root cause",o.rc);para("Corrective actions",o.ca);para("Preventive measures",o.pm);
+    await K.imgs(ins.ph[q.id],"Before");await K.imgs((ins.pa||{})[q.id],"After / evidence");g=K.g;
+    g.strokeStyle="#ccc";g.beginPath();g.moveTo(M,K.y);g.lineTo(W-M,K.y);g.stroke();K.y+=40;}
+  K.ep();return makePdf(K.pages);}
+$("#xCo").onclick=async e=>{const b=e.currentTarget,x=b.textContent;if(!findings(I()).length){toast(t("noFind"));return;}b.disabled=true;b.textContent="⏳ PDF…";
+  try{const p=await buildCoPdf();await shareFiles([{name:fname(I(),"pdf").replace("_RISQ_Crew_","_CloseOut_"),mime:"application/pdf",dataUrl:"data:application/pdf;base64,"+b64(p)}],"Close-out");}catch(err){console.error(err);toast(t("pdfErr"));}b.disabled=false;b.textContent=x;};
+
+/* ---------- voice (browser dictation, English) ---------- */
+let REC=null;
+function dictate(btn,ta){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(REC){REC.stop();return;}
+  if(!SR){ta.focus();toast(t("kbd"));return;}
+  const r=new SR();r.lang="en-US";r.interimResults=true;r.continuous=true;const base=ta.value?ta.value.replace(/\s*$/," "):"";let fin="";
+  r.onresult=ev=>{let it="";for(let i=ev.resultIndex;i<ev.results.length;i++){const s=ev.results[i][0].transcript;if(ev.results[i].isFinal)fin+=s+" ";else it+=s;}ta.value=base+fin+it;ta.dispatchEvent(new Event("input"));};
+  r.onerror=ev=>{toast(ev.error==="not-allowed"?t("mic"):t("kbd"));if(ev.error!=="no-speech")ta.focus();};
+  r.onend=()=>{REC=null;btn.classList.remove("rec");btn.textContent=t("speak");};
+  try{r.start();REC=r;btn.classList.add("rec");btn.textContent=t("stop");}catch(x){ta.focus();toast(t("kbd"));}}
+
+/* ---------- validity simulator (RightShip Inspection Validity Matrix) ---------- */
+function vMonths(lm,h,co){const lo=lm<=23;
+  if(co==="g"){if(h>6)return 0;if(lo)return h<=1?12:h===2?9:h===3?6:3;return h===0?12:h===1?9:h===2?6:3;}
+  if(co==="a"){if(lo)return h===0?12:h===1?9:h===2?6:h===3?3:0;return h===0?9:h===1?6:h===2?3:0;}
+  if(lo)return h===0?9:h===1?6:h===2?3:0;return h===0?6:h===1?3:0;}
+const vCell=m=>`<td class="v${m||"U"}">${m?t("vM",{m}):"Unacceptable"}</td>`;
+function rValid(ins,fl){const c={L:0,M:0,H:0},sec={};fl.forEach(q=>{const v=sevOf(ins,q);c[v]++;if(v!=="H"&&(q.s==="3"||q.s==="13"))sec[q.s]=(sec[q.s]||0)+1;});
+  const cl=Math.floor((sec["3"]||0)/4)+Math.floor((sec["13"]||0)/4),lm=c.L+c.M,h=c.H+cl,g=vMonths(lm,h,"g");
+  const tips=[];if(h>1)tips.push(t("vTipH"));if(lm>23)tips.push(t("vTipLM",{n:lm,k:lm-23}));
+  ["3","13"].forEach(k=>{const n=sec[k]||0;if(n>=3)tips.push(t("vTipS",{s:k,n}));});
+  $("#valid").innerHTML=`<h2>${t("vT")}</h2>
+   <div class="tiles" style="grid-template-columns:repeat(4,1fr)"><div class="tile"><b style="color:#5b8f6f">${c.L}</b><span class="note">Low</span></div><div class="tile"><b style="color:#c88a12">${c.M}</b><span class="note">Medium</span></div><div class="tile"><b style="color:var(--f)">${c.H}</b><span class="note">High</span></div><div class="tile"><b style="color:var(--f)">+${cl}</b><span class="note">clustering 3/13</span></div></div>
+   <p style="margin:10px 0 4px">${t("vLM")}: <b>${lm}</b> ${lm<=23?"✅ ≤23":"⚠ >23"} · ${t("vH")}: <b>${h}</b></p>
+   <table class="vt"><tr><th>${t("vCo")}</th><th>${t("vGood")}</th><th>${t("vAvg")}</th><th>${t("vPoor")}</th></tr><tr><td>${t("vVal")}</td>${vCell(g)}${vCell(vMonths(lm,h,"a"))}${vCell(vMonths(lm,h,"p"))}</tr></table>
+   ${tips.length?`<ul class="note" style="margin:8px 0 0;padding-left:18px">${tips.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:`<p class="note" style="margin:8px 0 0">${t("vOk")}</p>`}
+   <p class="note" style="margin:6px 0 0">${t("vNote")}</p>`;}
+
+/* ---------- pages ---------- */
+function openPage(k,from){page=k;pageFrom=from||(view==="list"?"list":"home");go("page");}
+$$("[data-pg]").forEach(b=>b.onclick=()=>{cur=null;openPage(b.dataset.pg,"list");});
+$("#docsIns").onclick=()=>openPage("docs","home");$("#drillIns").onclick=()=>openPage("drill","home");
+const crewL=r=>F(L)&&r[2]?r[2]:r[1];
+const crewTxt=rs=>(F(L)?"RIGHTSHIP INSPECTION – CREW BRIEFING\n(“Kung hindi naka-record, hindi ginawa.” Ang huling permit/record ang tinitingnan ng inspector, at sinusubukan niya ang equipment.)\n\n":"RIGHTSHIP INSPECTION – CREW BRIEFING\n(“If it is not recorded, it is not done.” Inspector checks the LAST permit/record and tests equipment.)\n\n")+rs.map(([r,it])=>r.toUpperCase()+"\n"+it.map(x=>`☐ ${x[0]!=="*"?"["+x[0]+"] ":""}${crewL(x)}`).join("\n")).join("\n\n");
+const drQ=d=>F(L)&&d[4]?d[4]:d[1],drA=d=>F(L)&&d[5]?d[5]:d[2];
+function rPage(){const ins=pageFrom!=="list"?I():null,box=$("#pg");let h="";
+  if(page==="mind"){h=X.mind.map((m,i)=>`<div class="card"><h2 style="margin:0 0 6px">${i+1}. ${esc(F(L)?m[2]:m[0])}</h2><div>${esc(F(L)?m[3]:m[1])}</div></div>`).join("");}
+  else if(page==="crew"){h=`<div class="card note" style="margin-top:0">${t("crewX")}</div><div class="row" style="margin-bottom:6px"><button class="btn p" id="crewAll">${t("crewAll")}</button></div>`+
+    X.crew.map((r,i)=>`<div class="card"><div class="row" style="justify-content:space-between"><h2 style="margin:0">${esc(r[0])}</h2><button class="btn" data-crew="${i}">📤</button></div><ul>${r[1].map(x=>`<li>${x[0]!=="*"?`<b>${esc(x[0])}</b> `:""}${esc(crewL(x))}</li>`).join("")}</ul></div>`).join("");}
+  else if(page==="drill"){h=`<div class="card note" style="margin-top:0">${t("drillX")}</div><div class="row" style="margin-bottom:6px"><button class="btn" id="drillSh">${t("drillSh")}</button></div><div class="card">`+
+    X.drill.map((d,i)=>`<div class="qa" data-i="${i}"><div class="who">${esc(d[0])} · RISQ ${esc(d[3])}</div><div style="font-weight:600">${esc(drQ(d))}</div><div class="ans2">${esc(drA(d))}${F(L)&&d[5]?`<div class="note" style="margin-top:6px">🇬🇧 ${esc(d[2])}</div>`:""}</div></div>`).join("")+`</div>`;}
+  else if(page==="docs"){const dc=ins?(ins.dc=ins.dc||{}):null;
+    h=`<div class="card note" style="margin-top:0">${t("docsX")} ${ins?t("docsKeep"):t("docsOpen")}</div><div class="row" style="margin-bottom:6px"><button class="btn" id="docsSh">${t("docsSh")}</button><span class="note" id="docsN"></span></div>`+
+    X.docs.map(([sn,l],i)=>`<div class="card"><h2 style="margin-top:0">${esc(sn)}</h2>${l.map((d,j)=>`<label class="chk"><input type="checkbox" data-dc="${i}_${j}" ${dc&&dc[i+"_"+j]?"checked":""} ${dc?"":"disabled"}><span>${esc(d)}</span></label>`).join("")}</div>`).join("");}
+  box.innerHTML=h;hdr();
+  box.querySelectorAll(".qa").forEach(e=>e.onclick=()=>e.classList.toggle("open"));
+  box.querySelectorAll("[data-crew]").forEach(b=>b.onclick=()=>shareText("RISQ briefing – "+X.crew[b.dataset.crew][0],crewTxt([X.crew[b.dataset.crew]])));
+  const ca=$("#crewAll");if(ca)ca.onclick=()=>shareText("RISQ crew briefing",crewTxt(X.crew));
+  const ds=$("#drillSh");if(ds)ds.onclick=()=>shareText("RightShip interview drill",X.drill.map((d,i)=>`${i+1}. [${d[0]} · RISQ ${d[3]}] ${drQ(d)}\n   → ${drA(d)}`).join("\n\n"));
+  const dsh=$("#docsSh");if(dsh)dsh.onclick=()=>shareText("RightShip hybrid documents (72h)",X.docs.map(([sn,l])=>sn.toUpperCase()+"\n"+l.map(d=>"☐ "+d).join("\n")).join("\n\n"));
+  const dn=()=>{const e=$("#docsN");if(e&&ins){const n0=X.docs.reduce((a,b)=>a+b[1].length,0),n=Object.values(ins.dc||{}).filter(Boolean).length;e.textContent=`${n}/${n0} ✔`;}};dn();
+  box.querySelectorAll("[data-dc]").forEach(c=>c.onchange=()=>{ins.dc[c.dataset.dc]=c.checked;save();dn();});}
+
+applyLang();go("list");
+/*SW*/
+</script>
+</body>
+</html>
