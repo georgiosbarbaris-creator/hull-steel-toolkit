@@ -52,6 +52,10 @@ nav button.on{color:var(--acc)}
 h2{font-size:17px;margin:0 0 8px}h3{font-size:15px;margin:14px 0 4px}
 ol,ul{padding-left:20px;margin:6px 0}
 .empty{text-align:center;color:var(--muted);padding:24px 8px}
+.nb{background:var(--acc);color:#fff;border-radius:6px;padding:1px 6px;font-size:10px;letter-spacing:0;text-transform:none;margin-left:4px}
+.sit{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}.sit:last-child{border:0}
+.sit .w{font-weight:800;color:var(--navy);font-size:15px}
+.wod{background:linear-gradient(135deg,#3a2a06,#7a5a10);color:#fff;border:0}.wod .word{color:#ffe7a6}
 </style>
 </head>
 <body>
@@ -67,6 +71,15 @@ ol,ul{padding-left:20px;margin:6px 0}
   <div class="chips" id="quick"></div>
  </div>
  <div id="res"></div>
+ <div class="card wod" id="wod"></div>
+ <a class="card" style="display:block;text-decoration:none;color:inherit" href="../rito/"><b>🦉 Κέρμα Σοφίας</b><div class="muted">Νέα εφαρμογή: γράψε την ερώτησή σου, γύρνα το κέρμα, πάρε το ρητό σου →</div></a>
+</section>
+
+<!-- ΚΑΤΑΣΤΑΣΕΙΣ -->
+<section class="view" id="v-sit">
+ <div class="card"><h2>Έτοιμες φράσεις για καταστάσεις</h2><p class="muted" style="margin:0">Διάλεξε την κατάσταση, πάτα 🔁 και πες τη φράση σαν μία λέξη.</p>
+  <div class="chips" id="sgr"></div></div>
+ <div id="sits"></div>
 </section>
 
 <!-- ΛΙΣΤΑ -->
@@ -105,6 +118,12 @@ ol,ul{padding-left:20px;margin:6px 0}
    <li>Μία ή δύο λέξεις τη φορά· όχι λίστες.</li>
    <li>Πρόσεχε πώς νιώθεις. Αν μια λέξη «κάθεται» καλά, κράτα τη στα ⭐.</li>
   </ul>
+  <h3>Από πού είναι οι λέξεις</h3>
+  <ul>
+   <li><b>Του Mangan</b> — οι κλασικές από το βιβλίο του (χωρίς σήμα).</li>
+   <li><b>νεότερη</b> — «ανοιχτές» λέξεις που πρόσθεσαν μεταγενέστεροι (π.χ. Shunyam Nirav και η κοινότητα των switchwords). Δεν είναι του Mangan.</li>
+   <li><b>Θάλασσα (δικές μας)</b> — ΑΓΚΥΡΑ, ΠΥΞΙΔΑ, ΦΑΡΟΣ, ΣΤΕΓΑΝΟ, ΠΡΙΜΑ, ΛΙΜΑΝΙ, ΒΑΡΔΙΑ: δικές μας λέξεις για ναυτικό ελληνικό μυαλό. Κατά τον Mangan, όποια λέξη «χτυπάει» μέσα σου, δουλεύει.</li>
+  </ul>
   <p class="muted">Σημείωση: δεν υπάρχει επιστημονική απόδειξη για τα switchwords. Λειτουργούν σαν εργαλείο αυτοϋποβολής και εστίασης — όπως ένα σύντομο mantra ή ένα «σημείο ελέγχου» στη βάρδια. Δεν αντικαθιστούν γιατρό ή επαγγελματική βοήθεια.</p>
  </div>
 </section>
@@ -112,6 +131,7 @@ ol,ul{padding-left:20px;margin:6px 0}
 
 <nav>
  <button data-v="find" class="on"><b>🔍</b>Βρες</button>
+ <button data-v="sit"><b>🧭</b>Καταστάσεις</button>
  <button data-v="list"><b>📜</b>Λίστα</button>
  <button data-v="fav"><b>⭐</b>Δικές μου</button>
  <button data-v="help"><b>📖</b>Οδηγός</button>
@@ -127,7 +147,7 @@ ol,ul{padding-left:20px;margin:6px 0}
 
 <script>
 // [λέξη, προφορά, σημασία, κατηγορία, ρίζες-λέξεις για αναζήτηση]
-const C={M:"Χρήματα",H:"Υγεία & ενέργεια",E:"Συναισθήματα",R:"Σχέσεις",W:"Δουλειά & επιτυχία",N:"Νους & μάθηση",P:"Προστασία",B:"Συνήθειες",A:"Ομορφιά & εικόνα",S:"Πνεύμα"};
+const C={M:"Χρήματα",H:"Υγεία & ενέργεια",E:"Συναισθήματα",R:"Σχέσεις",W:"Δουλειά & επιτυχία",N:"Νους & μάθηση",P:"Προστασία",B:"Συνήθειες",A:"Ομορφιά & εικόνα",S:"Πνεύμα",T:"Θάλασσα (δικές μας)"};
 const D=[
 ["TOGETHER","τουγκέδερ","Η κύρια λέξη: να τα έχεις όλα «μαζεμένα», να πετυχαίνεις σε ό,τι κάνεις· μπαίνει μπροστά σε κάθε άλλη λέξη","S","ολα,γενικ,τελει,ενοτ,συγκεντρ,μαζι,master"],
 ["DIVINE","ντιβάιν","Θαύματα και ασυνήθιστα επιτεύγματα· δυναμώνει την προσωπική ικανότητα","S","θαυμ,επιτευγ,ικανοτ,απιθαν"],
@@ -250,11 +270,113 @@ const D=[
 ["CURVE","κερβ","Δημιουργείς ομορφιά","A","ομορφ,τεχν,ζωγραφ,αισθητ"],
 ["PRAISE","πρέιζ","Ομορφιά· σταματάς την κριτική και το ψεγάδι","A","ομορφ,κριτικ,γκριν,ψεγαδ"],
 ["SPEND","σπεντ","Ντύνεσαι καλύτερα","A","ντυσ,ρουχ,εμφανισ"],
-["COPY","κόπι","Καλό γούστο· γονιμότητα","A","γουστ,γονιμ,εγκυμ"]
+["COPY","κόπι","Καλό γούστο· γονιμότητα","A","γουστ,γονιμ,εγκυμ"],
+// ── Νεότερες (Open switchwords της κοινότητας — όχι από το βιβλίο του Mangan)
+["ALLOW","αλάου","Αφήνεις να συμβεί· σταματάς να σπρώχνεις με το ζόρι","E","αφησ,ζορ,σπρωχν,πιεζ,να μην ελεγχ,ελεγχω τα παντα"],
+["ACCEPT","ακσέπτ","Αποδοχή αυτού που είναι — και μετά κίνηση","E","αποδεχ,δεχτ,δεν αλλαζ,συμβιβ,αδιεξοδ"],
+["RELEASE","ριλίς","Αφήνεις το παρελθόν, έναν άνθρωπο, ένα βάρος","E","παρελθ,πρωην,ξεχασ,αφησ,βαρος,κρατω μεσα"],
+["TRUST","τραστ","Εμπιστοσύνη στον εαυτό, στους άλλους, στη ζωή","E","εμπιστ,αμφιβολ,ανησυχ,καχυποψ,πιστεψ"],
+["CALM","κάαμ","Ηρεμία μέσα στη φουρτούνα","E","ηρεμ,πανικ,ταραχ,νευρ,φουρτουν"],
+["PEACE","πις","Εσωτερική ειρήνη· σταματά ο εσωτερικός πόλεμος","E","ειρην,γαληνη,εσωτερικ,συγκρουσ"],
+["JOY","τζόι","Χαρά χωρίς λόγο","E","χαρα,χαρουμ,ευτυχ"],
+["STEADY","στέντι","Σταθερό χέρι, σταθερό μυαλό","E","σταθερ,τρεμ,χερι,ακριβει"],
+["FLOW","φλόου","Ροή· τα πράγματα «ξεκολλάνε»","W","ροη,κολλημ,μπλοκ,σταματημ,ξεκολλ"],
+["EASY","ίζι","Γίνεται εύκολα, χωρίς ζόρι","W","ευκολ,δυσκολ,περιπλοκ,ζορι"],
+["FORWARD","φόργουορντ","Προχωράς· βγαίνεις από το τέλμα","W","προχωρ,στασιμ,τελμα,βαλτωσ"],
+["NEW","νιου","Νέα αρχή — νέα δουλειά, σπίτι, κεφάλαιο","W","νεα αρχ,νεα δουλει,αλλαγη δουλει,μετακομ,κεφαλαι,ξεκινημα"],
+["YES","γιες","Ανοίγεις στις ευκαιρίες· λες «ναι» στη ζωή","W","ευκαιρ,προτασ,προσφορα δουλει,ναι"],
+["SHINE","σάιν","Ξεχωρίζεις· σε προσέχουν και σε εκτιμούν","W","ξεχωρ,αναγνωρ,συνεντευξ,προσλη,εκτιμησ,επαιν"],
+["PASS","πας","Περνάς εξετάσεις, ελέγχους, επιθεωρήσεις","N","εξετασ,περασ,πτυχ,διπλωμ,audit,survey,vetting,ελεγχ,επιθεωρ,psc,class,rightship,κλασ"],
+["FOCUS","φόουκους","Συγκέντρωση σε ένα πράγμα","N","συγκεντρ,αφηρημ,διασπασ,εστιασ,ενα πραγμα"],
+["DEEP","ντιπ","Βάθος· φτάνεις στην ουσία","N","βαθ,ουσια,φιλοσοφ,νοημα,κατανοησ"],
+["CREATE","κριέιτ","Δημιουργείς κάτι καινούριο","N","δημιουργ,εφαρμογ,app,κωδικ,εφευρ,καινουρ"],
+["PROSPER","πρόσπερ","Ευημερία και προκοπή","M","ευημερ,προκοπ,αφθον,πλουτ"],
+["ENOUGH","ινάφ","Αρκεί — σταματά το «κι άλλο»","B","αρκει,ψωνι,σπαταλ,υπερκαταναλ,κι αλλο,απληστ"],
+["HEAL","χιλ","Επούλωση σώματος και ψυχής","H","γιατρ,επουλ,αρρωστ,αναρρ,θεραπ,τραυμ,χειρουργ"],
+["BREATHE","μπριθ","Ανάσα — επαναφορά στο τώρα","H","αναπν,ανασ,πανικ,λαχαν"],
+["REST","ρεστ","Βαθιά ξεκούραση","H","ξεκουρ,αναπαυ,εξαντλ,burnout,διακοπ"],
+["RENEW","ρινιού","Αναγέννηση· ξαναγεμίζουν οι μπαταρίες","H","αναγεν,ανανε,μπαταρ,νεα ζωη"],
+["GLOW","γκλόου","Λάμψη στο πρόσωπο· φρεσκάδα","A","λαμψ,δερμα,προσωπ,λαμπ"],
+["HOME","χόουμ","Βρίσκεις σπίτι — ή νιώθεις σαν στο σπίτι σου","R","σπιτι,ενοικ,διαμερισμ,μετακομ,στεγ"],
+["WELCOME","γουέλκαμ","Σε δέχονται· νιώθεις καλοδεχούμενος","R","νεο περιβαλλ,νεα ομαδ,ενταξ,ξενος,καινουρ"],
+["GRATITUDE","γκράτιτιουντ","Ευγνωμοσύνη — βλέπεις όσα ήδη έχεις","S","ευγνωμ,γκριν,παραπον"],
+["BLESS","μπλες","Ευλογείς — κάτι, κάποιον, ένα ξεκίνημα","S","ευλογ,ευχη,προσευχ,εγκαιν,βαφτισ"],
+["SAFE","σέιφ","Ασφάλεια σε δρόμο, θάλασσα, αέρα","P","ασφαλ,οδηγ,πτησ,λιμαν,δρομ"],
+["SHIELD","σιλντ","Ασπίδα απέναντι σε τοξικούς ανθρώπους","P","τοξικ,κακοπροαιρ,ενεργειακ,ζηλια αλλων"],
+// ── Ναυτικές λέξεις — δικές μας προσθήκες για ναυτικό ελληνικό μυαλό (όχι Mangan)
+["ANCHOR","άνκορ","Γείωση· μένεις σταθερός όταν όλα κουνάνε","T","γειωσ,αγκυρ,σταθερ,κουναει,χαμενος"],
+["COMPASS","κάμπας","Κατεύθυνση — παίρνεις τη σωστή πορεία","T","πορει,πυξιδ,κατευθυνσ,ποιο δρομο,αποφασ"],
+["LIGHTHOUSE","λάιτχαους","Ελπίδα· σε βρίσκει ο δρόμος στο σκοτάδι","T","ελπιδ,σκοταδ,φαρ,απελπισ"],
+["WATERTIGHT","γουότερταϊτ","Στεγανό — τίποτα αρνητικό δεν «μπάζει»","T","στεγαν,μπαζ,διαρρ,watertight,κλειστ"],
+["FAIRWIND","φέαργουιντ","Πρίμα — όλα πάνε ευνοϊκά","T","πριμα,ευνοικ,καλο καιρο,καιρος,ουριο,αερα"],
+["HARBOUR","χάρμπορ","Λιμάνι — ασφαλές καταφύγιο και ξεκούραση","T","λιμαν,καταφυγ,γυρισ σπιτι,επιστροφ"],
+["WATCHKEEP","γουότσκιπ","Βάρδια — εγρήγορση, ξύπνιος και καθαρός","T","βαρδι,εγρηγορσ,νυχτα,οδηγω νυχτα,ξυπνι"]
 ];
-const GR={"TOGETHER": "ΜΑΖΙ", "DIVINE": "ΘΕΪΚΑ", "DIVINE-LIGHT": "ΘΕΪΚΟ-ΦΩΣ", "COUNT": "ΜΕΤΡΑ", "FIND": "ΘΗΣΑΥΡΟΣ", "ADD": "ΠΡΟΣΘΕΣΕ", "CANCEL": "ΑΚΥΡΟ", "WASTE": "ΑΡΧΟΝΤΙΑ", "SUFFER": "ΑΝΤΕΧΩ", "GIVE": "ΔΩΣΕ", "FOR": "ΜΠΡΟΣΤΑ", "SCHEME": "ΣΧΕΔΙΟ", "RIDICULOUS": "ΘΕΑΜΑ", "PERSONAL": "ΠΡΟΣΩΠΙΚΟ", "SOPHISTICATE": "ΦΙΝΕΤΣΑ", "TAKE": "ΤΙΜΟΝΙ", "DONE": "ΕΓΙΝΕ", "DO": "ΚΑΝΕ", "NOW": "ΤΩΡΑ", "GO": "ΠΑΜΕ", "NEXT": "ΕΠΟΜΕΝΟ", "ATTENTION": "ΠΡΟΣΟΧΗ", "DIVINE-ORDER": "ΘΕΪΚΗ-ΤΑΞΗ", "PHASE": "ΡΥΘΜΟΣ", "PUT": "ΧΤΙΣΕ", "CLIMB": "ΑΝΕΒΑ", "FIGHT": "ΑΓΩΝΑΣ", "FIFTY-THREE": "ΠΕΝΗΝΤΑ-ΤΡΙΑ", "CONSIDER": "ΜΑΣΤΟΡΑΣ", "TAP": "ΑΝΑΝΕΩΣΕ", "ON": "ΑΝΑΨΕ", "GIGGLE": "ΚΕΦΙ", "CARE": "ΦΡΟΝΤΙΔΑ", "JUDGE": "ΚΡΙΣΗ", "WATCH": "ΠΑΡΑΤΗΡΗΣΕ", "CUTE": "ΕΞΥΠΝΑ", "HELP": "ΒΟΗΘΕΙΑ", "POINT": "ΣΗΜΑΔΙ", "CRYSTAL": "ΚΡΥΣΤΑΛΛΟ", "AROUND": "ΓΥΡΩ", "UNMASK": "ΞΕΣΚΕΠΑΣΕ", "WAIT": "ΠΕΡΙΜΕΝΕ", "ROOT": "ΡΙΖΑ", "REACH": "ΦΤΑΣΕ", "RESCIND": "ΑΝΑΙΡΕΣΗ", "WHET": "ΑΚΟΝΙ", "LISTEN": "ΑΚΟΥ", "BETWEEN": "ΑΝΑΜΕΣΑ", "SHOW": "ΣΕΒΑΣ", "SAGE": "ΞΟΡΚΙ", "GUARD": "ΦΥΛΑΚΑΣ", "MASK": "ΑΣΠΙΔΑ", "FOREVER": "ΓΙΑ-ΠΑΝΤΑ", "HALFWAY": "ΜΙΣΟΣ-ΔΡΟΜΟΣ", "BE": "ΕΙΜΑΙ", "ALONE": "ΜΟΝΟΣ", "CRISP": "ΦΡΕΣΚΟ", "MOVE": "ΚΙΝΗΣΗ", "HORSE": "ΑΛΟΓΟ", "CONTINUE": "ΣΥΝΕΧΙΣΕ", "BUBBLE": "ΦΟΥΣΚΑ", "FULL": "ΓΕΜΑΤΟ", "CHANGE": "ΑΛΛΑΞΕ", "SWIVEL": "ΣΤΡΙΨΕ", "LEARN": "ΜΑΘΕ", "OFF": "ΣΒΗΣΕ", "SAVE": "ΣΩΣΕ", "CUT": "ΚΟΨΕ", "TINY": "ΜΙΚΡΟ", "HO": "ΧΑΛΑΡΑ", "BLUFF": "ΜΠΛΟΦΑ", "COVER": "ΚΑΛΥΨΕ", "UP": "ΠΑΝΩ", "LIGHT": "ΦΩΣ", "CLEAR": "ΚΑΘΑΡΟ", "OVER": "ΠΕΡΑΣΕ", "ELATE": "ΑΝΑΤΑΣΗ", "TOMORROW": "ΑΥΡΙΟ", "THANKS": "ΕΥΧΑΡΙΣΤΩ", "FORGIVE": "ΣΥΓΧΩΡΩ", "SWING": "ΤΟΛΜΗ", "DUCK": "ΓΛΙΣΤΡΑ", "OPEN": "ΑΝΟΙΞΕ", "SLOW": "ΣΙΓΑ", "QUIET": "ΗΣΥΧΙΑ", "STRETCH": "ΑΠΛΩΣΕ", "ADJUST": "ΙΣΟΡΡΟΠΙΑ", "HOLD": "ΚΡΑΤΑ", "HORSESHOE": "ΠΕΤΑΛΟ", "DEDICATE": "ΑΦΙΕΡΩΣΗ", "REVERSE": "ΓΥΡΝΑ", "POSTPONE": "ΑΣΤΟ", "CHARM": "ΓΟΗΤΕΙΑ", "BRING": "ΦΕΡΕ", "LOVE": "ΑΓΑΠΗ", "HOLE": "ΕΛΞΗ", "WITH": "ΜΕ", "CONCEDE": "ΥΠΟΧΩΡΗΣΕ", "CONFESS": "ΟΜΟΛΟΓΗΣΕ", "SHUT": "ΚΛΕΙΣΕ", "CROWD": "ΠΕΙΘΑΡΧΙΑ", "CIRCULATE": "ΚΥΚΛΟΦΟΡΗΣΕ", "CHLORINE": "ΣΜΙΞΕ", "CHUCKLE": "ΓΕΛΙΟ", "SWEET": "ΓΛΥΚΑ", "MAGNANIMITY": "ΜΕΓΑΛΟΨΥΧΙΑ", "OFFER": "ΠΡΟΣΦΕΡΕ", "BOW": "ΥΠΟΚΛΙΣΗ", "DOWN": "ΚΑΤΩ", "REJOICE": "ΧΑΙΡΟΜΑΙ", "MONA-LISA": "ΧΑΜΟΓΕΛΟ", "RESTORE": "ΑΠΟΚΑΤΑΣΤΑΣΗ", "UNCLE": "ΕΝΩΣΗ", "WOMB": "ΑΓΚΑΛΙΑ", "LIMIT": "ΟΡΙΟ", "OIL": "ΛΑΔΙ", "ACT": "ΛΟΓΟΣ", "CLASSIC": "ΚΛΑΣΙΚΟ", "CURVE": "ΚΑΜΠΥΛΗ", "PRAISE": "ΕΠΑΙΝΟΣ", "SPEND": "ΚΟΜΨΑ", "COPY": "ΓΟΥΣΤΟ"};
-// Ετοιμες φράσεις (συνδυασμοί)
-const PH=[["TOGETHER+DIVINE+COUNT","Αφθονία χρημάτων"],["TOGETHER+REACH","Βρες ό,τι έχασες / λύση"],["TOGETHER+HO","Χαλάρωση τώρα"],["TOGETHER+GIGGLE","Γράψιμο με κέφι"],["TOGETHER+GUARD","Ασφαλές ταξίδι"],["TOGETHER+DONE","Τέλειωσε τη δουλειά"],["TOGETHER+UP","Πάνω η διάθεση"],["DIVINE-ORDER","Οργάνωση / συγύρισμα"]];
+const NEW=new Set(["ALLOW","ACCEPT","RELEASE","TRUST","CALM","PEACE","JOY","STEADY","FLOW","EASY","FORWARD","NEW","YES","SHINE","PASS","FOCUS","DEEP","CREATE","PROSPER","ENOUGH","HEAL","BREATHE","REST","RENEW","GLOW","HOME","WELCOME","GRATITUDE","BLESS","SAFE","SHIELD"]);
+const GR={"TOGETHER": "ΜΑΖΙ", "DIVINE": "ΘΕΪΚΑ", "DIVINE-LIGHT": "ΘΕΪΚΟ-ΦΩΣ", "COUNT": "ΜΕΤΡΑ", "FIND": "ΘΗΣΑΥΡΟΣ", "ADD": "ΠΡΟΣΘΕΣΕ", "CANCEL": "ΑΚΥΡΟ", "WASTE": "ΑΡΧΟΝΤΙΑ", "SUFFER": "ΑΝΤΕΧΩ", "GIVE": "ΔΩΣΕ", "FOR": "ΜΠΡΟΣΤΑ", "SCHEME": "ΣΧΕΔΙΟ", "RIDICULOUS": "ΘΕΑΜΑ", "PERSONAL": "ΠΡΟΣΩΠΙΚΟ", "SOPHISTICATE": "ΦΙΝΕΤΣΑ", "TAKE": "ΤΙΜΟΝΙ", "DONE": "ΕΓΙΝΕ", "DO": "ΚΑΝΕ", "NOW": "ΤΩΡΑ", "GO": "ΠΑΜΕ", "NEXT": "ΕΠΟΜΕΝΟ", "ATTENTION": "ΠΡΟΣΟΧΗ", "DIVINE-ORDER": "ΘΕΪΚΗ-ΤΑΞΗ", "PHASE": "ΡΥΘΜΟΣ", "PUT": "ΧΤΙΣΕ", "CLIMB": "ΑΝΕΒΑ", "FIGHT": "ΑΓΩΝΑΣ", "FIFTY-THREE": "ΠΕΝΗΝΤΑ-ΤΡΙΑ", "CONSIDER": "ΜΑΣΤΟΡΑΣ", "TAP": "ΑΝΑΝΕΩΣΕ", "ON": "ΑΝΑΨΕ", "GIGGLE": "ΚΕΦΙ", "CARE": "ΦΡΟΝΤΙΔΑ", "JUDGE": "ΚΡΙΣΗ", "WATCH": "ΠΑΡΑΤΗΡΗΣΕ", "CUTE": "ΕΞΥΠΝΑ", "HELP": "ΒΟΗΘΕΙΑ", "POINT": "ΣΗΜΑΔΙ", "CRYSTAL": "ΚΡΥΣΤΑΛΛΟ", "AROUND": "ΓΥΡΩ", "UNMASK": "ΞΕΣΚΕΠΑΣΕ", "WAIT": "ΠΕΡΙΜΕΝΕ", "ROOT": "ΡΙΖΑ", "REACH": "ΦΤΑΣΕ", "RESCIND": "ΑΝΑΙΡΕΣΗ", "WHET": "ΑΚΟΝΙ", "LISTEN": "ΑΚΟΥ", "BETWEEN": "ΑΝΑΜΕΣΑ", "SHOW": "ΣΕΒΑΣ", "SAGE": "ΞΟΡΚΙ", "GUARD": "ΦΥΛΑΚΑΣ", "MASK": "ΑΣΠΙΔΑ", "FOREVER": "ΓΙΑ-ΠΑΝΤΑ", "HALFWAY": "ΜΙΣΟΣ-ΔΡΟΜΟΣ", "BE": "ΕΙΜΑΙ", "ALONE": "ΜΟΝΟΣ", "CRISP": "ΦΡΕΣΚΟ", "MOVE": "ΚΙΝΗΣΗ", "HORSE": "ΑΛΟΓΟ", "CONTINUE": "ΣΥΝΕΧΙΣΕ", "BUBBLE": "ΦΟΥΣΚΑ", "FULL": "ΓΕΜΑΤΟ", "CHANGE": "ΑΛΛΑΞΕ", "SWIVEL": "ΣΤΡΙΨΕ", "LEARN": "ΜΑΘΕ", "OFF": "ΣΒΗΣΕ", "SAVE": "ΣΩΣΕ", "CUT": "ΚΟΨΕ", "TINY": "ΜΙΚΡΟ", "HO": "ΧΑΛΑΡΑ", "BLUFF": "ΜΠΛΟΦΑ", "COVER": "ΚΑΛΥΨΕ", "UP": "ΠΑΝΩ", "LIGHT": "ΦΩΣ", "CLEAR": "ΚΑΘΑΡΟ", "OVER": "ΠΕΡΑΣΕ", "ELATE": "ΑΝΑΤΑΣΗ", "TOMORROW": "ΑΥΡΙΟ", "THANKS": "ΕΥΧΑΡΙΣΤΩ", "FORGIVE": "ΣΥΓΧΩΡΩ", "SWING": "ΤΟΛΜΗ", "DUCK": "ΓΛΙΣΤΡΑ", "OPEN": "ΑΝΟΙΞΕ", "SLOW": "ΣΙΓΑ", "QUIET": "ΗΣΥΧΙΑ", "STRETCH": "ΑΠΛΩΣΕ", "ADJUST": "ΙΣΟΡΡΟΠΙΑ", "HOLD": "ΚΡΑΤΑ", "HORSESHOE": "ΠΕΤΑΛΟ", "DEDICATE": "ΑΦΙΕΡΩΣΗ", "REVERSE": "ΓΥΡΝΑ", "POSTPONE": "ΑΣΤΟ", "CHARM": "ΓΟΗΤΕΙΑ", "BRING": "ΦΕΡΕ", "LOVE": "ΑΓΑΠΗ", "HOLE": "ΕΛΞΗ", "WITH": "ΜΕ", "CONCEDE": "ΥΠΟΧΩΡΗΣΕ", "CONFESS": "ΟΜΟΛΟΓΗΣΕ", "SHUT": "ΚΛΕΙΣΕ", "CROWD": "ΠΕΙΘΑΡΧΙΑ", "CIRCULATE": "ΚΥΚΛΟΦΟΡΗΣΕ", "CHLORINE": "ΣΜΙΞΕ", "CHUCKLE": "ΓΕΛΙΟ", "SWEET": "ΓΛΥΚΑ", "MAGNANIMITY": "ΜΕΓΑΛΟΨΥΧΙΑ", "OFFER": "ΠΡΟΣΦΕΡΕ", "BOW": "ΥΠΟΚΛΙΣΗ", "DOWN": "ΚΑΤΩ", "REJOICE": "ΧΑΙΡΟΜΑΙ", "MONA-LISA": "ΧΑΜΟΓΕΛΟ", "RESTORE": "ΑΠΟΚΑΤΑΣΤΑΣΗ", "UNCLE": "ΕΝΩΣΗ", "WOMB": "ΑΓΚΑΛΙΑ", "LIMIT": "ΟΡΙΟ", "OIL": "ΛΑΔΙ", "ACT": "ΛΟΓΟΣ", "CLASSIC": "ΚΛΑΣΙΚΟ", "CURVE": "ΚΑΜΠΥΛΗ", "PRAISE": "ΕΠΑΙΝΟΣ", "SPEND": "ΚΟΜΨΑ", "COPY": "ΓΟΥΣΤΟ",
+"ALLOW":"ΑΦΗΣΕ","ACCEPT":"ΔΕΧΟΜΑΙ","RELEASE":"ΛΥΣΕ","TRUST":"ΕΜΠΙΣΤΟΣΥΝΗ","CALM":"ΗΡΕΜΑ","PEACE":"ΕΙΡΗΝΗ","JOY":"ΧΑΡΑ","STEADY":"ΣΤΑΘΕΡΑ","FLOW":"ΡΟΗ","EASY":"ΕΥΚΟΛΑ","FORWARD":"ΕΜΠΡΟΣ","NEW":"ΝΕΟ","YES":"ΝΑΙ","SHINE":"ΛΑΜΨΕ","PASS":"ΠΕΡΝΑΩ","FOCUS":"ΕΣΤΙΑΣΗ","DEEP":"ΒΑΘΙΑ","CREATE":"ΔΗΜΙΟΥΡΓΩ","PROSPER":"ΠΡΟΚΟΠΗ","ENOUGH":"ΑΡΚΕΙ","HEAL":"ΓΙΑΤΡΕΙΑ","BREATHE":"ΑΝΑΣΑ","REST":"ΑΝΑΠΑΥΣΗ","RENEW":"ΑΝΑΓΕΝΝΗΣΗ","GLOW":"ΛΑΜΠΙΡΙΖΩ","HOME":"ΣΠΙΤΙ","WELCOME":"ΚΑΛΩΣΗΡΘΕΣ","GRATITUDE":"ΕΥΓΝΩΜΟΣΥΝΗ","BLESS":"ΕΥΛΟΓΙΑ","SAFE":"ΑΣΦΑΛΩΣ","SHIELD":"ΘΩΡΑΚΑ",
+"ANCHOR":"ΑΓΚΥΡΑ","COMPASS":"ΠΥΞΙΔΑ","LIGHTHOUSE":"ΦΑΡΟΣ","WATERTIGHT":"ΣΤΕΓΑΝΟ","FAIRWIND":"ΠΡΙΜΑ","HARBOUR":"ΛΙΜΑΝΙ","WATCHKEEP":"ΒΑΡΔΙΑ"};
+// Καταστάσεις: [ομάδα, τίτλος, φράση, ρίζες αναζήτησης, συμβουλή]
+const SG={W:"⚓ Δουλειά & θάλασσα",M:"💰 Χρήματα",H:"💪 Υγεία & ενέργεια",E:"🧠 Ψυχή & διάθεση",R:"❤️ Σχέσεις & σπίτι",T:"🚙 Ταξίδι & overland",C:"✍️ Γράψιμο & δημιουργία",S:"✨ Πνεύμα"};
+const SIT=[
+["W","Πριν από επιθεώρηση (PSC, RightShip, Class, audit)","TOGETHER+ATTENTION+PASS+GUARD","επιθεωρ,psc,rightship,vetting,audit,survey,class,κλασ,επιθεωρητ,inspector","Πες τη στη σκάλα, πριν ανέβεις στο πλοίο."],
+["W","Διαπραγμάτευση (λογαριασμός ναυπηγείου, τιμή, συμβόλαιο)","TOGETHER+COUNT+LIMIT+OIL","διαπραγματ,λογαριασμ,ναυπηγ,εκπτωσ,τιμη,προσφορ,συμβολαι,bill,quotation","Πριν ανοίξεις το email ή μπεις στη συνάντηση."],
+["W","Δεξαμενισμός / επισκευές να πάνε ομαλά","TOGETHER+DIVINE-ORDER+DONE","δεξαμεν,drydock,επισκευ,ναυπηγ,yard,εργασ πλοιου",""],
+["W","Προθεσμία — αναφορά, report, παράδοση","TOGETHER+DO+DONE","προθεσμ,deadline,report,αναφορ,παραδοσ,τελειωσ",""],
+["W","Πολλά emails, χαρτιά, γραφειοκρατία","TOGETHER+NEXT+DIVINE-ORDER","email,mail,χαρτι,γραφειοκρ,πολλη δουλει,inbox",""],
+["W","Βλάβη — να βρεθεί η αιτία και η λύση","TOGETHER+CONSIDER+REACH","βλαβ,χαλασ,αιτια,ζημι,μηχαν,γεννητρ,αντλι,κινητηρ",""],
+["W","Ομάδα / πλήρωμα να δέσει και να ακούει","TOGETHER+WITH+CROWD","πληρωμ,ομαδ,ναυτ,συνεργ,πειθαρχ,υφισταμ",""],
+["W","Ηγεσία — παίρνω την ευθύνη","TOGETHER+TAKE+FIFTY-THREE","ηγεσ,ηγετ,ευθυν,καπετ,πλοιαρχ,διοικ",""],
+["W","Συνέντευξη / νέα θέση","TOGETHER+SHINE+ACT","συνεντευξ,θεση,προσλη,interview",""],
+["W","Νέα δουλειά — να σταθώ και να ενταχθώ","TOGETHER+NEW+WELCOME+CLIMB","νεα δουλει,πρωτη μερα,νεα εταιρ,ενταξ",""],
+["W","Παρουσίαση / ομιλία σε κόσμο","TOGETHER+ACT+HO","παρουσιασ,ομιλ,κοινο,meeting,συσκεψ,μιλησω",""],
+["M","Αφθονία χρημάτων","TOGETHER+DIVINE+COUNT","χρημ,λεφτ,αφθον,πλουτ",""],
+["M","Ξεχρέωμα","TOGETHER+CANCEL+COUNT","χρε,δανει,ξεχρεω,οφειλ",""],
+["M","Πωλήσεις (βιβλίο, εφαρμογή, προϊόν)","TOGETHER+GIVE+FOR+COUNT","πωλησ,πουλ,βιβλι,εφαρμογ,app,payhip,amazon,πελατ",""],
+["M","Αποταμίευση / επένδυση","TOGETHER+FIND+ADD","αποταμ,επενδ,οικονομ,κουμπαρ",""],
+["M","Δημοσιότητα / viral","TOGETHER+RIDICULOUS+FOR","viral,δημοσιοτ,instagram,youtube,followers,ακολουθ",""],
+["M","Μέτρο στα έξοδα","TOGETHER+ENOUGH+COUNT","εξοδα,σπαταλ,ψωνι,προυπολογ",""],
+["H","Ύπνος","TOGETHER+OFF+HO","υπν,αυπν,κοιμ,ξυπναω νυχτα","Πες την ξαπλωμένος, όλο και πιο σιγά."],
+["H","Κούραση — χρειάζομαι ενέργεια","TOGETHER+CRISP+MOVE","κουρασ,εξαντλ,ενεργ,νυσταζ",""],
+["H","Πόνος","TOGETHER+CHANGE+HEAL","πον,πονα,πονοκεφ,μεση,πλατη",""],
+["H","Κόψιμο τσιγάρου / κακής συνήθειας","TOGETHER+COUNT+SAVE+OFF","καπν,τσιγαρ,κοψω,συνηθει,εθισμ",""],
+["H","Γυμναστική — να το συνεχίσω","TOGETHER+BE+CONTINUE","γυμναστ,τρεξ,φορμα,προπον,αντοχ",""],
+["H","Ανάρρωση","TOGETHER+ALONE+HEAL+RENEW","αναρρ,αρρωστ,γιατρ,θεραπ,χειρουργ",""],
+["E","Άγχος","TOGETHER+HO+COVER","αγχ,στρες,ενταση,ανησυχ",""],
+["E","Φόβος / τρακ","TOGETHER+BLUFF+SWING","φοβ,τρακ,τρομ,δειλ",""],
+["E","Θυμός","TOGETHER+CLEAR+SLOW","θυμ,νευρ,οργ,εκνευρ,τσαντ",""],
+["E","Θλίψη","TOGETHER+TOMORROW+UP","θλιψ,λυπ,στενοχ,μαυρ,πεσμεν",""],
+["E","Ενοχές / τύψεις","TOGETHER+THANKS+FORGIVE","ενοχ,τυψ,μετανι",""],
+["E","Δεν ξέρω τι να αποφασίσω","TOGETHER+HELP+POINT+COMPASS","αποφασ,διλημ,αναποφασ,δεν ξερω,επιλογ",""],
+["E","Σύγχυση — θέλω καθαρή εικόνα","TOGETHER+CRYSTAL+AROUND","μπερδ,συγχυσ,ξεκαθαρ,δεν καταλαβ",""],
+["E","Υπομονή","TOGETHER+SLOW+ADJUST","υπομον,ανυπομον,περιμεν,βιασ",""],
+["E","Αυτοπεποίθηση","TOGETHER+UP+SWING+SHINE","αυτοπεποιθ,αυτοεκτιμ,κατωτερ,δεν αξιζ",""],
+["E","Να αφήσω κάτι πίσω","TOGETHER+RELEASE+DEDICATE","αφησ,πισω,παρελθ,κολλημ,πρωην",""],
+["R","Αγάπη / σχέση","TOGETHER+LOVE+WITH","αγαπ,σχεσ,συντροφ,ερωτ",""],
+["R","Συμφιλίωση μετά από καβγά","TOGETHER+CONCEDE+FORGIVE+OIL","καβγ,τσακω,μαλω,συμφιλ,παρεξηγ",""],
+["R","Όρια — να πω «όχι»","TOGETHER+LIMIT+BE","ορια,οχι,εκμεταλλ,πιεσ",""],
+["R","Οικογένεια ενωμένη","TOGETHER+UNCLE+WOMB","οικογεν,γονει,παιδι,αδερφ",""],
+["R","Παιδί να διαβάσει / σχολείο","TOGETHER+JUDGE+CARE+WATCH","σχολ,διαβασ,μαθητ,ασκησ,εργασια σχολ,φροντιστ",""],
+["R","Νέοι φίλοι / παρέα","TOGETHER+CIRCULATE+CHUCKLE","φιλ,παρεα,μοναξ,γνωρ",""],
+["R","Σπίτι — να βρω το σωστό","TOGETHER+HOME+REACH","σπιτι,ενοικ,διαμερισμ,μετακομ",""],
+["T","Ασφαλές ταξίδι","TOGETHER+GUARD+SAFE","ταξιδ,ασφαλ,δρομ,πτησ",""],
+["T","Καλός καιρός / ήρεμη θάλασσα","TOGETHER+FAIRWIND+CALM","καιρ,θαλασσ,φουρτουν,κυμα,ανεμ,μποφορ",""],
+["T","Μεγάλη οδήγηση","TOGETHER+HALFWAY+WATCHKEEP","οδηγ,μακρι,χιλιομετρ,εθνικ",""],
+["T","Δύσκολο πέρασμα off-road","TOGETHER+POINT+SWING+STEADY","off,offroad,λασπ,αμμο,βραχ,κλιση,περασμα,4x4,land cruiser",""],
+["T","Να βρω καλό σημείο για κατασκήνωση","TOGETHER+REACH+LISTEN","camping,κατασκην,ελευθερο camping,σκηνη,σημειο",""],
+["T","Χαμένα πράγματα (κλειδιά, χαρτιά)","TOGETHER+REACH","εχασα,χαμεν,κλειδ,ψαχν,να βρω",""],
+["T","Γυρισμός στο σπίτι","TOGETHER+HARBOUR+HOME","γυρισ,επιστροφ,σπιτι,αποβιβασ,sign off",""],
+["C","Γράψιμο με κέφι","TOGETHER+GIGGLE+FLOW","γραψ,γραφ,συγγραφ,κειμεν,δοκιμ",""],
+["C","Να τελειώσει το βιβλίο","TOGETHER+GIGGLE+DONE","βιβλι,μυθιστορ,κεφαλαι,τελειωσ",""],
+["C","Νέες ιδέες","TOGETHER+ON+CREATE","ιδε,δημιουργ,εφαρμογ,app,brainstorm",""],
+["C","Έμπνευση","TOGETHER+LIGHT+LISTEN","εμπνευσ,κενο,δεν μου ερχετ",""],
+["C","Να μάθω κάτι καινούριο","TOGETHER+WATCH+CARE+FOCUS","μαθ,δεξιοτ,σεμιναρ,γλωσσ,μαθημ",""],
+["S","Επιθυμία της καρδιάς","TOGETHER+CHARM+BRING","επιθυμ,ευχ,ονειρ,να γινει",""],
+["S","Γαλήνη / διαλογισμός","TOGETHER+QUIET+BE+PEACE","διαλογ,γαληνη,ησυχ,ειρην",""],
+["S","Ευγνωμοσύνη","TOGETHER+GRATITUDE+BLESS","ευγνωμ,ευχαριστ,ευλογ",""],
+["S","Νέα αρχή","TOGETHER+NEW+BLESS+GO","νεα αρχ,ξεκινημα,πρωτοχρον,γενεθλ",""]
+];
+const PH=[["TOGETHER+DIVINE+COUNT","Αφθονία χρημάτων"],["TOGETHER+ATTENTION+PASS+GUARD","Πριν την επιθεώρηση"],["TOGETHER+REACH","Βρες ό,τι έχασες"],["TOGETHER+HO+COVER","Άγχος"],["TOGETHER+GIGGLE+FLOW","Γράψιμο"],["TOGETHER+OFF+HO","Ύπνος"],["TOGETHER+DO+DONE","Προθεσμία"],["TOGETHER+UP","Πάνω η διάθεση"],["DIVINE-ORDER","Συγύρισμα"]];
 
 const norm=s=>s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/ς/g,"σ");
 let lang=(()=>{try{return localStorage.getItem("sw_lang")||"el"}catch(e){return "el"}})();
@@ -266,22 +388,29 @@ const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&qu
 const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 let favs=store.get("sw_favs",[]),hist=store.get("sw_hist",[]);
 
+const STOPG=new Set(["ΑΥΡΙΟ","ΤΩΡΑ","ΜΕ","ΚΑΤΩ","ΠΑΝΩ","ΓΥΡΩ","ΝΑΙ","ΝΕΟ","ΜΑΖΙ","ΜΟΝΟΣ","ΑΡΚΕΙ","ΣΙΓΑ","ΣΠΙΤΙ","ΚΑΝΕ","ΠΑΜΕ","ΕΙΜΑΙ","ΦΩΣ","ΜΙΚΡΟ","ΓΕΜΑΤΟ","ΚΡΑΤΑ","ΓΥΡΝΑ","ΑΣΤΟ","ΔΩΣΕ","ΦΕΡΕ","ΑΚΟΥ","ΚΛΕΙΣΕ"]);
 function search(q){
  const t=" "+norm(q)+" ";
  const sc=IDX.map(e=>{let s=0;for(const k of e.k){if(t.includes(k))s+=k.length+(k.includes(" ")?4:0)}
-  if(t.includes(norm(e.w).replace("-"," ")))s+=10;if(t.includes(" "+norm(e.g).replace("-"," ")+" "))s+=10;return{e,s}}).filter(x=>x.s>0).sort((a,b)=>b.s-a.s);
+  if(t.includes(norm(e.w).replace("-"," ")))s+=10;if(!STOPG.has(e.g)&&t.includes(" "+norm(e.g).replace("-"," ")+" "))s+=10;return{e,s}}).filter(x=>x.s>0).sort((a,b)=>b.s-a.s);
  return sc.slice(0,5).map(x=>x.e);
 }
+const SIDX=SIT.map((s,i)=>({i,g:s[0],t:s[1],w:s[2],k:s[3].split(",").map(norm).filter(Boolean),tip:s[4]}));
+function searchSit(q){
+ const t=" "+norm(q)+" ";
+ return SIDX.map(s=>{let n=0;for(const k of s.k)if(t.includes(k))n+=k.length+(k.includes(" ")?4:0);return{s,n}}).filter(x=>x.n>0).sort((a,b)=>b.n-a.n).slice(0,2).map(x=>x.s);
+}
+const badge=w=>NEW.has(w)?` <span class="nb">νεότερη</span>`:"";
 function card(e,big){
  const on=favs.includes(e.w);
- return `<div class="card"><div class="cat">${C[e.c]}</div>
+ return `<div class="card"><div class="cat">${C[e.c]}${badge(e.w)}</div>
  <div class="row" style="justify-content:space-between"><div><span class="word">${tr(e.w)}</span><span class="pron">${lang==="el"?e.w+" · "+e.p:e.g+" · "+e.p}</span></div>
  <button class="star" data-fav="${e.w}">${on?"★":"☆"}</button></div>
  <div class="mean">${esc(e.m)}</div>
  <div class="row"><button data-rep="${e.w}">🔁 Επανάληψη</button><button class="ghost" data-say="${e.w}">🔊</button><button class="ghost" data-copy="${e.w}">📋</button></div></div>`;
 }
-function phraseCard(w,label){
- return `<div class="card phrase"><div class="cat" style="color:#ffd27a">Φράση-διακόπτης</div><div class="word">${tr(w)}</div><div style="opacity:.7;font-size:13px">${sub(w)}</div>
+function phraseCard(w,label,kind){
+ return `<div class="card phrase"><div class="cat" style="color:#ffd27a">${kind||"Φράση-διακόπτης"}</div><div class="word">${tr(w)}</div><div style="opacity:.7;font-size:13px">${sub(w)}</div>
  <div class="mean" style="opacity:.9">${esc(label)}</div>
  <div class="row"><button class="acc" data-rep="${w}">🔁 Επανάληψη</button><button class="ghost" style="color:#fff;border-color:rgba(255,255,255,.3)" data-say="${w}">🔊</button><button class="ghost" style="color:#fff;border-color:rgba(255,255,255,.3)" data-copy="${w}">📋</button></div></div>`;
 }
@@ -296,6 +425,9 @@ function run(){
   const ph=main.length?"TOGETHER+"+main.slice(0,main.length>1&&r.length>1?2:1).map(e=>e.w).join("+"):"TOGETHER";
   h=phraseCard(ph,"Πες την όλη μαζί, σαν μία λέξη. Ή χρησιμοποίησε μόνο την πρώτη λέξη από κάτω.")+r.map(e=>card(e)).join("");
  }
+ const st=searchSit(q);
+ if(st.length)h=st.map(s=>phraseCard(s.w,"📍 "+s.t+(s.tip?" — "+s.tip:""),"Κατάσταση")).join("")+h;
+ h+=`<a class="card" style="display:block;text-decoration:none;color:inherit" href="../rito/?q=${encodeURIComponent(q)}"><b>🦉 Κέρμα Σοφίας</b><div class="muted">Ρίξε το κέρμα με την ίδια ερώτηση και πάρε ένα ρητό →</div></a>`;
  $("res").innerHTML=h;
  hist=[{q,w:r[0]?r[0].w:"TOGETHER",t:Date.now()},...hist.filter(x=>x.q!==q)].slice(0,30);store.set("sw_hist",hist);
 }
@@ -314,11 +446,11 @@ function drawList(){
  const f=norm($("filter").value.trim());
  const L=IDX.filter(e=>(!curCat||e.c===curCat)&&(!f||norm(e.w+" "+e.g+" "+e.m+" "+e.p).includes(f)||e.k.some(k=>f.includes(k)||k.includes(f)))).sort((a,b)=>tr(a.w).localeCompare(tr(b.w),"el"));
  [...$("cats").children].forEach(b=>b.style.borderColor=b.dataset.c===curCat?"var(--acc)":"");
- $("all").innerHTML=L.length?L.map(e=>`<div class="list-item"><div><span class="w">${tr(e.w)}</span> <span class="muted">${lang==="el"?e.w:e.g} · ${e.p}</span><div class="muted" style="color:var(--ink)">${esc(e.m)}</div></div>
+ $("all").innerHTML=L.length?L.map(e=>`<div class="list-item"><div><span class="w">${tr(e.w)}</span> <span class="muted">${lang==="el"?e.w:e.g} · ${e.p}</span>${badge(e.w)}<div class="muted" style="color:var(--ink)">${esc(e.m)}</div></div>
  <div style="display:flex;flex-direction:column;gap:4px"><button class="star" data-fav="${e.w}">${favs.includes(e.w)?"★":"☆"}</button><button class="ghost" style="padding:6px 8px" data-rep="${e.w}">🔁</button></div></div>`).join(""):`<div class="empty">Τίποτα με αυτό το φίλτρο</div>`;
 }
 function drawFav(){
- const F=favs.map(w=>IDX.find(e=>e.w===w)||{w,p:"",m:"Δική σου φράση",c:"S"});
+ const F=favs.map(w=>IDX.find(e=>e.w===w)||{w,p:"",m:(SIDX.find(s=>s.w===w)||{t:"Δική σου φράση"}).t,c:"S"});
  $("favs").innerHTML=F.length?F.map(e=>`<div class="list-item"><div><span class="w">${tr(e.w)}</span> <span class="muted">${sub(e.w)}</span><div class="muted">${esc(e.m)}</div></div>
  <div style="display:flex;gap:4px"><button class="ghost" style="padding:6px 8px" data-rep="${e.w}">🔁</button><button class="star" data-fav="${e.w}">★</button></div></div>`).join(""):`<div class="empty">Πάτα ☆ σε μια λέξη για να μπει εδώ.</div>`;
  $("hist").innerHTML=hist.length?hist.slice(0,12).map(h=>`<div class="list-item"><div><div>${esc(h.q)}</div><div class="muted">→ <b>${tr(h.w)}</b></div></div><button class="ghost" style="padding:6px 8px" data-again="${esc(h.q)}">↻</button></div>`).join(""):`<div class="empty">Ακόμα τίποτα.</div>`;
@@ -327,7 +459,18 @@ function drawFav(){
 // Πλοήγηση
 document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>show(b.dataset.v));
 function show(v){document.querySelectorAll(".view").forEach(x=>x.classList.toggle("on",x.id==="v-"+v));document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x.dataset.v===v));
- if(v==="list")drawList();if(v==="fav")drawFav();scrollTo(0,0)}
+ if(v==="list")drawList();if(v==="fav")drawFav();if(v==="sit")drawSit();scrollTo(0,0)}
+let curG="";
+function drawSit(){
+ $("sgr").innerHTML=`<button class="chip" data-g="" style="${!curG?"border-color:var(--acc)":""}">Όλες</button>`+Object.entries(SG).map(([k,v])=>`<button class="chip" data-g="${k}" style="${curG===k?"border-color:var(--acc)":""}">${v}</button>`).join("");
+ $("sits").innerHTML=Object.entries(SG).filter(([k])=>!curG||k===curG).map(([k,v])=>`<div class="card"><h2>${v}</h2>`+SIDX.filter(s=>s.g===k).map(s=>`<div class="sit"><div><div>${esc(s.t)}</div><div class="w">${tr(s.w)}</div><div class="muted">${sub(s.w)}${s.tip?" · "+esc(s.tip):""}</div></div><div style="display:flex;flex-direction:column;gap:4px"><button class="ghost" style="padding:6px 8px" data-rep="${s.w}">🔁</button><button class="star" data-fav="${s.w}">${favs.includes(s.w)?"★":"☆"}</button></div></div>`).join("")+`</div>`).join("");
+}
+$("sgr").onclick=e=>{const b=e.target.closest("[data-g]");if(b){curG=b.dataset.g;drawSit()}};
+function drawWod(){
+ const d=new Date(),n=d.getFullYear()*1000+Math.floor((d-new Date(d.getFullYear(),0,0))/864e5);
+ const e=IDX[(n*7919)%IDX.length];
+ $("wod").innerHTML=`<div class="cat" style="color:#ffe7a6">☀️ Λέξη της ημέρας</div><div class="row" style="justify-content:space-between"><div><span class="word">${tr(e.w)}</span><span class="pron" style="color:#ffe7a6">${lang==="el"?e.w:e.g} · ${e.p}</span></div><button class="acc" data-rep="${e.w}">🔁</button></div><div class="mean" style="margin-bottom:0">${esc(e.m)}</div>`;
+}
 
 // Κουμπιά παντού
 document.addEventListener("click",e=>{
@@ -356,8 +499,9 @@ $("reset").onclick=()=>{cnt=0;upd()};
 $("say").onclick=()=>say(cur);
 $("close").onclick=()=>$("counter").classList.remove("on");
 
-function setLang(l){lang=l;try{localStorage.setItem("sw_lang",l)}catch(e){}$("lng").textContent=l==="el"?"ΕΛ → EN":"EN → ΕΛ";if($("q").value.trim())run();drawList();drawFav();}
+function setLang(l){lang=l;try{localStorage.setItem("sw_lang",l)}catch(e){}$("lng").textContent=l==="el"?"ΕΛ → EN":"EN → ΕΛ";if($("q").value.trim())run();drawList();drawFav();drawWod();if($("v-sit").classList.contains("on"))drawSit();}
 $("lng").onclick=()=>setLang(lang==="el"?"en":"el");setLang(lang);
+try{const qq=new URLSearchParams(location.search).get("q");if(qq){$("q").value=qq;run();}}catch(e){}
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 </script>
 </body>
