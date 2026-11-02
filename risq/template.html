@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>RISQ Walk-Round</title>
+<title>RISQ Anti-RightShip</title>
 <!--PWA-->
 <style>
 :root{--bg:#eef1f4;--card:#fff;--ink:#14212e;--muted:#5a6876;--line:#d3dae1;--navy:#1d3a5c;--acc:#c8551c;
@@ -74,6 +74,27 @@ button{font:inherit;cursor:pointer}
 .en{margin-top:8px}.en textarea{border-color:#6d4aff}.stale{color:var(--hr);font-size:12px}
 #toast{position:fixed;left:50%;top:calc(70px + env(safe-area-inset-top));transform:translateX(-50%);background:#1d3a5c;color:#fff;padding:9px 14px;border-radius:10px;font-size:14px;opacity:0;transition:.2s;pointer-events:none;z-index:20}
 #toast.show{opacity:1}
+.tools{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tools button{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 10px;text-align:left;color:var(--ink);font:600 14px system-ui}
+.tools button small{display:block;font-weight:400;color:var(--muted);font-size:12px;margin-top:2px}
+.flt{background:#e8f0f8;border-radius:10px;padding:8px 10px;margin:4px 0 10px;font-size:14px}
+@media (prefers-color-scheme:dark){.flt{background:#16283a}}
+.flt summary{font-weight:700;color:var(--navy);cursor:pointer;font-size:13px}.flt li{margin:4px 0}.flt .m{color:var(--muted);font-size:12px}
+.trp{background:var(--hrb);color:var(--hr);font-weight:700;padding:1px 7px;border-radius:10px}
+.flb{background:#dfeaf6;color:#1d3a5c;font-weight:700;padding:1px 7px;border-radius:10px}
+@media (prefers-color-scheme:dark){.flb{background:#16283a;color:#8fb4dc}}
+.sev{display:flex;gap:4px;margin:8px 0 4px;align-items:center;font-size:13px;color:var(--muted)}
+.sev button{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:5px 10px;font-weight:700;font-size:13px}
+.sev button.on[data-s=L]{background:#5b8f6f;border-color:#5b8f6f;color:#fff}.sev button.on[data-s=M]{background:#c88a12;border-color:#c88a12;color:#fff}.sev button.on[data-s=H]{background:var(--f);border-color:var(--f);color:#fff}
+.co{margin-top:8px;border:1px dashed var(--line);border-radius:10px;padding:8px}.co summary{font-weight:700;color:var(--ok);cursor:pointer;font-size:14px}
+.co label{margin-top:6px}.co textarea{font-size:14px}
+.big{font-size:28px;font-weight:800}.vt{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}.vt td,.vt th{border:1px solid var(--line);padding:6px;text-align:center}
+.v12{background:var(--okb);color:var(--ok);font-weight:700}.v9{background:#eef6d9;color:#5b7a12;font-weight:700}.v6{background:var(--hrb);color:var(--hr);font-weight:700}.v3{background:#fde3cf;color:#a5490f;font-weight:700}.vU{background:var(--fb);color:var(--f);font-weight:700}
+.pg h3{margin:14px 0 6px;font-size:15px}.pg ul{padding-left:20px;margin:6px 0}.pg li{margin:4px 0}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--line);font-size:15px}.chk input{width:22px;height:22px;flex:0 0 22px;margin-top:1px}
+.qa{border-bottom:1px solid var(--line);padding:10px 0}.qa .who{font-size:12px;color:var(--acc);font-weight:700}.qa .ans2{display:none;background:var(--okb);border-radius:8px;padding:8px;margin-top:6px;font-size:14px}.qa.open .ans2{display:block}
+.snap img{max-width:100%;border-radius:10px;border:1px solid var(--line)}
+.res{background:var(--bg);border-radius:10px;padding:10px;margin-top:8px;font-size:14px;white-space:pre-wrap}
 </style>
 </head>
 <body>
@@ -86,7 +107,16 @@ button{font:inherit;cursor:pointer}
   <section id="v-list">
     <div class="card"><h2>Πώς δουλεύει</h2>
       <p class="note" style="margin:0">1. Νέα επιθεώρηση → όνομα πλοίου. 2. Διάλεξε χώρο (Bridge, Deck, ER…) και περπάτα τον. 3. Σε κάθε ερώτηση: <b>✓ OK</b>, <b>✗ Finding</b> (σημείωση + φωτογραφία) ή <b>N/A</b>. 4. Στο τέλος: <b>Findings → PDF</b>.<br>«ℹ Τι κοιτάει ο inspector» = πότε γράφεται finding. Λειτουργεί offline.</p></div>
-    <div class="card"><h2>🔥 Τι πιάνουν πιο συχνά (RightShip 2025)</h2><p class="note" style="margin:0">Enclosed space (4.5) · Lifeboats/rescue boat & davits (4.18) · Hatch covers (9A) · Machinery: boilers, em'cy generator, compressors (13) · Pilot ladders (4.37) · Mooring lines & winch brakes (10.4/10.5/10.15) · PPE (4.11) · Deck lights (14.9) · Safe access (4.35) · MPX & manoeuvring data (3.3/3.6).<br>Ξεκίνα κάθε χώρο με το φίλτρο <b>🔥 Συχνά</b>. Όριο για καλή βαθμολογία: κάτω από ~20 findings.</p></div>
+    <div class="card"><h2>🛡 Anti-RightShip</h2>
+      <div class="tools">
+        <button data-pg="traps">🎯 Οι 10 παγίδες<small>Τι μας γράφουν ξανά και ξανά</small></button>
+        <button data-pg="mind">🧠 Το μυαλό του inspector<small>12 κανόνες που ακολουθεί</small></button>
+        <button data-pg="crew">👷 Briefing πληρώματος<small>Κάρτα ανά βαθμό (English)</small></button>
+        <button data-pg="drill">🎤 Drill συνέντευξης<small>Τι ρωτάει & σωστή απάντηση</small></button>
+        <button data-pg="docs">📁 Έγγραφα hybrid 72h<small>Λίστα για upload</small></button>
+        <button data-pg="fleet">⚓ Ιστορικό στόλου<small id="fleetSt">Εισαγωγή αρχείου</small></button>
+      </div>
+      <p class="note" style="margin:10px 0 0">Στόχος για validity 12 μηνών: <b>≤23 low/medium, το πολύ 1 High, καλό close-out</b>. Τα Sections 3 & 13: ~4 findings = 1 High.</p></div>
     <details class="card" id="aiCard"><summary style="font-weight:600;cursor:pointer">✨ Μετάφραση με Claude (API key)</summary>
       <p class="note">Μιλάς/γράφεις ελληνικά → το ✨ English γράφει σωστό αγγλικό finding. Χρειάζεται internet και δικό σου key από console.anthropic.com. Το key μένει μόνο σε αυτό το κινητό.</p>
       <label>API key<input id="apiKey" type="password" placeholder="sk-ant-..." autocomplete="off"></label>
@@ -110,13 +140,34 @@ button{font:inherit;cursor:pointer}
   <!-- INSPECTION HOME (areas) -->
   <section id="v-home" class="hide">
     <div class="card tog"><div><b>★ Μόνο high-risk</b><div class="note">Γρήγορη επιθεώρηση: οι ερωτήσεις με το μεγαλύτερο βάρος</div></div><label class="sw"><input type="checkbox" id="hrOnly"><span></span></label></div>
+    <div class="row" style="margin:0 0 10px"><button class="btn ai" id="snapGo" style="flex:1">📷 Φωτογράφισε → AI βρίσκει την ερώτηση</button></div>
     <div class="tiles" id="tiles"></div>
-    <div class="row" style="margin-top:12px"><button class="btn" id="editIns">✎ Στοιχεία</button></div>
+    <div class="row" style="margin-top:12px"><button class="btn" id="editIns">✎ Στοιχεία</button><button class="btn" id="docsIns">📁 Έγγραφα 72h</button><button class="btn" id="trapsIns">🎯 Παγίδες</button></div>
+  </section>
+
+  <!-- PAGES (traps, mind, crew, drill, docs, fleet) -->
+  <section id="v-page" class="hide"><div id="pg" class="pg"></div></section>
+
+  <!-- SNAP: photo → AI → archive -->
+  <section id="v-snap" class="hide">
+    <div class="card snap">
+      <h2>📷 Φωτογραφία → ερώτηση RISQ</h2>
+      <p class="note" style="margin-top:0">Βγάλε φωτογραφία. Ο AI λέει τι βλέπει, ποιο είναι το defect, σε ποια ερώτηση πάει και πόσο σοβαρό είναι. Μετά το αρχειοθετείς στην επιθεώρηση. Χωρίς internet διαλέγεις μόνος σου την ερώτηση.</p>
+      <label class="cam" style="justify-content:center">📷 Λήψη / επιλογή φωτογραφίας<input id="snapIn" type="file" accept="image/*" style="display:none"></label>
+      <div id="snapImg" style="margin-top:8px"></div>
+      <label style="margin-top:8px">Σημείωση (προαιρετικά: πού είναι, τι υποψιάζεσαι)<textarea id="snapNote" rows="2"></textarea></label>
+      <div class="row" style="margin-top:8px"><button class="btn ai" id="snapAi">✨ Ανάλυση με AI</button></div>
+      <div id="snapRes"></div>
+      <label style="margin-top:10px">Ερώτηση RISQ<input id="snapQ" list="qlist" placeholder="π.χ. 4.17 ή λέξη (oxygen, hatch…)"></label><datalist id="qlist"></datalist>
+      <div class="sev" id="snapSev">Σοβαρότητα: <button data-s="L">Low</button><button data-s="M" class="on">Med</button><button data-s="H">High</button></div>
+      <label>Finding (English)<textarea id="snapEn" rows="3"></textarea></label>
+      <div class="row" style="margin-top:10px"><button class="btn p" id="snapSave">📌 Αρχειοθέτηση ως finding</button><button class="btn" id="snapOk">✓ Αρχειοθέτηση ως OK (φωτο)</button></div>
+    </div>
   </section>
 
   <!-- AREA QUESTIONS -->
   <section id="v-area" class="hide">
-    <div class="seg" id="aflt"><button data-f="open" class="on">Ανοιχτά</button><button data-f="hot">🔥 Συχνά</button><button data-f="all">Όλα</button><button data-f="f">Findings</button></div>
+    <div class="seg" id="aflt"><button data-f="open" class="on">Ανοιχτά</button><button data-f="hot">🔥 Συχνά</button><button data-f="fleet">⚓ Στόλος</button><button data-f="all">Όλα</button><button data-f="f">✗</button></div>
     <div id="qs"></div>
     <div class="row" style="justify-content:space-between;margin-top:6px"><button class="btn" id="prevA">‹ Προηγ. χώρος</button><button class="btn p" id="nextA">Επόμενος χώρος ›</button></div>
   </section>
@@ -125,6 +176,9 @@ button{font:inherit;cursor:pointer}
   <section id="v-find" class="hide">
     <div class="card"><div class="row" style="justify-content:space-between"><h2 style="margin:0">Σύνοψη</h2></div><div id="sum" style="margin-top:8px"></div>
       <div class="row" style="margin-top:12px"><button class="btn p" id="xPdf">📄 PDF report</button><button class="btn ai" id="xAi">✨ Μετάφραση όλων</button><button class="btn" id="xTxt">📤 Κείμενο</button><button class="btn" id="xCsv">📊 Excel</button></div></div>
+    <div class="card" id="valid"></div>
+    <div class="card"><h2>✅ Close-out (RightShip format)</h2><p class="note" style="margin-top:0">Ένα PDF για όλα τα findings, με τη σειρά του report. Για κάθε finding: explanation, immediate cause, root cause, corrective action, preventive measure (υπεύθυνος βαθμός + ημερομηνία) και φωτογραφίες before/after. Συμπλήρωσε σε κάθε finding το «✅ Close-out». Το ✨ γράφει πρόταση.</p>
+      <div class="row"><button class="btn p" id="xCo">📑 Close-out PDF</button><button class="btn ai" id="xCoAi">✨ Πρόταση για όλα</button></div></div>
     <div id="flist"></div>
   </section>
 </main>
@@ -132,6 +186,10 @@ button{font:inherit;cursor:pointer}
 <div id="toast"></div>
 <script>
 const DATA=/*DATA*/;
+const X=/*EXTRA*/;const QM=Object.fromEntries(DATA.q.map(q=>[q.id,q]));const HI=new Set(X.hi);
+const TRAPQ={};X.traps.forEach((t,i)=>t.q.forEach(q=>{(TRAPQ[q]=TRAPQ[q]||[]).push(i+1);}));
+let FLEET=null;try{FLEET=JSON.parse(localStorage.getItem("risq_fleet")||"null");}catch(e){}
+const FL=id=>(FLEET&&FLEET.f&&FLEET.f[id])||[];
 const AREAS=[["DOC","📋","Documents","Γραφείο Master / ship's office"],["BRG","🧭","Bridge","Γέφυρα, ECDIS, charts, GMDSS"],["LSA","🛟","LSA / FFE","Lifeboats, rafts, fire equipment"],
  ["DECK","⚓","Deck & mooring","Mooring, cranes, ladders, pollution"],["HOLD","📦","Holds & hatches","Cargo holds, hatch covers, access"],["ER","⚙️","Engine room","Machinery, OWS, fire, steering"],["ACC","🛏","Accommodation","Galley, cabins, hospital, welfare"]];
 const AN=Object.fromEntries(AREAS.map(a=>[a[0],a[2]]));
@@ -161,14 +219,16 @@ let cur=null,area=null,aflt="open",view="list";
 const I=()=>S.ins.find(x=>x.id===cur);
 const QS=ins=>DATA.q.filter(q=>!ins.hr||q.h);
 function stats(ins,a){const qs=QS(ins).filter(q=>!a||q.a===a);let d=0,f=0;qs.forEach(q=>{const v=ins.st[q.id];if(v)d++;if(v==="f")f++;});return{n:qs.length,d,f};}
-function go(v){view=v;["list","edit","home","area","find"].forEach(x=>$("#v-"+x).classList.toggle("hide",x!==v));
-  $("#nav").classList.toggle("hide",!cur||v==="list"||v==="edit");$$("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.go===v||(v==="area"&&b.dataset.go==="home")));
+let page=null,pageFrom="list";
+function go(v){view=v;["list","edit","home","area","find","page","snap"].forEach(x=>$("#v-"+x).classList.toggle("hide",x!==v));
+  $("#nav").classList.toggle("hide",!cur||v==="list"||v==="edit"||v==="page"&&pageFrom==="list");$$("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.go===v||(v==="area"&&b.dataset.go==="home")));
   $("#back").classList.toggle("hide",v==="list");hdr();window.scrollTo(0,0);
-  ({list:rList,home:rHome,area:rArea,find:rFind,edit:()=>{}})[v]();}
-function hdr(){const ins=I();if(!ins||view==="list"){$("#ttl").textContent="RISQ 3.2 Walk-Round";$("#sub").textContent=`${DATA.q.length} ερωτήσεις · offline`;$("#pbar").classList.add("hide");return;}
+  ({list:rList,home:rHome,area:rArea,find:rFind,edit:()=>{},page:rPage,snap:rSnap})[v]();}
+function hdr(){const ins=I();if(view==="page"||view==="snap"){$("#ttl").textContent=view==="snap"?"📷 Φωτο → AI":PGT[page]||"";$("#sub").textContent=ins&&pageFrom!=="list"?ins.vessel:"Anti-RightShip toolkit";$("#pbar").classList.add("hide");return;}
+  if(!ins||view==="list"){$("#ttl").textContent="RISQ 3.2 Walk-Round";$("#sub").textContent=`${DATA.q.length} ερωτήσεις · offline`;$("#pbar").classList.add("hide");return;}
   const s=stats(ins);$("#ttl").textContent=view==="area"?AN[area]:ins.vessel;$("#sub").textContent=`${ins.vessel}${ins.port?" · "+ins.port:""} · ${s.d}/${s.n} · ${s.f} findings${ins.hr?" · ★":""}`;
   $("#pbar").classList.remove("hide");$("#pfill").style.width=(s.n?s.d/s.n*100:0)+"%";}
-$("#back").onclick=()=>go(view==="area"||view==="find"?"home":view==="home"?"list":cur&&view==="edit"&&I()?"home":"list");
+$("#back").onclick=()=>{if(view==="page"||view==="snap"){if(pageFrom==="list")cur=null;go(pageFrom);return;}go(view==="area"||view==="find"?"home":view==="home"?"list":cur&&view==="edit"&&I()?"home":"list");};
 $$("#nav button").forEach(b=>b.onclick=()=>{if(b.dataset.go==="list")cur=null;go(b.dataset.go);});
 
 /* ---------- list ---------- */
@@ -187,7 +247,7 @@ $("#e_save").onclick=()=>{const v=$("#e_vessel").value.trim();if(!v){toast("Βά
   Object.assign(ins,{vessel:v,imo:$("#e_imo").value.trim(),port:$("#e_port").value.trim(),date:$("#e_date").value,by:$("#e_by").value.trim()});
   $$("[data-s1]").forEach(i=>ins.s1[i.dataset.s1]=i.value.trim());save();go("home");};
 let delArm=0;$("#e_del").onclick=async e=>{if(!delArm){delArm=1;e.target.textContent="Σίγουρα; Πάτα ξανά";setTimeout(()=>{delArm=0;e.target.textContent="Διαγραφή";},3000);return;}
-  const ins=I();for(const k of Object.values(ins.ph).flat())await IDB.del(k).catch(()=>{});S.ins=S.ins.filter(x=>x.id!==cur);cur=null;save();delArm=0;e.target.textContent="Διαγραφή";go("list");};
+  const ins=I();for(const k of [...Object.values(ins.ph).flat(),...Object.values(ins.pa||{}).flat()])await IDB.del(k).catch(()=>{});S.ins=S.ins.filter(x=>x.id!==cur);cur=null;save();delArm=0;e.target.textContent="Διαγραφή";go("list");};
 
 /* ---------- home ---------- */
 $("#hrOnly").onchange=e=>{I().hr=e.target.checked;save();rHome();hdr();};
@@ -200,19 +260,31 @@ function rHome(){const ins=I();$("#hrOnly").checked=!!ins.hr;
 /* ---------- area ---------- */
 $("#aflt").addEventListener("click",e=>{const b=e.target.closest("[data-f]");if(!b)return;aflt=b.dataset.f;rArea();});
 function rArea(){const ins=I();$$("#aflt button").forEach(b=>b.classList.toggle("on",b.dataset.f===aflt));
-  const qs=QS(ins).filter(q=>q.a===area).filter(q=>aflt==="all"||(aflt==="open"?!ins.st[q.id]:aflt==="hot"?(q.f&&!ins.st[q.id]):ins.st[q.id]==="f"));
+  const qs=QS(ins).filter(q=>q.a===area).filter(q=>aflt==="all"||(aflt==="open"?!ins.st[q.id]:aflt==="hot"?((q.f||TRAPQ[q.id])&&!ins.st[q.id]):aflt==="fleet"?(FL(q.id).length&&!ins.st[q.id]):ins.st[q.id]==="f"));
   const box=$("#qs");box.innerHTML=qs.length?"":`<div class="card" style="text-align:center">${aflt==="open"?"✓ Όλα τα σημεία του χώρου ελέγχθηκαν.":"Τίποτα εδώ."}</div>`;
+  if(aflt==="fleet"&&!FLEET)box.innerHTML=`<div class="card note">Δεν έχει γίνει εισαγωγή ιστορικού στόλου. Αρχική οθόνη → ⚓ Ιστορικό στόλου.</div>`;
   qs.forEach(q=>box.appendChild(qCard(ins,q)));
   const i=AREAS.findIndex(a=>a[0]===area);$("#prevA").style.visibility=i>0?"":"hidden";$("#nextA").textContent=i<AREAS.length-1?`${AREAS[i+1][2]} ›`:"Findings ›";}
 function qCard(ins,q){const el=document.createElement("article"),v=ins.st[q.id]||"";el.className="q "+v;el.dataset.id=q.id;
-  el.innerHTML=`<div class="qh"><span class="id">${esc(q.id)}</span>${q.h?'<span class="hrt">★ high-risk</span>':""}${q.f?'<span class="hot">🔥</span>':""}<span style="flex:1"></span><span>${esc(q.sn)}</span></div>
+  el.innerHTML=`<div class="qh"><span class="id">${esc(q.id)}</span>${q.h?'<span class="hrt">★ high-risk</span>':""}${q.f?'<span class="hot">🔥</span>':""}${TRAPQ[q.id]?'<span class="trp">🎯</span>':""}${FL(q.id).length?`<span class="flb">⚓${FL(q.id).length}</span>`:""}<span style="flex:1"></span><span>${esc(q.sn)}</span></div>
    <div class="t">${esc(q.g)}</div>${q.c.length?`<div class="lk">👀 Κοίτα:</div><ul>${q.c.map(c=>`<li>${esc(c)}</li>`).join("")}</ul>`:""}
    ${q.f?`<div class="ff"><b>🔥 Έτσι το γράφουν οι inspectors:</b><ul>${q.f.map(c=>`<li>${esc(c)}</li>`).join("")}</ul></div>`:""}
+   ${FL(q.id).length?`<details class="flt"><summary>⚓ Μας το έγραψαν ${FL(q.id).length} φορές στον στόλο — δες πώς</summary><ul>${FL(q.id).map(r=>`<li>${esc(r[3])}<div class="m">${esc(r[0])} · ${esc(r[1])}${r[2]&&r[2]!=="-"?" · "+esc(r[2]):""}</div></li>`).join("")}</ul></details>`:""}
    <div class="ans"><button data-v="ok" class="${v==="ok"?"on":""}">✓ OK</button><button data-v="f" class="${v==="f"?"on":""}">✗ Finding</button><button data-v="na" class="${v==="na"?"on":""}">N/A</button></div>
    <div class="fbox"><textarea class="gr" rows="2" placeholder="Τι βρέθηκε (ελληνικά ή αγγλικά)">${esc(ins.nt[q.id]||"")}</textarea>
      <div class="row" style="margin-top:6px"><button class="mic">🎤 Ομιλία</button><button class="ai">✨ English</button><label class="cam">📷<input type="file" accept="image/*" multiple style="display:none"></label></div>
      <div class="en ${ins.en&&ins.en[q.id]?"":"hide"}"><div class="note">English (για το report) <span class="stale hide">⚠ άλλαξε το ελληνικό — ξαναπάτα ✨</span></div><textarea class="et" rows="3">${esc(ins.en&&ins.en[q.id]||"")}</textarea></div>
-     <div class="ph"></div></div>
+     <div class="ph"></div>
+     <div class="sev">Σοβαρότητα: <button data-s="L">Low</button><button data-s="M">Med</button><button data-s="H">High</button><span class="note" style="margin-left:4px">${HI.has(q.id)?"RightShip High-risk ερώτηση":""}</span></div>
+     <div class="row"><button class="btn ai aiph">🔍 AI: τι δείχνει η φωτο</button></div><div class="aires"></div>
+     <details class="co"><summary>✅ Close-out</summary>
+       <label>Explanation<textarea data-co="ex" rows="2"></textarea></label>
+       <label>Immediate cause<textarea data-co="ic" rows="2"></textarea></label>
+       <label>Root cause (όχι «human error»)<textarea data-co="rc" rows="2"></textarea></label>
+       <label>Corrective action – υπεύθυνος βαθμός – ημερομηνία<textarea data-co="ca" rows="3"></textarea></label>
+       <label>Preventive measure – υπεύθυνος – ημερομηνία (και για τον στόλο)<textarea data-co="pm" rows="3"></textarea></label>
+       <div class="row" style="margin-top:6px"><button class="btn ai coai">✨ Πρόταση close-out</button><label class="cam">📷 After<input type="file" accept="image/*" multiple style="display:none" class="afterIn"></label></div>
+       <div class="ph pha"></div></details></div>
    <details class="more"><summary>ℹ Τι κοιτάει ο inspector</summary><pre>${esc(q.x)}</pre><p class="note" style="margin:8px 0 0"><b>RISQ:</b> ${esc(q.o)}</p></details>`;
   el.querySelectorAll(".ans button").forEach(b=>b.onclick=()=>{const nv=ins.st[q.id]===b.dataset.v?"":b.dataset.v;if(nv)ins.st[q.id]=nv;else delete ins.st[q.id];save();
     el.className="q "+nv;el.querySelectorAll(".ans button").forEach(x=>x.classList.toggle("on",x.dataset.v===nv));hdr();
@@ -226,9 +298,23 @@ function qCard(ins,q){const el=document.createElement("article"),v=ins.st[q.id]|
   el.querySelector(".ai").onclick=async e=>{const b=e.currentTarget,t=b.textContent;b.disabled=true;b.textContent="⏳…";
     try{await translateQ(ins,q);et.value=ins.en[q.id];enb.classList.remove("hide");chk();}catch(x){toast(x.message);}b.disabled=false;b.textContent=t;};
   el.querySelector("input[type=file]").onchange=async e=>{const fs=[...e.target.files];e.target.value="";for(const f of fs){try{const k="p_"+uid();await IDB.put(k,await fileToJpeg(f));(ins.ph[q.id]=ins.ph[q.id]||[]).push(k);}catch(x){toast("Σφάλμα φωτογραφίας");}}save();phs(el,ins,q);};
-  phs(el,ins,q);return el;}
-async function phs(el,ins,q){const box=el.querySelector(".ph");box.innerHTML="";for(const k of ins.ph[q.id]||[]){const d=await IDB.get(k);if(!d)continue;const w=document.createElement("div");
-  w.innerHTML=`<img src="${d}"><button>✕</button>`;w.querySelector("button").onclick=async()=>{ins.ph[q.id]=ins.ph[q.id].filter(x=>x!==k);await IDB.del(k).catch(()=>{});save();phs(el,ins,q);};box.appendChild(w);}}
+  // severity
+  ins.sv=ins.sv||{};const sv=el.querySelectorAll(".sev button");const shs=()=>sv.forEach(b=>b.classList.toggle("on",b.dataset.s===sevOf(ins,q)));shs();
+  sv.forEach(b=>b.onclick=()=>{ins.sv[q.id]=b.dataset.s;save();shs();});
+  // close-out
+  ins.co=ins.co||{};el.querySelectorAll("[data-co]").forEach(t=>{t.value=(ins.co[q.id]||{})[t.dataset.co]||"";t.oninput=()=>{(ins.co[q.id]=ins.co[q.id]||{})[t.dataset.co]=t.value;save();};});
+  el.querySelector(".coai").onclick=async e=>{const b=e.currentTarget,t=b.textContent;b.disabled=true;b.textContent="⏳…";try{await coDraft(ins,q);el.querySelectorAll("[data-co]").forEach(x=>x.value=(ins.co[q.id]||{})[x.dataset.co]||"");}catch(x){toast(x.message);}b.disabled=false;b.textContent=t;};
+  el.querySelector(".afterIn").onchange=async e=>{const fs=[...e.target.files];e.target.value="";ins.pa=ins.pa||{};for(const f of fs){try{const k="p_"+uid();await IDB.put(k,await fileToJpeg(f));(ins.pa[q.id]=ins.pa[q.id]||[]).push(k);}catch(x){toast("Σφάλμα φωτογραφίας");}}save();phs(el,ins,q,1);};
+  // AI photo
+  el.querySelector(".aiph").onclick=async e=>{const b=e.currentTarget,t=b.textContent,ks=ins.ph[q.id]||[];if(!ks.length){toast("Βάλε πρώτα φωτογραφία 📷");return;}b.disabled=true;b.textContent="⏳ AI…";
+    try{const d=await IDB.get(ks[ks.length-1]);const r=await aiPhoto(d,ins.nt[q.id]||"",q);const box=el.querySelector(".aires");
+      box.innerHTML=`<div class="res">${esc(aiTxt(r))}</div><div class="row" style="margin-top:6px"><button class="btn">⬇ Χρήση στο finding</button></div>`;
+      box.querySelector("button").onclick=()=>{if(r.finding_en){ins.en=ins.en||{};ins.en[q.id]=r.finding_en;ins.ens=ins.ens||{};if(!ins.nt[q.id]){ins.nt[q.id]=r.defect_gr||r.what_gr||"";ta.value=ins.nt[q.id];}ins.ens[q.id]=ins.nt[q.id];et.value=r.finding_en;enb.classList.remove("hide");}
+        if(r.severity&&"LMH".includes(r.severity)){ins.sv[q.id]=r.severity;shs();}save();chk();toast("✔");};}catch(x){toast(x.message);}b.disabled=false;b.textContent=t;};
+  phs(el,ins,q);phs(el,ins,q,1);return el;}
+const sevOf=(ins,q)=>(ins.sv&&ins.sv[q.id])||(HI.has(q.id)?"H":"M");
+async function phs(el,ins,q,after){const P=after?(ins.pa=ins.pa||{}):ins.ph,box=el.querySelector(after?".pha":".ph");if(!box)return;box.innerHTML="";for(const k of P[q.id]||[]){const d=await IDB.get(k);if(!d)continue;const w=document.createElement("div");
+  w.innerHTML=`<img src="${d}"><button>✕</button>`;w.querySelector("button").onclick=async()=>{P[q.id]=P[q.id].filter(x=>x!==k);await IDB.del(k).catch(()=>{});save();phs(el,ins,q,after);};box.appendChild(w);}}
 $("#prevA").onclick=()=>{const i=AREAS.findIndex(a=>a[0]===area);area=AREAS[i-1][0];aflt="open";go("area");};
 $("#nextA").onclick=()=>{const i=AREAS.findIndex(a=>a[0]===area);if(i<AREAS.length-1){area=AREAS[i+1][0];aflt="open";go("area");}else go("find");};
 
@@ -238,9 +324,10 @@ function rFind(){const ins=I(),s=stats(ins),fl=findings(ins);
   $("#sum").innerHTML=`<div class="tiles" style="grid-template-columns:repeat(3,1fr)"><div class="tile"><b>${s.d}/${s.n}</b><span class="note">ελέγχθηκαν</span></div>
     <div class="tile"><b style="color:var(--f)">${fl.length}</b><span class="note">findings</span></div><div class="tile"><b style="color:var(--hr)">${fl.filter(q=>q.h).length}</b><span class="note">★ high-risk</span></div></div>
     ${s.n-s.d?`<p class="note">⚠ ${s.n-s.d} ερωτήσεις δεν έχουν απαντηθεί ακόμα.</p>`:""}`;
+  rValid(ins,fl);
   const box=$("#flist");box.innerHTML=fl.length?"":'<div class="card note" style="text-align:center">Κανένα finding. 👍</div>';
   AREAS.forEach(([k,ic,nm])=>{const a=fl.filter(q=>q.a===k);if(!a.length)return;const h=document.createElement("h2");h.textContent=`${ic} ${nm} (${a.length})`;h.style.marginTop="16px";box.appendChild(h);
-    a.forEach(q=>{const d=document.createElement("div");d.className="fl";d.innerHTML=`<div class="qh"><span class="id">${q.id}</span>${q.h?'<span class="hrt">★</span>':""}</div><div style="font-weight:600;margin:3px 0">${esc(q.g)}</div>
+    a.forEach(q=>{const d=document.createElement("div");d.className="fl";d.innerHTML=`<div class="qh"><span class="id">${q.id}</span>${q.h?'<span class="hrt">★</span>':""}<span class="trp" style="background:none;color:${{H:"var(--f)",M:"#c88a12",L:"#5b8f6f"}[sevOf(ins,q)]}">${{H:"High",M:"Medium",L:"Low"}[sevOf(ins,q)]}</span>${ins.co&&ins.co[q.id]&&ins.co[q.id].rc?'<span class="note">✅ close-out</span>':""}</div><div style="font-weight:600;margin:3px 0">${esc(q.g)}</div>
       <div class="note" style="color:var(--ink)">${esc(rpt(ins,q)||"— χωρίς σημείωση —")}</div>${ins.en&&ins.en[q.id]&&ins.nt[q.id]?`<div class="note">🇬🇷 ${esc(ins.nt[q.id])}</div>`:""}<div class="ph"></div>`;
       d.onclick=e=>{if(e.target.tagName==="BUTTON")return;area=k;aflt="f";go("area");};box.appendChild(d);
       (async()=>{for(const p of ins.ph[q.id]||[]){const u=await IDB.get(p);if(u){const w=document.createElement("div");w.innerHTML=`<img src="${u}">`;d.querySelector(".ph").appendChild(w);}}})();});});}
@@ -303,6 +390,127 @@ function dictate(btn,ta){const SR=window.SpeechRecognition||window.webkitSpeechR
   r.onerror=ev=>{toast(ev.error==="not-allowed"?"Δώσε άδεια μικροφώνου":"Πάτα το 🎤 του πληκτρολογίου");if(ev.error!=="no-speech")ta.focus();};
   r.onend=()=>{REC=null;btn.classList.remove("rec");btn.textContent="🎤 Ομιλία";};
   try{r.start();REC=r;btn.classList.add("rec");btn.textContent="⏹ Stop";}catch(x){ta.focus();toast("Πάτα το 🎤 του πληκτρολογίου");}}
+/* ---------- validity simulator (RightShip Inspection Validity Matrix) ---------- */
+function vMonths(lm,h,co){const lo=lm<=23;
+  if(co==="g"){if(h>6)return 0;if(lo)return h<=1?12:h===2?9:h===3?6:3;return h===0?12:h===1?9:h===2?6:3;}
+  if(co==="a"){if(lo)return h===0?12:h===1?9:h===2?6:h===3?3:0;return h===0?9:h===1?6:h===2?3:0;}
+  if(lo)return h===0?9:h===1?6:h===2?3:0;return h===0?6:h===1?3:0;}
+const vCell=m=>`<td class="v${m||"U"}">${m?m+" μήνες":"Unacceptable"}</td>`;
+function rValid(ins,fl){const c={L:0,M:0,H:0},sec={};fl.forEach(q=>{const v=sevOf(ins,q);c[v]++;if(v!=="H"&&(q.s==="3"||q.s==="13"))sec[q.s]=(sec[q.s]||0)+1;});
+  const cl=Math.floor((sec["3"]||0)/4)+Math.floor((sec["13"]||0)/4),lm=c.L+c.M,h=c.H+cl,g=vMonths(lm,h,"g");
+  const tips=[];if(h>1)tips.push(`Μείωσε τα High: κάθε High που κλείνει πριν έρθει ο inspector κερδίζει μήνες.`);
+  if(lm>23)tips.push(`Πάνω από 23 low/medium (${lm}): κλείσε ${lm-23} για να πέσεις κάτω από το όριο.`);
+  ["3","13"].forEach(k=>{const n=sec[k]||0;if(n>=3)tips.push(`Section ${k}: ${n} findings — στο 4ο μετράει +1 High (clustering).`);});
+  $("#valid").innerHTML=`<h2>🎯 Πρόβλεψη RightShip validity</h2>
+   <div class="tiles" style="grid-template-columns:repeat(4,1fr)"><div class="tile"><b style="color:#5b8f6f">${c.L}</b><span class="note">Low</span></div><div class="tile"><b style="color:#c88a12">${c.M}</b><span class="note">Medium</span></div><div class="tile"><b style="color:var(--f)">${c.H}</b><span class="note">High</span></div><div class="tile"><b style="color:var(--f)">+${cl}</b><span class="note">clustering 3/13</span></div></div>
+   <p style="margin:10px 0 4px">Low+Medium: <b>${lm}</b> ${lm<=23?"✅ ≤23":"⚠ >23"} · High (με clustering): <b>${h}</b></p>
+   <table class="vt"><tr><th>Close-out</th><th>Καλό</th><th>Μέτριο</th><th>Κακό</th></tr><tr><td>Validity</td>${vCell(g)}${vCell(vMonths(lm,h,"a"))}${vCell(vMonths(lm,h,"p"))}</tr></table>
+   ${tips.length?`<ul class="note" style="margin:8px 0 0;padding-left:18px">${tips.map(t=>`<li>${esc(t)}</li>`).join("")}</ul>`:`<p class="note" style="margin:8px 0 0">✅ Με καλό close-out είσαι στους 12 μήνες.</p>`}
+   <p class="note" style="margin:6px 0 0">Η σοβαρότητα κάθε finding αλλάζει μέσα στο finding (Low/Med/High). Default: High στις ερωτήσεις του RightShip high-risk list (4.5, 4.18, 9A.13, 13.33, 4.37, 10.4, 4.11). Πρόβλεψη με βάση το δημοσιευμένο validity matrix· η RightShip κάνει και peer review.</p>`;}
+
+/* ---------- pages ---------- */
+const PGT={traps:"🎯 Οι 10 παγίδες",mind:"🧠 Το μυαλό του inspector",crew:"👷 Briefing πληρώματος",drill:"🎤 Drill συνέντευξης",docs:"📁 Έγγραφα hybrid 72h",fleet:"⚓ Ιστορικό στόλου"};
+function openPage(k,from){page=k;pageFrom=from||(view==="list"?"list":"home");go("page");}
+$$("[data-pg]").forEach(b=>b.onclick=()=>{cur=null;openPage(b.dataset.pg,"list");});
+$("#docsIns").onclick=()=>openPage("docs","home");$("#trapsIns").onclick=()=>openPage("traps","home");
+const qref=id=>QM[id]?`<b>${esc(id)}</b>`:"";
+function rPage(){const ins=pageFrom!=="list"?I():null,box=$("#pg");let h="";
+  if(page==="traps"){h=`<div class="card note" style="margin-top:0">Από ανάλυση <b>15 RightShip επιθεωρήσεων του στόλου (2023–2026, ~300 findings)</b> + RightShip high-risk list 2025 + Fleet Alerts 09/26, 13/26, 14/26. Στην επιθεώρηση οι ερωτήσεις αυτές έχουν σήμα 🎯.</div>`+
+    X.traps.map((t,i)=>`<div class="card"><h2 style="margin-top:0">${i+1}. ${esc(t.t)}</h2><div class="note">${t.q.map(qref).join(" · ")} — ${esc(t.n)}</div>
+      <p style="margin:8px 0">${esc(t.why)}</p><div class="lk">✔ Έλεγξε πριν έρθει:</div><ul>${t.c.map(c=>`<li>${esc(c)}</li>`).join("")}</ul>
+      ${ins?`<div class="row">${t.q.map(id=>`<button class="btn" data-goq="${id}">→ ${id}</button>`).join("")}</div>`:""}</div>`).join("")+
+    `<div class="card"><h2 style="margin-top:0">Οι επόμενες 10</h2><ul>${X.next.map(n=>`<li>${esc(n)}</li>`).join("")}</ul></div>`;}
+  else if(page==="mind"){h=X.mind.map((m,i)=>`<div class="card"><h2 style="margin:0 0 6px">${i+1}. ${esc(m[0])}</h2><div>${esc(m[1])}</div></div>`).join("");}
+  else if(page==="crew"){h=`<div class="card note" style="margin-top:0">Κάρτες στα αγγλικά για το πλήρωμα. Στείλ' τες στο πλοίο ή διάβασέ τες στο briefing. Ο αριθμός είναι η ερώτηση RISQ.</div><div class="row" style="margin-bottom:6px"><button class="btn p" id="crewAll">📤 Όλες οι κάρτες</button></div>`+
+    X.crew.map((r,i)=>`<div class="card"><div class="row" style="justify-content:space-between"><h2 style="margin:0">${esc(r[0])}</h2><button class="btn" data-crew="${i}">📤</button></div><ul>${r[1].map(([q,t])=>`<li>${q!=="*"?`<b>${esc(q)}</b> `:""}${esc(t)}</li>`).join("")}</ul></div>`).join("");}
+  else if(page==="drill"){h=`<div class="card note" style="margin-top:0">Κάνε τις ερωτήσεις στο πλήρωμα όπως ο inspector. Πάτα πάνω στην ερώτηση για να δεις τη σωστή απάντηση. Ένας αξιωματικός που κομπιάζει = finding.</div><div class="row" style="margin-bottom:6px"><button class="btn" id="drillSh">📤 Στείλε στο πλοίο</button></div><div class="card">`+
+    X.drill.map((d,i)=>`<div class="qa" data-i="${i}"><div class="who">${esc(d[0])} · RISQ ${esc(d[3])}</div><div style="font-weight:600">${esc(d[1])}</div><div class="ans2">${esc(d[2])}</div></div>`).join("")+`</div>`;}
+  else if(page==="docs"){const dc=ins?(ins.dc=ins.dc||{}):null;let n=0,t=0;X.docs.forEach(([,l])=>l.forEach((_,j)=>{t++;}));
+    h=`<div class="card note" style="margin-top:0">Hybrid inspection: τα έγγραφα ανεβαίνουν στο RightShip τουλάχιστον 72 ώρες πριν. Ένα αρχείο ανά αίτημα, σωστό όνομα, σε ισχύ. ${ins?"Τα ✔ αποθηκεύονται σε αυτή την επιθεώρηση.":"Άνοιξε μια επιθεώρηση για να κρατάς ✔."}</div><div class="row" style="margin-bottom:6px"><button class="btn" id="docsSh">📤 Λίστα στο πλοίο</button><span class="note" id="docsN"></span></div>`+
+    X.docs.map(([sn,l],i)=>`<div class="card"><h2 style="margin-top:0">${esc(sn)}</h2>${l.map((d,j)=>`<label class="chk"><input type="checkbox" data-dc="${i}_${j}" ${dc&&dc[i+"_"+j]?"checked":""} ${dc?"":"disabled"}><span>${esc(d)}</span></label>`).join("")}</div>`).join("");}
+  else if(page==="fleet"){const n=FLEET?Object.values(FLEET.f).reduce((a,b)=>a+b.length,0):0;
+    h=`<div class="card"><h2 style="margin-top:0">⚓ Ιστορικό findings του στόλου</h2>
+     <p>Το αρχείο με τα πραγματικά findings των πλοίων μας <b>δεν</b> είναι μέσα στην εφαρμογή, γιατί η σελίδα είναι δημόσια. Το εισάγεις μία φορά από το αρχείο <b>.json</b> και μένει μόνο σε αυτό το κινητό.</p>
+     ${FLEET?`<p>✅ Φορτωμένο: <b>${n}</b> findings από <b>${(FLEET.ins||[]).length}</b> επιθεωρήσεις (${esc(FLEET.co||"")}, ${esc(FLEET.made||"")}).</p>`:`<p class="note">Δεν έχει φορτωθεί ακόμα.</p>`}
+     <div class="row"><label class="btn p">📥 Εισαγωγή αρχείου<input type="file" id="fleetIn" accept=".json,application/json" style="display:none"></label>${FLEET?`<button class="btn d" id="fleetDel">Αφαίρεση</button>`:""}</div></div>`;
+    if(FLEET){const cnt=Object.entries(FLEET.f).map(([q,a])=>[q,new Set(a.map(r=>r[0]+r[1])).size,a.length]).sort((a,b)=>b[1]-a[1]).slice(0,25);
+      h+=`<div class="card"><h2 style="margin-top:0">Top 25 ερωτήσεις στον στόλο</h2>${cnt.map(([q,ni])=>`<div class="chk" style="justify-content:space-between"><span><b>${esc(q)}</b> ${esc(QM[q]?QM[q].g:"")}</span><span class="flb">${ni}</span></div>`).join("")}</div>
+       <div class="card"><h2 style="margin-top:0">Επιθεωρήσεις</h2><ul>${(FLEET.ins||[]).slice().reverse().map(i=>`<li>${esc(i[0])} · ${esc(i[1])}${i[2]&&i[2]!=="-"?" · "+esc(i[2]):""}</li>`).join("")}</ul></div>`;}}
+  box.innerHTML=h;hdr();
+  box.querySelectorAll("[data-goq]").forEach(b=>b.onclick=()=>{const q=QM[b.dataset.goq];area=q.a;aflt="all";go("area");setTimeout(()=>{const e=$(`#qs [data-id="${q.id}"]`);if(e)e.scrollIntoView({block:"center"});},60);});
+  box.querySelectorAll(".qa").forEach(e=>e.onclick=()=>e.classList.toggle("open"));
+  box.querySelectorAll("[data-crew]").forEach(b=>b.onclick=()=>shareText("RISQ briefing – "+X.crew[b.dataset.crew][0],crewTxt([X.crew[b.dataset.crew]])));
+  const ca=$("#crewAll");if(ca)ca.onclick=()=>shareText("RISQ crew briefing",crewTxt(X.crew));
+  const ds=$("#drillSh");if(ds)ds.onclick=()=>shareText("RightShip interview drill",X.drill.map((d,i)=>`${i+1}. [${d[0]} · RISQ ${d[3]}] ${d[1]}\n   → ${d[2]}`).join("\n\n"));
+  const dsh=$("#docsSh");if(dsh)dsh.onclick=()=>shareText("RightShip hybrid documents (72h)",X.docs.map(([sn,l])=>sn.toUpperCase()+"\n"+l.map(d=>"☐ "+d).join("\n")).join("\n\n"));
+  const dn=()=>{const e=$("#docsN");if(e&&ins){const t=X.docs.reduce((a,b)=>a+b[1].length,0),n=Object.values(ins.dc||{}).filter(Boolean).length;e.textContent=`${n}/${t} ✔`;}};dn();
+  box.querySelectorAll("[data-dc]").forEach(c=>c.onchange=()=>{ins.dc[c.dataset.dc]=c.checked;save();dn();});
+  const fi=$("#fleetIn");if(fi)fi.onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const j=JSON.parse(await f.text());if(j.kind!=="risq-fleet"||!j.f)throw 0;localStorage.setItem("risq_fleet",JSON.stringify(j));FLEET=j;toast("✔ Φορτώθηκε");fleetSt();rPage();}catch(x){toast("Λάθος αρχείο");}};
+  const fd=$("#fleetDel");if(fd)fd.onclick=()=>{localStorage.removeItem("risq_fleet");FLEET=null;fleetSt();rPage();};}
+const crewTxt=rs=>"RIGHTSHIP INSPECTION – CREW BRIEFING\n(“If it is not recorded, it is not done.” Inspector checks the LAST permit/record and tests equipment.)\n\n"+rs.map(([r,it])=>r.toUpperCase()+"\n"+it.map(([q,t])=>`☐ ${q!=="*"?"["+q+"] ":""}${t}`).join("\n")).join("\n\n");
+function fleetSt(){const e=$("#fleetSt");if(e)e.textContent=FLEET?`✅ ${Object.values(FLEET.f).reduce((a,b)=>a+b.length,0)} findings φορτωμένα`:"Εισαγωγή αρχείου";}fleetSt();
+
+/* ---------- Claude helpers ---------- */
+async function claudeRaw(system,content,max=900){const key=getKey();if(!key)throw new Error("Βάλε API key (αρχική οθόνη → ✨)");if(!navigator.onLine)throw new Error("Χρειάζεται internet");
+  const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"content-type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+    body:JSON.stringify({model:"claude-haiku-5-5",max_tokens:max,system,messages:[{role:"user",content}]})});
+  const j=await r.json().catch(()=>({}));if(!r.ok){const m=(j.error&&j.error.message)||"";throw new Error(r.status===401?"Λάθος API key":/credit balance/i.test(m)?"Ο λογαριασμός API δεν έχει υπόλοιπο (Billing)":(m||("Σφάλμα "+r.status)));}
+  return (j.content||[]).filter(c=>c.type==="text").map(c=>c.text).join("").trim();}
+function pj(t){const m=t.match(/\{[\s\S]*\}/);if(!m)throw new Error("Ο AI δεν έδωσε σωστή απάντηση");return JSON.parse(m[0]);}
+async function small(d,max=1024,q=.7){const im=await loadImg(d),k=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);return c.toDataURL("image/jpeg",q).split(",")[1];}
+const SYSV="You are a senior RightShip RISQ 3.2 inspector and marine superintendent on a dry bulk carrier. Look at the photo and the surveyor's note. Be factual: describe only what is visible; if unsure, say so. Never invent measurements, dates or certificates. Reply ONLY with JSON.";
+async function aiPhoto(d,note,q){const qs=q?`The photo belongs to RISQ ${q.id}: ${q.o}`:"Pick the single best matching RISQ question id from this list (id | question):\n"+DATA.q.map(x=>x.id+" | "+x.o.slice(0,95)).join("\n");
+  const t=await claudeRaw(SYSV,[{type:"image",source:{type:"base64",media_type:"image/jpeg",data:await small(d)}},{type:"text",text:`${qs}\n\nSurveyor note (Greek/English, may be empty): ${note||"-"}\n\nReturn JSON with keys: "what_gr" (τι φαίνεται, 1 πρόταση στα ελληνικά), "defect_gr" (ποιο είναι το defect/κίνδυνος στα ελληνικά, ή "Κανένα εμφανές defect"), "qid" (RISQ id string), "severity" ("L","M" or "H" using RightShip meaning: H = clear danger to ship/people/environment, M = weakness in controls, L = minor/administrative), "finding_en" (1-2 sentence English finding in RightShip report style, past tense; empty if no defect), "action_gr" (τι κάνει το πλήρωμα τώρα, σύντομα).`}],700);
+  return pj(t);}
+const aiTxt=r=>`👁 ${r.what_gr||""}\n⚠ ${r.defect_gr||""}\n📌 RISQ ${r.qid||"?"} · ${({H:"High",M:"Medium",L:"Low"})[r.severity]||"?"}\n🇬🇧 ${r.finding_en||"—"}\n🔧 ${r.action_gr||""}`;
+const SYSC="You are a ship manager's HSQE superintendent writing a RightShip close-out submission per RightShip 'Guidance on completing PSC/RightShip closeout submissions' (Nov 2025). Write in clear English. Root cause must be systemic (procedures, supervision, design, resources, training content) – never just 'human error' or 'lack of training'. Every action must name a responsible RANK (not a department) and a due date or 'Completed dd/mm/yyyy' placeholder. Preventive measures should consider fleet-wide application. Do not invent facts beyond the finding; use [brackets] for details the user must fill in. Reply ONLY with JSON.";
+async function coDraft(ins,q){const f=rpt(ins,q);if(!f.trim())throw new Error("Γράψε πρώτα το finding");
+  const t=await claudeRaw(SYSC,`Vessel: ${ins.vessel}. RISQ ${q.id}: ${q.o}\nFinding as written: ${f}\nSeverity: ${sevOf(ins,q)}\nExisting notes: ${JSON.stringify(ins.co&&ins.co[q.id]||{})}\n\nReturn JSON keys: "ex" (explanation, 1-3 sentences), "ic" (immediate cause), "rc" (root cause), "ca" (corrective actions, numbered lines 'action – responsible rank – due'), "pm" (preventive measures, numbered lines 'measure – responsible rank – due', incl. fleet-wide where relevant).`,1100);
+  const r=pj(t);ins.co=ins.co||{};const o=ins.co[q.id]=ins.co[q.id]||{};["ex","ic","rc","ca","pm"].forEach(k=>{if(r[k])o[k]=Array.isArray(r[k])?r[k].join("\n"):String(r[k]);});save();}
+$("#xCoAi").onclick=async e=>{const ins=I(),b=e.currentTarget,todo=findings(ins).filter(q=>rpt(ins,q).trim()&&!(ins.co&&ins.co[q.id]&&ins.co[q.id].rc));if(!todo.length){toast("Δεν υπάρχει κάτι για πρόταση");return;}
+  b.disabled=true;let k=0;try{for(const q of todo){b.textContent=`⏳ ${++k}/${todo.length}`;await coDraft(ins,q);}toast("✔ "+k+" close-outs");}catch(x){toast(x.message);}b.disabled=false;b.textContent="✨ Πρόταση για όλα";rFind();};
+
+/* ---------- close-out PDF ---------- */
+async function buildCoPdf(){const ins=I(),fl=findings(ins),W=1240,H=1754,M=70,F="system-ui,-apple-system,sans-serif",pages=[];let c,g,pn=0,y;
+  const np=()=>{c=document.createElement("canvas");c.width=W;c.height=H;g=c.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,W,H);pn++;g.fillStyle="#1d3a5c";g.fillRect(0,0,W,110);
+    g.fillStyle="#fff";g.font=`bold 32px ${F}`;g.fillText("RIGHTSHIP INSPECTION — CLOSE-OUT SUBMISSION",M,52);g.font=`22px ${F}`;g.fillText(`${ins.vessel}${ins.imo?"  ·  IMO "+ins.imo:""}${ins.port?"  ·  "+ins.port:""}${ins.date?"  ·  "+ins.date:""}`,M,88);
+    g.fillStyle="#777";g.font=`18px ${F}`;g.fillText(`Page ${pn}`,M,H-35);y=160;};
+  const ep=()=>{const d=c.toDataURL("image/jpeg",.8),b=atob(d.split(",")[1]),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);pages.push({jpg:u,w:W,h:H});};
+  const lines=(t,mw)=>{const out=[];String(t||"").split("\n").forEach(par=>{let line="";par.split(/\s+/).forEach(w=>{const tt=line?line+" "+w:w;if(g.measureText(tt).width>mw&&line){out.push(line);line=w;}else line=tt;});out.push(line);});return out;};
+  const para=(lab,t,col)=>{if(!String(t||"").trim())return;g.font=`bold 20px ${F}`;if(y+60>H-80){ep();np();}g.fillStyle=col||"#1d3a5c";g.fillText(lab,M+20,y);y+=28;g.font=`20px ${F}`;g.fillStyle="#222";
+    for(const l of lines(t,W-2*M-40)){if(y>H-80){ep();np();g.font=`20px ${F}`;g.fillStyle="#222";}g.fillText(l,M+20,y);y+=27;}y+=8;};
+  const imgs=async(keys,lab)=>{const ims=[];for(const k of (keys||[]).slice(0,3)){const d=await IDB.get(k);if(d)ims.push(await loadImg(d));}if(!ims.length)return;if(y+300>H-80){ep();np();}
+    g.font=`bold 18px ${F}`;g.fillStyle="#555";g.fillText(lab,M+20,y);y+=8;const bw=(W-2*M-40-20*2)/3,bh=250;let x=M+20;for(const im of ims){const k=Math.min(bw/im.width,bh/im.height);g.drawImage(im,x,y,im.width*k,im.height*k);x+=bw+20;}y+=bh+20;};
+  np();g.fillStyle="#14212e";g.font=`22px ${F}`;g.fillText(`Number of findings: ${fl.length}    Prepared by: ${ins.by||"Marine Superintendent"}    Reviewed by: ____________________`,M,y);y+=50;
+  for(const q of fl){const o=(ins.co&&ins.co[q.id])||{};if(y+200>H-80){ep();np();}
+    g.fillStyle="#b3261e";g.fillRect(M,y-24,8,34);g.fillStyle="#1d3a5c";g.font=`bold 24px ${F}`;g.fillText(`RISQ ${q.id}   ·   Severity: ${{H:"High",M:"Medium",L:"Low"}[sevOf(ins,q)]}`,M+20,y);y+=34;
+    g.font=`italic 19px ${F}`;g.fillStyle="#555";for(const l of lines(q.o,W-2*M-40)){g.fillText(l,M+20,y);y+=25;}y+=6;
+    para("Finding",rpt(ins,q),"#b3261e");para("Explanation",o.ex);para("Immediate cause",o.ic);para("Root cause",o.rc);para("Corrective actions",o.ca);para("Preventive measures",o.pm);
+    await imgs(ins.ph[q.id],"Before");await imgs((ins.pa||{})[q.id],"After / evidence");
+    g.strokeStyle="#ccc";g.beginPath();g.moveTo(M,y);g.lineTo(W-M,y);g.stroke();y+=40;}
+  ep();return makePdf(pages);}
+$("#xCo").onclick=async e=>{const b=e.target,t=b.textContent;if(!findings(I()).length){toast("Δεν υπάρχουν findings");return;}b.disabled=true;b.textContent="⏳ PDF…";
+  try{const p=await buildCoPdf();await shareFiles([{name:fname(I(),"pdf").replace("_RISQ_","_CloseOut_"),mime:"application/pdf",dataUrl:"data:application/pdf;base64,"+b64(p)}],"Close-out");}catch(x){toast("Σφάλμα PDF");}b.disabled=false;b.textContent=t;};
+
+/* ---------- snap: photo → AI → archive ---------- */
+let SN={d:null,sev:"M"};
+$("#snapGo").onclick=()=>{pageFrom="home";SN={d:null,sev:"M"};go("snap");};
+$("#qlist").innerHTML=DATA.q.map(q=>`<option value="${esc(q.id)} – ${esc(q.g.slice(0,70))}">`).join("");
+function rSnap(){$("#snapImg").innerHTML=SN.d?`<img src="${SN.d}">`:"";$("#snapRes").innerHTML="";$("#snapNote").value="";$("#snapQ").value="";$("#snapEn").value="";snapSev("M");hdr();}
+function snapSev(v){SN.sev=v;$$("#snapSev button").forEach(b=>b.classList.toggle("on",b.dataset.s===v));}
+$$("#snapSev button").forEach(b=>b.onclick=()=>snapSev(b.dataset.s));
+$("#snapIn").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(!f)return;try{SN.d=await fileToJpeg(f);$("#snapImg").innerHTML=`<img src="${SN.d}">`;$("#snapRes").innerHTML="";}catch(x){toast("Σφάλμα φωτογραφίας");}};
+$("#snapAi").onclick=async e=>{if(!SN.d){toast("Βγάλε πρώτα φωτογραφία");return;}const b=e.currentTarget,t=b.textContent;b.disabled=true;b.textContent="⏳ AI…";
+  try{const r=await aiPhoto(SN.d,$("#snapNote").value,null);$("#snapRes").innerHTML=`<div class="res">${esc(aiTxt(r))}</div>`;
+    if(r.qid&&QM[r.qid])$("#snapQ").value=`${r.qid} – ${QM[r.qid].g.slice(0,70)}`;if(r.finding_en)$("#snapEn").value=r.finding_en;if("LMH".includes(r.severity||"x"))snapSev(r.severity);
+    if(!$("#snapNote").value&&r.defect_gr)$("#snapNote").value=r.defect_gr;}catch(x){toast(x.message);}b.disabled=false;b.textContent=t;};
+async function snapArch(st){const ins=I(),id=($("#snapQ").value.match(/^\s*([0-9]{1,2}[AB]?\.[0-9]{1,2})/)||[])[1];
+  if(!SN.d){toast("Βγάλε πρώτα φωτογραφία");return;}if(!id||!QM[id]){toast("Διάλεξε ερώτηση RISQ");$("#snapQ").focus();return;}
+  const k="p_"+uid();await IDB.put(k,SN.d);(ins.ph[id]=ins.ph[id]||[]).push(k);ins.st[id]=st;
+  if(st==="f"){const n=$("#snapNote").value.trim();if(n)ins.nt[id]=(ins.nt[id]?ins.nt[id]+"\n":"")+n;const en=$("#snapEn").value.trim();if(en){ins.en=ins.en||{};ins.ens=ins.ens||{};ins.en[id]=(ins.en[id]?ins.en[id]+" ":"")+en;ins.ens[id]=ins.nt[id]||"";}ins.sv=ins.sv||{};ins.sv[id]=SN.sev;}
+  save();toast(`✔ Αρχειοθετήθηκε στο ${id}`);SN={d:null,sev:"M"};rSnap();}
+$("#snapSave").onclick=()=>snapArch("f");$("#snapOk").onclick=()=>snapArch("ok");
+
 go("list");
 /*SW*/
 </script>
