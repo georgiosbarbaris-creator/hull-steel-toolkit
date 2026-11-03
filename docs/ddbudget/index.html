@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DD Budget</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="DD Budget">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#1f3864">
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#141c2b;--muted:#5b6578;--line:#d5dbe6;--pri:#1f3864;--acc:#2f6fd6;--ok:#1d7a46;--okb:#e1f3e8;--bad:#c0392b;--badb:#fde4e1;--wrn:#9a6700;--wrnb:#fff3d1;--yel:#fff7c2}
+@media (prefers-color-scheme:dark){:root{--bg:#0d121b;--card:#161e2c;--ink:#e4e9f2;--muted:#95a1b6;--line:#2a3549;--pri:#9cc0ff;--acc:#5b93f0;--ok:#5cc98a;--okb:#16301f;--bad:#ff8a80;--badb:#3d1a18;--wrn:#e3b341;--wrnb:#3a2f10;--yel:#3a3510}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+header{position:sticky;top:0;z-index:9;background:#1f3864;color:#fff;padding:calc(10px + env(safe-area-inset-top)) 12px 8px}
+.hd{display:flex;gap:10px;align-items:center}
+header button{background:rgba(255,255,255,.15);color:#fff;border:0;border-radius:8px;padding:7px 11px;font:700 15px system-ui}
+header .t{flex:1;min-width:0}header h1{margin:0;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}header .s{font-size:12px;opacity:.8}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:8px 0 2px;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex:0 0 auto;background:rgba(255,255,255,.12);font-size:13px;padding:6px 10px;border-radius:16px}
+.tabs button.on{background:#fff;color:#1f3864}
+main{max-width:820px;margin:0 auto;padding:8px 10px calc(40px + env(safe-area-inset-bottom))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px;margin:10px 0}
+h2{font-size:15px;color:var(--pri);margin:2px 0 10px}h3{font-size:14px;margin:12px 0 6px;color:var(--pri)}
+label{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--muted)}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:9px;width:100%;min-width:0}
+textarea{min-height:120px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+@media(max-width:420px){.g3{grid-template-columns:1fr 1fr}}
+.btn{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:9px 13px;font-weight:600;cursor:pointer}
+.btn.p{background:var(--acc);border-color:var(--acc);color:#fff}.btn.d{color:var(--bad)}.btn.sm{padding:5px 9px;font-size:13px}.btn.big{width:100%;padding:14px;font-size:16px}
+.ai{border-color:#6d4aff;background:#efeaff;color:#4b2fd1}@media (prefers-color-scheme:dark){.ai{background:#241a4a;color:#c9bbff}}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.sp{flex:1}
+.note{font-size:12.5px;color:var(--muted)}
+.chip{display:inline-block;font-size:11px;font-weight:700;padding:2px 7px;border-radius:10px;border:1px solid var(--line);cursor:pointer;user-select:none;white-space:nowrap}
+.c-R{background:var(--okb);color:var(--ok);border-color:var(--ok)}.c-I{background:var(--wrnb);color:var(--wrn);border-color:var(--wrn)}.c-O{background:var(--bg);color:var(--muted)}
+.cls{font-size:10px;font-weight:800;color:#fff;background:#6b4fd8;border-radius:5px;padding:1px 4px;margin-left:4px}
+.sec{border-top:1px solid var(--line);padding:8px 0}
+.sech{display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:700}
+.sech .amt{margin-left:auto;font-variant-numeric:tabular-nums}
+.ln{display:grid;grid-template-columns:1fr auto;gap:2px 8px;padding:7px 0;border-bottom:1px dashed var(--line)}
+.ln .d{font-size:13.5px}.ln .m{font-size:12px;color:var(--muted)}.ln .a{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.ln.off{opacity:.45}.ln.edited .d:after{content:" ✎";color:var(--acc)}
+.big-n{font-size:26px;font-weight:800;font-variant-numeric:tabular-nums}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.kpi{background:var(--bg);border-radius:12px;padding:10px;text-align:center}.kpi .v{font-size:18px;font-weight:800;font-variant-numeric:tabular-nums}.kpi .l{font-size:11px;color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:13px}td,th{padding:6px 4px;border-bottom:1px solid var(--line);text-align:left}td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+tr.tot td{font-weight:800;background:var(--yel)}
+.bar{height:8px;background:var(--acc);border-radius:4px}
+.pc{display:flex;justify-content:space-between;gap:10px;align-items:center;cursor:pointer}
+.pill{font-size:11px;padding:2px 8px;border-radius:10px;background:var(--bg);color:var(--muted)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.modal .box{background:var(--card);width:100%;max-width:640px;border-radius:16px 16px 0 0;padding:16px 14px calc(18px + env(safe-area-inset-bottom));max-height:88vh;overflow:auto}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%);background:#222;color:#fff;padding:10px 16px;border-radius:20px;z-index:30;font-size:14px}
+.warn{background:var(--wrnb);color:var(--wrn);border-radius:10px;padding:8px 10px;font-size:13px;margin:6px 0}
+.okb{background:var(--okb);color:var(--ok);border-radius:10px;padding:8px 10px;font-size:13px;margin:6px 0}
+.seg{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}.seg button{flex:1;border:0;background:var(--card);color:var(--ink);padding:9px 4px;font:600 13px system-ui}.seg button.on{background:var(--acc);color:#fff}
+.foot{text-align:center;font-size:11px;color:var(--muted);margin:20px 0}
+.typecard{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.typecard button{padding:14px 6px;border-radius:12px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:700 14px system-ui}.typecard button.on{border-color:var(--acc);background:var(--bg)}
+.typecard span{display:block;font-size:26px}
+</style>
+</head>
+<body>
+<header><div class="hd"><button id="bk" style="display:none">‹</button><div class="t"><h1 id="ttl">DD Budget</h1><div class="s" id="sub">Dry-dock budget · Bulk · Container · Gas</div></div><button id="hm">☰</button></div><div class="tabs" id="tabs" style="display:none"></div></header>
+<main id="app"></main>
+<input type="file" id="fileIn" accept=".json,application/json" style="display:none">
+<script>
+"use strict";
+/* ===================== DATA / CONSTANTS ===================== */
+const VER="1.0";
+const $=s=>document.querySelector(s);
+const fmt=n=>(Math.round(n||0)).toLocaleString("en-US");
+const fmt1=n=>(Math.round((n||0)*10)/10).toLocaleString("en-US");
+const uid=()=>Math.random().toString(36).slice(2,9);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const TYPES={B:{n:"Bulk carrier",i:"🚢",gr:"Φορτηγό"},C:{n:"Container",i:"📦",gr:"Κοντέινερ"},G:{n:"Gas carrier",i:"🔥",gr:"Γκαζάδικο"}};
+// size classes with typical particulars (editable after)
+const SIZES={
+B:[{k:"HANDY",n:"Handysize 28–40k",L:180,Lbp:172,B:28.8,D:14.6,T:10.2,dwt:35000,gt:22400,holds:5,cranes:4,grain:46000,kw:6500,gens:3,tce:12000,cons:22},
+   {k:"SUPRA",n:"Supramax/Ultramax 50–64k",L:199,Lbp:194,B:32.26,D:18.5,T:13.0,dwt:61000,gt:35000,holds:5,cranes:4,grain:78000,kw:8500,gens:3,tce:14000,cons:26},
+   {k:"PMX",n:"Panamax/Kamsarmax 75–85k",L:229,Lbp:222,B:32.26,D:20.0,T:14.4,dwt:82000,gt:43000,holds:7,cranes:0,grain:97000,kw:9800,gens:3,tce:15000,cons:30},
+   {k:"CAPE",n:"Capesize 170–210k",L:292,Lbp:282,B:45,D:24.8,T:18.2,dwt:180000,gt:92000,holds:9,cranes:0,grain:198000,kw:16000,gens:3,tce:22000,cons:45}],
+C:[{k:"FEED",n:"Feeder 700–1,200 TEU",L:150,Lbp:140,B:23.5,D:11.5,T:8.5,dwt:13000,gt:10000,teu:1000,reef:150,cranes:2,kw:8000,gens:3,tce:11000,cons:24,bt:1},
+   {k:"FMAX",n:"Feedermax 1,700–2,800 TEU",L:182,Lbp:172,B:28,D:14.5,T:10.5,dwt:28000,gt:22000,teu:2200,reef:400,cranes:0,kw:16000,gens:4,tce:16000,cons:40,bt:1},
+   {k:"PMXC",n:"Panamax 3,500–5,000 TEU",L:260,Lbp:248,B:32.25,D:19.3,T:12.5,dwt:52000,gt:42000,teu:4300,reef:600,cranes:0,kw:36000,gens:4,tce:25000,cons:75,bt:1},
+   {k:"PPMX",n:"Post-Panamax 6,000–10,000 TEU",L:300,Lbp:286,B:42.8,D:24.6,T:14.5,dwt:100000,gt:90000,teu:8500,reef:800,cranes:0,kw:57000,gens:4,tce:40000,cons:110,bt:1},
+   {k:"NPMX",n:"Neo-Panamax 12,000–15,000 TEU",L:366,Lbp:350,B:48.2,D:29.9,T:15.5,dwt:150000,gt:140000,teu:13500,reef:1000,cranes:0,kw:62000,gens:5,tce:55000,cons:130,bt:1}],
+G:[{k:"LPGS",n:"Small LPG pressurised 3–7k cbm",L:105,Lbp:98,B:17.6,D:8.6,T:6.6,dwt:5500,gt:4500,cbm:5000,tanks:2,kw:3500,gens:3,tce:9000,cons:12,lng:0},
+   {k:"LPGR",n:"Semi-ref / ethylene 10–22k cbm",L:160,Lbp:150,B:25.6,D:16,T:9.5,dwt:17000,gt:15000,cbm:20000,tanks:3,kw:7000,gens:3,tce:18000,cons:22,lng:0},
+   {k:"MGC",n:"MGC LPG 35–40k cbm",L:180,Lbp:174,B:32.2,D:18.4,T:10.9,dwt:44000,gt:27000,cbm:38000,tanks:4,kw:9000,gens:3,tce:28000,cons:28,lng:0},
+   {k:"VLGC",n:"VLGC 80–86k cbm",L:226,Lbp:219,B:36.6,D:22.2,T:11.6,dwt:55000,gt:48000,cbm:84000,tanks:4,kw:13000,gens:3,tce:40000,cons:38,lng:0},
+   {k:"LNGM",n:"LNG membrane 150–180k cbm",L:295,Lbp:284,B:46.4,D:26.5,T:11.5,dwt:90000,gt:115000,cbm:174000,tanks:4,kw:28000,gens:4,tce:60000,cons:110,lng:1},
+   {k:"LNGS",n:"LNG Moss / spherical 135–147k cbm",L:290,Lbp:277,B:48,D:28,T:11.4,dwt:75000,gt:110000,cbm:145000,tanks:4,kw:26000,gens:3,tce:45000,cons:150,lng:1}]};
+const REGIONS=[
+ {k:"CNN",n:"China North (Shandong/Dalian/Qingdao)",f:1.00,st:2.8},
+ {k:"CNZ",n:"China Zhoushan/Shanghai",f:1.00,st:2.8},
+ {k:"CNS",n:"China South (Guangzhou/Yiu Lian)",f:1.08,st:3.0},
+ {k:"VN",n:"Vietnam",f:1.05,st:3.0},
+ {k:"SG",n:"Singapore/Malaysia",f:1.35,st:3.8},
+ {k:"ME",n:"Middle East (Dubai/Oman/Bahrain)",f:1.40,st:4.0},
+ {k:"TR",n:"Turkey (Tuzla)",f:1.45,st:4.2},
+ {k:"GR",n:"Greece (Perama/Elefsis)",f:1.60,st:4.8},
+ {k:"EU",n:"Europe (Poland/Portugal/Spain)",f:1.70,st:5.0}];
+const SECTIONS=[["03","General services"],["04","Dry-docking works"],["05","Surface treatment & painting"],["06","Steel renewal"],["07","Pipes"],["08","Valves"],["09","Engine room machinery"],["10","Deck fittings & gear"],["16","Cargo systems"],["11","Electrical & automation"],["12","Safety / LSA / FFE (yard)"],["13","Accommodation"],["14","Bridge & navigation"],["15","Miscellaneous"],["20","Modifications & upgrades"]];
+const COND={R:"RQRD",I:"IF RQRD",O:"OPT"};
+
+/* ===================== STORAGE ===================== */
+const KEY="ddb:projects";
+let DB={projects:[]};
+try{DB=JSON.parse(localStorage.getItem(KEY))||DB}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(DB))}catch(e){toast("⚠ Αποθήκευση απέτυχε: "+e.message)}};
+let cur=null, tab="ship";
+function toast(m){const t=document.createElement("div");t.className="toast";t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2300)}
+
+/* ===================== PROJECT FACTORY ===================== */
+function newProject(type,sizeK){
+ const s=SIZES[type].find(x=>x.k===sizeK)||SIZES[type][0];
+ const yr=new Date().getFullYear();
+ const v={name:"",imo:"",type,size:s.k,L:s.L,Lbp:s.Lbp,B:s.B,D:s.D,T:s.T,dwt:s.dwt,gt:s.gt,built:yr-15,holds:s.holds||0,cranes:s.cranes||0,grain:s.grain||0,teu:s.teu||0,reef:s.reef||0,cbm:s.cbm||0,tanks:s.tanks||0,
+  kw:s.kw,gens:s.gens,boiler:1,bwts:1,iccp:0,ffl:1,bt:s.bt||0,scrub:0,lng:s.lng||0,cls:"",flag:"",me:"",cb:{B:.83,C:.65,G:.74}[type]};
+ const p={id:uid(),created:Date.now(),v,
+  o:{survey:"SS",region:"CNN",yard:"",date:"",cond:"A",hull:"",holds:"",deck:"",steelT:null,tsw:0,prop:0,rudder:0,chain:0,crane5:1,hcOver:1,dock:null,afloat:null,dev:2,cont:3,tce:s.tce,cons:s.cons,vlsfo:600,mgo:800,
+     prob:.5,disc:.10,grow:.12,cont2:.05,supts:2},
+  ov:{},cust:[],steel:[],sov:{},cust2:[],act:{},notes:""};
+ return p;
+}
+/* ===================== CONTEXT ===================== */
+function ctx(p){
+ const v=p.v,o=p.o,c={v,o,type:v.type};
+ c.age=Math.max(0,(o.date?new Date(o.date).getFullYear():new Date().getFullYear())-(+v.built||2010));
+ c.ssNo=Math.min(5,Math.max(1,Math.round(c.age/5)));
+ c.SS=o.survey==="SS";
+ c.reg=REGIONS.find(r=>r.k===o.region)||REGIONS[0];c.rf=c.reg.f;
+ c.gt=+v.gt||20000;c.dwt=+v.dwt||30000;c.L=+v.L||180;c.B=+v.B||28;c.D=+v.D||15;c.T=+v.T||10;c.Lbp=+v.Lbp||c.L*.96;
+ c.sf=clamp(Math.sqrt(c.gt/22400),.55,2.8);
+ // areas (Mumford wetted surface, calibrated on handysize work-done areas)
+ const Lwl=c.Lbp*1.02, Cb=+v.cb||.8, tbR={B:.45,C:.55,G:.55}[c.type], Tb=c.T*tbR;
+ const S=t=>1.7*Lwl*t+Cb*Lwl*c.B;
+ const fb=Cb*Lwl*c.B*.9, vb=1.45*Math.max(0,S(Tb)-fb), bt=1.45*1.7*Lwl*(c.T-Tb), ts=2*Math.max(1,c.D-c.T)*c.L*1.5;
+ const ho=c.type==="B"?.37*c.L*c.B:c.type==="C"?.62*c.L*c.B:0;
+ const deck=Math.max(0,c.L*c.B*.9-ho);
+ const holdsA=c.type==="B"?(5.5+1.3*(+v.holds||5))*Math.pow((+v.grain||c.dwt*1.25),2/3):0;
+ c.A={fb,vb,bt,ts,hull:fb+vb+bt+ts,deck,hc:ho*1.26,cm:c.type==="B"?.18*c.L*c.B:c.type==="C"?.10*c.L*c.B:0,holds:holdsA,ho};
+ if(p.v.areas){for(const k in p.v.areas){if(p.v.areas[k]>0)c.A[k]=+p.v.areas[k]}c.A.hull=c.A.fb+c.A.vb+c.A.bt+c.A.ts}
+ // default scope levels
+ c.hull=o.hull||(c.age<=5?"L":c.age<=10?"M":"H");
+ c.holdsL=c.type!=="B"?"N":(o.holds||(c.SS&&c.age>=10?"P":"T"));
+ c.deckL=o.deck||(c.SS?"T":"N");
+ // steel estimate (t)
+ const fac=c.age<10?.15:c.age<15?.5:c.age<20?1.1:2.0, cm={G:.7,A:1,P:1.6}[o.cond]||1, base=(c.type==="C"?c.gt:c.dwt)/1000;
+ c.steelAuto=Math.round(base*fac*cm*(c.SS?1:.3)*(c.type==="G"?.7:1));
+ c.steelT=o.steelT!=null&&o.steelT!==""?+o.steelT:c.steelAuto;
+ // days
+ const dockD=(c.SS?(c.ssNo>=3?7:6):5)+(o.tsw?1:0)+(c.gt>60000?1:0);
+ const afl=(c.SS?{B:10,C:10,G:13}[c.type]:6)+Math.round(c.steelT/10)+(v.lng&&c.SS?3:0);
+ c.dock=o.dock!=null&&o.dock!==""?+o.dock:dockD;
+ c.afloat=o.afloat!=null&&o.afloat!==""?+o.afloat:afl;
+ c.yard=c.dock+c.afloat;
+ c.gasDays=c.type==="G"?(v.lng?6:3):1; // gas-freeing/warm-up + gassing-up/cool-down; others: tank prep
+ c.offhire=(+o.dev||0)+c.gasDays+c.yard+(+o.cont||0);
+ c.tugs=c.gt<30000?2:c.gt<80000?3:4;
+ return c;
+}
+/* ===================== JOB LIBRARY =====================
+ it(sec,id,desc,unit,qty(c),price,cond,flags) cond: "R"|"I"|"O"|fn ; flags: cls(class item),t(types),sc(price×size factor),nr(no region factor),gr(note)  */
+const LIB=[];
+const it=(sec,id,d,u,q,pr,cd="R",f={})=>LIB.push({sec,id,d,u,q,pr,cd,...f});
+const HB={L:[.10,.05,.10,.05,.15,.10,.15,.10],M:[.20,.10,.20,.10,.25,.15,.30,.15],H:[.30,.15,.30,.15,.40,.20,.50,.20],F:[1,0,1,0,1,0,.6,.2]};
+// ---- 03 GENERAL SERVICES
+it("03","gs1","Connect/disconnect ballast, fire line, FW, SW cooling, air, sewage (all services)","MOVE",c=>12,45);
+it("03","gs2","Remove/refit ballast tank vent heads & manholes for inspection, new gaskets","EACH",c=>Math.round((c.SS?26:10)*c.sf),45,"R",{cls:1});
+it("03","gs3","Ballast water supply for undocking/trim","TON",c=>Math.round(c.dwt*.08),.5);
+it("03","gs4","Fire line under pressure – per day","DAY",c=>c.yard,50);
+it("03","gs5","SW cooling under pressure in dock – per day","DAY",c=>c.dock,50);
+it("03","gs6","Compressed air supply – per day","DAY",c=>c.yard,40);
+it("03","gs7","Fire / safety watch 24 h","DAY",c=>c.yard,290);
+it("03","gs8","Security watch (ISPS) 24 h","DAY",c=>c.yard,150);
+it("03","gs9","Fresh water supply","TON",c=>Math.round(15*c.yard*c.sf),3.5);
+it("03","gs10","Gangways – per set per shifting (2 sets × 3 shiftings)","SET-TIME",c=>6,650,"R",{gr:"Γράψε 'per set per shifting' – όχι per day."});
+it("03","gs11","Garbage removal – daily + MARPOL receipt","DAY",c=>c.yard+5,60);
+it("03","gs12","Gas free certificates – daily visit + per hot work space","EACH",c=>c.yard+Math.round(20+c.steelT),55,"R",{gr:"1 επίσκεψη/ημέρα + ανά hot work (όχι 4/ημέρα)."});
+it("03","gs13","Shore power – connection + kWh (dock period)","KWH",c=>Math.round(24*c.dock*(120+c.gt/300)),.42);
+it("03","gs14","Shore crane / forklift (hours)","HOUR",c=>Math.round(40*c.sf),70);
+it("03","gs15","Cherry pickers – general use (hours, daily log)","HOUR",c=>Math.round(60*c.sf),90);
+it("03","gs16","General staging (deck, E/R, dock) – actual volume between supports","M3",c=>Math.round(2000*c.sf),2.8,"R",{gr:"Μέτρηση μόνο μεταξύ στηριγμάτων – χωρίς min."});
+it("03","gs17","Staging in holds/tanks for Class close-up & UTM (if not cherry picker)","M3",c=>c.SS?Math.round(400*c.sf*(c.ssNo>=3?1:.5)):0,3.4,"I",{cls:1});
+it("03","gs18","Wharfage at repair berth – per day afloat","DAY",c=>c.afloat,1,"R",{prf:c=>400+.025*c.gt});
+it("03","gs19","Fixed CO2 / fixed system isolate & reactivate","MOVE",c=>2,600);
+it("03","gs20","Ventilation fans, portable lighting, heating lamps (set-days)","SET-DAY",c=>Math.round(200*c.sf),25);
+it("03","gs21","Sewage / bilge / oily water / sludge disposal incl. certificates","TON",c=>Math.round(80*c.sf),100);
+it("03","gs22","F.O./D.O./L.O. tanks cleaning for Class internal examination","M3",c=>c.SS&&c.ssNo>=2?Math.round(700*c.sf):0,12,"R",{cls:1});
+it("03","gs23","WBT mud/scale removal & disposal","TON",c=>Math.round((c.SS?30:10)*c.sf),100,"R",{cls:1});
+it("03","gs24","Pilots (berth/dock/undock/unberth)","MOVE",c=>4,850);
+it("03","gs25","Tugs (per tug per move)","TUG-MOVE",c=>4*c.tugs,1400,"R",{prf:c=>1400*(1+c.gt/150000)});
+it("03","gs26","Riggers / line handlers","MOVE",c=>4,750);
+it("03","gs27","Dock & sea trial attendance","LUMPSUM",c=>2,850);
+it("03","gs28","Temporary handrails/ropes around openings (per m) & final deck cleaning","M",c=>Math.round(150*c.sf),6);
+it("03","gs29","Floor protection, debris removal (owners' debris only)","LUMPSUM",c=>1,2000);
+// ---- 04 DOCKING
+it("04","dk1","Docking & undocking incl. dock preparation, first & last day dock rent","LUMPSUM",c=>1,1,"R",{cls:1,prf:c=>1500+.47*c.gt});
+it("04","dk2","Lay-days dock rent (dock days − 2)","DAY",c=>Math.max(0,c.dock-2),1,"R",{cls:1,prf:c=>400+.1*c.gt});
+it("04","dk3","Keel/side blocks shifting (only for owners' bottom steel)","EACH",c=>4,120,"I");
+it("04","dk4","Anchors & chains ranged in dock, washed, calibrated, marked; releasers tested","SIDE",c=>2,1100,"R",{cls:1,sc:1});
+it("04","dk5","Chain renewal / reversing (if wear >12%)","LENGTH",c=>c.o.chain?4:2,300,c=>c.o.chain?"R":(c.SS&&c.age>=15?"I":"O"));
+it("04","dk6","Chain lockers cleaned, mud removed, painted, bilge strainers","EACH",c=>2,1400,"R",{sc:1});
+it("04","dk7","Bottom plugs removed/refitted, vacuum tested, cemented","EACH",c=>Math.round(26*c.sf),35,"R",{cls:1});
+it("04","dk8","Sacrificial anodes renewal – hull/sea chests/rudder (owners' supply)","PC",c=>c.v.iccp?12:Math.round(70*c.sf),27,"R");
+it("04","dk9","WBT anodes renewal (owners' supply)","PC",c=>c.SS?Math.round(110*c.sf):0,30,"I",{cls:1});
+it("04","dk10","ICCP dielectric shields & anodes protection, service assist","LUMPSUM",c=>c.v.iccp?1:0,2000,"R");
+it("04","dk11","Sea chests opened, cleaned, coated, gratings, MGPS nozzles","PC",c=>Math.round(3*Math.min(c.sf,1.6)),900,"R",{cls:1});
+it("04","dk12","Propeller polished in place (Rupert B), cap & cement","LUMPSUM",c=>1,950,"R",{sc:1});
+it("04","dk13","Propeller dismount/refit + dye check (with shaft withdrawal)","LUMPSUM",c=>1,3100,c=>c.o.tsw?"R":"I",{sc:1});
+it("04","dk14","Rope guard, net cutters, wear-down before/after, stern tube LO renew","LUMPSUM",c=>1,900,"R",{cls:1});
+it("04","dk15","Stern tube seals – fwd & aft seal boxes dismantled/reassembled, assist maker","LUMPSUM",c=>1,1300,c=>c.SS?"R":"I",{cls:1,sc:1});
+it("04","dk16","Intermediate shaft bearing opened for Class","LUMPSUM",c=>1,360,c=>c.SS?"R":"O",{cls:1});
+it("04","dk17","Tailshaft withdrawal & refit for complete survey (+rudder turned)","LUMPSUM",c=>1,4250,c=>c.o.tsw?"R":(c.SS?"I":"O"),{cls:1,sc:1,gr:"Ανάλογα με τη μέθοδο tailshaft survey (Class)."});
+it("04","dk18","Rudder: clearances before/after, jumping clearance, plugs, pressure test","LUMPSUM",c=>1,1700,"R",{cls:1,sc:1});
+it("04","dk19","Rudder pintle bush renewal / gland repack","LUMPSUM",c=>1,1650,"I",{sc:1});
+it("04","dk20","Rudder unshipped / re-assembled","LUMPSUM",c=>1,5800,c=>c.o.rudder?"R":"O",{sc:1});
+it("04","dk21","Echo sounder & speed log transducers cleaned/protected","PC",c=>2,180);
+it("04","dk22","Underwater seams / cavitation rebuilt by welding (m)","M",c=>40,35,"I");
+it("04","dk23","Cherry picker for Class/UTM external hull close-up","HOUR",c=>c.SS?Math.round(24*c.sf):8,90,"R",{cls:1});
+it("04","dk24","Bow thruster: blades, seals, oil, tunnel grating & anodes (assist maker)","LUMPSUM",c=>c.v.bt?1:0,3500,c=>c.SS?"R":"I",{t:"CG"});
+// ---- 05 SURFACE
+const HA=(k)=>[["fb","Flat bottom",0],["vb","Vertical bottom/sides",2],["bt","Boottop",4],["ts","Topsides",6]];
+for(const [k,n,ix] of HA()){
+ it("05",`h_${k}_w`,`${n}: HP fresh water washing ≥300 bar – 100%`,"M2",c=>c.A[k],.5);
+ if(k==="bt")it("05",`h_${k}_sc`,`${n}: scraping hard fouling`,"M2",c=>c.A[k]*.15,4,"I");
+ it("05",`h_${k}_2`,`${n}: hydro-blasting WJ2 / grit SA2 spot`,"M2",c=>c.A[k]*HB[c.hull][ix],6.5);
+ it("05",`h_${k}_1`,`${n}: WJ4 / sweep SA1 spot`,"M2",c=>c.A[k]*HB[c.hull][ix+1],5.5);
+ it("05",`h_${k}_t1`,`${n}: 1st A/C touch-up 150μm (blasted × 1.2)`,"M2",c=>c.hull==="F"&&k!=="ts"?c.A[k]:c.A[k]*(HB[c.hull][ix]+HB[c.hull][ix+1])*1.2,.5,"R",{pt:"AC"});
+ it("05",`h_${k}_t2`,`${n}: 2nd A/C touch-up 100μm (1st × 1.2)`,"M2",c=>c.hull==="F"&&k!=="ts"?c.A[k]:c.A[k]*(HB[c.hull][ix]+HB[c.hull][ix+1])*1.44,.46,"R",{pt:"AC"});
+ if(k==="ts"){it("05","h_ts_seal","Topsides: A/C sealer full coat","M2",c=>c.hull==="L"?0:c.A.ts,.5,"R",{pt:"AC"});
+   it("05","h_ts_f","Topsides: finish full coat","M2",c=>c.A.ts,.52,"R",{pt:"FIN"});}
+ else{it("05",`h_${k}_af1`,`${n}: antifouling full coat No.1`,"M2",c=>c.A[k],.52,"R",{pt:"AF"});
+   it("05",`h_${k}_af2`,`${n}: antifouling full coat No.2`,"M2",c=>(k==="fb"&&c.hull!=="F")?0:c.A[k],.52,"R",{pt:"AF"});}
+ it("05",`h_${k}_ab`,`${n}: air blowing + rinsing before painting`,"M2",c=>c.A[k],.55);
+}
+it("05","h_cp","Cherry pickers for hull treatment (dock period, daily log)","HOUR",c=>Math.round(100*c.sf),90);
+it("05","h_mk","Hull markings (draft, Load Line, name, IMO, thruster/tug marks)","LUMPSUM",c=>1,1500,"R",{cls:1,sc:1});
+const DKL={N:0,T:.20,H:.40};
+it("05","d_hc2","Hatch covers & coamings: spot blasting SA2","M2",c=>(c.A.hc+c.A.cm)*DKL[c.deckL],6.5,"R",{t:"BC"});
+it("05","d_hct","Hatch covers & coamings: 2 epoxy touch-ups","M2",c=>(c.A.hc+c.A.cm)*DKL[c.deckL]*2.64,.48,"R",{t:"BC",pt:"AC"});
+it("05","d_hcf","Hatch covers & coamings: finish full coat","M2",c=>c.deckL==="N"?0:c.A.hc+c.A.cm,.5,"R",{t:"BC",pt:"FIN"});
+it("05","d_dk2","Main deck: spot blasting SA2 + 2 touch-ups","M2",c=>c.A.deck*DKL[c.deckL]*.7,7.5,"I",{pt:"AC2"});
+it("05","d_dkf","Main deck: finish full coat","M2",c=>c.deckL==="N"?0:c.A.deck,.5,"I",{pt:"FIN"});
+it("05","w_sa","WBT coating repairs after close-up: spot SA2 (confined)","M2",c=>Math.round(c.dwt*.004*Math.max(1,c.age/5)*(c.SS?1:.4)),8.5,"R",{cls:1});
+it("05","w_tu","WBT: 2 coats pure epoxy (2 × 1.2 × blasted)","M2",c=>Math.round(c.dwt*.004*Math.max(1,c.age/5)*(c.SS?1:.4))*2.4,.8,"R",{pt:"WBT"});
+const HL={N:[0,0,0,0],T:[1,.10,0,0],P:[1,.25,.10,0],F:[1,.25,.10,1]};
+it("05","c_w","Cargo holds: HP fresh water hosing 100%","M2",c=>c.A.holds*HL[c.holdsL][0],.62,"R",{t:"B"});
+it("05","c_2","Cargo holds: spot grit blasting SA2 (yard min. charge often 25%)","M2",c=>c.A.holds*HL[c.holdsL][1],8,"R",{t:"B"});
+it("05","c_1","Cargo holds: SA1 / sweep","M2",c=>c.A.holds*HL[c.holdsL][2],6.8,"R",{t:"B"});
+it("05","c_t","Cargo holds: 2 touch-up coats + stripe","M2",c=>c.A.holds*(HL[c.holdsL][1]+HL[c.holdsL][2])*2.3,.55,"R",{t:"B",pt:"HOLD"});
+it("05","c_f","Cargo holds: full coat 125μm","M2",c=>c.A.holds*HL[c.holdsL][3],.5,c=>c.holdsL==="F"?"R":"O",{t:"B",pt:"HOLD"});
+it("05","c_cp","Cargo holds: cherry pickers (per hold, by working days)","HOLD",c=>c.holdsL==="N"?0:(+c.v.holds||5),4250,"R",{t:"B",sc:1});
+it("05","c_o","Holds: bilge wells/sensors protection, dust nets, final grit removal","HOLD",c=>c.holdsL==="N"?0:(+c.v.holds||5),1000,"R",{t:"B"});
+it("05","x_lb","Lifeboat painted, E/R escape trunks contrasting colour","LUMPSUM",c=>1,1350);
+// ---- 06 STEEL (estimate or Steel tab)
+it("06","st","Steel renewal (see Steel tab) – plates & sections incl. location surcharges","LUMPSUM",c=>1,0,"R",{cls:1,steel:1});
+it("06","sta","Steel associated: NDT, tank air tests, staging in tanks, fire blankets, coating restore","LUMPSUM",c=>1,0,"R",{steelA:1});
+// ---- 07 PIPES
+it("07","p1","Deck pipes renewal (hydraulic/pneumatic/fire/air & sounding) – allowance","M",c=>Math.round((c.SS?120:40)*c.sf*Math.max(1,c.age/10)),75,"I");
+it("07","p2","E/R & tank pipes renewal (SW/FW/ballast/bilge) – allowance","M",c=>Math.round((c.SS?60:20)*c.sf*Math.max(1,c.age/10)),160,"I");
+it("07","p3","Pressure tests: fire line, bunker lines, LO, FW (certificates)","EACH",c=>5,650);
+// ---- 08 VALVES
+it("08","v1","Overboard / sea valves opened for Class, overhauled (all)","PC",c=>Math.round(28*Math.min(c.sf,1.8)),230,c=>c.SS?"R":"R",{cls:1});
+it("08","v2","Sea valves renewal with owners' supply (failed)","PC",c=>2,250,"I");
+it("08","v3","E/R / ballast / bilge / bunker manifold valves overhaul","PC",c=>Math.round(35*Math.min(c.sf,1.8)),150,"I");
+it("08","v4","Safety/relief valves overhauled & popping tested","PC",c=>10,300,"R",{cls:1});
+// ---- 09 MACHINERY
+it("09","m1","ME crankshaft deflections before/after, thrust bearing for Class","LUMPSUM",c=>1,1100,c=>c.SS?"R":"R",{cls:1});
+it("09","m2","ME air cooler removed, chemically cleaned, pressure tested","PC",c=>c.v.kw>20000?2:1,2500,"R",{sc:1});
+it("09","m3","Turbocharger: yard lifting/transport assist (maker overhaul in 2000)","LUMPSUM",c=>1,900,"I");
+it("09","m4","Air receivers internal exam, mountings & safety valves (Class)","PC",c=>3,500,c=>c.SS?"R":"O",{cls:1});
+it("09","m5","Coolers / heat exchangers opened, cleaned, tested (central, LO, FWG)","LUMPSUM",c=>1,6500,"R",{sc:1});
+it("09","m6","Pumps overhaul – ballast, SW, fire, em'cy fire, FW (yard)","SET",c=>Math.round(8*Math.min(c.sf,1.6)),700,c=>c.SS?"R":"I");
+it("09","m7","Boiler internal survey, mountings & safety valves popping","LUMPSUM",c=>c.v.boiler?1:0,2500,c=>c.SS?"R":"O",{cls:1});
+it("09","m8","E/R crane load test 125% & certificate","LUMPSUM",c=>1,450);
+it("09","m9","Steering gear overhaul, safety valves test","LUMPSUM",c=>1,1900,"I",{cls:1});
+it("09","m10","FO flow meters & viscosity controller calibration (IMO DCS)","EACH",c=>4,400);
+it("09","m11","Emergency generator: QCV directly on D.O. tank (verify / relocate)","LUMPSUM",c=>1,1200,"I",{gr:"SOLAS II-2/4.2.2.3.4 – PSC code 07114."});
+it("09","m12","Scrubber (EGCS): washwater pumps/valves/overboard inspection, assist maker","LUMPSUM",c=>c.v.scrub?1:0,6000,"R");
+it("09","m13","Yard fitters assist to crew/maker (man-days)","MAN-DAY",c=>Math.round(8*c.sf),160,"I");
+// ---- 10 DECK
+it("10","dg1","Windlasses & mooring winches: brake tests (MEG4), linings, clearances","LUMPSUM",c=>1,4500,"R",{cls:1,sc:1});
+it("10","dg2","Cargo cranes proof load test (5-yearly) & slewing bearing check","CRANE",c=>c.v.cranes||0,1800,c=>c.o.crane5?"R":"O",{t:"BCG"});
+it("10","dg3","Cargo crane wires renewal (owners' supply)","WIRE",c=>(c.v.cranes||0)*2,600,"I",{t:"BCG"});
+it("10","dg4","Hatch covers: packing renewal (≈30%), drain NRVs, cleats, hydraulics, tightness test","LUMPSUM",c=>c.o.hcOver?1:0,1,"R",{t:"B",cls:1,prf:c=>2500+1300*(+c.v.holds||5)});
+it("10","dg5","HC temporary removal/support for coaming works","TIME",c=>2,2500,"I",{t:"B"});
+it("10","dg6","Load Line: weathertight doors, small hatches, air pipe heads & floats","LUMPSUM",c=>1,5500,"R",{cls:1,sc:1});
+it("10","dg7","Accommodation/pilot ladders load test & wires (MSC.1/Circ.1331)","LUMPSUM",c=>1,3300);
+it("10","dg8","Provision & hose handling cranes load test & wires","EACH",c=>3,700);
+it("10","dg9","Rollers, fairleads, chocks overhauled / built up","LUMPSUM",c=>1,2700,"I",{sc:1});
+it("10","dg10","Water ingress alarm test after holds works (SOLAS XII)","LUMPSUM",c=>1,300,"R",{t:"B"});
+// ---- 16 CARGO SYSTEMS
+it("16","cc1","Container lashing gear survey & renewals (twistlocks, rods, turnbuckles) – labour","TEU",c=>c.v.teu||0,1.2,"R",{t:"C"});
+it("16","cc2","Cell guides inspection & straightening / repairs","M",c=>Math.round((c.v.teu||0)/10),45,"I",{t:"C"});
+it("16","cc3","Pontoon hatch covers lifted by shore crane, gaskets & cleats overhaul","PANEL",c=>Math.round((c.v.teu||0)/60),550,"R",{t:"C"});
+it("16","cc4","Reefer sockets & cabling insulation test / repairs","PLUG",c=>c.v.reef||0,12,"R",{t:"C"});
+it("16","cc5","Lashing bridges / stack fittings steel repairs","LUMPSUM",c=>1,6000,"I",{t:"C",sc:1});
+it("16","gc1","Cargo tanks internal inspection – access, staging, cleaning (Class SS)","TANK",c=>c.SS?(c.v.tanks||2):0,4500,"R",{t:"G",cls:1,sc:1});
+it("16","gc2","Cargo tank PSVs overhaul & set-pressure test, certificates","PC",c=>(c.v.tanks||2)*2,900,"R",{t:"G",cls:1});
+it("16","gc3","Cargo valves (ESD, ball, butterfly) overhaul & tests","PC",c=>Math.round(30*Math.min(c.sf,2)),260,"R",{t:"G"});
+it("16","gc4","Cargo piping NDT / hydro test, insulation repairs","LUMPSUM",c=>1,9000,"I",{t:"G",sc:1});
+it("16","gc5","Cargo pumps (deepwell/submerged) removal & refit – assist maker","PC",c=>(c.v.tanks||2)*(c.v.lng?2:1),2500,"R",{t:"G"});
+it("16","gc6","ESD system, gas detection, water spray & dry powder systems tests","LUMPSUM",c=>1,3500,"R",{t:"G",cls:1});
+it("16","gc7","Cargo tank insulation inspection & repairs (semi-ref/LNG)","LUMPSUM",c=>(c.v.lng||c.v.size==="LPGR"||c.v.size==="VLGC"||c.v.size==="MGC")?1:0,15000,"I",{t:"G",sc:1});
+it("16","gc8","LNG membrane: global tightness test / secondary barrier test (with GTT)","LUMPSUM",c=>c.v.size==="LNGM"&&c.SS?1:0,60000,"R",{t:"G"});
+it("16","gc9","Cargo compressor room / motor room: gas-tight bulkhead seals, fans, airlock","LUMPSUM",c=>1,4000,"R",{t:"G"});
+// ---- 11 ELECTRICAL
+it("11","e1","MSB/ESB cleaned, ACB protection tests (OC, U/V, O/F, pref. trip, reverse power)","LUMPSUM",c=>1,3600,"R",{cls:1,sc:1});
+it("11","e2","Thermographic survey & insulation resistance survey","LUMPSUM",c=>1,1800);
+it("11","e3","Electric motors overhaul in workshop (ballast, SW, steering, fans…)","EACH",c=>Math.round(10*Math.min(c.sf,1.8)),800,"I");
+it("11","e4","Generators / em'cy generator alternators cleaned & tested, load test","EACH",c=>(+c.v.gens||3)+1,600,"I",{cls:1});
+it("11","e5","Lighting repairs, floodlights, nav lights","LUMPSUM",c=>1,1800);
+it("11","e6","Deck cable trays / conduits renewal (corroded)","LUMPSUM",c=>1,15000,c=>c.age>=15?"I":"O",{sc:1});
+// ---- 12 SAFETY
+it("12","s1","Lifeboat/rescue boat davits load tests, fall wires renewal (yard part)","LUMPSUM",c=>1,2500,"R",{cls:1});
+it("12","s2","Fire dampers & mushroom vents overhaul, marking open/close","PC",c=>Math.round(8*c.sf),300,"I");
+it("12","s3","Fire hydrant valves overhaul / renewal","PC",c=>Math.round(20*c.sf),45,"I");
+// ---- 13/14/15
+it("13","a1","Galley exhaust duct cleaned, windows gaskets, galley tiles","LUMPSUM",c=>1,2500,"I");
+it("14","n1","Magnetic compass adjustment & deviation card","LUMPSUM",c=>1,1000);
+it("14","n2","Radar mast / scanners access, nav & signal lights globes","LUMPSUM",c=>1,600,"I");
+it("15","x1","Chain blocks & portable lifting gear tested/certified, pad eyes marked","LUMPSUM",c=>1,2700);
+it("15","x2","Pilot boarding arrangement compliance (SOLAS V/23)","LUMPSUM",c=>1,800,"I");
+// ---- 20 MODS
+it("20","u1","Energy saving: propeller boss cap fins / PBCF / duct (EEXI/CII)","LUMPSUM",c=>1,25000,"O",{sc:1});
+it("20","u2","Premium silicone fouling-release in lieu of SPC (extra labour)","LUMPSUM",c=>1,6000,"O",{sc:1});
+it("20","u3","BWTS retrofit (if not fitted) – yard installation only","LUMPSUM",c=>c.v.bwts?0:1,250000,"O",{sc:1});
+
+/* ===== SECTION 2000 library ===== */
+const SV=[];
+const sv=(id,cat,d,amt,cd="R",f={})=>SV.push({id,cat,d,amt,cd,...f});
+sv("cl1","CLASS","Class surveys: Special/Intermediate + bottom + statutory – fees & attendance",c=>(c.SS?15000:6000)*c.sf*(c.v.lng?1.6:1));
+sv("ut1","UTM","Thickness measurement (UTM) – class-approved firm, report",c=>c.SS?[0,3000,8000,16000,24000,30000][c.ssNo]*c.sf*(c.type==="G"?1.2:1):0);
+sv("se1","SERVICE","Stern tube seals – maker service engineer",c=>6500,c=>c.SS?"R":"I");
+sv("se2","SERVICE","ME turbocharger(s) overhaul – authorised service",c=>9000*(c.v.kw>20000?2:1),"I");
+sv("se3","SERVICE","ME governor / control / alpha lubricator / pneumatic manoeuvring service",c=>6000*c.sf,"I");
+sv("se4","SERVICE","BWTS annual service & sensors calibration",c=>c.v.bwts?7500:0);
+sv("se5","SERVICE","OWS 15 ppm alarm calibration & certificate",c=>1650);
+sv("se6","LSA","Lifeboat/rescue boat/davits/release gear – annual + 5-yearly thorough exam",c=>7500*Math.min(c.sf,1.4));
+sv("se7","LSA","Liferafts annual service + HRUs",c=>4000*Math.min(c.sf,1.4));
+sv("se8","FFE","Fixed CO2/foam/water mist, extinguishers, SCBA/EEBD, fire detection",c=>8000*Math.min(c.sf,1.6));
+sv("se9","NAV","Annual radio survey, EPIRB SBM, VDR APT, gyro/radar/ECDIS service",c=>9000);
+sv("se10","SERVICE","Cargo cranes maker attendance (5-yearly)",c=>(c.v.cranes||0)?4000:0,"I");
+sv("se11","SERVICE","Hatch covers maker inspection/adjustment",c=>c.type==="B"?4500:0,"I");
+sv("se12","SERVICE","A/C & refrigeration service, IHM update, instruments calibration",c=>5500);
+sv("se13","SERVICE","ICCP service",c=>c.v.iccp?3600:0,"I");
+sv("se14","SERVICE","Scrubber maker service",c=>c.v.scrub?12000:0);
+sv("gs1","SERVICE","Cargo compressors overhaul – maker (Burckhardt etc.)",c=>c.type==="G"?18000*Math.min(c.sf,2):0,"R",{t:"G"});
+sv("gs2","SERVICE","Reliquefaction plant / vaporisers / heaters service",c=>c.type==="G"&&c.v.size!=="LPGS"?14000*Math.min(c.sf,2):0,"R",{t:"G"});
+sv("gs3","SERVICE","Cargo pumps overhaul – maker (deepwell/submerged)",c=>c.type==="G"?(c.v.tanks||2)*6000*(c.v.lng?2:1):0,"R",{t:"G"});
+sv("gs4","SERVICE","Inert gas / nitrogen generator service",c=>c.type==="G"?6000:0,"R",{t:"G"});
+sv("gs5","SERVICE","Cargo gauging, temperature & level sensors calibration",c=>c.type==="G"?7000:0,"R",{t:"G"});
+sv("gs6","SERVICE","GTT / containment specialist attendance (LNG membrane)",c=>c.v.size==="LNGM"?40000:0,"R",{t:"G"});
+sv("gs7","SERVICE","LNG cargo machinery: HD/LD compressors, vaporisers, GCU – maker overhaul",c=>c.v.lng?60000:0,"R",{t:"G"});
+sv("cs1","SERVICE","Lashing gear supplier inspection (container)",c=>c.type==="C"?3500:0,"I",{t:"C"});
+sv("sp1","SPARES","Stern tube seal kits",c=>18000*c.sf,c=>c.SS?"R":"I");
+sv("sp2","SPARES","Anodes (hull/sea chest/rudder/WBT)",c=>(c.v.iccp?3000:6000)*c.sf+(c.SS?5000*c.sf:0));
+sv("sp3","SPARES","Hatch cover packing, NRVs, cleats",c=>c.type==="B"?7000*c.sf:c.type==="C"?5000*c.sf:0);
+sv("sp4","SPARES","Crane wires / LSA wires / ladder wires",c=>((c.v.cranes||0)*3600)+3500,"I");
+sv("sp5","SPARES","Pumps, valves, motors bearings, steering seals",c=>19000*Math.min(c.sf,1.8));
+sv("sp6","SPARES","ME/DG/T/C DD-related spares",c=>16000*Math.min(c.sf,2.2),"I");
+sv("sp7","SPARES","Chain lengths / kenter shackles",c=>9000*c.sf,c=>c.o.chain?"R":"I");
+sv("sp8","SPARES","Cargo system spares (gas: valves seals, PSV kits; container: lashing gear stock)",c=>c.type==="G"?25000*Math.min(c.sf,2):c.type==="C"?(c.v.teu||0)*3:0,"R",{t:"CG"});
+sv("st1","STORES","DD engine & deck stores / consumables",c=>15000*Math.min(c.sf,2));
+sv("fw1","FORWARDING","Forwarding owners' supply, customs, delivery to yard",c=>10000*Math.min(c.sf,1.8));
+const PAINTS={AC:{n:"Anticorrosive epoxy",dft:150,vs:.60,l:.40,pr:5.5},AF:{n:"SPC antifouling",dft:110,vs:.55,l:.40,pr:11},FIN:{n:"Finish (PU/epoxy)",dft:50,vs:.55,l:.40,pr:7.5},AC2:{n:"Deck epoxy touch-ups",dft:250,vs:.60,l:.40,pr:5.5},HOLD:{n:"Cargo hold epoxy",dft:125,vs:.65,l:.50,pr:5},WBT:{n:"WBT pure epoxy",dft:150,vs:.70,l:.50,pr:6}};
+
+/* ===================== ENGINE ===================== */
+function lines(p,c){
+ c=c||ctx(p);const out=[];
+ for(const L of LIB){
+  if(L.t&&!L.t.includes(c.type))continue;
+  let q=+L.q(c)||0,pr=L.prf?L.prf(c):L.pr,cd=typeof L.cd==="function"?L.cd(c):L.cd;
+  if(L.sc)pr*=c.sf;
+  if(!L.nr)pr*=c.rf;
+  if(L.steel){pr=steelCost(p,c).plate}if(L.steelA){pr=steelCost(p,c).assoc}
+  const ov=p.ov[L.id]||{};
+  const edited=ov.q!=null||ov.p!=null||ov.c!=null;
+  if(ov.q!=null&&ov.q!=="")q=+ov.q;if(ov.p!=null&&ov.p!=="")pr=+ov.p;if(ov.c)cd=ov.c;
+  if(q===0&&!edited&&!L.steel&&!L.steelA)continue;
+  out.push({id:L.id,sec:L.sec,d:L.d,u:L.u,q,pr,cd,cls:L.cls,gr:L.gr,pt:L.pt,edited,note:ov.n||""});
+ }
+ for(const x of p.cust)out.push({id:x.id,sec:x.sec,d:x.d,u:x.u,q:+x.q||0,pr:+x.pr||0,cd:x.cd||"R",cust:1,note:x.n||""});
+ return out;
+}
+function steelCost(p,c){
+ const base=c.reg.st;
+ let plate=0,kg=0,lowP=0,highP=0;
+ if(p.steel.length){for(const s of p.steel){const v=(+s.kg||0)*base*(1+(+s.sur||0)/100);kg+=+s.kg||0;highP+=v;if(s.cd==="R")lowP+=v;plate+=s.cd==="R"?v:s.cd==="I"?v*p.o.prob:0}}
+ else{kg=c.steelT*1000;plate=kg*base*1.35;lowP=plate*.75;highP=plate*1.25}
+ const assoc=kg*0.25+(c.SS?2500:800)*c.sf;
+ return {kg,plate,assoc,lowP,highP};
+}
+function wsum(ls,prob,mode){let s=0;for(const l of ls){const a=l.q*l.pr;if(l.cd==="R")s+=a;else if(l.cd==="I")s+=mode==="L"?0:mode==="H"?a:a*prob}return s}
+function services(p,c){
+ const out=[];
+ for(const S of SV){if(S.t&&!S.t.includes(c.type))continue;let a=+S.amt(c)||0,cd=typeof S.cd==="function"?S.cd(c):S.cd;const ov=p.sov[S.id]||{};
+  if(ov.a!=null&&ov.a!=="")a=+ov.a;if(ov.c)cd=ov.c;if(a===0&&ov.a==null)continue;out.push({id:S.id,cat:S.cat,d:S.d,amt:a,cd,edited:ov.a!=null||!!ov.c})}
+ for(const x of p.cust2)out.push({id:x.id,cat:x.cat||"SERVICE",d:x.d,amt:+x.amt||0,cd:x.cd||"R",cust:1});
+ return out;
+}
+function paints(p,c,ls){
+ const agg={};for(const l of ls){if(!l.pt||l.cd==="O")continue;const w=l.cd==="I"?p.o.prob:1;agg[l.pt]=(agg[l.pt]||0)+l.q*w}
+ // AF/AC lines are m2 per coat
+ const rows=[];let tot=0;
+ for(const k in PAINTS){if(!agg[k])continue;const P=PAINTS[k],ov=(p.pov||{})[k]||{};const pr=ov.pr!=null&&ov.pr!==""?+ov.pr:P.pr;
+  const lit=agg[k]*P.dft/(P.vs*1000)*(1+P.l);const amt=lit*pr;tot+=amt;rows.push({k,n:P.n,m2:agg[k],dft:P.dft,vs:P.vs,lit,pr,amt})}
+ const thin=tot*.04;
+ return {rows,tot:tot+thin,thin};
+}
+function logistics(p,c){
+ const o=p.o,L=[];const add=(id,d,a,cd="R")=>{const ov=(p.lov||{})[id];L.push({id,d,amt:ov!=null&&ov!==""?+ov:a,cd,edited:ov!=null&&ov!==""})};
+ add("bk1",`Deviation bunkers VLSFO (${o.cons} t/d × ${o.dev} d × ${o.vlsfo} $/t)`,(+o.cons||0)*(+o.dev||0)*(+o.vlsfo||0));
+ add("bk2",`MGO in yard (${fmt1(1+c.sf)} t/d × ${c.yard} d)`,(1+c.sf)*c.yard*(+o.mgo||0));
+ if(c.type==="G")add("gf",c.v.lng?"LNG warm-up, gas-freeing, inerting & gassing-up/cool-down (N2, LNG heel/cool-down cargo)":"LPG gas-freeing / aeration & gassing-up / purging (N2, vapour)",c.v.lng?220000:35000*Math.min(c.sf,1.6));
+ else add("gf","Tank cleaning / gas-freeing preparation (crew, chemicals)",2000);
+ add("ag","Agency fees & expenses, CIQ, crew passes",8000*Math.min(c.sf,1.5)*(c.rf>1.3?1.4:1));
+ add("pd","Port dues / pilots & tugs outside yard limits",6000*c.sf);
+ add("su",`Superintendents (${o.supts} × ${c.yard+4} d × 180 $) + flights`,(+o.supts||0)*((c.yard+4)*180+1800));
+ add("cb","Crew DD bonus / overtime",6000);
+ add("cx","Class / certificate extension, documentation",1500,"I");
+ add("rt","Riding team / extra fitters",12000,"O");
+ return L;
+}
+function compute(p){
+ const c=ctx(p),ls=lines(p,c),pr=p.o.prob,R={c,ls};
+ R.sec=SECTIONS.map(([k,n])=>{const s=ls.filter(l=>l.sec===k);return{k,n,E:wsum(s,pr,"E"),L:wsum(s,pr,"L"),H:wsum(s,pr,"H"),n_:s.length}});
+ const st=steelCost(p,c);
+ // steel section uses its own low/high
+ const s6=R.sec.find(x=>x.k==="06");if(s6&&p.steel.length){s6.L=st.lowP+st.assoc;s6.H=st.highP+st.assoc}
+ else if(s6){s6.L=st.lowP+st.assoc;s6.H=st.highP+st.assoc}
+ const Y=k=>R.sec.reduce((a,s)=>a+s[k],0);
+ R.yard={};for(const k of["E","L","H"]){const b=Y(k),d=-b*p.o.disc,g=(b+d)*p.o.grow;R.yard[k]={b,d,g,t:b+d+g}}
+ R.sv=services(p,c);const cats=["CLASS","UTM","SERVICE","LSA","FFE","NAV","SPARES","STORES","FORWARDING"];
+ const swsum=(m)=>R.sv.reduce((a,x)=>a+(x.cd==="R"?x.amt:x.cd==="I"?(m==="L"?0:m==="H"?x.amt:x.amt*pr):0),0);
+ R.pt=paints(p,c,ls);
+ R.s2={E:swsum("E")+R.pt.tot,L:swsum("L")+R.pt.tot*.92,H:swsum("H")+R.pt.tot*1.08};
+ R.lg=logistics(p,c);
+ const lsum=m=>R.lg.reduce((a,x)=>a+(x.cd==="R"?x.amt:x.cd==="I"?(m==="L"?0:m==="H"?x.amt:x.amt*pr):0),0);
+ R.s3={E:lsum("E"),L:lsum("L"),H:lsum("H")};
+ R.tot={};for(const k of["E","L","H"]){const cn=(R.s2[k]+R.s3[k])*p.o.cont2;R.tot[k]={cont:cn,t:R.yard[k].t+R.s2[k]+R.s3[k]+cn}}
+ R.loss=c.offhire*(+p.o.tce||0);
+ return R;
+}
+/* ===================== UI HELPERS ===================== */
+function setHeader(t,s,showTabs,back){$("#ttl").textContent=t;$("#sub").textContent=s||"";$("#tabs").style.display=showTabs?"flex":"none";$("#bk").style.display=back?"block":"none"}
+function modal(html,onMount){const m=document.createElement("div");m.className="modal";m.innerHTML=`<div class="box">${html}</div>`;m.addEventListener("click",e=>{if(e.target===m)m.remove()});document.body.appendChild(m);onMount&&onMount(m);return m}
+const inp=(k,lbl,val,type="number",extra="")=>`<label>${lbl}<input data-k="${k}" type="${type}" value="${esc(val??"")}" ${type==="number"?'inputmode="decimal" step="any"':""} ${extra}></label>`;
+function bindInputs(root,obj,after){root.querySelectorAll("[data-k]").forEach(el=>{const h=()=>{const k=el.dataset.k;let v=el.type==="checkbox"?(el.checked?1:0):el.value;if(el.type==="number")v=v===""?"":+v;obj[k]=v;save();after&&after(k)};el.addEventListener(el.tagName==="SELECT"||el.type==="checkbox"?"change":"input",h)})}
+function chip(cd,attr=""){return `<span class="chip c-${cd}" ${attr}>${COND[cd]}</span>`}
+const nextCd=cd=>cd==="R"?"I":cd==="I"?"O":"R";
+
+/* ===================== HOME ===================== */
+function home(){
+ cur=null;setHeader("DD Budget","Dry-dock budget · Bulk · Container · Gas",false,false);
+ const ps=DB.projects.slice().sort((a,b)=>b.created-a.created);
+ let h=`<div class="card"><button class="btn p big" id="np">＋ Νέο budget δεξαμενισμού</button>
+ <p class="note">Διάλεξε τύπο & μέγεθος → διόρθωσε τα particulars → η εφαρμογή βγάζει το spec με ποσότητες, τιμές, steel, χρώματα, class/services, logistics & off-hire. Όλα αποθηκεύονται μόνο στο iPhone.</p></div>`;
+ if(ps.length){h+=`<div class="card"><h2>Τα budget μου</h2>`;
+  for(const p of ps){const R=compute(p);h+=`<div class="pc card" style="margin:8px 0" data-id="${p.id}"><div><b>${TYPES[p.v.type].i} ${esc(p.v.name||"(χωρίς όνομα)")}</b><div class="note">${esc(sizeName(p))} · ${p.o.survey==="SS"?"Special Survey "+R.c.ssNo:"Intermediate DD"} · ${esc(regionName(p))}</div></div><div style="text-align:right"><div class="big-n" style="font-size:17px">$${fmt(R.tot.E.t)}</div><div class="note">${fmt(R.tot.L.t/1000)}k – ${fmt(R.tot.H.t/1000)}k</div></div></div>`}
+  h+=`</div>`}
+ h+=`<div class="card"><h2>Backup</h2><div class="row"><button class="btn" id="bkp">⬇ Backup όλων (.json)</button><button class="btn" id="rst">⬆ Επαναφορά</button></div><p class="note">Τα δεδομένα μένουν στο κινητό. Κάνε backup πριν αλλάξεις συσκευή.</p></div>
+ <div class="card"><h2>Ενδεικτικά σύνολα αγοράς (για έλεγχο λογικής)</h2><p class="note">Συνολικό κόστος Special Survey με ναυπηγείο, class, spares, χρώματα, χωρίς off-hire. Πολύ ενδεικτικά – εξαρτώνται από ηλικία, steel, ναυπηγείο.</p>
+ <table><tr><th>Τύπος</th><th class="n">Εύρος USD</th></tr>
+ <tr><td>Handysize / Supramax</td><td class="n">0.7 – 1.4 M</td></tr><tr><td>Panamax / Kamsarmax</td><td class="n">1.0 – 2.0 M</td></tr><tr><td>Capesize</td><td class="n">1.8 – 3.0 M</td></tr>
+ <tr><td>Container Feeder / Feedermax</td><td class="n">0.7 – 1.6 M</td></tr><tr><td>Container Panamax / Post-Panamax</td><td class="n">1.5 – 4.5 M</td></tr>
+ <tr><td>LPG small / semi-ref</td><td class="n">0.8 – 1.8 M</td></tr><tr><td>MGC / VLGC</td><td class="n">1.5 – 4.0 M</td></tr><tr><td>LNG carrier (με upgrades έως 6–7 M)</td><td class="n">3 – 7 M</td></tr></table></div>
+ <div class="foot">DD Budget v${VER} · Created by George Barbaris</div>`;
+ $("#app").innerHTML=h;
+ $("#np").onclick=wizard;
+ document.querySelectorAll(".pc[data-id]").forEach(el=>el.onclick=()=>openP(el.dataset.id));
+ $("#bkp").onclick=()=>dl(new Blob([JSON.stringify(DB,null,1)],{type:"application/json"}),`DDBudget_backup_${today()}.json`);
+ $("#rst").onclick=()=>$("#fileIn").click();
+}
+$("#fileIn").onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const j=JSON.parse(await f.text());const arr=j.projects||(j.v?[j]:[]);let n=0;for(const p of arr){if(!p.id||!p.v)continue;const i=DB.projects.findIndex(x=>x.id===p.id);if(i>=0)DB.projects[i]=p;else DB.projects.push(p);n++}save();toast(`✓ ${n} budget επανήλθαν`);home()}catch(er){toast("⚠ Μη έγκυρο αρχείο")}e.target.value=""};
+const sizeName=p=>(SIZES[p.v.type].find(s=>s.k===p.v.size)||{}).n||"";
+const regionName=p=>(REGIONS.find(r=>r.k===p.o.region)||{}).n||"";
+const today=()=>new Date().toISOString().slice(0,10);
+function dl(blob,name){const u=URL.createObjectURL(blob);const a=document.createElement("a");a.href=u;a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(u);a.remove()},1500)}
+
+function wizard(){
+ let t="B",s=null;
+ const m=modal(`<h2>Νέο budget</h2><div class="typecard">${Object.entries(TYPES).map(([k,x])=>`<button data-t="${k}" class="${k==="B"?"on":""}"><span>${x.i}</span>${x.gr}<div class="note">${x.n}</div></button>`).join("")}</div>
+ <h3>Μέγεθος</h3><div id="szs"></div><label style="margin-top:10px">Όνομα πλοίου<input id="wn" placeholder="π.χ. AGIA PISTI"></label>
+ <div class="row" style="margin-top:12px"><button class="btn" id="wc">Άκυρο</button><span class="sp"></span><button class="btn p" id="wo">Δημιουργία ›</button></div>`,m=>{
+  const draw=()=>{m.querySelector("#szs").innerHTML=SIZES[t].map((x,i)=>`<label style="flex-direction:row;align-items:center;gap:8px;padding:6px 0;color:var(--ink);font-size:14px"><input type="radio" name="sz" value="${x.k}" ${i===0?"checked":""} style="width:auto"> ${x.n}</label>`).join("")};
+  draw();m.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>{t=b.dataset.t;m.querySelectorAll("[data-t]").forEach(x=>x.classList.toggle("on",x===b));draw()});
+  m.querySelector("#wc").onclick=()=>m.remove();
+  m.querySelector("#wo").onclick=()=>{s=m.querySelector("input[name=sz]:checked").value;const p=newProject(t,s);p.v.name=m.querySelector("#wn").value.trim().toUpperCase();DB.projects.push(p);save();m.remove();openP(p.id)}});
+}
+/* ===================== PROJECT ===================== */
+const TABS=[["ship","🚢 Πλοίο"],["scope","⚙️ Scope"],["spec","📋 Spec"],["steel","🔩 Steel"],["paint","🎨 Χρώματα"],["s2","🧰 Class/Services"],["s3","🚚 Logistics"],["sum","📊 Budget"],["wu","📝 Write-up"],["act","✅ Actual"]];
+function openP(id){cur=DB.projects.find(p=>p.id===id);if(!cur)return home();tab=tab||"ship";renderP()}
+function renderP(){
+ const p=cur,R=compute(p);
+ setHeader(`${TYPES[p.v.type].i} ${p.v.name||"Νέο πλοίο"}`,`Expected $${fmt(R.tot.E.t)} · off-hire ${R.c.offhire} d`,true,true);
+ $("#tabs").innerHTML=TABS.map(([k,n])=>`<button data-tab="${k}" class="${k===tab?"on":""}">${n}</button>`).join("");
+ $("#tabs").querySelectorAll("button").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;renderP();window.scrollTo(0,0)});
+ const on=$("#tabs .on");on&&on.scrollIntoView({inline:"center",block:"nearest"});
+ ({ship:tShip,scope:tScope,spec:tSpec,steel:tSteel,paint:tPaint,s2:tS2,s3:tS3,sum:tSum,wu:tWU,act:tAct})[tab](p,R);
+}
+function refreshHdr(){if(!cur)return;const R=compute(cur);$("#sub").textContent=`Expected $${fmt(R.tot.E.t)} · off-hire ${R.c.offhire} d`}
+function tShip(p,R){
+ const v=p.v,c=R.c,A=c.A;
+ let h=`<div class="card"><h2>Στοιχεία πλοίου</h2><div class="g2">${inp("name","Όνομα",v.name,"text")}${inp("imo","IMO",v.imo,"text")}
+ <label>Τύπος<select disabled><option>${TYPES[v.type].n}</option></select></label>
+ <label>Μέγεθος<select data-k="size">${SIZES[v.type].map(s=>`<option value="${s.k}" ${s.k===v.size?"selected":""}>${s.n}</option>`).join("")}</select></label>
+ ${inp("cls","Class",v.cls,"text")}${inp("flag","Flag",v.flag,"text")}</div>
+ <h3>Διαστάσεις</h3><div class="g3">${inp("L","LOA m",v.L)}${inp("Lbp","LBP m",v.Lbp)}${inp("B","B m",v.B)}${inp("D","D m",v.D)}${inp("T","T summer m",v.T)}${inp("cb","Cb",v.cb)}${inp("dwt","DWT t",v.dwt)}${inp("gt","GT",v.gt)}${inp("built","Έτος ναυπήγησης",v.built)}</div>
+ <h3>Εξοπλισμός</h3><div class="g3">
+ ${v.type==="B"?inp("holds","Holds/hatches",v.holds)+inp("grain","Grain m³",v.grain):""}
+ ${v.type==="C"?inp("teu","TEU",v.teu)+inp("reef","Reefer plugs",v.reef):""}
+ ${v.type==="G"?inp("cbm","Cargo cbm",v.cbm)+inp("tanks","Cargo tanks",v.tanks):""}
+ ${inp("cranes","Cargo cranes",v.cranes)}${inp("kw","ME kW",v.kw)}${inp("gens","Generators",v.gens)}${inp("me","ME make/model",v.me,"text")}</div>
+ <div class="row" style="margin-top:8px">${[["boiler","Boiler"],["bwts","BWTS"],["iccp","ICCP"],["ffl","Free-fall LB"],["bt","Bow thruster"],["scrub","Scrubber"]].concat(v.type==="G"?[["lng","LNG"]]:[]).map(([k,n])=>`<label style="flex-direction:row;align-items:center;gap:6px;color:var(--ink);font-size:14px"><input type="checkbox" data-k="${k}" ${v[k]?"checked":""} style="width:auto">${n}</label>`).join("")}</div>
+ <p class="note">Η αλλαγή «Μέγεθος» δεν αλλάζει αυτόματα τις διαστάσεις – <a href="#" id="ldef">φόρτωσε τυπικές τιμές μεγέθους</a>.</p></div>
+ <div class="card"><h2>Επιφάνειες (αυτόματα · γράψε δικές σου αν τις έχεις από paint maker)</h2><div class="g3">
+ ${[["fb","Flat bottom"],["vb","Vertical bottom"],["bt","Boottop"],["ts","Topsides"],["deck","Main deck"],["hc","Hatch covers"],["cm","Coamings ext."],["holds","Cargo holds"]].map(([k,n])=>`<label>${n} m² <input data-a="${k}" type="number" inputmode="decimal" placeholder="${fmt(A[k])}" value="${(v.areas&&v.areas[k])||""}"></label>`).join("")}</div>
+ <p class="note">Σύνολο γάστρας: <b>${fmt(A.hull)} m²</b>. Υπολογισμός Mumford (wetted surface) με συντελεστές από πραγματικά work-done handysize.</p></div>`;
+ $("#app").innerHTML=h;
+ bindInputs($("#app"),v,k=>{refreshHdr();if(k==="size"||k==="lng")renderP()});
+ $("#app").querySelectorAll("[data-a]").forEach(el=>el.oninput=()=>{v.areas=v.areas||{};v.areas[el.dataset.a]=el.value===""?"":+el.value;save();refreshHdr()});
+ $("#ldef").onclick=e=>{e.preventDefault();const s=SIZES[v.type].find(x=>x.k===v.size);for(const k of["L","Lbp","B","D","T","dwt","gt","holds","cranes","grain","teu","reef","cbm","tanks","kw","gens","bt","lng"])if(s[k]!=null)v[k]=s[k];p.o.tce=s.tce;p.o.cons=s.cons;save();renderP();toast("✓ Τυπικές τιμές")};
+}
+function seg(k,cur_,opts){return `<div class="seg" data-seg="${k}">${opts.map(([v,n])=>`<button data-v="${v}" class="${v===cur_?"on":""}">${n}</button>`).join("")}</div>`}
+function tScope(p,R){
+ const o=p.o,c=R.c;
+ let h=`<div class="card"><h2>Δεξαμενισμός</h2>${seg("survey",o.survey,[["SS","Special Survey"],["IS","Intermediate DD"]])}
+ <p class="note">Ηλικία ${c.age} ετών → ${o.survey==="SS"?`<b>Special Survey No.${c.ssNo}</b>`:"Intermediate"}.</p>
+ <div class="g2">${inp("date","Ημερομηνία DD",o.date,"date")}${inp("yard","Ναυπηγείο",o.yard,"text")}</div>
+ <label style="margin-top:8px">Περιοχή / τιμές ναυπηγείου<select data-k="region">${REGIONS.map(r=>`<option value="${r.k}" ${r.k===o.region?"selected":""}>${r.n} (×${r.f.toFixed(2)})</option>`).join("")}</select></label>
+ <h3>Κατάσταση πλοίου</h3>${seg("cond",o.cond,[["G","Καλή"],["A","Μέτρια"],["P","Κακή"]])}</div>
+ <div class="card"><h2>Scope</h2>
+ <h3>Γάστρα (blasting)</h3>${seg("hull",c.hull,[["L","Light"],["M","Medium"],["H","Heavy"],["F","Full SA2.5"]])}
+ ${c.type==="B"?`<h3>Cargo holds</h3>${seg("holds",c.holdsL,[["N","Τίποτα"],["T","Touch-up"],["P","Partial"],["F","Full coat"]])}`:""}
+ <h3>Deck / hatch covers</h3>${seg("deck",c.deckL,[["N","Τίποτα"],["T","Touch-up"],["H","Heavy"]])}
+ <div class="row" style="margin-top:12px">${[["tsw","Tailshaft withdrawal"],["rudder","Rudder unship"],["chain","Chain renewal"],["crane5","Cranes 5-yearly test"],["hcOver","HC overhaul"]].map(([k,n])=>`<label style="flex-direction:row;align-items:center;gap:6px;color:var(--ink);font-size:14px"><input type="checkbox" data-k="${k}" ${o[k]?"checked":""} style="width:auto">${n}</label>`).join("")}</div></div>
+ <div class="card"><h2>Ημέρες</h2><div class="g2">${inp("dock",`Dock days (auto ${c.dock})`,o.dock)}${inp("afloat",`Afloat days (auto ${c.afloat})`,o.afloat)}${inp("dev","Deviation days",o.dev)}${inp("cont","Contingency days (καιρός/extras)",o.cont)}</div>
+ <p class="note">Yard ${c.yard} ημ. + ${c.type==="G"?"gas-freeing/gassing-up":"προετοιμασία"} ${c.gasDays} ημ. → <b>Off-hire ${c.offhire} ημέρες</b>. Άδειο = αυτόματο.</p></div>
+ <div class="card"><h2>Μοχλοί budget</h2><div class="g2">
+ <label>Πιθανότητα «IF RQRD» %<input data-p="prob" type="number" value="${Math.round(o.prob*100)}"></label>
+ <label>Commercial discount στο final %<input data-p="disc" type="number" value="${Math.round(o.disc*100)}"></label>
+ <label>Extras / growth ναυπηγείου %<input data-p="grow" type="number" value="${Math.round(o.grow*100)}"></label>
+ <label>Contingency 2000+3000 %<input data-p="cont2" type="number" value="${Math.round(o.cont2*100)}"></label></div>
+ ${calibNote(p)}</div>`;
+ $("#app").innerHTML=h;
+ bindInputs($("#app"),o,()=>{refreshHdr()});
+ $("#app").querySelectorAll("[data-k=survey],[data-k=region]").forEach(el=>el.addEventListener("change",renderP));
+ $("#app").querySelectorAll("[data-p]").forEach(el=>el.oninput=()=>{o[el.dataset.p]=(+el.value||0)/100;save();refreshHdr()});
+ $("#app").querySelectorAll("[data-seg]").forEach(sg=>sg.querySelectorAll("button").forEach(b=>b.onclick=()=>{o[sg.dataset.seg]=b.dataset.v;save();renderP()}));
+ $("#app").querySelectorAll("input[type=checkbox]").forEach(el=>el.addEventListener("change",()=>renderP()));
+}
+function calibNote(p){
+ const done=DB.projects.filter(x=>x.id!==p.id&&x.act&&+x.act.yard>0);
+ if(!done.length)return `<p class="note">💡 Όταν περάσεις τα πραγματικά (tab ✅ Actual) σε τελειωμένους δεξαμενισμούς, η εφαρμογή θα σου προτείνει growth % από την εμπειρία σου.</p>`;
+ const r=done.map(x=>{const R=compute(x);return(+x.act.yard)/(R.yard.E.b*(1-x.o.disc))-1});const avg=r.reduce((a,b)=>a+b,0)/r.length;
+ return `<div class="okb">📈 Από ${done.length} τελειωμένους δεξαμενισμούς: μέση υπέρβαση ναυπηγείου <b>${Math.round(avg*100)}%</b> → πρόταση growth ${Math.max(0,Math.round(avg*100))}%.</div>`;
+}
+function tSpec(p,R){
+ const ls=R.ls;let q=(window._sq||"").toLowerCase(),showO=window._so||false;
+ let h=`<div class="card"><div class="row"><input id="sq" placeholder="🔎 Αναζήτηση" value="${esc(window._sq||"")}" style="flex:1"><label style="flex-direction:row;align-items:center;gap:6px;color:var(--ink)"><input type="checkbox" id="so" ${showO?"checked":""} style="width:auto">OPT</label></div>
+ <p class="note">Πάτα το chip για RQRD → IF RQRD → OPT. Πάτα τη γραμμή για ποσότητα/τιμή/σημείωση. <span class="cls">CLASS</span> = απαίτηση Class.</p>`;
+ for(const S of R.sec){const sl=ls.filter(l=>l.sec===S.k&&(showO||l.cd!=="O")&&(!q||l.d.toLowerCase().includes(q)));if(!sl.length&&q)continue;
+  const open=(window._open||{})[S.k]!==false&&(q||(window._open||{})[S.k]);
+  h+=`<div class="sec"><div class="sech" data-sec="${S.k}"><span>${open?"▾":"▸"} ${S.k} ${S.n}</span><span class="amt">$${fmt(S.E)}</span></div>`;
+  if(open){for(const l of sl){h+=`<div class="ln ${l.cd==="O"?"off":""} ${l.edited||l.cust?"edited":""}" data-id="${l.id}"><div class="d">${esc(l.d)}${l.cls?'<span class="cls">CLASS</span>':""}</div><div class="a">$${fmt(l.q*l.pr)}</div>
+   <div class="m">${fmt1(l.q)} ${l.u} × $${(Math.round(l.pr*100)/100).toLocaleString("en-US")}${l.note?" · "+esc(l.note):""}${l.gr?" · 💡"+esc(l.gr):""}</div><div style="text-align:right">${chip(l.cd,`data-cd="${l.id}"`)}</div></div>`}
+   h+=`<button class="btn sm" data-add="${S.k}" style="margin-top:6px">＋ Νέα γραμμή στο ${S.k}</button>`}
+  h+=`</div>`}
+ h+=`</div>`;$("#app").innerHTML=h;
+ $("#sq").oninput=e=>{window._sq=e.target.value;const pos=e.target.selectionStart;tSpec(p,compute(p));const n=$("#sq");n.focus();n.setSelectionRange(pos,pos)};
+ $("#so").onchange=e=>{window._so=e.target.checked;tSpec(p,compute(p))};
+ $("#app").querySelectorAll("[data-sec]").forEach(el=>el.onclick=()=>{window._open=window._open||{};const k=el.dataset.sec;window._open[k]=!((window._open[k]!==false)&&window._open[k]);tSpec(p,compute(p))});
+ $("#app").querySelectorAll("[data-cd]").forEach(el=>el.onclick=e=>{e.stopPropagation();const id=el.dataset.cd;const l=R.ls.find(x=>x.id===id);const n=nextCd(l.cd);
+  if(l.cust){p.cust.find(x=>x.id===id).cd=n}else{p.ov[id]=p.ov[id]||{};p.ov[id].c=n}save();tSpec(p,compute(p));refreshHdr()});
+ $("#app").querySelectorAll(".ln[data-id]").forEach(el=>el.onclick=()=>editLine(p,R.ls.find(x=>x.id===el.dataset.id)));
+ $("#app").querySelectorAll("[data-add]").forEach(el=>el.onclick=()=>{const x={id:"c"+uid(),sec:el.dataset.add,d:"New item",u:"LUMPSUM",q:1,pr:0,cd:"R"};p.cust.push(x);save();editLine(p,{...x,cust:1})});
+}
+function editLine(p,l){
+ const L=LIB.find(x=>x.id===l.id);
+ const m=modal(`<h2>${l.cust?"Νέα γραμμή":"Επεξεργασία"}</h2>${l.cust?`<label>Περιγραφή (EN)<input id="ed" value="${esc(l.d)}"></label><label>Μονάδα<input id="eu" value="${esc(l.u)}"></label>`:`<p><b>${esc(l.d)}</b></p>`}
+ <div class="g2"><label>Ποσότητα (${esc(l.u)})<input id="eq" type="number" inputmode="decimal" value="${l.q}"></label><label>Τιμή μονάδας USD<input id="ep" type="number" inputmode="decimal" value="${Math.round(l.pr*100)/100}"></label></div>
+ <label>Σημείωση<input id="en" value="${esc(l.note||"")}"></label>
+ <div class="row" style="margin-top:12px">${l.cust?'<button class="btn d" id="edel">🗑 Διαγραφή</button>':'<button class="btn" id="erst">↺ Αυτόματο</button>'}<span class="sp"></span><button class="btn p" id="eok">OK</button></div>`,m=>{
+  m.querySelector("#eok").onclick=()=>{const q=m.querySelector("#eq").value,pr=m.querySelector("#ep").value,n=m.querySelector("#en").value;
+   if(l.cust){const x=p.cust.find(y=>y.id===l.id);x.d=m.querySelector("#ed").value;x.u=m.querySelector("#eu").value;x.q=+q;x.pr=+pr;x.n=n}
+   else{const o=p.ov[l.id]=p.ov[l.id]||{};if(+q!==Math.round(l.q*1000)/1000||o.q!=null)o.q=+q;if(Math.abs(+pr-l.pr)>.005||o.p!=null)o.p=+pr;o.n=n}
+   save();m.remove();renderP()};
+  const r=m.querySelector("#erst");r&&(r.onclick=()=>{delete p.ov[l.id];save();m.remove();renderP()});
+  const d=m.querySelector("#edel");d&&(d.onclick=()=>{p.cust=p.cust.filter(x=>x.id!==l.id);save();m.remove();renderP()});
+ });
+}
+/* ---- STEEL TAB ---- */
+function tSteel(p,R){
+ const c=R.c,st=steelCost(p,c);
+ let h=`<div class="card"><h2>Steel – εκτίμηση</h2><div class="kpis"><div class="kpi"><div class="v">${fmt1(st.kg/1000)} t</div><div class="l">τόνοι</div></div><div class="kpi"><div class="v">$${c.reg.st.toFixed(2)}</div><div class="l">βάση / kg (${esc(c.reg.k)})</div></div><div class="kpi"><div class="v">$${fmt(st.plate+st.assoc)}</div><div class="l">expected</div></div></div>
+ <p class="note">Αυτόματη εκτίμηση: <b>${c.steelAuto} t</b> (μέγεθος × ηλικία ${c.age} ετών × κατάσταση × ${c.SS?"Special":"Intermediate"}). Μέσος συντελεστής θέσης +35% (confined, HT, dock, curvature) + associated (NDT, tests, staging).</p>
+ ${p.steel.length?'<div class="warn">Χρησιμοποιείται η αναλυτική λίστα από κάτω.</div>':`<label>Τόνοι (άδειο = αυτόματο)<input id="stt" type="number" inputmode="decimal" value="${p.o.steelT??""}" placeholder="${c.steelAuto}"></label>`}</div>
+ <div class="card"><h2>Αναλυτική λίστα steel (από UTM / close-up)</h2>`;
+ if(p.steel.length){h+=`<table><tr><th>Θέση</th><th class="n">kg</th><th class="n">+%</th><th class="n">USD</th><th></th></tr>`;
+  p.steel.forEach((s,i)=>{h+=`<tr><td>${esc(s.t)}</td><td class="n">${fmt(s.kg)}</td><td class="n">${s.sur}</td><td class="n">${fmt((+s.kg)*c.reg.st*(1+s.sur/100))}</td><td>${chip(s.cd||"R",`data-scd="${i}"`)} <button class="btn sm d" data-sdel="${i}">✕</button></td></tr>`});h+=`</table>`}
+ h+=`<button class="btn" id="sadd" style="margin-top:8px">＋ Θέση steel</button></div>
+ <div class="card"><h2>🧮 Υπολογιστής βάρους</h2><div class="seg" id="calc"><button data-c="pl" class="on">Λαμαρίνα</button><button data-c="fb">Flat bar</button><button data-c="an">Angle</button><button data-c="bb">Bulb</button><button data-c="pi">Σωλήνας</button></div>
+ <div class="g3" id="cin" style="margin-top:8px"></div><p style="margin:8px 0"><b id="cres">0 kg</b></p>
+ <div class="g2"><label>Θέση<input id="cpos" placeholder="π.χ. WBT No.3 P longitudinals"></label><label>Location surcharge %<select id="csur"><option value="0">0 – open deck</option><option value="20">+20 E/R, DB, TST, holds, HC</option><option value="30">+30 peaks, oil tanks, dock</option><option value="50">+50 keel fwd/aft</option><option value="40">+40 HT + confined</option></select></label></div>
+ <label style="margin-top:6px">Τεμάχια<input id="cpcs" type="number" value="1"></label>
+ <button class="btn p" id="cadd" style="margin-top:8px">＋ Πρόσθεσε στη λίστα</button>
+ <p class="note">Πυκνότητα 7.85 t/m³. ⚠ Το ναυπηγείο συχνά χρεώνει min 15 kg/τεμάχιο – δες το final bill.</p></div>`;
+ $("#app").innerHTML=h;
+ const stt=$("#stt");stt&&(stt.oninput=()=>{p.o.steelT=stt.value===""?null:+stt.value;save();refreshHdr()});
+ $("#sadd").onclick=()=>{const t=prompt("Θέση / item");if(!t)return;const kg=+prompt("kg",1000)||0;const sur=+prompt("Location surcharge %",20)||0;p.steel.push({t,kg,sur,cd:"R"});save();renderP()};
+ $("#app").querySelectorAll("[data-sdel]").forEach(b=>b.onclick=()=>{p.steel.splice(+b.dataset.sdel,1);save();renderP()});
+ $("#app").querySelectorAll("[data-scd]").forEach(b=>b.onclick=()=>{const s=p.steel[+b.dataset.scd];s.cd=nextCd(s.cd||"R");save();renderP()});
+ let mode="pl";const F={pl:[["L","Μήκος mm",1000],["W","Πλάτος mm",1000],["t","Πάχος mm",12]],fb:[["L","Μήκος mm",1000],["h","Ύψος mm",150],["t","Πάχος mm",12]],an:[["L","Μήκος mm",1000],["a","Σκέλος A mm",150],["b","Σκέλος B mm",90],["t","Πάχος mm",10]],bb:[["L","Μήκος mm",1000],["h","Ύψος mm",200],["t","Πάχος mm",10]],pi:[["L","Μήκος mm",1000],["d","Εξ. διάμετρος mm",114.3],["t","Πάχος mm",6]]};
+ const calc=()=>{const g=k=>+($("#ci_"+k)||{}).value||0;let a=0;
+  if(mode==="pl")a=g("W")*g("t");if(mode==="fb")a=g("h")*g("t");if(mode==="an")a=(g("a")+g("b")-g("t"))*g("t");if(mode==="bb")a=g("h")*g("t")*1.22;if(mode==="pi")a=Math.PI*(g("d")-g("t"))*g("t");
+  const kg=a*g("L")/1e9*7850*(+$("#cpcs").value||1);$("#cres").textContent=`${fmt1(kg)} kg  ·  $${fmt(kg*c.reg.st*(1+(+$("#csur").value)/100))}`;return kg};
+ const draw=()=>{$("#cin").innerHTML=F[mode].map(([k,n,d])=>`<label>${n}<input id="ci_${k}" type="number" inputmode="decimal" value="${d}"></label>`).join("");$("#cin").querySelectorAll("input").forEach(i=>i.oninput=calc);calc()};
+ $("#calc").querySelectorAll("button").forEach(b=>b.onclick=()=>{mode=b.dataset.c;$("#calc").querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));draw()});
+ $("#cpcs").oninput=calc;$("#csur").onchange=calc;draw();
+ $("#cadd").onclick=()=>{const kg=calc();if(!kg)return;p.steel.push({t:$("#cpos").value||({pl:"Plate",fb:"Flat bar",an:"Angle",bb:"Bulb",pi:"Pipe"})[mode],kg:Math.round(kg),sur:+$("#csur").value,cd:"R"});save();toast("✓ Προστέθηκε");renderP()};
+}
+function tPaint(p,R){
+ const P=R.pt;p.pov=p.pov||{};
+ let h=`<div class="card"><h2>Χρώματα (owners' supply) – από τα m² του spec</h2><table><tr><th>Σύστημα</th><th class="n">m²×coats</th><th class="n">Λίτρα</th><th class="n">$/L</th><th class="n">USD</th></tr>`;
+ for(const r of P.rows)h+=`<tr><td>${esc(r.n)}<div class="note">${r.dft}μm · VS ${Math.round(r.vs*100)}%</div></td><td class="n">${fmt(r.m2)}</td><td class="n">${fmt(r.lit)}</td><td class="n"><input data-pp="${r.k}" type="number" inputmode="decimal" value="${r.pr}" style="width:70px;padding:5px"></td><td class="n">${fmt(r.amt)}</td></tr>`;
+ h+=`<tr><td>Thinners / cleaning (4%)</td><td></td><td></td><td></td><td class="n">${fmt(P.thin)}</td></tr><tr class="tot"><td>Σύνολο χρωμάτων</td><td></td><td class="n">${fmt(P.rows.reduce((a,r)=>a+r.lit,0))}</td><td></td><td class="n">$${fmt(P.tot)}</td></tr></table>
+ <p class="note">Λίτρα = m² × DFT / (VS × 1000) × (1 + απώλεια 40% εξωτ. / 50% εσωτ.). Γραμμές IF RQRD μετράνε με την πιθανότητα. Ο paint maker κάνει τον δικό του υπολογισμό.</p></div>`;
+ $("#app").innerHTML=h;
+ $("#app").querySelectorAll("[data-pp]").forEach(el=>el.onchange=()=>{p.pov[el.dataset.pp]={pr:el.value};save();renderP()});
+}
+function tS2(p,R){
+ let h=`<div class="card"><h2>Section 2000 – Class, UTM, service engineers, spares, stores, forwarding</h2><p class="note">Ποσά incl. travel μηχανικού. Πάτα ποσό για αλλαγή.</p>`;
+ const cats=[...new Set(R.sv.map(x=>x.cat))];
+ for(const ct of cats){h+=`<h3>${ct}</h3>`;for(const x of R.sv.filter(y=>y.cat===ct))h+=`<div class="ln ${x.cd==="O"?"off":""} ${x.edited||x.cust?"edited":""}"><div class="d">${esc(x.d)}</div><div class="a"><input data-sa="${x.id}" type="number" inputmode="decimal" value="${Math.round(x.amt)}" style="width:100px;padding:5px;text-align:right"></div><div></div><div style="text-align:right">${chip(x.cd,`data-sc="${x.id}"`)}</div></div>`}
+ h+=`<button class="btn" id="s2add" style="margin-top:8px">＋ Νέα γραμμή</button><p style="margin-top:10px"><b>Paints: $${fmt(R.pt.tot)}</b> (tab 🎨)</p></div>`;
+ $("#app").innerHTML=h;
+ $("#app").querySelectorAll("[data-sa]").forEach(el=>el.onchange=()=>{const id=el.dataset.sa,c2=p.cust2.find(x=>x.id===id);if(c2)c2.amt=+el.value;else{p.sov[id]=p.sov[id]||{};p.sov[id].a=+el.value}save();refreshHdr()});
+ $("#app").querySelectorAll("[data-sc]").forEach(el=>el.onclick=()=>{const id=el.dataset.sc,x=R.sv.find(y=>y.id===id),n=nextCd(x.cd),c2=p.cust2.find(y=>y.id===id);if(c2)c2.cd=n;else{p.sov[id]=p.sov[id]||{};p.sov[id].c=n}save();renderP()});
+ $("#s2add").onclick=()=>{const d=prompt("Περιγραφή (π.χ. Gyro service – Furuno)");if(!d)return;const cat=(prompt("Κατηγορία: CLASS / UTM / SERVICE / LSA / FFE / NAV / SPARES / STORES / FORWARDING","SERVICE")||"SERVICE").toUpperCase();p.cust2.push({id:"s"+uid(),cat,d,amt:+prompt("USD",1000)||0,cd:"R"});save();renderP()};
+}
+function tS3(p,R){
+ const o=p.o;p.lov=p.lov||{};
+ let h=`<div class="card"><h2>Section 3000 – Logistics</h2><div class="g3">${inp("cons","Κατανάλωση εν πλω t/d",o.cons)}${inp("vlsfo","VLSFO $/t",o.vlsfo)}${inp("mgo","MGO $/t",o.mgo)}${inp("supts","Superintendents",o.supts)}${inp("tce","TCE $/day",o.tce)}</div>`;
+ for(const x of R.lg)h+=`<div class="ln ${x.cd==="O"?"off":""} ${x.edited?"edited":""}"><div class="d">${esc(x.d)}</div><div class="a"><input data-la="${x.id}" type="number" inputmode="decimal" value="${Math.round(x.amt)}" style="width:100px;padding:5px;text-align:right"></div><div class="m">${COND[x.cd]}</div></div>`;
+ h+=`<p style="margin-top:10px">Off-hire <b>${R.c.offhire} ημέρες</b> × TCE $${fmt(o.tce)} = <b>$${fmt(R.loss)}</b> loss of revenue</p></div>`;
+ $("#app").innerHTML=h;bindInputs($("#app"),o,()=>refreshHdr());
+ $("#app").querySelectorAll("[data-k]").forEach(el=>el.addEventListener("change",renderP));
+ $("#app").querySelectorAll("[data-la]").forEach(el=>el.onchange=()=>{p.lov[el.dataset.la]=el.value;save();renderP()});
+}
+function tSum(p,R){
+ const mx=Math.max(...R.sec.map(s=>s.E),1);
+ let h=`<div class="card"><h2>Σύνολο budget δεξαμενισμού</h2><div class="kpis"><div class="kpi"><div class="l">LOW</div><div class="v">$${fmt(R.tot.L.t/1000)}k</div></div><div class="kpi" style="background:var(--yel)"><div class="l">EXPECTED</div><div class="v">$${fmt(R.tot.E.t/1000)}k</div></div><div class="kpi"><div class="l">HIGH</div><div class="v">$${fmt(R.tot.H.t/1000)}k</div></div></div>
+ <p class="note">+ loss of revenue ${R.c.offhire} d × $${fmt(p.o.tce)} = $${fmt(R.loss)} → <b>Commercial exposure $${fmt(R.tot.E.t+R.loss)}</b></p></div>
+ <div class="card" style="overflow-x:auto"><table style="font-size:12px"><tr><th></th><th class="n">Expected</th><th class="n">Low</th><th class="n">High</th></tr>`;
+ for(const s of R.sec)if(s.H>0)h+=`<tr><td>${s.k} ${esc(s.n)}<div class="bar" style="width:${Math.round(s.E/mx*100)}%"></div></td><td class="n">${fmt(s.E)}</td><td class="n">${fmt(s.L)}</td><td class="n">${fmt(s.H)}</td></tr>`;
+ const Y=R.yard;
+ h+=`<tr><td>Yard as per spec</td><td class="n">${fmt(Y.E.b)}</td><td class="n">${fmt(Y.L.b)}</td><td class="n">${fmt(Y.H.b)}</td></tr>
+ <tr><td>− Discount ${Math.round(p.o.disc*100)}%</td><td class="n">${fmt(Y.E.d)}</td><td class="n">${fmt(Y.L.d)}</td><td class="n">${fmt(Y.H.d)}</td></tr>
+ <tr><td>+ Extras/growth ${Math.round(p.o.grow*100)}%</td><td class="n">${fmt(Y.E.g)}</td><td class="n">${fmt(Y.L.g)}</td><td class="n">${fmt(Y.H.g)}</td></tr>
+ <tr class="tot"><td>1000 YARD</td><td class="n">${fmt(Y.E.t)}</td><td class="n">${fmt(Y.L.t)}</td><td class="n">${fmt(Y.H.t)}</td></tr>
+ <tr class="tot"><td>2000 Class/Services/Spares/Paints</td><td class="n">${fmt(R.s2.E)}</td><td class="n">${fmt(R.s2.L)}</td><td class="n">${fmt(R.s2.H)}</td></tr>
+ <tr class="tot"><td>3000 Logistics</td><td class="n">${fmt(R.s3.E)}</td><td class="n">${fmt(R.s3.L)}</td><td class="n">${fmt(R.s3.H)}</td></tr>
+ <tr><td>Contingency ${Math.round(p.o.cont2*100)}%</td><td class="n">${fmt(R.tot.E.cont)}</td><td class="n">${fmt(R.tot.L.cont)}</td><td class="n">${fmt(R.tot.H.cont)}</td></tr>
+ <tr class="tot"><td>TOTAL DD COST</td><td class="n">${fmt(R.tot.E.t)}</td><td class="n">${fmt(R.tot.L.t)}</td><td class="n">${fmt(R.tot.H.t)}</td></tr></table></div>
+ <div class="card"><h2>Έξυπνοι έλεγχοι</h2>${checks(p,R)}</div>
+ <div class="card"><div class="row"><button class="btn p" id="xl">📊 Export Excel</button><button class="btn" id="js">⬇ JSON</button><button class="btn" id="dup">⧉ Αντίγραφο</button><button class="btn d" id="del">🗑</button></div></div>`;
+ $("#app").innerHTML=h;
+ $("#xl").onclick=()=>exportXLSX(p);
+ $("#js").onclick=()=>dl(new Blob([JSON.stringify(p,null,1)],{type:"application/json"}),`DDBudget_${(p.v.name||"vessel").replace(/\W+/g,"_")}_${today()}.json`);
+ $("#dup").onclick=()=>{const q=JSON.parse(JSON.stringify(p));q.id=uid();q.created=Date.now();q.v.name=(q.v.name||"")+" (copy)";q.act={};DB.projects.push(q);save();openP(q.id);toast("✓ Αντίγραφο")};
+ $("#del").onclick=()=>{if(confirm("Διαγραφή του budget;")){DB.projects=DB.projects.filter(x=>x.id!==p.id);save();home()}};
+}
+function checks(p,R){
+ const c=R.c,w=[];const per=R.tot.E.t/1e6;
+ const rng={HANDY:[.7,1.4],SUPRA:[.8,1.6],PMX:[1,2],CAPE:[1.8,3],FEED:[.7,1.3],FMAX:[.9,1.6],PMXC:[1.2,2.6],PPMX:[2.5,4.5],NPMX:[3,5.5],LPGS:[.6,1.2],LPGR:[.9,1.8],MGC:[1.5,2.6],VLGC:[2.2,4],LNGM:[3,6.5],LNGS:[3,6]}[p.v.size];
+ if(rng&&p.o.survey==="SS"){if(per<rng[0]*.8)w.push(`⚠ Expected ${per.toFixed(2)}M κάτω από το συνηθισμένο εύρος (${rng[0]}–${rng[1]}M) – μήπως λείπει scope;`);else if(per>rng[1]*1.2)w.push(`⚠ Expected ${per.toFixed(2)}M πάνω από το εύρος (${rng[0]}–${rng[1]}M) – έλεγξε steel/blasting/τιμές.`);else w.push(`✓ Expected ${per.toFixed(2)}M μέσα στο ενδεικτικό εύρος (${rng[0]}–${rng[1]}M).`)}
+ if(c.SS&&c.ssNo>=3&&c.steelT<10)w.push("⚠ Special Survey ≥3 με κάτω από 10 t steel – πολύ αισιόδοξο χωρίς UTM.");
+ if(c.SS&&!p.o.tsw)w.push("💡 Tailshaft: έλεγξε μέθοδο survey στην Class – η withdrawal είναι IF RQRD.");
+ if(c.age>=10&&c.hull==="L")w.push("⚠ Πλοίο ≥10 ετών με Light blasting – πιθανή υποεκτίμηση.");
+ if(c.type==="B"&&c.holdsL==="N"&&c.SS)w.push("💡 Special Survey χωρίς εργασίες holds – σίγουρα;");
+ if(c.type==="G")w.push("💡 Gas: προσθέτεις ημέρες gas-freeing/warm-up & gassing-up/cool-down στο off-hire ("+c.gasDays+" ημ.).");
+ if((+p.v.cranes||0)>0&&!p.o.crane5)w.push("💡 Cranes: έλεγξε πότε είναι το 5-yearly proof load test.");
+ const cls=R.ls.filter(l=>l.cls&&l.cd==="O");if(cls.length)w.push(`⚠ ${cls.length} γραμμές CLASS είναι OPT – θα τις ζητήσει ο surveyor.`);
+ w.push("💡 Όροι που γλιτώνουν χρήματα: staging μεταξύ στηριγμάτων, όχι min 15 kg/piece, gangway per shifting, touch-ups ×1.2, joint steel marking.");
+ return w.map(x=>`<div class="${x.startsWith("✓")?"okb":"warn"}">${esc(x)}</div>`).join("");
+}
+/* ---- WRITE-UP ---- */
+function writeup(p,R,lang){
+ const c=R.c,v=p.v,o=p.o,M=x=>"USD "+fmt(x);
+ const top=R.ls.filter(l=>l.cd!=="O").map(l=>({d:l.d,a:l.q*l.pr*(l.cd==="I"?o.prob:1)})).sort((a,b)=>b.a-a.a).slice(0,8);
+ if(lang==="en")return `DRY-DOCKING BUDGET – M/V ${v.name||"…"}${v.imo?" (IMO "+v.imo+")":""}
+${TYPES[v.type].n}, ${sizeName(p)}, built ${v.built} (${c.age} yrs), ${fmt(v.dwt)} DWT / ${fmt(v.gt)} GT.
+Scope: ${o.survey==="SS"?"Special Survey No."+c.ssNo:"Intermediate"} + dry-docking${o.yard?" at "+o.yard:""}, ${regionName(p)}${o.date?", planned "+o.date:""}.
+Duration: ${c.dock} days in dock + ${c.afloat} days afloat; total off-hire ${c.offhire} days (incl. deviation & contingency).
+
+BUDGET (expected / range):
+• Yard (Section 1000): ${M(R.yard.E.t)} (${M(R.yard.L.t)} – ${M(R.yard.H.t)})
+• Class, UTM, services, spares, paints (2000): ${M(R.s2.E)}
+• Logistics (3000): ${M(R.s3.E)}
+• Contingency: ${M(R.tot.E.cont)}
+TOTAL DD COST: ${M(R.tot.E.t)}  (range ${M(R.tot.L.t)} – ${M(R.tot.H.t)})
+Loss of revenue: ${c.offhire} d × ${M(o.tce)} = ${M(R.loss)} → total commercial exposure ${M(R.tot.E.t+R.loss)}.
+
+Main cost drivers:
+${top.map(t=>"• "+t.d+": "+M(t.a)).join("\n")}
+
+Key assumptions: hull blasting ${({L:"light",M:"medium",H:"heavy",F:"full SA2.5"})[c.hull]}${c.type==="B"?", holds "+({N:"none",T:"touch-up",P:"partial",F:"full re-coat"})[c.holdsL]:""}; steel ${fmt1(steelCost(p,c).kg/1000)} t (estimate before UTM); yard discount ${Math.round(o.disc*100)}%, growth allowance ${Math.round(o.grow*100)}%, probability of conditional items ${Math.round(o.prob*100)}%.
+Main risks: steel quantities after UTM/close-up, tailshaft survey method, weather/extra days, yard extras and minimum charges.
+
+Prepared by: ______________   Date: ${today()}`;
+ return `BUDGET ΔΕΞΑΜΕΝΙΣΜΟΥ – M/V ${v.name||"…"}${v.imo?" (IMO "+v.imo+")":""}
+${TYPES[v.type].n}, ${sizeName(p)}, ναυπήγηση ${v.built} (${c.age} ετών), ${fmt(v.dwt)} DWT / ${fmt(v.gt)} GT.
+Scope: ${o.survey==="SS"?"Special Survey No."+c.ssNo:"Intermediate"} + δεξαμενισμός${o.yard?" στο "+o.yard:""}, ${regionName(p)}${o.date?", "+o.date:""}.
+Διάρκεια: ${c.dock} ημ. dock + ${c.afloat} ημ. afloat· off-hire ${c.offhire} ημ.
+
+BUDGET (expected / εύρος):
+• Ναυπηγείο: ${M(R.yard.E.t)} (${M(R.yard.L.t)} – ${M(R.yard.H.t)})
+• Class, UTM, services, spares, χρώματα: ${M(R.s2.E)}
+• Logistics: ${M(R.s3.E)}
+• Contingency: ${M(R.tot.E.cont)}
+ΣΥΝΟΛΟ: ${M(R.tot.E.t)} (εύρος ${M(R.tot.L.t)} – ${M(R.tot.H.t)})
+Loss of revenue: ${M(R.loss)} → commercial exposure ${M(R.tot.E.t+R.loss)}.
+
+Μεγαλύτερα κονδύλια:
+${top.map(t=>"• "+t.d+": "+M(t.a)).join("\n")}
+
+Παραδοχές: blasting ${({L:"light",M:"medium",H:"heavy",F:"full"})[c.hull]}, steel ${fmt1(steelCost(p,c).kg/1000)} t πριν το UTM, discount ${Math.round(o.disc*100)}%, extras ${Math.round(o.grow*100)}%.
+Κίνδυνοι: steel μετά το UTM, tailshaft, καιρός/ημέρες, extras & minimum charges ναυπηγείου.`;
+}
+function tWU(p,R){
+ const lang=window._wl||"en";
+ let h=`<div class="card"><h2>Budget write-up</h2>${seg("wl",lang,[["en","English (office/owners)"],["el","Ελληνικά"]])}
+ <textarea id="wt" style="min-height:380px;margin-top:10px;font-size:13px">${esc(p.wu&&p.wu[lang]||writeup(p,R,lang))}</textarea>
+ <div class="row" style="margin-top:8px"><button class="btn p" id="wcp">📋 Αντιγραφή</button><button class="btn" id="wsh">📤 Share</button><button class="btn" id="wre">↺ Ξαναδημιουργία</button><button class="btn ai" id="wai">✨ Βελτίωση με Claude</button></div>
+ <p class="note">Το ✨ χρησιμοποιεί το ίδιο API key με RISQ/Job Orders (αποθηκευμένο στο κινητό).</p></div>`;
+ $("#app").innerHTML=h;
+ $("#app").querySelectorAll("[data-seg=wl] button").forEach(b=>b.onclick=()=>{window._wl=b.dataset.v;renderP()});
+ const ta=$("#wt");ta.oninput=()=>{p.wu=p.wu||{};p.wu[lang]=ta.value;save()};
+ $("#wcp").onclick=()=>{navigator.clipboard.writeText(ta.value).then(()=>toast("✓ Αντιγράφηκε"))};
+ $("#wsh").onclick=()=>{navigator.share?navigator.share({title:"DD Budget",text:ta.value}).catch(()=>{}):navigator.clipboard.writeText(ta.value)};
+ $("#wre").onclick=()=>{if(p.wu)delete p.wu[lang];save();renderP()};
+ $("#wai").onclick=async()=>{let key=localStorage.getItem("risq_api_key");if(!key){key=prompt("Claude API key (console.anthropic.com):");if(!key)return;localStorage.setItem("risq_api_key",key.trim())}
+  const b=$("#wai");b.disabled=true;b.textContent="✨ …";
+  try{const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"content-type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+   body:JSON.stringify({model:"claude-haiku-5-5",max_tokens:1500,messages:[{role:"user",content:`You are a senior marine technical superintendent. Rewrite this dry-docking budget write-up as a clear, professional memo to the owners/technical director (${lang==="en"?"English":"Greek, with maritime terms in English"}). Keep every figure exactly as given, do not invent numbers. Short executive summary first, then cost breakdown, drivers, assumptions, risks and recommendation.\n\n${ta.value}`}]})});
+   const j=await r.json();if(!r.ok)throw new Error(j.error&&j.error.message||r.status);ta.value=j.content.map(x=>x.text||"").join("");ta.oninput()}catch(e){toast("⚠ "+e.message)}
+  b.disabled=false;b.textContent="✨ Βελτίωση με Claude"};
+}
+function tAct(p,R){
+ const a=p.act=p.act||{};
+ const rows=[["yard","1000 Ναυπηγείο (final bill)",R.yard.E.t],["s2","2000 Class/Services/Spares/Paints",R.s2.E],["s3","3000 Logistics",R.s3.E],["days","Off-hire ημέρες",R.c.offhire]];
+ let h=`<div class="card"><h2>Πραγματικά vs Budget</h2><p class="note">Μετά τον δεξαμενισμό γράψε τα πραγματικά. Η εφαρμογή μαθαίνει την υπέρβασή σου και προτείνει growth % στα επόμενα budget.</p><table><tr><th></th><th class="n">Budget</th><th class="n">Actual</th><th class="n">Διαφορά</th></tr>`;
+ for(const [k,n,b] of rows){const x=+a[k]||0;h+=`<tr><td>${n}</td><td class="n">${fmt(b)}</td><td class="n"><input data-ac="${k}" type="number" inputmode="decimal" value="${a[k]??""}" style="width:110px;padding:5px;text-align:right"></td><td class="n" style="color:${x>b?"var(--bad)":"var(--ok)"}">${x?(x>b?"+":"")+fmt(x-b)+" ("+Math.round((x/b-1)*100)+"%)":""}</td></tr>`}
+ h+=`</table><label style="margin-top:10px">Lessons learned<textarea data-ln>${esc(a.lessons||"")}</textarea></label></div>`;
+ $("#app").innerHTML=h;
+ $("#app").querySelectorAll("[data-ac]").forEach(el=>el.onchange=()=>{a[el.dataset.ac]=el.value===""?"":+el.value;save();renderP()});
+ $("[data-ln]").oninput=e=>{a.lessons=e.target.value;save()};
+}
+/* ===================== EXCEL EXPORT ===================== */
+function loadXL(){return new Promise((res,rej)=>{if(window.ExcelJS)return res();const s=document.createElement("script");s.src="exceljs.min.js";s.onload=res;s.onerror=()=>rej(new Error("ExcelJS δεν φορτώθηκε – άνοιξε μία φορά online"));document.head.appendChild(s)})}
+async function exportXLSX(p){
+ try{toast("📊 Δημιουργία Excel…");await loadXL();
+ const R=compute(p),c=R.c,v=p.v,o=p.o,wb=new ExcelJS.Workbook();wb.creator="DD Budget – Created by GB";
+ const HF={type:"pattern",pattern:"solid",fgColor:{argb:"FF1F3864"}},SF={type:"pattern",pattern:"solid",fgColor:{argb:"FFD9E1F2"}},YF={type:"pattern",pattern:"solid",fgColor:{argb:"FFFFFF00"}};
+ const font={name:"Arial",size:9},bold={name:"Arial",size:9,bold:true},white={name:"Arial",size:9,bold:true,color:{argb:"FFFFFFFF"}},blue={name:"Arial",size:9,color:{argb:"FF0000FF"}};
+ const NF='#,##0;(#,##0);"-"';
+ const hdr=(ws,r,vals)=>{const row=ws.getRow(r);vals.forEach((x,i)=>{const cl=row.getCell(i+1);cl.value=x;cl.font=white;cl.fill=HF;cl.alignment={wrapText:true,vertical:"middle",horizontal:"center"}});row.height=28};
+ // ---- PARAMS sheet (levers referenced by formulas)
+ const pa=wb.addWorksheet("PARAMETERS");pa.columns=[{width:46},{width:16},{width:50}];
+ pa.getCell("A1").value=`M/V ${v.name||""} – DD BUDGET PARAMETERS`;pa.getCell("A1").font={name:"Arial",size:12,bold:true};
+ const PR=[["Probability of IF RQRD items",o.prob,"0%"],["Overall yard discount",o.disc,"0%"],["Yard growth / extras",o.grow,"0%"],["Contingency on 2000+3000",o.cont2,"0%"],["Off-hire days",c.offhire,"0"],["TCE USD/day",+o.tce||0,NF]];
+ PR.forEach((x,i)=>{const r=3+i;pa.getCell(r,1).value=x[0];const cl=pa.getCell(r,2);cl.value=x[1];cl.numFmt=x[2];cl.font=blue;cl.fill=YF;pa.getCell(r,1).font=font});
+ pa.getCell("C3").value="Αλλάζεις εδώ – όλα τα σύνολα ξαναϋπολογίζονται.";pa.getCell("C3").font={name:"Arial",size:8,italic:true};
+ const vinfo=[["Vessel",v.name],["IMO",v.imo],["Type / size",TYPES[v.type].n+" – "+sizeName(p)],["Built / age",v.built+" / "+c.age+" yrs"],["DWT / GT",fmt(v.dwt)+" / "+fmt(v.gt)],["LOA × B × D × T",[v.L,v.B,v.D,v.T].join(" × ")+" m"],["Survey",o.survey==="SS"?"Special Survey No."+c.ssNo:"Intermediate DD"],["Yard / region",(o.yard||"")+" – "+regionName(p)],["Dock / afloat days",c.dock+" / "+c.afloat],["Hull area m²",fmt(c.A.hull)],["Steel estimate t",fmt1(steelCost(p,c).kg/1000)]];
+ vinfo.forEach((x,i)=>{pa.getCell(11+i,1).value=x[0];pa.getCell(11+i,2).value=x[1];pa.getCell(11+i,1).font=bold;pa.getCell(11+i,2).font=font});
+ // ---- SPEC
+ const ws=wb.addWorksheet("MAIN SPEC",{views:[{state:"frozen",ySplit:3}]});
+ ws.columns=[{width:9},{width:66},{width:9},{width:10},{width:11},{width:13},{width:9},{width:9},{width:13},{width:7},{width:36},{width:5}];
+ ws.getCell("A1").value=`M/V ${v.name||""} – DRY-DOCKING SPECIFICATION (budget prices, USD)`;ws.getCell("A1").font={name:"Arial",size:12,bold:true};
+ hdr(ws,3,["ID","DESCRIPTION","UNIT","QTY","UNIT PRICE","NET AMOUNT","COND","BUDGET %","BUDGET USD","CLASS","REMARKS","GRP"]);
+ let r=4;const first=4;
+ for(const [k,n] of SECTIONS){const sl=R.ls.filter(l=>l.sec===k);if(!sl.length)continue;
+  const sr=ws.getRow(r);sr.getCell(1).value=k;sr.getCell(2).value=n.toUpperCase();for(let j=1;j<=12;j++){sr.getCell(j).fill=SF;sr.getCell(j).font=bold}r++;
+  sl.forEach((l,i)=>{const row=ws.getRow(r);row.getCell(1).value=`${k}.${i+1}`;row.getCell(2).value=l.d;row.getCell(3).value=l.u;
+   row.getCell(4).value=Math.round(l.q*100)/100;row.getCell(5).value=Math.round(l.pr*100)/100;row.getCell(4).font=blue;row.getCell(5).font=blue;
+   row.getCell(6).value={formula:`D${r}*E${r}`};row.getCell(7).value=COND[l.cd];row.getCell(7).font=blue;
+   row.getCell(8).value={formula:`IF(G${r}="RQRD",1,IF(G${r}="IF RQRD",PARAMETERS!$B$3,0))`};row.getCell(9).value={formula:`F${r}*H${r}`};
+   row.getCell(10).value=l.cls?"✓":"";row.getCell(11).value=[l.note,l.gr].filter(Boolean).join(" · ");row.getCell(12).value=k;
+   [5,6,9].forEach(j=>row.getCell(j).numFmt=NF);row.getCell(8).numFmt="0%";row.getCell(2).alignment={wrapText:true};
+   for(const j of[1,2,3,6,8,9,10,11,12])row.getCell(j).font=row.getCell(j).font&&row.getCell(j).font.color?row.getCell(j).font:font;r++})}
+ const last=r-1;ws.autoFilter={from:"A3",to:`L${last}`};
+ ws.getColumn(7).eachCell((cl,rn)=>{if(rn>3&&rn<=last&&cl.value)cl.dataValidation={type:"list",allowBlank:true,formulae:['"RQRD,IF RQRD,OPT"']}});
+ // ---- 2000
+ const s2=wb.addWorksheet("2000 SERVICES");s2.columns=[{width:14},{width:70},{width:14},{width:10}];
+ hdr(s2,1,["CATEGORY","ITEM","USD","COND"]);let r2=2;
+ for(const x of R.sv){s2.getCell(r2,1).value=x.cat;s2.getCell(r2,2).value=x.d;s2.getCell(r2,3).value=Math.round(x.amt);s2.getCell(r2,3).numFmt=NF;s2.getCell(r2,3).font=blue;s2.getCell(r2,4).value=COND[x.cd];r2++}
+ s2.getCell(r2,1).value="PAINTS";s2.getCell(r2,2).value="Paints – owners' supply (see PAINTS)";s2.getCell(r2,3).value=Math.round(R.pt.tot);s2.getCell(r2,3).numFmt=NF;s2.getCell(r2,4).value="RQRD";const s2l=r2;
+ // ---- PAINTS
+ const pt=wb.addWorksheet("PAINTS");pt.columns=[{width:30},{width:12},{width:8},{width:8},{width:10},{width:10},{width:12}];
+ hdr(pt,1,["SYSTEM","m2 × coats","DFT μm","VS","Litres","USD/L","USD"]);let r3=2;
+ for(const x of R.pt.rows){pt.getRow(r3).values=[x.n,Math.round(x.m2),x.dft,x.vs,Math.round(x.lit),x.pr,Math.round(x.amt)];r3++}
+ pt.getRow(r3).values=["Thinners 4%","","","","","",Math.round(R.pt.thin)];
+ // ---- STEEL
+ const sx=wb.addWorksheet("STEEL");sx.columns=[{width:50},{width:12},{width:10},{width:12},{width:10}];
+ hdr(sx,1,["LOCATION","kg","Surcharge %","USD","COND"]);let r4=2;
+ if(p.steel.length)for(const s of p.steel){sx.getRow(r4).values=[s.t,+s.kg,+s.sur,{formula:`B${r4}*${c.reg.st}*(1+C${r4}/100)`},COND[s.cd||"R"]];sx.getCell(r4,4).numFmt=NF;r4++}
+ else{sx.getRow(r4).values=["Estimated steel (before UTM)",c.steelT*1000,35,{formula:`B${r4}*${c.reg.st}*(1+C${r4}/100)`},"RQRD"];sx.getCell(r4,4).numFmt=NF;r4++}
+ sx.getCell(r4+1,1).value=`Base price ${c.reg.st} USD/kg (${c.reg.n}); density 7.85`;
+ // ---- 3000
+ const s3=wb.addWorksheet("3000 LOGISTICS");s3.columns=[{width:80},{width:14},{width:10}];hdr(s3,1,["ITEM","USD","COND"]);let r5=2;
+ for(const x of R.lg){s3.getCell(r5,1).value=x.d;s3.getCell(r5,2).value=Math.round(x.amt);s3.getCell(r5,2).numFmt=NF;s3.getCell(r5,2).font=blue;s3.getCell(r5,3).value=COND[x.cd];r5++}const s3l=r5-1;
+ // ---- SUMMARY (formulas)
+ const sm=wb.addWorksheet("BUDGET SUMMARY");sm.columns=[{width:8},{width:46},{width:16},{width:16},{width:16}];
+ sm.getCell("A1").value=`M/V ${v.name||""} – DRY-DOCKING BUDGET`;sm.getCell("A1").font={name:"Arial",size:13,bold:true};
+ sm.getCell("A2").value=`${TYPES[v.type].n} · ${sizeName(p)} · ${o.survey==="SS"?"Special Survey No."+c.ssNo:"Intermediate"} · ${regionName(p)} · ${today()}`;sm.getCell("A2").font={name:"Arial",size:9,italic:true};
+ hdr(sm,4,["CODE","DESCRIPTION","EXPECTED","LOW","HIGH"]);let rr=5;const sp=`'MAIN SPEC'!`;
+ const yr=[];
+ for(const [k,n] of SECTIONS){if(!R.ls.some(l=>l.sec===k))continue;sm.getCell(rr,1).value=k;sm.getCell(rr,2).value=n;
+  sm.getCell(rr,3).value={formula:`SUMIFS(${sp}$I$${first}:$I$${last},${sp}$L$${first}:$L$${last},"${k}")`};
+  sm.getCell(rr,4).value={formula:`SUMIFS(${sp}$F$${first}:$F$${last},${sp}$L$${first}:$L$${last},"${k}",${sp}$G$${first}:$G$${last},"RQRD")`};
+  sm.getCell(rr,5).value={formula:`SUMIFS(${sp}$F$${first}:$F$${last},${sp}$L$${first}:$L$${last},"${k}",${sp}$G$${first}:$G$${last},"<>OPT")`};
+  yr.push(rr);rr++}
+ const y1=yr[0],y2=yr[yr.length-1];
+ const put=(lbl,f,b=false)=>{sm.getCell(rr,2).value=lbl;["C","D","E"].forEach((L,i)=>{const cl=sm.getCell(`${L}${rr}`);cl.value={formula:f(L,i)};cl.numFmt=NF;if(b){cl.font=bold;cl.fill=YF}});if(b)sm.getCell(rr,2).font=bold;return rr++};
+ const rb=put("Yard as per spec",L=>`SUM(${L}${y1}:${L}${y2})`);
+ const rd=put("Less: overall discount",L=>`-${L}${rb}*PARAMETERS!$B$4`);
+ const rg=put("Add: yard growth / extras",L=>`(${L}${rb}+${L}${rd})*PARAMETERS!$B$5`);
+ const ry=put("1000 YARD TOTAL",L=>`${L}${rb}+${L}${rd}+${L}${rg}`,true);
+ const s2f=(m)=>m===0?`SUMIFS('2000 SERVICES'!$C$2:$C$${s2l},'2000 SERVICES'!$D$2:$D$${s2l},"RQRD")+PARAMETERS!$B$3*SUMIFS('2000 SERVICES'!$C$2:$C$${s2l},'2000 SERVICES'!$D$2:$D$${s2l},"IF RQRD")`:m===1?`SUMIFS('2000 SERVICES'!$C$2:$C$${s2l},'2000 SERVICES'!$D$2:$D$${s2l},"RQRD")`:`SUMIFS('2000 SERVICES'!$C$2:$C$${s2l},'2000 SERVICES'!$D$2:$D$${s2l},"<>OPT")`;
+ const r2t=put("2000 CLASS / SERVICES / SPARES / PAINTS",(L,i)=>s2f(i),true);
+ const s3f=(m)=>m===0?`SUMIFS('3000 LOGISTICS'!$B$2:$B$${s3l},'3000 LOGISTICS'!$C$2:$C$${s3l},"RQRD")+PARAMETERS!$B$3*SUMIFS('3000 LOGISTICS'!$B$2:$B$${s3l},'3000 LOGISTICS'!$C$2:$C$${s3l},"IF RQRD")`:m===1?`SUMIFS('3000 LOGISTICS'!$B$2:$B$${s3l},'3000 LOGISTICS'!$C$2:$C$${s3l},"RQRD")`:`SUMIFS('3000 LOGISTICS'!$B$2:$B$${s3l},'3000 LOGISTICS'!$C$2:$C$${s3l},"<>OPT")`;
+ const r3t=put("3000 LOGISTICS",(L,i)=>s3f(i),true);
+ const rc=put("Contingency on 2000+3000",L=>`(${L}${r2t}+${L}${r3t})*PARAMETERS!$B$6`);
+ const rt=put("TOTAL DRY-DOCKING COST",L=>`${L}${ry}+${L}${r2t}+${L}${r3t}+${L}${rc}`,true);
+ const rl=put("Loss of revenue (off-hire × TCE)",()=>`PARAMETERS!$B$7*PARAMETERS!$B$8`);
+ put("TOTAL COMMERCIAL EXPOSURE",L=>`${L}${rt}+${L}${rl}`,true);
+ for(let i=5;i<rr;i++)["C","D","E"].forEach(L=>{const cl=sm.getCell(`${L}${i}`);cl.numFmt=NF;if(!cl.font||!cl.font.bold)cl.font=font});
+ sm.getCell(rr+2,2).value="Created by GB";sm.getCell(rr+2,2).font={name:"Arial",size:8,italic:true,color:{argb:"FF808080"}};
+ // write-up
+ const wu=wb.addWorksheet("WRITE-UP");wu.getColumn(1).width=120;const txt=(p.wu&&p.wu.en)||writeup(p,R,"en");txt.split("\n").forEach((t,i)=>{wu.getCell(i+1,1).value=t;wu.getCell(i+1,1).font=font});
+ // order
+ wb.worksheets.forEach(w=>{w.eachRow(rw=>rw.eachCell(cl=>{if(!cl.font||!cl.font.name)cl.font=font}))});
+ [sm,pa,ws,s2,pt,sx,s3,wu].forEach((w,i)=>{w.orderNo=i});
+ const buf=await wb.xlsx.writeBuffer();const name=`DD_Budget_${(v.name||"vessel").replace(/\W+/g,"_")}_${today()}.xlsx`;
+ const blob=new Blob([buf],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+ const file=new File([blob],name,{type:blob.type});
+ if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:name}).catch(()=>dl(blob,name))}else dl(blob,name);
+ }catch(e){toast("⚠ "+e.message);console.error(e)}
+}
+/* ===================== NAV ===================== */
+$("#bk").onclick=home;
+$("#hm").onclick=()=>{const m=modal(`<h2>DD Budget</h2><div class="row" style="flex-direction:column;align-items:stretch"><button class="btn" id="m1">🏠 Αρχική</button><button class="btn" id="m2">＋ Νέο budget</button><button class="btn" id="m3">🔑 Αλλαγή Claude API key</button></div>
+ <p class="note">Πώς δουλεύει: τυπικά particulars ανά μέγεθος → επιφάνειες (Mumford) → βιβλιοθήκη εργασιών ανά τύπο πλοίου με ποσότητες & τιμές ναυπηγείου (βάση Κίνα 2026 × συντελεστής περιοχής) → steel & χρώματα → class/services/spares → logistics & off-hire. RQRD μετράει πάντα, IF RQRD με πιθανότητα, OPT όχι.</p><div class="foot">v${VER} · Created by George Barbaris</div>`,m=>{
+ m.querySelector("#m1").onclick=()=>{m.remove();home()};m.querySelector("#m2").onclick=()=>{m.remove();wizard()};
+ m.querySelector("#m3").onclick=()=>{const k=prompt("Claude API key",localStorage.getItem("risq_api_key")||"");if(k!=null){localStorage.setItem("risq_api_key",k.trim());toast("✓ Αποθηκεύτηκε")}}})};
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+home();
+</script>
+</body>
+</html>
