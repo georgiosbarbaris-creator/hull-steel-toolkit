@@ -351,7 +351,7 @@ async function buildPdf(){const ins=I(),fl=findings(ins),s=stats(ins),W=1240,H=1
   const np=()=>{c=document.createElement("canvas");c.width=W;c.height=H;g=c.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,W,H);pn++;g.fillStyle="#1d3a5c";g.fillRect(0,0,W,110);
     g.fillStyle="#fff";g.font=`bold 34px ${F}`;g.fillText("RISQ 3.2 WALK-ROUND — FINDINGS",M,52);g.font=`22px ${F}`;g.fillText(`${ins.vessel}${ins.imo?"  ·  IMO "+ins.imo:""}${ins.port?"  ·  "+ins.port:""}`,M,88);
     g.textAlign="right";g.fillText(ins.date||"",W-M,52);g.textAlign="left";g.fillStyle="#777";g.font=`18px ${F}`;g.fillText(`Page ${pn}${ins.by?"  ·  "+ins.by:""}`,M,H-35);g.textAlign="right";g.fillText("Created by George Barbaris",W-M,H-35);g.textAlign="left";y=165;};
-  const ep=()=>{const d=c.toDataURL("image/jpeg",.82),b=atob(d.split(",")[1]),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);pages.push({jpg:u,w:W,h:H});};
+  const ep=()=>{const d=c.toDataURL("image/jpeg",.62),b=atob(d.split(",")[1]),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);pages.push({jpg:u,w:W,h:H});};
   const wrap=(t,x,mw,lh,max=99)=>{const ws=String(t||"").split(/\s+/);let line="",n=0;for(const w of ws){const tt=line?line+" "+w:w;if(g.measureText(tt).width>mw&&line){g.fillText(line,x,y);y+=lh;line=w;if(++n>=max)return;}else line=tt;}if(line){g.fillText(line,x,y);y+=lh;}};
   np();g.fillStyle="#14212e";g.font=`bold 28px ${F}`;g.fillText("Summary",M,y);y+=44;g.font=`22px ${F}`;
   g.fillText(`Checked: ${s.d} / ${s.n}${ins.hr?" (high-risk only)":""}     Findings: ${fl.length}     ★ High-risk findings: ${fl.filter(q=>q.h).length}`,M,y);y+=50;
@@ -477,7 +477,7 @@ async function buildCoPdf(){const ins=I(),fl=findings(ins),W=1240,H=1754,M=70,F=
   const np=()=>{c=document.createElement("canvas");c.width=W;c.height=H;g=c.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,W,H);pn++;g.fillStyle="#1d3a5c";g.fillRect(0,0,W,110);
     g.fillStyle="#fff";g.font=`bold 32px ${F}`;g.fillText("RIGHTSHIP INSPECTION — CLOSE-OUT SUBMISSION",M,52);g.font=`22px ${F}`;g.fillText(`${ins.vessel}${ins.imo?"  ·  IMO "+ins.imo:""}${ins.port?"  ·  "+ins.port:""}${ins.date?"  ·  "+ins.date:""}`,M,88);
     g.fillStyle="#777";g.font=`18px ${F}`;g.fillText(`Page ${pn}`,M,H-35);g.textAlign="right";g.fillText("Created by George Barbaris",W-M,H-35);g.textAlign="left";y=160;};
-  const ep=()=>{const d=c.toDataURL("image/jpeg",.8),b=atob(d.split(",")[1]),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);pages.push({jpg:u,w:W,h:H});};
+  const ep=()=>{const d=c.toDataURL("image/jpeg",.62),b=atob(d.split(",")[1]),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);pages.push({jpg:u,w:W,h:H});};
   const lines=(t,mw)=>{const out=[];String(t||"").split("\n").forEach(par=>{let line="";par.split(/\s+/).forEach(w=>{const tt=line?line+" "+w:w;if(g.measureText(tt).width>mw&&line){out.push(line);line=w;}else line=tt;});out.push(line);});return out;};
   const para=(lab,t,col)=>{if(!String(t||"").trim())return;g.font=`bold 20px ${F}`;if(y+60>H-80){ep();np();}g.fillStyle=col||"#1d3a5c";g.fillText(lab,M+20,y);y+=28;g.font=`20px ${F}`;g.fillStyle="#222";
     for(const l of lines(t,W-2*M-40)){if(y>H-80){ep();np();g.font=`20px ${F}`;g.fillStyle="#222";}g.fillText(l,M+20,y);y+=27;}y+=8;};

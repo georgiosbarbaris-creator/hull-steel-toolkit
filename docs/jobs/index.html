@@ -348,7 +348,7 @@ $("#xPdf").onclick=async e=>{const b=e.currentTarget,tx=b.textContent;b.disabled
     const np=()=>{c=document.createElement("canvas");c.width=W;c.height=H;g=c.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,W,H);pn++;g.fillStyle="#123b3a";g.fillRect(0,0,W,100);
       g.fillStyle="#fff";g.font=`bold 34px ${Fn}`;g.fillText(fit(`JOB ORDER LIST — ${v.name}${lTitle()}`,W-2*M),M,50);g.font=`20px ${Fn}`;g.fillText(`${fd(today())}  ·  Open ${op.length}  ·  Overdue ${op.filter(i=>stat(i)==="ov").length}  ·  Done ${dn.length}`,M,82);
       g.fillStyle="#888";g.font=`17px ${Fn}`;g.fillText(`Page ${pn}`,M,H-30);y=140;};
-    const ep=()=>{const d=c.toDataURL("image/jpeg",.82),bb=atob(d.split(",")[1]),u=new Uint8Array(bb.length);for(let i=0;i<bb.length;i++)u[i]=bb.charCodeAt(i);pages.push(u);};
+    const ep=(q=.8)=>{const d=c.toDataURL("image/jpeg",q),bb=atob(d.split(",")[1]),u=new Uint8Array(bb.length);for(let i=0;i<bb.length;i++)u[i]=bb.charCodeAt(i);pages.push(u);};
     const fit=(t,mw)=>{t=String(t||"");if(g.measureText(t).width<=mw)return t;while(t&&g.measureText(t+"…").width>mw)t=t.slice(0,-1);return t+"…";};
     const cols=[["#",50],["Job",470],["Area",190],["Resp.",110],["Given",100],["Due",110],["Status",90]];
     const head=()=>{g.fillStyle="#e3eeec";g.fillRect(M,y-26,W-2*M,36);g.fillStyle="#123b3a";g.font=`bold 17px ${Fn}`;let x=M+6;cols.forEach(cc=>{g.fillText(cc[0],x,y);x+=cc[1];});y+=36;};
@@ -366,8 +366,8 @@ $("#xPdf").onclick=async e=>{const b=e.currentTarget,tx=b.textContent;b.disabled
       const sets=[["BEFORE",i.photos.slice(0,2)],["AFTER",i.after.slice(0,2)]].filter(s=>s[1].length);const bw=(W-2*M-40-20*(sets.length-1))/sets.length;let x=M+20;
       for(const [lab,ks] of sets){g.fillStyle=lab==="AFTER"?"#1d7a46":"#c0392b";g.font=`bold 18px ${Fn}`;g.fillText(lab,x,top+140);const ih=(600-10*(ks.length-1))/ks.length;let yy=top+152;
         for(const k of ks){const d=await IDB.get(k);if(d){const im=await loadImg(d),s=Math.min(bw/im.width,ih/im.height);g.drawImage(im,x,yy,im.width*s,im.height*s);}yy+=ih+10;}x+=bw+20;}
-      slot++;if(slot===2){ep();slot=0;}}
-    if(slot)ep();await shareFile(new Blob([makePdf(pages)],{type:"application/pdf"}),`${v.name}${lTitle()}_Job_Order_List_${today()}.pdf`.replace(/\s+/g,"_"));}
+      slot++;if(slot===2){ep(.6);slot=0;}}
+    if(slot)ep(.6);await shareFile(new Blob([makePdf(pages)],{type:"application/pdf"}),`${v.name}${lTitle()}_Job_Order_List_${today()}.pdf`.replace(/\s+/g,"_"));}
   catch(x){toast("Σφάλμα PDF");}b.disabled=false;b.textContent=tx;};
 
 /* ---------- voice + Claude EN (shared key with RISQ app) ---------- */
