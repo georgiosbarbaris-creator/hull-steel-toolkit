@@ -87,7 +87,7 @@ input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:
   <div class="chips" id="flt"></div>
   <input id="q" placeholder="🔍 αναζήτηση" style="margin-bottom:4px">
   <div id="iList"></div>
-  <div class="row" style="margin-top:16px"><button class="btn sm" id="selOn">☑ Επιλογή πολλών</button><button class="btn sm" id="lRen">✎ Μετονομασία λίστας</button><button class="btn sm d" id="lDel">Διαγραφή λίστας</button></div>
+  <div class="row" style="margin-top:16px"><button class="btn sm" id="selOn">☑ Επιλογή πολλών</button><button class="btn sm" id="lRen">✎ Μετονομασία λίστας</button><button class="btn sm d" id="lDel">Διαγραφή λίστας</button><button class="btn sm p" id="mvOn">➡ Μετακίνηση σε άλλη λίστα</button></div>
   <button class="btn d sm" id="vDel" style="margin-top:20px">Διαγραφή πλοίου</button>
 </section>
 
@@ -426,7 +426,8 @@ $("#mGo").onclick=async()=>{const vid=$("#mV").value;let lid=$("#mL").value;
 $("#i_mv").onclick=()=>itemMove(false);$("#i_cp").onclick=()=>itemMove(true);
 function itemMove(copy){if(draft._new){toast("Πάτα πρώτα Αποθήκευση");return;}readItem();const i=S.it.findIndex(x=>x.id===draft.id);
   const d=JSON.parse(JSON.stringify(draft));delete d._tmp;delete d._rm;delete d._new;S.it[i]=d;save();openMove([draft.id],copy);}
-$("#selOn").onclick=()=>{sel=sel?null:new Set();rVes();};$("#selX").onclick=()=>{sel=null;rVes();};
+$("#selOn").onclick=()=>{sel=sel?null:new Set();rVes();};
+$("#mvOn").onclick=()=>{if(sel&&sel.size){openMove([...sel],false);return;}sel=new Set();rVes();toast("Πάτα τις δουλειές που θέλεις και μετά ➡ Μεταφορά (πάνω)",3500);window.scrollTo({top:0,behavior:"smooth"});};$("#selX").onclick=()=>{sel=null;rVes();};
 $("#selMv").onclick=()=>{if(!sel||!sel.size){toast("Διάλεξε δουλειές");return;}openMove([...sel],false);};
 $("#selCp").onclick=()=>{if(!sel||!sel.size){toast("Διάλεξε δουλειές");return;}openMove([...sel],true);};
 $("#lRen").onclick=()=>{const l=S.l.find(x=>x.id===cl);if(!l)return;const n=prompt("Νέο όνομα λίστας",l.name);if(n&&n.trim()){l.name=n.trim();save();rVes();}};
