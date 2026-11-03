@@ -67,7 +67,7 @@ tr.tot td{font-weight:800;background:var(--yel)}
 <script>
 "use strict";
 /* ===================== DATA / CONSTANTS ===================== */
-const VER="1.0";
+const VER="1.1";
 const $=s=>document.querySelector(s);
 const fmt=n=>(Math.round(n||0)).toLocaleString("en-US");
 const fmt1=n=>(Math.round((n||0)*10)/10).toLocaleString("en-US");
@@ -109,6 +109,7 @@ const COND={R:"RQRD",I:"IF RQRD",O:"OPT"};
 const KEY="ddb:projects";
 let DB={projects:[]};
 try{DB=JSON.parse(localStorage.getItem(KEY))||DB}catch(e){}
+DB.projects.forEach(p=>{const o=p.o;if(o.nextM==null)o.nextM=30;if(!o.pay)o.pay=[50,30,20];if(!o.payD)o.payD=[0,60,90]});
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(DB))}catch(e){toast("⚠ Αποθήκευση απέτυχε: "+e.message)}};
 let cur=null, tab="ship";
 function toast(m){const t=document.createElement("div");t.className="toast";t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2300)}
@@ -121,7 +122,7 @@ function newProject(type,sizeK){
   kw:s.kw,gens:s.gens,boiler:1,bwts:1,iccp:0,ffl:1,bt:s.bt||0,scrub:0,lng:s.lng||0,cls:"",flag:"",me:"",cb:{B:.83,C:.65,G:.74}[type]};
  const p={id:uid(),created:Date.now(),v,
   o:{survey:"SS",region:"CNN",yard:"",date:"",cond:"A",hull:"",holds:"",deck:"",steelT:null,tsw:0,prop:0,rudder:0,chain:0,crane5:1,hcOver:1,dock:null,afloat:null,dev:2,cont:3,tce:s.tce,cons:s.cons,vlsfo:600,mgo:800,
-     prob:.5,disc:.10,grow:.12,cont2:.05,supts:2},
+     prob:.5,disc:.10,grow:.12,cont2:.05,supts:2,nextM:30,pay:[50,30,20],payD:[0,60,90]},
   ov:{},cust:[],steel:[],sov:{},cust2:[],act:{},notes:""};
  return p;
 }
@@ -444,6 +445,11 @@ function compute(p){
  R.s3={E:lsum("E"),L:lsum("L"),H:lsum("H")};
  R.tot={};for(const k of["E","L","H"]){const cn=(R.s2[k]+R.s3[k])*p.o.cont2;R.tot[k]={cont:cn,t:R.yard[k].t+R.s2[k]+R.s3[k]+cn}}
  R.loss=c.offhire*(+p.o.tce||0);
+ const catE=cs=>R.sv.filter(x=>cs.includes(x.cat)).reduce((a,x)=>a+(x.cd==="R"?x.amt:x.cd==="I"?x.amt*pr:0),0);
+ R.own={yard:R.yard.E.t,cls:catE(["CLASS","UTM"]),srv:catE(["SERVICE","LSA","FFE","NAV"]),spr:catE(["SPARES","STORES"]),pnt:R.pt.tot,log:R.s3.E+catE(["FORWARDING"]),cont:R.tot.E.cont,cash:R.tot.E.t,off:R.loss};
+ R.own.all=R.own.cash+R.own.off;
+ const o=p.o;R.extraDay=c.rf*(400+.1*c.gt)+695*c.rf+(+o.supts||0)*180+(+o.tce||0);
+ R.perDay=R.own.cash/Math.max(1,(+o.nextM||30)*30.4);
  return R;
 }
 /* ===================== UI HELPERS ===================== */
@@ -461,7 +467,7 @@ function home(){
  let h=`<div class="card"><button class="btn p big" id="np">＋ Νέο budget δεξαμενισμού</button>
  <p class="note">Διάλεξε τύπο & μέγεθος → διόρθωσε τα particulars → η εφαρμογή βγάζει το spec με ποσότητες, τιμές, steel, χρώματα, class/services, logistics & off-hire. Όλα αποθηκεύονται μόνο στο iPhone.</p></div>`;
  if(ps.length){h+=`<div class="card"><h2>Τα budget μου</h2>`;
-  for(const p of ps){const R=compute(p);h+=`<div class="pc card" style="margin:8px 0" data-id="${p.id}"><div><b>${TYPES[p.v.type].i} ${esc(p.v.name||"(χωρίς όνομα)")}</b><div class="note">${esc(sizeName(p))} · ${p.o.survey==="SS"?"Special Survey "+R.c.ssNo:"Intermediate DD"} · ${esc(regionName(p))}</div></div><div style="text-align:right"><div class="big-n" style="font-size:17px">$${fmt(R.tot.E.t)}</div><div class="note">${fmt(R.tot.L.t/1000)}k – ${fmt(R.tot.H.t/1000)}k</div></div></div>`}
+  for(const p of ps){const R=compute(p);h+=`<div class="pc card" style="margin:8px 0" data-id="${p.id}"><div><b>${TYPES[p.v.type].i} ${esc(p.v.name||"(χωρίς όνομα)")}</b><div class="note">${esc(sizeName(p))} · ${p.o.survey==="SS"?"Special Survey "+R.c.ssNo:"Intermediate DD"} · ${esc(regionName(p))}</div></div><div style="text-align:right"><div class="note">Ναυπηγείο</div><div class="big-n" style="font-size:18px">$${fmt(R.own.yard)}</div><div class="note">Σύνολο $${fmt(R.own.cash)}</div></div></div>`}
   h+=`</div>`}
  h+=`<div class="card"><h2>Backup</h2><div class="row"><button class="btn" id="bkp">⬇ Backup όλων (.json)</button><button class="btn" id="rst">⬆ Επαναφορά</button></div><p class="note">Τα δεδομένα μένουν στο κινητό. Κάνε backup πριν αλλάξεις συσκευή.</p></div>
  <div class="card"><h2>Ενδεικτικά σύνολα αγοράς (για έλεγχο λογικής)</h2><p class="note">Συνολικό κόστος Special Survey με ναυπηγείο, class, spares, χρώματα, χωρίς off-hire. Πολύ ενδεικτικά – εξαρτώνται από ηλικία, steel, ναυπηγείο.</p>
@@ -490,20 +496,109 @@ function wizard(){
   const draw=()=>{m.querySelector("#szs").innerHTML=SIZES[t].map((x,i)=>`<label style="flex-direction:row;align-items:center;gap:8px;padding:6px 0;color:var(--ink);font-size:14px"><input type="radio" name="sz" value="${x.k}" ${i===0?"checked":""} style="width:auto"> ${x.n}</label>`).join("")};
   draw();m.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>{t=b.dataset.t;m.querySelectorAll("[data-t]").forEach(x=>x.classList.toggle("on",x===b));draw()});
   m.querySelector("#wc").onclick=()=>m.remove();
-  m.querySelector("#wo").onclick=()=>{s=m.querySelector("input[name=sz]:checked").value;const p=newProject(t,s);p.v.name=m.querySelector("#wn").value.trim().toUpperCase();DB.projects.push(p);save();m.remove();openP(p.id)}});
+  m.querySelector("#wo").onclick=()=>{s=m.querySelector("input[name=sz]:checked").value;const p=newProject(t,s);p.v.name=m.querySelector("#wn").value.trim().toUpperCase();DB.projects.push(p);save();m.remove();openP(p.id,"ship")}});
 }
 /* ===================== PROJECT ===================== */
-const TABS=[["ship","🚢 Πλοίο"],["scope","⚙️ Scope"],["spec","📋 Spec"],["steel","🔩 Steel"],["paint","🎨 Χρώματα"],["s2","🧰 Class/Services"],["s3","🚚 Logistics"],["sum","📊 Budget"],["wu","📝 Write-up"],["act","✅ Actual"]];
-function openP(id){cur=DB.projects.find(p=>p.id===id);if(!cur)return home();tab=tab||"ship";renderP()}
+const TABS=[["own","👔 Σύνοψη"],["ship","🚢 Πλοίο"],["scope","⚙️ Scope"],["spec","📋 Spec"],["steel","🔩 Steel"],["paint","🎨 Χρώματα"],["s2","🧰 Class/Services"],["s3","🚚 Logistics"],["sum","📊 Αναλυτικά"],["wu","📝 Write-up"],["act","✅ Actual"]];
+function openP(id,t){cur=DB.projects.find(p=>p.id===id);if(!cur)return home();tab=t||"own";renderP()}
 function renderP(){
  const p=cur,R=compute(p);
- setHeader(`${TYPES[p.v.type].i} ${p.v.name||"Νέο πλοίο"}`,`Expected $${fmt(R.tot.E.t)} · off-hire ${R.c.offhire} d`,true,true);
+ setHeader(`${TYPES[p.v.type].i} ${p.v.name||"Νέο πλοίο"}`,hdrTxt(R),true,true);
  $("#tabs").innerHTML=TABS.map(([k,n])=>`<button data-tab="${k}" class="${k===tab?"on":""}">${n}</button>`).join("");
  $("#tabs").querySelectorAll("button").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;renderP();window.scrollTo(0,0)});
  const on=$("#tabs .on");on&&on.scrollIntoView({inline:"center",block:"nearest"});
- ({ship:tShip,scope:tScope,spec:tSpec,steel:tSteel,paint:tPaint,s2:tS2,s3:tS3,sum:tSum,wu:tWU,act:tAct})[tab](p,R);
+ ({own:tOwn,ship:tShip,scope:tScope,spec:tSpec,steel:tSteel,paint:tPaint,s2:tS2,s3:tS3,sum:tSum,wu:tWU,act:tAct})[tab](p,R);
 }
-function refreshHdr(){if(!cur)return;const R=compute(cur);$("#sub").textContent=`Expected $${fmt(R.tot.E.t)} · off-hire ${R.c.offhire} d`}
+const hdrTxt=R=>`Ναυπηγείο $${fmt(R.own.yard)} · Σύνολο $${fmt(R.own.cash)}`;
+function refreshHdr(){if(!cur)return;$("#sub").textContent=hdrTxt(compute(cur))}
+
+function tOwn(p,R){
+ const O=R.own,c=R.c,o=p.o,pc=x=>Math.round(x/O.all*100);
+ const row=(lbl,sub,v,cls="")=>`<tr class="${cls}"><td>${lbl}${sub?`<div class="note">${sub}</div>`:""}</td><td class="n">${v<0?"−":""}$${fmt(Math.abs(v))}</td><td style="width:70px"><div class="bar" style="width:${Math.max(2,pc(v))}%;${cls?"background:var(--pri)":""}"></div></td></tr>`;
+ let h=`<div class="card" style="text-align:center"><div class="note">ΤΙΜΗ ΝΑΥΠΗΓΕΙΟΥ (yard bill)</div><div class="big-n" style="font-size:38px">$${fmt(O.yard)}</div>
+ <div class="note">εύρος $${fmt(R.yard.L.t)} – $${fmt(R.yard.H.t)} · ${c.dock} ημ. δεξαμενή + ${c.afloat} ημ. προβλήτα · ${esc(o.yard||regionName(p))}</div>
+ <div class="note" style="margin-top:4px">Ό,τι θα τιμολογήσει το ναυπηγείο: μετά το discount ${Math.round(o.disc*100)}%, με περιθώριο extras ${Math.round(o.grow*100)}%.</div></div>
+ <div class="card"><h2>Από την τιμή του ναυπηγείου στο σύνολο</h2><table>
+ ${row("🏗 Τιμή ναυπηγείου","δεξαμενή, γάστρα, steel, μηχανές, υπηρεσίες ναυπηγείου",O.yard,"tot")}
+ ${row("＋ Class & UTM","νηογνώμονας, παχυμετρήσεις",O.cls)}
+ ${row("＋ Service engineers","makers: stern tube, T/C, LSA, FFE, radio/nav"+(c.type==="G"?", cargo plant":""),O.srv)}
+ ${row("＋ Spares & stores","ανταλλακτικά & αναλώσιμα πλοιοκτήτη",O.spr)}
+ ${row("＋ Χρώματα","owners' supply",O.pnt)}
+ ${row("＋ Logistics","bunkers, agency, superintendents, forwarding"+(c.type==="G"?", gas-freeing/gassing-up":""),O.log)}
+ ${row("＋ Contingency","απρόβλεπτα "+Math.round(o.cont2*100)+"%",O.cont)}
+ ${row("= ΣΥΝΟΛΟ ΔΕΞΑΜΕΝΙΣΜΟΥ","ό,τι πληρώνεται σε μετρητά",O.cash,"tot")}
+ ${row("＋ Χαμένα έσοδα (off-hire)",`${c.offhire} ημ. × TCE $${fmt(o.tce)}`,O.off)}
+ ${row("= ΣΥΝΟΛΙΚΗ ΕΠΙΒΑΡΥΝΣΗ","μετρητά + χαμένα έσοδα",O.all,"tot")}</table>
+ <p class="note">Εύρος συνόλου δεξαμενισμού: $${fmt(R.tot.L.t)} – $${fmt(R.tot.H.t)}.</p></div>
+ <div class="card"><h2>Τι σημαίνει για τον πλοιοκτήτη</h2><div class="kpis">
+ <div class="kpi"><div class="v">$${fmt(R.perDay)}</div><div class="l">ανά ημέρα λειτουργίας μέχρι τον επόμενο DD (${o.nextM} μήνες)</div></div>
+ <div class="kpi"><div class="v">${fmt1(O.cash/Math.max(1,+o.tce||1))}</div><div class="l">ημέρες hire για να «βγει» το κόστος</div></div>
+ <div class="kpi"><div class="v">$${fmt(R.extraDay)}</div><div class="l">κοστίζει κάθε επιπλέον ημέρα (ναυπηγείο + off-hire)</div></div></div>
+ <div class="g2" style="margin-top:8px"><label>Μήνες μέχρι τον επόμενο DD<input id="nm" type="number" value="${o.nextM}"></label><label>TCE $/ημέρα<input id="tc" type="number" value="${o.tce}"></label></div></div>
+ <div class="card"><h2>Πότε πληρώνεται</h2>${cashflow(p,R)}</div>
+ <div class="card"><h2>Λογιστικά</h2><table>
+ <tr><td>Κεφαλαιοποιείται & αποσβένεται (yard, class, UTM, services, χρώματα, logistics, contingency)</td><td class="n">$${fmt(O.cash-O.spr)}</td></tr>
+ <tr><td>Απόσβεση ανά μήνα (${o.nextM} μήνες)</td><td class="n">$${fmt((O.cash-O.spr)/Math.max(1,+o.nextM))}</td></tr>
+ <tr><td>Spares & stores (συχνά OPEX – ανάλογα με την πολιτική)</td><td class="n">$${fmt(O.spr)}</td></tr>
+ <tr><td>Off-hire (χαμένα έσοδα – όχι πληρωμή)</td><td class="n">$${fmt(O.off)}</td></tr></table>
+ <p class="note">Το κόστος δεξαμενισμού συνήθως κεφαλαιοποιείται (IAS 16) και αποσβένεται μέχρι τον επόμενο δεξαμενισμό· η τελική κατανομή ανήκει στο λογιστήριο.</p></div>
+ <div class="card"><h2>Πού μπορεί να ξεφύγει</h2>${risks(p,R)}</div>
+ ${decisions(p,R)}
+ <div class="card"><h2>Σύγκριση περιοχών ναυπηγείου (ίδιο scope)</h2>${regions(p,R)}</div>
+ <div class="card"><div class="row"><button class="btn p" id="osh">📤 Στείλε στον εφοπλιστή</button><button class="btn" id="oxl">📊 Excel</button></div><p class="note">Σύντομο μήνυμα (WhatsApp/email) με τα βασικά νούμερα.</p></div>`;
+ $("#app").innerHTML=h;
+ $("#nm").onchange=e=>{o.nextM=+e.target.value||30;save();renderP()};
+ $("#tc").onchange=e=>{o.tce=+e.target.value||0;save();renderP()};
+ $("#app").querySelectorAll("[data-py]").forEach(el=>el.onchange=()=>{const [k,i]=el.dataset.py.split(":");o[k][+i]=+el.value||0;save();renderP()});
+ $("#app").querySelectorAll("[data-dec]").forEach(el=>el.onchange=()=>{const id=el.dataset.dec;p.ov[id]=p.ov[id]||{};p.ov[id].c=el.checked?"R":"O";save();renderP()});
+ $("#osh").onclick=()=>{const t=ownerMsg(p,R);navigator.share?navigator.share({title:"DD Budget",text:t}).catch(()=>{}):navigator.clipboard.writeText(t).then(()=>toast("✓ Αντιγράφηκε"))};
+ $("#oxl").onclick=()=>exportXLSX(p);
+}
+function cashflow(p,R){
+ const o=p.o,O=R.own,d0=o.date?new Date(o.date):null;
+ const dt=n=>{if(!d0)return n?`+${n} ημ.`:"αναχώρηση";const d=new Date(d0);d.setDate(d.getDate()+R.c.yard+n);return d.toLocaleDateString("el-GR")};
+ const pre=O.spr+O.pnt+O.srv*.5,during=O.cls+O.srv*.5+O.log;
+ let h=`<table><tr><th>Πότε</th><th class="n">USD</th></tr><tr><td>Πριν το DD (spares, χρώματα, προκαταβολές makers)</td><td class="n">${fmt(pre)}</td></tr><tr><td>Κατά το DD (class, makers, logistics)</td><td class="n">${fmt(during)}</td></tr>`;
+ o.pay.forEach((x,i)=>{h+=`<tr><td>Ναυπηγείο <input data-py="pay:${i}" type="number" value="${x}" style="width:52px;padding:3px">% στις <input data-py="payD:${i}" type="number" value="${o.payD[i]}" style="width:52px;padding:3px"> ημ. μετά την αναχώρηση <span class="note">(${dt(+o.payD[i])})</span></td><td class="n">${fmt(O.yard*x/100)}</td></tr>`});
+ const sp=o.pay.reduce((a,b)=>a+(+b||0),0);
+ h+=`</table>${sp!==100?`<div class="warn">Οι δόσεις του ναυπηγείου αθροίζουν ${sp}% – διόρθωσε σε 100%.</div>`:""}<p class="note">Τυπικοί όροι Κίνας: 50% πριν την αναχώρηση, 30% σε 60 ημ., 20% σε 90 ημ. Τα ποσά contingency δεν εμφανίζονται εδώ.</p>`;
+ return h;
+}
+function risks(p,R){
+ const c=R.c,st=steelCost(p,c),o=p.o;
+ const items=[["Steel μετά το UTM / close-up",(st.highP-st.plate)*(1-o.disc)*(1+o.grow)],
+  ["Γραμμές «IF RQRD» αν χρειαστούν όλες",(R.yard.H.t-R.yard.E.t)+(R.s2.H-R.s2.E)],
+  [`+${o.cont||3} ημέρες καθυστέρηση (καιρός/extras)`,(+o.cont||3)*R.extraDay]];
+ if(c.SS&&!o.tsw)items.push(["Tailshaft withdrawal (αν το ζητήσει η Class)",4250*c.sf*c.rf+3100*c.sf*c.rf]);
+ return `<table>${items.map(([a,b])=>`<tr><td>${a}</td><td class="n">+$${fmt(b)}</td></tr>`).join("")}</table><p class="note">Γι' αυτό το «High» είναι $${fmt(R.tot.H.t)}. Κάθε extra του ναυπηγείου να κοστολογείται και σε ημέρες.</p>`;
+}
+function decisions(p,R){
+ const ops=R.ls.filter(l=>l.sec==="20"||(l.cd==="O"&&l.q*l.pr>3000));
+ if(!ops.length)return "";
+ return `<div class="card"><h2>Αποφάσεις πλοιοκτήτη (προαιρετικά)</h2>${ops.slice(0,8).map(l=>`<label style="flex-direction:row;align-items:center;gap:8px;color:var(--ink);font-size:14px;padding:5px 0"><input type="checkbox" data-dec="${l.id}" ${l.cd==="R"?"checked":""} style="width:auto"><span style="flex:1">${esc(l.d)}</span><b>$${fmt(l.q*l.pr)}</b></label>`).join("")}<p class="note">Τσέκαρε για να μπει στο budget.</p></div>`;
+}
+function regions(p,R){
+ const rows=REGIONS.map(r=>{const q=JSON.parse(JSON.stringify(p));q.o.region=r.k;const X=compute(q);return{r,y:X.own.yard,t:X.own.cash}});
+ return `<table><tr><th>Περιοχή</th><th class="n">Ναυπηγείο</th><th class="n">Σύνολο</th></tr>${rows.map(x=>`<tr style="${x.r.k===p.o.region?"font-weight:800;background:var(--yel)":""}"><td>${esc(x.r.n)}</td><td class="n">${fmt(x.y)}</td><td class="n">${fmt(x.t)}</td></tr>`).join("")}</table><p class="note">Δεν περιλαμβάνει διαφορά deviation/ημερών – πρόσθεσέ τη στο Logistics.</p>`;
+}
+function ownerMsg(p,R){
+ const O=R.own,c=R.c,M=x=>"$"+fmt(x);
+ return `M/V ${p.v.name||""} – Dry-docking budget
+${p.o.survey==="SS"?"Special Survey No."+c.ssNo:"Intermediate"} · ${p.o.yard||regionName(p)} · ${c.dock}+${c.afloat} days
+
+YARD PRICE: ${M(O.yard)}
++ Class & UTM ${M(O.cls)}
++ Service engineers ${M(O.srv)}
++ Spares & stores ${M(O.spr)}
++ Paints ${M(O.pnt)}
++ Logistics ${M(O.log)}
++ Contingency ${M(O.cont)}
+= TOTAL DRY-DOCKING ${M(O.cash)} (range ${M(R.tot.L.t)}–${M(R.tot.H.t)})
++ Off-hire ${c.offhire} d × ${M(p.o.tce)} = ${M(O.off)}
+= TOTAL IMPACT ${M(O.all)}
+
+≈ ${M(R.perDay)}/day until next DD (${p.o.nextM} months) · each extra day ≈ ${M(R.extraDay)}`;
+}
 function tShip(p,R){
  const v=p.v,c=R.c,A=c.A;
  let h=`<div class="card"><h2>Στοιχεία πλοίου</h2><div class="g2">${inp("name","Όνομα",v.name,"text")}${inp("imo","IMO",v.imo,"text")}
@@ -698,13 +793,15 @@ ${TYPES[v.type].n}, ${sizeName(p)}, built ${v.built} (${c.age} yrs), ${fmt(v.dwt
 Scope: ${o.survey==="SS"?"Special Survey No."+c.ssNo:"Intermediate"} + dry-docking${o.yard?" at "+o.yard:""}, ${regionName(p)}${o.date?", planned "+o.date:""}.
 Duration: ${c.dock} days in dock + ${c.afloat} days afloat; total off-hire ${c.offhire} days (incl. deviation & contingency).
 
-BUDGET (expected / range):
-• Yard (Section 1000): ${M(R.yard.E.t)} (${M(R.yard.L.t)} – ${M(R.yard.H.t)})
+YARD PRICE: ${M(R.yard.E.t)} (range ${M(R.yard.L.t)} – ${M(R.yard.H.t)})
+
+OTHER COSTS:
 • Class, UTM, services, spares, paints (2000): ${M(R.s2.E)}
 • Logistics (3000): ${M(R.s3.E)}
 • Contingency: ${M(R.tot.E.cont)}
 TOTAL DD COST: ${M(R.tot.E.t)}  (range ${M(R.tot.L.t)} – ${M(R.tot.H.t)})
-Loss of revenue: ${c.offhire} d × ${M(o.tce)} = ${M(R.loss)} → total commercial exposure ${M(R.tot.E.t+R.loss)}.
+Loss of revenue: ${c.offhire} d × ${M(o.tce)} = ${M(R.loss)} → total impact ${M(R.tot.E.t+R.loss)}.
+Equivalent to ${M(R.perDay)} per operating day until the next dry-docking (${o.nextM} months); each extra yard day ≈ ${M(R.extraDay)}.
 
 Main cost drivers:
 ${top.map(t=>"• "+t.d+": "+M(t.a)).join("\n")}
@@ -718,8 +815,9 @@ ${TYPES[v.type].n}, ${sizeName(p)}, ναυπήγηση ${v.built} (${c.age} ετ
 Scope: ${o.survey==="SS"?"Special Survey No."+c.ssNo:"Intermediate"} + δεξαμενισμός${o.yard?" στο "+o.yard:""}, ${regionName(p)}${o.date?", "+o.date:""}.
 Διάρκεια: ${c.dock} ημ. dock + ${c.afloat} ημ. afloat· off-hire ${c.offhire} ημ.
 
-BUDGET (expected / εύρος):
-• Ναυπηγείο: ${M(R.yard.E.t)} (${M(R.yard.L.t)} – ${M(R.yard.H.t)})
+ΤΙΜΗ ΝΑΥΠΗΓΕΙΟΥ: ${M(R.yard.E.t)} (εύρος ${M(R.yard.L.t)} – ${M(R.yard.H.t)})
+
+ΛΟΙΠΑ ΚΟΣΤΗ:
 • Class, UTM, services, spares, χρώματα: ${M(R.s2.E)}
 • Logistics: ${M(R.s3.E)}
 • Contingency: ${M(R.tot.E.cont)}
@@ -841,11 +939,29 @@ async function exportXLSX(p){
  put("TOTAL COMMERCIAL EXPOSURE",L=>`${L}${rt}+${L}${rl}`,true);
  for(let i=5;i<rr;i++)["C","D","E"].forEach(L=>{const cl=sm.getCell(`${L}${i}`);cl.numFmt=NF;if(!cl.font||!cl.font.bold)cl.font=font});
  sm.getCell(rr+2,2).value="Created by GB";sm.getCell(rr+2,2).font={name:"Arial",size:8,italic:true,color:{argb:"FF808080"}};
+ // ---- OWNER BRIEF (yard price first, then additions)
+ const ob=wb.addWorksheet("OWNER BRIEF");ob.columns=[{width:4},{width:52},{width:18},{width:40}];
+ ob.getCell("B1").value=`M/V ${v.name||""} – DRY-DOCKING BUDGET`;ob.getCell("B1").font={name:"Arial",size:14,bold:true,color:{argb:"FF1F3864"}};
+ ob.getCell("B2").value=`${o.survey==="SS"?"Special Survey No."+c.ssNo:"Intermediate DD"} · ${o.yard||regionName(p)} · ${c.dock} days dock + ${c.afloat} days afloat · ${today()}`;ob.getCell("B2").font={name:"Arial",size:9,italic:true};
+ const S2=`'2000 SERVICES'!`,ce=(cats)=>cats.map(k=>`SUMIFS(${S2}$C$2:$C$${s2l},${S2}$A$2:$A$${s2l},"${k}",${S2}$D$2:$D$${s2l},"RQRD")+PARAMETERS!$B$3*SUMIFS(${S2}$C$2:$C$${s2l},${S2}$A$2:$A$${s2l},"${k}",${S2}$D$2:$D$${s2l},"IF RQRD")`).join("+");
+ const BS="'BUDGET SUMMARY'!";
+ const OB=[["YARD PRICE (shipyard bill)",`${BS}C${ry}`,1,"Dock, hull, steel, machinery & yard services – after discount, incl. extras allowance"],
+  ["+ Class & UTM",ce(["CLASS","UTM"]),0,""],["+ Service engineers (makers)",ce(["SERVICE","LSA","FFE","NAV"]),0,""],["+ Spares & stores (owners' supply)",ce(["SPARES","STORES"]),0,""],
+  ["+ Paints (owners' supply)",ce(["PAINTS"]),0,""],["+ Logistics (bunkers, agency, supts, forwarding)",`${BS}C${r3t}+${ce(["FORWARDING"])}`,0,""],["+ Contingency",`${BS}C${rc}`,0,""],
+  ["= TOTAL DRY-DOCKING COST (cash)",`${BS}C${rt}`,1,`Range: ${fmt(R.tot.L.t)} – ${fmt(R.tot.H.t)}`],["+ Loss of revenue (off-hire)",`${BS}C${rl}`,0,`${c.offhire} days × TCE`],["= TOTAL IMPACT",`${BS}C${rt}+${BS}C${rl}`,1,""]];
+ OB.forEach((x,i)=>{const r=4+i,a=ob.getCell(r,2),b=ob.getCell(r,3);a.value=x[0];b.value={formula:x[1]};b.numFmt='"$"#,##0';ob.getCell(r,4).value=x[3];ob.getCell(r,4).font={name:"Arial",size:8,italic:true};
+  a.font=x[2]?{name:"Arial",size:i===0?13:11,bold:true}:font;b.font=x[2]?{name:"Arial",size:i===0?13:11,bold:true}:font;if(x[2]){a.fill=YF;b.fill=YF}ob.getRow(r).height=i===0?24:16});
+ ob.getCell("B15").value="Per operating day until next DD";ob.getCell("C15").value={formula:`C11/(${+o.nextM||30}*30.4)`};ob.getCell("C15").numFmt='"$"#,##0';
+ ob.getCell("B16").value="Each extra yard day ≈";ob.getCell("C16").value=Math.round(R.extraDay);ob.getCell("C16").numFmt='"$"#,##0';
+ ob.getCell("B18").value="Yard payment terms";ob.getCell("B18").font=bold;
+ o.pay.forEach((x,i)=>{ob.getCell(19+i,2).value=`${x}% at departure + ${o.payD[i]} days`;ob.getCell(19+i,3).value={formula:`C4*${(+x||0)/100}`};ob.getCell(19+i,3).numFmt='"$"#,##0'});
+ [15,16,19,20,21].forEach(r=>{ob.getCell(r,2).font=ob.getCell(r,2).font&&ob.getCell(r,2).font.bold?ob.getCell(r,2).font:font;ob.getCell(r,3).font=font});
+ ob.getCell("B24").value="Created by GB";ob.getCell("B24").font={name:"Arial",size:8,italic:true,color:{argb:"FF808080"}};
  // write-up
  const wu=wb.addWorksheet("WRITE-UP");wu.getColumn(1).width=120;const txt=(p.wu&&p.wu.en)||writeup(p,R,"en");txt.split("\n").forEach((t,i)=>{wu.getCell(i+1,1).value=t;wu.getCell(i+1,1).font=font});
  // order
  wb.worksheets.forEach(w=>{w.eachRow(rw=>rw.eachCell(cl=>{if(!cl.font||!cl.font.name)cl.font=font}))});
- [sm,pa,ws,s2,pt,sx,s3,wu].forEach((w,i)=>{w.orderNo=i});
+ [ob,sm,pa,ws,s2,pt,sx,s3,wu].forEach((w,i)=>{w.orderNo=i});
  const buf=await wb.xlsx.writeBuffer();const name=`DD_Budget_${(v.name||"vessel").replace(/\W+/g,"_")}_${today()}.xlsx`;
  const blob=new Blob([buf],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
  const file=new File([blob],name,{type:blob.type});
