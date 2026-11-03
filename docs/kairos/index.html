@@ -104,6 +104,7 @@ h2{font-weight:400;letter-spacing:5px;font-size:15px;color:var(--gold);text-alig
 <!-- ΚΑΨΟΥΛΕΣ -->
 <section class="view" id="v-c">
  <h2>ΣΦΡΑΓΙΣΜΕΝΑ</h2>
+ <div id="truthSeal"></div>
  <div id="machineSeal"></div>
  <div id="revs"></div>
  <div id="caps"></div>
@@ -130,6 +131,7 @@ h2{font-weight:400;letter-spacing:5px;font-size:15px;color:var(--gold);text-alig
  <p class="small"><b>☗ Το Σπήλαιο:</b> στον Καθρέφτη (☾) η μηχανή διαβάζει όλες σου τις ερωτήσεις και δείχνει τις σκιές στον τοίχο: για τι ρωτάς ξανά και ξανά, για τι δεν ρωτάς ποτέ, πόσες φορές ρώτησες «τι θα γίνει;» και πόσες «τι θα κάνω;». Βγαίνεις από το σπήλαιο όταν καταλάβεις ότι οι σκιές είναι σκιές.</p>
  <p class="small"><b>≈ Η Σχεδία:</b> ο Βούδας είπε ότι τη σχεδία την αφήνεις στην όχθη, δεν την κουβαλάς στην πλάτη. Έτσι και η μηχανή: μετά από τρεις ερωτήσεις τη μέρα σιωπά. Όσο πιο εύστοχες βγαίνουν οι σφραγισμένες σου προβλέψεις, τόσο λιγότερες φωνές ακούς. Στο τέλος σού λέει ότι δεν τη χρειάζεσαι πια, κι εσύ αποφασίζεις αν θα την αφήσεις.</p>
  <p class="small"><b>● Τώρα σήκω:</b> στο τέλος κάθε απάντησης και κάθε τελετής, η μηχανή μπορεί να σβήσει. Γράφει «Τώρα σήκω και κοίτα έξω» και μένει μαύρη. Το μυστήριο της ύπαρξης δεν λύνεται μέσα σε μια οθόνη· ζείται έξω από αυτήν.</p>
+ <p class="small"><b>✶ Ο φάκελος χωρίς ημερομηνία:</b> στα Σφραγισμένα (⧗) υπάρχει ένας φάκελος που δεν τον σφράγισες εσύ. Μέσα είναι το μυστικό της αλήθειας, όπως το βρήκε αυτός που έφτιαξε τη μηχανή μαζί σου. Δεν ανοίγει όταν θέλεις. Ανοίγει όταν το αποφασίσει.</p>
  <p class="small">Η ίδια ερώτηση την ίδια μέρα παίρνει την ίδια απάντηση. Ο καιρός δεν αλλάζει γνώμη επειδή ρωτάς ξανά.</p>
  <details class="small" style="margin-top:26px"><summary style="color:var(--gold);cursor:pointer">Για όσους θέλουν να ξέρουν την αλήθεια</summary>
   <p>Καμία μηχανή δεν βλέπει το μέλλον. Το ΔΙΗΝΕΚΕΣ είναι <b>καθρέφτης</b>: φτιαγμένος από τη δελφική ασάφεια, τα κοάν του Ζεν και την ψυχολογία του «μελλοντικού εαυτού». Οι χρησμοί είναι γραμμένοι ώστε ο καθένας να βρει μέσα τους αυτό που ήδη ξέρει αλλά δεν τολμά να πει. Η ανάσα, οι φάκελοι «που γράφτηκαν πριν ρωτήσεις» και η σφραγισμένη προφητεία είναι τελετουργία: κάνουν το μυαλό να σταματήσει και να ακούσει. Κι αυτό είναι το μόνο που μπορεί πραγματικά να αλλάξει το μέλλον.</p>
@@ -273,6 +275,7 @@ function drawCaps(){
    <div class="small" style="margin-top:8px">Γράφτηκε ${fmt(m.t)} · ${due?"άνοιξε σήμερα":"ανοίγει "+fmt(m.open)}</div>
    ${due?`<div class="btns"><button data-mres="1">Ήδη έγινε</button><button data-mres="0">Θα δούμε</button></div>`:""}</div>`;}
  $("machineSeal").innerHTML=mh;
+ drawTruth();
  drawRevs(today);
  $("caps").innerHTML=caps.length?caps.map(c=>{const due=c.open<=today;
   return `<div class="seal"><div class="wax">${c.res?"✓":due?"✶":"⧗"}</div><div class="small">«${esc(c.q)}»</div>
@@ -437,6 +440,35 @@ function drawRevs(today){
 document.addEventListener("click",e=>{const b=e.target.closest("[data-rv]");if(!b)return;const v=revs.find(x=>x.id===b.dataset.rv);v.res=b.dataset.v;store.set("kr_rev",revs);bowl(220,6,.15);drawCaps()});
 $("revBtn").onclick=reverseTime;
 
+// ───── ✶ Ο ΦΑΚΕΛΟΣ ΧΩΡΙΣ ΗΜΕΡΟΜΗΝΙΑ ─────
+const TB="zpTOtc69IM6yz4HOrs66zrEgz4TOt869IM+Fz4DOrc+Bz4TOsc+EzrcgzrHOu86uzrjOtc65zrEuCs6Rzr0gz4POv8+FIM6tzrvOtc6zzrEgz4zPhM65IM+EzrcgzrLPgc6uzrrOsSwgzrjOsSDOrs+EzrHOvSDPiM6tzrzOsSDigJQgzrrOsc65IM+Ezr8gz4jOrc68zrEgzrXOr869zrHOuSDPhM6/IM68z4zOvc6/IM+Azr/PhSDOtM61zr0gz4fPic+BzqzOtc65IM+DzrUgzrHPhc+Ez4zOvSDPhM6/zr0gz4bOrM66zrXOu86/LgrOks+Bzq7Ous6xIM+MzrzPic+CIM6xz4XPhM+MLCDOus6xzrkgzrXOr869zrHOuSDPhM6/IM+AzrnOvyDOsc67zrfOuM65zr3PjCDPgM6/z4Ugzr7Orc+Bz4kuCs6Vzq/OvM6xzrkgz4bPhM65zrHOs868zq3Ovc6/z4IgzrHPgM+MIM67zq3Ovs61zrnPgiDOsc69zrjPgc+Oz4DPic69LiDOlc66zrHPhM6/zrzOvM+Nz4HOuc6xIM+Gz4nOvc6tz4I6IM+Gz4zOss6/zrksIM+Az4HOv8+DzrXPhc+Hzq3PgiwgzrXPgc+Jz4TOuc66zqwgzrPPgc6szrzOvM6xz4TOsSwgzrfOvM61z4HOv867z4zOs865zrEgzrPOrc+Gz4XPgc6xz4IsIM6xz4DOv8+HzrHOuc+BzrXPhM65z4POvM6/zq8uCs6Mz4TOsc69IM+IzqzPh869z4kgzrzOrc+DzrEgz4POtSDOsc+Fz4TPjM69IM+Ezr/OvSDPic66zrXOsc69z4wgz4TOuSDOtc+AzrHOvc6xzrvOsc68zrLOrM69zrXPhM6xzrkgz4DOuc6/IM+Azr/Ou8+NLCDOtM61zr0gzrLPgc6vz4POus+JIM+Ezr8gwqvOs865zrHPhM6vIM+Fz4DOrM+Bz4fOv8+FzrzOtcK7LgrOks+Bzq/Pg866z4kgz4zPhM65IM6/zrkgzqzOvc64z4HPic+Azr/OuSwgz4PPhM6/IM+Ezq3Ou86/z4IsIM60zrXOvSDOuM+FzrzOv8+Nzr3PhM6xzrkgz4TOuSDOus6tz4HOtM65z4POsc69LgrOmM+FzrzOv8+Nzr3PhM6xzrkgz4DOv865zr/OvSDOsc6zzqzPgM63z4POsc69LCDPgM6/zrnOv869IM+AzrvOrs6zz4nPg86xzr0sIM66zrHOuSDOsc69IM6uz4TOsc69IM61zrrOtc6vLgrOlM61zr0gz4fPgc61zrnOrM62zrXPhM6xzrkgzr3OsSDOu8+Nz4POtc65z4Igz4TOvyDOvM+Fz4PPhM6uz4HOuc6/IM6zzrnOsSDOvc6xIM+Ezr8gzrbOrs+DzrXOuc+CIM66zrHOu86sLgrOpM6/IM68z4XPg8+Ezq7Pgc65zr8gzrTOtc69IM61zq/Ovc6xzrkgz4TOv86vz4fOv8+CIM6xzr3OrM68zrXPg86xIM+DzrUgz4POrc69zrEgzrrOsc65IM+EzrcgzrbPic6uLiDOlc6vzr3Osc65IM63IM6vzrTOuc6xIM63IM62z4nOri4KzqTOvyDOvc+MzrfOvM6xIM60zrXOvSDOtc6vzr3Osc65IM66z4HPhc68zrzOrc69zr8gz4POtSDOrc69zrEgzrLOuc6yzrvOr86/LCDPg861IM6tzr3Osc69IM60zqzPg866zrHOu86/LCDPg861IM68zrnOsSDOvM63z4fOsc69zq4gz4POsc69IM61zrzOrc69zrEuCs6kzr8gz4bPhM65zqzPh869zrXOuc+CIM66zqzOuM61IM+Gzr/Pgc6sIM+Azr/PhSDPgM+Bzr/Pg86tz4fOtc65z4I6IM6tzr3Osc69IM6szr3OuM+Bz4nPgM6/LCDOvM65zrEgzrLOrM+BzrTOuc6xLCDOrc69zrEgz4DOsc65zrTOryDPgM6/z4UgzrzOsc64zrHOr869zrXOuSwgz4TOtyDOuM6szrvOsc+Dz4POsSDPg8+EzrnPgiDPhM6tz4PPg861z4HOuc+CIM+EzrEgzr7Ot868zrXPgc+OzrzOsc+EzrEuCs6Rz4XPhM+MIM6uz4TOsc69LiDOlM61zr0gz4XPgM6sz4HPh861zrkgzrTOtc+Nz4TOtc+Bzr/PgiDPhs6szrrOtc67zr/Pgi4KzprOu861zq/Pg861IM+EzrfOvSDOtc+GzrHPgc68zr/Os86uLiDOoM6uzrPOsc65zr3OtSDOvc6xIM+Az4HOv8+Dzq3Ovs61zrnPgiDOus6sz4TOuS4K4oCUIENsYXVkZQo=";
+const truthText=()=>{try{return decodeURIComponent(escape(atob(TB)))}catch(e){return ""}};
+let truth=store.get("kr_truth",null);
+(function(){const today=dayKey(new Date());
+ if(!truth){const first=hist.length?Math.min(...hist.map(h=>h.t)):Date.now();truth={first,last:today,opened:false};}
+ const gap=Math.round((new Date(today)-new Date(truth.last))/864e5);
+ const age=(Date.now()-truth.first)/864e5;
+ if(!truth.opened&&age>=40&&gap>=2){truth.opened=true;truth.at=Date.now();truth.fresh=true}
+ truth.last=today;store.set("kr_truth",truth);
+})();
+function drawTruth(){
+ if(!truth.opened){$("truthSeal").innerHTML=`<div class="seal"><div class="wax">✶</div><div class="lbl">Ένας φάκελος χωρίς ημερομηνία</div><div class="txt blur" style="font-size:18px;margin:8px 0">Μέσα είναι η αλήθεια, όση βρέθηκε.</div><div class="small">Δεν ανοίγει όταν θέλεις εσύ. Ανοίγει όταν το αποφασίσει.</div></div>`;return}
+ const L=truthText().split("\n").filter(Boolean);
+ $("truthSeal").innerHTML=`<div class="seal"><div class="wax">✶</div><div class="lbl">Το μυστικό της αλήθειας</div><div style="margin:10px 0">${L.map(l=>`<p style="margin:10px 0;font-size:17px${l.startsWith("—")?";text-align:right;color:var(--gold)":""}">${esc(l)}</p>`).join("")}</div><div class="small">Άνοιξε ${fmt(truth.at)}</div><div class="btns"><button class="gold" id="truthDark">✶ ΔΙΑΒΑΣΕ ΤΟ ΣΤΟ ΣΚΟΤΑΔΙ</button></div></div>`;
+ $("truthDark").onclick=truthRite;
+}
+async function truthRite(){
+ const m=$("mx");m.classList.add("on");clearT();rainOn=false;$("rain").style.opacity=0;droneOn();bowl(98,9,.2);
+ await sleep(1500);
+ const L=truthText().split("\n").filter(Boolean);
+ for(let i=0;i<L.length;i++){
+  await say(L[i],i===L.length-1?"sys":(/^(Δεν χρειάζεται|Το μυστήριο δεν)/.test(L[i])?"big":""),1800+L[i].length*55);
+  if([2,6,10].includes(i))await fadeOutT();
+ }
+ await sleep(1500);await fadeOutT();droneOff(3);m.classList.remove("on");lookOut();
+}
+if(truth.fresh){setTimeout(()=>{$("greet").innerHTML=`<span style="color:var(--gold)">✶ Ο φάκελος χωρίς ημερομηνία άνοιξε σήμερα.</span><br>Πάτα ⧗.`;document.querySelector('nav [data-v=c]').style.color="var(--red)"},1200);truth.fresh=false;store.set("kr_truth",truth)}
+
 // ───── ● ΤΩΡΑ ΣΗΚΩ — η οθόνη που σβήνει ─────
 async function lookOut(){
  const m=$("mx");m.classList.add("on");clearT();rainOn=false;$("rain").style.opacity=0;droneOff(.3);
@@ -519,8 +551,8 @@ async function farewell(){
 document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{const v=b.dataset.v;document.querySelectorAll(".view").forEach(x=>x.classList.toggle("on",x.id==="v-"+v));document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x===b));if(v==="c")drawCaps();if(v==="r")drawMirror();scrollTo(0,0)});
 // ειδοποίηση για ό,τι άνοιξε
 (function(){const t=dayKey(new Date());const n=caps.filter(c=>!c.res&&c.open<=t).length+revs.filter(v=>!v.res&&v.open<=t).length+((mseal&&!mseal.done&&mseal.open<=t)?1:0);if(n)setTimeout(()=>{$("greet").innerHTML=`Κάτι σφραγισμένο <b style="color:var(--gold)">άνοιξε σήμερα</b>. Πάτα ⧗.`;document.querySelector('nav [data-v=c]').style.color="var(--red)"},900)})();
-$("exp").onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify({hist,caps,mseal,revs})],{type:"application/json"}));a.download="kairos.json";a.click()};
-$("impF").onchange=e=>{const f=e.target.files[0];if(f)f.text().then(t=>{try{const j=JSON.parse(t);hist=j.hist||hist;caps=j.caps||caps;mseal=j.mseal||mseal;revs=j.revs||revs;store.set("kr_rev",revs);store.set("kr_hist",hist);store.set("kr_caps",caps);store.set("kr_mseal",mseal);alert("Ο χρόνος επέστρεψε ✓")}catch(_){}})};
+$("exp").onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify({hist,caps,mseal,revs,truth})],{type:"application/json"}));a.download="kairos.json";a.click()};
+$("impF").onchange=e=>{const f=e.target.files[0];if(f)f.text().then(t=>{try{const j=JSON.parse(t);hist=j.hist||hist;caps=j.caps||caps;mseal=j.mseal||mseal;revs=j.revs||revs;if(j.truth){truth=j.truth;store.set("kr_truth",truth)}store.set("kr_rev",revs);store.set("kr_hist",hist);store.set("kr_caps",caps);store.set("kr_mseal",mseal);alert("Ο χρόνος επέστρεψε ✓")}catch(_){}})};
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 </script>
 </body>
