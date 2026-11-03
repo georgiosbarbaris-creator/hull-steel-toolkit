@@ -67,7 +67,7 @@ tr.tot td{font-weight:800;background:var(--yel)}
 <script>
 "use strict";
 /* ===================== DATA / CONSTANTS ===================== */
-const VER="1.2";
+const VER="1.3";
 const $=s=>document.querySelector(s);
 const fmt=n=>(Math.round(n||0)).toLocaleString("en-US");
 const fmt1=n=>(Math.round((n||0)*10)/10).toLocaleString("en-US");
@@ -783,8 +783,10 @@ function home(){
  const ps=DB.projects.slice().sort((a,b)=>b.created-a.created);
  let h=`<div class="card"><button class="btn p big" id="np">＋ Νέο budget δεξαμενισμού</button>
  <p class="note">Διάλεξε τύπο & μέγεθος → διόρθωσε τα particulars → η εφαρμογή βγάζει το spec με ποσότητες, τιμές, steel, χρώματα, class/services, logistics & off-hire. Όλα αποθηκεύονται μόνο στο iPhone.</p></div>`;
- if(ps.length){h+=`<div class="card"><h2>Τα budget μου</h2>`;
-  for(const p of ps){const R=compute(p);h+=`<div class="pc card" style="margin:8px 0" data-id="${p.id}"><div><b>${TYPES[p.v.type].i} ${esc(p.v.name||"(χωρίς όνομα)")}</b><div class="note">${esc(sizeName(p))} · ${p.o.survey==="SS"?"Special Survey "+R.c.ssNo:"Intermediate DD"} · ${esc(regionName(p))}</div></div><div style="text-align:right"><div class="note">Ναυπηγείο</div><div class="big-n" style="font-size:18px">$${fmt(R.own.yard)}</div><div class="note">Σύνολο $${fmt(R.own.cash)}</div></div></div>`}
+ const ed=window._ed;if(ps.length){h+=`<div class="card"><div class="row"><h2 style="margin:0">Τα budget μου</h2><span class="sp"></span><button class="btn sm" id="ced">${ed?"Άκυρο":"🧹 Καθαρισμός"}</button></div>`;
+  if(ed)h+=`<p class="note">Τσέκαρε τα πλοία που θέλεις να βγουν από τη λίστα.</p>`;
+  for(const p of ps){const R=compute(p);h+=`<div class="pc card" style="margin:8px 0" data-id="${p.id}">${ed?`<input type="checkbox" data-sel="${p.id}" style="width:22px;height:22px;flex:0 0 auto">`:""}<div style="flex:1"><b>${TYPES[p.v.type].i} ${esc(p.v.name||"(χωρίς όνομα)")}</b><div class="note">${esc(sizeName(p))} · ${p.o.survey==="SS"?"Special Survey "+R.c.ssNo:"Intermediate DD"} · ${esc(regionName(p))}</div></div><div style="text-align:right"><div class="note">Ναυπηγείο</div><div class="big-n" style="font-size:18px">$${fmt(R.own.yard)}</div><div class="note">Σύνολο $${fmt(R.own.cash)}</div></div></div>`}
+  if(ed)h+=`<div class="row"><button class="btn d" id="cdel">🗑 Διαγραφή επιλεγμένων</button><button class="btn sm" id="call">Επιλογή όλων</button></div>`;
   h+=`</div>`}
  h+=`<div class="card"><h2>Backup</h2><div class="row"><button class="btn" id="bkp">⬇ Backup όλων (.json)</button><button class="btn" id="rst">⬆ Επαναφορά</button></div><p class="note">Τα δεδομένα μένουν στο κινητό. Κάνε backup πριν αλλάξεις συσκευή.</p></div>
  <div class="card"><h2>Ενδεικτικά σύνολα αγοράς (για έλεγχο λογικής)</h2><p class="note">Συνολικό κόστος Special Survey με ναυπηγείο, class, spares, χρώματα, χωρίς off-hire. Πολύ ενδεικτικά – εξαρτώνται από ηλικία, steel, ναυπηγείο.</p>
@@ -795,7 +797,13 @@ function home(){
  <div class="foot">DD Budget v${VER} · Created by George Barbaris</div>`;
  $("#app").innerHTML=h;
  $("#np").onclick=wizard;
- document.querySelectorAll(".pc[data-id]").forEach(el=>el.onclick=()=>openP(el.dataset.id));
+ document.querySelectorAll(".pc[data-id]").forEach(el=>el.onclick=e=>{if(window._ed){if(e.target.type!=="checkbox"){const c=el.querySelector("[data-sel]");c.checked=!c.checked}return}openP(el.dataset.id)});
+ const ce=$("#ced");ce&&(ce.onclick=()=>{window._ed=!window._ed;home()});
+ const ca=$("#call");ca&&(ca.onclick=()=>document.querySelectorAll("[data-sel]").forEach(c=>c.checked=true));
+ const cd=$("#cdel");cd&&(cd.onclick=()=>{const ids=[...document.querySelectorAll("[data-sel]:checked")].map(c=>c.dataset.sel);if(!ids.length)return toast("Δεν επιλέχθηκε πλοίο");
+  const names=DB.projects.filter(x=>ids.includes(x.id)).map(x=>x.v.name||"(χωρίς όνομα)").join(", ");
+  if(!confirm(`Διαγραφή ${ids.length} budget;\n${names}\n\nΣυμβουλή: κάνε πρώτα Backup.`))return;
+  DB.projects=DB.projects.filter(x=>!ids.includes(x.id));save();window._ed=false;toast(`🗑 Διαγράφηκαν ${ids.length}`);home()});
  $("#bkp").onclick=()=>dl(new Blob([JSON.stringify(DB,null,1)],{type:"application/json"}),`DDBudget_backup_${today()}.json`);
  $("#rst").onclick=()=>$("#fileIn").click();
 }
