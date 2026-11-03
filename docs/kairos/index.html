@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ΚΑΙΡΟΣ</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="ΚΑΙΡΟΣ">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#0a0a0b">
+<style>
+:root{--bg:#0a0a0b;--ink:#e9e4d8;--dim:#8d887d;--faint:#3a3833;--gold:#c9a45a;--red:#a8432f}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Georgia,"Times New Roman",serif;min-height:100%}
+body{padding:calc(14px + env(safe-area-inset-top)) 0 calc(70px + env(safe-area-inset-bottom));overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;background:radial-gradient(ellipse at 50% 35%,rgba(201,164,90,.07),transparent 60%);pointer-events:none}
+main{max-width:560px;margin:0 auto;padding:0 22px;position:relative}
+.top{display:flex;justify-content:space-between;align-items:center;color:var(--dim);font-size:13px;letter-spacing:2px}
+.top b{color:var(--ink);font-weight:400;letter-spacing:7px;font-size:15px}
+.view{display:none}.view.on{display:block;animation:fade 1.2s ease}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+textarea,input,select{-webkit-user-select:text;user-select:text;width:100%;background:transparent;border:0;border-bottom:1px solid var(--faint);color:var(--ink);font:italic 19px/1.5 Georgia,serif;padding:10px 2px;outline:none;resize:none;border-radius:0}
+textarea::placeholder{color:#55524b}
+.whisper{color:var(--dim);font-style:italic;text-align:center;min-height:26px;margin:10px 0;transition:opacity .8s}
+.ensoWrap{display:flex;justify-content:center;margin:18px 0 6px;touch-action:none}
+#enso{width:260px;height:260px;transition:transform 4s cubic-bezier(.4,0,.2,1);cursor:pointer}
+#enso.inhale{transform:scale(1.18)}
+#enso.spin{animation:spin 6s cubic-bezier(.5,0,.2,1)}
+@keyframes spin{to{transform:rotate(1080deg) scale(.9)}}
+#stroke{stroke-dasharray:820;stroke-dashoffset:0;transition:stroke-dashoffset 1.6s ease}
+.dots{text-align:center;letter-spacing:14px;color:var(--gold);font-size:14px;height:20px}
+.years{text-align:center;font:300 44px/1 Georgia,serif;color:var(--gold);letter-spacing:6px;height:50px;opacity:0;transition:opacity .6s}
+.years.on{opacity:1}
+.line{opacity:0;transform:translateY(8px);transition:opacity 2.2s ease,transform 2.2s ease;margin:22px 0}
+.line.on{opacity:1;transform:none}
+.lbl{font:11px/1 -apple-system,system-ui,sans-serif;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:8px}
+.txt{font-size:20px;line-height:1.5}
+.when{color:var(--gold);font-style:italic}
+.koan{text-align:center;font-style:italic;font-size:19px;color:var(--ink);border-top:1px solid var(--faint);border-bottom:1px solid var(--faint);padding:18px 6px}
+.btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:20px 0}
+button{font:13px/1 -apple-system,system-ui,sans-serif;letter-spacing:2px;background:transparent;color:var(--ink);border:1px solid var(--faint);border-radius:999px;padding:12px 18px;cursor:pointer}
+button.gold{border-color:var(--gold);color:var(--gold)}
+a{color:var(--gold)}
+.seal{border:1px solid var(--faint);border-radius:4px;padding:16px;margin:16px 0;position:relative;background:linear-gradient(180deg,rgba(201,164,90,.05),transparent)}
+.seal .wax{position:absolute;right:14px;top:-14px;width:34px;height:34px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#d0614a,#7d2a1c);box-shadow:0 2px 6px rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;color:#f3d3c8;font-size:15px}
+.blur{filter:blur(6px);opacity:.6}
+.small{font:12.5px/1.5 -apple-system,system-ui,sans-serif;color:var(--dim);letter-spacing:.3px}
+.item{border-bottom:1px solid var(--faint);padding:14px 0}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;gap:34px;padding:12px 0 calc(12px + env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--bg) 40%)}
+nav button{border:0;font-size:22px;padding:6px 10px;color:var(--dim);letter-spacing:0;border-radius:0}
+nav button.on{color:var(--gold)}
+input[type=range]{border:0;padding:0;accent-color:var(--gold)}
+input[type=date]{font-style:normal;font-size:17px;color-scheme:dark}
+.credit{text-align:center;color:#4a4740;font:11px -apple-system,system-ui,sans-serif;letter-spacing:2px;margin:26px 0 10px}
+h2{font-weight:400;letter-spacing:5px;font-size:15px;color:var(--gold);text-align:center;margin:18px 0}
+.stat{display:flex;justify-content:space-around;text-align:center;margin:10px 0}
+.stat b{display:block;font-size:30px;font-weight:400;color:var(--gold)}
+</style>
+</head>
+<body>
+<main>
+<div class="top"><span id="moon"></span><b>ΚΑΙΡΟΣ</b><span id="clock"></span></div>
+
+<!-- Η ΜΗΧΑΝΗ -->
+<section class="view on" id="v-m">
+ <div id="ask">
+  <div class="whisper" id="greet"></div>
+  <textarea id="q" rows="2" placeholder="Ρώτα τον χρόνο…"></textarea>
+  <div class="seal" id="preSeal" style="display:none"><div class="wax">✶</div><div class="small" id="preTxt"></div></div>
+ </div>
+ <div class="ensoWrap"><svg id="enso" viewBox="0 0 200 200" aria-label="ενσό">
+  <defs><filter id="ink"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3.2"/></filter></defs>
+  <path id="stroke" filter="url(#ink)" d="M138 38 C 175 58, 182 118, 150 152 C 118 186, 58 182, 32 146 C 8 112, 22 54, 70 34 C 92 25, 112 26, 128 32" fill="none" stroke="#e9e4d8" stroke-width="9" stroke-linecap="round" opacity=".92"/>
+  <circle id="core" cx="100" cy="100" r="3" fill="#c9a45a" opacity=".0"/>
+ </svg></div>
+ <div class="dots" id="dots"></div>
+ <div class="whisper" id="guide">Γράψε. Μετά άγγιξε τον κύκλο.</div>
+ <div class="years" id="years"></div>
+ <div id="out"></div>
+ <div class="credit">Created by George Barbaris</div>
+</section>
+
+<!-- ΚΑΨΟΥΛΕΣ -->
+<section class="view" id="v-c">
+ <h2>ΣΦΡΑΓΙΣΜΕΝΑ</h2>
+ <div id="machineSeal"></div>
+ <div id="caps"></div>
+</section>
+
+<!-- ΚΑΘΡΕΦΤΗΣ -->
+<section class="view" id="v-r">
+ <h2>Ο ΚΑΘΡΕΦΤΗΣ ΤΟΥ ΧΡΟΝΟΥ</h2>
+ <div id="calib"></div>
+ <div id="hist"></div>
+</section>
+
+<!-- ΤΟ ΜΥΣΤΙΚΟ -->
+<section class="view" id="v-s">
+ <h2>ΤΟ ΜΥΣΤΙΚΟ</h2>
+ <p>Ο <b>Χρόνος</b> μετρά τις ώρες. Ο <b>Καιρός</b> είναι η στιγμή που κάτι ωριμάζει. Αυτή η μηχανή δεν μετρά. Κοιτάζει τον καιρό.</p>
+ <p class="small">Πώς τη χρησιμοποιείς: γράφεις μια ερώτηση. Κρατάς το δάχτυλο στον κύκλο όσο εισπνέεις και το αφήνεις όσο εκπνέεις, τρεις φορές. Η μηχανή ακούει τον ρυθμό σου. Μετά μιλά με τρεις φωνές: τη <b>Ρίζα</b> (από πού έρχεται), το <b>Τώρα</b> και την <b>Κλωστή</b> (πού πάει). Κλείνει με ένα κοάν και μια πράξη για σήμερα. Ό,τι θέλεις να ελέγξεις, το <b>σφραγίζεις</b>. Ανοίγει μόνο την ημέρα που όρισες, και τότε ο Καθρέφτης σού δείχνει πόσο σωστά είδες.</p>
+ <p class="small">Η ίδια ερώτηση την ίδια μέρα παίρνει την ίδια απάντηση. Ο καιρός δεν αλλάζει γνώμη επειδή ρωτάς ξανά.</p>
+ <details class="small" style="margin-top:26px"><summary style="color:var(--gold);cursor:pointer">Για όσους θέλουν να ξέρουν την αλήθεια</summary>
+  <p>Καμία μηχανή δεν βλέπει το μέλλον. Ο ΚΑΙΡΟΣ είναι <b>καθρέφτης</b>: φτιαγμένος από τη δελφική ασάφεια, τα κοάν του Ζεν και την ψυχολογία του «μελλοντικού εαυτού». Οι χρησμοί είναι γραμμένοι ώστε ο καθένας να βρει μέσα τους αυτό που ήδη ξέρει αλλά δεν τολμά να πει. Η ανάσα, οι φάκελοι «που γράφτηκαν πριν ρωτήσεις» και η σφραγισμένη προφητεία είναι τελετουργία: κάνουν το μυαλό να σταματήσει και να ακούσει. Κι αυτό είναι το μόνο που μπορεί πραγματικά να αλλάξει το μέλλον.</p>
+  <p>Το κομμάτι που κάνει την πρόβλεψή σου <b>αληθινά</b> καλύτερη είναι οι σφραγισμένες προβλέψεις με ποσοστό βεβαιότητας. Ο Καθρέφτης μετρά πόσο εύστοχος είσαι (όπως στο <i>Superforecasting</i> του Tetlock). Όσο περισσότερες σφραγίζεις και ανοίγεις, τόσο καλύτερος μάντης γίνεσαι.</p>
+  <p>Για τις μεγάλες αποφάσεις, μίλα και με ανθρώπους που εμπιστεύεσαι.</p>
+ </details>
+ <div class="btns" style="margin-top:24px"><button id="exp">Αντίγραφο ↓</button><label><button onclick="document.getElementById('impF').click()">Επαναφορά ↑</button><input type="file" id="impF" accept=".json" hidden></label></div>
+ <div class="credit">Created by George Barbaris</div>
+</section>
+</main>
+<nav><button data-v="m" class="on" aria-label="Μηχανή">◯</button><button data-v="c" aria-label="Σφραγισμένα">⧗</button><button data-v="r" aria-label="Καθρέφτης">☾</button><button data-v="s" aria-label="Μυστικό">∴</button></nav>
+
+<script>
+// ───── ΦΩΝΕΣ ─────
+const ROOT=["Αυτό που ρωτάς φυτεύτηκε πριν από καιρό, μια μέρα που δεν θυμάσαι.","Η ρίζα είναι ένας φόβος που κάποτε σε προστάτεψε.","Κάποιος σου είπε πώς πρέπει να είναι. Δεν ήταν δικό σου.","Η ερώτηση γεννήθηκε από μια υπόσχεση που έδωσες στον εαυτό σου.","Πίσω της υπάρχει μια κούραση που δεν ομολόγησες.","Έρχεται από μια επιθυμία που άργησε να μιλήσει.","Η ρίζα είναι μια παλιά πληγή που ζητά να κλείσει, όχι να ξανανοίξει.","Ήταν ένα «όχι» που δεν είπες.","Ήταν ένα «ναι» που είπες βιαστικά.","Ξεκίνησε τη μέρα που σταμάτησες να ακούς το σώμα σου.","Ήρθε από τη θάλασσα μέσα σου· από την ανάγκη να ανοιχτείς.","Ένας άνθρωπος από το παρελθόν κρατά ακόμα την άκρη της κλωστής.","Η ρίζα είναι η περιέργεια. Και η περιέργεια δεν είναι ποτέ λάθος.","Έρχεται από εκεί που μεγάλωσες· από τα λόγια γύρω από ένα τραπέζι.","Πίσω της κρύβεται ο φόβος να μη σε δουν.","Πίσω της κρύβεται ο φόβος να σε δουν.","Είναι ο σπόρος μιας απόφασης που ήδη πήρες, χωρίς να την πεις.","Γεννήθηκε την ώρα που σύγκρινες τη ζωή σου με μια ξένη.","Η ρίζα είναι αγάπη. Απλώς φοράει άλλα ρούχα.","Ήταν ένα λάθος που σε δίδαξε περισσότερα απ' όσα παραδέχεσαι.","Ξεκίνησε από ένα όνειρο που άφησες στη μέση.","Έρχεται από την ανάγκη να ελέγχεις τον άνεμο.","Η ρίζα είναι ήσυχη. Θόρυβο κάνουν μόνο τα κλαδιά.","Δεν έχει ρίζα στο χθες. Είναι καινούριο, και γι' αυτό σε ταράζει.","Ένα βράδυ, μόνος, το σκέφτηκες για πρώτη φορά. Θυμήσου εκείνο το βράδυ.","Ήρθε από την κούραση να περιμένεις τους άλλους.","Η ρίζα είναι η ευθύνη που σήκωσες νωρίς.","Έρχεται από μια αδικία που δεν ξέχασες.","Γεννήθηκε από την ελπίδα. Πρόσεξε να μη γίνει προσδοκία.","Ξεκίνησε από κάτι μικρό, που το άφησες να μεγαλώσει στο σκοτάδι.","Το έχεις ξαναζήσει. Με άλλα πρόσωπα, το ίδιο σχήμα.","Η ρίζα είναι ένα ταξίδι που δεν έκανες."];
+const NOW=["Στέκεσαι στην πόρτα. Το χέρι είναι ήδη στο πόμολο.","Είναι νηνεμία. Μην τη μπερδέψεις με αδιέξοδο.","Κουβαλάς περισσότερα απ' όσα χρειάζεσαι.","Ο άνεμος ήδη αλλάζει. Δεν το νιώθεις ακόμα στα πανιά.","Το νερό είναι θολό. Άφησέ το να κατακαθίσει.","Κάποιος περιμένει να μιλήσεις πρώτος.","Ξέρεις την απάντηση. Ψάχνεις άδεια.","Είναι ώρα για σπόρο, όχι για θερισμό.","Είναι ώρα θερισμού. Μην αφήσεις τον καρπό να πέσει.","Εσύ τρέχεις. Η απάντηση περπατά.","Είσαι πιο δυνατός απ' όσο φαίνεσαι.","Είσαι πιο κουρασμένος απ' όσο λες.","Δύο δρόμοι μοιάζουν ίδιοι. Δεν είναι.","Το πιο δύσκολο έχει ήδη περάσει.","Το πιο δύσκολο δεν έχει αρχίσει. Και είσαι έτοιμος.","Η σιωπή σου λέει περισσότερα από τις σκέψεις σου.","Η ομίχλη είναι μέσα σου, όχι μπροστά σου.","Κρατάς κάτι που πρέπει να αφήσεις, για να πιάσεις κάτι άλλο.","Το σώμα σου ξέρει πριν από το μυαλό σου.","Είναι ώρα να ρωτήσεις έναν άνθρωπο, όχι μια μηχανή.","Όλα κινούνται αργά, για να προλάβεις να δεις.","Η πόρτα που χτυπάς είναι τοίχος. Η πόρτα είναι δίπλα.","Η βιασύνη είναι ο μόνος σου αντίπαλος.","Η αναβολή είναι ο μόνος σου αντίπαλος.","Είναι αυγή, ακόμα κι αν μοιάζει με σούρουπο.","Γυρίζεις γύρω από το ίδιο σημείο. Ο κύκλος θέλει να ανοίξει.","Κάποιος σε βοηθά χωρίς να το ξέρεις.","Έχεις ό,τι χρειάζεσαι. Λείπει μόνο η πρώτη κίνηση.","Η ερώτηση είναι πιο σημαντική από την απάντηση.","Είσαι στη βάρδια. Κοίτα τον ορίζοντα, όχι την πυξίδα.","Αυτό που ζητάς σε ζητά κι αυτό.","Κάτι τελείωσε ήδη. Μόνο εσύ δεν το έχεις κηδέψει."];
+const THREAD=["Η κλωστή πάει προς μια συνάντηση που δεν περιμένεις.","Το μέλλον ανοίγει όταν κλείσεις κάτι παλιό.","Πάει προς μια αλλαγή που στην αρχή θα μοιάζει με απώλεια.","Πάει προς μια ησυχία που δεν έχεις γνωρίσει ακόμα.","Αυτό που ζητάς έρχεται — αλλά από άλλη πόρτα.","Αυτό που φοβάσαι δεν θα έρθει όπως το φαντάζεσαι.","Ο δρόμος στρίβει. Πίσω από τη στροφή, θάλασσα.","Πάει προς μια απόφαση που θα πάρεις σε μια μέρα, αφού την κουβαλήσεις μήνες.","Ένας άνθρωπος θα σου πει την ίδια φράση δύο φορές. Άκουσέ τον.","Πάει προς το πιο απλό. Το περίπλοκο ήταν μόνο το πέρασμα.","Η κλωστή κόβεται εδώ και ξαναδένεται πιο γερά.","Πάει προς έναν καρπό που ωριμάζει αργά — και θα είναι γλυκός.","Εδώ το μέλλον είναι μισοσχεδιασμένο. Το μολύβι το κρατάς εσύ.","Πάει προς ένα ταξίδι. Ίσως χωρίς χάρτη.","Πάει προς μια αλήθεια που θα σε λύσει, αφού πρώτα σε ενοχλήσει.","Ό,τι σήμερα μοιάζει βουνό, σε έναν χρόνο θα το λες λόφο.","Πάει προς τη μοναχικότητα — όχι τη μοναξιά.","Πάει προς μια συνεργασία. Δεν θα το κάνεις μόνος.","Έρχεται μια πρόταση. Μην απαντήσεις την ίδια μέρα.","Η κλωστή γυρίζει σε κάτι που άφησες. Αυτή τη φορά θα το δεις αλλιώς.","Πάει προς ένα τέλος που είναι μεταμφιεσμένη αρχή.","Πάει προς την αφθονία, μέσα από το μέτρο.","Όταν σταματήσεις να το κυνηγάς, θα σε βρει.","Πάει προς ένα λιμάνι. Όχι το πρώτο που θα δεις.","Πάει προς μια λέξη που θα πεις φωναχτά για πρώτη φορά.","Η κλωστή είναι λεπτή αλλά δεν κόβεται. Κράτα τη.","Το μέλλον εδώ χωρίζεται στα δύο. Το ένα το διαλέγεις σήμερα.","Πάει προς μια γιορτή που θα αξίζει την αναμονή.","Πάει προς ένα μάθημα που αργότερα θα το διδάξεις εσύ.","Πάει εκεί που η καρδιά σου έδειχνε από την αρχή.","Κάτι που θεωρούσες χαμένο θα ξαναφανεί.","Το είδα ήδη να γίνεται. Δεν έγινε όπως το σχεδιάζεις· έγινε καλύτερα απ' όσο φοβάσαι."];
+const WHEN=["πριν φύγει αυτό το φεγγάρι","όταν αλλάξει η εποχή","σε τρεις ανατολές","πριν κλείσει ο χρόνος","όταν σταματήσεις να το περιμένεις","μια μέρα με αέρα","στη νέα σελήνη","όταν δεις το ίδιο σημάδι τρεις φορές","μετά από ένα ταξίδι","όταν μιλήσεις πρώτος","στην επόμενη πανσέληνο","πριν από μια γιορτή","σε επτά μέρες ή επτά εβδομάδες","όταν ηρεμήσει η θάλασσα","τη στιγμή που θα πεις «αρκεί»","όταν τελειώσει κάτι άλλο"];
+const KOAN=["Ποιος ρωτάει;","Αν το ήξερες ήδη, τι θα έκανες σήμερα;","Τι θα έμενε αν έφευγε ο φόβος;","Τι περιμένεις να σου επιτρέψει ο χρόνος;","Ποιο ήταν το πρόσωπό σου πριν γεννηθείς;","Τι ακούς όταν δεν ακούς τίποτα;","Αν το αύριο ήταν σήμερα, θα το ρωτούσες;","Ποιο κομμάτι της ερώτησης είναι ήδη απάντηση;","Τι κρατάς τόσο σφιχτά που δεν βλέπεις τι κρατάς;","Για ποιον το θέλεις;","Αν σε κοίταζε τώρα ο εαυτός σου στα ογδόντα, πού θα χαμογελούσε;","Τι θα έκανες αν δεν το μάθαινε ποτέ κανείς;","Πού είναι το «μετά», αν όχι εδώ;","Σε πάει το ρεύμα ή το πας εσύ;","Τι δεν θέλεις να μάθεις;","Ποια είναι η πιο μικρή αλήθεια εδώ;","Αν αποτύχεις, τι θα έχεις κερδίσει;","Αν πετύχεις, τι θα έχεις χάσει;","Ποιος θα ήσουν χωρίς αυτή την ιστορία;","Ποια ερώτηση φοβάσαι να κάνεις;","Τι θα έκανε ο φάρος;","Ποιο βήμα χωράει σε μία ανάσα;"];
+const ACT=["Γράψε την απάντηση σε χαρτί και κλείσ' το σε συρτάρι.","Περπάτα δέκα λεπτά χωρίς κινητό.","Πες σε έναν άνθρωπο αυτό που δεν του έχεις πει.","Μην αποφασίσεις τίποτα σήμερα. Κοιμήσου το.","Κάνε το πρώτο μικρό βήμα πριν δύσει ο ήλιος.","Τακτοποίησε ένα συρτάρι. Ο νους θα ακολουθήσει.","Κοίτα τη θάλασσα ή τον ουρανό για τρία λεπτά.","Σβήσε από τη λίστα σου κάτι που δεν είναι δικό σου.","Πιες ένα ποτήρι νερό αργά, σαν τελετή.","Γράψε τρία πράγματα που ήδη πήγαν καλά.","Ρώτα τη γνώμη κάποιου που διαφωνεί μαζί σου.","Πες «όχι» σε κάτι μικρό.","Πες «ναι» σε κάτι μικρό.","Κλείσε τα μάτια και μέτρησε δέκα ανάσες.","Στείλε ένα μήνυμα ευχαριστίας.","Σφράγισε μια πρόβλεψη. Ο χρόνος θα σου πει.","Άλλαξε δρόμο σήμερα — κυριολεκτικά.","Άναψε ένα κερί και μη σκέφτεσαι τίποτα όσο καίει."];
+const HOUR=[[5,"Η αυγή μιλά για αρχές."],[11,"Το φως της μέρας δεν κρύβει τίποτα."],[17,"Το απόγευμα μιλά για όσα ωρίμασαν."],[20,"Το σούρουπο μιλά για όσα τελειώνουν."],[24,"Η νύχτα κρατά μυστικά. Ό,τι ακούσεις, θα ωριμάσει ως το πρωί."]];
+const PROPH=["Μέσα σε αυτές τις μέρες κάποιος θα σου ζητήσει κάτι που έχεις μόνο εσύ. Θα το δώσεις, και θα πάρεις πίσω περισσότερα.","Μέσα σε αυτές τις μέρες θα βρεις κάτι που νόμιζες χαμένο. Δεν θα είναι αντικείμενο.","Μέσα σε αυτές τις μέρες θα πάρεις ένα νέο που θα σε κάνει να χαμογελάσεις μόνος.","Μέσα σε αυτές τις μέρες ένα «όχι» θα σε προστατέψει περισσότερο από δέκα «ναι».","Μέσα σε αυτές τις μέρες θα ξαναδείς έναν δρόμο που είχες εγκαταλείψει. Είναι ακόμα ανοιχτός.","Μέσα σε αυτές τις μέρες ένας άνθρωπος θα σου δείξει, χωρίς να το ξέρει, την απάντηση που ψάχνεις.","Μέσα σε αυτές τις μέρες κάτι που σε βάραινε θα ελαφρύνει χωρίς να κάνεις τίποτα.","Μέσα σε αυτές τις μέρες μια ιδέα θα σε ξυπνήσει νωρίς. Γράψ' τη."];
+
+// ───── εργαλεία ─────
+const $=i=>document.getElementById(i);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const norm=s=>s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[^a-zα-ω0-9 ]/g,"").replace(/\s+/g," ").trim();
+const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+function hash(s){let h=2166136261;for(const c of s){h^=c.codePointAt(0);h=Math.imul(h,16777619)}return h>>>0}
+function rng(seed){let a=seed>>>0;return()=>{a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const dayKey=d=>d.toISOString().slice(0,10);
+const fmt=t=>new Date(t).toLocaleDateString("el-GR",{day:"numeric",month:"long",year:"numeric"});
+const tfmt=t=>new Date(t).toLocaleTimeString("el-GR",{hour:"2-digit",minute:"2-digit"});
+let hist=store.get("kr_hist",[]),caps=store.get("kr_caps",[]),mseal=store.get("kr_mseal",null);
+const opened=Date.now();
+
+// ───── φεγγάρι & ώρα ─────
+function moon(d){const p=((d-Date.UTC(2000,0,6,18,14))/864e5/29.530588)%1;const i=Math.floor(((p+1)%1)*8+.5)%8;return{ic:"🌑🌒🌓🌔🌕🌖🌗🌘"[i*2]+"🌑🌒🌓🌔🌕🌖🌗🌘"[i*2+1],p:(p+1)%1}}
+function tick(){const d=new Date();$("clock").textContent=tfmt(d);$("moon").textContent=moon(d).ic;}
+tick();setInterval(tick,20000);
+function hourVoice(){const h=new Date().getHours();return HOUR.find(x=>h<x[0])[1]}
+const GREET=["Ο χρόνος σε περίμενε.","Ήξερα ότι θα έρθεις σήμερα.","Κάθισε. Η απάντηση είναι ήδη εδώ.","Ό,τι ρωτήσεις, έχει ήδη συμβεί κάπου.","Δεν χρειάζεται να εξηγήσεις. Γράψε μόνο."];
+$("greet").textContent=GREET[hash(dayKey(new Date()))%GREET.length];
+
+// ───── ήχος: μπολ ─────
+let AC;function bowl(f=196,len=5,vol=.18){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const t=AC.currentTime,g=AC.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+.04);g.gain.exponentialRampToValueAtTime(.0001,t+len);g.connect(AC.destination);
+ [[1,1],[2.76,.35],[5.4,.12]].forEach(([m,a])=>{const o=AC.createOscillator(),og=AC.createGain();o.frequency.value=f*m;o.detune.value=(Math.random()-.5)*8;og.gain.value=a;o.connect(og);og.connect(g);o.start(t);o.stop(t+len)})}catch(e){}}
+const buzz=p=>{try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}};
+
+// ───── φάκελος «γράφτηκε πριν ρωτήσεις» ─────
+$("q").addEventListener("input",()=>{if($("q").value.trim().length>3&&$("preSeal").style.display==="none"){$("preSeal").style.display="block";$("preTxt").innerHTML=`Ένας φάκελος σφραγίστηκε στις <b>${tfmt(opened)}</b> — πριν γράψεις. Θα ανοίξει μόλις μιλήσει ο κύκλος.`;}});
+
+// ───── τελετουργία ανάσας ─────
+let phase="idle",breaths=[],downAt=0;
+const E=$("enso"),G=$("guide");
+function setGuide(t){G.style.opacity=0;setTimeout(()=>{G.textContent=t;G.style.opacity=1},350)}
+function drawDots(){$("dots").textContent="●".repeat(breaths.length)+"○".repeat(3-breaths.length)}
+E.addEventListener("pointerdown",e=>{e.preventDefault();
+ if(phase==="done"||phase==="speaking")return;
+ if(!$("q").value.trim()){setGuide("Πρώτα γράψε. Ο χρόνος δεν απαντά στη σιωπή.");return}
+ if(phase==="idle"){phase="breath";breaths=[];drawDots();$("q").blur();bowl(147,6,.12)}
+ downAt=performance.now();E.classList.add("inhale");setGuide("Εισπνοή…");buzz(10)});
+function up(){if(phase!=="breath"||!downAt)return;const d=performance.now()-downAt;downAt=0;E.classList.remove("inhale");
+ if(d<1500){setGuide("Πιο αργά. Ο χρόνος δεν βιάζεται.");return}
+ breaths.push(Math.round(d));drawDots();bowl(196+breaths.length*24,4,.1);
+ if(breaths.length<3)setGuide("Εκπνοή… και ξανά.");else{phase="speaking";travel()}}
+E.addEventListener("pointerup",up);E.addEventListener("pointerleave",up);E.addEventListener("pointercancel",up);
+
+// ───── ταξίδι στον χρόνο ─────
+function travel(){
+ setGuide("");const y=$("years");y.classList.add("on");E.classList.add("spin");$("stroke").style.strokeDashoffset=820;buzz([30,80,30,80,30]);
+ const now=new Date().getFullYear();let n=0;const iv=setInterval(()=>{y.textContent=String(now+Math.floor(Math.random()*12)-3);n++},90);
+ setTimeout(()=>{clearInterval(iv);y.textContent="";y.classList.remove("on");E.classList.remove("spin");$("stroke").style.strokeDashoffset=0;speak()},6000);
+}
+function reading(q){
+ const day=dayKey(new Date()),key=norm(q);
+ const prev=hist.find(h=>h.k===key&&h.day===day);if(prev)return{...prev,again:true};
+ const b=breaths.map(x=>Math.round(x/700)).join(".");
+ const r=rng(hash(key+"|"+day+"|"+b));const p=a=>a[Math.floor(r()*a.length)];
+ return{id:"h"+Date.now().toString(36),q,k:key,day,t:Date.now(),root:p(ROOT),now:p(NOW),thread:p(THREAD),when:p(WHEN),koan:p(KOAN),act:p(ACT),voice:hourVoice(),moon:moon(new Date()).ic};
+}
+let cur=null;
+function speak(){
+ const q=$("q").value.trim();cur=reading(q);
+ if(!cur.again){hist.unshift(cur);hist=hist.slice(0,200);store.set("kr_hist",hist)}
+ $("preTxt").innerHTML=`Σφραγίστηκε στις <b>${tfmt(opened)}</b>. Άνοιξε: <i>«${esc(cur.when.charAt(0).toUpperCase()+cur.when.slice(1))}.»</i>`;
+ const parts=[
+  cur.again?`<div class="whisper">Ο κύκλος έχει ήδη μιλήσει γι' αυτό σήμερα. Ο καιρός δεν αλλάζει γνώμη επειδή ρωτάς ξανά.</div>`:`<div class="whisper">${esc(cur.voice)}</div>`,
+  `<div class="line"><div class="lbl">Η ρίζα</div><div class="txt">${esc(cur.root)}</div></div>`,
+  `<div class="line"><div class="lbl">Το τώρα</div><div class="txt">${esc(cur.now)}</div></div>`,
+  `<div class="line"><div class="lbl">Η κλωστή</div><div class="txt">${esc(cur.thread)} <span class="when">— ${esc(cur.when)}.</span></div></div>`,
+  `<div class="line"><div class="koan">${esc(cur.koan)}</div></div>`,
+  `<div class="line"><div class="lbl">Σήμερα</div><div class="txt" style="font-size:17px">${esc(cur.act)}</div></div>`,
+  `<div class="line"><div class="btns"><button class="gold" id="sealBtn">⧗ ΣΦΡΑΓΙΣΕ ΠΡΟΒΛΕΨΗ</button><button id="again">◯ ΝΕΑ ΕΡΩΤΗΣΗ</button></div>
+   <div class="btns" style="margin-top:0"><a class="small" href="../lexeis/?q=${encodeURIComponent(q)}">λέξη-διακόπτης</a><span class="small">·</span><a class="small" href="../rito/?q=${encodeURIComponent(q)}">κέρμα σοφίας</a></div></div>`];
+ $("out").innerHTML=parts.join("");
+ const L=[...$("out").querySelectorAll(".line")];
+ L.forEach((el,i)=>setTimeout(()=>{el.classList.add("on");if(i<3)bowl([220,247,262][i],5,.12);if(i===0)el.scrollIntoView({behavior:"smooth",block:"center"})},700+i*2200));
+ setTimeout(()=>{phase="done";$("sealBtn").onclick=()=>sealForm(cur);$("again").onclick=reset},700+L.length*2200);
+}
+function reset(){phase="idle";breaths=[];$("dots").textContent="";$("out").innerHTML="";$("q").value="";$("preSeal").style.display="none";setGuide("Γράψε. Μετά άγγιξε τον κύκλο.");scrollTo({top:0,behavior:"smooth"})}
+
+// ───── σφράγισμα πρόβλεψης ─────
+function addDays(n){const d=new Date();d.setDate(d.getDate()+n);return dayKey(d)}
+function sealForm(r){
+ const box=document.createElement("div");box.className="seal line on";
+ box.innerHTML=`<div class="wax">⧗</div><div class="lbl">Τι πιστεύεις ότι θα γίνει;</div><textarea id="sp" rows="2" placeholder="π.χ. Θα πάρω απάντηση ως το τέλος του μήνα"></textarea>
+ <div class="lbl" style="margin-top:16px">Πόσο βέβαιος είσαι; <span id="cv">70%</span></div><input type="range" id="sc" min="50" max="99" value="70">
+ <div class="lbl" style="margin-top:16px">Πότε ανοίγει;</div><input type="date" id="sd" value="${addDays(30)}" min="${addDays(1)}">
+ <div class="btns"><button class="gold" id="sok">ΣΦΡΑΓΙΣΕ</button></div>`;
+ $("out").appendChild(box);box.scrollIntoView({behavior:"smooth",block:"center"});
+ $("sc").oninput=()=>$("cv").textContent=$("sc").value+"%";
+ $("sok").onclick=()=>{const p=$("sp").value.trim();if(!p){$("sp").focus();return}
+  const c={id:"c"+Date.now().toString(36),q:r.q,p,conf:+$("sc").value,open:$("sd").value,t:Date.now(),res:null};
+  caps.unshift(c);store.set("kr_caps",caps);bowl(130,7,.2);buzz([40,60,90]);
+  box.innerHTML=`<div class="wax">✶</div><div class="txt" style="text-align:center">Σφραγίστηκε.<br><span class="small">Ανοίγει ${fmt(c.open)}. Ως τότε, ούτε εσύ δεν θα το δεις.</span></div>
+  <div class="btns"><button id="ics">Υπενθύμιση στο ημερολόγιο</button></div>`;$("ics").onclick=()=>ics(c);};
+}
+function ics(c){const d=c.open.replace(/-/g,"");const txt=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//KAIROS//EL","BEGIN:VEVENT","UID:"+c.id+"@kairos","DTSTAMP:"+new Date().toISOString().replace(/[-:]/g,"").slice(0,15)+"Z","DTSTART;VALUE=DATE:"+d,"SUMMARY:⧗ ΚΑΙΡΟΣ — άνοιξε τη σφραγισμένη πρόβλεψη","DESCRIPTION:Η μηχανή του χρόνου έχει κάτι για σένα.","BEGIN:VALARM","TRIGGER:PT9H","ACTION:DISPLAY","DESCRIPTION:ΚΑΙΡΟΣ","END:VALARM","END:VEVENT","END:VCALENDAR"].join("\r\n");
+ const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([txt],{type:"text/calendar"}));a.download="kairos.ics";a.click();}
+
+// ───── η προφητεία της μηχανής ─────
+function ensureMachineSeal(){
+ if(!mseal||mseal.done){if(mseal&&mseal.done&&Date.now()-mseal.doneAt<3*864e5)return;
+  const r=rng(hash(String(Date.now())));mseal={t:Date.now(),open:addDays(5+Math.floor(r()*5)),txt:PROPH[Math.floor(r()*PROPH.length)],done:false};store.set("kr_mseal",mseal);}
+}
+ensureMachineSeal();
+function drawCaps(){
+ const today=dayKey(new Date());
+ const m=mseal;let mh="";
+ if(m&&!m.done){const due=m.open<=today;
+  mh=`<div class="seal"><div class="wax">☉</div><div class="lbl">Η μηχανή κρατά κάτι για σένα</div>
+   <div class="txt ${due?"":"blur"}" style="font-size:18px">${due?esc(m.txt):"Αυτό δεν είναι για σήμερα. Ο χρόνος ξέρει πότε."}</div>
+   <div class="small" style="margin-top:8px">Γράφτηκε ${fmt(m.t)} · ${due?"άνοιξε σήμερα":"ανοίγει "+fmt(m.open)}</div>
+   ${due?`<div class="btns"><button data-mres="1">Ήδη έγινε</button><button data-mres="0">Θα δούμε</button></div>`:""}</div>`;}
+ $("machineSeal").innerHTML=mh;
+ $("caps").innerHTML=caps.length?caps.map(c=>{const due=c.open<=today;
+  return `<div class="seal"><div class="wax">${c.res?"✓":due?"✶":"⧗"}</div><div class="small">«${esc(c.q)}»</div>
+  <div class="txt ${due||c.res?"":"blur"}" style="font-size:18px;margin:8px 0">${due||c.res?esc(c.p):"Σφραγισμένο. Μην προσπαθείς."}</div>
+  <div class="small">Βεβαιότητα ${due||c.res?c.conf+"%":"··"} · ${c.res?"κρίθηκε":due?"άνοιξε":"ανοίγει"} ${fmt(c.open)}</div>
+  ${due&&!c.res?`<div class="lbl" style="margin-top:12px">Έγινε;</div><div class="btns" style="margin:8px 0"><button data-res="${c.id}" data-v="1">ΝΑΙ</button><button data-res="${c.id}" data-v="0.5">ΕΝ ΜΕΡΕΙ</button><button data-res="${c.id}" data-v="0">ΟΧΙ</button></div>`:""}
+  ${c.res?`<div class="small" style="color:var(--gold)">${c.res==="1"?"Το είδες.":c.res==="0"?"Ο χρόνος είχε άλλα σχέδια.":"Το μισό το είδες."}</div>`:""}</div>`}).join(""):`<p class="whisper">Τίποτα σφραγισμένο ακόμα. Ρώτα τον κύκλο και πάτα ⧗.</p>`;
+}
+function drawMirror(){
+ const R=caps.filter(c=>c.res!=null);
+ if(R.length){const hit=R.reduce((s,c)=>s+(+c.res),0)/R.length*100,conf=R.reduce((s,c)=>s+c.conf,0)/R.length;
+  const brier=R.reduce((s,c)=>s+Math.pow(c.conf/100-(+c.res),2),0)/R.length;
+  const verdict=Math.abs(conf-hit)<8?"Βλέπεις καθαρά. Η βεβαιότητά σου ταιριάζει με τον χρόνο.":conf>hit?"Ο χρόνος σε βρίσκει πιο βέβαιο απ' όσο πρέπει. Χαμήλωσε λίγο τη φωνή της βεβαιότητας.":"Βλέπεις καλύτερα απ' όσο πιστεύεις. Εμπιστέψου λίγο περισσότερο το βλέμμα σου.";
+  $("calib").innerHTML=`<div class="stat"><div><b>${R.length}</b><span class="small">κρίθηκαν</span></div><div><b>${Math.round(conf)}%</b><span class="small">βεβαιότητα</span></div><div><b>${Math.round(hit)}%</b><span class="small">έγιναν</span></div></div>
+  <p class="whisper">${verdict}</p><p class="small" style="text-align:center">Δείκτης Brier: ${brier.toFixed(2)} (0 = προφήτης, 0.25 = τύχη)</p>`;
+ }else $("calib").innerHTML=`<p class="whisper">Ο Καθρέφτης δείχνει πόσο εύστοχα βλέπεις — μόλις ανοίξουν οι πρώτες σφραγισμένες προβλέψεις.</p>`;
+ $("hist").innerHTML=hist.slice(0,40).map(h=>`<div class="item"><div class="small">${h.moon||""} ${fmt(h.t)}</div><div style="font-style:italic;margin:4px 0">«${esc(h.q)}»</div>
+  <div class="small" style="color:var(--ink)">${esc(h.root)}<br>${esc(h.now)}<br><span style="color:var(--gold)">${esc(h.thread)} — ${esc(h.when)}.</span></div></div>`).join("");
+}
+document.addEventListener("click",e=>{
+ const r=e.target.closest("[data-res]");if(r){const c=caps.find(x=>x.id===r.dataset.res);c.res=r.dataset.v;store.set("kr_caps",caps);bowl(c.res==="1"?262:174,5,.15);drawCaps();}
+ const m=e.target.closest("[data-mres]");if(m){mseal.done=true;mseal.doneAt=Date.now();mseal.res=m.dataset.mres;store.set("kr_mseal",mseal);bowl(220,6,.15);drawCaps();}
+});
+// ───── πλοήγηση ─────
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{const v=b.dataset.v;document.querySelectorAll(".view").forEach(x=>x.classList.toggle("on",x.id==="v-"+v));document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x===b));if(v==="c")drawCaps();if(v==="r")drawMirror();scrollTo(0,0)});
+// ειδοποίηση για ό,τι άνοιξε
+(function(){const t=dayKey(new Date());const n=caps.filter(c=>!c.res&&c.open<=t).length+((mseal&&!mseal.done&&mseal.open<=t)?1:0);if(n)setTimeout(()=>{$("greet").innerHTML=`Κάτι σφραγισμένο <b style="color:var(--gold)">άνοιξε σήμερα</b>. Πάτα ⧗.`;document.querySelector('nav [data-v=c]').style.color="var(--red)"},900)})();
+$("exp").onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify({hist,caps,mseal})],{type:"application/json"}));a.download="kairos.json";a.click()};
+$("impF").onchange=e=>{const f=e.target.files[0];if(f)f.text().then(t=>{try{const j=JSON.parse(t);hist=j.hist||hist;caps=j.caps||caps;mseal=j.mseal||mseal;store.set("kr_hist",hist);store.set("kr_caps",caps);store.set("kr_mseal",mseal);alert("Ο χρόνος επέστρεψε ✓")}catch(_){}})};
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>
