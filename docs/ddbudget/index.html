@@ -67,7 +67,7 @@ tr.tot td{font-weight:800;background:var(--yel)}
 <script>
 "use strict";
 /* ===================== DATA / CONSTANTS ===================== */
-const VER="1.1";
+const VER="1.2";
 const $=s=>document.querySelector(s);
 const fmt=n=>(Math.round(n||0)).toLocaleString("en-US");
 const fmt1=n=>(Math.round((n||0)*10)/10).toLocaleString("en-US");
@@ -283,6 +283,35 @@ it("09","m10","FO flow meters & viscosity controller calibration (IMO DCS)","EAC
 it("09","m11","Emergency generator: QCV directly on D.O. tank (verify / relocate)","LUMPSUM",c=>1,1200,"I",{gr:"SOLAS II-2/4.2.2.3.4 – PSC code 07114."});
 it("09","m12","Scrubber (EGCS): washwater pumps/valves/overboard inspection, assist maker","LUMPSUM",c=>c.v.scrub?1:0,6000,"R");
 it("09","m13","Yard fitters assist to crew/maker (man-days)","MAN-DAY",c=>Math.round(8*c.sf),160,"I");
+// ---- 09 extra machinery items (mostly crew/maker – quoted by yard as assistance / if required)
+it("09","mx1","ME cylinder units overhaul – yard assistance (pistons, liners measurement, covers to workshop)","UNIT",c=>2,1800,"O");
+it("09","mx2","ME exhaust valves overhaul in workshop (seat & spindle grinding, owners' spares)","PC",c=>2,900,"I");
+it("09","mx3","ME fuel valves overhaul & pressure test","PC",c=>Math.round(6*Math.min(c.sf,1.5)),120,"O");
+it("09","mx4","ME crankcase, main & crosshead bearings inspection – yard assistance","LUMPSUM",c=>1,1500,"O");
+it("09","mx5","ME L.O. sump tank cleaned & inspected","LUMPSUM",c=>1,1800,"I");
+it("09","mx6","Auxiliary engines overhaul – yard assistance / workshop machining","EACH",c=>+c.v.gens||3,1500,"O");
+it("09","mx7","Main / service air compressors overhaul (valves, rings, coolers)","EACH",c=>2,900,"O");
+it("09","mx8","F.O. / L.O. purifiers overhaul assistance, bowls to workshop if required","EACH",c=>3,600,"O");
+it("09","mx9","Oily water separator internal cleaning & coating","LUMPSUM",c=>1,1200,"I");
+it("09","mx10","Incinerator refractory repair & burner overhaul","LUMPSUM",c=>1,1800,"O");
+it("09","mx11","Refrigeration & A/C plant: condensers cleaned, gas top-up (yard part)","LUMPSUM",c=>1,1500,"I");
+it("09","mx12","E/R ventilation fans overhaul (impellers, dampers, bearings)","EACH",c=>Math.round(4*Math.min(c.sf,1.5)),450,"I");
+it("09","mx13","E/R tanks (bilge, sludge, drain, settling, service) cleaned for inspection","EACH",c=>6,600,"I",{cls:1});
+it("09","mx14","E/R bilges & tank tops cleaned, bilge wells & strainers","LUMPSUM",c=>1,1500,"I");
+it("09","mx15","Lathe / workshop machinery & welding equipment check","LUMPSUM",c=>1,500,"O");
+it("09","mx16","Exhaust gas economizer / boiler smoke tubes water washing & inspection","LUMPSUM",c=>c.v.boiler?1:0,1800,"I");
+it("10","dx1","Cargo hold bilge wells cleaned, suction proven free, sounding pipes checked","HOLD",c=>c.type==="B"?(+c.v.holds||5):0,200,"R",{t:"B"});
+it("10","dx2","Cargo hold access ladders / platforms / handrails repairs","LUMPSUM",c=>c.type==="B"?1:0,2500,"I",{t:"B"});
+it("10","dx3","Hatch coaming top / water channels / drains cleaned & repaired","HATCH",c=>c.type!=="G"?(c.type==="B"?(+c.v.holds||5):Math.round((c.v.teu||0)/400)):0,600,"I",{t:"BC"});
+it("10","dx4","Mooring ropes / wires renewal – yard assistance (owners' supply)","PC",c=>4,180,"O");
+it("10","dx5","Deck stores / bosun store / paint store doors, ventilation & lighting","LUMPSUM",c=>1,900,"I");
+it("10","dx6","Mast & funnel steel / ladders / guard rails repairs","LUMPSUM",c=>1,2500,"I");
+it("11","ex1","Batteries (emergency, GMDSS, starting) renewal assistance / charging test","LUMPSUM",c=>1,500,"O");
+it("11","ex2","Alarm & monitoring system tests (bilge, high-level, fire, E/R UMS)","LUMPSUM",c=>1,900,"R",{cls:1});
+it("12","sx1","Fire main / hydrants / hoses pressure tested, international shore connection","LUMPSUM",c=>1,800,"R",{cls:1});
+it("12","sx2","Rescue boat engine & equipment check, lifeboat hull repairs (yard part)","LUMPSUM",c=>1,900,"O");
+it("13","ax1","Accommodation sanitary / grey water pipes & valves repairs","LUMPSUM",c=>1,2000,"I");
+it("13","ax2","Accommodation ventilation / A/C ducts & fire dampers cleaning","LUMPSUM",c=>1,1500,"O");
 // ---- 10 DECK
 it("10","dg1","Windlasses & mooring winches: brake tests (MEG4), linings, clearances","LUMPSUM",c=>1,4500,"R",{cls:1,sc:1});
 it("10","dg2","Cargo cranes proof load test (5-yearly) & slewing bearing check","CRANE",c=>c.v.cranes||0,1800,c=>c.o.crane5?"R":"O",{t:"BCG"});
@@ -452,6 +481,294 @@ function compute(p){
  R.perDay=R.own.cash/Math.max(1,(+o.nextM||30)*30.4);
  return R;
 }
+/* ===================== TENDER SPEC (English, itemised for yards) =====================
+ TD[budgetLineId] = {t:"HEADING", i:[[description, unit, qty(c,l) | number]]}  – qty default = budget line qty */
+const Q=(n)=>()=>n;
+const TD={
+ gs1:{t:"SHORE CONNECTIONS (each to be quoted as one complete operation: connect + disconnect)",i:[
+  ["Ballast water line – connect / disconnect","MOVE",Q(4)],["Fire line – connect / disconnect","MOVE",Q(2)],["Fresh water line – connect / disconnect","MOVE",Q(2)],
+  ["Sea water cooling (A/C & refrigeration, in dock) – connect / disconnect","MOVE",Q(2)],["Compressed air – connect / disconnect","MOVE",Q(2)],
+  ["Sewage line – connect / disconnect","MOVE",Q(2)],["Shore power 440V/60Hz – connect / disconnect (incl. phase check with ship's electrician)","MOVE",Q(2)],["Earth connection – connect / disconnect","MOVE",Q(2)]]},
+ gs2:{t:"BALLAST TANKS ACCESS FOR SURVEY",i:[["Remove / refit ballast tank vent heads for inspection","EACH",c=>Math.round(20*c.sf)],
+  ["Open / close ballast tank manholes for survey, incl. new gaskets (yard supply) – quote per manhole","EACH",(c,l)=>l.q],["Renewal of manhole stud bolts / nuts (stainless) if required","PC",Q(50)]]},
+ gs3:{t:"BALLAST WATER SUPPLY",i:[["Ballast water supply for undocking / trim – per ton","TON"]]},
+ gs4:{t:"FIRE LINE UNDER PRESSURE",i:[["Maintain fire line under pressure throughout the stay – per day","DAY"]]},
+ gs5:{t:"SEA WATER COOLING",i:[["Sea water cooling under pressure in dry dock – per day","DAY"]]},
+ gs6:{t:"COMPRESSED AIR",i:[["Compressed air supply 7 bar – per day","DAY"]]},
+ gs7:{t:"FIRE / SAFETY WATCH",i:[["Fire / safety watch 24 h as per yard regulations – per day","DAY"],["Additional portable fire extinguishers during hot work – per pc per day","PC-DAY",Q(60)]]},
+ gs8:{t:"SECURITY WATCH (ISPS)",i:[["Security watch at gangway 24 h – per day","DAY"]]},
+ gs9:{t:"FRESH WATER",i:[["Fresh water supply – per ton","TON"]]},
+ gs10:{t:"GANGWAYS",i:[["Provide, install & remove safe access gangway – PER SET PER SHIFTING (2 sets: berth / dock / berth)","SET-TIME"]]},
+ gs11:{t:"GARBAGE",i:[["Collection & disposal of domestic / industrial garbage – per day","DAY",c=>c.yard],["MARPOL Annex V garbage receipt / certificate","PC",Q(1)]]},
+ gs12:{t:"GAS FREE INSPECTION & CERTIFICATION",i:[["Gas free inspection & certificate by certified chemist – initial visit","VISIT",Q(1)],
+  ["Gas free – subsequent daily visit (one visit per day)","DAY",c=>c.yard],["Gas free certificate / hot work permit – per space per time","EACH",c=>Math.round(20+c.steelT)]]},
+ gs13:{t:"SHORE POWER",i:[["Shore power supply 440V/60Hz – per kWh (state max kW & amperes available)","KWH"]]},
+ gs14:{t:"CRANES & LIFTING",i:[["Shore crane incl. operator – per hour","HOUR",c=>Math.round(30*c.sf)],["Fork lift incl. operator – per hour","HOUR",c=>Math.round(10*c.sf)],["Floating crane incl. operator – per hour (if required)","HOUR",Q(0)]]},
+ gs15:{t:"CHERRY PICKERS (general use)",i:[["Cherry picker incl. operator – per hour (daily log signed by Owners' rep.; state minimum per call)","HOUR"]]},
+ gs16:{t:"GENERAL STAGING (if not included in other items)",i:[
+  ["Tower staging on deck (masts, cranes, funnel, accommodation front) – per m³","M3",c=>Math.round(800*c.sf)],["Tower staging in engine room – per m³","M3",c=>Math.round(150*c.sf)],
+  ["Tower staging in dry dock (stern, rudder, propeller, bulbous bow) – per m³","M3",c=>Math.round(1000*c.sf)],["Hanging staging – per m per plank","M/PLANK",Q(60)]]},
+ gs17:{t:"STAGING IN HOLDS / TANKS FOR CLASS CLOSE-UP & UTM",i:[["Tower staging inside cargo holds / ballast tanks for close-up survey & thickness measurement – per m³","M3"]]},
+ gs18:{t:"WHARFAGE",i:[["Berthing alongside yard's pier with full shore facilities – per day","DAY"]]},
+ gs19:{t:"FIXED FIRE-FIGHTING SYSTEM",i:[["De-activation / re-activation of ship's fixed CO2 / fixed system – complete operation","MOVE"]]},
+ gs20:{t:"VENTILATION / LIGHTING / HEATING",i:[["Portable ventilation fans & flexible ducts for hot work / painting spaces – per set per day","SET-DAY",c=>Math.round(100*c.sf)],
+  ["Additional portable lighting – per set per day","SET-DAY",c=>Math.round(80*c.sf)],["Heating lamps to restore insulation of motors – per set per day","SET-DAY",Q(20)]]},
+ gs21:{t:"SLUDGE / OILY WATER / SEWAGE DISPOSAL (incl. MSA certificates)",i:[["Bilge water pump-out & disposal – per ton","TON",c=>Math.round(30*c.sf)],
+  ["Sludge removal & disposal – per m³","M3",c=>Math.round(20*c.sf)],["Oily water removal & disposal – per ton","TON",c=>Math.round(30*c.sf)],["Sewage disposal – per ton","TON",c=>Math.round(30*c.sf)]]},
+ gs22:{t:"TANK CLEANING FOR CLASS INTERNAL EXAMINATION",i:[["F.O. tanks normal cleaning for internal examination – per m³ (tanks as per Class requirements)","M3",(c,l)=>Math.round(l.q*.85)],
+  ["D.O. / L.O. tanks cleaning for inspection – per m³","M3",(c,l)=>Math.round(l.q*.15)],["Local cleaning for hot work (after normal cleaning) – per m²","M2",Q(150)]]},
+ gs23:{t:"BALLAST TANKS MUD REMOVAL",i:[["Removal & disposal of mud / scale from ballast tanks (after HP washing) – per ton","TON"],["Removal of remaining water from tanks – per ton","TON",Q(20)]]},
+ gs24:{t:"PILOTS",i:[["Pilot for berthing / unberthing – per move","MOVE",Q(2)],["Pilot for docking / undocking – per move","MOVE",Q(2)]]},
+ gs25:{t:"TUGS",i:[["Tugs for berthing / unberthing – per tug per move","TUG-MOVE",c=>2*c.tugs],["Tugs for docking / undocking – per tug per move","TUG-MOVE",c=>2*c.tugs]]},
+ gs26:{t:"RIGGERS / LINE HANDLERS",i:[["Riggers for berthing / unberthing – per move","MOVE",Q(2)],["Riggers for docking / undocking – per move","MOVE",Q(2)]]},
+ gs27:{t:"TRIALS",i:[["Dock trial attendance","LUMPSUM",Q(1)],["Sea trial attendance","LUMPSUM",Q(1)]]},
+ gs28:{t:"TEMPORARY SAFETY & CLEANING",i:[["Temporary safety handrails / ropes around openings (hatches, coamings) – per m","M"],["Final cleaning of main deck before departure","LUMPSUM",Q(1)]]},
+ gs29:{t:"PROTECTION & DEBRIS",i:[["Floor protection in accommodation / E/R, remove on completion – per m²","M2",c=>Math.round(150*c.sf)],["Removal of owners' debris (yard's own debris at no cost)","LUMPSUM",Q(1)]]},
+ dk1:{t:"DOCKING / UNDOCKING",i:[["Dock preparation, docking & undocking incl. first & last day dock rent (as per docking plan)","LUMPSUM",Q(1)]]},
+ dk2:{t:"DOCK HIRE",i:[["Lay-days dock rent – per day","DAY"],["Surcharge for docking / undocking beyond normal hours (state %)","%",Q(0)]]},
+ dk3:{t:"KEEL / SIDE BLOCKS",i:[["Removal & replacing of nominated keel / side blocks (only for owners' bottom steel works)","EACH"]]},
+ dk4:{t:"ANCHORS & CHAIN CABLES",i:[["Anchors & chain cables lowered and ranged in dock bottom, HP washed","SIDE",Q(2)],["Calibration of chain cables – thickness report of links & pins to Owners / Class","SIDE",Q(2)],
+  ["Each shot wire-marked & painted; kenter shackles red, common shackles white & banded","SIDE",Q(2)],["Release & reconnect bitter ends, cable releasers tested","SIDE",Q(2)],
+  ["Remove / refit kenter shackles (if required)","PC",Q(4)],["Loose studs welded one side (if required)","PC",Q(20)],["Anchors & cables restowed in chain lockers","SIDE",Q(2)]]},
+ dk5:{t:"CHAIN CABLES RENEWAL / REVERSING",i:[["Chain lengths renewal with owners' supply (if required)","LENGTH"],["Both cables reversed end to end (if required)","SIDE",Q(2)]]},
+ dk6:{t:"CHAIN LOCKERS",i:[["Chain lockers cleaned, mud & retained water removed","EACH",Q(2)],["Remove / refit access manholes & gratings","EACH",Q(2)],
+  ["Hand scraping, HP washing & painting to 2 m height (owners' paint)","EACH",Q(2)],["Removal & disposal of mud / scale – per ton","TON",Q(6)],["Bilge suction strainers cleaned, piping proven free","EACH",Q(2)]]},
+ dk7:{t:"BOTTOM PLUGS",i:[["Bottom plugs removed / refitted, vacuum tested in presence of Owners' rep. (as per plug list)","EACH"],["New lead gaskets & cement after vacuum test","EACH"]]},
+ dk8:{t:"SACRIFICIAL ANODES (owners' supply)",i:[["Hull anodes renewal (welded / bolted) – protected during painting","PC",(c,l)=>Math.max(0,l.q-8)],["Rudder anodes renewal","PC",Q(4)],["Sea chest anodes renewal","PC",Q(4)]]},
+ dk9:{t:"BALLAST TANK ANODES (owners' supply)",i:[["Ballast tank anodes renewal (welded / bolted)","PC"]]},
+ dk10:{t:"IMPRESSED CURRENT CATHODIC PROTECTION (ICCP)",i:[["Dielectric shields spot blasted SA2 & coated with glass flake / epoxy filler","PC",Q(2)],["ICCP anodes & reference cells protected during hull treatment","PC",Q(4)],["Assistance to owners' service engineer","LUMPSUM",Q(1)]]},
+ dk11:{t:"SEA CHESTS",i:[["Sea chest gratings opened / closed","PC"],["Gratings & interiors thoroughly cleaned & scraped incl. valve connections","PC"],
+  ["Sea valves protected, interiors & gratings sand swept & coated 2 × epoxy (owners' paint)","PC"],["Cleaning of MGPS nozzles","LUMPSUM",Q(1)],["Staging for sea chests – per m³","M3",Q(30)]]},
+ dk12:{t:"PROPELLER",i:[["Propeller HP washed & polished in place to Rupert 'B', coated with oil","LUMPSUM",Q(1)],["Propeller cap removed / refitted, cement renewed, new gasket","LUMPSUM",Q(1)],["Staging for propeller works","SET",Q(1)]]},
+ dk13:{t:"PROPELLER REMOVAL (with tailshaft withdrawal)",i:[["Propeller dismounted, hung off & refitted on completion (incl. chain blocks, lugs, hydraulic tools)","LUMPSUM",Q(1)],["Propeller blade roots & hub dye-checked","LUMPSUM",Q(1)],["Propeller hub cleaned, new grease","LUMPSUM",Q(1)]]},
+ dk14:{t:"TAILSHAFT & STERN TUBE",i:[["Rope guard removed / refitted (welded)","LUMPSUM",Q(1)],["Net cutters removed / refitted","PC",Q(4)],["Tailshaft wear-down readings before & after works","TIME",Q(2)],["Stern tube L.O. drained & refilled (owners' oil), pressure tested","LUMPSUM",Q(1)],["Rope guard anodes renewal (owners' supply)","PC",Q(2)]]},
+ dk15:{t:"STERN TUBE SEALS",i:[["Fwd (inner) seal box dismantled, reassembled with new seals (owners' supply)","LUMPSUM",Q(1)],["Aft seal box dismantled, reassembled with new seals (owners' supply)","LUMPSUM",Q(1)],
+  ["Assistance to maker's service engineer for seal renewal / bonding","LUMPSUM",Q(2)],["Liner inspected, machined & polished (if required)","LUMPSUM",Q(1)]]},
+ dk16:{t:"INTERMEDIATE SHAFT",i:[["Intermediate shaft bearing upper half opened for Class inspection & reassembled","LUMPSUM",Q(1)]]},
+ dk17:{t:"TAILSHAFT WITHDRAWAL (complete survey)",i:[["Tailshaft withdrawn & refitted for complete survey","LUMPSUM",Q(1)],["Tailshaft cone & keyway MPI to Class satisfaction","LUMPSUM",Q(1)],["Rudder turned 90° / ram pins & rudder angle indicator disconnected and reconnected","LUMPSUM",Q(1)],["Tailshaft true run checked before / after","TIME",Q(2)]]},
+ dk18:{t:"RUDDER",i:[["Inspection plates removed / refitted for pintle nut & securing arrangement inspection","PC",Q(2)],["Pintle bush & carrier bearing clearances before & after (Owners + Class)","TIME",Q(2)],
+  ["Jumping clearance at 35P / 0 / 35S","TIME",Q(1)],["Rudder plugs removed / refitted, rudder proved dry, pressure test","LUMPSUM",Q(1)],["Cherry picker for rudder works – per hour","HOUR",Q(8)]]},
+ dk19:{t:"RUDDER BEARINGS / GLAND",i:[["Rudder stock gland repacked (owners' packing)","LUMPSUM",Q(1)],["Pintle bush renewal with owners' supply (if clearances out of limits)","LUMPSUM",Q(1)],["Pintles skimmed & made to size (if required)","LUMPSUM",Q(1)]]},
+ dk20:{t:"RUDDER UNSHIPPING",i:[["Rudder blade unshipped & re-assembled (incl. lifting arrangement)","LUMPSUM",Q(1)]]},
+ dk21:{t:"ECHO SOUNDER / SPEED LOG",i:[["Echo sounder transducer cleaned & protected during painting","PC",Q(1)],["Speed log transducer cleaned & protected during painting","PC",Q(1)],["Vacuum test after transducer renewal (if required)","PC",Q(1)]]},
+ dk22:{t:"UNDERWATER WELDING REPAIRS",i:[["Scrapping, V-out & rebuilding wasted welds (min. 3 passes) – per m","M"],["Rudder cavitation / seams rebuilt by welding – per m","M",Q(20)]]},
+ dk23:{t:"ACCESS FOR CLASS / UTM (external hull)",i:[["Cherry picker for Class / UTM external hull close-up – per hour","HOUR"]]},
+ dk24:{t:"BOW THRUSTER",i:[["Bow thruster tunnel grating removed / refitted, tunnel cleaned & coated","LUMPSUM",Q(1)],["Assistance to maker for blades / seals inspection, oil renewal","LUMPSUM",Q(1)],["Thruster anodes renewal (owners' supply)","PC",Q(4)]]},
+ h_cp:{t:"CHERRY PICKERS FOR HULL TREATMENT",i:[["Cherry pickers for hull treatment & painting – per hour (daily log)","HOUR"]]},
+ h_mk:{t:"HULL MARKINGS",i:[["Draft marks, Load Line marks, name, port of registry, IMO no., bulb / thruster / tug marks re-painted","LUMPSUM",Q(1)]]},
+ x_lb:{t:"LIFEBOAT PAINTING / ESCAPE ROUTES",i:[["Lifeboat painted (owners' paint) incl. staging","PC",Q(1)],["E/R escape trunks painted in contrasting colour","LUMPSUM",Q(1)]]},
+ p1:{t:"PIPE RENEWALS – DECK (provisional – see PIPE TARIFF)",i:[["Hydraulic / pneumatic pipes on main deck (incl. supports, U-clamps) – per m, provisional","M",(c,l)=>Math.round(l.q*.5)],["Fire & wash deck line renewal – per m, provisional","M",(c,l)=>Math.round(l.q*.25)],["Air / sounding pipes renewal – per m, provisional","M",(c,l)=>Math.round(l.q*.25)]]},
+ p2:{t:"PIPE RENEWALS – E/R & TANKS (provisional – see PIPE TARIFF)",i:[["E/R sea water / fresh water pipes renewal – per m, provisional","M",(c,l)=>Math.round(l.q*.5)],["Ballast / bilge pipes in tanks renewal – per m, provisional","M",(c,l)=>Math.round(l.q*.5)]]},
+ p3:{t:"PIPE PRESSURE TESTS (certificates, date marking)",i:[["Fire line hydrostatic test 7 bar","EACH",Q(1)],["Fuel bunker lines test 1.5 × WP","EACH",Q(2)],["L.O. bunker line test","EACH",Q(1)],["Fresh water line test 5 bar","EACH",Q(1)],["Assistance for leaking flanges – per flange","PC",Q(10)]]},
+ v1:{t:"OVERBOARD / SEA VALVES (all opened for Class)",i:[["Sea valves DN≥300 (gate/butterfly) opened in place, cleaned, ground in, repacked, closed with new gaskets","PC",(c,l)=>Math.round(l.q*.35)],
+  ["Sea valves DN100–250 opened in place, cleaned, ground in, repacked","PC",(c,l)=>Math.round(l.q*.35)],["Storm valves / screw-down NRVs DN≤100 overhauled","PC",(c,l)=>Math.round(l.q*.3)],["Valve bodies wire-brushed & coated","PC",(c,l)=>l.q]]},
+ v2:{t:"SEA VALVES RENEWAL",i:[["Sea valve renewal with owners' supply incl. pressure test","PC"]]},
+ v3:{t:"OTHER VALVES OVERHAUL",i:[["E/R valves (SW, FW, bilge) overhauled in place","PC",(c,l)=>Math.round(l.q*.5)],["Ballast valves (remote hydraulic) overhauled & actuators tested","PC",(c,l)=>Math.round(l.q*.3)],["Bunker manifold valves FO/DO/LO overhauled","PC",(c,l)=>Math.round(l.q*.2)]]},
+ v4:{t:"SAFETY / RELIEF VALVES",i:[["Safety / relief valves overhauled in workshop, popping tested & set, certificates","PC"]]},
+ m1:{t:"MAIN ENGINE",i:[["Crankshaft deflections before & after docking","TIME",Q(2)],["Thrust bearing opened for Class inspection (if required)","LUMPSUM",Q(1)],["Tie rods tension checked","PAIR",Q(4)],["Holding-down bolts / chocks checked & re-tightened (if required)","LUMPSUM",Q(1)]]},
+ m2:{t:"MAIN ENGINE AIR COOLER",i:[["Air cooler removed, chemically cleaned, pressure tested & refitted with new gaskets (yard supply)","PC"],["Cooler casing & water mist catcher power brushed & coated","PC"]]},
+ m3:{t:"TURBOCHARGER (overhaul by maker)",i:[["Yard assistance: lifting, transport to/from workshop, rotor dynamic balancing certificate","LUMPSUM",Q(1)]]},
+ m4:{t:"AIR RECEIVERS (Class)",i:[["Manholes opened for internal inspection, closed with new joints","PC"],["Safety valves overhauled, tested & set in workshop, certificates","PC"],["Mountings (inlet / outlet / drain) opened for survey","PC",(c,l)=>l.q*2]]},
+ m5:{t:"COOLERS / HEAT EXCHANGERS",i:[["Central coolers (plate type): plates dismantled, cleaned, re-assembled – per plate","PLATE",c=>Math.round(300*Math.min(c.sf,1.6))],["Central coolers pressure tested","EACH",Q(2)],
+  ["L.O. cooler (tube type) opened, tubes cleaned, covers coated, pressure tested","EACH",Q(1)],["Jacket / HT cooler opened, cleaned, tested","EACH",Q(1)],["Fresh water generator plates / condenser cleaned & tested","EACH",Q(1)],["Re-tubing / plugging of tubes (yard supply) – per tube, if required","TUBE",Q(20)]]},
+ m6:{t:"PUMPS (open up, overhaul, new packing & gaskets yard supply, test)",i:[["Ballast pumps","SET",Q(2)],["Main sea water cooling pumps","SET",Q(2)],["Fire & G.S. / bilge pumps","SET",Q(2)],["Emergency fire pump incl. capacity test","SET",Q(1)],["F.W. cooling pumps","SET",Q(2)],["Pump transport to workshop (if required)","SET",Q(2)]]},
+ m7:{t:"AUXILIARY / COMPOSITE BOILER (Class)",i:[["Boiler opened for internal survey, water & fire side cleaned","LUMPSUM",Q(1)],["Boiler mounting valves opened, ground in, repacked","PC",Q(10)],["Boiler safety valves overhauled & popping tested with Class","PC",Q(2)],["Boiler pressure gauges calibrated & certified","EACH",Q(4)],["Refractory repairs (if required)","LUMPSUM",Q(1)]]},
+ m8:{t:"ENGINE ROOM CRANE",i:[["E/R overhead crane load test 125% SWL, certificate","LUMPSUM",Q(1)],["E/R crane wire renewal (owners' supply)","LUMPSUM",Q(1)]]},
+ m9:{t:"STEERING GEAR",i:[["Steering gear filters cleaned, relief / safety valves tested & adjusted","LUMPSUM",Q(1)],["Ram V-packings / seals renewal (owners' supply)","LUMPSUM",Q(1)],["Rudder angle indicators checked after works","LUMPSUM",Q(1)]]},
+ m10:{t:"CALIBRATIONS",i:[["F.O. flow meters removed, cleaned, calibrated & refitted, certificates","EACH",Q(3)],["F.O. viscosity controller cleaned & calibrated, certificate","EACH",Q(1)]]},
+ m11:{t:"EMERGENCY GENERATOR FUEL TANK",i:[["Emergency generator D.O. tank quick-closing valve to be fitted directly on tank shell (remove spool piece if fitted), remote wire operational","LUMPSUM",Q(1)]]},
+ m12:{t:"SCRUBBER (EGCS)",i:[["Washwater pumps, valves & overboard inspected; assistance to maker","LUMPSUM",Q(1)]]},
+ m13:{t:"YARD FITTERS ASSISTANCE",i:[["Yard fitters assistance to crew / maker – per man-day (state normal & overtime rates)","MAN-DAY"]]},
+ dg1:{t:"ANCHOR WINDLASSES & MOORING WINCHES",i:[["Windlass brake holding capacity test & setting, certificates","EACH",Q(2)],["Mooring winch brake holding tests (all drums, OCIMF MEG4), certificates","DRUM",Q(6)],
+  ["Windlass & winch shaft clearances taken","EACH",Q(6)],["Brake linings renewal (state yard / owners' supply)","EACH",Q(4)],["Cable lifter build-up by welding & grinding (if required)","EACH",Q(2)]]},
+ dg2:{t:"CARGO CRANES – 5-YEARLY THOROUGH EXAMINATION",i:[["Proof load test with test weights / water bags, certificate (Class / ILO)","CRANE"],["Slewing bearing rocking test / clearance, bolts check","CRANE"],["Limit switches & safety devices tested","CRANE"]]},
+ dg3:{t:"CARGO CRANE WIRES",i:[["Hoisting & luffing wires renewal (owners' supply)","WIRE"]]},
+ dg4:{t:"HATCH COVERS",i:[["Hatch cover rubber packing renewal (owners' supply) – per m","M",c=>Math.round(27*(+c.v.holds||5))],["Compression bars repaired / built up – per m","M",Q(50)],
+  ["Drain non-return valves renewal","PC",c=>4*(+c.v.holds||5)],["Cleats / quick-acting cleats overhauled or renewed","PC",c=>12*(+c.v.holds||5)],["Hydraulic cylinders seal renewal (owners' supply)","PC",Q(4)],
+  ["Hydraulic hoses renewal (owners' supply)","PC",Q(20)],["Wheels, hinges, chains greased & adjusted, operational test","HATCH",c=>+c.v.holds||5],["Hose test / ultrasonic tightness test to Class","HATCH",c=>+c.v.holds||5]]},
+ dg5:{t:"HATCH COVERS REMOVAL / SUPPORT",i:[["Hatch cover panels removed / temporarily supported for coaming works (price to include supports)","TIME"]]},
+ dg6:{t:"LOAD LINE ITEMS",i:[["External weathertight doors overhauled: dogs, hinges, packing renewal (owners' packing)","PC",c=>Math.round(10*c.sf)],["Small hatches / hold access hatches overhauled, packing renewed","PC",c=>Math.round(12*c.sf)],
+  ["Air pipe heads opened, floats & seats inspected / renewed","EACH",c=>Math.round(60*c.sf)],["Air vent heads renewal (type approved, yard supply) – if required","EACH",Q(10)],["Sounding pipe caps / self-closing cocks renewed – if required","EACH",Q(20)]]},
+ dg7:{t:"ACCOMMODATION & PILOT LADDERS",i:[["Accommodation ladders static & dynamic load test (MSC.1/Circ.1331), certificates","EACH",Q(2)],["Accommodation ladder wires renewal (owners' supply)","EACH",Q(2)],["SWL permanently marked","EACH",Q(2)],["Pilot ladder winch / combination arrangement load test","EACH",Q(1)]]},
+ dg8:{t:"PROVISION / HOSE HANDLING CRANES",i:[["Load test 125% SWL with certificate","EACH"],["Wire renewal (owners' supply)","EACH"],["MPI of hooks in situ","PC"]]},
+ dg9:{t:"ROLLERS, FAIRLEADS, CHOCKS",i:[["Pedestal / fairlead rollers overhauled & greased","PC",Q(8)],["Chocks / bitts built up by welding & ground – per location","LOC",Q(10)]]},
+ dg10:{t:"WATER INGRESS ALARM",i:[["Water ingress alarm system tested after holds works (SOLAS XII)","LUMPSUM",Q(1)]]},
+ cc1:{t:"CONTAINER LASHING GEAR",i:[["Lashing gear survey: twistlocks, lashing rods, turnbuckles – sorting & renewals (owners' supply) – per TEU","TEU"]]},
+ cc2:{t:"CELL GUIDES",i:[["Cell guides inspected, straightened / repaired – per m","M"]]},
+ cc3:{t:"PONTOON HATCH COVERS",i:[["Pontoon hatch covers lifted by shore crane & landed","PANEL"],["Gaskets renewal (owners' supply) & cleats overhaul","PANEL"]]},
+ cc4:{t:"REEFER SOCKETS",i:[["Reefer sockets & cabling insulation tested, defective repaired","PLUG"]]},
+ cc5:{t:"LASHING BRIDGES / STACK FITTINGS",i:[["Lashing bridges & stack fittings steel repairs (see STEEL TARIFF)","LUMPSUM"]]},
+ gc1:{t:"CARGO TANKS – CLASS INTERNAL INSPECTION",i:[["Cargo tank access, staging, lighting & cleaning for internal inspection","TANK"],["Cargo tank ventilation / aeration during works","TANK"]]},
+ gc2:{t:"CARGO TANK RELIEF VALVES",i:[["Cargo tank PSVs removed, overhauled, set-pressure tested & refitted, certificates","PC"]]},
+ gc3:{t:"CARGO VALVES",i:[["Cargo valves (ESD, ball, butterfly, globe) overhauled & tested","PC"]]},
+ gc4:{t:"CARGO PIPING",i:[["Cargo piping NDT / hydrostatic test, insulation repairs","LUMPSUM"]]},
+ gc5:{t:"CARGO PUMPS",i:[["Cargo pumps (deepwell / submerged) removed & refitted – assistance to maker","PC"]]},
+ gc6:{t:"CARGO SAFETY SYSTEMS",i:[["ESD system tested","LUMPSUM",Q(1)],["Fixed gas detection system calibrated","LUMPSUM",Q(1)],["Water spray system tested","LUMPSUM",Q(1)],["Dry powder system serviced","LUMPSUM",Q(1)]]},
+ gc7:{t:"CARGO TANK INSULATION",i:[["Cargo tank insulation inspected & repaired","LUMPSUM"]]},
+ gc8:{t:"MEMBRANE CONTAINMENT (LNG)",i:[["Global tightness test / secondary barrier test with containment specialist","LUMPSUM"]]},
+ gc9:{t:"COMPRESSOR / MOTOR ROOM",i:[["Gas-tight bulkhead seals, ventilation fans & airlock inspected / repaired","LUMPSUM"]]},
+ e1:{t:"MAIN & EMERGENCY SWITCHBOARDS",i:[["MSB / ESB opened, vacuum cleaned, connections re-tightened","PANEL",Q(8)],["ACB protection tests: overcurrent, under/over voltage, over/under frequency, preferential trip, reverse power – per breaker","EACH",c=>(+c.v.gens||3)+1]]},
+ e2:{t:"ELECTRICAL SURVEYS",i:[["Thermographic survey of MSB / ESB / group starters, report","LUMPSUM",Q(1)],["Insulation resistance survey of all motors & feeders, report","LUMPSUM",Q(1)]]},
+ e3:{t:"ELECTRIC MOTORS (to workshop: clean, megger, varnish, bake, bearings, test)",i:[["Motors ≤15 kW","EACH",(c,l)=>Math.round(l.q*.4)],["Motors 15–50 kW","EACH",(c,l)=>Math.round(l.q*.4)],["Motors 50–150 kW","EACH",(c,l)=>Math.round(l.q*.2)]]},
+ e4:{t:"GENERATORS",i:[["Main generator alternators cleaned, insulation tested","EACH",c=>+c.v.gens||3],["Emergency generator alternator cleaned, tested; load test","EACH",Q(1)]]},
+ e5:{t:"LIGHTING",i:[["E/R & funnel light fittings repaired, broken covers renewed","LUMPSUM",Q(1)],["Deck & hold floodlights overhauled","PC",Q(20)],["Navigation & signal lights checked","LUMPSUM",Q(1)]]},
+ e6:{t:"DECK CABLE TRAYS",i:[["Main deck cable trays / conduits renewal incl. cable pulling (state lump sum)","LUMPSUM"]]},
+ s1:{t:"LIFEBOAT / RESCUE BOAT / LIFERAFT DAVITS",i:[["Lifeboat & release gear load test with service company (yard weights & assistance)","PC",Q(1)],["Rescue boat davit & winch static / dynamic load test (SOLAS III/20)","LUMPSUM",Q(1)],["Liferaft davit load test","LUMPSUM",Q(1)],["Davit fall wires renewal (owners' supply)","EACH",Q(2)]]},
+ s2:{t:"FIRE DAMPERS / VENTILATORS",i:[["Fire dampers & mushroom vents overhauled, wire mesh renewed","PC"],["Fire dampers marked open / close & space served","LUMPSUM",Q(1)]]},
+ s3:{t:"FIRE HYDRANTS",i:[["Fire hydrant valves overhauled / renewed","PC"]]},
+ a1:{t:"ACCOMMODATION",i:[["Galley exhaust duct & hood cleaned","LUMPSUM",Q(1)],["Windows / portholes gaskets renewed","PC",Q(10)],["Galley floor tiles renewal – per m²","M2",Q(20)]]},
+ n1:{t:"MAGNETIC COMPASS",i:[["Magnetic compass adjustment & deviation card after steel works","LUMPSUM",Q(1)]]},
+ n2:{t:"MASTS & NAVIGATION LIGHTS",i:[["Radar mast / scanners access for service","LUMPSUM",Q(1)],["Navigation & signal lights coloured globes renewed","LUMPSUM",Q(1)]]},
+ x1:{t:"LIFTING GEAR",i:[["Chain blocks / portable lifting gear tested, numbered & certified","EACH",Q(15)],["E/R lifting lugs / pad eyes load tested & SWL marked","EACH",Q(20)]]},
+ x2:{t:"PILOT BOARDING ARRANGEMENT",i:[["Pilot boarding arrangement compliance check & modifications (SOLAS V/23, ISO 799-2)","LUMPSUM",Q(1)]]},
+};
+const HULLT={fb:"FLAT BOTTOM",vb:"VERTICAL BOTTOM / SIDES",bt:"BOOTTOP",ts:"TOPSIDES"};
+const TCOND={R:"REQUIRED",I:"IF REQUIRED",O:"OPTIONAL"};
+const GEN_COND=[
+ "All prices in USD, net of VAT. Unit prices to be quoted in the yellow cells; quantities are estimated and will be adjusted to actual work done.",
+ "Items marked IF REQUIRED: quote unit price – execution subject to survey / Owners' instruction. Items marked OPTIONAL: quote separately.",
+ "Please state: dock days, total repair days (good weather), earliest slot, overall discount, payment terms, delay penalty per day, quotation validity.",
+ "Staging: measured jointly ONLY between supports (standards / lugs), actual volume, NO minimum charge per location. No staging without Owners' Project Manager approval.",
+ "Steel: weight calculated 'as fitted' with density 7.85 t/m³. Minimum chargeable weight per piece is NOT accepted. Final marking jointly by Owners' rep., yard steel foreman and UTM firm. Class certified material, shop primed.",
+ "Gangways: priced per set per shifting. Gas free: one daily visit plus per hot-work space. Cherry pickers / cranes: per hour against daily log signed by Owners' representative.",
+ "Hull coating: 1st touch-up area = blasted area × 1.2; 2nd touch-up = 1st × 1.2; second fresh water wash charged as rinsing. All paints Owners' supply; paint cans & grit disposal at yard's cost.",
+ "Coating / equipment damages caused by the yard to be restored at yard's cost. All debris generated by the yard removed at no cost.",
+ "Means of work (chain blocks, lifting lugs, hydraulic tools, temporary lighting/ventilation for yard's own works) are included in the item prices.",
+ "Work-done list to be agreed and signed daily / before departure by Owners' representative; final invoice per spec item numbers.",
+ "Owners' supply spares & services delivered to the yard free of charge for handling; yard to assist service engineers as quoted.",
+];
+function tenderRows(p,R,inc){
+ const c=R.c,out=[];let sn={};
+ for(const [k,n] of SECTIONS){
+  let ls=R.ls.filter(l=>l.sec===k&&(l.cd==="R"||(inc.I&&l.cd==="I")||(inc.O&&l.cd==="O")));
+  if(k==="06"||k==="07"||k==="08"){/* handled below / keep */}
+  if(!ls.length)continue;
+  out.push({type:"S",id:k,d:n.toUpperCase()});let hn=0;
+  if(k==="05"){ // group hull lines per area
+   const groups=[["fb"],["vb"],["bt"],["ts"]];
+   for(const [a] of groups){const gl=ls.filter(l=>l.id.startsWith("h_"+a+"_"));if(!gl.length)continue;hn++;
+    out.push({type:"H",id:`${k}.${hn}`,d:`HULL – ${HULLT[a]} (area ≈ ${fmt(c.A[a])} m²)`});let i=0;
+    for(const l of gl){i++;out.push({type:"I",id:`${k}.${hn}.${i}`,d:l.d.replace(/^[^:]+: /,""),u:l.u,q:l.q,cd:l.cd,cls:l.cls})}}
+   const rest=[["HULL – OTHER",x=>x.id==="h_cp"||x.id==="h_mk"],["HATCH COVERS / COAMINGS / MAIN DECK",x=>x.id.startsWith("d_")],["WATER BALLAST TANKS – COATING REPAIRS",x=>x.id.startsWith("w_")],
+     [`CARGO HOLDS (area ≈ ${fmt(c.A.holds)} m²)`,x=>x.id.startsWith("c_")],["OTHER",x=>x.id==="x_lb"||x.cust]];
+   for(const [t,f] of rest){const gl=ls.filter(f);if(!gl.length)continue;hn++;out.push({type:"H",id:`${k}.${hn}`,d:t});let i=0;
+    for(const l of gl){const td=TD[l.id];if(td){for(const s of td.i){const q=s[2]?s[2](c,l):l.q;if(!q&&q!==0)continue;i++;out.push({type:"I",id:`${k}.${hn}.${i}`,d:s[0],u:s[1],q,cd:l.cd,cls:l.cls})}}
+     else{i++;out.push({type:"I",id:`${k}.${hn}.${i}`,d:l.d,u:l.u,q:l.q,cd:l.cd,cls:l.cls,note:l.note})}}}
+   continue;
+  }
+  for(const l of ls){
+   if(l.steel||l.steelA){
+    if(l.steelA)continue;hn++;
+    out.push({type:"H",id:`${k}.${hn}`,d:"STEEL RENEWAL – as per STEEL TARIFF sheet (provisional quantities)"});
+    if(p.steel.length){let i=0;for(const s of p.steel){if(s.cd==="O"&&!inc.O)continue;if(s.cd==="I"&&!inc.I)continue;i++;out.push({type:"I",id:`${k}.${hn}.${i}`,d:`${s.t} – plates / sections renewal (location surcharge ${s.sur}%)`,u:"KG",q:+s.kg,cd:s.cd||"R",cls:1})}}
+    else out.push({type:"I",id:`${k}.${hn}.1`,d:"Steel renewal – plates & sections, various locations (provisional, final after UTM / close-up survey)",u:"KG",q:c.steelT*1000,cd:"R",cls:1});
+    hn++;out.push({type:"H",id:`${k}.${hn}`,d:"STEEL ASSOCIATED WORKS"});
+    [["Gouging / re-welding seams & butts (min 1 m/location, 3 passes)","M",60],["Ultrasonic test of new welds","M",40],["X-ray of butts","PHOTO",20],["Dye check","M",30],["Vacuum test","M",40],
+     ["Air test of tanks after steel renewal","M3",1500],["Tower staging for steel works in tanks / holds","M3",Math.round(600*c.sf)],["Ventilation / A/C machine for hot work in closed tanks","SET-DAY",20],["Fireproof fabric protection during hot work","M2",150],["Coating restoration around new steel (power tool + 2 coats, owners' paint)","M2",200]]
+     .forEach((x,i)=>out.push({type:"I",id:`${k}.${hn}.${i+1}`,d:x[0],u:x[1],q:x[2],cd:"R"}));
+    continue}
+   hn++;const td=TD[l.id];
+   if(td){out.push({type:"H",id:`${k}.${hn}`,d:td.t,cls:l.cls});let i=0;
+    for(const s of td.i){const q=s[2]?s[2](c,l):l.q;if(q===0&&!s[2])continue;if(q===0)continue;i++;out.push({type:"I",id:`${k}.${hn}.${i}`,d:s[0],u:s[1],q:Math.round(q*100)/100,cd:l.cd,cls:l.cls})}}
+   else{out.push({type:"H",id:`${k}.${hn}`,d:l.d.toUpperCase().slice(0,90),cls:l.cls});out.push({type:"I",id:`${k}.${hn}.1`,d:l.d,u:l.u,q:Math.round(l.q*100)/100,cd:l.cd,cls:l.cls,note:l.note})}
+  }
+ }
+ return out;
+}
+function tTender(p,R){
+ p.tp=p.tp||{};const tp=p.tp,v=p.v;const inc=p.tinc=p.tinc||{I:1,O:1};
+ const rows=tenderRows(p,R,inc);const n=rows.filter(r=>r.type==="I").length;
+ const PF=[["anch","Anchors (no. × weight / type)","2 × … kg, stockless"],["chain","Chain cables (length × Ø × grade)","2 × … m × … mm, U3"],["prop","Propeller (type, blades, Ø, material, weight)","FPP, 4 blades, Ø… mm, NiAlBr"],
+  ["shaft","Tailshaft / stern tube seals (Ø, maker)","Ø… mm / …"],["rud","Rudder (type, weight)","semi-spade, … t"],["me",`Main engine (maker / model / kW)`,v.me||"MAN B&W …"],["tc","Turbocharger(s)","…"],["ae","Generators (no. × maker/model)",`${v.gens||3} × …`],
+  ["boil","Boiler","…"],["sc","Sea chests (no. & grating sizes)","3 × …"],["plugs","Bottom plugs (no., as per plug list / drawing)","…"],["hc","Hatch covers (type, no.)",v.type==="B"?`${v.holds||5} × folding / side rolling`:"…"],
+  ["cr","Cargo cranes (no. × SWL, maker)",v.cranes?`${v.cranes} × … t`:"…"],["lb","Lifeboat / davits (type, maker)",v.ffl?"Free-fall lifeboat …":"…"],["bwts","BWTS (maker / model)",v.bwts?"…":"not fitted"],["dock","Docking plan / drawing no.","…"]];
+ let h=`<div class="card"><h2>📑 Tender spec για ναυπηγεία (English)</h2>
+ <p class="note">Όλες οι δουλειές του spec, αναλυτικά ανά section και item (03.1.1 …), στα αγγλικά, με ποσότητες και ΚΕΝΕΣ στήλες τιμών για το ναυπηγείο. Χωρίς τις δικές μας τιμές budget. Περιλαμβάνει: instructions & general conditions, vessel particulars, spec, steel / pipe / valve tariff, yard quotation summary.</p>
+ <div class="kpis"><div class="kpi"><div class="v">${n}</div><div class="l">items</div></div><div class="kpi"><div class="v">${rows.filter(r=>r.type==="H").length}</div><div class="l">jobs</div></div><div class="kpi"><div class="v">${rows.filter(r=>r.type==="S").length}</div><div class="l">sections</div></div></div>
+ <div class="row" style="margin-top:10px"><label style="flex-direction:row;align-items:center;gap:6px;color:var(--ink);font-size:14px"><input type="checkbox" id="tI" ${inc.I?"checked":""} style="width:auto">IF REQUIRED items</label>
+ <label style="flex-direction:row;align-items:center;gap:6px;color:var(--ink);font-size:14px"><input type="checkbox" id="tO" ${inc.O?"checked":""} style="width:auto">OPTIONAL items</label></div>
+ <div class="g2" style="margin-top:8px">${inp("ref","Enquiry ref.",tp.ref,"text")}${inp("due","Quotation due date",tp.due,"date")}${inp("issuer","Issued by (company)",tp.issuer||"","text")}${inp("contact","Contact (name / email)",tp.contact||"","text")}</div>
+ <button class="btn p big" id="tx" style="margin-top:12px">📑 Export tender spec (Excel)</button>
+ <p class="note">Για να πάρεις σωστές τιμές: συμπλήρωσε τα particulars από κάτω και έλεγξε στο 📋 Spec ότι υπάρχουν όλες οι δουλειές του πλοίου (defect list, PMS, Class items). Ό,τι προσθέσεις εκεί μπαίνει αυτόματα στο tender.</p></div>
+ <div class="card"><h2>Particulars για το ναυπηγείο</h2>${PF.map(([k,l,ph])=>`<label>${l}<input data-tp="${k}" value="${esc(tp[k]||"")}" placeholder="${esc(ph)}"></label>`).join("")}</div>
+ <div class="card"><h2>Προεπισκόπηση</h2>${rows.slice(0,400).map(r=>r.type==="S"?`<h3>${r.id} ${esc(r.d)}</h3>`:r.type==="H"?`<div style="font-weight:700;font-size:13px;margin-top:6px">${r.id} ${esc(r.d)}${r.cls?'<span class="cls">CLASS</span>':""}</div>`:`<div class="note" style="padding-left:10px">${r.id} ${esc(r.d)} — ${fmt1(r.q)} ${r.u}${r.cd!=="R"?" · "+TCOND[r.cd]:""}</div>`).join("")}</div>`;
+ $("#app").innerHTML=h;
+ bindInputs($("#app"),tp);
+ $("#app").querySelectorAll("[data-tp]").forEach(el=>el.oninput=()=>{tp[el.dataset.tp]=el.value;save()});
+ $("#tI").onchange=e=>{inc.I=e.target.checked?1:0;save();renderP()};$("#tO").onchange=e=>{inc.O=e.target.checked?1:0;save();renderP()};
+ $("#tx").onclick=()=>exportTender(p);
+ window._PF=PF;
+}
+async function exportTender(p){
+ try{toast("📑 Δημιουργία tender…");await loadXL();
+ const R=compute(p),c=R.c,v=p.v,o=p.o,tp=p.tp||{},inc=p.tinc||{I:1,O:1},rows=tenderRows(p,R,inc),wb=new ExcelJS.Workbook();wb.creator=tp.issuer||"Owners";
+ const HF={type:"pattern",pattern:"solid",fgColor:{argb:"FF1F3864"}},SF={type:"pattern",pattern:"solid",fgColor:{argb:"FFD9E1F2"}},JF={type:"pattern",pattern:"solid",fgColor:{argb:"FFEEF3FA"}},YF={type:"pattern",pattern:"solid",fgColor:{argb:"FFFFF9C4"}};
+ const f9={name:"Arial",size:9},b9={name:"Arial",size:9,bold:true},w9={name:"Arial",size:9,bold:true,color:{argb:"FFFFFFFF"}};const thin={style:"thin",color:{argb:"FFBFBFBF"}},BX={top:thin,left:thin,bottom:thin,right:thin};
+ const NF='#,##0.00;(#,##0.00);"-"',VN=`M/V ${v.name||""}${v.imo?" (IMO "+v.imo+")":""}`;
+ const hdr=(ws,r,vals)=>{const row=ws.getRow(r);vals.forEach((x,i)=>{const cl=row.getCell(i+1);cl.value=x;cl.font=w9;cl.fill=HF;cl.border=BX;cl.alignment={wrapText:true,vertical:"middle",horizontal:"center"}});row.height=30};
+ // INSTRUCTIONS
+ const ins=wb.addWorksheet("INSTRUCTIONS");ins.columns=[{width:4},{width:120}];
+ ins.getCell("B1").value=`${VN} – DRY-DOCKING REPAIR SPECIFICATION / REQUEST FOR QUOTATION`;ins.getCell("B1").font={name:"Arial",size:13,bold:true,color:{argb:"FF1F3864"}};
+ const meta=[`Survey: ${o.survey==="SS"?"Special Survey No."+c.ssNo+" + Dry-docking":"Intermediate Survey + Dry-docking"}`,`Planned: ${o.date||"TBA"}${o.yard?" · Yard: "+o.yard:""}`,`Enquiry ref.: ${tp.ref||"-"} · Quotation due: ${tp.due||"-"}`,`Issued by: ${tp.issuer||"Owners"}${tp.contact?" · Contact: "+tp.contact:""}`];
+ meta.forEach((t,i)=>{ins.getCell(3+i,2).value=t;ins.getCell(3+i,2).font=f9});
+ ins.getCell("B8").value="GENERAL CONDITIONS FOR QUOTATION";ins.getCell("B8").font=b9;
+ GEN_COND.forEach((t,i)=>{const cl=ins.getCell(9+i,2);cl.value=`${i+1}. ${t}`;cl.font=f9;cl.alignment={wrapText:true,vertical:"top"};ins.getRow(9+i).height=26});
+ const r0=9+GEN_COND.length+1;ins.getCell(r0,2).value="SHEETS: VESSEL PARTICULARS · SPECIFICATION · STEEL TARIFF · PIPE & VALVE TARIFF · YARD QUOTATION SUMMARY";ins.getCell(r0,2).font=b9;
+ // PARTICULARS
+ const pa=wb.addWorksheet("VESSEL PARTICULARS");pa.columns=[{width:4},{width:42},{width:60}];
+ pa.getCell("B1").value=`${VN} – PRINCIPAL PARTICULARS`;pa.getCell("B1").font={name:"Arial",size:12,bold:true};
+ const PP=[["Type",`${TYPES[v.type].n} – ${(SIZES[v.type].find(s=>s.k===v.size)||{}).n||""}`],["Flag / Class",`${v.flag||"-"} / ${v.cls||"-"}`],["Year built",v.built],["LOA / LBP",`${v.L} m / ${v.Lbp} m`],["Breadth / Depth / Summer draught",`${v.B} m / ${v.D} m / ${v.T} m`],["DWT / GT",`${fmt(v.dwt)} t / ${fmt(v.gt)}`]];
+ if(v.type==="B")PP.push(["Holds / hatches",v.holds]);if(v.type==="C")PP.push(["TEU / reefer plugs",`${v.teu} / ${v.reef}`]);if(v.type==="G")PP.push(["Cargo capacity / tanks",`${fmt(v.cbm)} m³ / ${v.tanks}`]);
+ PP.push(["Main engine power",`${fmt(v.kw)} kW`]);
+ for(const [k,l] of (window._PF||[]))if(tp[k])PP.push([l,tp[k]]);
+ PP.push(["Hull areas (approx., for information)",`Flat bottom ${fmt(c.A.fb)} m² · Vertical bottom ${fmt(c.A.vb)} m² · Boottop ${fmt(c.A.bt)} m² · Topsides ${fmt(c.A.ts)} m²`]);
+ PP.forEach((x,i)=>{pa.getCell(3+i,2).value=x[0];pa.getCell(3+i,3).value=x[1]+"";pa.getCell(3+i,2).font=b9;pa.getCell(3+i,3).font=f9;pa.getCell(3+i,3).alignment={wrapText:true};[2,3].forEach(j=>pa.getCell(3+i,j).border=BX)});
+ // SPEC
+ const ws=wb.addWorksheet("SPECIFICATION",{views:[{state:"frozen",ySplit:3}]});
+ ws.columns=[{width:10},{width:70},{width:10},{width:9},{width:13},{width:8},{width:14},{width:12},{width:7},{width:32}];
+ ws.getCell("A1").value=`${VN} – DRY-DOCKING SPECIFICATION (yellow cells: to be filled by the shipyard)`;ws.getCell("A1").font={name:"Arial",size:12,bold:true};
+ hdr(ws,3,["ITEM","DESCRIPTION","UNIT","QTY","UNIT PRICE USD","DISC. %","NET TOTAL USD","STATUS","CLASS","YARD REMARKS"]);
+ let r=4;const secRows=[];let sStart=0,curS=null;
+ const closeSec=()=>{if(!curS)return;const t=ws.getRow(r);t.getCell(2).value=`SUBTOTAL ${curS.id} – ${curS.d}`;t.getCell(2).font=b9;
+  t.getCell(7).value={formula:`SUM(G${sStart}:G${r-1})`};t.getCell(7).numFmt=NF;t.getCell(7).font=b9;for(let j=1;j<=10;j++){t.getCell(j).fill=SF;t.getCell(j).border=BX}secRows.push({...curS,row:r});r+=2};
+ for(const x of rows){
+  if(x.type==="S"){closeSec();curS=x;const t=ws.getRow(r);t.getCell(1).value=x.id;t.getCell(2).value=x.d;for(let j=1;j<=10;j++){t.getCell(j).fill=HF;t.getCell(j).font=w9}r++;sStart=r;continue}
+  if(x.type==="H"){const t=ws.getRow(r);t.getCell(1).value=x.id;t.getCell(2).value=x.d;t.getCell(9).value=x.cls?"✓":"";for(let j=1;j<=10;j++){t.getCell(j).fill=JF;t.getCell(j).font=b9;t.getCell(j).border=BX}r++;continue}
+  const t=ws.getRow(r);t.getCell(1).value=x.id;t.getCell(2).value=x.d;t.getCell(3).value=x.u;t.getCell(4).value=x.q;t.getCell(8).value=TCOND[x.cd];t.getCell(9).value=x.cls?"✓":"";t.getCell(10).value=x.note||"";
+  t.getCell(7).value={formula:`IF(E${r}="","",D${r}*E${r}*(1-F${r}/100))`};t.getCell(7).numFmt=NF;t.getCell(5).numFmt=NF;t.getCell(4).numFmt="#,##0.##";
+  for(let j=1;j<=10;j++){const cl=t.getCell(j);cl.font=f9;cl.border=BX;cl.alignment={wrapText:j===2||j===10,vertical:"top"}}
+  [5,6,10].forEach(j=>t.getCell(j).fill=YF);if(x.cd!=="R")t.getCell(8).font={name:"Arial",size:9,bold:true,color:{argb:"FF9A6700"}};r++}
+ closeSec();
+ // STEEL TARIFF
+ const st=wb.addWorksheet("STEEL TARIFF");st.columns=[{width:4},{width:70},{width:12},{width:16},{width:30}];
+ st.getCell("B1").value=`${VN} – STEEL & NDT TARIFF (to be filled by the shipyard)`;st.getCell("B1").font={name:"Arial",size:12,bold:true};hdr(st,3,["","ITEM","UNIT","PRICE USD","YARD REMARKS"]);
+ const STL=[["Steel renewal, mild steel grade A/B, plates – open deck / superstructure","KG"],["Surcharge: high tensile AH32/AH36","%"],["Surcharge: engine room, double bottom, topside tanks, wing tanks, holds, chain lockers","%"],
+  ["Surcharge: fore / aft peak tanks, fuel tanks","%"],["Surcharge: in dry dock (shell plating)","%"],["Surcharge: hatch covers / coamings / accommodation","%"],["Surcharge: single / double curvature","%"],["Surcharge: plates < 10 mm","%"],
+  ["Shaped bars (flat / angle / bulb / channel) – basic price","KG"],["Remove, fair & refit / fair in place (state % of renewal)","%"],["Gouging & re-welding seams (up to 3 passes)","M"],["Ultrasonic test","M"],["X-ray","PHOTO"],["Dye check","M"],["Vacuum test","M"],["Air test of tanks","M3"],
+  ["Tower staging – open space","M3"],["Tower staging – confined spaces","M3"],["Hanging staging","M/PLANK"],["Steel productivity – tons per day","T/DAY"]];
+ STL.forEach((x,i)=>{const rr=4+i;st.getCell(rr,2).value=x[0];st.getCell(rr,3).value=x[1];[2,3,4,5].forEach(j=>{st.getCell(rr,j).border=BX;st.getCell(rr,j).font=f9});st.getCell(rr,4).fill=YF;st.getCell(rr,5).fill=YF});
+ st.getCell(4+STL.length+1,2).value="Note: weight as fitted, density 7.85; NO minimum weight per piece; ventilation, lighting, gas-free for hot work, grit blasting & shop primer of new steel included.";st.getCell(4+STL.length+1,2).font={name:"Arial",size:8,italic:true};
+ // PIPE & VALVE TARIFF
+ const pv=wb.addWorksheet("PIPE & VALVE TARIFF");pv.columns=[{width:4},{width:12},{width:16},{width:16},{width:16},{width:16},{width:16},{width:16}];
+ pv.getCell("B1").value=`${VN} – PIPE & VALVE TARIFF (USD, to be filled by the shipyard)`;pv.getCell("B1").font={name:"Arial",size:12,bold:true};
+ hdr(pv,3,["","DN mm","Pipe renewal sch40 per m (deck)","Bend per pc","Flange per pc","Globe valve overhaul per pc","Gate valve overhaul per pc","Butterfly valve overhaul per pc"]);
+ [25,40,50,65,80,100,125,150,200,250,300,350,400,500].forEach((dn,i)=>{const rr=4+i;pv.getCell(rr,2).value=dn;for(let j=2;j<=8;j++){pv.getCell(rr,j).border=BX;pv.getCell(rr,j).font=f9;if(j>2)pv.getCell(rr,j).fill=YF}});
+ pv.getCell(19,2).value="Please state surcharges: pipes in E/R / holds / accommodation, in tanks / duct keel, galvanizing, sch80, valves in tanks / E/R / pipe tunnel, workshop repairs, renewal with owners' supply.";pv.getCell(19,2).font={name:"Arial",size:8,italic:true};
+ // YARD QUOTATION SUMMARY
+ const ys=wb.addWorksheet("YARD QUOTATION SUMMARY");ys.columns=[{width:4},{width:62},{width:20},{width:30}];
+ ys.getCell("B1").value=`${VN} – YARD QUOTATION SUMMARY`;ys.getCell("B1").font={name:"Arial",size:12,bold:true};
+ hdr(ys,3,["","SECTION","NET TOTAL USD","REMARKS"]);let yr=4;
+ for(const s of secRows){ys.getCell(yr,2).value=`${s.id} ${s.d}`;ys.getCell(yr,3).value={formula:`SPECIFICATION!G${s.row}`};ys.getCell(yr,3).numFmt=NF;[2,3,4].forEach(j=>{ys.getCell(yr,j).border=BX;ys.getCell(yr,j).font=f9});yr++}
+ ys.getCell(yr,2).value="TOTAL AS PER SPECIFICATION";ys.getCell(yr,3).value={formula:`SUM(C4:C${yr-1})`};ys.getCell(yr,3).numFmt=NF;ys.getCell(yr,2).font=b9;ys.getCell(yr,3).font=b9;const tr=yr;yr+=2;
+ [["Overall discount %",""],["TOTAL NET AFTER DISCOUNT",{formula:`C${tr}*(1-C${tr+2}/100)`}],["Days in dry dock",""],["Days afloat",""],["Total repair period (good weather days)",""],["Earliest available slot",""],["Payment terms",""],["Delay penalty per day (yard's account)",""],["Quotation validity",""],["Yard name / signature / date",""]]
+ .forEach((x,i)=>{const rr=tr+2+i;ys.getCell(rr,2).value=x[0];ys.getCell(rr,3).value=x[1]||null;ys.getCell(rr,2).font=b9;[2,3].forEach(j=>ys.getCell(rr,j).border=BX);if(!x[1])ys.getCell(rr,3).fill=YF;else ys.getCell(rr,3).numFmt=NF});
+ [ins,pa,ws,st,pv,ys].forEach((w,i)=>w.orderNo=i);
+ const buf=await wb.xlsx.writeBuffer();const name=`DD_Spec_RFQ_${(v.name||"vessel").replace(/\W+/g,"_")}_${today()}.xlsx`;
+ const blob=new Blob([buf],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});const file=new File([blob],name,{type:blob.type});
+ if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:name}).catch(()=>dl(blob,name))}else dl(blob,name);
+ }catch(e){toast("⚠ "+e.message);console.error(e)}
+}
+
 /* ===================== UI HELPERS ===================== */
 function setHeader(t,s,showTabs,back){$("#ttl").textContent=t;$("#sub").textContent=s||"";$("#tabs").style.display=showTabs?"flex":"none";$("#bk").style.display=back?"block":"none"}
 function modal(html,onMount){const m=document.createElement("div");m.className="modal";m.innerHTML=`<div class="box">${html}</div>`;m.addEventListener("click",e=>{if(e.target===m)m.remove()});document.body.appendChild(m);onMount&&onMount(m);return m}
@@ -499,7 +816,7 @@ function wizard(){
   m.querySelector("#wo").onclick=()=>{s=m.querySelector("input[name=sz]:checked").value;const p=newProject(t,s);p.v.name=m.querySelector("#wn").value.trim().toUpperCase();DB.projects.push(p);save();m.remove();openP(p.id,"ship")}});
 }
 /* ===================== PROJECT ===================== */
-const TABS=[["own","👔 Σύνοψη"],["ship","🚢 Πλοίο"],["scope","⚙️ Scope"],["spec","📋 Spec"],["steel","🔩 Steel"],["paint","🎨 Χρώματα"],["s2","🧰 Class/Services"],["s3","🚚 Logistics"],["sum","📊 Αναλυτικά"],["wu","📝 Write-up"],["act","✅ Actual"]];
+const TABS=[["own","👔 Σύνοψη"],["ship","🚢 Πλοίο"],["scope","⚙️ Scope"],["spec","📋 Spec"],["tender","📑 Tender"],["steel","🔩 Steel"],["paint","🎨 Χρώματα"],["s2","🧰 Class/Services"],["s3","🚚 Logistics"],["sum","📊 Αναλυτικά"],["wu","📝 Write-up"],["act","✅ Actual"]];
 function openP(id,t){cur=DB.projects.find(p=>p.id===id);if(!cur)return home();tab=t||"own";renderP()}
 function renderP(){
  const p=cur,R=compute(p);
@@ -507,7 +824,7 @@ function renderP(){
  $("#tabs").innerHTML=TABS.map(([k,n])=>`<button data-tab="${k}" class="${k===tab?"on":""}">${n}</button>`).join("");
  $("#tabs").querySelectorAll("button").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;renderP();window.scrollTo(0,0)});
  const on=$("#tabs .on");on&&on.scrollIntoView({inline:"center",block:"nearest"});
- ({own:tOwn,ship:tShip,scope:tScope,spec:tSpec,steel:tSteel,paint:tPaint,s2:tS2,s3:tS3,sum:tSum,wu:tWU,act:tAct})[tab](p,R);
+ ({tender:tTender,own:tOwn,ship:tShip,scope:tScope,spec:tSpec,steel:tSteel,paint:tPaint,s2:tS2,s3:tS3,sum:tSum,wu:tWU,act:tAct})[tab](p,R);
 }
 const hdrTxt=R=>`Ναυπηγείο $${fmt(R.own.yard)} · Σύνολο $${fmt(R.own.cash)}`;
 function refreshHdr(){if(!cur)return;$("#sub").textContent=hdrTxt(compute(cur))}
