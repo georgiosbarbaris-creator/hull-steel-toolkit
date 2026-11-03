@@ -84,6 +84,7 @@ input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:
   <div class="row" style="margin:8px 0"><button class="btn" id="xIcs" style="flex:1">📅 Υπενθυμίσεις στο κινητό</button><button class="btn" id="xTxt">💬</button><button class="btn" id="xCsv">📊</button></div>
   <div class="lists" id="lsts"></div>
   <div class="selbar hide" id="selbar"><b id="selN" style="flex:1">0 επιλεγμένα</b><button id="selMv">➡ Μεταφορά</button><button id="selCp">⧉ Αντιγραφή</button><button id="selX">✕</button></div>
+  <div class="row" style="margin:0 0 6px"><button class="btn sm p" id="mvTop" style="flex:1">➡ Μετακίνηση σε άλλη λίστα</button><button class="btn sm" id="cpTop">⧉ Αντιγραφή</button></div>
   <div class="chips" id="flt"></div>
   <input id="q" placeholder="🔍 αναζήτηση" style="margin-bottom:4px">
   <div id="iList"></div>
@@ -209,7 +210,7 @@ function rVes(){const v=V();$("#ttl").textContent=v.name+lTitle();const it=vItem
   $("#lsts").innerHTML=`<button data-l="all" class="${cl==="all"?"on":""}">📂 Όλες ${items(cv).length}</button>`+lists(cv).map(l=>`<button data-l="${l.id}" class="${cl===l.id?"on":""}">${esc(l.name)} ${items(cv).filter(i=>(i.lid||"")===l.id).length}</button>`).join("")+`<button data-l="__new">+ Νέα λίστα</button>`;
   $$("#lsts button").forEach(b=>b.onclick=()=>{if(b.dataset.l==="__new"){const n=prompt("Όνομα νέας λίστας / task (π.χ. Pre-inspection Vancouver)");if(!n||!n.trim())return;const l={id:uid(),vid:cv,name:n.trim()};S.l.push(l);save();cl=l.id;}else cl=b.dataset.l;flt="open";rVes();});
   $("#lRen").classList.toggle("hide",!cl||cl==="all");$("#lDel").classList.toggle("hide",!cl||cl==="all");
-  $("#selbar").classList.toggle("hide",!sel);if(sel)$("#selN").textContent=`${sel.size} επιλεγμένα`;$("#selOn").textContent=sel?"✕ Τέλος επιλογής":"☑ Επιλογή πολλών";
+  $("#selbar").classList.toggle("hide",!sel);$("#mvTop").textContent=sel&&sel.size?`➡ Μετακίνηση ${sel.size} επιλεγμένων`:"➡ Μετακίνηση σε άλλη λίστα";if(sel)$("#selN").textContent=`${sel.size} επιλεγμένα`;$("#selOn").textContent=sel?"✕ Τέλος επιλογής":"☑ Επιλογή πολλών";
   $("#sub").textContent=`${op.length} ανοιχτά · ${op.filter(i=>stat(i)==="ov").length} overdue · ${it.length-op.length} done`;
   $("#flt").innerHTML=FL.map(([k,l])=>{const c=fil(it,k).length;return(c||k==="open"||k===flt)?`<button data-f="${k}" class="${k===flt?"on":""}">${l} ${c}</button>`:"";}).join("");
   $$("#flt button").forEach(b=>b.onclick=()=>{flt=b.dataset.f;rVes();});rList();}
@@ -221,7 +222,7 @@ function card(i){const s=stat(i),d=daysTo(i.due);return`<div class="it ${s}" dat
   <div class="m">Δόθηκε ${fd(i.given)} · Due <b>${fd(i.due)}</b>${s==="soon"?` (σε ${d} μ.)`:""}${i.st==="In progress"?" · ⏳ σε εξέλιξη":""}${i.st==="Done"?` · ✓ ${fd(i.closed)}`:""}</div></div></div>`;}
 function thumbs(box){$$(box+" .it").forEach(el=>{const i=S.it.find(x=>x.id===el.dataset.i);const k=(i.after&&i.after[0])&&i.st==="Done"?i.after[0]:(i.photos||[])[0];if(k)IDB.get(k).then(d=>{if(d)el.querySelector(".th").innerHTML=`<img src="${d}">`;});
   if(sel&&sel.has(i.id))el.classList.add("sel");
-  el.onclick=()=>{if(sel&&view==="ves"){sel.has(i.id)?sel.delete(i.id):sel.add(i.id);el.classList.toggle("sel");$("#selN").textContent=`${sel.size} επιλεγμένα`;return;}retWr=view==="wr";openItem(i.id);};});}
+  el.onclick=()=>{if(sel&&view==="ves"){sel.has(i.id)?sel.delete(i.id):sel.add(i.id);el.classList.toggle("sel");$("#selN").textContent=`${sel.size} επιλεγμένα`;$("#mvTop").textContent=sel.size?`➡ Μετακίνηση ${sel.size} επιλεγμένων`:"➡ Μετακίνηση σε άλλη λίστα";return;}retWr=view==="wr";openItem(i.id);};});}
 function rList(){const q=$("#q").value.toLowerCase();const it=fil(vItems(),flt).filter(i=>!q||[i.title,i.desc,i.en,i.ref,i.spares,AN[i.area],"#"+i.no].join(" ").toLowerCase().includes(q)).sort(srt);
   $("#iList").innerHTML=it.map(card).join("")||'<p class="note" style="text-align:center;margin-top:16px">Τίποτα εδώ. Πάτα + για νέα δουλειά.</p>';thumbs("#iList");}
 $("#q").oninput=rList;
@@ -427,6 +428,7 @@ $("#i_mv").onclick=()=>itemMove(false);$("#i_cp").onclick=()=>itemMove(true);
 function itemMove(copy){if(draft._new){toast("Πάτα πρώτα Αποθήκευση");return;}readItem();const i=S.it.findIndex(x=>x.id===draft.id);
   const d=JSON.parse(JSON.stringify(draft));delete d._tmp;delete d._rm;delete d._new;S.it[i]=d;save();openMove([draft.id],copy);}
 $("#selOn").onclick=()=>{sel=sel?null:new Set();rVes();};
+$("#mvTop").onclick=()=>$("#mvOn").onclick();$("#cpTop").onclick=()=>{if(sel&&sel.size){openMove([...sel],true);return;}sel=new Set();rVes();toast("Πάτα τις δουλειές που θέλεις και μετά ⧉ Αντιγραφή",3500);};
 $("#mvOn").onclick=()=>{if(sel&&sel.size){openMove([...sel],false);return;}sel=new Set();rVes();toast("Πάτα τις δουλειές που θέλεις και μετά ➡ Μεταφορά (πάνω)",3500);window.scrollTo({top:0,behavior:"smooth"});};$("#selX").onclick=()=>{sel=null;rVes();};
 $("#selMv").onclick=()=>{if(!sel||!sel.size){toast("Διάλεξε δουλειές");return;}openMove([...sel],false);};
 $("#selCp").onclick=()=>{if(!sel||!sel.size){toast("Διάλεξε δουλειές");return;}openMove([...sel],true);};
