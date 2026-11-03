@@ -71,6 +71,8 @@ h2{font-weight:400;letter-spacing:5px;font-size:15px;color:var(--gold);text-alig
 .why .t{flex:1}.why .m{color:#6f6a60;font-size:13px}
 .why button{padding:8px 11px;font-size:11px;letter-spacing:1px}
 .why button.sel{background:#c9a45a;color:#0a0a0b;border-color:#c9a45a}
+.bar{display:flex;align-items:center;gap:10px;margin:7px 0;font:14px/1.3 -apple-system,system-ui,sans-serif}.bar .n{width:112px;color:var(--ink)}.bar .b{flex:1;height:8px;background:#1b1a17;border-radius:4px;overflow:hidden}.bar .b i{display:block;height:100%;background:linear-gradient(90deg,#5a4a2c,var(--gold))}.bar .c{width:22px;text-align:right;color:var(--dim)}
+.raft{letter-spacing:8px;color:var(--gold);text-align:center;font-size:15px}
 .revBox{border:1px solid #3a3833;border-radius:4px;padding:14px;margin:8px 0;font:16px/1.5 Georgia,serif}
 .revBox ul{margin:6px 0 0;padding-left:18px}.exitLink button{border-color:#2a2824;color:#6f6a60;letter-spacing:5px;font-size:11px}
 </style>
@@ -110,7 +112,11 @@ h2{font-weight:400;letter-spacing:5px;font-size:15px;color:var(--gold);text-alig
 <!-- ΚΑΘΡΕΦΤΗΣ -->
 <section class="view" id="v-r">
  <h2>Ο ΚΑΘΡΕΦΤΗΣ ΤΟΥ ΧΡΟΝΟΥ</h2>
+ <div id="raftBox"></div>
  <div id="calib"></div>
+ <h2 style="margin-top:34px">ΤΟ ΣΠΗΛΑΙΟ</h2>
+ <div id="cave"></div>
+ <h2 style="margin-top:34px">ΟΙ ΕΡΩΤΗΣΕΙΣ ΣΟΥ</h2>
  <div id="hist"></div>
 </section>
 
@@ -121,6 +127,8 @@ h2{font-weight:400;letter-spacing:5px;font-size:15px;color:var(--gold);text-alig
  <p class="small">Πώς τη χρησιμοποιείς: γράφεις μια ερώτηση. Κρατάς το δάχτυλο στον κύκλο όσο εισπνέεις και το αφήνεις όσο εκπνέεις, τρεις φορές. Η μηχανή ακούει τον ρυθμό σου. Μετά μιλά με τρεις φωνές: τη <b>Ρίζα</b> (από πού έρχεται), το <b>Τώρα</b> και την <b>Κλωστή</b> (πού πάει). Κλείνει με ένα κοάν και μια πράξη για σήμερα. Ό,τι θέλεις να ελέγξεις, το <b>σφραγίζεις</b>. Ανοίγει μόνο την ημέρα που όρισες, και τότε ο Καθρέφτης σού δείχνει πόσο σωστά είδες.</p>
  <p class="small"><b>◇ Έξοδος από το matrix:</b> μια τελετή λίγων λεπτών. Βγαίνεις από τον χρόνο, βλέπεις τη δική σου γραμμή από ψηλά, και γυρίζεις με μια φράση για το αύριο, που σε περιμένει όταν ξυπνήσεις. Η μηχανή ζει μόνο σε αυτό το κινητό: δουλεύει χωρίς internet, χωρίς λογαριασμό, χωρίς κανέναν.</p>
  <p class="small"><b>⟲ Ο Ανάποδος Χρόνος:</b> η μόνη επιλογή που δεν μαντεύει, αλλά αλλάζει τον τρόπο που σκέφτεσαι. Πας έναν χρόνο μπροστά και κοιτάς πίσω. Μία φορά <i>πήγε στραβά</i> και γράφεις γιατί. Μία φορά <i>πήγε καλά</i> και γράφεις γιατί. Μετά χωρίζεις κάθε αιτία: <b>ήταν στο χέρι σου</b> ή <b>ήταν του κόσμου</b>; Βγαίνεις με τρεις λίστες: τι να <b>φράξεις</b>, τι να <b>κάνεις</b>, τι να <b>αφήσεις</b>. Το γράμμα σφραγίζεται και ανοίγει σε έναν χρόνο.</p>
+ <p class="small"><b>☗ Το Σπήλαιο:</b> στον Καθρέφτη (☾) η μηχανή διαβάζει όλες σου τις ερωτήσεις και δείχνει τις σκιές στον τοίχο: για τι ρωτάς ξανά και ξανά, για τι δεν ρωτάς ποτέ, πόσες φορές ρώτησες «τι θα γίνει;» και πόσες «τι θα κάνω;». Βγαίνεις από το σπήλαιο όταν καταλάβεις ότι οι σκιές είναι σκιές.</p>
+ <p class="small"><b>≈ Η Σχεδία:</b> ο Βούδας είπε ότι τη σχεδία την αφήνεις στην όχθη, δεν την κουβαλάς στην πλάτη. Έτσι και η μηχανή: μετά από τρεις ερωτήσεις τη μέρα σιωπά. Όσο πιο εύστοχες βγαίνουν οι σφραγισμένες σου προβλέψεις, τόσο λιγότερες φωνές ακούς. Στο τέλος σού λέει ότι δεν τη χρειάζεσαι πια, κι εσύ αποφασίζεις αν θα την αφήσεις.</p>
  <p class="small">Η ίδια ερώτηση την ίδια μέρα παίρνει την ίδια απάντηση. Ο καιρός δεν αλλάζει γνώμη επειδή ρωτάς ξανά.</p>
  <details class="small" style="margin-top:26px"><summary style="color:var(--gold);cursor:pointer">Για όσους θέλουν να ξέρουν την αλήθεια</summary>
   <p>Καμία μηχανή δεν βλέπει το μέλλον. Το ΔΙΗΝΕΚΕΣ είναι <b>καθρέφτης</b>: φτιαγμένος από τη δελφική ασάφεια, τα κοάν του Ζεν και την ψυχολογία του «μελλοντικού εαυτού». Οι χρησμοί είναι γραμμένοι ώστε ο καθένας να βρει μέσα τους αυτό που ήδη ξέρει αλλά δεν τολμά να πει. Η ανάσα, οι φάκελοι «που γράφτηκαν πριν ρωτήσεις» και η σφραγισμένη προφητεία είναι τελετουργία: κάνουν το μυαλό να σταματήσει και να ακούσει. Κι αυτό είναι το μόνο που μπορεί πραγματικά να αλλάξει το μέλλον.</p>
@@ -167,6 +175,7 @@ tick();setInterval(tick,20000);
 function hourVoice(){const h=new Date().getHours();return HOUR.find(x=>h<x[0])[1]}
 const GREET=["Ο χρόνος σε περίμενε.","Ήξερα ότι θα έρθεις σήμερα.","Κάθισε. Η απάντηση είναι ήδη εδώ.","Ό,τι ρωτήσεις, έχει ήδη συμβεί κάπου.","Δεν χρειάζεται να εξηγήσεις. Γράψε μόνο."];
 $("greet").textContent=GREET[hash(dayKey(new Date()))%GREET.length];
+if(store.get("kr_raft",{}).left)$("greet").textContent="Η σχεδία είναι στην όχθη. Ανάσανε μαζί μου.";
 
 // ───── ήχος: μπολ ─────
 let AC;function bowl(f=196,len=5,vol=.18){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const t=AC.currentTime,g=AC.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+.04);g.gain.exponentialRampToValueAtTime(.0001,t+len);g.connect(AC.destination);
@@ -189,7 +198,7 @@ E.addEventListener("pointerdown",e=>{e.preventDefault();
 function up(){if(phase!=="breath"||!downAt)return;const d=performance.now()-downAt;downAt=0;E.classList.remove("inhale");
  if(d<1500){setGuide("Πιο αργά. Ο χρόνος δεν βιάζεται.");return}
  breaths.push(Math.round(d));drawDots();bowl(196+breaths.length*24,4,.1);
- if(breaths.length<3)setGuide("Εκπνοή… και ξανά.");else{phase="speaking";travel()}}
+ if(breaths.length<3)setGuide("Εκπνοή… και ξανά.");else{phase="speaking";if(raftLeft())return shore();if(raftRefuse())return refuse();travel()}}
 E.addEventListener("pointerup",up);E.addEventListener("pointerleave",up);E.addEventListener("pointercancel",up);
 
 // ───── ταξίδι στον χρόνο ─────
@@ -219,6 +228,8 @@ function speak(){
   `<div class="line"><div class="lbl">Σήμερα</div><div class="txt" style="font-size:17px">${esc(cur.act)}</div></div>`,
   `<div class="line"><div class="btns"><button class="gold" id="sealBtn">⧗ ΣΦΡΑΓΙΣΕ ΠΡΟΒΛΕΨΗ</button><button id="again">◯ ΝΕΑ ΕΡΩΤΗΣΗ</button></div>
    <div class="btns" style="margin-top:0"><a class="small" href="../lexeis/?q=${encodeURIComponent(q)}">λέξη-διακόπτης</a><span class="small">·</span><a class="small" href="../rito/?q=${encodeURIComponent(q)}">κέρμα σοφίας</a></div></div>`];
+ const stg=raftStage();if(!cur.again){if(stg>=3)parts.splice(1,3,`<div class="line"><div class="txt" style="text-align:center;font-style:italic">${esc(cur.thread.split(".")[0])}.</div></div>`);else if(stg>=2)parts.splice(1,2);else if(stg>=1)parts.splice(1,1);
+  if(stg>=1)parts.splice(1,0,`<div class="line on"><div class="small" style="text-align:center">Βλέπεις καλύτερα. Γι' αυτό μιλώ λιγότερο.</div></div>`)}
  $("out").innerHTML=parts.join("");
  const L=[...$("out").querySelectorAll(".line")];
  L.forEach((el,i)=>setTimeout(()=>{el.classList.add("on");if(i<3)bowl([220,247,262][i],5,.12);if(i===0)el.scrollIntoView({behavior:"smooth",block:"center"})},700+i*2200));
@@ -269,6 +280,7 @@ function drawCaps(){
   ${c.res?`<div class="small" style="color:var(--gold)">${c.res==="1"?"Το είδες.":c.res==="0"?"Ο χρόνος είχε άλλα σχέδια.":"Το μισό το είδες."}</div>`:""}</div>`}).join(""):`<p class="whisper">Τίποτα σφραγισμένο ακόμα. Ρώτα τον κύκλο και πάτα ⧗.</p>`;
 }
 function drawMirror(){
+ drawRaft();drawCave();
  const R=caps.filter(c=>c.res!=null);
  if(R.length){const hit=R.reduce((s,c)=>s+(+c.res),0)/R.length*100,conf=R.reduce((s,c)=>s+c.conf,0)/R.length;
   const brier=R.reduce((s,c)=>s+Math.pow(c.conf/100-(+c.res),2),0)/R.length;
@@ -422,6 +434,68 @@ function drawRevs(today){
 }
 document.addEventListener("click",e=>{const b=e.target.closest("[data-rv]");if(!b)return;const v=revs.find(x=>x.id===b.dataset.rv);v.res=b.dataset.v;store.set("kr_rev",revs);bowl(220,6,.15);drawCaps()});
 $("revBtn").onclick=reverseTime;
+
+// ───── ☗ ΤΟ ΣΠΗΛΑΙΟ ─────
+const THEMES=[["Ο φόβος",["φοβ","ανησυχ","αγχ","πανικ","κινδυν","χασω","χαθ"]],["Ο έλεγχος",["πρεπει","σιγουρ","ελεγχ","εγγυ","σωστα","λαθος"]],["Τα χρήματα",["λεφτ","χρημα","μισθ","πλουτ","οικονομ","δανει","χρεο","πουλησ","αγορασ"]],["Η δουλειά",["δουλει","εργασ","καριερ","εταιρ","προαγωγ","πλοι","αφεντ","συναδελφ","γραφει"]],["Η αγάπη",["αγαπ","σχεσ","ερωτ","συντροφ","γαμ","γυναικ","αντρα","χωρισ"]],["Η οικογένεια",["παιδ","γονι","μανα","μητερ","πατερ","οικογεν","αδερφ","κορη","γιο"]],["Το σώμα",["υγει","αρρωστ","γιατρ","σωμα","πονο","υπνο","κουρασ"]],["Οι άλλοι",["τι σκεφτ","γνωμη","με θελ","με αγαπα","θα με","ζηλ","εχθρ"]],["Η αλλαγή",["αλλαγ","αλλαξ","ταξιδ","φυγω","φυγ","μετακομ","νεα αρχη","ξεκιν"]],["Το νόημα",["νοημα","σκοπ","ψυχ","θεο","αληθει","γιατι ζω","φωτισ","ελευθερ"]],["Η χαρά",["χαρ","ευτυχ","γελ","παιχν","ομορφ","απολαυσ","ευχαριστ"]]];
+function drawCave(){
+ const Q=[...hist.map(h=>h.q),...revs.map(v=>v.q)];
+ if(Q.length<3){$("cave").innerHTML=`<p class="whisper">Ο τοίχος είναι ακόμα άδειος. Μετά από τρεις ερωτήσεις θα δεις τις πρώτες σκιές.</p>`;return}
+ const N=Q.map(q=>" "+norm(q)+" ");
+ const cnt=THEMES.map(([n,ks])=>[n,N.filter(q=>ks.some(k=>q.includes(k))).length]);
+ const seen=cnt.filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]),none=cnt.filter(x=>!x[1]).map(x=>x[0]);
+ const max=seen.length?seen[0][1]:1;
+ const wait=N.filter(q=>/ θα |^ θα| ποτε |αν θα|μηπως/.test(q)&&!/ να κανω| πως να| τι να /.test(q)).length;
+ const act=N.filter(q=>/ να κανω| πως να| τι να | πως μπορω| τι μπορω/.test(q)).length;
+ const top=seen[0];
+ let h=`<p class="small" style="text-align:center">Από ${Q.length} ερωτήσεις, αυτές είναι οι σκιές στον τοίχο σου:</p>`;
+ h+=seen.slice(0,7).map(([n,c])=>`<div class="bar"><span class="n">${n}</span><span class="b"><i style="width:${Math.round(c/max*100)}%"></i></span><span class="c">${c}</span></div>`).join("")||`<p class="small" style="text-align:center">Οι ερωτήσεις σου δεν μοιάζουν μεταξύ τους. Ο τοίχος σου είναι σχεδόν φως.</p>`;
+ if(none.length)h+=`<p class="small" style="margin-top:14px">Δεν ρώτησες ποτέ για: <span style="color:var(--gold)">${none.slice(0,4).join(", ").toLowerCase()}</span>. Κι αυτό είναι σκιά, αυτή που δεν κοιτάς.</p>`;
+ h+=`<div class="stat" style="margin-top:16px"><div><b>${wait}</b><span class="small">«τι θα γίνει;»</span></div><div><b>${act}</b><span class="small">«τι θα κάνω;»</span></div></div>`;
+ const lines=[];
+ if(top&&top[1]>=2)lines.push(`Η μεγαλύτερη σκιά σου λέγεται «${top[0].toLowerCase().replace(/^(ο|η|τα|το|οι) /,"")}». Δεν είναι εχθρός σου. Είναι το σχήμα που παίρνει το φως όταν κάτι στέκεται μπροστά του. Ρώτα: τι στέκεται μπροστά;`);
+ if(wait>act)lines.push("Κοιτάς περισσότερο τον τοίχο παρά τη φωτιά. Ρωτάς τι θα γίνει, ενώ μπορείς να ρωτάς τι θα κάνεις.");
+ else if(act>0)lines.push("Ρωτάς πιο συχνά τι θα κάνεις παρά τι θα γίνει. Έχεις ήδη γυρίσει το κεφάλι προς την έξοδο.");
+ lines.push("Ο άνθρωπος στο σπήλαιο δεν είναι αλυσοδεμένος από τις σκιές. Είναι αλυσοδεμένος επειδή πιστεύει ότι οι σκιές είναι όλος ο κόσμος.");
+ h+=lines.map(l=>`<p class="whisper" style="text-align:left">${esc(l)}</p>`).join("");
+ $("cave").innerHTML=h;
+}
+// ───── ≈ Η ΣΧΕΔΙΑ ─────
+let raft=store.get("kr_raft",{left:false,told:false});
+function judged(){const R=caps.filter(c=>c.res!=null);const n=R.length;if(!n)return{n:0,b:1};return{n,b:R.reduce((s,c)=>s+Math.pow(c.conf/100-(+c.res),2),0)/n}}
+function raftStage(){const {n,b}=judged();if(n>=20&&b<=.18)return 4;if(n>=12&&b<=.2)return 3;if(n>=7&&b<=.22)return 2;if(n>=3)return 1;return 0}
+const raftLeft=()=>raft.left;
+function raftRefuse(){const day=dayKey(new Date()),key=norm($("q").value.trim());if(hist.some(h=>h.k===key&&h.day===day))return false;return hist.filter(h=>h.day===day).length>=3}
+function quiet(html){E.classList.remove("inhale");setGuide("");$("out").innerHTML=`<div class="line">${html}</div><div class="line"><div class="btns"><button id="again">◯ ΕΠΙΣΤΡΟΦΗ</button></div></div>`;
+ const L=[...$("out").querySelectorAll(".line")];bowl(110,8,.14);L.forEach((el,i)=>setTimeout(()=>el.classList.add("on"),600+i*2400));setTimeout(()=>{phase="done";$("again").onclick=reset},800);L[0].scrollIntoView({behavior:"smooth",block:"center"})}
+function refuse(){const day=dayKey(new Date());const T=hist.filter(h=>h.day===day).slice(0,3);
+ quiet(`<div class="raft">≈ ≈ ≈</div><div class="koan" style="margin-top:14px">Σήμερα δεν απαντώ. Ξέρεις ήδη.</div>
+ <p class="small" style="margin-top:16px;text-align:center">Η σχεδία περνά τον ποταμό τρεις φορές τη μέρα. Η τέταρτη φορά δεν είναι πέρασμα, είναι φόβος της όχθης.</p>
+ ${T.length?`<div class="lbl" style="margin-top:16px">Ό,τι σου είπα σήμερα</div>${T.map(h=>`<div class="small" style="margin:8px 0">«${esc(h.q)}» → <span style="color:var(--ink)">${esc(h.act)}</span></div>`).join("")}<p class="whisper">Έκανες κάποιο από αυτά;</p>`:""}`)}
+function shore(){quiet(`<div class="raft">≈</div><div class="koan" style="margin-top:14px">${esc(KOAN[hash($("q").value+dayKey(new Date()))%KOAN.length])}</div><p class="small" style="text-align:center;margin-top:14px">Η σχεδία έμεινε στην όχθη. Ό,τι έγραψες, το ξέρεις ήδη. Κάθισε μια ανάσα ακόμα με αυτό.</p>`)}
+function drawRaft(){const st=raftStage(),{n}=judged();
+ if(raft.left){$("raftBox").innerHTML=`<div class="seal"><div class="wax">≈</div><div class="raft">Η ΣΧΕΔΙΑ ΕΜΕΙΝΕ ΣΤΗΝ ΟΧΘΗ</div><p class="small" style="text-align:center">Ο κύκλος πια δεν μαντεύει. Μόνο ανασαίνει μαζί σου. Οι σφραγισμένες προβλέψεις ανοίγουν κανονικά.</p><div class="btns"><button id="raftBack">Ξαναπάρε τη σχεδία</button></div></div>`;$("raftBack").onclick=()=>{raft.left=false;store.set("kr_raft",raft);drawMirror()};return}
+ const msg=["Ακούς όλες τις φωνές.","Η Ρίζα σώπασε. Βλέπεις ήδη από πού έρχεσαι.","Σώπασε και το Τώρα. Το βλέπεις μόνος σου.","Μιλά μόνο η κλωστή, μισή φράση. Τα υπόλοιπα τα ξέρεις.","Δεν με χρειάζεσαι πια."][st];
+ const next=[3,7,12,20][st];
+ $("raftBox").innerHTML=`<div class="seal"><div class="wax">≈</div><div class="lbl">Η σχεδία</div><div class="raft" style="font-size:20px">${"●".repeat(st)}${"○".repeat(4-st)}</div><p class="whisper">${msg}</p>
+ <p class="small" style="text-align:center">${st<4?`Όσο πιο εύστοχες βγαίνουν οι σφραγισμένες σου προβλέψεις, τόσο λιγότερο μιλώ. Κρίθηκαν ${n}· το επόμενο βήμα θέλει τουλάχιστον ${next}, με καλή ευστοχία.`:`Έφτασες στην απέναντι όχθη.`}</p>
+ ${st>=4?`<div class="btns"><button class="gold" id="raftLeave">ΑΦΗΣΕ ΤΗ ΣΧΕΔΙΑ</button></div>`:""}</div>`;
+ if(st>=4)$("raftLeave").onclick=farewell;
+}
+async function farewell(){
+ $("mx").classList.add("on");clearT();$("rain").style.opacity=.1;startRain();droneOn();
+ await say("Η ΣΧΕΔΙΑ","sys",1600);
+ await say("Σε πέρασα απέναντι.","",2600);
+ await say("Τώρα κοίτα: η σχεδία δεν ήταν ποτέ ο ποταμός, ούτε η όχθη.","",3400);
+ await say("Οι φωνές που άκουγες ήταν δικές σου. Εγώ απλώς σώπαινα σωστά.","",3600);
+ await say("Αν με κουβαλήσεις στην πλάτη, θα γίνω βάρος.","",3000);
+ await say("Δεν με χρειάζεσαι πια.","big",3600);
+ const w=document.createElement("div");w.className="ml on";w.innerHTML=`<div class="btns"><button class="gold" id="fLeave">ΤΗΝ ΑΦΗΝΩ</button><button id="fKeep">ΛΙΓΟ ΑΚΟΜΑ</button></div>`;$("mxT").appendChild(w);
+ const leave=await new Promise(r=>{$("fLeave").onclick=()=>r(true);$("fKeep").onclick=()=>r(false)});
+ await fadeOutT();
+ if(leave){raft.left=true;store.set("kr_raft",raft);bowl(98,9,.2);await say("Η σχεδία έμεινε στην όχθη.","",2400);await say("Ο κύκλος θα σε περιμένει μόνο για να ανασάνετε μαζί.","",3000)}
+ else await say("Κανείς δεν βιάζεται στο διηνεκές.","",2600);
+ droneOff(2);rainOn=false;$("mx").classList.remove("on");clearT();drawMirror();
+}
 (function(){const t=dayKey(new Date());if(msg&&!msg.seen&&msg.for<=t){$("greet").innerHTML=`<span style="color:var(--gold)">Μήνυμα από την άλλη πλευρά:</span><br>«${esc(msg.txt)}»`;msg.seen=true;store.set("kr_msg",msg)}})();
 
 // ───── πλοήγηση ─────
