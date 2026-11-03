@@ -71,6 +71,7 @@ input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:
   <div id="vList"></div>
   <button class="btn p big" id="vAdd">+ Πλοίο</button>
   <div class="row" style="margin-top:8px"><label class="btn" style="flex:1;text-align:center;cursor:pointer">📥 Εισαγωγή δουλειών<input type="file" accept=".json,application/json,text/plain" id="impF" style="display:none"></label><button class="btn" id="bkExp">💾 Backup</button></div>
+  <div class="row" style="margin-top:8px"><button class="btn" id="zipAll" style="flex:1">🗂 Όλες οι φωτογραφίες σε φάκελο (ZIP)</button></div>
   <div class="row" style="margin-top:8px"><button class="btn" id="impL" style="flex:1">🔗 Επικόλληση link δουλειών</button></div>
   <div class="card hide" id="impBox"><label>Επικόλλησε εδώ το link (κράτα πατημένο → Paste)<textarea id="impT" rows="3" style="width:100%"></textarea></label><div class="row" style="margin-top:8px"><button class="btn p" id="impGo" style="flex:1">Εισαγωγή</button><button class="btn" id="impX">Άκυρο</button></div></div>
   <div class="card"><h2>Πώς δουλεύει</h2><p class="note" style="margin:0">1. Πλοίο → <b>+</b> για νέα δουλειά (φωτό, τι, πού, πότε). 2. <b>🚶 Walk-round</b>: σε πάει χώρο-χώρο, σου δείχνει τι είναι ανοιχτό εκεί και τι να κοιτάξεις. 3. Όταν κλείσει: <b>Done + φωτό after</b>. 4. <b>📅 Υπενθυμίσεις</b> → στο ημερολόγιο του κινητού. 5. <b>📄 Job Order List</b> PDF για πλοίο/γραφείο.</p></div>
@@ -82,6 +83,7 @@ input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:
 <section id="v-ves" class="hide">
   <div class="row" style="margin-top:4px"><button class="btn p" id="wrStart" style="flex:1">🚶 Walk-round</button><button class="btn" id="xPdf">📄 Job Order List</button></div>
   <div class="row" style="margin:8px 0"><button class="btn" id="xIcs" style="flex:1">📅 Υπενθυμίσεις στο κινητό</button><button class="btn" id="xTxt">💬</button><button class="btn" id="xCsv">📊</button></div>
+  <div class="row" style="margin:0 0 8px"><button class="btn" id="xZip" style="flex:1">🗂 Φωτογραφίες σε φάκελο (ZIP)</button></div>
   <div class="lists" id="lsts"></div>
   <div class="selbar hide" id="selbar"><b id="selN" style="flex:1">0 επιλεγμένα</b><button id="selMv">➡ Μεταφορά</button><button id="selCp">⧉ Αντιγραφή</button><button id="selX">✕</button></div>
   <div class="row" style="margin:0 0 6px"><button class="btn sm p" id="mvTop" style="flex:1">➡ Μετακίνηση σε άλλη λίστα</button><button class="btn sm" id="cpTop">⧉ Αντιγραφή</button></div>
@@ -139,7 +141,6 @@ input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:
   <label style="margin-top:8px">Λίστα / Task<select id="mL"></select></label>
   <label style="margin-top:8px" id="mNewW">Όνομα νέας λίστας<input id="mNew" placeholder="π.χ. Pre-inspection Vancouver"></label>
   <div class="row" style="margin-top:12px"><button class="btn p" id="mGo" style="flex:1">OK</button><button class="btn" id="mX">Άκυρο</button></div></div></div>
-<div class="psv hide" id="psv"><span style="flex:1" id="psvT">💾 Αποθήκευση στο Photos;</span><button class="y" id="psvY">Ναι</button><button class="n" id="psvN">Όχι</button></div>
 <div id="toast"></div>
 <div class="lb hide" id="lb"><div class="bar"><b id="lbT" style="flex:1"></b><button id="lbX">✕</button></div><div class="im" id="lbIm"><img id="lbImg"></div>
   <div class="bot"><button id="lbP">‹</button><button id="lbZ">🔍 Zoom</button><button id="lbS">💾 Photos</button><button id="lbN">›</button></div></div>
@@ -390,19 +391,41 @@ let REC=null;$("#i_mic").onclick=e=>{const btn=e.currentTarget,ta=$("#i_desc"),S
   try{r.start();REC=r;btn.classList.add("rec");btn.textContent="⏹ Stop";}catch(x){ta.focus();toast("Πάτα το 🎤 του πληκτρολογίου");}};
 
 /* ---------- camera direct + save to Photos ---------- */
-let PEND=[];
-function askSave(files){PEND.push(...files);$("#psvT").textContent=`💾 Αποθήκευση ${PEND.length>1?PEND.length+" φωτό":"της φωτό"} στο Photos;`;$("#psv").classList.remove("hide");}
-$("#psvN").onclick=()=>{PEND=[];$("#psv").classList.add("hide");};
-$("#psvY").onclick=async()=>{const fl=PEND.map((f,i)=>new File([f],f.name&&!/^image\.\w+$/.test(f.name)?f.name:`JobOrders_${today()}_${Date.now().toString(36)}_${i+1}.jpg`,{type:f.type||"image/jpeg"}));PEND=[];$("#psv").classList.add("hide");
-  try{if(navigator.canShare&&navigator.canShare({files:fl})){await navigator.share({files:fl});return;}}catch(e){return;}
-  fl.forEach(f=>{const a=document.createElement("a");a.href=URL.createObjectURL(f);a.download=f.name;document.body.appendChild(a);a.click();a.remove();});toast("Κατέβηκε");};
-async function camPh(e,w){const fs=[...e.target.files];await addPh(e,w);if(fs.length)askSave(fs);}
+async function camPh(e,w){await addPh(e,w);} /* no ask — save to Photos only with 💾 */
 $("#cB").onchange=e=>camPh(e,"B");$("#cA").onchange=e=>camPh(e,"A");
 async function saveAll(w){const arr=w==="B"?draft.photos:draft.after;if(!arr.length){toast("Δεν υπάρχουν φωτογραφίες");return;}const fl=[];
   for(const [n,k] of arr.entries()){const d=await IDB.get(k);if(!d)continue;const b=await (await fetch(d)).blob();fl.push(new File([b],`${(V()||{name:"ship"}).name}_#${draft.no}_${w==="B"?"before":"after"}_${n+1}.jpg`.replace(/\s+/g,"_"),{type:"image/jpeg"}));}
   try{if(navigator.canShare&&navigator.canShare({files:fl})){await navigator.share({files:fl});return;}}catch(e){return;}
   fl.forEach(f=>{const a=document.createElement("a");a.href=URL.createObjectURL(f);a.download=f.name;document.body.appendChild(a);a.click();a.remove();});}
 $("#svB").onclick=()=>saveAll("B");$("#svA").onclick=()=>saveAll("A");
+
+/* ---------- photos → folder (ZIP, no compression) ---------- */
+const CRC=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0;}return t;})();
+const crc32=u=>{let c=0xFFFFFFFF;for(let i=0;i<u.length;i++)c=CRC[(c^u[i])&255]^(c>>>8);return (c^0xFFFFFFFF)>>>0;};
+function makeZip(files){const te=new TextEncoder(),parts=[],cen=[];let off=0;const d=new Date(),
+  tm=(d.getHours()<<11)|(d.getMinutes()<<5)|(d.getSeconds()>>1),dt=((d.getFullYear()-1980)<<9)|((d.getMonth()+1)<<5)|d.getDate();
+  for(const f of files){const nm=te.encode(f.name),c=crc32(f.data),n=f.data.length,h=new DataView(new ArrayBuffer(30));
+    h.setUint32(0,0x04034b50,true);h.setUint16(4,20,true);h.setUint16(6,0x0800,true);h.setUint16(8,0,true);h.setUint16(10,tm,true);h.setUint16(12,dt,true);
+    h.setUint32(14,c,true);h.setUint32(18,n,true);h.setUint32(22,n,true);h.setUint16(26,nm.length,true);h.setUint16(28,0,true);parts.push(h,nm,f.data);
+    const e=new DataView(new ArrayBuffer(46));e.setUint32(0,0x02014b50,true);e.setUint16(4,20,true);e.setUint16(6,20,true);e.setUint16(8,0x0800,true);e.setUint16(10,0,true);
+    e.setUint16(12,tm,true);e.setUint16(14,dt,true);e.setUint32(16,c,true);e.setUint32(20,n,true);e.setUint32(24,n,true);e.setUint16(28,nm.length,true);e.setUint32(42,off,true);cen.push(e,nm);
+    off+=30+nm.length+n;}
+  const cs=cen.reduce((a,x)=>a+x.byteLength,0),end=new DataView(new ArrayBuffer(22));end.setUint32(0,0x06054b50,true);end.setUint16(8,files.length,true);end.setUint16(10,files.length,true);
+  end.setUint32(12,cs,true);end.setUint32(16,off,true);return new Blob([...parts,...cen,end],{type:"application/zip"});}
+const fsName=t=>String(t||"").replace(/[\\/:*?"<>|#%\n\r\t]+/g," ").replace(/\s+/g,"_").replace(/^[._]+|[._]+$/g,"").slice(0,48)||"x";
+async function photosZip(vids,lid){const files=[],root=`JobOrders_Photos_${today()}`;let n=0;
+  for(const vid of vids){const v=S.v.find(x=>x.id===vid);if(!v)continue;
+    for(const i of items(vid).filter(i=>lid==null||lid==="all"||(i.lid||"")===lid).sort((a,b)=>a.no-b.no)){
+      const dir=`${root}/${fsName(v.name)}/${fsName(lName(vid,i.lid||""))}/${String(i.no).padStart(3,"0")}_${fsName(i.title)}`;
+      for(const [w,arr] of [["before",i.photos||[]],["after",i.after||[]]])for(const [k,key] of arr.entries()){const du=await IDB.get(key).catch(()=>null);if(!du)continue;
+        files.push({name:`${dir}/${w}_${k+1}.jpg`,data:new Uint8Array(await (await fetch(du)).arrayBuffer())});n++;}}}
+  return {files,n,root};}
+async function exportZip(btn,vids,lid,label){const t=btn.textContent;btn.disabled=true;btn.textContent="⏳ Ετοιμάζω…";
+  try{const {files,n,root}=await photosZip(vids,lid);if(!n){toast("Δεν υπάρχουν φωτογραφίες");return;}
+    await shareFile(makeZip(files),`${root}_${fsName(label)}.zip`);toast(`🗂 ${n} φωτό → «Αποθήκευση στα Αρχεία»`,3000);}
+  catch(x){toast("Σφάλμα: "+(x.message||x));}finally{btn.disabled=false;btn.textContent=t;}}
+$("#xZip").onclick=e=>exportZip(e.currentTarget,[cv],cl,(V()||{}).name+(cl==="all"?"":"_"+lName(cv,cl)));
+$("#zipAll").onclick=e=>exportZip(e.currentTarget,S.v.map(v=>v.id),null,"ALL");
 
 /* ---------- lists / tasks: move & copy ---------- */
 let MV=null;
