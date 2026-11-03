@@ -67,7 +67,7 @@ tr.tot td{font-weight:800;background:var(--yel)}
 <script>
 "use strict";
 /* ===================== DATA / CONSTANTS ===================== */
-const VER="1.3";
+const VER="1.4";
 const $=s=>document.querySelector(s);
 const fmt=n=>(Math.round(n||0)).toLocaleString("en-US");
 const fmt1=n=>(Math.round((n||0)*10)/10).toLocaleString("en-US");
@@ -148,6 +148,14 @@ function ctx(p){
  c.hull=o.hull||(c.age<=5?"L":c.age<=10?"M":"H");
  c.holdsL=c.type!=="B"?"N":(o.holds||(c.SS&&c.age>=10?"P":"T"));
  c.deckL=o.deck||(c.SS?"T":"N");
+ // coating percentages: preset from level, overridable per area (o.hp, values in %)
+ const hp=o.hp||{},num=(x,d)=>x!==""&&x!=null&&!isNaN(+x)?(+x)/100:d,cnt=(x,d)=>x!==""&&x!=null&&!isNaN(+x)?+x:d,IX={fb:0,vb:2,bt:4,ts:6};c.hp={};
+ for(const k in IX){const P=HB[c.hull],i=IX[k],u=hp[k]||{},full=c.hull==="F"&&k!=="ts";
+  const sa2=num(u.sa2,P[i]),sa1=num(u.sa1,P[i+1]),t1=num(u.t1,full?1:(sa2+sa1)*1.2),t2=num(u.t2,full?1:t1*1.2);
+  c.hp[k]={sa2,sa1,t1,t2,sc:num(u.sc,k==="bt"?.15:0),fc:cnt(u.fc,k==="ts"?1:(k==="fb"&&c.hull!=="F"?1:2)),seal:cnt(u.seal,c.hull==="L"?0:1)}}
+ const HLp=HL[c.holdsL],hh=hp.holds||{};c.hh={sa2:num(hh.sa2,HLp[1]),sa1:num(hh.sa1,HLp[2]),tc:cnt(hh.tc,2),full:cnt(hh.fc,HLp[3])};
+ c.hh.hw=HLp[0]||((c.hh.sa2+c.hh.sa1+c.hh.full)>0?1:0);
+ const dd=hp.deck||{};c.dk={hc:num(dd.hc,DKL[c.deckL]),dk:num(dd.dk,DKL[c.deckL]*.7)};
  // steel estimate (t)
  const fac=c.age<10?.15:c.age<15?.5:c.age<20?1.1:2.0, cm={G:.7,A:1,P:1.6}[o.cond]||1, base=(c.type==="C"?c.gt:c.dwt)/1000;
  c.steelAuto=Math.round(base*fac*cm*(c.SS?1:.3)*(c.type==="G"?.7:1));
@@ -227,35 +235,36 @@ it("04","dk24","Bow thruster: blades, seals, oil, tunnel grating & anodes (assis
 const HA=(k)=>[["fb","Flat bottom",0],["vb","Vertical bottom/sides",2],["bt","Boottop",4],["ts","Topsides",6]];
 for(const [k,n,ix] of HA()){
  it("05",`h_${k}_w`,`${n}: HP fresh water washing ≥300 bar – 100%`,"M2",c=>c.A[k],.5);
- if(k==="bt")it("05",`h_${k}_sc`,`${n}: scraping hard fouling`,"M2",c=>c.A[k]*.15,4,"I");
- it("05",`h_${k}_2`,`${n}: hydro-blasting WJ2 / grit SA2 spot`,"M2",c=>c.A[k]*HB[c.hull][ix],6.5);
- it("05",`h_${k}_1`,`${n}: WJ4 / sweep SA1 spot`,"M2",c=>c.A[k]*HB[c.hull][ix+1],5.5);
- it("05",`h_${k}_t1`,`${n}: 1st A/C touch-up 150μm (blasted × 1.2)`,"M2",c=>c.hull==="F"&&k!=="ts"?c.A[k]:c.A[k]*(HB[c.hull][ix]+HB[c.hull][ix+1])*1.2,.5,"R",{pt:"AC"});
- it("05",`h_${k}_t2`,`${n}: 2nd A/C touch-up 100μm (1st × 1.2)`,"M2",c=>c.hull==="F"&&k!=="ts"?c.A[k]:c.A[k]*(HB[c.hull][ix]+HB[c.hull][ix+1])*1.44,.46,"R",{pt:"AC"});
- if(k==="ts"){it("05","h_ts_seal","Topsides: A/C sealer full coat","M2",c=>c.hull==="L"?0:c.A.ts,.5,"R",{pt:"AC"});
-   it("05","h_ts_f","Topsides: finish full coat","M2",c=>c.A.ts,.52,"R",{pt:"FIN"});}
- else{it("05",`h_${k}_af1`,`${n}: antifouling full coat No.1`,"M2",c=>c.A[k],.52,"R",{pt:"AF"});
-   it("05",`h_${k}_af2`,`${n}: antifouling full coat No.2`,"M2",c=>(k==="fb"&&c.hull!=="F")?0:c.A[k],.52,"R",{pt:"AF"});}
+ it("05",`h_${k}_sc`,`${n}: scraping hard fouling / barnacles`,"M2",c=>c.A[k]*c.hp[k].sc,4,"I");
+ it("05",`h_${k}_2`,`${n}: hydro-blasting WJ2 / grit SA2 spot`,"M2",c=>c.A[k]*c.hp[k].sa2,6.5);
+ it("05",`h_${k}_1`,`${n}: WJ4 / sweep SA1 spot`,"M2",c=>c.A[k]*c.hp[k].sa1,5.5);
+ it("05",`h_${k}_t1`,`${n}: 1st A/C touch-up 150μm`,"M2",c=>c.A[k]*c.hp[k].t1,.5,"R",{pt:"AC"});
+ it("05",`h_${k}_t2`,`${n}: 2nd A/C touch-up 100μm`,"M2",c=>c.A[k]*c.hp[k].t2,.46,"R",{pt:"AC"});
+ if(k==="ts"){it("05","h_ts_seal","Topsides: A/C sealer full coat","M2",c=>c.A.ts*c.hp.ts.seal,.5,"R",{pt:"AC"});
+   it("05","h_ts_f","Topsides: finish full coat(s) (m² × coats)","M2",c=>c.A.ts*c.hp.ts.fc,.52,"R",{pt:"FIN"});}
+ else{it("05",`h_${k}_af1`,`${n}: antifouling full coat No.1`,"M2",c=>c.hp[k].fc>=1?c.A[k]:0,.52,"R",{pt:"AF"});
+   it("05",`h_${k}_af2`,`${n}: antifouling full coat No.2`,"M2",c=>c.hp[k].fc>=2?c.A[k]:0,.52,"R",{pt:"AF"});
+   it("05",`h_${k}_af3`,`${n}: antifouling full coat No.3`,"M2",c=>c.hp[k].fc>=3?c.A[k]:0,.52,"R",{pt:"AF"});}
  it("05",`h_${k}_ab`,`${n}: air blowing + rinsing before painting`,"M2",c=>c.A[k],.55);
 }
 it("05","h_cp","Cherry pickers for hull treatment (dock period, daily log)","HOUR",c=>Math.round(100*c.sf),90);
 it("05","h_mk","Hull markings (draft, Load Line, name, IMO, thruster/tug marks)","LUMPSUM",c=>1,1500,"R",{cls:1,sc:1});
 const DKL={N:0,T:.20,H:.40};
-it("05","d_hc2","Hatch covers & coamings: spot blasting SA2","M2",c=>(c.A.hc+c.A.cm)*DKL[c.deckL],6.5,"R",{t:"BC"});
-it("05","d_hct","Hatch covers & coamings: 2 epoxy touch-ups","M2",c=>(c.A.hc+c.A.cm)*DKL[c.deckL]*2.64,.48,"R",{t:"BC",pt:"AC"});
-it("05","d_hcf","Hatch covers & coamings: finish full coat","M2",c=>c.deckL==="N"?0:c.A.hc+c.A.cm,.5,"R",{t:"BC",pt:"FIN"});
-it("05","d_dk2","Main deck: spot blasting SA2 + 2 touch-ups","M2",c=>c.A.deck*DKL[c.deckL]*.7,7.5,"I",{pt:"AC2"});
-it("05","d_dkf","Main deck: finish full coat","M2",c=>c.deckL==="N"?0:c.A.deck,.5,"I",{pt:"FIN"});
+it("05","d_hc2","Hatch covers & coamings: spot blasting SA2","M2",c=>(c.A.hc+c.A.cm)*c.dk.hc,6.5,"R",{t:"BC"});
+it("05","d_hct","Hatch covers & coamings: 2 epoxy touch-ups","M2",c=>(c.A.hc+c.A.cm)*c.dk.hc*2.64,.48,"R",{t:"BC",pt:"AC"});
+it("05","d_hcf","Hatch covers & coamings: finish full coat","M2",c=>c.deckL==="N"&&!c.dk.hc?0:c.A.hc+c.A.cm,.5,"R",{t:"BC",pt:"FIN"});
+it("05","d_dk2","Main deck: spot blasting SA2 + 2 touch-ups","M2",c=>c.A.deck*c.dk.dk,7.5,"I",{pt:"AC2"});
+it("05","d_dkf","Main deck: finish full coat","M2",c=>c.deckL==="N"&&!c.dk.dk?0:c.A.deck,.5,"I",{pt:"FIN"});
 it("05","w_sa","WBT coating repairs after close-up: spot SA2 (confined)","M2",c=>Math.round(c.dwt*.004*Math.max(1,c.age/5)*(c.SS?1:.4)),8.5,"R",{cls:1});
 it("05","w_tu","WBT: 2 coats pure epoxy (2 × 1.2 × blasted)","M2",c=>Math.round(c.dwt*.004*Math.max(1,c.age/5)*(c.SS?1:.4))*2.4,.8,"R",{pt:"WBT"});
 const HL={N:[0,0,0,0],T:[1,.10,0,0],P:[1,.25,.10,0],F:[1,.25,.10,1]};
-it("05","c_w","Cargo holds: HP fresh water hosing 100%","M2",c=>c.A.holds*HL[c.holdsL][0],.62,"R",{t:"B"});
-it("05","c_2","Cargo holds: spot grit blasting SA2 (yard min. charge often 25%)","M2",c=>c.A.holds*HL[c.holdsL][1],8,"R",{t:"B"});
-it("05","c_1","Cargo holds: SA1 / sweep","M2",c=>c.A.holds*HL[c.holdsL][2],6.8,"R",{t:"B"});
-it("05","c_t","Cargo holds: 2 touch-up coats + stripe","M2",c=>c.A.holds*(HL[c.holdsL][1]+HL[c.holdsL][2])*2.3,.55,"R",{t:"B",pt:"HOLD"});
-it("05","c_f","Cargo holds: full coat 125μm","M2",c=>c.A.holds*HL[c.holdsL][3],.5,c=>c.holdsL==="F"?"R":"O",{t:"B",pt:"HOLD"});
-it("05","c_cp","Cargo holds: cherry pickers (per hold, by working days)","HOLD",c=>c.holdsL==="N"?0:(+c.v.holds||5),4250,"R",{t:"B",sc:1});
-it("05","c_o","Holds: bilge wells/sensors protection, dust nets, final grit removal","HOLD",c=>c.holdsL==="N"?0:(+c.v.holds||5),1000,"R",{t:"B"});
+it("05","c_w","Cargo holds: HP fresh water hosing 100%","M2",c=>c.A.holds*c.hh.hw,.62,"R",{t:"B"});
+it("05","c_2","Cargo holds: spot grit blasting SA2 (yard min. charge often 25%)","M2",c=>c.A.holds*c.hh.sa2,8,"R",{t:"B"});
+it("05","c_1","Cargo holds: SA1 / sweep","M2",c=>c.A.holds*c.hh.sa1,6.8,"R",{t:"B"});
+it("05","c_t","Cargo holds: touch-up coats + stripe (m² × coats)","M2",c=>c.A.holds*(c.hh.sa2+c.hh.sa1)*c.hh.tc*1.15,.55,"R",{t:"B",pt:"HOLD"});
+it("05","c_f","Cargo holds: full coat(s) 125μm (m² × coats)","M2",c=>c.A.holds*c.hh.full,.5,c=>c.hh.full>0?"R":"O",{t:"B",pt:"HOLD"});
+it("05","c_cp","Cargo holds: cherry pickers (per hold, by working days)","HOLD",c=>c.hh.hw?(+c.v.holds||5):0,4250,"R",{t:"B",sc:1});
+it("05","c_o","Holds: bilge wells/sensors protection, dust nets, final grit removal","HOLD",c=>c.hh.hw?(+c.v.holds||5):0,1000,"R",{t:"B"});
 it("05","x_lb","Lifeboat painted, E/R escape trunks contrasting colour","LUMPSUM",c=>1,1350);
 // ---- 06 STEEL (estimate or Steel tab)
 it("06","st","Steel renewal (see Steel tab) – plates & sections incl. location surcharges","LUMPSUM",c=>1,0,"R",{cls:1,steel:1});
@@ -958,6 +967,7 @@ function tScope(p,R){
  <h3>Γάστρα (blasting)</h3>${seg("hull",c.hull,[["L","Light"],["M","Medium"],["H","Heavy"],["F","Full SA2.5"]])}
  ${c.type==="B"?`<h3>Cargo holds</h3>${seg("holds",c.holdsL,[["N","Τίποτα"],["T","Touch-up"],["P","Partial"],["F","Full coat"]])}`:""}
  <h3>Deck / hatch covers</h3>${seg("deck",c.deckL,[["N","Τίποτα"],["T","Touch-up"],["H","Heavy"]])}
+ ${pctTable(p,c)}
  <div class="row" style="margin-top:12px">${[["tsw","Tailshaft withdrawal"],["rudder","Rudder unship"],["chain","Chain renewal"],["crane5","Cranes 5-yearly test"],["hcOver","HC overhaul"]].map(([k,n])=>`<label style="flex-direction:row;align-items:center;gap:6px;color:var(--ink);font-size:14px"><input type="checkbox" data-k="${k}" ${o[k]?"checked":""} style="width:auto">${n}</label>`).join("")}</div></div>
  <div class="card"><h2>Ημέρες</h2><div class="g2">${inp("dock",`Dock days (auto ${c.dock})`,o.dock)}${inp("afloat",`Afloat days (auto ${c.afloat})`,o.afloat)}${inp("dev","Deviation days",o.dev)}${inp("cont","Contingency days (καιρός/extras)",o.cont)}</div>
  <p class="note">Yard ${c.yard} ημ. + ${c.type==="G"?"gas-freeing/gassing-up":"προετοιμασία"} ${c.gasDays} ημ. → <b>Off-hire ${c.offhire} ημέρες</b>. Άδειο = αυτόματο.</p></div>
@@ -973,6 +983,22 @@ function tScope(p,R){
  $("#app").querySelectorAll("[data-p]").forEach(el=>el.oninput=()=>{o[el.dataset.p]=(+el.value||0)/100;save();refreshHdr()});
  $("#app").querySelectorAll("[data-seg]").forEach(sg=>sg.querySelectorAll("button").forEach(b=>b.onclick=()=>{o[sg.dataset.seg]=b.dataset.v;save();renderP()}));
  $("#app").querySelectorAll("input[type=checkbox]").forEach(el=>el.addEventListener("change",()=>renderP()));
+ $("#app").querySelectorAll("[data-hp]").forEach(el=>el.onchange=()=>{const [a,k]=el.dataset.hp.split(":");o.hp=o.hp||{};o.hp[a]=o.hp[a]||{};o.hp[a][k]=el.value===""?"":+el.value;save();renderP()});
+ const hr=$("#hpr");hr&&(hr.onclick=()=>{delete o.hp;save();renderP();toast("↺ Αυτόματα ποσοστά")});
+}
+function pctTable(p,c){
+ const P=x=>Math.round(x*1000)/10,hp=p.o.hp||{},v=(a,k)=>(hp[a]&&hp[a][k]!=null&&hp[a][k]!=="")?hp[a][k]:"";
+ const cell=(a,k,auto,cnt)=>`<td><input data-hp="${a}:${k}" type="number" inputmode="decimal" value="${v(a,k)}" placeholder="${cnt?auto:P(auto)}" style="width:58px;padding:5px;text-align:right;${v(a,k)!==""?"background:var(--yel);font-weight:700":""}"></td>`;
+ const nm={fb:"Flat bottom",vb:"Vert. bottom",bt:"Boottop",ts:"Topsides"};
+ let h=`<h3>Ποσοστά blasting & βαφής (% της επιφάνειας)</h3><div style="overflow-x:auto"><table style="font-size:12px"><tr><th>Περιοχή</th><th class="n">SA2/WJ2</th><th class="n">SA1/WJ4</th><th class="n">Scraping</th><th class="n">1st TU</th><th class="n">2nd TU</th><th class="n">Full coats</th></tr>`;
+ for(const k of ["fb","vb","bt","ts"]){const x=c.hp[k];h+=`<tr><td>${nm[k]}<div class="note">${fmt(c.A[k])} m²</div></td>${cell(k,"sa2",x.sa2)}${cell(k,"sa1",x.sa1)}${cell(k,"sc",x.sc)}${cell(k,"t1",x.t1)}${cell(k,"t2",x.t2)}${cell(k,"fc",x.fc,1)}</tr>`}
+ h+=`<tr><td>Topsides sealer<div class="note">0 / 1 coat</div></td><td colspan="5"></td>${cell("ts","seal",c.hp.ts.seal,1)}</tr>`;
+ if(c.type==="B")h+=`<tr><td>Cargo holds<div class="note">${fmt(c.A.holds)} m²</div></td>${cell("holds","sa2",c.hh.sa2)}${cell("holds","sa1",c.hh.sa1)}<td></td><td colspan="2" class="note" style="text-align:right">TU coats →</td>${cell("holds","tc",c.hh.tc,1)}</tr><tr><td>Holds full coats</td><td colspan="5"></td>${cell("holds","fc",c.hh.full,1)}</tr>`;
+ if(c.type!=="G")h+=`<tr><td>HC & coamings<div class="note">${fmt(c.A.hc+c.A.cm)} m²</div></td>${cell("deck","hc",c.dk.hc)}<td colspan="5" class="note">SA2 spot + 2 touch-ups + finish</td></tr>`;
+ h+=`<tr><td>Main deck<div class="note">${fmt(c.A.deck)} m²</div></td>${cell("deck","dk",c.dk.dk)}<td colspan="5" class="note">SA2 spot + 2 touch-ups + finish</td></tr></table></div>
+ <p class="note">Γκρι = αυτόματο από το επίπεδο (Light/Medium/Heavy/Full). Γράψε δικό σου νούμερο για να το αλλάξεις (κίτρινο). 1st/2nd TU = % της επιφάνειας που βάφεται touch-up (αυτόματα: blasted × 1.2 και 1st × 1.2). Full coats = πόσα πλήρη χέρια.</p>
+ <button class="btn sm" id="hpr">↺ Επαναφορά ποσοστών</button>`;
+ return h;
 }
 function calibNote(p){
  const done=DB.projects.filter(x=>x.id!==p.id&&x.act&&+x.act.yard>0);
