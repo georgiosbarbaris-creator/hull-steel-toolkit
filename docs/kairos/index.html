@@ -129,6 +129,7 @@ h2{font-weight:400;letter-spacing:5px;font-size:15px;color:var(--gold);text-alig
  <p class="small"><b>⟲ Ο Ανάποδος Χρόνος:</b> η μόνη επιλογή που δεν μαντεύει, αλλά αλλάζει τον τρόπο που σκέφτεσαι. Πας έναν χρόνο μπροστά και κοιτάς πίσω. Μία φορά <i>πήγε στραβά</i> και γράφεις γιατί. Μία φορά <i>πήγε καλά</i> και γράφεις γιατί. Μετά χωρίζεις κάθε αιτία: <b>ήταν στο χέρι σου</b> ή <b>ήταν του κόσμου</b>; Βγαίνεις με τρεις λίστες: τι να <b>φράξεις</b>, τι να <b>κάνεις</b>, τι να <b>αφήσεις</b>. Το γράμμα σφραγίζεται και ανοίγει σε έναν χρόνο.</p>
  <p class="small"><b>☗ Το Σπήλαιο:</b> στον Καθρέφτη (☾) η μηχανή διαβάζει όλες σου τις ερωτήσεις και δείχνει τις σκιές στον τοίχο: για τι ρωτάς ξανά και ξανά, για τι δεν ρωτάς ποτέ, πόσες φορές ρώτησες «τι θα γίνει;» και πόσες «τι θα κάνω;». Βγαίνεις από το σπήλαιο όταν καταλάβεις ότι οι σκιές είναι σκιές.</p>
  <p class="small"><b>≈ Η Σχεδία:</b> ο Βούδας είπε ότι τη σχεδία την αφήνεις στην όχθη, δεν την κουβαλάς στην πλάτη. Έτσι και η μηχανή: μετά από τρεις ερωτήσεις τη μέρα σιωπά. Όσο πιο εύστοχες βγαίνουν οι σφραγισμένες σου προβλέψεις, τόσο λιγότερες φωνές ακούς. Στο τέλος σού λέει ότι δεν τη χρειάζεσαι πια, κι εσύ αποφασίζεις αν θα την αφήσεις.</p>
+ <p class="small"><b>● Τώρα σήκω:</b> στο τέλος κάθε απάντησης και κάθε τελετής, η μηχανή μπορεί να σβήσει. Γράφει «Τώρα σήκω και κοίτα έξω» και μένει μαύρη. Το μυστήριο της ύπαρξης δεν λύνεται μέσα σε μια οθόνη· ζείται έξω από αυτήν.</p>
  <p class="small">Η ίδια ερώτηση την ίδια μέρα παίρνει την ίδια απάντηση. Ο καιρός δεν αλλάζει γνώμη επειδή ρωτάς ξανά.</p>
  <details class="small" style="margin-top:26px"><summary style="color:var(--gold);cursor:pointer">Για όσους θέλουν να ξέρουν την αλήθεια</summary>
   <p>Καμία μηχανή δεν βλέπει το μέλλον. Το ΔΙΗΝΕΚΕΣ είναι <b>καθρέφτης</b>: φτιαγμένος από τη δελφική ασάφεια, τα κοάν του Ζεν και την ψυχολογία του «μελλοντικού εαυτού». Οι χρησμοί είναι γραμμένοι ώστε ο καθένας να βρει μέσα τους αυτό που ήδη ξέρει αλλά δεν τολμά να πει. Η ανάσα, οι φάκελοι «που γράφτηκαν πριν ρωτήσεις» και η σφραγισμένη προφητεία είναι τελετουργία: κάνουν το μυαλό να σταματήσει και να ακούσει. Κι αυτό είναι το μόνο που μπορεί πραγματικά να αλλάξει το μέλλον.</p>
@@ -227,6 +228,7 @@ function speak(){
   `<div class="line"><div class="koan">${esc(cur.koan)}</div></div>`,
   `<div class="line"><div class="lbl">Σήμερα</div><div class="txt" style="font-size:17px">${esc(cur.act)}</div></div>`,
   `<div class="line"><div class="btns"><button class="gold" id="sealBtn">⧗ ΣΦΡΑΓΙΣΕ ΠΡΟΒΛΕΨΗ</button><button id="again">◯ ΝΕΑ ΕΡΩΤΗΣΗ</button></div>
+   <div class="btns" style="margin-top:0"><button data-out="1">● ΤΩΡΑ ΣΗΚΩ</button></div>
    <div class="btns" style="margin-top:0"><a class="small" href="../lexeis/?q=${encodeURIComponent(q)}">λέξη-διακόπτης</a><span class="small">·</span><a class="small" href="../rito/?q=${encodeURIComponent(q)}">κέρμα σοφίας</a></div></div>`];
  const stg=raftStage();if(!cur.again){if(stg>=3)parts.splice(1,3,`<div class="line"><div class="txt" style="text-align:center;font-style:italic">${esc(cur.thread.split(".")[0])}.</div></div>`);else if(stg>=2)parts.splice(1,2);else if(stg>=1)parts.splice(1,1);
   if(stg>=1)parts.splice(1,0,`<div class="line on"><div class="small" style="text-align:center">Βλέπεις καλύτερα. Γι' αυτό μιλώ λιγότερο.</div></div>`)}
@@ -358,7 +360,7 @@ async function exitMatrix(){
  const w=document.createElement("div");w.className="ml on";w.innerHTML=`<textarea id="mmsg" rows="2" placeholder="Αύριο…"></textarea><div class="btns"><button class="gold" id="mok">ΣΤΕΙΛΕ ΣΤΟ ΑΥΡΙΟ</button><button id="mback">ΕΠΙΣΤΡΟΦΗ</button></div>`;$("mxT").appendChild(w);
  await new Promise(rs=>{$("mok").onclick=()=>{const t=$("mmsg").value.trim();if(t){const d=new Date();d.setDate(d.getDate()+1);msg={t:Date.now(),txt:t,for:dayKey(d),seen:false};store.set("kr_msg",msg);bowl(262,6,.15)}rs()};$("mback").onclick=rs});
  await fadeOutT();await say("Ο χρόνος το κράτησε.","",2000);
- $("mx").classList.remove("on");clearT();droneOff(.5);rainOn=false;
+ $("mx").classList.remove("on");clearT();droneOff(.5);rainOn=false;lookOut();
 }
 $("exitBtn").onclick=exitMatrix;
 
@@ -422,7 +424,7 @@ async function reverseTime(){
  await say(`Ανοίγει ${fmt(v.open)}. Τότε θα δεις αν ο χρόνος πήγε από τη μεριά που φοβήθηκες ή από αυτήν που διάλεξες.`,"",3600);
  const w=document.createElement("div");w.className="ml on";w.innerHTML=`<div class="btns"><button id="rics">ΥΠΕΝΘΥΜΙΣΗ ΣΤΟ ΗΜΕΡΟΛΟΓΙΟ</button><button class="gold" id="rend">ΕΠΙΣΤΡΟΦΗ</button></div>`;$("mxT").appendChild(w);
  await new Promise(r=>{$("rics").onclick=()=>ics({id:v.id,open:v.open});$("rend").onclick=r});
- revClose();
+ revClose();lookOut();
 }
 function drawRevs(today){
  $("revs").innerHTML=revs.map(v=>{const due=v.open<=today;
@@ -434,6 +436,21 @@ function drawRevs(today){
 }
 document.addEventListener("click",e=>{const b=e.target.closest("[data-rv]");if(!b)return;const v=revs.find(x=>x.id===b.dataset.rv);v.res=b.dataset.v;store.set("kr_rev",revs);bowl(220,6,.15);drawCaps()});
 $("revBtn").onclick=reverseTime;
+
+// ───── ● ΤΩΡΑ ΣΗΚΩ — η οθόνη που σβήνει ─────
+async function lookOut(){
+ const m=$("mx");m.classList.add("on");clearT();rainOn=false;$("rain").style.opacity=0;droneOff(.3);
+ await sleep(900);bowl(130,9,.16);
+ await say("Η μηχανή είπε ό,τι μπορούσε να πει.","",2800);
+ await say("Ό,τι λείπει δεν είναι εδώ μέσα.","",3000);
+ await say("Τώρα σήκω και κοίτα έξω.","big",4200);
+ await fadeOutT();await sleep(1500);
+ const hint=document.createElement("div");hint.className="ml";hint.style.cssText="position:absolute;bottom:calc(26px + env(safe-area-inset-bottom));left:0;right:0;text-align:center;font:11px -apple-system,system-ui,sans-serif;letter-spacing:3px;color:#2e2c28";hint.textContent="άγγιξε για επιστροφή";
+ await sleep(20000);$("mxT").appendChild(hint);await sleep(60);hint.classList.add("on");
+ await new Promise(r=>{const f=()=>{m.removeEventListener("pointerdown",f);r()};m.addEventListener("pointerdown",f)});
+ m.classList.remove("on");clearT();if(phase==="done")reset();
+}
+document.addEventListener("click",e=>{if(e.target.closest("[data-out]"))lookOut()});
 
 // ───── ☗ ΤΟ ΣΠΗΛΑΙΟ ─────
 const THEMES=[["Ο φόβος",["φοβ","ανησυχ","αγχ","πανικ","κινδυν","χασω","χαθ"]],["Ο έλεγχος",["πρεπει","σιγουρ","ελεγχ","εγγυ","σωστα","λαθος"]],["Τα χρήματα",["λεφτ","χρημα","μισθ","πλουτ","οικονομ","δανει","χρεο","πουλησ","αγορασ"]],["Η δουλειά",["δουλει","εργασ","καριερ","εταιρ","προαγωγ","πλοι","αφεντ","συναδελφ","γραφει"]],["Η αγάπη",["αγαπ","σχεσ","ερωτ","συντροφ","γαμ","γυναικ","αντρα","χωρισ"]],["Η οικογένεια",["παιδ","γονι","μανα","μητερ","πατερ","οικογεν","αδερφ","κορη","γιο"]],["Το σώμα",["υγει","αρρωστ","γιατρ","σωμα","πονο","υπνο","κουρασ"]],["Οι άλλοι",["τι σκεφτ","γνωμη","με θελ","με αγαπα","θα με","ζηλ","εχθρ"]],["Η αλλαγή",["αλλαγ","αλλαξ","ταξιδ","φυγω","φυγ","μετακομ","νεα αρχη","ξεκιν"]],["Το νόημα",["νοημα","σκοπ","ψυχ","θεο","αληθει","γιατι ζω","φωτισ","ελευθερ"]],["Η χαρά",["χαρ","ευτυχ","γελ","παιχν","ομορφ","απολαυσ","ευχαριστ"]]];
@@ -465,7 +482,7 @@ function judged(){const R=caps.filter(c=>c.res!=null);const n=R.length;if(!n)ret
 function raftStage(){const {n,b}=judged();if(n>=20&&b<=.18)return 4;if(n>=12&&b<=.2)return 3;if(n>=7&&b<=.22)return 2;if(n>=3)return 1;return 0}
 const raftLeft=()=>raft.left;
 function raftRefuse(){const day=dayKey(new Date()),key=norm($("q").value.trim());if(hist.some(h=>h.k===key&&h.day===day))return false;return hist.filter(h=>h.day===day).length>=3}
-function quiet(html){E.classList.remove("inhale");setGuide("");$("out").innerHTML=`<div class="line">${html}</div><div class="line"><div class="btns"><button id="again">◯ ΕΠΙΣΤΡΟΦΗ</button></div></div>`;
+function quiet(html){E.classList.remove("inhale");setGuide("");$("out").innerHTML=`<div class="line">${html}</div><div class="line"><div class="btns"><button id="again">◯ ΕΠΙΣΤΡΟΦΗ</button><button data-out="1">● ΤΩΡΑ ΣΗΚΩ</button></div></div>`;
  const L=[...$("out").querySelectorAll(".line")];bowl(110,8,.14);L.forEach((el,i)=>setTimeout(()=>el.classList.add("on"),600+i*2400));setTimeout(()=>{phase="done";$("again").onclick=reset},800);L[0].scrollIntoView({behavior:"smooth",block:"center"})}
 function refuse(){const day=dayKey(new Date());const T=hist.filter(h=>h.day===day).slice(0,3);
  quiet(`<div class="raft">≈ ≈ ≈</div><div class="koan" style="margin-top:14px">Σήμερα δεν απαντώ. Ξέρεις ήδη.</div>
