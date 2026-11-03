@@ -67,7 +67,7 @@ tr.tot td{font-weight:800;background:var(--yel)}
 <script>
 "use strict";
 /* ===================== DATA / CONSTANTS ===================== */
-const VER="1.4";
+const VER="1.5";
 const $=s=>document.querySelector(s);
 const fmt=n=>(Math.round(n||0)).toLocaleString("en-US");
 const fmt1=n=>(Math.round((n||0)*10)/10).toLocaleString("en-US");
@@ -153,8 +153,8 @@ function ctx(p){
  for(const k in IX){const P=HB[c.hull],i=IX[k],u=hp[k]||{},full=c.hull==="F"&&k!=="ts";
   const sa2=num(u.sa2,P[i]),sa1=num(u.sa1,P[i+1]),t1=num(u.t1,full?1:(sa2+sa1)*1.2),t2=num(u.t2,full?1:t1*1.2);
   c.hp[k]={sa2,sa1,t1,t2,sc:num(u.sc,k==="bt"?.15:0),fc:cnt(u.fc,k==="ts"?1:(k==="fb"&&c.hull!=="F"?1:2)),seal:cnt(u.seal,c.hull==="L"?0:1)}}
- const HLp=HL[c.holdsL],hh=hp.holds||{};c.hh={sa2:num(hh.sa2,HLp[1]),sa1:num(hh.sa1,HLp[2]),tc:cnt(hh.tc,2),full:cnt(hh.fc,HLp[3])};
- c.hh.hw=HLp[0]||((c.hh.sa2+c.hh.sa1+c.hh.full)>0?1:0);
+ const HLp=HL[c.holdsL],hh=hp.holds||{};{const sa2=num(hh.sa2,HLp[1]),sa1=num(hh.sa1,HLp[2]),full=cnt(hh.fc,HLp[3]),act=(sa2+sa1+full)>0;
+  const t1=num(hh.t1,(sa2+sa1)*1.15);c.hh={sa2,sa1,full,t1,t2:num(hh.t2,t1),st:num(hh.st,act?.05:0),hw:num(hh.hw,HLp[0]||(act?1:0))}}
  const dd=hp.deck||{};c.dk={hc:num(dd.hc,DKL[c.deckL]),dk:num(dd.dk,DKL[c.deckL]*.7)};
  // steel estimate (t)
  const fac=c.age<10?.15:c.age<15?.5:c.age<20?1.1:2.0, cm={G:.7,A:1,P:1.6}[o.cond]||1, base=(c.type==="C"?c.gt:c.dwt)/1000;
@@ -261,7 +261,9 @@ const HL={N:[0,0,0,0],T:[1,.10,0,0],P:[1,.25,.10,0],F:[1,.25,.10,1]};
 it("05","c_w","Cargo holds: HP fresh water hosing 100%","M2",c=>c.A.holds*c.hh.hw,.62,"R",{t:"B"});
 it("05","c_2","Cargo holds: spot grit blasting SA2 (yard min. charge often 25%)","M2",c=>c.A.holds*c.hh.sa2,8,"R",{t:"B"});
 it("05","c_1","Cargo holds: SA1 / sweep","M2",c=>c.A.holds*c.hh.sa1,6.8,"R",{t:"B"});
-it("05","c_t","Cargo holds: touch-up coats + stripe (m² × coats)","M2",c=>c.A.holds*(c.hh.sa2+c.hh.sa1)*c.hh.tc*1.15,.55,"R",{t:"B",pt:"HOLD"});
+it("05","c_t1","Cargo holds: 1st touch-up coat 125μm","M2",c=>c.A.holds*c.hh.t1,.55,"R",{t:"B",pt:"HOLD"});
+it("05","c_t2","Cargo holds: 2nd touch-up coat 125μm","M2",c=>c.A.holds*c.hh.t2,.55,"R",{t:"B",pt:"HOLD"});
+it("05","c_st","Cargo holds: stripe coat on edges, welds, corners (brush)","M2",c=>c.A.holds*c.hh.st,1.2,"R",{t:"B",pt:"HOLD"});
 it("05","c_f","Cargo holds: full coat(s) 125μm (m² × coats)","M2",c=>c.A.holds*c.hh.full,.5,c=>c.hh.full>0?"R":"O",{t:"B",pt:"HOLD"});
 it("05","c_cp","Cargo holds: cherry pickers (per hold, by working days)","HOLD",c=>c.hh.hw?(+c.v.holds||5):0,4250,"R",{t:"B",sc:1});
 it("05","c_o","Holds: bilge wells/sensors protection, dust nets, final grit removal","HOLD",c=>c.hh.hw?(+c.v.holds||5):0,1000,"R",{t:"B"});
@@ -993,7 +995,10 @@ function pctTable(p,c){
  let h=`<h3>Ποσοστά blasting & βαφής (% της επιφάνειας)</h3><div style="overflow-x:auto"><table style="font-size:12px"><tr><th>Περιοχή</th><th class="n">SA2/WJ2</th><th class="n">SA1/WJ4</th><th class="n">Scraping</th><th class="n">1st TU</th><th class="n">2nd TU</th><th class="n">Full coats</th></tr>`;
  for(const k of ["fb","vb","bt","ts"]){const x=c.hp[k];h+=`<tr><td>${nm[k]}<div class="note">${fmt(c.A[k])} m²</div></td>${cell(k,"sa2",x.sa2)}${cell(k,"sa1",x.sa1)}${cell(k,"sc",x.sc)}${cell(k,"t1",x.t1)}${cell(k,"t2",x.t2)}${cell(k,"fc",x.fc,1)}</tr>`}
  h+=`<tr><td>Topsides sealer<div class="note">0 / 1 coat</div></td><td colspan="5"></td>${cell("ts","seal",c.hp.ts.seal,1)}</tr>`;
- if(c.type==="B")h+=`<tr><td>Cargo holds<div class="note">${fmt(c.A.holds)} m²</div></td>${cell("holds","sa2",c.hh.sa2)}${cell("holds","sa1",c.hh.sa1)}<td></td><td colspan="2" class="note" style="text-align:right">TU coats →</td>${cell("holds","tc",c.hh.tc,1)}</tr><tr><td>Holds full coats</td><td colspan="5"></td>${cell("holds","fc",c.hh.full,1)}</tr>`;
+ h+=`</table></div>`;
+ if(c.type==="B")h+=`<h3>Cargo holds (% των ${fmt(c.A.holds)} m²)</h3><div style="overflow-x:auto"><table style="font-size:12px"><tr><th class="n">HPFW</th><th class="n">SA2</th><th class="n">SA1</th><th class="n">1st TU</th><th class="n">2nd TU</th><th class="n">Stripe</th><th class="n">Full coats</th></tr>
+ <tr>${cell("holds","hw",c.hh.hw)}${cell("holds","sa2",c.hh.sa2)}${cell("holds","sa1",c.hh.sa1)}${cell("holds","t1",c.hh.t1)}${cell("holds","t2",c.hh.t2)}${cell("holds","st",c.hh.st)}${cell("holds","fc",c.hh.full,1)}</tr></table></div>`;
+ h+=`<h3>Deck</h3><div style="overflow-x:auto"><table style="font-size:12px">`;
  if(c.type!=="G")h+=`<tr><td>HC & coamings<div class="note">${fmt(c.A.hc+c.A.cm)} m²</div></td>${cell("deck","hc",c.dk.hc)}<td colspan="5" class="note">SA2 spot + 2 touch-ups + finish</td></tr>`;
  h+=`<tr><td>Main deck<div class="note">${fmt(c.A.deck)} m²</div></td>${cell("deck","dk",c.dk.dk)}<td colspan="5" class="note">SA2 spot + 2 touch-ups + finish</td></tr></table></div>
  <p class="note">Γκρι = αυτόματο από το επίπεδο (Light/Medium/Heavy/Full). Γράψε δικό σου νούμερο για να το αλλάξεις (κίτρινο). 1st/2nd TU = % της επιφάνειας που βάφεται touch-up (αυτόματα: blasted × 1.2 και 1st × 1.2). Full coats = πόσα πλήρη χέρια.</p>
