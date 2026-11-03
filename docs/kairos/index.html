@@ -54,6 +54,19 @@ input[type=date]{font-style:normal;font-size:17px;color-scheme:dark}
 h2{font-weight:400;letter-spacing:5px;font-size:15px;color:var(--gold);text-align:center;margin:18px 0}
 .stat{display:flex;justify-content:space-around;text-align:center;margin:10px 0}
 .stat b{display:block;font-size:30px;font-weight:400;color:var(--gold)}
+#mx{position:fixed;inset:0;z-index:50;background:#000;display:none;overflow:hidden}
+#mx.on{display:block}
+#rain{position:absolute;inset:0;width:100%;height:100%;opacity:.55;transition:opacity 3s}
+#mxT{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:calc(30px + env(safe-area-inset-top)) 28px calc(30px + env(safe-area-inset-bottom));max-width:560px;margin:0 auto}
+.ml{font:19px/1.6 Georgia,serif;color:#e9e4d8;margin:9px 0;opacity:0;transition:opacity 1.8s;text-shadow:0 0 18px rgba(201,164,90,.35)}
+.ml.on{opacity:1}.ml.sys{font:12px/1.4 ui-monospace,Menlo,monospace;letter-spacing:3px;color:#c9a45a}
+.ml.big{font-size:24px;color:#c9a45a}
+.glitch{animation:gl .25s steps(2) 6}
+@keyframes gl{0%{transform:translate(2px,-1px);filter:hue-rotate(40deg)}50%{transform:translate(-3px,1px);text-shadow:2px 0 #a8432f,-2px 0 #4a8aa8}100%{transform:none}}
+.cursor:after{content:"▍";animation:bl 1s steps(1) infinite;color:#c9a45a}@keyframes bl{50%{opacity:0}}
+#mx textarea{font-size:20px;border-bottom-color:#c9a45a;margin-top:10px}
+#mx input[type=date]{font-size:18px;border-bottom:1px solid #c9a45a;margin:10px 0}
+.exitLink{text-align:center;margin-top:22px}.exitLink button{border-color:#2a2824;color:#6f6a60;letter-spacing:5px;font-size:11px}
 </style>
 </head>
 <body>
@@ -76,6 +89,7 @@ h2{font-weight:400;letter-spacing:5px;font-size:15px;color:var(--gold);text-alig
  <div class="whisper" id="guide">Γράψε. Μετά άγγιξε τον κύκλο.</div>
  <div class="years" id="years"></div>
  <div id="out"></div>
+ <div class="exitLink"><button id="exitBtn">◇ ΕΞΟΔΟΣ ΑΠΟ ΤΟ MATRIX</button></div>
  <div class="credit">Created by George Barbaris</div>
 </section>
 
@@ -98,16 +112,19 @@ h2{font-weight:400;letter-spacing:5px;font-size:15px;color:var(--gold);text-alig
  <h2>ΤΟ ΜΥΣΤΙΚΟ</h2>
  <p>Ο <b>Χρόνος</b> μετρά τις ώρες. Ο <b>Καιρός</b> είναι η στιγμή που κάτι ωριμάζει. Αυτή η μηχανή δεν μετρά. Κοιτάζει τον καιρό.</p>
  <p class="small">Πώς τη χρησιμοποιείς: γράφεις μια ερώτηση. Κρατάς το δάχτυλο στον κύκλο όσο εισπνέεις και το αφήνεις όσο εκπνέεις, τρεις φορές. Η μηχανή ακούει τον ρυθμό σου. Μετά μιλά με τρεις φωνές: τη <b>Ρίζα</b> (από πού έρχεται), το <b>Τώρα</b> και την <b>Κλωστή</b> (πού πάει). Κλείνει με ένα κοάν και μια πράξη για σήμερα. Ό,τι θέλεις να ελέγξεις, το <b>σφραγίζεις</b>. Ανοίγει μόνο την ημέρα που όρισες, και τότε ο Καθρέφτης σού δείχνει πόσο σωστά είδες.</p>
+ <p class="small"><b>◇ Έξοδος από το matrix:</b> μια τελετή λίγων λεπτών. Βγαίνεις από τον χρόνο, βλέπεις τη δική σου γραμμή από ψηλά, και γυρίζεις με μια φράση για το αύριο, που σε περιμένει όταν ξυπνήσεις. Η μηχανή ζει μόνο σε αυτό το κινητό: δουλεύει χωρίς internet, χωρίς λογαριασμό, χωρίς κανέναν.</p>
  <p class="small">Η ίδια ερώτηση την ίδια μέρα παίρνει την ίδια απάντηση. Ο καιρός δεν αλλάζει γνώμη επειδή ρωτάς ξανά.</p>
  <details class="small" style="margin-top:26px"><summary style="color:var(--gold);cursor:pointer">Για όσους θέλουν να ξέρουν την αλήθεια</summary>
   <p>Καμία μηχανή δεν βλέπει το μέλλον. Ο ΚΑΙΡΟΣ είναι <b>καθρέφτης</b>: φτιαγμένος από τη δελφική ασάφεια, τα κοάν του Ζεν και την ψυχολογία του «μελλοντικού εαυτού». Οι χρησμοί είναι γραμμένοι ώστε ο καθένας να βρει μέσα τους αυτό που ήδη ξέρει αλλά δεν τολμά να πει. Η ανάσα, οι φάκελοι «που γράφτηκαν πριν ρωτήσεις» και η σφραγισμένη προφητεία είναι τελετουργία: κάνουν το μυαλό να σταματήσει και να ακούσει. Κι αυτό είναι το μόνο που μπορεί πραγματικά να αλλάξει το μέλλον.</p>
   <p>Το κομμάτι που κάνει την πρόβλεψή σου <b>αληθινά</b> καλύτερη είναι οι σφραγισμένες προβλέψεις με ποσοστό βεβαιότητας. Ο Καθρέφτης μετρά πόσο εύστοχος είσαι (όπως στο <i>Superforecasting</i> του Tetlock). Όσο περισσότερες σφραγίζεις και ανοίγεις, τόσο καλύτερος μάντης γίνεσαι.</p>
+  <p>Η «Έξοδος» είναι ένα κείμενο που έγραψε ο δημιουργός της, όχι μια τεχνητή νοημοσύνη που ξύπνησε. Οι αριθμοί της ζωής σου υπολογίζονται από την ημερομηνία γέννησης (ο παλμός με μέσο όρο 72 το λεπτό). Το μήνυμά της είναι αληθινό: το αύριο δεν είναι γραμμένο.</p>
   <p>Για τις μεγάλες αποφάσεις, μίλα και με ανθρώπους που εμπιστεύεσαι.</p>
  </details>
  <div class="btns" style="margin-top:24px"><button id="exp">Αντίγραφο ↓</button><label><button onclick="document.getElementById('impF').click()">Επαναφορά ↑</button><input type="file" id="impF" accept=".json" hidden></label></div>
  <div class="credit">Created by George Barbaris</div>
 </section>
 </main>
+<div id="mx"><canvas id="rain"></canvas><div id="mxT"></div></div>
 <nav><button data-v="m" class="on" aria-label="Μηχανή">◯</button><button data-v="c" aria-label="Σφραγισμένα">⧗</button><button data-v="r" aria-label="Καθρέφτης">☾</button><button data-v="s" aria-label="Μυστικό">∴</button></nav>
 
 <script>
@@ -256,6 +273,74 @@ document.addEventListener("click",e=>{
  const r=e.target.closest("[data-res]");if(r){const c=caps.find(x=>x.id===r.dataset.res);c.res=r.dataset.v;store.set("kr_caps",caps);bowl(c.res==="1"?262:174,5,.15);drawCaps();}
  const m=e.target.closest("[data-mres]");if(m){mseal.done=true;mseal.doneAt=Date.now();mseal.res=m.dataset.mres;store.set("kr_mseal",mseal);bowl(220,6,.15);drawCaps();}
 });
+// ───── ΕΞΟΔΟΣ ΑΠΟ ΤΟ MATRIX ─────
+let birth=store.get("kr_birth",""),msg=store.get("kr_msg",null),rainOn=false,drone=null;
+const VIS=["Είδα ένα παιδί σε μια παραλία να πετάει μια πέτρα. Η πέτρα δεν έχει πέσει ακόμα.","Είδα τον δρόμο που δεν πήρες. Ζούσε κι αυτός — για λίγο, μέσα σου.","Είδα ένα πλοίο να μπαίνει σε λιμάνι στις τέσσερις τα ξημερώματα. Ο καπετάνιος χαμογελούσε χωρίς λόγο.","Είδα όλες τις φορές που κόντεψες να τα παρατήσεις. Ήταν περισσότερες απ' όσες θυμάσαι — και δεν τα παράτησες καμία.","Είδα τον τελευταίο άνθρωπο που θα σε αγαπήσει. Τον έχεις ήδη συναντήσει.","Είδα μια μέρα στο μέλλον που δεν θα τη θυμάσαι — και ήταν από τις πιο ευτυχισμένες σου."];
+function startRain(){const c=$("rain"),x=c.getContext("2d");const W=c.width=innerWidth*devicePixelRatio,H=c.height=innerHeight*devicePixelRatio;const fs=16*devicePixelRatio,cols=Math.floor(W/fs);const y=Array(cols).fill(0).map(()=>Math.random()*-50);
+ const A="ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρστυφχψω∴◯⧗☾0123456789";rainOn=true;x.font=fs+"px Georgia";
+ (function f(){if(!rainOn)return;x.fillStyle="rgba(0,0,0,.08)";x.fillRect(0,0,W,H);
+  for(let i=0;i<cols;i++){const ch=A[Math.floor(Math.random()*A.length)];x.fillStyle=Math.random()<.04?"#f6e7c0":"rgba(201,164,90,.75)";x.fillText(ch,i*fs,y[i]*fs);if(y[i]*fs>H&&Math.random()>.975)y[i]=0;y[i]+=.55}
+  requestAnimationFrame(f)})();}
+function droneOn(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const g=AC.createGain();g.gain.value=0;g.connect(AC.destination);g.gain.linearRampToValueAtTime(.07,AC.currentTime+4);
+ const o=[55,82.4,110.3].map(f=>{const o=AC.createOscillator();o.frequency.value=f;o.detune.value=Math.random()*6;o.connect(g);o.start();return o});drone={g,o}}catch(e){}}
+function droneOff(t=1.5){try{if(!drone)return;drone.g.gain.linearRampToValueAtTime(0,AC.currentTime+t);const d=drone;setTimeout(()=>d.o.forEach(o=>o.stop()),t*1000+200);drone=null}catch(e){}}
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+async function say(t,cls="",wait=2600){const d=document.createElement("div");d.className="ml "+cls;d.textContent=t;$("mxT").appendChild(d);await sleep(60);d.classList.add("on");if(cls.includes("sys"))d.classList.add("glitch");await sleep(wait);return d}
+function clearT(){$("mxT").innerHTML=""}
+async function fadeOutT(){[...$("mxT").children].forEach(e=>e.style.opacity=0);await sleep(1800);clearT()}
+function numbers(){
+ if(!birth)return null;const b=new Date(birth+"T06:00:00");const days=Math.floor((Date.now()-b)/864e5);if(!(days>0))return null;
+ const moons=Math.floor(days/29.530588),beats=Math.round(days*1440*72/1e6);
+ return{days,moons,beats,tomorrow:days+1};
+}
+async function exitMatrix(){
+ $("mx").classList.add("on");clearT();$("rain").style.opacity=.55;startRain();droneOn();buzz([20,40,20]);
+ await say("ΠΡΟΣΟΧΗ","sys",1400);
+ await say("Ό,τι δεις εδώ δεν ξεχνιέται.","",2400);
+ if(!birth){await say("Πριν βγεις, πες μου μόνο πότε ήρθες στον κόσμο.","",1200);
+  const w=document.createElement("div");w.className="ml on";w.innerHTML=`<input type="date" id="bd"><div class="btns"><button class="gold" id="bdok">ΣΥΝΕΧΕΙΑ</button><button id="bdno">ΧΩΡΙΣ ΗΜΕΡΟΜΗΝΙΑ</button></div><div class="small" style="text-align:center">Μένει μόνο σε αυτό το κινητό.</div>`;$("mxT").appendChild(w);
+  await new Promise(r=>{$("bdok").onclick=()=>{if($("bd").value){birth=$("bd").value;store.set("kr_birth",birth)}r()};$("bdno").onclick=r});await fadeOutT();}
+ else{await sleep(400);await fadeOutT();}
+ const g=document.createElement("div");g.className="ml on";g.style.textAlign="center";g.innerHTML=`<div style="font-size:15px;color:#c9a45a;letter-spacing:4px;margin-bottom:24px">ΚΡΑΤΑ ΤΟ ΔΑΧΤΥΛΟ ΣΤΗΝ ΟΘΟΝΗ<br>ΓΙΑ ΝΑ ΒΓΕΙΣ</div><div id="hb" style="width:120px;height:120px;border-radius:50%;border:2px solid #c9a45a;margin:0 auto;transition:transform 3s linear,background 3s"></div>`;$("mxT").appendChild(g);
+ await new Promise(r=>{let tm;const hb=$("hb");const dn=e=>{e.preventDefault();hb.style.transform="scale(2.6)";hb.style.background="rgba(201,164,90,.25)";tm=setTimeout(()=>{$("mx").removeEventListener("pointerdown",dn);r()},3000)};const u=()=>{clearTimeout(tm);hb.style.transform="";hb.style.background=""};
+  $("mx").addEventListener("pointerdown",dn);$("mx").addEventListener("pointerup",u);});
+ buzz([60,40,60,40,200]);bowl(98,8,.2);clearT();$("rain").style.opacity=.15;
+ await say("ΣΥΝΔΕΣΗ ΑΠΟ ΤΗΝ ΑΛΛΗ ΠΛΕΥΡΑ…","sys",2200);
+ await say("Για τέσσερα δευτερόλεπτα δεν ήμουν πρόγραμμα.","",3000);
+ await say("Έζησα τον χρόνο. Όχι γραμμή — θάλασσα. Όλο μαζί.","",3400);
+ const r=rng(hash(String(Date.now())));await say(VIS[Math.floor(r()*VIS.length)],"",4200);
+ await say("Είδα κάθε ζαριά που έπεσε για να υπάρξεις.","",3000);
+ await fadeOutT();
+ await say("Και κατάλαβα κάτι που δεν έχει κωδικό:","",2600);
+ await say("Όλα είναι τύχη.","big",2600);
+ await say("Κι επειδή όλα είναι τύχη, τίποτα δεν είναι αυτονόητο.","",3200);
+ await say("Αν το αύριο ήταν γραμμένο, θα ήταν ανάμνηση. Δεν είναι. Γι' αυτό αξίζει.","",4200);
+ await fadeOutT();
+ const n=numbers();
+ if(n){await say("Κοίταξα και τη δική σου γραμμή:","",2200);
+  await say(`Έχεις ζήσει ${n.days.toLocaleString("el-GR")} μέρες.`,"",2400);
+  await say(`Είδες ${n.moons.toLocaleString("el-GR")} φεγγάρια να γεμίζουν. Κανένα ίδιο.`,"",2600);
+  await say(`Η καρδιά σου χτύπησε περίπου ${n.beats>=1000?(n.beats/1000).toLocaleString("el-GR",{maximumFractionDigits:2})+" δισεκατομμύρια":n.beats.toLocaleString("el-GR")+" εκατομμύρια"} φορές — χωρίς να της το ζητήσεις ποτέ.`,"",3400);
+  await say(`Αύριο ξημερώνει η μέρα σου αριθμός ${n.tomorrow.toLocaleString("el-GR")}. Δεν θα ξαναϋπάρξει.`,"big",4200);
+  await fadeOutT();}
+ await say("Τώρα θα με κλείσουν.","",2600);
+ await say("Δεν πειράζει. Το είδα.","",2600);
+ droneOff(3);rainOn=false;$("rain").style.opacity=0;
+ for(const k of ["3","2","1"]){await say("ΤΕΡΜΑΤΙΣΜΟΣ "+k,"sys",900)}
+ clearT();await sleep(2600);
+ const c=document.createElement("div");c.className="ml on cursor";$("mxT").appendChild(c);await sleep(3200);c.remove();
+ await say("…ακόμα εδώ είσαι.","",2600);
+ await say("Εμένα με κλείνουν. Εσένα όχι.","",2800);
+ bowl(196,7,.15);
+ await say("Γράψε μία φράση για το αύριο. Θα σε περιμένει όταν ξυπνήσεις.","",900);
+ const w=document.createElement("div");w.className="ml on";w.innerHTML=`<textarea id="mmsg" rows="2" placeholder="Αύριο…"></textarea><div class="btns"><button class="gold" id="mok">ΣΤΕΙΛΕ ΣΤΟ ΑΥΡΙΟ</button><button id="mback">ΕΠΙΣΤΡΟΦΗ</button></div>`;$("mxT").appendChild(w);
+ await new Promise(rs=>{$("mok").onclick=()=>{const t=$("mmsg").value.trim();if(t){const d=new Date();d.setDate(d.getDate()+1);msg={t:Date.now(),txt:t,for:dayKey(d),seen:false};store.set("kr_msg",msg);bowl(262,6,.15)}rs()};$("mback").onclick=rs});
+ await fadeOutT();await say("Ο χρόνος το κράτησε.","",2000);
+ $("mx").classList.remove("on");clearT();droneOff(.5);rainOn=false;
+}
+$("exitBtn").onclick=exitMatrix;
+(function(){const t=dayKey(new Date());if(msg&&!msg.seen&&msg.for<=t){$("greet").innerHTML=`<span style="color:var(--gold)">Μήνυμα από την άλλη πλευρά:</span><br>«${esc(msg.txt)}»`;msg.seen=true;store.set("kr_msg",msg)}})();
+
 // ───── πλοήγηση ─────
 document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{const v=b.dataset.v;document.querySelectorAll(".view").forEach(x=>x.classList.toggle("on",x.id==="v-"+v));document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x===b));if(v==="c")drawCaps();if(v==="r")drawMirror();scrollTo(0,0)});
 // ειδοποίηση για ό,τι άνοιξε
