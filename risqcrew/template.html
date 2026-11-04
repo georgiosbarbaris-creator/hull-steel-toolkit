@@ -82,7 +82,7 @@ button{font:inherit;cursor:pointer}
 .big{font-size:28px;font-weight:800}.vt{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}.vt td,.vt th{border:1px solid var(--line);padding:6px;text-align:center}
 .v12{background:var(--okb);color:var(--ok);font-weight:700}.v9{background:#eef6d9;color:#5b7a12;font-weight:700}.v6{background:var(--hrb);color:var(--hr);font-weight:700}.v3{background:#fde3cf;color:#a5490f;font-weight:700}.vU{background:var(--fb);color:var(--f);font-weight:700}
 .pg h3{margin:14px 0 6px;font-size:15px}.pg ul{padding-left:20px;margin:6px 0}.pg li{margin:4px 0}
-.chk{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--line);font-size:15px}.chk input{width:22px;height:22px;flex:0 0 22px;margin-top:1px}
+.dci{position:relative}.dci .chk{padding-right:40px;flex-direction:row;align-items:center;color:inherit;font-size:15px}.ib{position:absolute;right:0;top:4px;background:none;border:0;font-size:20px;padding:2px 4px;cursor:pointer}.dinfo{font-size:13.5px;line-height:1.45;background:var(--line);border-radius:8px;padding:8px 10px;margin:2px 0 8px 32px}.chk{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--line);font-size:15px}.chk input{width:22px;height:22px;flex:0 0 22px;margin-top:1px}
 .qa{border-bottom:1px solid var(--line);padding:10px 0}.qa .who{font-size:12px;color:var(--acc);font-weight:700}.qa .ans2{display:none;background:var(--okb);border-radius:8px;padding:8px;margin-top:6px;font-size:14px}.qa.open .ans2{display:block}
 header{background:#0e5a5a}#toast{background:#0e5a5a}
 .lng{background:rgba(255,255,255,.18)!important;font:700 13px system-ui!important;padding:7px 10px!important;letter-spacing:.5px}
@@ -175,7 +175,7 @@ const TT={en:{
  vOk:"✅ With a good close-out you get 12 months.",vNote:"Change the severity inside each finding (Low/Med/High). Default: High for the RightShip high-risk list (4.5, 4.18, 9A.13, 13.33, 4.37, 10.4, 4.11). Forecast from the published validity matrix; RightShip also does a peer review.",
  crewX:"Cards for each rank. Send them to the ship or read them at the briefing. The number is the RISQ question.",crewAll:"📤 All cards",
  drillX:"Ask the crew like the inspector does. Tap a question to see the right answer. An officer who hesitates = finding.",drillSh:"📤 Send to ship",
- docsX:"Hybrid inspection: documents are uploaded to RightShip at least 72 hours before. One file per request, correct name, valid.",docsKeep:"Ticks are saved in this check.",docsOpen:"Open a check to keep ✔.",docsSh:"📤 List to ship",
+ docsX:"Hybrid inspection: documents are uploaded to RightShip at least 72 hours before. One file per request, correct name, valid. Tap ℹ️ to see what each document is and what to show.",docsKeep:"Ticks are saved in this check.",docsOpen:"Open a check to keep ✔.",docsSh:"📤 List to ship",
  A:{DOC:"Master's office / ship's office",BRG:"Bridge, ECDIS, charts, GMDSS",LSA:"Lifeboats, rafts, fire equipment",DECK:"Mooring, cranes, ladders, pollution",HOLD:"Cargo holds, hatch covers, access",ER:"Machinery, OWS, fire, steering",ACC:"Galley, cabins, hospital, welfare"}},
 fil:{
  sub:"{n} tanong · offline",howT:"Paano gamitin",
@@ -196,7 +196,7 @@ fil:{
  vOk:"✅ Kung maayos ang close-out, 12 buwan ang makukuha mo.",vNote:"Palitan ang severity sa loob ng bawat finding (Low/Med/High). Default: High para sa RightShip high-risk list (4.5, 4.18, 9A.13, 13.33, 4.37, 10.4, 4.11). Tantiya batay sa published validity matrix; may peer review din ang RightShip.",
  crewX:"Card para sa bawat rank. Ipadala sa barko o basahin sa briefing. Ang numero ay ang RISQ question.",crewAll:"📤 Lahat ng card",
  drillX:"Magtanong sa crew gaya ng ginagawa ng inspector. Pindutin ang tanong para makita ang tamang sagot. Officer na nag-aalangan sumagot = finding.",drillSh:"📤 Ipadala sa barko",
- docsX:"Hybrid inspection: ina-upload ang mga dokumento sa RightShip hindi bababa sa 72 oras bago. Isang file bawat request, tamang pangalan, valid.",docsKeep:"Naka-save ang ✔ sa check na ito.",docsOpen:"Magbukas ng check para ma-save ang ✔.",docsSh:"📤 Ipadala ang listahan",
+ docsX:"Hybrid inspection: ina-upload ang mga dokumento sa RightShip hindi bababa sa 72 oras bago. Isang file bawat request, tamang pangalan, valid. Pindutin ang ℹ️ para makita kung ano ang bawat dokumento at ano ang ipapakita.",docsKeep:"Naka-save ang ✔ sa check na ito.",docsOpen:"Magbukas ng check para ma-save ang ✔.",docsSh:"📤 Ipadala ang listahan",
  A:{DOC:"Opisina ng Master / ship's office",BRG:"Bridge, ECDIS, charts, GMDSS",LSA:"Lifeboat, liferaft, fire equipment",DECK:"Mooring, crane, ladder, polusyon",HOLD:"Cargo holds, hatch covers, daanan",ER:"Makina, OWS, sunog, steering",ACC:"Galley, cabin, hospital, welfare"}}};
 let L="en";try{L=localStorage.getItem("risqc_lang")==="fil"?"fil":"en";}catch(e){}
 const t=(k,v)=>{let s=(TT[L][k]??TT.en[k]??k);if(v)for(const a in v)s=s.split("{"+a+"}").join(v[a]);return s;};
@@ -423,13 +423,13 @@ function rPage(){const ins=pageFrom!=="list"?I():null,box=$("#pg");let h="";
     X.drill.map((d,i)=>`<div class="qa" data-i="${i}"><div class="who">${esc(d[0])} · RISQ ${esc(d[3])}</div><div style="font-weight:600">${esc(drQ(d))}</div><div class="ans2">${esc(drA(d))}${F(L)&&d[5]?`<div class="note" style="margin-top:6px">🇬🇧 ${esc(d[2])}</div>`:""}</div></div>`).join("")+`</div>`;}
   else if(page==="docs"){const dc=ins?(ins.dc=ins.dc||{}):null;
     h=`<div class="card note" style="margin-top:0">${t("docsX")} ${ins?t("docsKeep"):t("docsOpen")}</div><div class="row" style="margin-bottom:6px"><button class="btn" id="docsSh">${t("docsSh")}</button><span class="note" id="docsN"></span></div>`+
-    X.docs.map(([sn,l],i)=>`<div class="card"><h2 style="margin-top:0">${esc(sn)}</h2>${l.map((d,j)=>`<label class="chk"><input type="checkbox" data-dc="${i}_${j}" ${dc&&dc[i+"_"+j]?"checked":""} ${dc?"":"disabled"}><span>${esc(d)}</span></label>`).join("")}</div>`).join("");}
+    X.docs.map(([sn,l],i)=>`<div class="card"><h2 style="margin-top:0">${esc(sn)}</h2>${l.map((d,j)=>`<div class="dci"><label class="chk"><input type="checkbox" data-dc="${i}_${j}" ${dc&&dc[i+"_"+j]?"checked":""} ${dc?"":"disabled"}><span>${esc(d)}</span></label>${(X.docsi||{})[d]?`<button class="ib" data-di="${i}_${j}" aria-label="info">ℹ️</button><div class="dinfo" id="di${i}_${j}" hidden>${esc(X.docsi[d][F(L)?1:0])}</div>`:""}</div>`).join("")}</div>`).join("");}
   box.innerHTML=h;hdr();
   box.querySelectorAll(".qa").forEach(e=>e.onclick=()=>e.classList.toggle("open"));
   box.querySelectorAll("[data-crew]").forEach(b=>b.onclick=()=>shareText("RISQ briefing – "+X.crew[b.dataset.crew][0],crewTxt([X.crew[b.dataset.crew]])));
   const ca=$("#crewAll");if(ca)ca.onclick=()=>shareText("RISQ crew briefing",crewTxt(X.crew));
   const ds=$("#drillSh");if(ds)ds.onclick=()=>shareText("RightShip interview drill",X.drill.map((d,i)=>`${i+1}. [${d[0]} · RISQ ${d[3]}] ${drQ(d)}\n   → ${drA(d)}`).join("\n\n"));
-  const dsh=$("#docsSh");if(dsh)dsh.onclick=()=>shareText("RightShip hybrid documents (72h)",X.docs.map(([sn,l])=>sn.toUpperCase()+"\n"+l.map(d=>"☐ "+d).join("\n")).join("\n\n"));
+  $$("[data-di]").forEach(b=>b.onclick=()=>{const e=document.getElementById("di"+b.dataset.di);e.hidden=!e.hidden;});const dsh=$("#docsSh");if(dsh)dsh.onclick=()=>shareText("RightShip hybrid documents (72h)",X.docs.map(([sn,l])=>sn.toUpperCase()+"\n"+l.map(d=>"☐ "+d).join("\n")).join("\n\n"));
   const dn=()=>{const e=$("#docsN");if(e&&ins){const n0=X.docs.reduce((a,b)=>a+b[1].length,0),n=Object.values(ins.dc||{}).filter(Boolean).length;e.textContent=`${n}/${n0} ✔`;}};dn();
   box.querySelectorAll("[data-dc]").forEach(c=>c.onchange=()=>{ins.dc[c.dataset.dc]=c.checked;save();dn();});}
 
