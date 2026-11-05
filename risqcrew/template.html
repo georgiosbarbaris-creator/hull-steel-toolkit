@@ -82,7 +82,8 @@ button{font:inherit;cursor:pointer}
 .big{font-size:28px;font-weight:800}.vt{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}.vt td,.vt th{border:1px solid var(--line);padding:6px;text-align:center}
 .v12{background:var(--okb);color:var(--ok);font-weight:700}.v9{background:#eef6d9;color:#5b7a12;font-weight:700}.v6{background:var(--hrb);color:var(--hr);font-weight:700}.v3{background:#fde3cf;color:#a5490f;font-weight:700}.vU{background:var(--fb);color:var(--f);font-weight:700}
 .pg h3{margin:14px 0 6px;font-size:15px}.pg ul{padding-left:20px;margin:6px 0}.pg li{margin:4px 0}
-.dci{position:relative}.dci .chk{padding-right:40px;flex-direction:row;align-items:center;color:inherit;font-size:15px}.ib{position:absolute;right:0;top:4px;background:none;border:0;font-size:20px;padding:2px 4px;cursor:pointer}.dinfo{font-size:13.5px;line-height:1.45;background:var(--line);border-radius:8px;padding:8px 10px;margin:2px 0 8px 32px}.chk{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--line);font-size:15px}.chk input{width:22px;height:22px;flex:0 0 22px;margin-top:1px}
+.dci{position:relative}.dci .chk{padding-right:40px;flex-direction:row;align-items:center;color:inherit;font-size:15px}.ib{position:absolute;right:0;top:4px;background:none;border:0;font-size:20px;padding:2px 4px;cursor:pointer}.dinfo{font-size:13.5px;line-height:1.45;background:var(--line);border-radius:8px;padding:8px 10px;margin:2px 0 8px 32px}.pscr{display:flex;gap:6px;overflow-x:auto;padding:2px 0 10px}.pchip{flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:18px;padding:7px 12px;font:600 14px system-ui}.pchip.on{background:var(--navy,#0e5a5a);color:#fff;border-color:var(--navy,#0e5a5a)}.pgo{flex:0 0 auto;margin-left:auto;border:1px solid var(--line);background:none;color:var(--acc);border-radius:8px;padding:2px 8px;font:600 13px system-ui}.psrc a{color:var(--acc);word-break:break-word}.chk.pchk{flex-direction:row;align-items:flex-start;color:inherit;font-size:15px;font-weight:400}.pchk .pgo{margin-top:0}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--line);font-size:15px}.chk input{width:22px;height:22px;flex:0 0 22px;margin-top:1px}
 .qa{border-bottom:1px solid var(--line);padding:10px 0}.qa .who{font-size:12px;color:var(--acc);font-weight:700}.qa .ans2{display:none;background:var(--okb);border-radius:8px;padding:8px;margin-top:6px;font-size:14px}.qa.open .ans2{display:block}
 header{background:#0e5a5a}#toast{background:#0e5a5a}
 .lng{background:rgba(255,255,255,.18)!important;font:700 13px system-ui!important;padding:7px 10px!important;letter-spacing:.5px}
@@ -104,6 +105,7 @@ header{background:#0e5a5a}#toast{background:#0e5a5a}
         <button data-pg="crew"><span data-t="pg_crew"></span><small data-t="pg_crew_s"></small></button>
         <button data-pg="drill"><span data-t="pg_drill"></span><small data-t="pg_drill_s"></small></button>
         <button data-pg="docs"><span data-t="pg_docs"></span><small data-t="pg_docs_s"></small></button>
+        <button data-pg="psc"><span data-t="pg_psc"></span><small data-t="pg_psc_s"></small></button>
       </div>
       <p class="note" style="margin:10px 0 0" data-th="target"></p></div>
     <button class="btn p" id="newIns" style="width:100%;padding:14px" data-t="newIns"></button>
@@ -127,7 +129,7 @@ header{background:#0e5a5a}#toast{background:#0e5a5a}
   <section id="v-home" class="hide">
     <div class="card tog"><div><b data-t="hrOnly"></b><div class="note" data-t="hrOnlyX"></div></div><label class="sw"><input type="checkbox" id="hrOnly"><span></span></label></div>
     <div class="tiles" id="tiles"></div>
-    <div class="row" style="margin-top:12px"><button class="btn" id="editIns" data-t="details"></button><button class="btn" id="docsIns" data-t="docs72"></button><button class="btn" id="drillIns" data-t="pg_drill"></button></div>
+    <div class="row" style="margin-top:12px"><button class="btn" id="editIns" data-t="details"></button><button class="btn" id="docsIns" data-t="docs72"></button><button class="btn" id="drillIns" data-t="pg_drill"></button><button class="btn" id="pscIns">🛂 PSC</button></div>
   </section>
 
   <!-- PAGES -->
@@ -154,7 +156,7 @@ header{background:#0e5a5a}#toast{background:#0e5a5a}
 <div id="toast"></div>
 <script>
 const DATA=/*DATA*/;
-const X=/*EXTRA*/;const QM=Object.fromEntries(DATA.q.map(q=>[q.id,q]));const HI=new Set(X.hi);
+const X=/*EXTRA*/;const PSC=/*PSC*/;const QM=Object.fromEntries(DATA.q.map(q=>[q.id,q]));const HI=new Set(X.hi);
 /* ---------- language ---------- */
 const TT={en:{
  sub:"{n} questions · offline",howT:"How it works",
@@ -175,7 +177,7 @@ const TT={en:{
  vOk:"✅ With a good close-out you get 12 months.",vNote:"Change the severity inside each finding (Low/Med/High). Default: High for the RightShip high-risk list (4.5, 4.18, 9A.13, 13.33, 4.37, 10.4, 4.11). Forecast from the published validity matrix; RightShip also does a peer review.",
  crewX:"Cards for each rank. Send them to the ship or read them at the briefing. The number is the RISQ question.",crewAll:"📤 All cards",
  drillX:"Ask the crew like the inspector does. Tap a question to see the right answer. An officer who hesitates = finding.",drillSh:"📤 Send to ship",
- docsX:"Hybrid inspection: documents are uploaded to RightShip at least 72 hours before. One file per request, correct name, valid. Tap ℹ️ to see what each document is and what to show.",docsKeep:"Ticks are saved in this check.",docsOpen:"Open a check to keep ✔.",docsSh:"📤 List to ship",
+ docsX:"Hybrid inspection: documents are uploaded to RightShip at least 72 hours before. One file per request, correct name, valid. Tap ℹ️ to see what each document is and what to show.",docsKeep:"Ticks are saved in this check.",docsOpen:"Open a check to keep ✔.",docsSh:"📤 List to ship",pg_psc:"🛂 PSC by region",pg_psc_s:"AMSA · Paris · Tokyo · USCG",pscAll:"Basics for all PSC",pscFirst:"Do the “🌐 All” list first too.",pscCamp:"Campaign",pscSh:"📤 Send list",pscUpd:"Updated",pscSrc:"Sources",
  A:{DOC:"Master's office / ship's office",BRG:"Bridge, ECDIS, charts, GMDSS",LSA:"Lifeboats, rafts, fire equipment",DECK:"Mooring, cranes, ladders, pollution",HOLD:"Cargo holds, hatch covers, access",ER:"Machinery, OWS, fire, steering",ACC:"Galley, cabins, hospital, welfare"}},
 fil:{
  sub:"{n} tanong · offline",howT:"Paano gamitin",
@@ -196,7 +198,7 @@ fil:{
  vOk:"✅ Kung maayos ang close-out, 12 buwan ang makukuha mo.",vNote:"Palitan ang severity sa loob ng bawat finding (Low/Med/High). Default: High para sa RightShip high-risk list (4.5, 4.18, 9A.13, 13.33, 4.37, 10.4, 4.11). Tantiya batay sa published validity matrix; may peer review din ang RightShip.",
  crewX:"Card para sa bawat rank. Ipadala sa barko o basahin sa briefing. Ang numero ay ang RISQ question.",crewAll:"📤 Lahat ng card",
  drillX:"Magtanong sa crew gaya ng ginagawa ng inspector. Pindutin ang tanong para makita ang tamang sagot. Officer na nag-aalangan sumagot = finding.",drillSh:"📤 Ipadala sa barko",
- docsX:"Hybrid inspection: ina-upload ang mga dokumento sa RightShip hindi bababa sa 72 oras bago. Isang file bawat request, tamang pangalan, valid. Pindutin ang ℹ️ para makita kung ano ang bawat dokumento at ano ang ipapakita.",docsKeep:"Naka-save ang ✔ sa check na ito.",docsOpen:"Magbukas ng check para ma-save ang ✔.",docsSh:"📤 Ipadala ang listahan",
+ docsX:"Hybrid inspection: ina-upload ang mga dokumento sa RightShip hindi bababa sa 72 oras bago. Isang file bawat request, tamang pangalan, valid. Pindutin ang ℹ️ para makita kung ano ang bawat dokumento at ano ang ipapakita.",docsKeep:"Naka-save ang ✔ sa check na ito.",docsOpen:"Magbukas ng check para ma-save ang ✔.",docsSh:"📤 Ipadala ang listahan",pg_psc:"🛂 PSC ayon sa rehiyon",pg_psc_s:"AMSA · Paris · Tokyo · USCG",pscAll:"Basic para sa lahat ng PSC",pscFirst:"Gawin din muna ang “🌐 All” na listahan.",pscCamp:"Campaign",pscSh:"📤 Ipadala ang listahan",pscUpd:"Update",pscSrc:"Pinagmulan",
  A:{DOC:"Opisina ng Master / ship's office",BRG:"Bridge, ECDIS, charts, GMDSS",LSA:"Lifeboat, liferaft, fire equipment",DECK:"Mooring, crane, ladder, polusyon",HOLD:"Cargo holds, hatch covers, daanan",ER:"Makina, OWS, sunog, steering",ACC:"Galley, cabin, hospital, welfare"}}};
 let L="en";try{L=localStorage.getItem("risqc_lang")==="fil"?"fil":"en";}catch(e){}
 const t=(k,v)=>{let s=(TT[L][k]??TT.en[k]??k);if(v)for(const a in v)s=s.split("{"+a+"}").join(v[a]);return s;};
@@ -228,7 +230,7 @@ async function shareText(title,text){if(navigator.share){try{await navigator.sha
   try{await navigator.clipboard.writeText(text);toast(t("copied"));}catch(e){toast(t("noCopy"));}}
 
 /* ---------- state ---------- */
-let cur=null,area=null,aflt="open",view="list",page=null,pageFrom="list";
+let page_psc=null,cur=null,area=null,aflt="open",view="list",page=null,pageFrom="list";
 const I=()=>S.ins.find(x=>x.id===cur);
 const QS=ins=>DATA.q.filter(q=>!ins.hr||q.h);
 function stats(ins,a){const qs=QS(ins).filter(q=>!a||q.a===a);let d=0,f=0;qs.forEach(q=>{const v=ins.st[q.id];if(v)d++;if(v==="f")f++;});return{n:qs.length,d,f};}
@@ -411,7 +413,7 @@ function rValid(ins,fl){const c={L:0,M:0,H:0},sec={};fl.forEach(q=>{const v=sevO
 /* ---------- pages ---------- */
 function openPage(k,from){page=k;pageFrom=from||(view==="list"?"list":"home");go("page");}
 $$("[data-pg]").forEach(b=>b.onclick=()=>{cur=null;openPage(b.dataset.pg,"list");});
-$("#docsIns").onclick=()=>openPage("docs","home");$("#drillIns").onclick=()=>openPage("drill","home");
+$("#docsIns").onclick=()=>openPage("docs","home");$("#drillIns").onclick=()=>openPage("drill","home");$("#pscIns").onclick=()=>openPage("psc","home");
 const crewL=r=>F(L)&&r[2]?r[2]:r[1];
 const crewTxt=rs=>(F(L)?"RIGHTSHIP INSPECTION – CREW BRIEFING\n(“Kung hindi naka-record, hindi ginawa.” Ang huling permit/record ang tinitingnan ng inspector, at sinusubukan niya ang equipment.)\n\n":"RIGHTSHIP INSPECTION – CREW BRIEFING\n(“If it is not recorded, it is not done.” Inspector checks the LAST permit/record and tests equipment.)\n\n")+rs.map(([r,it])=>r.toUpperCase()+"\n"+it.map(x=>`☐ ${x[0]!=="*"?"["+x[0]+"] ":""}${crewL(x)}`).join("\n")).join("\n\n");
 const drQ=d=>F(L)&&d[4]?d[4]:d[1],drA=d=>F(L)&&d[5]?d[5]:d[2];
@@ -424,7 +426,20 @@ function rPage(){const ins=pageFrom!=="list"?I():null,box=$("#pg");let h="";
   else if(page==="docs"){const dc=ins?(ins.dc=ins.dc||{}):null;
     h=`<div class="card note" style="margin-top:0">${t("docsX")} ${ins?t("docsKeep"):t("docsOpen")}</div><div class="row" style="margin-bottom:6px"><button class="btn" id="docsSh">${t("docsSh")}</button><span class="note" id="docsN"></span></div>`+
     X.docs.map(([sn,l],i)=>`<div class="card"><h2 style="margin-top:0">${esc(sn)}</h2>${l.map((d,j)=>`<div class="dci"><label class="chk"><input type="checkbox" data-dc="${i}_${j}" ${dc&&dc[i+"_"+j]?"checked":""} ${dc?"":"disabled"}><span>${esc(d)}</span></label>${(X.docsi||{})[d]?`<button class="ib" data-di="${i}_${j}" aria-label="info">ℹ️</button><div class="dinfo" id="di${i}_${j}" hidden>${esc(X.docsi[d][F(L)?1:0])}</div>`:""}</div>`).join("")}</div>`).join("");}
+  else if(page==="psc"){const pc=ins?(ins.pc=ins.pc||{}):null,li=F(L)?1:0;let rid=(ins&&ins.pr)||(()=>{try{return localStorage.getItem("risqc_psc_r")}catch(e){return null}})()||"all";const R=PSC.r.find(x=>x.id===rid)||PSC.r[0];
+    h=`<div class="pscr">${PSC.r.map(x=>`<button class="pchip${x.id===R.id?" on":""}" data-pr="${x.id}">${x.f} ${esc(x.n)}</button>`).join("")}</div>
+     <div class="card" style="margin-top:0"><h2 style="margin-top:0">${R.f} ${esc(R.id==="all"?t("pscAll"):R.n)}</h2><p style="margin:0 0 6px">${esc(R.a[li])}</p>${R.c[li]?`<div class="flt">📌 <b>${t("pscCamp")}:</b> ${esc(R.c[li])}</div>`:""}${R.p[li]?`<p class="note" style="margin:4px 0 0">⚓ ${esc(R.p[li])}</p>`:""}${R.id!=="all"?`<p class="note" style="margin:6px 0 0">${t("pscFirst")}</p>`:""}</div>
+     <div class="row" style="margin-bottom:6px"><button class="btn" id="pscSh">${t("pscSh")}</button><span class="note" id="pscN"></span></div>`+
+     R.s.map((S,si)=>`<div class="card"><h2 style="margin-top:0">${esc(S.t[li])}</h2>${S.i.map((it,ii)=>{const k=R.id+"_"+si+"_"+ii;return `<label class="chk pchk"><input type="checkbox" data-pc="${k}" ${pc&&pc[k]?"checked":""} ${pc?"":"disabled"}><span style="flex:1">${it[0]!=="*"?`<b>${esc(it[0])}</b> `:""}${esc(it[1+li])}</span>${ins&&it[0]!=="*"&&QM[it[0]]?`<button class="pgo" data-goq="${it[0]}">→</button>`:""}</label>`;}).join("")}</div>`).join("")+
+     `<div class="card note psrc">${t("pscUpd")} ${esc(PSC.u)} · ${t("pscSrc")}: ${R.src.map(x=>`<a href="${x[1]}" target="_blank" rel="noopener">${esc(x[0])}</a>`).join(" · ")}${ins?"":"<br>"+t("docsOpen")}</div>`;
+    page_psc=R;}
   box.innerHTML=h;hdr();
+  if(page==="psc"){const R=page_psc,pc=ins?ins.pc:null,li=F(L)?1:0;
+    box.querySelectorAll("[data-pr]").forEach(b=>b.onclick=()=>{if(ins){ins.pr=b.dataset.pr;save();}try{localStorage.setItem("risqc_psc_r",b.dataset.pr);}catch(e){}rPage();window.scrollTo(0,0);});
+    const pn=()=>{const e=$("#pscN");if(e&&pc){const n0=R.s.reduce((a,b)=>a+b.i.length,0),n=Object.keys(pc).filter(k=>pc[k]&&k.startsWith(R.id+"_")).length;e.textContent=`${n}/${n0} ✔`;}};pn();
+    box.querySelectorAll("[data-pc]").forEach(c=>c.onchange=()=>{pc[c.dataset.pc]=c.checked;save();pn();});
+    box.querySelectorAll("[data-goq]").forEach(b=>b.onclick=e=>{e.preventDefault();const q=QM[b.dataset.goq];area=q.a;aflt="all";go("area");setTimeout(()=>{const x=$(`#qs [data-id="${q.id}"]`);if(x)x.scrollIntoView({block:"center"});},60);});
+    $("#pscSh").onclick=()=>shareText("PSC checklist – "+R.n,`PSC CHECKLIST – ${R.id==="all"?"ALL REGIMES":R.n.toUpperCase()}\n${R.a[li]}\n${R.c[li]?t("pscCamp").toUpperCase()+": "+R.c[li]+"\n":""}\n`+R.s.map(S=>S.t[li].toUpperCase()+"\n"+S.i.map(i=>`☐ ${i[0]!=="*"?"["+i[0]+"] ":""}${i[1+li]}`).join("\n")).join("\n\n")+`\n\nSources (${PSC.u}): `+R.src.map(x=>x[0]).join("; "));}
   box.querySelectorAll(".qa").forEach(e=>e.onclick=()=>e.classList.toggle("open"));
   box.querySelectorAll("[data-crew]").forEach(b=>b.onclick=()=>shareText("RISQ briefing – "+X.crew[b.dataset.crew][0],crewTxt([X.crew[b.dataset.crew]])));
   const ca=$("#crewAll");if(ca)ca.onclick=()=>shareText("RISQ crew briefing",crewTxt(X.crew));
