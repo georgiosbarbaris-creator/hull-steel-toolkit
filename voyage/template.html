@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Voyage Calc</title>
+<!--PWA-->
+<style>
+:root{--bg:#eef1f4;--card:#fff;--ink:#14212e;--muted:#5a6876;--line:#d3dae1;--navy:#123d5e;--acc:#c8551c;--ok:#2f7d4f;--f:#c0392b;--hl:#fff6d6}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1720;--card:#17222e;--ink:#e3e9ef;--muted:#97a5b3;--line:#2a3846;--navy:#8fb4dc;--acc:#ef8a55;--ok:#5fbf86;--f:#f07a6c;--hl:#2d2a17}}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.4 -apple-system,system-ui,Segoe UI,Roboto,sans-serif}
+header{position:sticky;top:0;z-index:5;background:#123d5e;color:#fff;padding:calc(env(safe-area-inset-top) + 8px) 12px 8px}
+header .r{display:flex;gap:10px;align-items:center}header h1{font-size:18px;margin:0}header .sub{font-size:12px;opacity:.8}
+#back{background:rgba(255,255,255,.15);border:0;color:#fff;font-size:22px;border-radius:10px;width:38px;height:38px}
+main{padding:10px 10px 90px;max-width:900px;margin:0 auto}.hide{display:none!important}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin:10px 0}
+h2{font-size:15px;color:var(--navy);margin:2px 0 10px}
+.btn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:9px 12px;font:600 14px system-ui}
+.btn.p{background:var(--navy);border-color:var(--navy);color:#fff}@media (prefers-color-scheme:dark){.btn.p{color:#0f1720}}
+.btn.d{color:var(--f)}.btn.s{padding:5px 9px;font-size:13px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+label{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--muted);min-width:0}
+input,select{font:16px system-ui;padding:8px;border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--ink);width:100%;min-width:0}
+input[type=checkbox]{width:20px;height:20px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media (max-width:420px){.g4{grid-template-columns:repeat(2,1fr)}}
+.note{font-size:12.5px;color:var(--muted)}
+.leg{border-left:4px solid var(--navy)}.leg.B{border-left-color:#7a8794}.leg .hd{display:flex;justify-content:space-between;align-items:center;gap:6px}
+.chip{display:inline-block;font:700 11px system-ui;border-radius:6px;padding:2px 6px;background:var(--line)}.chip.est{background:#fde7c8;color:#7a4a00}.chip.mine{background:#d7f0df;color:#1f5e37}
+@media (prefers-color-scheme:dark){.chip.est{background:#4a3612;color:#f7d49a}.chip.mine{background:#173a25;color:#9be0b4}}
+table{border-collapse:collapse;width:100%;font-size:13.5px}td,th{padding:5px 6px;border-bottom:1px solid var(--line);text-align:right}th{color:var(--muted);font-weight:600}td:first-child,th:first-child{text-align:left}
+.big{font-size:26px;font-weight:800}.kpi{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.kpi div{background:var(--bg);border-radius:12px;padding:10px}.kpi b{display:block;font-size:20px}
+.pos{color:var(--ok)}.neg{color:var(--f)}
+.tabs{display:flex;gap:6px;overflow-x:auto;margin:4px 0}.tabs button{flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:18px;padding:7px 12px;font:600 14px system-ui}.tabs button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom);z-index:6}
+.nav button{flex:1;border:0;background:none;color:var(--muted);padding:8px 0 6px;font:600 11px system-ui}.nav button b{display:block;font-size:19px}.nav button.on{color:var(--navy)}
+.item{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px;border-bottom:1px solid var(--line)}
+.toast{position:fixed;left:50%;bottom:86px;transform:translateX(-50%);background:#123d5e;color:#fff;padding:9px 14px;border-radius:10px;z-index:9;font-size:14px}
+.sens td.c0{background:var(--hl);font-weight:700}
+.cred{text-align:center;font-size:11px;color:var(--muted);margin:14px 0}
+#print{display:none}
+@media print{body{background:#fff;color:#000}header,main,.nav,.toast{display:none!important}#print{display:block;font:11px "Courier New",monospace;color:#000}
+ #print h1{font-size:15px;margin:0 0 4px}#print .y{background:#ff0;height:14px;margin:0 0 8px}#print table{font-size:10.5px;width:100%}#print td,#print th{border:1px solid #000;padding:2px 3px;color:#000}
+ #print .b{color:#1530c8;font-weight:700}#print .nb td{border:0;border-bottom:1px solid #999}@page{size:A4;margin:12mm}}
+</style>
+</head>
+<body>
+<header><div class="r"><button id="back" class="hide">‹</button><div style="flex:1;min-width:0"><h1 id="ttl">Voyage Calc</h1><div class="sub" id="sub">Voyage estimate · TCE · offline</div><div style="font-size:11px;opacity:.6">Created by George Barbaris</div></div></div></header>
+<main>
+ <!-- LIST -->
+ <section id="v-list">
+  <button class="btn p" id="newC" style="width:100%;padding:14px">+ Νέο voyage calculation</button>
+  <div id="cList"></div>
+  <div class="card note">Οι αποστάσεις από τη βάση είναι <b>εκτίμηση</b> (≈ ±5%, Suez/Panama/Cape). Όταν γράψεις τη δική σου (BP/Netpas) την κρατάω και την ξαναβάζω αυτόματα — σήμα <span class="chip mine">✔ δική σου</span>.</div>
+  <p class="cred">Created by George Barbaris</p>
+ </section>
+ <!-- EDIT -->
+ <section id="v-edit" class="hide">
+  <div class="tabs" id="tabs"><button data-t="g" class="on">⚙ Γενικά</button><button data-t="l">🧭 Legs</button><button data-t="i">💰 Έσοδα/Έξοδα</button><button data-t="r">📊 Αποτέλεσμα</button></div>
+  <div id="t-g"></div><div id="t-l" class="hide"></div><div id="t-i" class="hide"></div><div id="t-r" class="hide"></div>
+ </section>
+ <!-- COMPARE -->
+ <section id="v-cmp" class="hide"><div class="card"><h2>⚖ Σύγκριση</h2><div class="g2"><label>Α<select id="cA"></select></label><label>Β<select id="cB"></select></label></div><div id="cmpOut" style="margin-top:10px"></div></div></section>
+ <!-- SETTINGS -->
+ <section id="v-set" class="hide">
+  <div class="card"><h2>📏 Οι αποστάσεις μου</h2><input id="dSearch" placeholder="Αναζήτηση λιμανιού…"><div id="dList" style="margin-top:6px"></div></div>
+  <div class="card"><h2>🧭 Διαδρομές</h2><label class="row" style="flex-direction:row;color:var(--ink);font-size:15px"><input type="checkbox" id="avSuez"> Αποφυγή Suez (μέσω Cape)</label>
+   <label class="row" style="flex-direction:row;color:var(--ink);font-size:15px;margin-top:6px"><input type="checkbox" id="avPan"> Αποφυγή Panama</label>
+   <p class="note">Ισχύει για τις νέες εκτιμήσεις. Οι δικές σου αποστάσεις δεν αλλάζουν.</p></div>
+  <div class="card"><h2>💾 Backup</h2><div class="row"><button class="btn" id="bkOut">📤 Εξαγωγή όλων (.json)</button><label class="btn">📥 Εισαγωγή<input type="file" id="bkIn" accept=".json" style="display:none"></label></div>
+   <p class="note">Όλα μένουν μόνο σε αυτό το κινητό. Κάνε backup πριν αλλάξεις κινητό.</p></div>
+  <div class="card"><h2>⭐ Τα λιμάνια μου</h2><div id="mpList"></div><div class="row" style="margin-top:6px"><input id="mpNew" placeholder="Νέο λιμάνι"><button class="btn" id="mpAdd">+</button></div></div>
+  <div class="card note"><b>Λιμάνια στη βάση:</b> <span id="pCount"></span>. Για λιμάνι που δεν υπάρχει, γράψε το όνομα και βάλε τα μίλια χειροκίνητα — θα το θυμάμαι.</div>
+ </section>
+</main>
+<nav class="nav" id="nav"><button data-go="list" class="on"><b>☰</b>Υπολογισμοί</button><button data-go="cmp"><b>⚖</b>Σύγκριση</button><button data-go="set"><b>⚙</b>Ρυθμίσεις</button></nav>
+<div id="print"></div>
+<datalist id="plist"></datalist>
+<script>
+const PORTS=/*PORTS*/;
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const toast=m=>{const t=document.createElement("div");t.className="toast";t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),1800);};
+const n=v=>{const x=parseFloat(String(v).replace(",","."));return isFinite(x)?x:0;};
+const f0=v=>Math.round(v).toLocaleString("en-US"),f1=v=>(Math.round(v*10)/10).toLocaleString("en-US",{minimumFractionDigits:1,maximumFractionDigits:1}),f2=v=>(Math.round(v*100)/100).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+const usd=v=>(v<0?"-$":"$")+f0(Math.abs(v));
+const LS={get:(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;}},set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch(e){toast("⚠ Δεν αποθηκεύτηκε");}}};
+let S=LS.get("voy_calcs",[]),DIST=LS.get("voy_dist",{}),OPT=LS.get("voy_opt",{avSuez:false,avPan:false});
+let MYP=LS.get("voy_myports",[]);
+const save=()=>LS.set("voy_calcs",S),saveD=()=>LS.set("voy_dist",DIST);
+const chipH=l=>l.src==="mine"?'<span class="chip mine">✔ δική σου</span>':l.src==="est"?'<span class="chip est">≈ εκτίμηση</span>':"";
+function plist(){$("#plist").innerHTML=MYP.map(x=>`<option value="${esc(x)}">⭐ δικό μου</option>`).join("")+PORTS.p.map(p=>`<option value="${esc(p[0])}">${p[1]}</option>`).join("");}
+function addMyPort(v){v=(v||"").trim();if(!v||PM[v.toLowerCase()]||MYP.some(x=>x.toLowerCase()===v.toLowerCase()))return;MYP.push(v);MYP.sort();LS.set("voy_myports",MYP);plist();}
+
+/* ---------- routing ---------- */
+const PM=Object.fromEntries(PORTS.p.map(p=>[p[0].toLowerCase(),p]));
+function gc(a,b){const r=Math.PI/180,la1=a[0]*r,la2=b[0]*r,dl=(b[1]-a[1])*r,dp=la2-la1;return 2*Math.asin(Math.sqrt(Math.sin(dp/2)**2+Math.cos(la1)*Math.cos(la2)*Math.sin(dl/2)**2))*3440.065;}
+function estimate(p1,p2){const a=PM[p1.toLowerCase()],b=PM[p2.toLowerCase()];if(!a||!b)return null;
+ const N=PORTS.n,adj={},av=[];if(OPT.avSuez)av.push("Suez");if(OPT.avPan)av.push("Panama");
+ PORTS.e.forEach(e=>{if(e[2]&&av.includes(e[2]))return;const w=gc(N[e[0]],N[e[1]]);(adj[e[0]]=adj[e[0]]||[]).push([e[1],w,e[2]]);(adj[e[1]]=adj[e[1]]||[]).push([e[0],w,e[2]]);});
+ const dist={},prev={},done={};a[4].forEach(g=>{const d=gc([a[2],a[3]],N[g]);if(dist[g]==null||d<dist[g]){dist[g]=d;prev[g]=null;}});
+ for(;;){let u=null,du=1e18;for(const k in dist)if(!done[k]&&dist[k]<du){du=dist[k];u=k;}if(u==null)break;done[u]=1;
+  (adj[u]||[]).forEach(([v,w,c])=>{if(du+w<(dist[v]??1e18)){dist[v]=du+w;prev[v]=[u,c];}});}
+ let best=1e18,bg=null;b[4].forEach(g=>{if(dist[g]!=null){const d=dist[g]+gc(N[g],[b[2],b[3]]);if(d<best){best=d;bg=g;}}});
+ const share=a[4].filter(g=>b[4].includes(g));if(share.length){const d=gc([a[2],a[3]],[b[2],b[3]]);if(d<best){best=d;bg=null;}}
+ if(best>=1e18)return null;const via=[];let g=bg;while(g&&prev[g]){if(prev[g][1])via.push(prev[g][1]);g=prev[g][0];}
+ return {nm:Math.round(best+(a[5]||0)+(b[5]||0)),via:via.reverse()};}
+const dkey=(a,b)=>[a.trim().toLowerCase(),b.trim().toLowerCase()].sort().join("|");
+function distFor(a,b){if(!a||!b)return null;const m=DIST[dkey(a,b)];if(m)return {nm:m.nm,mine:1,via:m.via||[]};const e=estimate(a,b);return e?{nm:e.nm,est:1,via:e.via}:null;}
+
+/* ---------- model ---------- */
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+function blankLeg(c,cond){const d=c.d;return {from:"",to:"",nm:0,src:"",via:[],cond:cond||"L",spd:cond==="B"?d.spdB:d.spdL,ifo:cond==="B"?d.ifoB:d.ifoL,mgo:d.mgoSea,eca:0,canal:0,cdays:0,
+ pt:"D",qty:0,rate:0,terms:"SHINC",turn:12,xdays:0,pdays:0,pifo:d.ifoPort,pmgo:d.mgoPort,da:0};}
+function newCalc(){const c={id:uid(),name:"Νέο ταξίδι",vessel:"",start:new Date().toISOString().slice(0,10),opex:0,target:0,
+ pr:{ifo:570,mgo:720},wm:0,allow:5,d:{spdB:12.5,spdL:12,ifoB:16.5,ifoL:17.5,mgoSea:0,ifoPort:3,mgoPort:0},
+ legs:[],cargo:[{n:"Cargo 1",qty:0,rate:0,lump:0}],addr:0,brok:5,dem:0,ins:0,other:[{n:"Other",v:0}],upd:Date.now()};return c;}
+function example(){const c=newCalc();Object.assign(c,{name:"R. Grande → Thessaloniki (example)",pr:{ifo:570,mgo:720},allow:5,brok:5,addr:0,
+ cargo:[{n:"Cargo 1",qty:24400,rate:51.5,lump:0}]});
+ const L=[["Rio Grande","San Lorenzo / Rosario",595,"B",12.35,16.5,0,"L",4.06,3,0,185000],["San Lorenzo / Rosario","Las Palmas",4794,"L",11.88,17.5,0,"O",0.25,3,0,0],
+  ["Las Palmas","Preveza",1995,"L",11.88,17.5,0,"D",2.5,0,5,27600],["Preveza","Larnaca",777,"L",11.88,17.5,0,"D",2.5,0,5,25000],["Larnaca","Thessaloniki",700,"L",11.88,17.5,0,"D",2.5,0,5,22000]];
+ c.legs=L.map(x=>Object.assign(blankLeg(c,x[3]),{from:x[0],to:x[1],nm:x[2],src:"mine",cond:x[3],spd:x[4],ifo:x[5],mgo:x[6],pt:x[7],pdays:x[8],pifo:x[9],pmgo:x[10],da:x[11]}));
+ return c;}
+
+/* ---------- calculation ---------- */
+function portDays(l){if(n(l.qty)>0&&n(l.rate)>0){let w=n(l.qty)/n(l.rate);if(l.terms==="SHEX")w=w*7/5;return w+n(l.turn)/24+n(l.xdays);}return n(l.pdays)+n(l.xdays);}
+function calc(c,o){o=o||{};const R={legs:[],sea:0,port:0,nm:0,ifo:0,mgo:0,da:0,canal:0};const wm=1+n(c.wm)/100;
+ c.legs.forEach((l,i)=>{let spd=n(l.spd)+(o.dSpd&&l.cond==="L"?o.dSpd:0);if(spd<=0)spd=0.1;const k=o.dSpd&&l.cond==="L"?Math.pow(spd/n(l.spd||spd),3):1;
+  const nm=n(l.nm),sea=nm*wm/(spd*24)+n(l.cdays),eca=Math.min(n(l.eca),nm),fe=nm>0?eca/nm:0,ifoD=n(l.ifo)*k;
+  const sIfo=sea*ifoD*(1-fe),sMgo=sea*(n(l.mgo)+ifoD*fe),pd=portDays(l),pIfo=pd*n(l.pifo),pMgo=pd*n(l.pmgo);
+  R.legs.push({nm,sea,pd,ifo:sIfo+pIfo,mgo:sMgo+pMgo});R.sea+=sea;R.port+=pd;R.nm+=nm;R.ifo+=sIfo+pIfo;R.mgo+=sMgo+pMgo;R.da+=n(l.da);R.canal+=n(l.canal);});
+ // sea allowance on total miles at average laden speed/cons
+ const lad=c.legs.filter(l=>l.cond==="L"),ref=lad[0]||c.legs[0];
+ if(ref&&n(c.allow)>0){const anm=R.nm*n(c.allow)/100,spd=n(ref.spd)+(o.dSpd?o.dSpd:0)||0.1,k=o.dSpd?Math.pow(spd/n(ref.spd),3):1,ad=anm/(spd*24);
+  R.allow={nm:anm,days:ad,ifo:ad*n(ref.ifo)*k,mgo:ad*n(ref.mgo)};R.sea+=ad;R.ifo+=R.allow.ifo;R.mgo+=R.allow.mgo;}
+ R.days=R.sea+R.port;const pi=n(c.pr.ifo)+(o.dBunk||0),pm=n(c.pr.mgo)+(o.dBunk||0);R.bunk=R.ifo*pi+R.mgo*pm;
+ R.oth=(c.other||[]).reduce((a,x)=>a+n(x.v),0);R.exp=R.bunk+R.da+R.canal+n(c.ins)+R.oth;
+ R.qty=0;R.gross=(c.cargo||[]).reduce((a,x,i)=>{R.qty+=n(x.qty);return a+(n(x.lump)>0?n(x.lump):n(x.qty)*(n(x.rate)+(i===0&&o.dFrt?o.dFrt:0)));},0);
+ R.cpct=(n(c.addr)+n(c.brok))/100;R.comm=R.gross*R.cpct;R.net=R.gross-R.comm+n(c.dem);R.res=R.net-R.exp;R.tce=R.days>0?R.res/R.days:0;R.nd=R.tce-n(c.opex);
+ const q1=n((c.cargo[0]||{}).qty),fix=(c.cargo||[]).slice(1).reduce((a,x)=>a+(n(x.lump)>0?n(x.lump):n(x.qty)*n(x.rate)),0);
+ const be=t=>q1>0?((t*R.days+R.exp-n(c.dem))/(1-R.cpct)-fix)/q1:0;R.beOpex=be(n(c.opex));R.beT=n(c.target)>0?be(n(c.target)):null;R.be0=be(0);
+ R.co2=R.ifo*3.114+R.mgo*3.206;return R;}
+
+/* ---------- views ---------- */
+let cur=null,view="list",tab="g";
+const C=()=>S.find(x=>x.id===cur);
+function go(v){view=v;["list","edit","cmp","set"].forEach(x=>$("#v-"+x).classList.toggle("hide",x!==v));$$("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.go===v||(v==="edit"&&b.dataset.go==="list")));
+ $("#back").classList.toggle("hide",v!=="edit");$("#ttl").textContent=v==="edit"&&C()?C().name:v==="cmp"?"Σύγκριση":v==="set"?"Ρυθμίσεις":"Voyage Calc";
+ if(v==="list")rList();if(v==="edit")rTab();if(v==="cmp")rCmp();if(v==="set")rSet();window.scrollTo(0,0);}
+$$("#nav button").forEach(b=>b.onclick=()=>go(b.dataset.go));$("#back").onclick=()=>go("list");
+function rList(){const b=$("#cList");if(!S.length){b.innerHTML=`<div class="card"><p>Δεν υπάρχουν υπολογισμοί ακόμα.</p><button class="btn" id="exB">📄 Άνοιξε το παράδειγμα από το Excel σου</button></div>`;$("#exB").onclick=()=>{const c=example();S.unshift(c);save();cur=c.id;tab="r";go("edit");};return;}
+ b.innerHTML=S.map(c=>{const R=calc(c);return `<div class="card item" data-id="${c.id}" style="cursor:pointer"><div style="min-width:0"><b>${esc(c.name)}</b><div class="note">${esc(c.vessel||"")} ${c.legs.length} legs · ${f1(R.days)} days · ${esc(c.start||"")}</div></div><div style="text-align:right"><b class="${R.tce>=0?"pos":"neg"}">${usd(R.tce)}</b><div class="note">TCE/day</div></div></div>`;}).join("");
+ $$("#cList [data-id]").forEach(e=>e.onclick=()=>{cur=e.dataset.id;tab="g";go("edit");});}
+$("#newC").onclick=()=>{const c=newCalc();S.unshift(c);save();cur=c.id;tab="g";go("edit");};
+$("#tabs").onclick=e=>{const b=e.target.closest("[data-t]");if(!b)return;tab=b.dataset.t;rTab();window.scrollTo(0,0);};
+function rTab(){$$("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.t===tab));["g","l","i","r"].forEach(t=>$("#t-"+t).classList.toggle("hide",t!==tab));({g:rG,l:rL,i:rI,r:rR})[tab]();}
+const inp=(k,v,lab,t,ext)=>`<label>${lab}<input data-k="${k}" value="${esc(v)}" ${t==="n"?'inputmode="decimal"':t==="d"?'type="date"':""} ${ext||""}></label>`;
+function bindInputs(box,obj,after){box.querySelectorAll("[data-k]").forEach(e=>{e.oninput=e.onchange=()=>{const path=e.dataset.k.split(".");let o=obj;for(let i=0;i<path.length-1;i++)o=o[path[i]];
+ const last=path[path.length-1];o[last]=e.type==="checkbox"?e.checked:(e.inputMode==="decimal"?e.value:e.value);C().upd=Date.now();save();if(after)after(e);};});}
+function rG(){const c=C(),b=$("#t-g");
+ b.innerHTML=`<div class="card"><h2>Ταξίδι</h2>${inp("name",c.name,"Όνομα υπολογισμού")}<div class="g2" style="margin-top:8px">${inp("vessel",c.vessel,"Πλοίο")}${inp("start",c.start,"Έναρξη (open)","d")}</div></div>
+ <div class="card"><h2>Bunkers $/MT</h2><div class="g2">${inp("pr.ifo",c.pr.ifo,"IFO / VLSFO","n")}${inp("pr.mgo",c.pr.mgo,"MGO / MDO","n")}</div></div>
+ <div class="card"><h2>Default ταχύτητες & καταναλώσεις (για νέα legs)</h2><div class="g4">${inp("d.spdB",c.d.spdB,"Ballast kn","n")}${inp("d.ifoB",c.d.ifoB,"Ballast IFO/d","n")}${inp("d.spdL",c.d.spdL,"Laden kn","n")}${inp("d.ifoL",c.d.ifoL,"Laden IFO/d","n")}
+  ${inp("d.mgoSea",c.d.mgoSea,"Sea MGO/d","n")}${inp("d.ifoPort",c.d.ifoPort,"Port IFO/d","n")}${inp("d.mgoPort",c.d.mgoPort,"Port MGO/d","n")}</div></div>
+ <div class="card"><h2>Margins & κόστος</h2><div class="g4">${inp("allow",c.allow,"Sea allowance % (μίλια)","n")}${inp("wm",c.wm,"Weather margin % (χρόνος)","n")}${inp("opex",c.opex,"Daily running cost $/d","n")}${inp("target",c.target,"Στόχος TCE $/d","n")}</div>
+ <p class="note">Allowance = % επί των συνολικών μιλίων με laden ταχύτητα (όπως στο Excel σου, αλλά σε όλα τα legs). Weather margin = % επιπλέον χρόνος θάλασσας.</p></div>
+ <div class="row"><button class="btn" id="dup">⧉ Αντίγραφο</button><button class="btn d" id="del">🗑 Διαγραφή</button></div>`;
+ bindInputs(b,c,e=>{if(e.dataset.k==="name")$("#ttl").textContent=c.name;});
+ $("#dup").onclick=()=>{const x=JSON.parse(JSON.stringify(c));x.id=uid();x.name=c.name+" (2)";S.unshift(x);save();cur=x.id;toast("✔ Αντίγραφο");go("edit");};
+ let k=0;$("#del").onclick=e=>{if(!k){k=1;e.target.textContent="Σίγουρα; πάτα ξανά";return;}S=S.filter(x=>x.id!==c.id);save();go("list");};}
+const PTL={L:"Load",D:"Discharge",O:"Bunkers / call",C:"Canal / waiting",X:"Χωρίς στάση"};
+function rL(){const c=C(),b=$("#t-l");
+ b.innerHTML=(c.legs.length?"":`<div class="card note">Πρόσθεσε τα σκέλη: από το open position (ballast) μέχρι το τελευταίο λιμάνι. Σε κάθε leg η στάση είναι στο λιμάνι «Προς».</div>`)+
+ c.legs.map((l,i)=>{const R=calc(c).legs[i]||{};return `<div class="card leg ${l.cond}" data-i="${i}">
+  <div class="hd"><b>Leg ${i+1} · ${l.cond==="B"?"Ballast":"Laden"}</b><span><button class="btn s" data-up="${i}">↑</button> <button class="btn s" data-dn="${i}">↓</button> <button class="btn s d" data-rm="${i}">✕</button></span></div>
+  <div class="g2" style="margin-top:6px"><label>Από<input list="plist" data-k="legs.${i}.from" value="${esc(l.from)}" data-pf="${i}"></label><label>Προς<input list="plist" data-k="legs.${i}.to" value="${esc(l.to)}" data-pf="${i}"></label></div>
+  <div class="g4" style="margin-top:8px"><label>N.Miles <span data-chip="${i}">${chipH(l)}</span><input inputmode="decimal" data-nm="${i}" value="${esc(l.nm)}"></label>
+   <label>L/B<select data-k="legs.${i}.cond"><option value="L"${l.cond==="L"?" selected":""}>Laden</option><option value="B"${l.cond==="B"?" selected":""}>Ballast</option></select></label>
+   ${inp(`legs.${i}.spd`,l.spd,"Knots","n")}${inp(`legs.${i}.ifo`,l.ifo,"Sea IFO/d","n")}</div>
+  <p class="note" style="margin:4px 0 0" data-via="${i}">${l.via&&l.via.length?"via "+l.via.join(", "):""}</p>
+  <details style="margin-top:6px"><summary class="note">Sea MGO, ECA, canal</summary><div class="g4" style="margin-top:6px">${inp(`legs.${i}.mgo`,l.mgo,"Sea MGO/d","n")}${inp(`legs.${i}.eca`,l.eca,"ECA μίλια (σε MGO)","n")}${inp(`legs.${i}.canal`,l.canal,"Canal dues $","n")}${inp(`legs.${i}.cdays`,l.cdays,"Canal/waiting days","n")}</div></details>
+  <div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)"><div class="g4"><label>Στάση στο «Προς»<select data-k="legs.${i}.pt">${Object.entries(PTL).map(([k,v])=>`<option value="${k}"${l.pt===k?" selected":""}>${v}</option>`).join("")}</select></label>
+   ${l.pt==="L"||l.pt==="D"?inp(`legs.${i}.qty`,l.qty,"Ποσότητα MT","n")+inp(`legs.${i}.rate`,l.rate,"Rate MT/day","n")+`<label>Terms<select data-k="legs.${i}.terms"><option${l.terms==="SHINC"?" selected":""}>SHINC</option><option${l.terms==="SHEX"?" selected":""}>SHEX</option></select></label>`+inp(`legs.${i}.turn`,l.turn,"Turn time h","n"):""}
+   ${inp(`legs.${i}.pdays`,l.pdays,n(l.qty)>0&&n(l.rate)>0?"Ημέρες (αν δεν έχει rate)":"Ημέρες λιμανιού","n")}${inp(`legs.${i}.xdays`,l.xdays,"+ waiting/holidays d","n")}${inp(`legs.${i}.pifo`,l.pifo,"Port IFO/d","n")}${inp(`legs.${i}.pmgo`,l.pmgo,"Port MGO/d","n")}${inp(`legs.${i}.da`,l.da,"Port D/A $","n")}</div>
+  <p class="note" style="margin:6px 0 0" data-sum="${i}">${f1(R.sea||0)} d sea · ${f1(R.pd||0)} d port · IFO ${f1(R.ifo||0)} · MGO ${f1(R.mgo||0)} MT</p></div></div>`;}).join("")+
+ `<div class="row"><button class="btn p" id="addL">+ Laden leg</button><button class="btn" id="addB">+ Ballast leg</button></div>`;
+ bindInputs(b,c,e=>{const k=e.dataset.k||"";if(/\.(cond|pt)$/.test(k)){rL();return;}if(/\.(from|to)$/.test(k)&&e.type!=="checkbox"){}refreshSums();});
+ b.querySelectorAll("[data-pf]").forEach(e=>e.addEventListener("change",()=>{const i=+e.dataset.pf,l=c.legs[i];addMyPort(e.value);
+  if(i+1<c.legs.length&&e.dataset.k.endsWith(".to")&&!c.legs[i+1].from){c.legs[i+1].from=l.to;const nx=$(`[data-k="legs.${i+1}.from"]`);if(nx)nx.value=l.to;}
+  if(l.from&&l.to){const d=distFor(l.from,l.to);if(d){l.nm=d.nm;l.src=d.mine?"mine":"est";l.via=d.via||[];}else{l.src="";l.via=[];if(!n(l.nm))toast("Λιμάνι εκτός βάσης — γράψε τα μίλια, θα τα θυμάμαι");}
+   const ni=$(`[data-nm="${i}"]`);if(ni)ni.value=l.nm;$(`[data-chip="${i}"]`).innerHTML=chipH(l);$(`[data-via="${i}"]`).textContent=l.via.length?"via "+l.via.join(", "):"";}
+  save();refreshSums();}));
+ b.querySelectorAll("[data-nm]").forEach(e=>e.onchange=()=>{const i=+e.dataset.nm,l=c.legs[i];l.nm=n(e.value);if(l.from&&l.to&&l.nm>0){DIST[dkey(l.from,l.to)]={nm:l.nm,via:l.via||[],a:l.from,b:l.to};saveD();l.src="mine";toast("✔ Αποθηκεύτηκε: "+l.from+" ↔ "+l.to);}
+  $(`[data-chip="${i}"]`).innerHTML=chipH(l);save();refreshSums();});
+ b.querySelectorAll("[data-rm]").forEach(e=>e.onclick=()=>{c.legs.splice(+e.dataset.rm,1);save();rL();});
+ b.querySelectorAll("[data-up]").forEach(e=>e.onclick=()=>{const i=+e.dataset.up;if(i>0){[c.legs[i-1],c.legs[i]]=[c.legs[i],c.legs[i-1]];save();rL();}});
+ b.querySelectorAll("[data-dn]").forEach(e=>e.onclick=()=>{const i=+e.dataset.dn;if(i<c.legs.length-1){[c.legs[i+1],c.legs[i]]=[c.legs[i],c.legs[i+1]];save();rL();}});
+ const add=cond=>{const l=blankLeg(c,cond),p=c.legs[c.legs.length-1];if(p)l.from=p.to;if(cond==="B")l.pt="L";c.legs.push(l);save();rL();setTimeout(()=>{const x=$(`#t-l [data-i="${c.legs.length-1}"] input`);if(x)x.scrollIntoView({block:"center"});},50);};
+ $("#addL").onclick=()=>add("L");$("#addB").onclick=()=>add("B");}
+function refreshSums(){const c=C(),R=calc(c);R.legs.forEach((r,i)=>{const e=$(`[data-sum="${i}"]`);if(e)e.textContent=`${f1(r.sea)} d sea · ${f1(r.pd)} d port · IFO ${f1(r.ifo)} · MGO ${f1(r.mgo)} MT`;});}
+function rI(){const c=C(),b=$("#t-i");
+ b.innerHTML=`<div class="card"><h2>Φορτία</h2>${c.cargo.map((x,i)=>`<div class="g4" style="margin-bottom:8px">${inp(`cargo.${i}.n`,x.n,"Φορτίο")}${inp(`cargo.${i}.qty`,x.qty,"MT","n")}${inp(`cargo.${i}.rate`,x.rate,"Rate $/MT","n")}${inp(`cargo.${i}.lump`,x.lump,"ή Lumpsum $","n")}</div>`).join("")}
+  <div class="row"><button class="btn s" id="addCg">+ φορτίο</button>${c.cargo.length>1?`<button class="btn s d" id="rmCg">− τελευταίο</button>`:""}</div></div>
+ <div class="card"><h2>Commissions & demurrage</h2><div class="g3">${inp("addr",c.addr,"Address comm %","n")}${inp("brok",c.brok,"Brokerage %","n")}${inp("dem",c.dem,"Demurrage (+) / Despatch (−) $","n")}</div></div>
+ <div class="card"><h2>Λοιπά έξοδα ταξιδιού</h2><div class="g2">${inp("ins",c.ins,"Insurance (war risk / extra) $","n")}</div>
+  ${c.other.map((x,i)=>`<div class="g2" style="margin-top:8px">${inp(`other.${i}.n`,x.n,"Περιγραφή")}${inp(`other.${i}.v`,x.v,"$","n")}</div>`).join("")}
+  <div class="row" style="margin-top:8px"><button class="btn s" id="addO">+ έξοδο</button></div>
+  <p class="note">Τα port D/A και canal dues μπαίνουν σε κάθε leg.</p></div>`;
+ bindInputs(b,c);
+ $("#addCg").onclick=()=>{c.cargo.push({n:"Cargo "+(c.cargo.length+1),qty:0,rate:0,lump:0});save();rI();};const rc=$("#rmCg");if(rc)rc.onclick=()=>{c.cargo.pop();save();rI();};
+ $("#addO").onclick=()=>{c.other.push({n:"Other",v:0});save();rI();};}
+function eta(c,R){let t=new Date((c.start||new Date().toISOString().slice(0,10))+"T00:00:00");const fmt=d=>d.toLocaleDateString("en-GB",{day:"2-digit",month:"short"});
+ return c.legs.map((l,i)=>{const r=R.legs[i];t=new Date(t.getTime()+r.sea*864e5);const a=fmt(t);t=new Date(t.getTime()+r.pd*864e5);return [l.to,a,fmt(t)];});}
+function sens(c){const base=calc(c).tce,cell=(o)=>{const v=calc(c,o).tce;return `<td class="${o.k?"c0":""} ${v>=0?"pos":"neg"}">${f0(v)}</td>`;};
+ const sp=[-1,-0.5,0,0.5,1],bk=[-100,-50,0,50,100],fr=[-2,-1,0,1,2];
+ return `<table class="sens"><tr><th>Laden speed Δkn</th>${sp.map(x=>`<th>${x>0?"+":""}${x}</th>`).join("")}</tr><tr><td>TCE $/d</td>${sp.map(x=>cell({dSpd:x,k:x===0})).join("")}</tr></table>
+  <table class="sens" style="margin-top:8px"><tr><th>Bunkers Δ$/MT</th>${bk.map(x=>`<th>${x>0?"+":""}${x}</th>`).join("")}</tr><tr><td>TCE $/d</td>${bk.map(x=>cell({dBunk:x,k:x===0})).join("")}</tr></table>
+  <table class="sens" style="margin-top:8px"><tr><th>Freight Δ$/MT</th>${fr.map(x=>`<th>${x>0?"+":""}${x}</th>`).join("")}</tr><tr><td>TCE $/d</td>${fr.map(x=>cell({dFrt:x,k:x===0})).join("")}</tr></table>
+  <p class="note">Η ταχύτητα αλλάζει την κατανάλωση με τον κυβικό νόμο (cons × (v'/v)³).</p>`;}
+function rR(){const c=C(),R=calc(c),b=$("#t-r");
+ const rows=c.legs.map((l,i)=>{const r=R.legs[i];return `<tr><td>${esc(l.from)}→${esc(l.to)} <span class="note">${l.cond}</span></td><td>${f0(r.nm)}</td><td>${f1(r.sea)}</td><td>${f1(r.pd)}</td><td>${f1(r.ifo)}</td><td>${f1(r.mgo)}</td></tr>`;}).join("");
+ b.innerHTML=`<div class="card"><div class="kpi"><div><span class="note">T/C Equivalent</span><b class="${R.tce>=0?"pos":"neg"}">${usd(R.tce)}/d</b></div><div><span class="note">Net daily (μετά OPEX)</span><b class="${R.nd>=0?"pos":"neg"}">${usd(R.nd)}/d</b></div>
+  <div><span class="note">Διάρκεια</span><b>${f2(R.days)} d</b><span class="note">${f1(R.sea)} sea · ${f1(R.port)} port</span></div><div><span class="note">Voyage result</span><b>${usd(R.res)}</b></div></div></div>
+ <div class="card"><h2>Legs</h2><div style="overflow-x:auto"><table style="min-width:520px"><tr><th>Leg</th><th>nm</th><th>Sea d</th><th>Port d</th><th>IFO</th><th>MGO</th></tr>${rows}
+  ${R.allow?`<tr><td>Allowance ${f1(c.allow)}%</td><td>${f0(R.allow.nm)}</td><td>${f1(R.allow.days)}</td><td></td><td>${f1(R.allow.ifo)}</td><td>${f1(R.allow.mgo)}</td></tr>`:""}
+  <tr><th>Σύνολο</th><th>${f0(R.nm+(R.allow?R.allow.nm:0))}</th><th>${f1(R.sea)}</th><th>${f1(R.port)}</th><th>${f1(R.ifo)}</th><th>${f1(R.mgo)}</th></tr></table></div></div>
+ <div class="card"><h2>Οικονομικά</h2><table>
+  <tr><td>Gross freight</td><td>${usd(R.gross)}</td></tr><tr><td>Commissions ${f2(R.cpct*100)}%</td><td class="neg">-${usd(R.comm).replace("$","$")}</td></tr>${n(c.dem)?`<tr><td>Demurrage / despatch</td><td>${usd(n(c.dem))}</td></tr>`:""}
+  <tr><th>Net freight</th><th>${usd(R.net)}</th></tr>
+  <tr><td>Bunkers (IFO ${f1(R.ifo)} × $${f0(n(c.pr.ifo))} + MGO ${f1(R.mgo)} × $${f0(n(c.pr.mgo))})</td><td>${usd(R.bunk)}</td></tr><tr><td>Port D/As</td><td>${usd(R.da)}</td></tr>
+  ${R.canal?`<tr><td>Canal dues</td><td>${usd(R.canal)}</td></tr>`:""}${n(c.ins)?`<tr><td>Insurance</td><td>${usd(n(c.ins))}</td></tr>`:""}${R.oth?`<tr><td>Other</td><td>${usd(R.oth)}</td></tr>`:""}
+  <tr><th>Gross voyage expenses</th><th>${usd(R.exp)}</th></tr><tr><th>Gross surplus</th><th class="${R.res>=0?"pos":"neg"}">${usd(R.res)}</th></tr>
+  <tr><td>Gross daily (TCE)</td><td>${usd(R.tce)}</td></tr><tr><td>Daily running cost</td><td>${usd(n(c.opex))}</td></tr><tr><th>Net daily</th><th>${usd(R.nd)}</th></tr></table></div>
+ <div class="card"><h2>Break-even (Cargo 1)</h2><table><tr><td>Rate για TCE = 0</td><td>$${f2(R.be0)}/MT</td></tr>${n(c.opex)?`<tr><td>Rate για TCE = OPEX ($${f0(n(c.opex))})</td><td>$${f2(R.beOpex)}/MT</td></tr>`:""}${R.beT!=null?`<tr><td>Rate για στόχο $${f0(n(c.target))}/d</td><td><b>$${f2(R.beT)}/MT</b></td></tr>`:""}</table></div>
+ <div class="card"><h2>Τι-αν (TCE $/d)</h2>${sens(c)}</div>
+ <div class="card"><h2>ETA (από ${esc(c.start)})</h2><table><tr><th>Λιμάνι</th><th>Άφιξη</th><th>Αναχώρηση</th></tr>${eta(c,R).map(x=>`<tr><td>${esc(x[0])}</td><td>${x[1]}</td><td>${x[2]}</td></tr>`).join("")}</table></div>
+ <div class="card"><h2>Εκπομπές</h2><p style="margin:0">CO₂ ≈ <b>${f0(R.co2)} t</b> <span class="note">(IFO×3.114 + MGO×3.206)</span></p></div>
+ <div class="row"><button class="btn p" id="pdf">🖨 PDF (το έντυπό σου)</button><button class="btn" id="xls">📊 Excel</button><button class="btn" id="shr">📤 Σύνοψη</button><button class="btn" id="shf">📎 Στείλε τον υπολογισμό</button></div><p class="note">«Στείλε τον υπολογισμό» = αρχείο .json που ο άλλος ανοίγει στη δική του Voyage Calc (⚙ → 📥 Εισαγωγή).</p>`;
+ $("#shf").onclick=async()=>{const x=JSON.parse(JSON.stringify(c));x.id=uid();const t=JSON.stringify({kind:"voyage-backup",v:1,calcs:[x],dist:{}}),fn=(c.name||"voyage").replace(/[^\p{L}\p{N}\-]+/gu,"_")+".voyage.json",f=new File([t],fn,{type:"application/json"});
+  if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:c.name});return;}catch(e){return;}}const a=document.createElement("a");a.href=URL.createObjectURL(f);a.download=fn;a.click();};
+ $("#pdf").onclick=()=>{buildPrint(c,R);setTimeout(()=>window.print(),100);};$("#xls").onclick=()=>xlsx(c,R);
+ $("#shr").onclick=async()=>{const t=summary(c,R);if(navigator.share){try{await navigator.share({title:c.name,text:t});}catch(e){}}else{try{await navigator.clipboard.writeText(t);toast("✔ Αντιγράφηκε");}catch(e){}}};}
+function summary(c,R){return `VOYAGE ESTIMATE – ${c.name}${c.vessel?"\nVessel: "+c.vessel:""}\n`+c.legs.map(l=>`${l.from} → ${l.to} ${f0(n(l.nm))} nm ${l.cond}`).join("\n")+
+ `\nDuration ${f2(R.days)} d (sea ${f1(R.sea)}, port ${f1(R.port)})\nBunkers IFO ${f1(R.ifo)} MT / MGO ${f1(R.mgo)} MT = ${usd(R.bunk)}\nGross freight ${usd(R.gross)}, net ${usd(R.net)}\nVoyage expenses ${usd(R.exp)}\nTCE ${usd(R.tce)}/day${n(c.opex)?`, net daily ${usd(R.nd)}/day`:""}\nBreak-even rate (TCE 0): $${f2(R.be0)}/MT`;}
+function buildPrint(c,R){const L=c.legs.map((l,i)=>{const r=R.legs[i];return `<tr><td class="b">${esc(l.from)}</td><td class="b">${esc(l.to)}</td><td class="b">${f0(r.nm)}</td><td>${l.cond}</td><td class="b">${f2(n(l.spd))}</td><td>${f1(r.sea)}</td><td class="b">${f1(r.pd)}</td><td class="b">${n(l.ifo)}</td><td class="b">${n(l.mgo)}</td><td class="b">${n(l.pifo)}</td><td class="b">${n(l.pmgo)}</td><td>${f1(r.ifo)}</td><td>${f1(r.mgo)}</td></tr>`;}).join("");
+ const A=R.allow?`<tr><td class="b">ALLOWANCE</td><td>${f1(c.allow)}%</td><td>${f2(R.allow.nm)}</td><td></td><td></td><td>${f1(R.allow.days)}</td><td>0.0</td><td></td><td></td><td></td><td></td><td>${f1(R.allow.ifo)}</td><td>${f1(R.allow.mgo)}</td></tr>`:"";
+ const m=(a,b,cl)=>`<tr class="nb"><td style="width:65%">${a}</td><td style="text-align:right" class="${cl||""}">${b}</td></tr>`;
+ $("#print").innerHTML=`<h1>VOYAGE CALCULATION ${c.vessel?"– "+esc(c.vessel):""}</h1><div class="y"></div><p><b>${esc(c.name)}</b> · ${esc(c.start)}</p>
+ <b>VOYAGE LEG</b><table><tr><th>From</th><th>To</th><th>N.Miles</th><th>L/B</th><th>Knots</th><th>AtSea</th><th>InPort</th><th>IFO sea</th><th>MDO sea</th><th>IFO port</th><th>MDO port</th><th>Tot IFO</th><th>Tot MDO</th></tr>${L}${A}
+ <tr><td><b>Totals</b></td><td></td><td><b>${f2(R.nm+(R.allow?R.allow.nm:0))}</b></td><td></td><td></td><td><b>${f2(R.sea)}</b></td><td><b>${f1(R.port)}</b></td><td></td><td></td><td></td><td></td><td><b>${f2(R.ifo)}</b></td><td><b>${f2(R.mgo)}</b></td></tr></table>
+ <p><b>Total duration: ${f2(R.days)} Days</b></p><b>VOYAGE EXPENSES</b><table>${m(`Bunkers — IFO $${f2(n(c.pr.ifo))} · MDO $${f2(n(c.pr.mgo))}`,usd(R.bunk))}${c.legs.filter(l=>n(l.da)).map(l=>m(`${l.pt==="L"?"Load":"Disch"} Port D/A — ${esc(l.to)}`,usd(n(l.da)),"b")).join("")}
+ ${R.canal?m("Canal dues",usd(R.canal),"b"):""}${n(c.ins)?m("Insurance",usd(n(c.ins)),"b"):""}${c.other.filter(x=>n(x.v)).map(x=>m(esc(x.n),usd(n(x.v)),"b")).join("")}${m("<b>Gross Voyage Expenses</b>","<b>"+usd(R.exp)+"</b>")}</table>
+ <br><b>VOYAGE INCOME</b><table>${c.cargo.map(x=>m(`${esc(x.n)} ${f0(n(x.qty))} MT · Rate ${f2(n(x.rate))}${n(x.lump)?" · Lumpsum "+usd(n(x.lump)):""}`,usd(n(x.lump)>0?n(x.lump):n(x.qty)*n(x.rate)))).join("")}
+ ${m("<b>Gross Freight</b>",usd(R.gross))}${m(`Commission ${f2(R.cpct*100)}%`,usd(R.comm))}${n(c.dem)?m("Demurrage / despatch",usd(n(c.dem))):""}${m("<b>Net Freight</b>",usd(R.net))}</table><br>
+ <table>${m("<b>Gross Surplus</b>",usd(R.res))}${m("Gross Daily",usd(R.tce),"b")}${m("Daily Running Cost",usd(n(c.opex)))}${m("<b>Net Daily</b>",usd(R.nd))}${m("<b>T/C Equivalent</b>","<b>"+usd(R.tce)+"</b>","b")}${m("Break-even rate (TCE 0)","$"+f2(R.be0)+"/MT")}${m("CO₂ estimate",f0(R.co2)+" t")}</table>
+ <p style="font-size:9px;margin-top:10px">Voyage Calc · Created by George Barbaris · distances: ${c.legs.some(l=>l.src==="est")?"includes estimates (≈)":"user figures"}</p>`;}
+function loadXL(){return new Promise((res,rej)=>{if(window.ExcelJS)return res();const s=document.createElement("script");s.src="exceljs.min.js";s.onload=res;s.onerror=()=>rej(new Error("Άνοιξε μία φορά online"));document.head.appendChild(s);});}
+async function xlsx(c,R){try{toast("📊 Excel…");await loadXL();const wb=new ExcelJS.Workbook();wb.creator="Voyage Calc – Created by George Barbaris";const ws=wb.addWorksheet("Voyage");
+ ws.columns=[{width:22},{width:22},{width:10},{width:6},{width:8},{width:9},{width:9},{width:8},{width:8},{width:8},{width:8},{width:10},{width:10}];
+ ws.addRow(["VOYAGE CALCULATION",c.vessel||"",c.name]).font={bold:true,size:13};ws.addRow([]);
+ const h=ws.addRow(["From","To","N.Miles","L/B","Knots","AtSea d","InPort d","IFO sea/d","MDO sea/d","IFO port/d","MDO port/d","Total IFO","Total MDO"]);h.font={bold:true};
+ c.legs.forEach((l,i)=>{const r=R.legs[i];ws.addRow([l.from,l.to,n(l.nm),l.cond,n(l.spd),+r.sea.toFixed(2),+r.pd.toFixed(2),n(l.ifo),n(l.mgo),n(l.pifo),n(l.pmgo),+r.ifo.toFixed(2),+r.mgo.toFixed(2)]);});
+ if(R.allow)ws.addRow(["ALLOWANCE",c.allow+"%",+R.allow.nm.toFixed(1),"","",+R.allow.days.toFixed(2),0,"","","","",+R.allow.ifo.toFixed(2),+R.allow.mgo.toFixed(2)]);
+ ws.addRow(["Totals","",+(R.nm+(R.allow?R.allow.nm:0)).toFixed(1),"","",+R.sea.toFixed(2),+R.port.toFixed(2),"","","","",+R.ifo.toFixed(2),+R.mgo.toFixed(2)]).font={bold:true};
+ ws.addRow([]);const kv=(a,b)=>{const r=ws.addRow([a,"","","","","","","","","","","",b]);if(typeof b==="number")r.getCell(13).numFmt='"$"#,##0';return r;};
+ kv("Total duration (days)",+R.days.toFixed(2)).getCell(13).numFmt="0.00";kv("IFO price $/MT",n(c.pr.ifo));kv("MDO price $/MT",n(c.pr.mgo));kv("Bunkers",Math.round(R.bunk));
+ c.legs.filter(l=>n(l.da)).forEach(l=>kv((l.pt==="L"?"Load":"Disch")+" Port D/A – "+l.to,n(l.da)));if(R.canal)kv("Canal dues",R.canal);if(n(c.ins))kv("Insurance",n(c.ins));c.other.filter(x=>n(x.v)).forEach(x=>kv(x.n,n(x.v)));
+ kv("Gross Voyage Expenses",Math.round(R.exp)).font={bold:true};ws.addRow([]);c.cargo.forEach(x=>kv(`${x.n} ${n(x.qty)} MT @ ${n(x.rate)}${n(x.lump)?" / lumpsum":""}`,n(x.lump)>0?n(x.lump):n(x.qty)*n(x.rate)));
+ kv("Gross Freight",Math.round(R.gross)).font={bold:true};kv(`Commission ${(R.cpct*100).toFixed(2)}%`,Math.round(R.comm));if(n(c.dem))kv("Demurrage/despatch",n(c.dem));kv("Net Freight",Math.round(R.net)).font={bold:true};
+ ws.addRow([]);kv("Gross Surplus",Math.round(R.res)).font={bold:true};kv("T/C Equivalent $/day",Math.round(R.tce)).font={bold:true};kv("Daily Running Cost",n(c.opex));kv("Net Daily",Math.round(R.nd)).font={bold:true};kv("Break-even rate (TCE 0) $/MT",+R.be0.toFixed(2)).getCell(13).numFmt="0.00";
+ const buf=await wb.xlsx.writeBuffer(),blob=new Blob([buf],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}),fn=(c.name||"voyage").replace(/[^\p{L}\p{N}\-]+/gu,"_")+".xlsx";
+ const file=new File([blob],fn,{type:blob.type});if(navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],title:fn});return;}catch(e){return;}}
+ const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=fn;a.click();}catch(e){toast("⚠ "+e.message);}}
+function rCmp(){const o=S.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join("");$("#cA").innerHTML=o;$("#cB").innerHTML=o;if(S[1])$("#cB").value=S[1].id;
+ const draw=()=>{const a=S.find(x=>x.id===$("#cA").value),b=S.find(x=>x.id===$("#cB").value);if(!a||!b){$("#cmpOut").innerHTML='<p class="note">Χρειάζονται τουλάχιστον 2 υπολογισμοί.</p>';return;}
+  const A=calc(a),B=calc(b),r=(t,x,y,fm,better)=>{const d=y-x;return `<tr><td>${t}</td><td>${fm(x)}</td><td>${fm(y)}</td><td class="${better==null?"":(better?d>0:d<0)?"pos":"neg"}">${d>0?"+":""}${fm(d)}</td></tr>`;};
+  $("#cmpOut").innerHTML=`<table><tr><th></th><th>Α</th><th>Β</th><th>Β−Α</th></tr>${r("TCE $/d",A.tce,B.tce,f0,true)}${r("Net daily $/d",A.nd,B.nd,f0,true)}${r("Ημέρες",A.days,B.days,f2,false)}${r("Μίλια",A.nm,B.nm,f0,null)}
+   ${r("Gross freight",A.gross,B.gross,f0,true)}${r("Bunkers $",A.bunk,B.bunk,f0,false)}${r("Voyage exp.",A.exp,B.exp,f0,false)}${r("Result",A.res,B.res,f0,true)}${r("Break-even $/MT",A.be0,B.be0,f2,false)}${r("CO₂ t",A.co2,B.co2,f0,false)}</table>`;};
+ $("#cA").onchange=$("#cB").onchange=draw;draw();}
+function rSet(){$("#avSuez").checked=!!OPT.avSuez;$("#avPan").checked=!!OPT.avPan;$("#pCount").textContent=PORTS.p.length;
+ $("#avSuez").onchange=$("#avPan").onchange=()=>{OPT={avSuez:$("#avSuez").checked,avPan:$("#avPan").checked};LS.set("voy_opt",OPT);};
+ const draw=()=>{const q=$("#dSearch").value.toLowerCase(),L=Object.entries(DIST).filter(([k])=>k.includes(q)).sort();
+  $("#dList").innerHTML=L.length?L.map(([k,v])=>`<div class="item"><span>${esc(v.a||k.split("|")[0])} ↔ ${esc(v.b||k.split("|")[1])}</span><span><b>${f0(v.nm)}</b> nm <button class="btn s d" data-dk="${esc(k)}">✕</button></span></div>`).join(""):'<p class="note">Καμία δική σου απόσταση ακόμα.</p>';
+  $$("[data-dk]").forEach(b=>b.onclick=()=>{delete DIST[b.dataset.dk];saveD();draw();});};$("#dSearch").oninput=draw;draw();
+ const mp=()=>{$("#mpList").innerHTML=MYP.length?MYP.map((x,i)=>`<div class="item"><span>⭐ ${esc(x)}</span><button class="btn s d" data-mp="${i}">✕</button></div>`).join(""):'<p class="note">Όταν γράψεις λιμάνι που δεν είναι στη βάση, μπαίνει εδώ αυτόματα.</p>';
+  $$("[data-mp]").forEach(b=>b.onclick=()=>{MYP.splice(+b.dataset.mp,1);LS.set("voy_myports",MYP);plist();mp();});};mp();
+ $("#mpAdd").onclick=()=>{addMyPort($("#mpNew").value);$("#mpNew").value="";mp();};
+ $("#bkOut").onclick=async()=>{const t=JSON.stringify({kind:"voyage-backup",v:1,calcs:S,dist:DIST,opt:OPT,myp:MYP}),fn="voyage_backup_"+new Date().toISOString().slice(0,10)+".json",f=new File([t],fn,{type:"application/json"});
+  if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f]});return;}catch(e){return;}}const a=document.createElement("a");a.href=URL.createObjectURL(f);a.download=fn;a.click();};
+ $("#bkIn").onchange=async e=>{try{const j=JSON.parse(await e.target.files[0].text());if(j.kind!=="voyage-backup")throw 0;const ids=new Set(S.map(x=>x.id));j.calcs.forEach(c=>{if(!ids.has(c.id))S.push(c);});Object.assign(DIST,j.dist||{});(j.myp||[]).forEach(addMyPort);save();saveD();toast("✔ Εισαγωγή");draw();}catch(x){toast("Λάθος αρχείο");}};}
+plist();
+go("list");
+/*SW*/
+</script>
+</body>
+</html>
