@@ -165,6 +165,10 @@
      "https://www.lr.org/en/fit-for-55/fueleu-regulation/timetable-for-compliance"
     ],
     [
+     "Paris MoU – ship selection (risk intervals)",
+     "https://parismou.org/inspection-regime/"
+    ],
+    [
      "Paris MoU 59th Committee (fraudulent certificates)",
      "https://www.maritimeprofessional.com/amp/news/paris-tackles-fraudulent-certificates-419831"
     ]
@@ -269,6 +273,12 @@
        "Ετοιμασία για CIC 2027 Enclosed Space Entry: register, permits, gas detectors calibrated, rescue drills.",
        "Prepare for CIC 2027 Enclosed Space Entry: register, permits, calibrated gas detectors, rescue drills.",
        "Maghanda para sa CIC 2027 Enclosed Space Entry: register, permit, calibrated gas detector, rescue drill."
+      ],
+      [
+       "*",
+       "Ship Risk Profile: high-risk πλοίο συνήθως κάθε 5–6 μήνες, standard 10–12, low 24–36. Overriding/unexpected factors φέρνουν επιθεώρηση ακόμα και μετά από πρόσφατη — έλεγξε το SRP & company performance πριν το ταξίδι.",
+       "Ship Risk Profile: high-risk ship normally every 5–6 months, standard 10–12, low 24–36. Overriding/unexpected factors can trigger inspection even after a recent one — check SRP & company performance before the voyage.",
+       "Ship Risk Profile: high-risk kada 5–6 buwan, standard 10–12, low 24–36. Pwedeng ma-inspect kahit bago lang dahil sa overriding/unexpected factors — suriin ang SRP at company performance bago bumiyahe."
       ]
      ]
     }
@@ -313,6 +323,10 @@
     [
      "Huatai (China MSA) CIC circular",
      "https://www.londonpandi.com/media/ryobbhiv/huatai-circular-2026-06.pdf"
+    ],
+    [
+     "Tokyo MOU – New Inspection Regime",
+     "https://www.tokyo-mou.org/inspections-detentions/nir/"
     ]
    ],
    "s": [
@@ -427,6 +441,12 @@
        "Κίνα (CIC): ο C/O κάνει πλήρη έλεγχο securing πριν το λιμάνι, κρατά record, και συνοδεύει τον PSCO σε όλη την επιθεώρηση.",
        "China (CIC): C/O checks all cargo securing before port, keeps a record, and accompanies the PSCO for the whole inspection.",
        "China (CIC): sinusuri ng C/O ang lahat ng cargo securing bago dumating, may record, at sasamahan ang PSCO sa buong inspection."
+      ],
+      [
+       "*",
+       "Το NIR του Tokyo διαφέρει από του Paris (type, age, flag/RO/company, ιστορικό) — μην υποθέτεις ίδιο risk. Η Επιτροπή έθεσε θέμα για λανθασμένες παρατάσεις πιστοποιητικών.",
+       "Tokyo NIR differs from Paris (type, age, flag/RO/company, history) — never assume the same risk. The Committee raised improper certificate extensions as a concern.",
+       "Iba ang NIR ng Tokyo sa Paris (type, edad, flag/RO/company, history) — huwag ipagpalagay na pareho. Pinuna ng Committee ang maling extension ng certificate."
       ]
      ]
     }
@@ -475,6 +495,18 @@
     [
      "BIMCO – FSMC (gypsy moth) season 2026",
      "https://www.bimco.org/news-insights/bimco-news/2026/04/09-fsmc/"
+    ],
+    [
+     "AMSA – during a PSC inspection",
+     "https://www.amsa.gov.au/vessels-operators/port-state-control/during-port-state-control-inspection"
+    ],
+    [
+     "AMSA MN 2025/06 – oil filtering equipment",
+     "https://www.amsa.gov.au/about/regulation-standards/202506-testing-and-inspection-oil-filtering-equipment-mepc10749"
+    ],
+    [
+     "AMSA MN 2026/01 – invalid extensions",
+     "https://www.amsa.gov.au/about/regulations-and-standards/marine-notices/202601-invalid-extensions-statutory-certification-0"
     ]
    ],
    "s": [
@@ -561,6 +593,39 @@
        "FSMC (gypsy moth): kung pumunta sa regulated area sa risk period sa huling 24 buwan, susuriin — mag-self-inspection."
       ]
      ]
+    },
+    {
+     "t": [
+      "Στην επιθεώρηση AMSA",
+      "During the AMSA inspection",
+      "Sa AMSA inspection"
+     ],
+     "i": [
+      [
+       "*",
+       "Στην αρχή ο Master δηλώνει γνωστές βλάβες που επηρεάζουν το seaworthiness και υπογράφει δήλωση — πες την αλήθεια· η έγκαιρη αναφορά αλλάζει τη μεταχείριση.",
+       "At the start the Master is asked about known defects affecting seaworthiness and signs a declaration — tell the truth; early reporting changes how a problem is treated.",
+       "Sa simula, tatanungin ang Master tungkol sa alam na sira at pipirma ng declaration — sabihin ang totoo; iba ang trato kapag maaga ni-report."
+      ],
+      [
+       "5.15",
+       "OWS (MEPC.107(49)): το clean-water flushing πρέπει να δίνει alarm & stop· monitor ≤5 s, συνολικό auto-stop ≤20 s· δοκιμή μόνο σε recirculation (AMSA MN 2025/06).",
+       "OWS (MEPC.107(49)): clean-water flushing must trigger alarm & stop; monitor ≤5 s, total auto-stop ≤20 s; test only in recirculation (AMSA MN 2025/06).",
+       "OWS (MEPC.107(49)): ang clean-water flushing ay dapat mag-alarm at huminto; monitor ≤5 s, auto-stop ≤20 s; test sa recirculation lang (AMSA MN 2025/06)."
+      ],
+      [
+       "2.1",
+       "Παράταση πιστοποιητικού ΔΕΝ νομιμοποιεί εμπορικό trading — μόνο κατά το Convention και τη διαδρομή προς survey port· αλλιώς detention (AMSA MN 2026/01).",
+       "A certificate extension does NOT legitimise commercial trading — only per the Convention and voyage to the survey port; otherwise detention (AMSA MN 2026/01).",
+       "HINDI pinapayagan ng extension ang commercial trading — ayon lang sa Convention at biyahe papunta sa survey port; kung hindi, detention (AMSA MN 2026/01)."
+      ],
+      [
+       "4.18",
+       "Lifeboat entry: πρόσθετα restraints αν δεν αποδεικνύεται σωστό set του release. Κλείσιμο detention μόνο αφού το δει PSCO AMSA/Tokyo — ειδοποίηση psc@amsa.gov.au.",
+       "Lifeboat entry: additional restraints if the release cannot be shown correctly set. A detention closes only when an AMSA/Tokyo PSCO sights the fix — notify psc@amsa.gov.au.",
+       "Lifeboat entry: dagdag na restraint kung hindi maipakitang tama ang release. Sarado lang ang detention kapag nakita ng AMSA/Tokyo PSCO — i-notify ang psc@amsa.gov.au."
+      ]
+     ]
     }
    ]
   },
@@ -591,6 +656,10 @@
     [
      "2025 detention breakdown (SAFETY4SEA)",
      "https://safety4sea.com/uscg-annual-psc-report-2025-77-vessels-detained-during-the-year/"
+    ],
+    [
+     "USCG – ballast water FAQs (Nov 2025)",
+     "https://www.dco.uscg.mil/Our-Organization/Assistant-Commandant-for-Prevention-Policy-CG-5P/Commercial-Regulations-Standards-CG-5PS/Office-of-Operating-and-Environmental-Standards-CG-OES/Environmental-Standards/FAQ/"
     ],
     [
      "33 CFR 164.25 – tests before entering",
@@ -715,6 +784,150 @@
        "ISPS: έλεγχος πρόσβασης, visitor log, DoS όταν ζητηθεί — η USCG κάνει και security exam.",
        "ISPS: access control, visitor log, DoS when requested — USCG also does a security exam.",
        "ISPS: access control, visitor log, DoS kung hihingin — may security exam din ang USCG."
+      ],
+      [
+       "5.10",
+       "Η αναφορά στο NBIC ΔΕΝ είναι άδεια discharge, και το ballast exchange μόνο του ΔΕΝ είναι αποδεκτή εναλλακτική όπου ισχύει το US discharge standard (USCG BWM FAQ, Νοέμ. 2025).",
+       "An NBIC report is NOT a discharge authorisation, and ballast exchange alone is NOT an accepted alternative where the US discharge standard applies (USCG BWM FAQ, Nov 2025).",
+       "HINDI pahintulot sa discharge ang NBIC report, at HINDI tanggap ang ballast exchange lang kung saan may US discharge standard (USCG BWM FAQ, Nob 2025)."
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "canada",
+   "f": "🇨🇦",
+   "n": "Canada",
+   "a": [
+    "Ο Καναδάς είναι μέλος ΚΑΙ του Paris MoU (ανατολικά: Quebec, St. Lawrence, Sorel) ΚΑΙ του Tokyo MoU (δυτικά: Vancouver). Οι inspectors της Transport Canada είναι αυστηροί, ειδικά σε bulk carriers. Πρόσφατο detention ανεβάζει το risk profile → expanded inspection. Πλήρες walk-round: 📘 Manuals → Zero Deficiency Canada.",
+    "Canada is a member of BOTH the Paris MoU (east: Quebec, St. Lawrence, Sorel) and the Tokyo MoU (west: Vancouver). Transport Canada inspectors are strict, especially on bulk carriers. A recent detention raises the risk profile → expanded inspection. Full walk-round: 📘 Manuals → Zero Deficiency Canada.",
+    "Miyembro ang Canada ng Paris MoU (silangan: Quebec, St. Lawrence, Sorel) at Tokyo MoU (kanluran: Vancouver). Mahigpit ang Transport Canada, lalo sa bulk carrier. Ang bagong detention ay nagpapataas ng risk → expanded inspection. Buong walk-round: 📘 Manuals → Zero Deficiency Canada."
+   ],
+   "c": [
+    "CIC Cargo Securing έως 30/11/2026 (Paris & Tokyo). Whales: NARW Gulf of St. Lawrence έως 15/11/2026, ECHO Haro Strait έως 30/11/2026.",
+    "CIC Cargo Securing until 30 Nov 2026 (Paris & Tokyo). Whales: NARW Gulf of St. Lawrence season to 15 Nov 2026, ECHO Haro Strait to 30 Nov 2026.",
+    "CIC Cargo Securing hanggang 30 Nob 2026 (Paris at Tokyo). Balyena: NARW Gulf of St. Lawrence hanggang 15 Nob 2026, ECHO Haro Strait hanggang 30 Nob 2026."
+   ],
+   "p": [
+    "Vancouver (BC), Quebec, St. Lawrence, Sorel, Port-Cartier, Sept-Îles",
+    "Vancouver (BC), Quebec, St. Lawrence, Sorel, Port-Cartier, Sept-Îles",
+    "Vancouver (BC), Quebec, St. Lawrence, Sorel, Port-Cartier, Sept-Îles"
+   ],
+   "src": [
+    [
+     "Transport Canada – TP 15611 grain loading",
+     "https://tc.canada.ca/en/marine-transportation/publications/tp-15611-guidance-masters-vessels-loading-grain-bulk"
+    ],
+    [
+     "Transport Canada – SSB 02/2026 NARW speed restriction",
+     "https://tc.canada.ca/en/marine-transportation/marine-safety/ship-safety-bulletins/protecting-north-atlantic-right-whale-speed-restriction-measures-gulf-st-lawrence-ssb-no-02-2026"
+    ],
+    [
+     "Ballast Water Regulations SOR/2021-120",
+     "https://laws-lois.justice.gc.ca/eng/regulations/SOR-2021-120/FullText.html"
+    ],
+    [
+     "NOTMAR A7D – winter navigation St. Lawrence",
+     "https://www.notmar.gc.ca/publications/annual/section-a/a7d-en"
+    ],
+    [
+     "Port of Vancouver – ECHO 2026 slowdowns",
+     "https://www.portvancouver.com/article/2026_voluntary_slowdowns_and_route_alteration"
+    ],
+    [
+     "Hong Kong MD – detention list 2025",
+     "https://www.mardep.gov.hk/filemanager/en/share/faq/pdf/detentlist2025.pdf"
+    ]
+   ],
+   "s": [
+    {
+     "t": [
+      "Κανόνες Καναδά (Vancouver / Quebec)",
+      "Canadian rules (Vancouver / Quebec)",
+      "Mga patakaran sa Canada (Vancouver / Quebec)"
+     ],
+     "i": [
+      [
+       "7A.9",
+       "North American ECA: 0,10% S μέσα στα 200 nm (καλύπτει και Gulf/River St. Lawrence) — changeover log.",
+       "North American ECA: 0.10% S inside 200 nm (also covers the Gulf and River St. Lawrence) — log the changeover.",
+       "North American ECA: 0.10% S sa loob ng 200 nm (kasama ang Gulf at River St. Lawrence) — i-log ang changeover."
+      ],
+      [
+       "5.10",
+       "Ballast Water Regulations SOR/2021-120: D-2 BWMS, BWRB, ballast report πριν την άφιξη· επιπλέον μέτρα αν κάνεις discharge σε γλυκό νερό (St. Lawrence) — ρώτα τον agent.",
+       "Ballast Water Regulations SOR/2021-120: D-2 BWMS, BWRB, ballast report before arrival; extra measures if discharging in fresh water (St. Lawrence) — check with agent.",
+       "Ballast Water Regulations SOR/2021-120: D-2 BWMS, BWRB, ballast report bago dumating; dagdag na measures kung sa fresh water (St. Lawrence) — tanungin ang agent."
+      ],
+      [
+       "3.23",
+       "Whales: NARW zones Gulf of St. Lawrence (10 kn όταν εντοπιστεί φάλαινα)· ECHO Haro Strait/Boundary Pass 11 kn για bulkers. Η TC ελέγχει AIS και ζητά εξηγήσεις.",
+       "Whales: NARW zones Gulf of St. Lawrence (10 kn when a whale is detected); ECHO Haro Strait/Boundary Pass 11 kn for bulkers. TC checks AIS and asks the Master.",
+       "Balyena: NARW zones Gulf of St. Lawrence (10 kn kapag may balyena); ECHO Haro Strait/Boundary Pass 11 kn para sa bulker. Sinusuri ng TC ang AIS at magtatanong."
+      ],
+      [
+       "8B.10",
+       "Grain: Transport Canada Certificate of Readiness to Load (TP 15611) + CFIA hold inspection — holds χωρίς grit, loose scale, ξεφλουδισμένη μπογιά, παλιό φορτίο.",
+       "Grain: Transport Canada Certificate of Readiness to Load (TP 15611) + CFIA hold inspection — holds free of grit, loose scale, flaking paint, old cargo.",
+       "Grain: Transport Canada Certificate of Readiness to Load (TP 15611) + CFIA hold inspection — walang grit, maluwag na kalawang, natutuklap na pintura, lumang cargo."
+      ],
+      [
+       "4.37",
+       "Pilots: Pacific & Laurentian Pilotage αναφέρουν κακές pilot ladders κατευθείαν στην TC. Laurentian χειμώνα: 3 cm stabilised radar, θέρμανση γέφυρας, ορατότητα.",
+       "Pilots: Pacific & Laurentian Pilotage report bad pilot ladders straight to TC. Laurentian winter: 3 cm stabilised radar, bridge heating, visibility.",
+       "Pilot: nire-report agad ng Pacific at Laurentian Pilotage sa TC ang masamang ladder. Taglamig sa Laurentian: 3 cm stabilised radar, bridge heating, visibility."
+      ],
+      [
+       "13.32",
+       "Χειμώνας Quebec (Δεκ–Μαρ): προστασία sea-water cooling από πάγο/frazil ice· μη συμμορφούμενα πλοία σταματούν δυτικά του Les Escoumins (winternav@tc.gc.ca).",
+       "Quebec winter (Dec–Mar): sea-water cooling protected against ice/frazil ice; non-compliant ships can be stopped west of Les Escoumins (winternav@tc.gc.ca).",
+       "Taglamig sa Quebec (Dis–Mar): protektado sa yelo/frazil ice ang sea-water cooling; pwedeng pigilan west ng Les Escoumins (winternav@tc.gc.ca)."
+      ],
+      [
+       "5.27",
+       "Sewage / grey water: καμία ορατή στερεά ουσία, film ή sheen από οποιοδήποτε discharge.",
+       "Sewage / grey water: no visible solids, film or sheen from any discharge.",
+       "Sewage / grey water: walang makikitang solids, film o sheen sa anumang discharge."
+      ],
+      [
+       "15.1",
+       "MLC: οι Καναδοί PSCOs ρωτούν ποιος έχει >11 μήνες στο πλοίο — κανείς πάνω από 11 μήνες στην άφιξη. Τα complaints πάνε κατευθείαν στην TC.",
+       "MLC: Canadian PSCOs ask who has been on board >11 months — nobody over 11 months on arrival. Crew complaints go straight to TC.",
+       "MLC: tinatanong ng Canadian PSCO kung sino ang >11 buwan — walang lampas 11 buwan pagdating. Diretso sa TC ang reklamo."
+      ]
+     ]
+    },
+    {
+     "t": [
+      "Πραγματικά detentions στον Καναδά 2025",
+      "Real Canadian detentions 2025",
+      "Totoong detention sa Canada 2025"
+     ],
+     "i": [
+      [
+       "4.18",
+       "Quebec 22/1/2025: μηχανές lifeboat & rescue boat δεν ξεκίνησαν · davit δεν έστριβε με reserve power · διαρροή fuel pump M/E · sewage UV νεκρή · anti-fouling ξεφλούδιζε στον St. Lawrence · σπασμένες βρύσες · ISM audit πριν την αναχώρηση.",
+       "Quebec 22 Jan 2025: lifeboat & rescue boat engines did not start · davit would not swing on reserve power · M/E fuel pump leaking · sewage UV dead · anti-fouling peeling into the St. Lawrence · broken faucets · ISM audit before departure.",
+       "Quebec 22 Ene 2025: hindi umandar ang lifeboat at rescue boat · hindi gumalaw ang davit sa reserve power · tumutulo ang fuel pump ng M/E · patay ang sewage UV · natutuklap ang anti-fouling · sirang gripo · ISM audit bago umalis."
+      ],
+      [
+       "9A.7",
+       "Quebec 24/4/2025: No.4 hatch coaming τρύπιο · water-ingress alarms ενεργά σε 3 holds · fire doors δεν έκλειναν · τρύπιο sprinkler paint locker · κακές embarkation ladders · έλειπαν DG records & NOx IDs · ISM.",
+       "Quebec area 24 Apr 2025: No.4 hatch coaming holed · water-ingress alarms active in 3 holds · fire doors not closing · paint locker sprinkler perforated · poor embarkation ladders · missing DG records & NOx IDs · ISM.",
+       "Quebec 24 Abr 2025: butas ang No.4 hatch coaming · aktibo ang water-ingress alarm sa 3 hold · hindi sumasara ang fire door · butas ang sprinkler ng paint locker · masamang embarkation ladder · kulang ang DG record at NOx ID · ISM."
+      ],
+      [
+       "13.42",
+       "Vancouver 22/7/2025: πλήρωμα δεν ήξερε emergency steering · κακό fire drill, Master δεν ήξερε τα fire systems · OOW δεν ήξερε ECDIS, echo sounder, gyro, Inmarsat · διαρροές hydraulics hatch covers · ISM.",
+       "Vancouver 22 Jul 2025: crew unfamiliar with emergency steering · poor fire drill, Master unfamiliar with fire systems · OOW not familiar with ECDIS, echo sounder, gyro, Inmarsat · hatch cover hydraulic leaks · ISM.",
+       "Vancouver 22 Hul 2025: hindi alam ng crew ang emergency steering · mahinang fire drill, hindi alam ng Master ang fire system · hindi alam ng OOW ang ECDIS, echo sounder, gyro, Inmarsat · tagas ng hatch cover hydraulics · ISM."
+      ],
+      [
+       "5.15",
+       "Vancouver 8/8/2025: αξιωματικός δεν μπορούσε να τρέξει το OWS · δεν βρέθηκε emergency towing equipment · πλήρωμα δεν φορούσε SCBA · 3/O δεν ήξερε CO2 · κλειδωμένο ER escape · OWS piping με πλαστικό λάστιχο (έσκασε) · ISM.",
+       "Vancouver 8 Aug 2025: officer could not run the OWS · emergency towing equipment not found · crew could not don SCBA · 3/O did not know CO2 · ER escape locked · OWS piping replaced by plastic hose (burst) · ISM.",
+       "Vancouver 8 Ago 2025: hindi napaandar ng officer ang OWS · hindi nakita ang emergency towing equipment · hindi naisuot ng crew ang SCBA · hindi alam ng 3/O ang CO2 · naka-lock ang ER escape · plastic hose sa OWS piping (pumutok) · ISM."
       ]
      ]
     }

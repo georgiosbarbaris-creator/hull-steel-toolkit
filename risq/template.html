@@ -91,6 +91,7 @@ button{font:inherit;cursor:pointer}
 .big{font-size:28px;font-weight:800}.vt{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}.vt td,.vt th{border:1px solid var(--line);padding:6px;text-align:center}
 .v12{background:var(--okb);color:var(--ok);font-weight:700}.v9{background:#eef6d9;color:#5b7a12;font-weight:700}.v6{background:var(--hrb);color:var(--hr);font-weight:700}.v3{background:#fde3cf;color:#a5490f;font-weight:700}.vU{background:var(--fb);color:var(--f);font-weight:700}
 .pg h3{margin:14px 0 6px;font-size:15px}.pg ul{padding-left:20px;margin:6px 0}.pg li{margin:4px 0}
+.mg{display:inline-block;min-width:20px;text-align:center;color:#fff;border-radius:5px;font:700 12px system-ui;padding:2px 4px;margin-top:2px}.mi{display:flex;gap:8px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line);font-size:14.5px}.pfn{display:flex;gap:3px;flex:0 0 auto}.pfn button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:7px;padding:5px 7px;font:600 12px system-ui}.pfn button.on.p{background:#5b8f6f;color:#fff;border-color:#5b8f6f}.pfn button.on.f{background:#c0392b;color:#fff;border-color:#c0392b}.pfn button.on.n,.pfn button.on.u{background:#7a8794;color:#fff;border-color:#7a8794}.stopb{background:#fdecea;color:#8a1f14;border-radius:8px;padding:8px 10px;font-size:13.5px;margin-bottom:6px}@media (prefers-color-scheme:dark){.stopb{background:#3a1d1a;color:#f4b3aa}}.mdet summary{font-weight:700;cursor:pointer;color:var(--navy)}.mfl{font-size:11px;font-weight:700;color:var(--acc)}.pk{display:block;margin-top:4px;font-size:13px;color:var(--acc);font-weight:600}
 .pscr{display:flex;gap:6px;overflow-x:auto;padding:2px 0 10px}.pchip{flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:18px;padding:7px 12px;font:600 14px system-ui}.pchip.on{background:var(--navy);color:#fff;border-color:var(--navy)}.pgo{flex:0 0 auto;margin-left:auto;border:1px solid var(--line);background:none;color:var(--acc);border-radius:8px;padding:2px 8px;font:600 13px system-ui}.psrc a{color:var(--acc);word-break:break-word}.chk.pchk{flex-direction:row;align-items:flex-start;color:inherit;font-size:15px;font-weight:400}.pchk .pgo{margin-top:0}
 .chk{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--line);font-size:15px}.chk input{width:22px;height:22px;flex:0 0 22px;margin-top:1px}
 .qa{border-bottom:1px solid var(--line);padding:10px 0}.qa .who{font-size:12px;color:var(--acc);font-weight:700}.qa .ans2{display:none;background:var(--okb);border-radius:8px;padding:8px;margin-top:6px;font-size:14px}.qa.open .ans2{display:block}
@@ -115,7 +116,8 @@ button{font:inherit;cursor:pointer}
         <button data-pg="crew">👷 Briefing πληρώματος<small>Κάρτα ανά βαθμό (English)</small></button>
         <button data-pg="drill">🎤 Drill συνέντευξης<small>Τι ρωτάει & σωστή απάντηση</small></button>
         <button data-pg="docs">📁 Έγγραφα hybrid 72h<small>Λίστα για upload</small></button>
-        <button data-pg="psc">🛂 PSC ανά περιοχή<small>AMSA · Paris · Tokyo · USCG</small></button>
+        <button data-pg="psc">🛂 PSC ανά περιοχή<small>AMSA · Paris · Tokyo · USCG · Canada</small></button>
+        <button data-pg="man">📘 Manuals<small>Field Manual · Zero Deficiency Canada</small></button>
         <button data-pg="fleet">⚓ Ιστορικό στόλου<small id="fleetSt">Εισαγωγή αρχείου</small></button>
       </div>
       <p class="note" style="margin:10px 0 0">Στόχος για validity 12 μηνών: <b>≤23 low/medium, το πολύ 1 High, καλό close-out</b>. Τα Sections 3 & 13: ~4 findings = 1 High.</p></div>
@@ -144,7 +146,7 @@ button{font:inherit;cursor:pointer}
     <div class="card tog"><div><b>★ Μόνο high-risk</b><div class="note">Γρήγορη επιθεώρηση: οι ερωτήσεις με το μεγαλύτερο βάρος</div></div><label class="sw"><input type="checkbox" id="hrOnly"><span></span></label></div>
     <div class="row" style="margin:0 0 10px"><button class="btn ai" id="snapGo" style="flex:1">📷 Φωτογράφισε → AI βρίσκει την ερώτηση</button></div>
     <div class="tiles" id="tiles"></div>
-    <div class="row" style="margin-top:12px"><button class="btn" id="editIns">✎ Στοιχεία</button><button class="btn" id="docsIns">📁 Έγγραφα 72h</button><button class="btn" id="trapsIns">🎯 Παγίδες</button><button class="btn" id="pscIns">🛂 PSC</button></div>
+    <div class="row" style="margin-top:12px"><button class="btn" id="editIns">✎ Στοιχεία</button><button class="btn" id="docsIns">📁 Έγγραφα 72h</button><button class="btn" id="trapsIns">🎯 Παγίδες</button><button class="btn" id="pscIns">🛂 PSC</button><button class="btn" id="manIns">📘 Manuals</button></div>
   </section>
 
   <!-- PAGES (traps, mind, crew, drill, docs, fleet) -->
@@ -188,7 +190,10 @@ button{font:inherit;cursor:pointer}
 <div id="toast"></div>
 <script>
 const DATA=/*DATA*/;
-const X=/*EXTRA*/;const PSC=/*PSC*/;const QM=Object.fromEntries(DATA.q.map(q=>[q.id,q]));const HI=new Set(X.hi);
+const X=/*EXTRA*/;const PSC=/*PSC*/;
+const PACKK="risq_pack",PSCK="risq_psc_r",LG=x=>Array.isArray(x)?x[0]:x;
+const ML={fmX:"Audit P/F/N/A ανά κεφάλαιο, stop conditions, 15 No-Go, decision tree, case files, itinerary επιθεωρητή. Κείμενο στα αγγλικά (πρωτότυπο).",caX:"Walk-round A–L πριν τον Καναδά με ★ / CA, rounds T-14 / T-5 / golden hour, pre-arrival, drills. Τα ◆ του πλοίου από το ιδιωτικό ship pack.",open:"Άνοιγμα",packT:"Ship pack (ιδιωτικό)",packX:"Τα ◆ open items του πλοίου (όνομα, πιστοποιητικά, ιστορικό PSC) ΔΕΝ είναι μέσα στη δημόσια εφαρμογή. Εισάγεις το αρχείο .json μία φορά — μένει μόνο σε αυτό το κινητό.",packNo:"Δεν έχει φορτωθεί ship pack.",packIn:"Εισαγωγή ship pack",del:"Αφαίρεση",bad:"Λάθος αρχείο",openIns:"Άνοιξε μια επιθεώρηση για να κρατάς P/F/N/A και ✔.",open2:"Ανοιχτά",shFail:"FAIL & No-Go στο γραφείο",shOpen:"Ανοιχτά στο πλοίο",dec:"Οι 10 πρώτες αποφάσεις",camp:"Καμπάνια 30 ημερών πριν την άφιξη",ladder:"Κλίμακα κλιμάκωσης A/B/C",ev:"Evidence room — 7 φάκελοι",how:"Πώς το ελέγχει ο Superintendent",tree:"Red-flag decision tree",cases:"5 case files: defect → CAPA",itin:"Πρόγραμμα επίσκεψης Superintendent",nogo:"Οι 15 No-Go ερωτήσεις",nogoX:"ΟΧΙ ή «?» = ανοιχτό A-grade θέμα μέχρι να επιβεβαιωθεί.",src:"Πηγές",caRules:"Κανόνες Καναδά & detentions 2025",rounds:"Τα 3 rounds",pre:"Pre-arrival — γραφείο, agent, πλοίο",drills:"Drills πριν την άφιξη",golden:"Χρυσοί κανόνες ημέρας επιθεώρησης"};
+/*MANJS*/const QM=Object.fromEntries(DATA.q.map(q=>[q.id,q]));const HI=new Set(X.hi);
 const TRAPQ={};X.traps.forEach((t,i)=>t.q.forEach(q=>{(TRAPQ[q]=TRAPQ[q]||[]).push(i+1);}));
 let FLEET=null;try{FLEET=JSON.parse(localStorage.getItem("risq_fleet")||"null");}catch(e){}
 const FL=id=>(FLEET&&FLEET.f&&FLEET.f[id])||[];
@@ -411,10 +416,10 @@ function rValid(ins,fl){const c={L:0,M:0,H:0},sec={};fl.forEach(q=>{const v=sevO
    <p class="note" style="margin:6px 0 0">Η σοβαρότητα κάθε finding αλλάζει μέσα στο finding (Low/Med/High). Default: High στις ερωτήσεις του RightShip high-risk list (4.5, 4.18, 9A.13, 13.33, 4.37, 10.4, 4.11). Πρόβλεψη με βάση το δημοσιευμένο validity matrix· η RightShip κάνει και peer review.</p>`;}
 
 /* ---------- pages ---------- */
-const PGT={traps:"🎯 Οι 10 παγίδες",mind:"🧠 Το μυαλό του inspector",crew:"👷 Briefing πληρώματος",drill:"🎤 Drill συνέντευξης",docs:"📁 Έγγραφα hybrid 72h",psc:"🛂 PSC ανά περιοχή",fleet:"⚓ Ιστορικό στόλου"};
+const PGT={traps:"🎯 Οι 10 παγίδες",mind:"🧠 Το μυαλό του inspector",crew:"👷 Briefing πληρώματος",drill:"🎤 Drill συνέντευξης",docs:"📁 Έγγραφα hybrid 72h",psc:"🛂 PSC ανά περιοχή",man:"📘 Manuals",fm:"📘 PSC Field Manual",ca:"🇨🇦 Zero Deficiency Canada",fleet:"⚓ Ιστορικό στόλου"};
 function openPage(k,from){page=k;pageFrom=from||(view==="list"?"list":"home");go("page");}
 $$("[data-pg]").forEach(b=>b.onclick=()=>{cur=null;openPage(b.dataset.pg,"list");});
-$("#docsIns").onclick=()=>openPage("docs","home");$("#trapsIns").onclick=()=>openPage("traps","home");$("#pscIns").onclick=()=>openPage("psc","home");
+$("#docsIns").onclick=()=>openPage("docs","home");$("#trapsIns").onclick=()=>openPage("traps","home");$("#pscIns").onclick=()=>openPage("psc","home");$("#manIns").onclick=()=>openPage("man","home");
 const qref=id=>QM[id]?`<b>${esc(id)}</b>`:"";
 function rPage(){const ins=pageFrom!=="list"?I():null,box=$("#pg");let h="";
   if(page==="traps"){h=`<div class="card note" style="margin-top:0">Από ανάλυση <b>15 RightShip επιθεωρήσεων του στόλου (2023–2026, ~300 findings)</b> + RightShip high-risk list 2025 + Fleet Alerts 09/26, 13/26, 14/26. Στην επιθεώρηση οι ερωτήσεις αυτές έχουν σήμα 🎯.</div>`+
@@ -432,11 +437,12 @@ function rPage(){const ins=pageFrom!=="list"?I():null,box=$("#pg");let h="";
     X.docs.map(([sn,l],i)=>`<div class="card"><h2 style="margin-top:0">${esc(sn)}</h2>${l.map((d,j)=>`<label class="chk"><input type="checkbox" data-dc="${i}_${j}" ${dc&&dc[i+"_"+j]?"checked":""} ${dc?"":"disabled"}><span>${esc(d)}</span></label>`).join("")}</div>`).join("");}
   else if(page==="psc"){const pc=ins?(ins.pc=ins.pc||{}):null;let rid=(ins&&ins.pr)||(()=>{try{return localStorage.getItem("risq_psc_r")}catch(e){return null}})()||"all";const R=PSC.r.find(x=>x.id===rid)||PSC.r[0];
     h=`<div class="pscr">${PSC.r.map(x=>`<button class="pchip${x.id===R.id?" on":""}" data-pr="${x.id}">${x.f} ${esc(x.id==="all"?"Όλα":x.n)}</button>`).join("")}</div>
-     <div class="card" style="margin-top:0"><h2 style="margin-top:0">${R.f} ${esc(R.id==="all"?"Βασικά για όλα τα PSC":R.n)}</h2><p style="margin:0 0 6px">${esc(R.a[0])}</p>${R.c[0]?`<div class="flt">📌 <b>Campaign:</b> ${esc(R.c[0])}</div>`:""}${R.p[0]?`<p class="note" style="margin:4px 0 0">⚓ ${esc(R.p[0])}</p>`:""}${R.id!=="all"?`<p class="note" style="margin:6px 0 0">Κάνε πρώτα και τα «🌐 Όλα».</p>`:""}</div>
+     <div class="card" style="margin-top:0"><h2 style="margin-top:0">${R.f} ${esc(R.id==="all"?"Βασικά για όλα τα PSC":R.n)}</h2><p style="margin:0 0 6px">${esc(R.a[0])}</p>${R.c[0]?`<div class="flt">📌 <b>Campaign:</b> ${esc(R.c[0])}</div>`:""}${R.p[0]?`<p class="note" style="margin:4px 0 0">⚓ ${esc(R.p[0])}</p>`:""}${R.id!=="all"?`<p class="note" style="margin:6px 0 0">Κάνε πρώτα και τα «🌐 Όλα».</p>`:""}${R.id==="canada"?`<div class="row" style="margin-top:8px"><button class="btn p" data-open="ca">📘 Zero Deficiency Canada walk-round</button></div>`:""}</div>
      <div class="row" style="margin-bottom:6px"><button class="btn" id="pscSh">📤 Λίστα στο πλοίο (EN)</button><span class="note" id="pscN"></span></div>`+
      R.s.map((S,si)=>`<div class="card"><h2 style="margin-top:0">${esc(S.t[0])}</h2>${S.i.map((it,ii)=>{const k=R.id+"_"+si+"_"+ii;return `<label class="chk pchk"><input type="checkbox" data-pc="${k}" ${pc&&pc[k]?"checked":""} ${pc?"":"disabled"}><span style="flex:1">${it[0]!=="*"?`<b>${esc(it[0])}</b> `:""}${esc(it[1])}</span>${ins&&it[0]!=="*"&&QM[it[0]]?`<button class="pgo" data-goq="${it[0]}">→</button>`:""}</label>`;}).join("")}</div>`).join("")+
      `<div class="card note psrc">Ενημέρωση ${esc(PSC.u)} · Πηγές: ${R.src.map(x=>`<a href="${x[1]}" target="_blank" rel="noopener">${esc(x[0])}</a>`).join(" · ")}${ins?"":"<br>Άνοιξε μια επιθεώρηση για να κρατάς ✔."}</div>`;
     page_psc=R;}
+  else if(["man","fm","ca"].includes(page)){h=MANR(page,ins);}
   else if(page==="fleet"){const n=FLEET?Object.values(FLEET.f).reduce((a,b)=>a+b.length,0):0;
     h=`<div class="card"><h2 style="margin-top:0">⚓ Ιστορικό findings του στόλου</h2>
      <p>Το αρχείο με τα πραγματικά findings των πλοίων μας <b>δεν</b> είναι μέσα στην εφαρμογή, γιατί η σελίδα είναι δημόσια. Το εισάγεις μία φορά από το αρχείο <b>.json</b> και μένει μόνο σε αυτό το κινητό.</p>
@@ -448,6 +454,8 @@ function rPage(){const ins=pageFrom!=="list"?I():null,box=$("#pg");let h="";
   box.innerHTML=h;hdr();
   box.querySelectorAll("[data-goq]").forEach(b=>b.onclick=()=>{const q=QM[b.dataset.goq];area=q.a;aflt="all";go("area");setTimeout(()=>{const e=$(`#qs [data-id="${q.id}"]`);if(e)e.scrollIntoView({block:"center"});},60);});
   box.querySelectorAll(".qa").forEach(e=>e.onclick=()=>e.classList.toggle("open"));
+  if(["man","fm","ca"].includes(page))MANB(page,ins,box);
+  box.querySelectorAll("[data-open]").forEach(b=>{if(!b.onclick)b.onclick=()=>{openPage(b.dataset.open,pageFrom);window.scrollTo(0,0);};});
   if(page==="psc"){const R=page_psc,pc=ins?ins.pc:null;
     box.querySelectorAll("[data-pr]").forEach(b=>b.onclick=()=>{if(ins){ins.pr=b.dataset.pr;save();}try{localStorage.setItem("risq_psc_r",b.dataset.pr);}catch(e){}rPage();window.scrollTo(0,0);});
     const pn=()=>{const e=$("#pscN");if(e&&pc){const t=R.s.reduce((a,b)=>a+b.i.length,0),n=Object.keys(pc).filter(k=>pc[k]&&k.startsWith(R.id+"_")).length;e.textContent=`${n}/${t} ✔`;}};pn();
