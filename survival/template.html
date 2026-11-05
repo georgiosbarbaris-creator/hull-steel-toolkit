@@ -86,6 +86,7 @@ function render(r){
  if(a==='me')return me();
  if(a==='search')return search();
  if(a==='cpr')return cprPage();
+ if(a==='morse')return morse();
  home();
 }
 function home(){T('Επιβίωση 72+');
@@ -94,7 +95,7 @@ function home(){T('Επιβίωση 72+');
  <button class="tile" onclick="go('phones')"><span class="e">📞</span>Τηλέφωνα<small>112 · 166 · 199</small></button>
  <button class="tile" onclick="go('cat/aid')"><span class="e">🩹</span>Πρώτες βοήθειες<small>ΚΑΡΠΑ, αίμα, εγκαύματα</small></button>
  <button class="tile" onclick="go('compass')"><span class="e">🧭</span>Πυξίδα & GPS<small>θέση, γυρισμός</small></button>
- <button class="tile" onclick="go('sos')"><span class="e">🔦</span>SOS<small>φως, σφυρίχτρα</small></button>
+ <button class="tile" onclick="go('sos')"><span class="e">🔦</span>SOS<small>φως, σφυρίχτρα, Morse</small></button>
  <button class="tile" onclick="go('cat/list')"><span class="e">🎒</span>Λίστες 72 ωρών<small>σακίδιο, σπίτι, φαρμακείο</small></button>
  <button class="tile" onclick="go('me')"><span class="e">🪪</span>Η κάρτα μου<small>υγεία, επαφές, σχέδιο</small></button>
  <button class="tile" onclick="go('cat/gear')"><span class="e">🛒</span>Τι να αγοράσω<small>κουβέρτα, φακός, σκηνή</small></button>
@@ -194,7 +195,7 @@ function cprTog(){if(cprT){stopAll();cprPage();return}cprN=0;wake(1);$('#mb').te
 
 /* ---- SOS ---- */
 let sosT=null,torchTrack=null;
-function sos(){T('SOS');M.innerHTML=`<button class="big" style="background:#fff;color:#000" onclick="ovOn('#fff','Πάτα για κλείσιμο')">⬜ Φως οθόνης<small>Άσπρη οθόνη στο φουλ</small></button>
+function sos(){T('SOS');M.innerHTML=`<button class="big grn" onclick="go('morse')">📡 Morse – γράψε λέξεις<small>Παίζει με φως και ήχο · όλο το λεξιλόγιο</small></button><button class="big" style="background:#fff;color:#000" onclick="ovOn('#fff','Πάτα για κλείσιμο')">⬜ Φως οθόνης<small>Άσπρη οθόνη στο φουλ</small></button>
  <button class="big red" onclick="sosLight()">🔦 SOS με φως<small>··· ––– ··· στην οθόνη</small></button>
  <button class="big org" id="wh" onclick="whistle()">📣 Σφυρίχτρα SOS<small>Δυνατός ήχος – βάλε ένταση στο τέρμα</small></button>
  <button class="big blu" onclick="torch()">💡 Φακός κινητού<small>Δουλεύει σε Android (Chrome)</small></button>
@@ -202,7 +203,7 @@ function sos(){T('SOS');M.innerHTML=`<button class="big" style="background:#fff;
  <div class="tip">Σήμα κινδύνου = <b>3</b> από οτιδήποτε: 3 σφυρίγματα, 3 λάμψεις, 3 φωτιές. Κράτα μπαταρία: χρησιμοποίησε το SOS όταν ακούς ή βλέπεις διασώστες.</div>
  <button class="btn" onclick="go('a/w_signal')">📖 Όλα τα σήματα (εδάφους, χεριών, Morse)</button>`}
 function ovOn(bg,t){const o=$('#ov');o.style.display='flex';o.style.background=bg;$('#ovt').textContent=t;wake(1)}
-function ovOff(){$('#ov').style.display='none';if(sosT){clearTimeout(sosT);sosT=null}wake(0)}
+function ovOff(){if($('#ov').dataset.mo)return moStop();$('#ov').style.display='none';if(sosT){clearTimeout(sosT);sosT=null}wake(0)}
 const SOSP=[1,1,1,1,1,3,3,1,3,1,3,3,1,1,1,1,1,7];// on,off pairs in units
 function sosLight(){ovOn('#000','SOS – πάτα για κλείσιμο');const o=$('#ov');let i=0;const u=250;
  const stp=()=>{if($('#ov').style.display==='none')return;const on=i%2===0;o.style.background=on?'#fff':'#000';const d=SOSP[i%SOSP.length]*u;i=(i+1)%SOSP.length;sosT=setTimeout(stp,d)};stp()}
@@ -214,6 +215,57 @@ async function torch(){if(torchTrack){torchTrack.stop();torchTrack=null;return}
  try{const s=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});const t=s.getVideoTracks()[0];const cap=t.getCapabilities?t.getCapabilities():{};
   if(!cap.torch){t.stop();alert('Αυτό το κινητό δεν επιτρέπει φακό από εφαρμογή web. Χρησιμοποίησε τον φακό του κινητού ή το «Φως οθόνης».');return}
   await t.applyConstraints({advanced:[{torch:true}]});torchTrack=t;alert('Φακός αναμμένος. Πάτα ξανά «Φακός κινητού» για σβήσιμο.')}catch(e){alert('Δεν άναψε ο φακός. Χρησιμοποίησε τον φακό του κινητού ή το «Φως οθόνης».')}}
+
+/* ---- Morse ---- */
+const MO_LAT={A:'.-',B:'-...',C:'-.-.',D:'-..',E:'.',F:'..-.',G:'--.',H:'....',I:'..',J:'.---',K:'-.-',L:'.-..',M:'--',N:'-.',O:'---',P:'.--.',Q:'--.-',R:'.-.',S:'...',T:'-',U:'..-',V:'...-',W:'.--',X:'-..-',Y:'-.--',Z:'--..'};
+const MO_GR={'Α':'.-','Β':'-...','Γ':'--.','Δ':'-..','Ε':'.','Ζ':'--..','Η':'....','Θ':'-.-.','Ι':'..','Κ':'-.-','Λ':'.-..','Μ':'--','Ν':'-.','Ξ':'-..-','Ο':'---','Π':'.--.','Ρ':'.-.','Σ':'...','Τ':'-','Υ':'-.--','Φ':'..-.','Χ':'----','Ψ':'--.-','Ω':'.--'};
+const MO_NUM={'0':'-----','1':'.----','2':'..---','3':'...--','4':'....-','5':'.....','6':'-....','7':'--...','8':'---..','9':'----.'};
+const MO_PUN={'.':'.-.-.-',',':'--..--','?':'..--..',"'":'.----.','!':'-.-.--','/':'-..-.','(':'-.--.',')':'-.--.-','&':'.-...',':':'---...',';':'-.-.-.','=':'-...-','+':'.-.-.','-':'-....-','_':'..--.-','"':'.-..-.','$':'...-..-','@':'.--.-.'};
+const MO_PRO=[['SOS','...---...','Κίνδυνος – ζητώ βοήθεια (στέλνεται ενωμένο)'],['AR','.-.-.','Τέλος μηνύματος'],['SK','...-.-','Τέλος επικοινωνίας'],['BT','-...-','Αλλαγή θέματος / παύση (=)'],['KN','-.--.','Πάρε μόνο εσύ (μόνο ο σταθμός που καλώ)'],['AS','.-...','Περίμενε'],['K','-.-','Πάρε / σειρά σου να μιλήσεις'],['R','.-.','Ελήφθη'],['ΛΑΘΟΣ','........','8 τελείες = λάθος, ξαναρχίζω τη λέξη'],['CT / KA','-.-.-','Αρχή μηνύματος'],['VE / SN','...-.','Κατάλαβα']];
+const MO_ABR=[['CQ','Καλώ όλους τους σταθμούς'],['DE','Από (π.χ. «CQ DE SV1ABC»)'],['MAYDAY','Κίνδυνος ζωής (φωνή)'],['PAN PAN','Επείγον, όχι κίνδυνος ζωής'],['SECURITE','Μήνυμα ασφαλείας'],['QTH','Η θέση μου είναι… / Ποια είναι η θέση σου;'],['QRZ','Ποιος με καλεί;'],['QSL','Επιβεβαιώνω λήψη'],['QRM / QRN','Παρεμβολές / παράσιτα'],['QRS / QRQ','Στείλε πιο αργά / πιο γρήγορα'],['QRT','Σταματώ την εκπομπή'],['QRV','Είμαι έτοιμος'],['QSO','Επικοινωνία με σταθμό'],['RST','Αναφορά ποιότητας σήματος'],['TNX / TU','Ευχαριστώ'],['PSE','Παρακαλώ'],['WX','Καιρός'],['HR','Εδώ'],['UR','Δικό σου'],['ES','Και'],['OK','Εντάξει'],['GM / GA / GE / GN','Καλημέρα / Καλό απόγευμα / Καλησπέρα / Καληνύχτα'],['73','Χαιρετισμούς'],['88','Αγάπη και φιλιά'],['HELP','Βοήθεια'],['MED','Χρειάζομαι γιατρό']];
+const ICS=[['A','Έχω δύτη κάτω – μείνε μακριά, αργή ταχύτητα'],['B','Φορτώνω/εκφορτώνω/μεταφέρω επικίνδυνο φορτίο'],['C','Ναι (καταφατικό)'],['D','Μείνε μακριά – κάνω δύσκολους χειρισμούς'],['E','Αλλάζω πορεία δεξιά'],['F','Έχω βλάβη – επικοινωνήστε μαζί μου'],['G','Χρειάζομαι πιλότο'],['H','Έχω πιλότο επί του σκάφους'],['I','Αλλάζω πορεία αριστερά'],['J','Έχω φωτιά και επικίνδυνο φορτίο – μείνε μακριά'],['K','Θέλω να επικοινωνήσω μαζί σου'],['L','Σταμάτα αμέσως το σκάφος σου'],['M','Το σκάφος μου έχει σταματήσει'],['N','Όχι (αρνητικό)'],['O','Άνθρωπος στη θάλασσα'],['P','Στο λιμάνι: όλοι επί του σκάφους, αναχωρούμε'],['Q','Το σκάφος μου είναι υγιές – ζητώ ελεύθερη πρατική'],['R','(Λήψη μηνύματος)'],['S','Οι μηχανές μου κινούνται ανάποδα'],['T','Μείνε μακριά – κάνω ζευγαρωτή αλιεία (τράτα)'],['U','Οδεύεις προς κίνδυνο'],['V','Χρειάζομαι βοήθεια'],['W','Χρειάζομαι ιατρική βοήθεια'],['X','Σταμάτα και πρόσεχε τα σήματά μου'],['Y','Σέρνω την άγκυρα'],['Z','Χρειάζομαι ρυμουλκό']];
+const MO_ALL=Object.assign({},MO_LAT,MO_GR,MO_NUM,MO_PUN);
+const moSym=c=>c.replace(/\./g,'·').replace(/-/g,'−');
+function moNorm(t){return t.toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/ς/g,'Σ').replace(/Σ/g,'Σ')}
+function moEnc(t){return moNorm(t).split(/\s+/).filter(Boolean).map(w=>w==='SOS'?[['SOS','...---...']]:[...w].filter(c=>MO_ALL[c]).map(c=>[c,MO_ALL[c]]))}
+let moT=null,moOn=false,moTorch=null;
+function morse(){T('Morse');const m=LS.g('mo',{t:'SOS',w:8,s:1,l:1,f:0,r:0});
+ const tab=(o)=>`<div class="grid" style="grid-template-columns:repeat(3,1fr);gap:6px">${Object.entries(o).map(([k,v])=>`<button class="btn" style="padding:8px 4px" onclick="moPlay('${k.replace(/'/g,"\\'")}')"><b style="font-size:1.2em">${esc(k)}</b><br><span class="mono">${moSym(v)}</span></button>`).join('')}</div>`;
+ M.innerHTML=`<div class="box"><label>Γράψε λέξεις (ελληνικά ή λατινικά)</label><textarea id="mot" rows="2" oninput="moShow()">${esc(m.t)}</textarea>
+ <div id="mov" class="mono" style="font-size:1.15em;word-break:break-word;margin:4px 0 10px"></div>
+ <div class="tools"><button class="btn ${m.s?'p':''}" id="mo_s" onclick="moOpt('s')">🔊 Ήχος</button><button class="btn ${m.l?'p':''}" id="mo_l" onclick="moOpt('l')">⬜ Φως οθόνης</button><button class="btn ${m.f?'p':''}" id="mo_f" onclick="moOpt('f')">💡 Φακός (Android)</button><button class="btn ${m.r?'p':''}" id="mo_r" onclick="moOpt('r')">🔁 Επανάληψη</button></div>
+ <label>Ταχύτητα: <span id="mow">${m.w}</span> λέξεις/λεπτό</label><input type="range" min="4" max="25" value="${m.w}" oninput="moSet('w',+this.value);$('#mow').textContent=this.value">
+ <button class="big red" id="mob" onclick="moGo()">▶ ΠΑΙΞΕ</button>
+ <div class="tools"><button class="btn" onclick="$('#mot').value='SOS';moShow()">SOS</button><button class="btn" onclick="$('#mot').value='ΒΟΗΘΕΙΑ';moShow()">ΒΟΗΘΕΙΑ</button><button class="btn" onclick="$('#mot').value='HELP';moShow()">HELP</button><button class="btn" onclick="$('#mot').value='MED';moShow()">MED (γιατρός)</button><button class="btn" onclick="$('#mot').value='OK';moShow()">OK</button></div>
+ <div class="muted">· = σύντομο, − = μακρύ (3 φορές το σύντομο). Κενό ανάμεσα σε γράμματα = 3, ανάμεσα σε λέξεις = 7. Το SOS στέλνεται ενωμένο, χωρίς κενά.</div></div>
+ <div class="tip">Πάτα οποιοδήποτε γράμμα στους πίνακες για να το ακούσεις.</div>
+ <h3>Ελληνικό αλφάβητο</h3>${tab(MO_GR)}
+ <h3>Λατινικό αλφάβητο</h3>${tab(MO_LAT)}
+ <h3>Αριθμοί</h3>${tab(MO_NUM)}
+ <h3>Σημεία στίξης</h3>${tab(MO_PUN)}
+ <h3>Ειδικά σήματα (prosigns)</h3>${MO_PRO.map(p=>`<button class="row" onclick="moRaw('${p[1]}')"><span class="e mono" style="width:auto;font-size:1em;min-width:5.5em">${moSym(p[1])}</span><span><b>${p[0]}</b><small>${p[2]}</small></span></button>`).join('')}
+ <h3>Συντομογραφίες και Q-codes</h3>${MO_ABR.map(p=>`<div class="wp"><b style="flex:none;min-width:6em">${p[0]}</b><span>${p[1]}</span></div>`).join('')}
+ <h3>⚓ Μονογραμματικά σήματα ICS (με φως, ήχο ή σημαία)</h3><div class="muted">International Code of Signals – ισχύουν διεθνώς στη θάλασσα.</div>${ICS.map(p=>`<button class="row" onclick="moPlay('${p[0]}')"><span class="e"><b>${p[0]}</b></span><span><b class="mono">${moSym(MO_LAT[p[0]])}</b><small>${p[1]}</small></span></button>`).join('')}
+ <div class="tip">Μάθε πρώτα το SOS: <b>··· −−− ···</b>. Για να θυμάσαι τα γράμματα, άκουσέ τα (ρυθμός), μη μετράς τελείες. Με φακό στη νύχτα το σήμα φαίνεται χιλιόμετρα μακριά.</div>`;
+ moShow()}
+function moSet(k,v){const m=LS.g('mo',{t:'SOS',w:8,s:1,l:1,f:0,r:0});m[k]=v;LS.s('mo',m)}
+function moOpt(k){const m=LS.g('mo',{t:'SOS',w:8,s:1,l:1,f:0,r:0});m[k]=m[k]?0:1;LS.s('mo',m);$('#mo_'+k).classList.toggle('p',!!m[k])}
+function moShow(){const t=$('#mot').value;moSet('t',t);const w=moEnc(t);$('#mov').innerHTML=w.map(x=>x.map(([c,v],i)=>`<span data-i="${i}">${esc(c)} <b>${moSym(v)}</b></span>`).join('&nbsp;&nbsp; ')).join('<span style="color:var(--org)"> / </span>')||'<span class="muted">—</span>'}
+async function moTorchSet(on){try{if(!moTorch){const s=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});const t=s.getVideoTracks()[0];if(!(t.getCapabilities&&t.getCapabilities().torch)){t.stop();return false}moTorch=t}await moTorch.applyConstraints({advanced:[{torch:on}]});return true}catch(e){return false}}
+function moStop(){if(moT){clearTimeout(moT);moT=null}moOn=false;if(moTorch){try{moTorch.applyConstraints({advanced:[{torch:false}]})}catch(e){}moTorch.stop();moTorch=null}
+ const o=$('#ov');if(o&&o.dataset.mo){o.style.display='none';delete o.dataset.mo}const b=$('#mob');if(b)b.textContent='▶ ΠΑΙΞΕ';document.querySelectorAll('#mov span.hl').forEach(e=>e.classList.remove('hl'));wake(0)}
+async function moRun(seq,label){moStop();const m=LS.g('mo',{t:'SOS',w:8,s:1,l:1,f:0,r:0});const u=1200/(m.w||8);moOn=true;wake(1);
+ if(m.f&&!(await moTorchSet(false))){alert('Ο φακός δεν ελέγχεται σε αυτό το κινητό (π.χ. iPhone). Χρησιμοποιώ φως οθόνης.');m.l=1}
+ const o=$('#ov');if(m.l){o.dataset.mo=1;o.style.display='flex';o.style.background='#000';$('#ovt').textContent=(label||'')+' – πάτα για στοπ'}
+ const b=$('#mob');if(b)b.textContent='⏹ ΣΤΟΠ';let i=0;
+ const stp=()=>{if(!moOn)return;if(m.l&&o.style.display==='none')return moStop();
+  if(i>=seq.length){if(m.r){i=0;moT=setTimeout(stp,u*7);return}return moStop()}
+  const [on,d]=seq[i++];if(on){if(m.s)beep(650,d*u,.8,'sine');if(m.l)o.style.background='#fff';if(m.f)moTorchSet(true)}else{if(m.l)o.style.background='#000';if(m.f&&moTorch)moTorchSet(false)}
+  moT=setTimeout(stp,d*u)};stp()}
+function moSeq(codes){const s=[];codes.forEach((c,ci)=>{if(c===' '){s.push([0,4]);return}[...c].forEach((x,j)=>{s.push([1,x==='.'?1:3]);s.push([0,j<c.length-1?1:3])})});return s}
+function moGo(){if(moOn)return moStop();const w=moEnc($('#mot').value);if(!w.length)return;const codes=[];w.forEach((x,wi)=>{if(wi)codes.push(' ');x.forEach(([c,v])=>codes.push(v))});moRun(moSeq(codes),$('#mot').value.trim().slice(0,20))}
+function moPlay(k){const v=MO_ALL[k];if(v)moRun(moSeq([v]),k)}
+function moRaw(v){moRun(moSeq([v]),moSym(v))}
 
 /* ---- wake lock ---- */
 let WL=null;async function wake(on){try{if(on&&'wakeLock'in navigator&&!WL)WL=await navigator.wakeLock.request('screen');if(!on&&WL){WL.release();WL=null}}catch(e){}}
@@ -293,7 +345,7 @@ function draw(){const cv=$('#cv');if(!cv)return;const x=cv.getContext('2d'),W=cv
  w.forEach((p,i)=>{const [a,b]=P(p);x.font='34px sans-serif';x.fillText('⭐',a,b+12);x.fillStyle=tgt===i?'#fcbf49':'#fff';x.font='bold 22px sans-serif';x.fillText(p.n,a,b-22);x.fillStyle='#ff4d4d'});
  if(pos){const [a,b]=P(pos);x.fillStyle='rgba(58,134,255,.25)';x.beginPath();x.arc(a,b,Math.max(10,pos.acc*sc),0,7);x.fill();x.fillStyle='#3a86ff';x.strokeStyle='#fff';x.lineWidth=4;x.beginPath();x.arc(a,b,13,0,7);x.fill();x.stroke()}}
 
-function stopAll(){if(cprT){clearInterval(cprT);cprT=null}if(whT){clearTimeout(whT);whT=null}if(window.speechSynthesis)speechSynthesis.cancel();speaking=false;
+function stopAll(){if(moOn||moTorch)moStop();if(cprT){clearInterval(cprT);cprT=null}if(whT){clearTimeout(whT);whT=null}if(window.speechSynthesis)speechSynthesis.cancel();speaking=false;
  if(!rec)stopGeo();if(!rec)wake(0);if(orientOn){window.removeEventListener('deviceorientation',onOr,true);window.removeEventListener('deviceorientationabsolute',onOr,true);orientOn=false;hdg=null}}
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&WL){WL=null;wake(1)}});
 if(rec)startGeo();
