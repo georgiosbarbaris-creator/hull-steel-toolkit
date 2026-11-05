@@ -26,7 +26,7 @@ input[type=checkbox]{width:20px;height:20px}
 @media (max-width:420px){.g4{grid-template-columns:repeat(2,1fr)}}
 .note{font-size:12.5px;color:var(--muted)}
 .leg{border-left:4px solid var(--navy)}.leg.B{border-left-color:#7a8794}.leg .hd{display:flex;justify-content:space-between;align-items:center;gap:6px}
-.chip{display:inline-block;font:700 11px system-ui;border-radius:6px;padding:2px 6px;background:var(--line)}.chip.est{background:#fde7c8;color:#7a4a00}.chip.mine{background:#d7f0df;color:#1f5e37}
+.chip{display:inline-block;font:700 11px system-ui;border-radius:6px;padding:2px 6px;background:var(--line)}.chip.est{background:#fde7c8;color:#7a4a00}.chip.mine{background:#d7f0df;color:#1f5e37}.chip.pub{background:#dbe8f7;color:#123d5e}
 @media (prefers-color-scheme:dark){.chip.est{background:#4a3612;color:#f7d49a}.chip.mine{background:#173a25;color:#9be0b4}}
 table{border-collapse:collapse;width:100%;font-size:13.5px}td,th{padding:5px 6px;border-bottom:1px solid var(--line);text-align:right}th{color:var(--muted);font-weight:600}td:first-child,th:first-child{text-align:left}
 .big{font-size:26px;font-weight:800}.kpi{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.kpi div{background:var(--bg);border-radius:12px;padding:10px}.kpi b{display:block;font-size:20px}
@@ -51,7 +51,7 @@ table{border-collapse:collapse;width:100%;font-size:13.5px}td,th{padding:5px 6px
  <section id="v-list">
   <button class="btn p" id="newC" style="width:100%;padding:14px">+ Νέο voyage calculation</button>
   <div id="cList"></div>
-  <div class="card note">Οι αποστάσεις από τη βάση είναι <b>εκτίμηση</b> (≈ ±5%, Suez/Panama/Cape). Όταν γράψεις τη δική σου (BP/Netpas) την κρατάω και την ξαναβάζω αυτόματα — σήμα <span class="chip mine">✔ δική σου</span>.</div>
+  <div class="card note"><b>Πηγές αποστάσεων (με σειρά):</b><br><span class="chip mine">✔ δική σου</span> ό,τι έγραψες εσύ (BP/Netpas) — το θυμάμαι<br><span class="chip pub">📘 Pub.151</span> NGA Distances Between Ports (2001, public domain) — απευθείας ή μέσω junction points<br><span class="chip est">≈ εκτίμηση</span> δική μου διαδρομή (Suez/Panama/Cape, ≈ ±5%)<br>Corinth Canal εξαιρείται (όχι για bulkers).</div>
   <p class="cred">Created by George Barbaris</p>
  </section>
  <!-- EDIT -->
@@ -70,7 +70,7 @@ table{border-collapse:collapse;width:100%;font-size:13.5px}td,th{padding:5px 6px
   <div class="card"><h2>💾 Backup</h2><div class="row"><button class="btn" id="bkOut">📤 Εξαγωγή όλων (.json)</button><label class="btn">📥 Εισαγωγή<input type="file" id="bkIn" accept=".json" style="display:none"></label></div>
    <p class="note">Όλα μένουν μόνο σε αυτό το κινητό. Κάνε backup πριν αλλάξεις κινητό.</p></div>
   <div class="card"><h2>⭐ Τα λιμάνια μου</h2><div id="mpList"></div><div class="row" style="margin-top:6px"><input id="mpNew" placeholder="Νέο λιμάνι"><button class="btn" id="mpAdd">+</button></div></div>
-  <div class="card note"><b>Λιμάνια στη βάση:</b> <span id="pCount"></span>. Για λιμάνι που δεν υπάρχει, γράψε το όνομα και βάλε τα μίλια χειροκίνητα — θα το θυμάμαι.</div>
+  <div class="card note"><b>Λιμάνια:</b> <span id="pCount"></span> στη βάση εκτίμησης + <span id="pubCount"></span> ονόματα NGA Pub.151. Για λιμάνι που δεν υπάρχει, γράψε το όνομα και βάλε τα μίλια χειροκίνητα — θα το θυμάμαι.</div>
  </section>
 </main>
 <nav class="nav" id="nav"><button data-go="list" class="on"><b>☰</b>Υπολογισμοί</button><button data-go="cmp"><b>⚖</b>Σύγκριση</button><button data-go="set"><b>⚙</b>Ρυθμίσεις</button></nav>
@@ -78,6 +78,7 @@ table{border-collapse:collapse;width:100%;font-size:13.5px}td,th{padding:5px 6px
 <datalist id="plist"></datalist>
 <script>
 const PORTS=/*PORTS*/;
+const PUB=/*PUB*/;
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const toast=m=>{const t=document.createElement("div");t.className="toast";t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),1800);};
@@ -88,9 +89,10 @@ const LS={get:(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v)
 let S=LS.get("voy_calcs",[]),DIST=LS.get("voy_dist",{}),OPT=LS.get("voy_opt",{avSuez:false,avPan:false});
 let MYP=LS.get("voy_myports",[]);
 const save=()=>LS.set("voy_calcs",S),saveD=()=>LS.set("voy_dist",DIST);
-const chipH=l=>l.src==="mine"?'<span class="chip mine">✔ δική σου</span>':l.src==="est"?'<span class="chip est">≈ εκτίμηση</span>':"";
-function plist(){$("#plist").innerHTML=MYP.map(x=>`<option value="${esc(x)}">⭐ δικό μου</option>`).join("")+PORTS.p.map(p=>`<option value="${esc(p[0])}">${p[1]}</option>`).join("");}
-function addMyPort(v){v=(v||"").trim();if(!v||PM[v.toLowerCase()]||MYP.some(x=>x.toLowerCase()===v.toLowerCase()))return;MYP.push(v);MYP.sort();LS.set("voy_myports",MYP);plist();}
+const chipH=l=>l.src==="mine"?'<span class="chip mine">✔ δική σου</span>':l.src==="pub"?'<span class="chip pub">📘 Pub.151</span>':l.src==="est"?'<span class="chip est">≈ εκτίμηση</span>':"";
+function plist(){const al=new Set(Object.values(PUB.a));$("#plist").innerHTML=MYP.map(x=>`<option value="${esc(x)}">⭐ δικό μου</option>`).join("")+PORTS.p.map(p=>`<option value="${esc(p[0])}">${p[1]}${PUB.a[p[0]]!=null?" · Pub.151":""}</option>`).join("")+
+ PUB.n.map((x,i)=>al.has(i)?"":`<option value="${esc(x)}">Pub.151</option>`).join("");}
+function addMyPort(v){v=(v||"").trim();if(!v||PM[v.toLowerCase()]||PUBK[pkey(v)]!=null||MYP.some(x=>x.toLowerCase()===v.toLowerCase()))return;MYP.push(v);MYP.sort();LS.set("voy_myports",MYP);plist();}
 
 /* ---------- routing ---------- */
 const PM=Object.fromEntries(PORTS.p.map(p=>[p[0].toLowerCase(),p]));
@@ -105,8 +107,22 @@ function estimate(p1,p2){const a=PM[p1.toLowerCase()],b=PM[p2.toLowerCase()];if(
  const share=a[4].filter(g=>b[4].includes(g));if(share.length){const d=gc([a[2],a[3]],[b[2],b[3]]);if(d<best){best=d;bg=null;}}
  if(best>=1e18)return null;const via=[];let g=bg;while(g&&prev[g]){if(prev[g][1])via.push(prev[g][1]);g=prev[g][0];}
  return {nm:Math.round(best+(a[5]||0)+(b[5]||0)),via:via.reverse()};}
+/* NGA Pub.151 graph */
+const pkey=s=>String(s||"").toLowerCase().replace(/\(.*?\)/g,"").replace(/[^a-z0-9]/g,"");
+const PUBK=Object.fromEntries(PUB.n.map((s,i)=>[pkey(s),i]));let PADJ=null,PAV="";
+function pubAdj(){const av=(OPT.avSuez?"S":"")+(OPT.avPan?"P":"");if(PADJ&&PAV===av)return PADJ;PAV=av;const bad=new Set([...(OPT.avSuez?PUB.canal.Suez:[]),...(OPT.avPan?PUB.canal.Panama:[])]);
+ PADJ=PUB.n.map(()=>[]);PUB.e.forEach(([i,j,d])=>{if(bad.has(i)||bad.has(j))return;PADJ[i].push([j,d]);PADJ[j].push([i,d]);});return PADJ;}
+const pubId=name=>{if(!name)return null;if(PUB.a[name]!=null)return PUB.a[name];const k=pkey(name);return PUBK[k]!=null?PUBK[k]:null;};
+function pubDist(a,b){const i=pubId(a),j=pubId(b);if(i==null||j==null||i===j)return null;const A=pubAdj(),dir=A[i].find(x=>x[0]===j);if(dir)return {nm:dir[1],direct:1};
+ const dist=new Float64Array(PUB.n.length).fill(1e18),done=new Uint8Array(PUB.n.length);dist[i]=0;
+ for(;;){let u=-1,du=1e18;for(let k=0;k<dist.length;k++)if(!done[k]&&dist[k]<du){du=dist[k];u=k;}if(u<0||u===j)break;done[u]=1;for(const [v,w] of A[u])if(du+w<dist[v])dist[v]=du+w;}
+ return dist[j]<1e18?{nm:Math.round(dist[j]),direct:0}:null;}
 const dkey=(a,b)=>[a.trim().toLowerCase(),b.trim().toLowerCase()].sort().join("|");
-function distFor(a,b){if(!a||!b)return null;const m=DIST[dkey(a,b)];if(m)return {nm:m.nm,mine:1,via:m.via||[]};const e=estimate(a,b);return e?{nm:e.nm,est:1,via:e.via}:null;}
+function distFor(a,b){if(!a||!b)return null;const m=DIST[dkey(a,b)];if(m)return {nm:m.nm,mine:1,via:m.via||[]};
+ const e=estimate(a,b),pb=pubDist(a,b);
+ if(pb&&pb.direct)return {nm:pb.nm,pub:1,via:["NGA Pub.151"]};
+ if(pb&&(!e||pb.nm<=e.nm*1.06))return {nm:pb.nm,pub:1,via:["NGA Pub.151 via junction points"]};
+ return e?{nm:e.nm,est:1,via:e.via}:null;}
 
 /* ---------- model ---------- */
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
@@ -187,7 +203,7 @@ function rL(){const c=C(),b=$("#t-l");
  bindInputs(b,c,e=>{const k=e.dataset.k||"";if(/\.(cond|pt)$/.test(k)){rL();return;}if(/\.(from|to)$/.test(k)&&e.type!=="checkbox"){}refreshSums();});
  b.querySelectorAll("[data-pf]").forEach(e=>e.addEventListener("change",()=>{const i=+e.dataset.pf,l=c.legs[i];addMyPort(e.value);
   if(i+1<c.legs.length&&e.dataset.k.endsWith(".to")&&!c.legs[i+1].from){c.legs[i+1].from=l.to;const nx=$(`[data-k="legs.${i+1}.from"]`);if(nx)nx.value=l.to;}
-  if(l.from&&l.to){const d=distFor(l.from,l.to);if(d){l.nm=d.nm;l.src=d.mine?"mine":"est";l.via=d.via||[];}else{l.src="";l.via=[];if(!n(l.nm))toast("Λιμάνι εκτός βάσης — γράψε τα μίλια, θα τα θυμάμαι");}
+  if(l.from&&l.to){const d=distFor(l.from,l.to);if(d){l.nm=d.nm;l.src=d.mine?"mine":d.pub?"pub":"est";l.via=d.via||[];}else{l.src="";l.via=[];if(!n(l.nm))toast("Λιμάνι εκτός βάσης — γράψε τα μίλια, θα τα θυμάμαι");}
    const ni=$(`[data-nm="${i}"]`);if(ni)ni.value=l.nm;$(`[data-chip="${i}"]`).innerHTML=chipH(l);$(`[data-via="${i}"]`).textContent=l.via.length?"via "+l.via.join(", "):"";}
   save();refreshSums();}));
  b.querySelectorAll("[data-nm]").forEach(e=>e.onchange=()=>{const i=+e.dataset.nm,l=c.legs[i];l.nm=n(e.value);if(l.from&&l.to&&l.nm>0){DIST[dkey(l.from,l.to)]={nm:l.nm,via:l.via||[],a:l.from,b:l.to};saveD();l.src="mine";toast("✔ Αποθηκεύτηκε: "+l.from+" ↔ "+l.to);}
@@ -277,7 +293,7 @@ function rCmp(){const o=S.map(c=>`<option value="${c.id}">${esc(c.name)}</option
   $("#cmpOut").innerHTML=`<table><tr><th></th><th>Α</th><th>Β</th><th>Β−Α</th></tr>${r("TCE $/d",A.tce,B.tce,f0,true)}${r("Net daily $/d",A.nd,B.nd,f0,true)}${r("Ημέρες",A.days,B.days,f2,false)}${r("Μίλια",A.nm,B.nm,f0,null)}
    ${r("Gross freight",A.gross,B.gross,f0,true)}${r("Bunkers $",A.bunk,B.bunk,f0,false)}${r("Voyage exp.",A.exp,B.exp,f0,false)}${r("Result",A.res,B.res,f0,true)}${r("Break-even $/MT",A.be0,B.be0,f2,false)}${r("CO₂ t",A.co2,B.co2,f0,false)}</table>`;};
  $("#cA").onchange=$("#cB").onchange=draw;draw();}
-function rSet(){$("#avSuez").checked=!!OPT.avSuez;$("#avPan").checked=!!OPT.avPan;$("#pCount").textContent=PORTS.p.length;
+function rSet(){$("#avSuez").checked=!!OPT.avSuez;$("#avPan").checked=!!OPT.avPan;$("#pCount").textContent=PORTS.p.length;$("#pubCount").textContent=PUB.n.length;
  $("#avSuez").onchange=$("#avPan").onchange=()=>{OPT={avSuez:$("#avSuez").checked,avPan:$("#avPan").checked};LS.set("voy_opt",OPT);};
  const draw=()=>{const q=$("#dSearch").value.toLowerCase(),L=Object.entries(DIST).filter(([k])=>k.includes(q)).sort();
   $("#dList").innerHTML=L.length?L.map(([k,v])=>`<div class="item"><span>${esc(v.a||k.split("|")[0])} ↔ ${esc(v.b||k.split("|")[1])}</span><span><b>${f0(v.nm)}</b> nm <button class="btn s d" data-dk="${esc(k)}">✕</button></span></div>`).join(""):'<p class="note">Καμία δική σου απόσταση ακόμα.</p>';
