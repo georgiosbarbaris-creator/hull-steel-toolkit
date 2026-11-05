@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="el"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Επιβίωση 72+</title>
+<!--PWA-->
+<style>
+:root{--fs:19px;--bg:#0d1b2a;--card:#16283d;--line:#2a4060;--tx:#f4f6f8;--mut:#a9b8c8;--red:#d62828;--org:#f77f00;--grn:#2a9d8f;--yel:#fcbf49;--blu:#3a86ff}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--tx);font-family:-apple-system,system-ui,"Segoe UI",Roboto,Arial,sans-serif;font-size:var(--fs);line-height:1.45}
+header{position:sticky;top:0;z-index:5;background:#0a1522;display:flex;align-items:center;gap:8px;padding:calc(env(safe-area-inset-top) + 8px) 10px 8px;border-bottom:1px solid var(--line)}
+header h1{flex:1;font-size:1.05em;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hb{background:var(--card);color:var(--tx);border:1px solid var(--line);border-radius:12px;min-width:46px;height:46px;font-size:1em;font-weight:700;padding:0 10px}
+main{padding:12px 12px calc(env(safe-area-inset-bottom) + 90px);max-width:760px;margin:0 auto}
+.big{display:block;width:100%;border:0;border-radius:18px;padding:20px 14px;margin:0 0 12px;font-size:1.35em;font-weight:800;color:#fff;text-align:center}
+.big small{display:block;font-size:.6em;font-weight:500;opacity:.9;margin-top:4px}
+.red{background:var(--red)}.org{background:var(--org)}.grn{background:var(--grn)}.blu{background:var(--blu)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 8px;text-align:center;color:var(--tx);font-size:1em;font-weight:700;min-height:112px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.tile .e{font-size:2.1em;line-height:1}
+.tile small{font-weight:400;color:var(--mut);font-size:.72em}
+.row{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:9px;color:var(--tx);width:100%;text-align:left;font-size:1em}
+.row .e{font-size:1.7em;width:1.4em;text-align:center}
+.row b{display:block}.row small{color:var(--mut)}
+h2{font-size:1.25em;margin:18px 0 8px;color:var(--yel)}
+h3{font-size:1.05em;margin:18px 0 6px;color:var(--yel);border-bottom:1px solid var(--line);padding-bottom:4px}
+.sub{color:var(--mut);margin:-4px 0 10px}
+.step{display:flex;gap:10px;background:var(--card);border-radius:12px;padding:10px 12px;margin:7px 0}
+.step .n{flex:none;width:1.8em;height:1.8em;border-radius:50%;background:var(--org);color:#000;font-weight:800;display:flex;align-items:center;justify-content:center}
+.li{padding:5px 0 5px 1.1em;position:relative}.li:before{content:"•";position:absolute;left:.2em;color:var(--org)}
+.warn{background:#4a1014;border-left:6px solid var(--red);padding:10px 12px;border-radius:10px;margin:8px 0;font-weight:600}
+.tip{background:#123a36;border-left:6px solid var(--grn);padding:10px 12px;border-radius:10px;margin:8px 0}
+.chk{display:flex;gap:12px;align-items:flex-start;padding:11px 8px;border-bottom:1px solid var(--line);cursor:pointer}
+.chk .bx{flex:none;width:1.5em;height:1.5em;border:2px solid var(--mut);border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:900}
+.chk.on .bx{background:var(--grn);border-color:var(--grn)}.chk.on span{color:var(--mut);text-decoration:line-through}
+.bar{height:14px;background:var(--card);border-radius:8px;overflow:hidden;margin:6px 0 2px}.bar i{display:block;height:100%;background:var(--grn)}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
+.btn{background:var(--card);border:1px solid var(--line);color:var(--tx);border-radius:12px;padding:11px 14px;font-size:.95em;font-weight:700}
+.btn.p{background:var(--blu);border-color:var(--blu);color:#fff}.btn.r{background:var(--red);border-color:var(--red);color:#fff}.btn.g{background:var(--grn);border-color:var(--grn);color:#fff}
+input,select,textarea{width:100%;font-size:1em;padding:11px;border-radius:10px;border:1px solid var(--line);background:#0a1522;color:var(--tx);margin:4px 0 10px}
+label{font-weight:700;color:var(--mut);font-size:.9em}
+.box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin:10px 0}
+.phone{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:9px;color:var(--tx);text-decoration:none}
+.phone .num{font-size:1.6em;font-weight:900;color:#fff;min-width:3.2em}
+.phone.k .num{color:var(--red)}
+.comp{position:relative;width:min(78vw,300px);height:min(78vw,300px);margin:8px auto}
+.comp svg{width:100%;height:100%}
+.hd{text-align:center;font-size:2.6em;font-weight:900;letter-spacing:1px}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+.coord{font-size:1.15em;text-align:center;font-weight:700}
+.muted{color:var(--mut);font-size:.88em}
+#ov{position:fixed;inset:0;z-index:50;display:none;align-items:flex-end;justify-content:center;background:#fff;color:#000;font-weight:800;padding-bottom:calc(env(safe-area-inset-bottom) + 30px)}
+.metro{width:150px;height:150px;border-radius:50%;margin:10px auto;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:2.6em;font-weight:900;transition:transform .08s}
+.metro.b{transform:scale(1.15);background:#ff4d4d}
+footer{text-align:center;color:var(--mut);font-size:.8em;margin-top:28px}
+.wp{display:flex;gap:8px;align-items:center;border-bottom:1px solid var(--line);padding:8px 0}.wp b{flex:1}
+.sel{outline:3px solid var(--yel)}
+canvas{width:100%;background:#0a1522;border-radius:12px;border:1px solid var(--line)}
+.card{background:#fff;color:#000;border-radius:14px;padding:14px;font-size:1.05em}.card b{color:#900}
+</style></head><body>
+<header><button class="hb" id="bk" onclick="back()" aria-label="Πίσω">◀</button><h1 id="ttl">Επιβίωση 72+</h1>
+<button class="hb" onclick="fz(-1)">A−</button><button class="hb" onclick="fz(1)">A+</button><button class="hb" onclick="go('home')" aria-label="Αρχική">🏠</button></header>
+<main id="m"></main>
+<div id="ov" onclick="ovOff()"><span id="ovt">Πάτα για κλείσιμο</span></div>
+<script>
+const D=/*DATA*/;
+const $=s=>document.querySelector(s),M=$('#m');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const LS={g(k,d){try{const v=localStorage.getItem('sv_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},s(k,v){try{localStorage.setItem('sv_'+k,JSON.stringify(v))}catch(e){}}};
+let fs=LS.g('fs',19);document.documentElement.style.setProperty('--fs',fs+'px');
+function fz(d){fs=Math.max(15,Math.min(28,fs+d*2));LS.s('fs',fs);document.documentElement.style.setProperty('--fs',fs+'px')}
+const CATS={now:['🚨','Τι συμβαίνει τώρα;','red'],aid:['🩹','Πρώτες βοήθειες','org'],list:['🎒','Λίστες εξοπλισμού','blu'],gear:['🛒','Οδηγός εξοπλισμού','blu'],wild:['🏕️','Μετά τις 72 ώρες – Επιβίωση','grn'],tips:['💡','Συμβουλές','grn']};
+const byId={};D.forEach(a=>byId[a.id]=a);
+function go(r){if(location.hash.slice(1)===r){stopAll();render(r);window.scrollTo(0,0)}else location.hash=r}
+function back(){history.length>1?history.back():go('home')}
+window.addEventListener('hashchange',()=>{stopAll();render(location.hash.slice(1)||'home');window.scrollTo(0,0)});
+function T(t){$('#ttl').textContent=t;$('#bk').style.visibility=(t==='Επιβίωση 72+')?'hidden':'visible'}
+
+function render(r){
+ const [a,b]=r.split('/');
+ if(a==='home'||!a)return home();
+ if(a==='cat')return cat(b);
+ if(a==='a')return art(b);
+ if(a==='compass')return compass();
+ if(a==='sos')return sos();
+ if(a==='phones')return phones();
+ if(a==='me')return me();
+ if(a==='search')return search();
+ if(a==='cpr')return cprPage();
+ home();
+}
+function home(){T('Επιβίωση 72+');
+ M.innerHTML=`<button class="big red" onclick="go('cat/now')">🚨 ΕΚΤΑΚΤΟ – ΤΩΡΑ!<small>Σεισμός, φωτιά, πλημμύρα, πόλεμος…</small></button>
+ <div class="grid">
+ <button class="tile" onclick="go('phones')"><span class="e">📞</span>Τηλέφωνα<small>112 · 166 · 199</small></button>
+ <button class="tile" onclick="go('cat/aid')"><span class="e">🩹</span>Πρώτες βοήθειες<small>ΚΑΡΠΑ, αίμα, εγκαύματα</small></button>
+ <button class="tile" onclick="go('compass')"><span class="e">🧭</span>Πυξίδα & GPS<small>θέση, γυρισμός</small></button>
+ <button class="tile" onclick="go('sos')"><span class="e">🔦</span>SOS<small>φως, σφυρίχτρα</small></button>
+ <button class="tile" onclick="go('cat/list')"><span class="e">🎒</span>Λίστες 72 ωρών<small>σακίδιο, σπίτι, φαρμακείο</small></button>
+ <button class="tile" onclick="go('me')"><span class="e">🪪</span>Η κάρτα μου<small>υγεία, επαφές, σχέδιο</small></button>
+ <button class="tile" onclick="go('cat/gear')"><span class="e">🛒</span>Τι να αγοράσω<small>κουβέρτα, φακός, σκηνή</small></button>
+ <button class="tile" onclick="go('cat/wild')"><span class="e">🏕️</span>Μετά τις 72 ώρες<small>νερό, φωτιά, καταφύγιο</small></button>
+ <button class="tile" onclick="go('cat/tips')"><span class="e">💡</span>Συμβουλές<small>και για παιδιά</small></button>
+ <button class="tile" onclick="go('search')"><span class="e">🔎</span>Αναζήτηση<small>βρες γρήγορα</small></button>
+ </div>
+ <div class="tip">Δουλεύει χωρίς internet. Τα δεδομένα σου μένουν μόνο σε αυτό το κινητό. <b>A+</b> πάνω δεξιά για μεγαλύτερα γράμματα.</div>
+ <footer>Επιβίωση 72+ · Created by George Barbaris<br>Οι οδηγίες δεν αντικαθιστούν το 112, τις επίσημες αρχές ή την εκπαίδευση σε πρώτες βοήθειες.</footer>`}
+function cat(c){const k=CATS[c];if(!k)return home();T(k[1]);
+ const L=D.filter(a=>a.cat===c);
+ let h='';
+ if(c==='aid')h+=`<button class="big red" onclick="go('cpr')">❤️ ΚΑΡΠΑ – δεν αναπνέει<small>με ρυθμό ♪ για τις πιέσεις</small></button>`;
+ if(c==='now'){h+=`<div class="grid">`+L.map(a=>`<button class="tile" onclick="go('a/${a.id}')"><span class="e">${a.emoji}</span>${esc(a.title)}</button>`).join('')+`<button class="tile" onclick="go('cat/aid')"><span class="e">🩹</span>Τραυματισμός</button></div>`;M.innerHTML=h;return}
+ h+=L.map(a=>{let p='';if(a.cat==='list'){const t=a.blocks.filter(x=>x.t==='chk').length,on=a.blocks.filter(x=>x.t==='chk'&&LS.g('c_'+a.id,{})[x.x]).length;p=` · ${on}/${t} ✓`}
+  return `<button class="row" onclick="go('a/${a.id}')"><span class="e">${a.emoji}</span><span><b>${esc(a.title)}</b><small>${esc(a.sub)}${p}</small></span></button>`}).join('');
+ M.innerHTML=h}
+function art(id){const a=byId[id];if(!a)return home();T(a.title);
+ let h=`<h2>${a.emoji} ${esc(a.title)}</h2><div class="sub">${esc(a.sub)}</div><div class="tools"><button class="btn" id="spk" onclick="speak('${id}')">🔊 Διάβασέ το</button>`;
+ if(a.cat==='now'||a.cat==='aid')h+=`<a class="btn r" href="tel:112" style="text-decoration:none">📞 112</a>`;
+ if(id==='cpr')h+=`<button class="btn r" onclick="go('cpr')">♪ Ρυθμός ΚΑΡΠΑ</button>`;
+ if(id==='lost'||id==='sea')h+=`<button class="btn p" onclick="go('compass')">🧭 Η θέση μου</button>`;
+ if(a.cat==='list')h+=`<button class="btn" onclick="clr('${id}')">↺ Από την αρχή</button>`;
+ h+=`</div>`;
+ if(id==='home72'||id==='nuclearkit')h+=calcBox();
+ if(a.cat==='list'){h+=`<div id="prog"></div>`}
+ let n=0;const st=LS.g('c_'+id,{});
+ for(const b of a.blocks){
+  if(b.t!=='step')n=0;
+  if(b.t==='h')h+=`<h3>${esc(b.x)}</h3>`;
+  else if(b.t==='step'){n++;h+=`<div class="step"><span class="n">${n}</span><span>${esc(b.x)}</span></div>`}
+  else if(b.t==='li')h+=`<div class="li">${esc(b.x)}</div>`;
+  else if(b.t==='warn')h+=`<div class="warn">⚠️ ${esc(b.x)}</div>`;
+  else if(b.t==='tip')h+=`<div class="tip">💡 ${esc(b.x)}</div>`;
+  else if(b.t==='chk')h+=`<div class="chk${st[b.x]?' on':''}" data-k="${esc(b.x)}" onclick="tg(this,'${id}')"><span class="bx">${st[b.x]?'✓':''}</span><span>${esc(b.x)}</span></div>`;
+ }
+ const same=D.filter(x=>x.cat===a.cat),i=same.indexOf(a);
+ h+=`<div class="tools" style="margin-top:20px">${i>0?`<button class="btn" onclick="go('a/${same[i-1].id}')">◀ ${esc(same[i-1].title)}</button>`:''}${i<same.length-1?`<button class="btn" onclick="go('a/${same[i+1].id}')">${esc(same[i+1].title)} ▶</button>`:''}</div>`;
+ M.innerHTML=h;if(a.cat==='list')prog(id);if($('#cp'))calc()}
+function tg(el,id){const st=LS.g('c_'+id,{}),k=el.dataset.k;st[k]=!st[k];if(!st[k])delete st[k];LS.s('c_'+id,st);el.classList.toggle('on',!!st[k]);el.querySelector('.bx').textContent=st[k]?'✓':'';prog(id)}
+function prog(id){const a=byId[id],t=a.blocks.filter(x=>x.t==='chk').length,on=Object.keys(LS.g('c_'+id,{})).length,p=Math.round(100*on/t);
+ $('#prog').innerHTML=`<div class="bar"><i style="width:${p}%"></i></div><div class="muted">${on} από ${t} έτοιμα (${p}%)</div>`}
+function clr(id){if(!confirm('Να ξεκαθαρίσουν όλα τα ✓ αυτής της λίστας;'))return;LS.s('c_'+id,{});art(id)}
+function calcBox(){const c=LS.g('calc',{p:4,d:3});return `<div class="box"><b>🧮 Υπολογισμός αποθεμάτων</b><div class="grid" style="margin-top:8px"><div><label>Άτομα</label><input id="cp" type="number" min="1" value="${c.p}" oninput="calc()"></div><div><label>Ημέρες</label><select id="cd" onchange="calc()">${[3,7,14,30].map(x=>`<option ${x==c.d?'selected':''}>${x}</option>`).join('')}</select></div></div><div id="cr"></div></div>`}
+function calc(){const p=Math.max(1,+$('#cp').value||1),d=+$('#cd').value;LS.s('calc',{p,d});
+ $('#cr').innerHTML=`<div class="li"><b>Νερό πόσιμο:</b> ${4*p*d} λίτρα (4 L/άτομο/μέρα)</div><div class="li"><b>Θερμίδες:</b> ~${(2000*p*d).toLocaleString('el')} kcal (≈ ${Math.ceil(p*d*2000/400)} κονσέρβες/μερίδες των 400 kcal)</div><div class="li"><b>Χαρτί υγείας:</b> ~${Math.ceil(p*d/4)} ρολά</div><div class="li"><b>Μπαταρίες ΑΑ:</b> ~${Math.max(8,p*4+d*2)} τεμ.</div><div class="li"><b>Σακούλες σκουπιδιών:</b> ~${Math.ceil(p*d/2)+5}</div><div class="muted">Πρόσθεσε 50% νερό σε καύσωνα, για θηλάζουσες ή αρρώστους.</div>`}
+
+/* ---- speech ---- */
+let speaking=false;
+function speak(id){const s=window.speechSynthesis;if(!s){alert('Το κινητό δεν υποστηρίζει ανάγνωση.');return}
+ if(speaking){s.cancel();speaking=false;$('#spk').textContent='🔊 Διάβασέ το';return}
+ const a=byId[id];let txt=a.title+'. '+a.sub+'. ';let n=0;a.blocks.forEach(b=>{if(b.t==='step'){n++;txt+=n+'. '+b.x+' '}else{n=0;txt+=(b.t==='warn'?'Προσοχή! ':'')+b.x+'. '}});
+ const u=new SpeechSynthesisUtterance(txt.replace(/[•→]/g,' '));u.lang='el-GR';u.rate=.95;const v=s.getVoices().find(v=>v.lang&&v.lang.startsWith('el'));if(v)u.voice=v;
+ u.onend=()=>{speaking=false;const b=$('#spk');if(b)b.textContent='🔊 Διάβασέ το'};s.cancel();s.speak(u);speaking=true;$('#spk').textContent='⏹ Σταμάτα'}
+
+/* ---- phones ---- */
+const PH=[['112','Ευρωπαϊκός αριθμός έκτακτης ανάγκης','Δουλεύει χωρίς SIM, από κάθε δίκτυο, και με SMS',1],['166','ΕΚΑΒ – Ασθενοφόρο','',1],['199','Πυροσβεστική','',1],['100','Αστυνομία','',1],['108','Λιμενικό Σώμα','Θάλασσα, ναυάγιο, άνθρωπος στη θάλασσα',1],['2107793777','Κέντρο Δηλητηριάσεων','24 ώρες – φάρμακα, χημικά, μανιτάρια, φίδια',0],['1056','Χαμόγελο του Παιδιού','Παιδί σε κίνδυνο / εξαφάνιση',0],['197','Κοινωνική Βοήθεια (ΕΚΚΑ)','',0],['1018','Γραμμή παρέμβασης για την αυτοκτονία','Κλίμακα – 24 ώρες',0]];
+function phones(){T('Τηλέφωνα');const my=LS.g('me',{});
+ let h=PH.map(p=>`<a class="phone ${p[3]?'k':''}" href="tel:${p[0]}"><span class="num">${p[0].length>6?'☎':p[0]}</span><span><b>${p[1]}</b>${p[0].length>6?`<br><span class="mono">${p[0].replace(/(\d{3})(\d{7})/,'$1 $2')}</span>`:''}${p[2]?`<br><small class="muted">${p[2]}</small>`:''}</span></a>`).join('');
+ const cs=(my.contacts||'').split('\n').map(x=>x.trim()).filter(Boolean);
+ if(cs.length)h+=`<h3>Οι επαφές μου</h3>`+cs.map(c=>{const t=(c.match(/[+\d][\d\s]{6,}/)||[''])[0].replace(/\s/g,'');return `<a class="phone" ${t?`href="tel:${t}"`:''}><span class="num">👤</span><span><b>${esc(c)}</b></span></a>`}).join('');
+ h+=`<div class="tip">Στο 112 πες: <b>ΠΟΥ</b> είσαι, <b>ΤΙ</b> έγινε, <b>ΠΟΣΟΙ</b> τραυματίες. Μην κλείνεις πρώτος. Τις επαφές σου τις γράφεις στην «Κάρτα μου».</div>`;M.innerHTML=h}
+
+/* ---- my card ---- */
+const MEF=[['name','Όνομα'],['blood','Ομάδα αίματος'],['allergy','Αλλεργίες'],['meds','Φάρμακα που παίρνω'],['cond','Παθήσεις / σημειώσεις υγείας'],['contacts','Επαφές έκτακτης ανάγκης (μία ανά γραμμή: Όνομα 69…)'],['meet1','Σημείο συνάντησης κοντά στο σπίτι'],['meet2','Σημείο συνάντησης έξω από την πόλη'],['out','Συγγενής «κέντρο επικοινωνίας» σε άλλη πόλη'],['shut','Πού κλείνει γκάζι / νερό / ρεύμα'],['notes','Άλλες σημειώσεις']];
+function me(edit){T('Η κάρτα μου');const m=LS.g('me',{});const has=MEF.some(f=>m[f[0]]);
+ if(!edit&&has){M.innerHTML=`<div class="card">${MEF.filter(f=>m[f[0]]).map(f=>`<div style="margin-bottom:8px"><b>${f[1].split(' (')[0]}:</b><br>${esc(m[f[0]]).replace(/\n/g,'<br>')}</div>`).join('')}</div><div class="tools" style="margin-top:12px"><button class="btn p" onclick="me(1)">✏️ Αλλαγή</button><button class="btn" onclick="go('phones')">📞 Τηλέφωνα</button></div><div class="tip">Δείξε αυτή την οθόνη σε διασώστη. Βάλε τα ίδια και στο Ιατρικό ID του κινητού για να φαίνονται στην κλειδωμένη οθόνη.</div>`;return}
+ M.innerHTML=`<div class="muted">Συμπλήρωσε ό,τι θέλεις. Μένει μόνο σε αυτό το κινητό.</div>`+MEF.map(f=>`<label>${f[1]}</label>${['contacts','cond','notes','meds'].includes(f[0])?`<textarea rows="3" id="f_${f[0]}">${esc(m[f[0]]||'')}</textarea>`:`<input id="f_${f[0]}" value="${esc(m[f[0]]||'')}">`}`).join('')+`<button class="big grn" onclick="saveMe()">💾 Αποθήκευση</button>`}
+function saveMe(){const m={};MEF.forEach(f=>m[f[0]]=$('#f_'+f[0]).value.trim());LS.s('me',m);me()}
+
+/* ---- search ---- */
+function search(){T('Αναζήτηση');M.innerHTML=`<input id="q" placeholder="π.χ. αίμα, νερό, σεισμός, κουβέρτα" oninput="sq()" autofocus><div id="sr"></div>`;$('#q').focus()}
+const norm=s=>s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+function sq(){const q=norm($('#q').value.trim());if(q.length<2){$('#sr').innerHTML='';return}
+ const r=D.map(a=>{const tt=norm(a.title+' '+a.sub);const hits=a.blocks.filter(b=>norm(b.x).includes(q));return {a,s:(tt.includes(q)?10:0)+hits.length,h:hits[0]}}).filter(x=>x.s>0).sort((x,y)=>y.s-x.s).slice(0,25);
+ $('#sr').innerHTML=r.length?r.map(x=>`<button class="row" onclick="go('a/${x.a.id}')"><span class="e">${x.a.emoji}</span><span><b>${esc(x.a.title)}</b><small>${esc(x.h?x.h.x:x.a.sub).slice(0,110)}</small></span></button>`).join(''):'<div class="muted">Δεν βρέθηκε. Δοκίμασε άλλη λέξη.</div>'}
+
+/* ---- audio ---- */
+let AC=null;function ac(){if(!AC)AC=new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();return AC}
+function beep(f,ms,vol=.9,type='square'){const c=ac(),o=c.createOscillator(),g=c.createGain();o.type=type;o.frequency.value=f;g.gain.value=vol;o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+ms/1000)}
+
+/* ---- CPR ---- */
+let cprT=null,cprN=0,cprMode=LS.g('cprm',0);
+function cprPage(){T('ΚΑΡΠΑ');M.innerHTML=`<div class="warn">Πρώτα κάλεσε 112 / 166 με ανοιχτή ακρόαση.</div><a class="big red" href="tel:112" style="text-decoration:none">📞 Κάλεσε 112</a>
+ <div class="metro" id="mt">▶</div><div class="hd" id="mc" style="font-size:1.6em">Πάτα ΕΝΑΡΞΗ</div>
+ <button class="big org" id="mb" onclick="cprTog()">▶ ΕΝΑΡΞΗ ρυθμού (110/λεπτό)</button>
+ <div class="tools"><button class="btn ${cprMode?'':'p'}" onclick="cprMode=0;LS.s('cprm',0);cprPage()">Μόνο πιέσεις</button><button class="btn ${cprMode?'p':''}" onclick="cprMode=1;LS.s('cprm',1);cprPage()">30 πιέσεις + 2 αναπνοές</button></div>
+ <div class="step"><span class="n">1</span><span>Παλάμη στο ΚΕΝΤΡΟ του στήθους, το άλλο χέρι από πάνω, χέρια ίσια.</span></div>
+ <div class="step"><span class="n">2</span><span>Πίεζε ΔΥΝΑΤΑ 5–6 cm, σε κάθε «μπιπ».</span></div>
+ <div class="step"><span class="n">3</span><span>Άσε το στήθος να ανέβει πλήρως ανάμεσα.</span></div>
+ <div class="step"><span class="n">4</span><span>Μη σταματάς μέχρι να έρθει βοήθεια. Αν φέρουν απινιδωτή, άνοιξέ τον και άκου τι λέει.</span></div>
+ <button class="btn" onclick="go('a/cpr')">📖 Παιδί / βρέφος / αναλυτικά</button>`}
+function cprTog(){if(cprT){stopAll();cprPage();return}cprN=0;wake(1);$('#mb').textContent='⏹ ΣΤΟΠ';let pause=0;
+ cprT=setInterval(()=>{if(pause>0){pause--;return}cprN++;const mt=$('#mt');if(!mt)return stopAll();
+  if(cprMode&&cprN>30){cprN=0;pause=Math.round(5000/545);$('#mc').textContent='2 ΑΝΑΠΝΟΕΣ';mt.textContent='💨';beep(440,600,.6,'sine');return}
+  beep(cprMode&&cprN===30?1200:880,70,.8,'sine');mt.textContent=cprMode?cprN:'⬇';$('#mc').textContent=cprMode?`Πίεση ${cprN} / 30`:'ΠΙΕΣΕ – ΠΙΕΣΕ';mt.classList.add('b');setTimeout(()=>mt.classList.remove('b'),90)},545)}
+
+/* ---- SOS ---- */
+let sosT=null,torchTrack=null;
+function sos(){T('SOS');M.innerHTML=`<button class="big" style="background:#fff;color:#000" onclick="ovOn('#fff','Πάτα για κλείσιμο')">⬜ Φως οθόνης<small>Άσπρη οθόνη στο φουλ</small></button>
+ <button class="big red" onclick="sosLight()">🔦 SOS με φως<small>··· ––– ··· στην οθόνη</small></button>
+ <button class="big org" id="wh" onclick="whistle()">📣 Σφυρίχτρα SOS<small>Δυνατός ήχος – βάλε ένταση στο τέρμα</small></button>
+ <button class="big blu" onclick="torch()">💡 Φακός κινητού<small>Δουλεύει σε Android (Chrome)</small></button>
+ <div class="tip">iPhone: για τον φακό σύρε από πάνω δεξιά προς τα κάτω (Κέντρο Ελέγχου) → 🔦. Για SOS κλήση: κράτα πατημένο το πλαϊνό κουμπί + ένταση.</div>
+ <div class="tip">Σήμα κινδύνου = <b>3</b> από οτιδήποτε: 3 σφυρίγματα, 3 λάμψεις, 3 φωτιές. Κράτα μπαταρία: χρησιμοποίησε το SOS όταν ακούς ή βλέπεις διασώστες.</div>
+ <button class="btn" onclick="go('a/w_signal')">📖 Όλα τα σήματα (εδάφους, χεριών, Morse)</button>`}
+function ovOn(bg,t){const o=$('#ov');o.style.display='flex';o.style.background=bg;$('#ovt').textContent=t;wake(1)}
+function ovOff(){$('#ov').style.display='none';if(sosT){clearTimeout(sosT);sosT=null}wake(0)}
+const SOSP=[1,1,1,1,1,3,3,1,3,1,3,3,1,1,1,1,1,7];// on,off pairs in units
+function sosLight(){ovOn('#000','SOS – πάτα για κλείσιμο');const o=$('#ov');let i=0;const u=250;
+ const stp=()=>{if($('#ov').style.display==='none')return;const on=i%2===0;o.style.background=on?'#fff':'#000';const d=SOSP[i%SOSP.length]*u;i=(i+1)%SOSP.length;sosT=setTimeout(stp,d)};stp()}
+let whT=null;
+function whistle(){if(whT){clearTimeout(whT);whT=null;$('#wh').innerHTML='📣 Σφυρίχτρα SOS<small>Δυνατός ήχος – βάλε ένταση στο τέρμα</small>';return}
+ $('#wh').innerHTML='⏹ ΣΤΟΠ σφυρίχτρα';let i=0;const u=200;
+ const stp=()=>{const on=i%2===0,d=SOSP[i%SOSP.length]*u;if(on)beep(3150,d,1,'square');i=(i+1)%SOSP.length;whT=setTimeout(stp,d)};stp()}
+async function torch(){if(torchTrack){torchTrack.stop();torchTrack=null;return}
+ try{const s=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});const t=s.getVideoTracks()[0];const cap=t.getCapabilities?t.getCapabilities():{};
+  if(!cap.torch){t.stop();alert('Αυτό το κινητό δεν επιτρέπει φακό από εφαρμογή web. Χρησιμοποίησε τον φακό του κινητού ή το «Φως οθόνης».');return}
+  await t.applyConstraints({advanced:[{torch:true}]});torchTrack=t;alert('Φακός αναμμένος. Πάτα ξανά «Φακός κινητού» για σβήσιμο.')}catch(e){alert('Δεν άναψε ο φακός. Χρησιμοποίησε τον φακό του κινητού ή το «Φως οθόνης».')}}
+
+/* ---- wake lock ---- */
+let WL=null;async function wake(on){try{if(on&&'wakeLock'in navigator&&!WL)WL=await navigator.wakeLock.request('screen');if(!on&&WL){WL.release();WL=null}}catch(e){}}
+
+/* ---- compass & GPS ---- */
+let hdg=null,pos=null,geoW=null,trk=LS.g('trk',[]),rec=LS.g('rec',false),tgt=LS.g('tgt',null),orientOn=false;
+const DEC=()=>+LS.g('dec',0);
+const R=6371000,rad=x=>x*Math.PI/180,deg=x=>x*180/Math.PI;
+function dist(a,b){const dl=rad(b.lat-a.lat),dn=rad(b.lon-a.lon),h=Math.sin(dl/2)**2+Math.cos(rad(a.lat))*Math.cos(rad(b.lat))*Math.sin(dn/2)**2;return 2*R*Math.asin(Math.sqrt(h))}
+function brg(a,b){const y=Math.sin(rad(b.lon-a.lon))*Math.cos(rad(b.lat)),x=Math.cos(rad(a.lat))*Math.sin(rad(b.lat))-Math.sin(rad(a.lat))*Math.cos(rad(b.lat))*Math.cos(rad(b.lon-a.lon));return (deg(Math.atan2(y,x))+360)%360}
+const card=h=>['Β','ΒΑ','Α','ΝΑ','Ν','ΝΔ','Δ','ΒΔ'][Math.round(h/45)%8];
+const fmD=m=>m<1000?Math.round(m)+' m':(m/1000).toFixed(m<10000?2:1)+' km';
+function ddm(v,p,n){const s=v<0?n:p,a=Math.abs(v),d=Math.floor(a),m=(a-d)*60;return `${d}°${m.toFixed(3).padStart(6,'0')}′${s}`}
+function dms(v,p,n){const s=v<0?n:p,a=Math.abs(v),d=Math.floor(a),mm=(a-d)*60,m=Math.floor(mm),ss=((mm-m)*60).toFixed(1);return `${d}°${m}′${ss}″${s}`}
+function compass(){T('Πυξίδα & GPS');const wps=LS.g('wps',[]);
+ M.innerHTML=`<div class="tools" id="cbtns"><button class="btn p" onclick="startOrient()">🧭 Ενεργοποίηση πυξίδας</button></div>
+ <div class="comp"><svg viewBox="-150 -150 300 300"><circle r="146" fill="#0a1522" stroke="#2a4060" stroke-width="3"/>
+ <g id="rose">${Array.from({length:72},(_,i)=>{const a=i*5,l=a%30===0?18:a%10===0?11:6;return `<line x1="0" y1="-140" x2="0" y2="${-140+l}" stroke="#a9b8c8" stroke-width="${a%30===0?3:1.5}" transform="rotate(${a})"/>`}).join('')}
+ ${[['Β',0,'#ff4d4d'],['Α',90,'#fff'],['Ν',180,'#fff'],['Δ',270,'#fff']].map(c=>`<text transform="rotate(${c[1]}) translate(0,-100)" text-anchor="middle" dominant-baseline="middle" font-size="30" font-weight="900" fill="${c[2]}">${c[0]}</text>`).join('')}
+ ${[30,60,120,150,210,240,300,330].map(a=>`<text transform="rotate(${a}) translate(0,-112)" text-anchor="middle" dominant-baseline="middle" font-size="13" fill="#a9b8c8">${a}</text>`).join('')}</g>
+ <g id="tarr" style="display:none"><path d="M0,-135 L14,-108 L-14,-108 Z" fill="#fcbf49"/></g>
+ <path d="M0,-80 L12,0 L0,-12 L-12,0 Z" fill="#d62828"/><path d="M0,80 L12,0 L0,12 L-12,0 Z" fill="#a9b8c8"/><circle r="6" fill="#fff"/>
+ <line x1="0" y1="-150" x2="0" y2="-128" stroke="#fff" stroke-width="5"/></svg></div>
+ <div class="hd" id="hd">—</div><div class="muted" style="text-align:center" id="hdn">Πάτα «Ενεργοποίηση πυξίδας» και κράτα το κινητό οριζόντια</div>
+ <div class="box" id="nav" style="display:none"></div>
+ <div class="box"><b>📍 Η θέση μου (GPS – δουλεύει χωρίς internet)</b><div id="gps" class="coord" style="margin-top:8px">Αναζήτηση δορυφόρων…</div>
+ <div class="tools" style="justify-content:center"><button class="btn g" onclick="saveWp()">➕ Αποθήκευσε αυτό το σημείο</button><button class="btn r" onclick="sendPos()">✉️ Στείλε τη θέση μου (SMS)</button><button class="btn" onclick="copyPos()">📋 Αντιγραφή</button></div></div>
+ <div class="box"><b>⭐ Τα σημεία μου</b> <span class="muted">(σπίτι, αυτοκίνητο, σημείο συνάντησης)</span><div id="wps">${wpsHtml(wps)}</div><button class="btn" style="margin-top:8px" onclick="addWpMan()">⌨️ Πρόσθεσε με συντεταγμένες</button></div>
+ <div class="box"><b>🗺️ Χάρτης σημείων και διαδρομής</b><div class="tools" style="margin-top:6px"><button class="btn ${rec?'r':''}" id="recb" onclick="togRec()">${rec?'⏹ Σταμάτα καταγραφή':'⏺ Κατέγραφε τη διαδρομή μου'}</button><button class="btn" onclick="clrTrk()">🧹 Σβήσε διαδρομή</button></div>
+ <canvas id="cv" width="700" height="700"></canvas><div class="muted">Ο Βορράς είναι πάνω. 🔵 εσύ · ⭐ σημεία · κίτρινη γραμμή η διαδρομή σου (για να γυρίσεις από τον ίδιο δρόμο).</div></div>
+ <div class="box"><label>Απόκλιση πυξίδας (declination, ° Ανατολικά +)</label><input type="number" step="0.5" value="${DEC()}" onchange="LS.s('dec',+this.value)"><div class="muted">Για κανονική χρήση άφησέ το 0. Στην Ελλάδα η μαγνητική απόκλιση είναι περίπου +5° E. Αν η πυξίδα κάνει λάθος, κάνε «οκτάρια» με το κινητό στον αέρα και κράτα το μακριά από μέταλλα, ηχεία, μαγνήτες.</div></div>
+ <button class="btn" onclick="go('a/w_navi')">📖 Προσανατολισμός χωρίς πυξίδα (ήλιος, αστέρια)</button>`;
+ startGeo();if(orientOn)$('#cbtns').style.display='none';draw();upd()}
+function wpsHtml(w){if(!w.length)return '<div class="muted">Κανένα σημείο ακόμα. Πάτα «Αποθήκευσε αυτό το σημείο» όταν είσαι σπίτι, στο αυτοκίνητο κ.λπ.</div>';
+ return w.map((p,i)=>`<div class="wp ${tgt===i?'sel':''}"><b>${esc(p.n)}<br><small class="muted mono">${p.lat.toFixed(5)}, ${p.lon.toFixed(5)}</small></b><button class="btn ${tgt===i?'p':''}" onclick="setTgt(${i})">${tgt===i?'✓ Πάω':'➡️ Πάμε'}</button><button class="btn" onclick="delWp(${i})">🗑</button></div>`).join('')}
+function refWps(){const e=$('#wps');if(e)e.innerHTML=wpsHtml(LS.g('wps',[]))}
+function setTgt(i){tgt=tgt===i?null:i;LS.s('tgt',tgt);refWps();upd();draw()}
+function delWp(i){const w=LS.g('wps',[]);if(!confirm('Διαγραφή «'+w[i].n+'»;'))return;w.splice(i,1);LS.s('wps',w);if(tgt===i)tgt=null;else if(tgt>i)tgt--;LS.s('tgt',tgt);refWps();upd();draw()}
+function saveWp(){if(!pos){alert('Περίμενε να βρεθεί η θέση σου (GPS).');return}const n=prompt('Όνομα σημείου (π.χ. Σπίτι, Αυτοκίνητο, Συνάντηση):','Σημείο '+(LS.g('wps',[]).length+1));if(!n)return;const w=LS.g('wps',[]);w.push({n,lat:pos.lat,lon:pos.lon,t:Date.now()});LS.s('wps',w);refWps();draw()}
+function addWpMan(){const n=prompt('Όνομα σημείου:');if(!n)return;const s=prompt('Συντεταγμένες σε δεκαδικό (π.χ. 37.97510, 23.73480):');if(!s)return;const m=s.replace(/,/g,' ').split(/\s+/).filter(Boolean).map(Number);if(m.length<2||m.some(isNaN)||Math.abs(m[0])>90||Math.abs(m[1])>180){alert('Λάθος μορφή. Γράψε: 37.97510, 23.73480');return}const w=LS.g('wps',[]);w.push({n,lat:m[0],lon:m[1],t:Date.now()});LS.s('wps',w);refWps();draw()}
+function posTxt(){return `Η θέση μου: ${pos.lat.toFixed(5)}, ${pos.lon.toFixed(5)} (${ddm(pos.lat,'N','S')} ${ddm(pos.lon,'E','W')}) ±${Math.round(pos.acc)} m. https://maps.google.com/?q=${pos.lat.toFixed(5)},${pos.lon.toFixed(5)}`}
+function sendPos(){if(!pos){alert('Περίμενε να βρεθεί η θέση σου (GPS).');return}const me=LS.g('me',{});location.href='sms:?&body='+encodeURIComponent('ΧΡΕΙΑΖΟΜΑΙ ΒΟΗΘΕΙΑ. '+(me.name?me.name+'. ':'')+posTxt())}
+function copyPos(){if(!pos)return alert('Περίμενε το GPS.');const t=posTxt();(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>alert('Αντιγράφηκε.'),()=>prompt('Αντέγραψε:',t))}
+function startGeo(){if(geoW!==null)return;if(!navigator.geolocation){$('#gps').textContent='Το κινητό δεν έχει GPS διαθέσιμο.';return}
+ geoW=navigator.geolocation.watchPosition(p=>{const c=p.coords;pos={lat:c.latitude,lon:c.longitude,acc:c.accuracy,alt:c.altitude,spd:c.speed,hd:c.heading,t:p.timestamp};
+  if(rec&&c.accuracy<60){const l=trk[trk.length-1];if(!l||dist(l,pos)>15){trk.push({lat:+pos.lat.toFixed(6),lon:+pos.lon.toFixed(6)});if(trk.length>3000)trk.shift();LS.s('trk',trk)}}
+  upd();draw()},e=>{const g=$('#gps');if(g)g.innerHTML=e.code===1?'❌ Δεν δόθηκε άδεια τοποθεσίας.<br><small class="muted">iPhone: Ρυθμίσεις → Απόρρητο → Υπηρεσίες τοποθεσίας → Safari → «Κατά τη χρήση».</small>':'Δεν βρέθηκε ακόμα θέση. Βγες σε ανοιχτό χώρο με θέα στον ουρανό.'},{enableHighAccuracy:true,maximumAge:2000,timeout:60000})}
+function stopGeo(){if(geoW!==null){navigator.geolocation.clearWatch(geoW);geoW=null}}
+function startOrient(){const go2=()=>{orientOn=true;const b=$('#cbtns');if(b)b.style.display='none';wake(1)};
+ if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){DeviceOrientationEvent.requestPermission().then(r=>{if(r==='granted'){window.addEventListener('deviceorientation',onOr,true);go2()}else alert('Δεν δόθηκε άδεια για την πυξίδα.')}).catch(()=>alert('Η πυξίδα δεν ενεργοποιήθηκε.'))}
+ else{if('ondeviceorientationabsolute' in window)window.addEventListener('deviceorientationabsolute',onOr,true);else window.addEventListener('deviceorientation',onOr,true);go2();setTimeout(()=>{if(hdg===null){const n=$('#hdn');if(n)n.textContent='Η συσκευή δεν δίνει πυξίδα (π.χ. υπολογιστής). Το GPS δουλεύει κανονικά.'}},2500)}}
+function onOr(e){let h=null;if(typeof e.webkitCompassHeading==='number')h=e.webkitCompassHeading;else if(e.absolute!==false&&e.alpha!=null)h=(360-e.alpha)%360;if(h==null)return;
+ const so=(screen.orientation&&screen.orientation.angle)||window.orientation||0;h=(h+so+DEC()+360)%360;hdg=hdg==null?h:hdg+((((h-hdg)%360)+540)%360-180)*.25;hdg=(hdg+360)%360;upd(1)}
+let lastU=0;
+function upd(fast){const r=$('#rose');if(!r)return;const now=Date.now();
+ if(hdg!=null){r.setAttribute('transform',`rotate(${-hdg})`);$('#hd').textContent=`${Math.round(hdg).toString().padStart(3,'0')}° ${card(hdg)}`;const n=$('#hdn');if(n)n.textContent='Η κόκκινη μύτη δείχνει πάντα Βορρά. Η λευκή γραμμή πάνω = προς τα πού κοιτάς.'}
+ const w=LS.g('wps',[]),t=tgt!=null?w[tgt]:null,ta=$('#tarr'),nv=$('#nav');
+ if(t&&pos){const b=brg(pos,t),d=dist(pos,t);ta.style.display='';ta.setAttribute('transform',`rotate(${hdg!=null?b-hdg:b})`);
+  if(!fast||now-lastU>500){nv.style.display='';nv.innerHTML=`<div style="text-align:center"><b>➡️ ${esc(t.n)}</b><div class="hd" style="font-size:2em">${fmD(d)}</div>Πορεία <b>${Math.round(b).toString().padStart(3,'0')}° ${card(b)}</b>${hdg!=null?`<br>${turnTxt(b-hdg)}`:''}<div class="muted">Ακολούθα το κίτρινο βέλος. Απόσταση σε ευθεία γραμμή.</div></div>`}}
+ else{ta.style.display='none';nv.style.display='none'}
+ if(fast&&now-lastU<500)return;lastU=now;
+ const g=$('#gps');if(g&&pos)g.innerHTML=`<div class="mono">${ddm(pos.lat,'N','S')}<br>${ddm(pos.lon,'E','W')}</div><div class="mono muted" style="font-size:.85em">${pos.lat.toFixed(5)}, ${pos.lon.toFixed(5)} · ${dms(pos.lat,'N','S')} ${dms(pos.lon,'E','W')}</div><div class="muted">Ακρίβεια ±${Math.round(pos.acc)} m${pos.alt!=null?` · Υψόμετρο ${Math.round(pos.alt)} m`:''}${pos.spd!=null&&pos.spd>0.3?` · Ταχύτητα ${(pos.spd*3.6).toFixed(1)} km/h`:''}</div>`}
+function turnTxt(d){d=((d%360)+540)%360-180;const a=Math.abs(Math.round(d));return a<10?'✅ Ευθεία μπροστά':(d>0?`↪️ Στρίψε ΔΕΞΙΑ ${a}°`:`↩️ Στρίψε ΑΡΙΣΤΕΡΑ ${a}°`)}
+function togRec(){rec=!rec;LS.s('rec',rec);const b=$('#recb');b.className='btn '+(rec?'r':'');b.textContent=rec?'⏹ Σταμάτα καταγραφή':'⏺ Κατέγραφε τη διαδρομή μου';if(rec)wake(1)}
+function clrTrk(){if(!confirm('Σβήσιμο της καταγεγραμμένης διαδρομής;'))return;trk=[];LS.s('trk',trk);draw()}
+function draw(){const cv=$('#cv');if(!cv)return;const x=cv.getContext('2d'),W=cv.width,H=cv.height;x.clearRect(0,0,W,H);
+ const w=LS.g('wps',[]),pts=[...trk,...w];if(pos)pts.push(pos);
+ if(!pts.length){x.fillStyle='#a9b8c8';x.font='28px sans-serif';x.textAlign='center';x.fillText('Δεν υπάρχουν ακόμα σημεία',W/2,H/2);return}
+ const c=pos||pts[pts.length-1],k=Math.cos(rad(c.lat));let mx=50;pts.forEach(p=>{mx=Math.max(mx,Math.abs((p.lon-c.lon)*k*111320),Math.abs((p.lat-c.lat)*110540))});
+ const sc=(W/2-50)/mx,P=p=>[W/2+(p.lon-c.lon)*k*111320*sc,H/2-(p.lat-c.lat)*110540*sc];
+ // grid rings
+ x.strokeStyle='#2a4060';x.lineWidth=2;x.fillStyle='#a9b8c8';x.font='22px sans-serif';x.textAlign='left';
+ const ring=[10,25,50,100,250,500,1000,2500,5000,10000,25000,50000,100000,250000,500000,1e6,2.5e6,5e6].find(r=>r*sc>W/6)||mx;
+ for(let i=1;i<=3;i++){x.beginPath();x.arc(W/2,H/2,ring*i*sc,0,7);x.stroke();x.fillText(fmD(ring*i),W/2+ring*i*sc*.71+4,H/2-ring*i*sc*.71)}
+ x.fillStyle='#ff4d4d';x.font='bold 30px sans-serif';x.textAlign='center';x.fillText('Β ▲',W/2,34);
+ if(trk.length>1){x.strokeStyle='#fcbf49';x.lineWidth=4;x.beginPath();trk.forEach((p,i)=>{const [a,b]=P(p);i?x.lineTo(a,b):x.moveTo(a,b)});x.stroke()}
+ w.forEach((p,i)=>{const [a,b]=P(p);x.font='34px sans-serif';x.fillText('⭐',a,b+12);x.fillStyle=tgt===i?'#fcbf49':'#fff';x.font='bold 22px sans-serif';x.fillText(p.n,a,b-22);x.fillStyle='#ff4d4d'});
+ if(pos){const [a,b]=P(pos);x.fillStyle='rgba(58,134,255,.25)';x.beginPath();x.arc(a,b,Math.max(10,pos.acc*sc),0,7);x.fill();x.fillStyle='#3a86ff';x.strokeStyle='#fff';x.lineWidth=4;x.beginPath();x.arc(a,b,13,0,7);x.fill();x.stroke()}}
+
+function stopAll(){if(cprT){clearInterval(cprT);cprT=null}if(whT){clearTimeout(whT);whT=null}if(window.speechSynthesis)speechSynthesis.cancel();speaking=false;
+ if(!rec)stopGeo();if(!rec)wake(0);if(orientOn){window.removeEventListener('deviceorientation',onOr,true);window.removeEventListener('deviceorientationabsolute',onOr,true);orientOn=false;hdg=null}}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&WL){WL=null;wake(1)}});
+if(rec)startGeo();
+render(location.hash.slice(1)||'home');
+/*SW*/
+</script></body></html>
