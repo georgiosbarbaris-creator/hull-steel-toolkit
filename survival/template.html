@@ -87,6 +87,7 @@ function render(r){
  if(a==='search')return search();
  if(a==='cpr')return cprPage();
  if(a==='morse')return morse();
+ if(a==='wx')return wx();
  home();
 }
 function home(){T('Επιβίωση 72+');
@@ -101,7 +102,9 @@ function home(){T('Επιβίωση 72+');
  <button class="tile" onclick="go('cat/gear')"><span class="e">🛒</span>Τι να αγοράσω<small>κουβέρτα, φακός, σκηνή</small></button>
  <button class="tile" onclick="go('cat/wild')"><span class="e">🏕️</span>Μετά τις 72 ώρες<small>νερό, φωτιά, καταφύγιο</small></button>
  <button class="tile" onclick="go('cat/tips')"><span class="e">💡</span>Συμβουλές<small>και για παιδιά</small></button>
- <button class="tile" onclick="go('search')"><span class="e">🔎</span>Αναζήτηση<small>βρες γρήγορα</small></button>
+ <button class="tile" onclick="go('wx')"><span class="e">🌦️</span>Καιρός & Υψόμετρο<small>βαρόμετρο, GPS ύψος</small></button>
+ <button class="tile" onclick="go('morse')"><span class="e">📡</span>Morse<small>λέξεις με φως & ήχο</small></button>
+ <button class="tile" onclick="go('search')" style="grid-column:1/-1;min-height:70px"><span class="e" style="font-size:1.4em">🔎</span>Αναζήτηση</button>
  </div>
  <div class="tip">Δουλεύει χωρίς internet. Τα δεδομένα σου μένουν μόνο σε αυτό το κινητό. <b>A+</b> πάνω δεξιά για μεγαλύτερα γράμματα.</div>
  <footer>Επιβίωση 72+ · Created by George Barbaris<br>Οι οδηγίες δεν αντικαθιστούν το 112, τις επίσημες αρχές ή την εκπαίδευση σε πρώτες βοήθειες.</footer>`}
@@ -267,6 +270,57 @@ function moGo(){if(moOn)return moStop();const w=moEnc($('#mot').value);if(!w.len
 function moPlay(k){const v=MO_ALL[k];if(v)moRun(moSeq([v]),k)}
 function moRaw(v){moRun(moSeq([v]),moSym(v))}
 
+/* ---- Weather (barometer log) & altitude ---- */
+const qnh=(p,h)=>p*Math.pow(1-0.0065*h/288.15,-5.255);
+function wx(){T('Καιρός & Υψόμετρο');const L=LS.g('baro',[]);
+ M.innerHTML=`<div class="box"><b>⛰️ Υψόμετρο (από GPS – χωρίς internet)</b><div class="hd" id="alt">—</div><div class="muted" style="text-align:center" id="alta">Αναζήτηση δορυφόρων… βγες σε ανοιχτό χώρο</div><div id="alts" class="muted" style="text-align:center;margin-top:6px"></div>
+ <div class="tools" style="justify-content:center"><button class="btn" onclick="LS.s('alt',null);wxAlt()">↺ Μηδένισε min/max/ανάβαση</button></div>
+ <div class="muted">Το GPS δίνει υψόμετρο με ακρίβεια ±10–30 m. Περίμενε 1–2 λεπτά σε ανοιχτό ουρανό για καλύτερη τιμή. Για ακρίβεια μέτρου: η εφαρμογή «Πυξίδα» του iPhone και τα ρολόγια με αλτίμετρο χρησιμοποιούν το βαρόμετρο της συσκευής.</div></div>
+ <div class="box"><b>🌡️ Βαρόμετρο – πρόγνωση καιρού</b>
+ <div class="warn" style="font-weight:400">Το Safari/Chrome δεν επιτρέπουν σε καμία web εφαρμογή να διαβάσει τον αισθητήρα πίεσης του κινητού. Γράφεις εδώ τις ενδείξεις από βαρόμετρο, ρολόι, σταθμό ή VHF/NAVTEX, και η εφαρμογή βγάζει την τάση και την πρόγνωση.</div>
+ <div class="grid"><div><label>Πίεση (hPa)</label><input id="bp" type="number" step="0.1" inputmode="decimal" placeholder="π.χ. 1013.2"></div><div><label>Υψόμετρο (m)</label><input id="bh" type="number" step="1" inputmode="numeric" value="${LS.g('bh',0)}"></div></div>
+ <label style="display:flex;gap:8px;align-items:center;font-weight:400"><input type="checkbox" id="bs" style="width:auto;margin:0" ${LS.g('bs',1)?'checked':''} onchange="LS.s('bs',this.checked?1:0)"> Η ένδειξη είναι στο ύψος όπου βρίσκομαι (station). Να γίνει αναγωγή στη θάλασσα (QNH).</label>
+ <button class="big org" style="margin-top:10px" onclick="wxAdd()">➕ Κατέγραψε τώρα</button>
+ <div id="wxr"></div><div id="wxl"></div></div>
+ <div class="box"><b>📖 Κανόνες βαρομέτρου (τάση 3 ωρών)</b>
+ <div class="li"><b>Σταθερή</b> (±1 hPa): ο καιρός δεν αλλάζει.</div>
+ <div class="li"><b>Αργή πτώση</b> (1–3,5 hPa): πιθανή επιδείνωση, βροχή σε 12–24 ώρες.</div>
+ <div class="li"><b>Γρήγορη πτώση</b> (3,6–6 hPa): δυνατός άνεμος, μπόρες σε λίγες ώρες.</div>
+ <div class="li"><b>Πολύ γρήγορη πτώση</b> (πάνω από 6 hPa): θύελλα πλησιάζει – καταφύγιο τώρα!</div>
+ <div class="li"><b>Αργή άνοδος</b>: βελτίωση, σταθερός καιρός.</div>
+ <div class="li"><b>Γρήγορη άνοδος</b> μετά από χαμηλό: καθαρίζει, αλλά δυνατός και ριπαίος άνεμος.</div>
+ <div class="li"><b>Πάνω από 1020 hPa</b>: συνήθως καλοκαιρία. <b>Κάτω από 1000 hPa</b>: άστατος καιρός.</div>
+ <div class="tip">«Long foretold, long last – short notice, soon past»: αργή αλλαγή = μεγάλη διάρκεια, απότομη αλλαγή = περνάει γρήγορα. Κανόνας Buys Ballot: με την πλάτη στον άνεμο, το χαμηλό είναι αριστερά σου (βόρειο ημισφαίριο).</div>
+ <button class="btn" onclick="go('a/w_weather')">📖 Σημάδια του καιρού χωρίς όργανα</button></div>`;
+ startGeo();wxAlt();wxList()}
+function wxAdd(){const p=+$('#bp').value,h=+$('#bh').value||0;if(!(p>850&&p<1090)){alert('Γράψε πίεση σε hPa (π.χ. 1013.2).');return}LS.s('bh',h);
+ const st=$('#bs').checked,q=st?qnh(p,h):p;const L=LS.g('baro',[]);L.push({t:Date.now(),p,h,q:+q.toFixed(1)});while(L.length>200)L.shift();LS.s('baro',L);$('#bp').value='';wxList()}
+function wxDel(i){const L=LS.g('baro',[]);L.splice(i,1);LS.s('baro',L);wxList()}
+function wxList(){const L=LS.g('baro',[]),r=$('#wxr'),l=$('#wxl');if(!r)return;
+ if(!L.length){r.innerHTML='<div class="muted" style="margin-top:8px">Καμία ένδειξη ακόμα. Κατέγραφε κάθε 1–3 ώρες για να φανεί η τάση.</div>';l.innerHTML='';return}
+ const last=L[L.length-1];let ref=null;for(let i=L.length-2;i>=0;i--){if(last.t-L[i].t>=50*60000){ref=L[i];break}}
+ let h=`<div class="hd" style="font-size:2em;margin-top:8px">${last.q.toFixed(1)} hPa</div>`;
+ if(ref){const hrs=(last.t-ref.t)/3600000,d3=(last.q-ref.q)/hrs*3,a=Math.abs(d3);
+  const tr=a<=1?'Σταθερή':(d3<0?(a<=3.5?'Αργή πτώση':a<=6?'Γρήγορη πτώση':'Πολύ γρήγορη πτώση'):(a<=3.5?'Αργή άνοδος':a<=6?'Γρήγορη άνοδος':'Πολύ γρήγορη άνοδος'));
+  let f;if(d3<-6)f='⛈️ Θύελλα / πολύ δυνατός άνεμος πλησιάζει. Βρες καταφύγιο ΤΩΡΑ, ασφάλισε σκάφος και πράγματα.';
+  else if(d3<-3.5)f='🌬️ Δυνατός άνεμος και μπόρες τις επόμενες ώρες. Μην ξεκινάς πορεία στο βουνό ή στη θάλασσα.';
+  else if(d3<-1)f=last.q<1005?'🌧️ Βροχή και άνεμος, επιδείνωση.':'🌥️ Πιθανή επιδείνωση σε 12–24 ώρες.';
+  else if(d3<=1)f=last.q>=1020?'☀️ Σταθερός καλός καιρός.':last.q<1000?'🌦️ Άστατος καιρός, χωρίς μεγάλη αλλαγή.':'⛅ Χωρίς σημαντική αλλαγή.';
+  else if(d3<=3.5)f='🌤️ Βελτίωση, ο καιρός σταθεροποιείται.';
+  else f='🌬️ Καθαρίζει, αλλά δυνατός και ριπαίος άνεμος για λίγο.';
+  h+=`<div style="text-align:center"><b>${tr}</b>: ${d3>0?'+':''}${d3.toFixed(1)} hPa / 3 ώρες<div class="tip" style="text-align:left">${f}</div></div>`}
+ else h+=`<div class="muted" style="text-align:center">Χρειάζεται δεύτερη ένδειξη τουλάχιστον 1 ώρα μετά για τάση.</div>`;
+ r.innerHTML=h;
+ const sp=L.slice(-24);if(sp.length>1){const mn=Math.min(...sp.map(x=>x.q)),mx=Math.max(...sp.map(x=>x.q)),rg=Math.max(4,mx-mn),t0=sp[0].t,tr=Math.max(1,sp[sp.length-1].t-t0);
+  l.innerHTML=`<svg viewBox="0 0 300 90" style="width:100%;background:#0a1522;border-radius:10px;margin:6px 0"><polyline fill="none" stroke="#fcbf49" stroke-width="2.5" points="${sp.map(x=>`${10+280*(x.t-t0)/tr},${80-70*(x.q-(mn+mx-rg)/2)/rg}`).join(' ')}"/><text x="6" y="12" font-size="10" fill="#a9b8c8">${mx.toFixed(1)}</text><text x="6" y="88" font-size="10" fill="#a9b8c8">${mn.toFixed(1)}</text></svg>`}
+ l.innerHTML+=L.map((x,i)=>[x,i]).reverse().slice(0,12).map(([x,i])=>`<div class="wp"><b>${new Date(x.t).toLocaleString('el',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</b><span class="mono">${x.q.toFixed(1)}${x.q!==x.p?` <small class="muted">(${x.p} @${x.h}m)</small>`:''}</span><button class="btn" onclick="wxDel(${i})">🗑</button></div>`).join('')}
+function wxAlt(){const e=$('#alt');if(!e)return;if(!pos||pos.alt==null){if(pos)$('#alta').textContent='Το GPS δεν έδωσε ακόμα υψόμετρο – περίμενε λίγο σε ανοιχτό χώρο.';return}
+ const a=pos.alt,acc=pos.altAcc;let s=LS.g('alt',null);
+ if(!s)s={min:a,max:a,gain:0,last:a};else{s.min=Math.min(s.min,a);s.max=Math.max(s.max,a);if(acc==null||acc<25){const d=a-s.last;if(Math.abs(d)>=5){if(d>0)s.gain+=d;s.last=a}}}
+ LS.s('alt',s);e.textContent=Math.round(a)+' m';$('#alta').textContent=acc!=null?`Ακρίβεια ±${Math.round(acc)} m (πάνω από τη θάλασσα)`:'πάνω από τη θάλασσα';
+ $('#alts').innerHTML=`Ελάχ. <b>${Math.round(s.min)} m</b> · Μέγ. <b>${Math.round(s.max)} m</b> · Ανάβαση <b>${Math.round(s.gain)} m</b>`;
+ const bh=$('#bh');if(bh&&!bh.dataset.set&&(acc==null||acc<30)){bh.value=Math.round(a);bh.dataset.set=1}}
+
 /* ---- wake lock ---- */
 let WL=null;async function wake(on){try{if(on&&'wakeLock'in navigator&&!WL)WL=await navigator.wakeLock.request('screen');if(!on&&WL){WL.release();WL=null}}catch(e){}}
 
@@ -310,9 +364,9 @@ function posTxt(){return `Η θέση μου: ${pos.lat.toFixed(5)}, ${pos.lon.t
 function sendPos(){if(!pos){alert('Περίμενε να βρεθεί η θέση σου (GPS).');return}const me=LS.g('me',{});location.href='sms:?&body='+encodeURIComponent('ΧΡΕΙΑΖΟΜΑΙ ΒΟΗΘΕΙΑ. '+(me.name?me.name+'. ':'')+posTxt())}
 function copyPos(){if(!pos)return alert('Περίμενε το GPS.');const t=posTxt();(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>alert('Αντιγράφηκε.'),()=>prompt('Αντέγραψε:',t))}
 function startGeo(){if(geoW!==null)return;if(!navigator.geolocation){$('#gps').textContent='Το κινητό δεν έχει GPS διαθέσιμο.';return}
- geoW=navigator.geolocation.watchPosition(p=>{const c=p.coords;pos={lat:c.latitude,lon:c.longitude,acc:c.accuracy,alt:c.altitude,spd:c.speed,hd:c.heading,t:p.timestamp};
+ geoW=navigator.geolocation.watchPosition(p=>{const c=p.coords;pos={lat:c.latitude,lon:c.longitude,acc:c.accuracy,alt:c.altitude,altAcc:c.altitudeAccuracy,spd:c.speed,hd:c.heading,t:p.timestamp};
   if(rec&&c.accuracy<60){const l=trk[trk.length-1];if(!l||dist(l,pos)>15){trk.push({lat:+pos.lat.toFixed(6),lon:+pos.lon.toFixed(6)});if(trk.length>3000)trk.shift();LS.s('trk',trk)}}
-  upd();draw()},e=>{const g=$('#gps');if(g)g.innerHTML=e.code===1?'❌ Δεν δόθηκε άδεια τοποθεσίας.<br><small class="muted">iPhone: Ρυθμίσεις → Απόρρητο → Υπηρεσίες τοποθεσίας → Safari → «Κατά τη χρήση».</small>':'Δεν βρέθηκε ακόμα θέση. Βγες σε ανοιχτό χώρο με θέα στον ουρανό.'},{enableHighAccuracy:true,maximumAge:2000,timeout:60000})}
+  upd();draw();wxAlt()},e=>{const g=$('#gps');if(g)g.innerHTML=e.code===1?'❌ Δεν δόθηκε άδεια τοποθεσίας.<br><small class="muted">iPhone: Ρυθμίσεις → Απόρρητο → Υπηρεσίες τοποθεσίας → Safari → «Κατά τη χρήση».</small>':'Δεν βρέθηκε ακόμα θέση. Βγες σε ανοιχτό χώρο με θέα στον ουρανό.'},{enableHighAccuracy:true,maximumAge:2000,timeout:60000})}
 function stopGeo(){if(geoW!==null){navigator.geolocation.clearWatch(geoW);geoW=null}}
 function startOrient(){const go2=()=>{orientOn=true;const b=$('#cbtns');if(b)b.style.display='none';wake(1)};
  if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){DeviceOrientationEvent.requestPermission().then(r=>{if(r==='granted'){window.addEventListener('deviceorientation',onOr,true);go2()}else alert('Δεν δόθηκε άδεια για την πυξίδα.')}).catch(()=>alert('Η πυξίδα δεν ενεργοποιήθηκε.'))}
