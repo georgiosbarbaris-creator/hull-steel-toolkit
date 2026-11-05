@@ -67,7 +67,7 @@ tr.tot td{font-weight:800;background:var(--yel)}
 <script>
 "use strict";
 /* ===================== DATA / CONSTANTS ===================== */
-const VER="1.6";
+const VER="1.7";
 const $=s=>document.querySelector(s);
 const fmt=n=>(Math.round(n||0)).toLocaleString("en-US");
 const fmt1=n=>(Math.round((n||0)*10)/10).toLocaleString("en-US");
@@ -845,7 +845,7 @@ function wizard(){
   m.querySelector("#wo").onclick=()=>{s=m.querySelector("input[name=sz]:checked").value;const p=newProject(t,s);p.v.name=m.querySelector("#wn").value.trim().toUpperCase();DB.projects.push(p);save();m.remove();openP(p.id,"ship")}});
 }
 /* ===================== PROJECT ===================== */
-const TABS=[["own","👔 Σύνοψη"],["ship","🚢 Πλοίο"],["scope","⚙️ Scope"],["spec","📋 Spec"],["tender","📑 Tender"],["steel","🔩 Steel"],["paint","🎨 Χρώματα"],["s2","🧰 Class/Services"],["dev","⛽ Deviation"],["s3","🚚 Logistics"],["sum","📊 Αναλυτικά"],["wu","📝 Write-up"],["act","✅ Actual"]];
+const TABS=[["own","👔 Σύνοψη"],["ship","🚢 Πλοίο"],["scope","⚙️ Scope"],["spec","📋 Spec"],["tender","📑 Tender"],["te","⚖️ Evaluation"],["steel","🔩 Steel"],["paint","🎨 Χρώματα"],["s2","🧰 Class/Services"],["dev","⛽ Deviation"],["s3","🚚 Logistics"],["sum","📊 Αναλυτικά"],["wu","📝 Write-up"],["act","✅ Actual"]];
 function openP(id,t){cur=DB.projects.find(p=>p.id===id);if(!cur)return home();tab=t||"own";renderP()}
 function renderP(){
  const p=cur,R=compute(p);
@@ -853,7 +853,7 @@ function renderP(){
  $("#tabs").innerHTML=TABS.map(([k,n])=>`<button data-tab="${k}" class="${k===tab?"on":""}">${n}</button>`).join("");
  $("#tabs").querySelectorAll("button").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;renderP();window.scrollTo(0,0)});
  const on=$("#tabs .on");on&&on.scrollIntoView({inline:"center",block:"nearest"});
- ({tender:tTender,own:tOwn,ship:tShip,scope:tScope,dev:tDev,spec:tSpec,steel:tSteel,paint:tPaint,s2:tS2,s3:tS3,sum:tSum,wu:tWU,act:tAct})[tab](p,R);
+ ({tender:tTender,te:tTE,own:tOwn,ship:tShip,scope:tScope,dev:tDev,spec:tSpec,steel:tSteel,paint:tPaint,s2:tS2,s3:tS3,sum:tSum,wu:tWU,act:tAct})[tab](p,R);
 }
 const hdrTxt=R=>`Ναυπηγείο $${fmt(R.own.yard)} · Σύνολο $${fmt(R.own.cash)}`;
 function refreshHdr(){if(!cur)return;$("#sub").textContent=hdrTxt(compute(cur))}
@@ -1264,6 +1264,228 @@ function tAct(p,R){
  $("#app").innerHTML=h;
  $("#app").querySelectorAll("[data-ac]").forEach(el=>el.onchange=()=>{a[el.dataset.ac]=el.value===""?"":+el.value;save();renderP()});
  $("[data-ln]").oninput=e=>{a.lessons=e.target.value;save()};
+}
+/* ===================== TENDER EVALUATION (Samios format) ===================== */
+const TE_SEC=[["03","GENERAL SERVICES"],["04","DRYDOCKING WORKS"],["05.1/2","HULL/DECK TREATMT/PAINTING"],["05.3/4","WBT / CGO TANKS TREATM/PAINTING"],["05.5","COT/CHOLDS TREATMT/PAINTING"],["06","STEEL REPAIRS"],["07","PIPING"],["08","VALVES"],["09","ENGINEROOM MACHINERY"],["10","DECK MACHINERY, GEAR, FITTING"],["11","ELECTRICAL"],["12","SAFETY ITEMS"],["13","ACCOMMODATION, LIVING, WELFARE"],["14","BRIDGE, NAVIGATION/COMMS"],["15","MISCELLANEOUS"],["16","CARGO SYSTEMS"],["20","MODIFICATION/UPGRADING"]];
+const teW=(p,x)=>x.cd==="R"?1:x.cd==="I"?p.o.prob:0;
+const teSv=(p,R,f)=>R.sv.filter(f).reduce((a,x)=>a+x.amt*teW(p,x),0);
+const teLg=(p,R,ids)=>R.lg.filter(x=>ids.includes(x.id)).reduce((a,x)=>a+x.amt*teW(p,x),0);
+const TE_NY=[["00363","DD PORT EXPENSES",(p,R)=>teLg(p,R,["ag","pd"])],["00370","DE-SLOPPING / SLUDGE DISPOSAL",()=>0],["00082","DD SPARES",(p,R)=>teSv(p,R,x=>x.cat==="SPARES"&&x.id!=="sp2")],
+ ["00134","DD PAINTS",(p,R)=>R.pt.tot],["00135","DD STORES",(p,R)=>teSv(p,R,x=>x.cat==="STORES")],["00361","DD TECHNICIANS / RIDING TEAM",(p,R)=>teLg(p,R,["rt"])],
+ ["00362","DD SERVICE ENGINEERS",(p,R)=>teSv(p,R,x=>["SERVICE","LSA","FFE","NAV"].includes(x.cat))],["00364","DD SUPERINTENDENTS EXPENSES",(p,R)=>teLg(p,R,["su"])],
+ ["00365","DD DECK EQUIPMENT",()=>0],["00366","DD NON-YARD RPRS (OWNERS' SUBCTR)",()=>0],["00367","DD TANK / HOLD PAINTS",()=>0],["00368","DD UPGRADING / NEW EQUIPMENT",()=>0],
+ ["00371","DD ULTRASONIC (UTM)",(p,R)=>teSv(p,R,x=>x.cat==="UTM")],["00372","DD ANODES / ICCP",(p,R)=>teSv(p,R,x=>x.id==="sp2")],["00381","CLASS / CAP SURVEY EXP.",(p,R)=>teSv(p,R,x=>x.cat==="CLASS")],
+ ["00890","FORWARDING EXPENSES",(p,R)=>teSv(p,R,x=>x.cat==="FORWARDING")],["OTH","OTHER (crew bonus, gas-free prep, certificates)",(p,R)=>teLg(p,R,["cb","gf","cx"])]];
+const teNum=(x,d)=>x!==""&&x!=null&&!isNaN(+x)?+x:d;
+function teInit(p){p.te=p.te||{};const t=p.te;t.yards=t.yards||[];t.ny=t.ny||{};return t}
+function teBudget(p,R){const s={},key=l=>l.sec!=="05"?l.sec:(l.id.startsWith("w_")?"05.3/4":l.id.startsWith("c_")?"05.5":"05.1/2");
+ for(const l of R.ls){const k=key(l);s[k]=(s[k]||0)+l.q*l.pr*teW(p,l)}for(const k in s)s[k]*=(1-p.o.disc);return s}
+function teCalc(p,R){
+ const t=teInit(p),c=R.c,o=p.o,f=c.fuel,N=teNum,r1=x=>Math.round(x*10)/10;
+ const P={rate:N(t.rate,+o.tce||0),spd:N(t.spd,12),unf:N(t.unf,5)/100,mfC:N(t.mfC,f.hfoC+f.vlsC),mfP:N(t.mfP,f.hfoC>0?f.hfoP:f.vlsP),goC:N(t.goC,f.mgoC),goP:N(t.goP,f.mgoP),goY:N(t.goY,f.mgoY)};
+ const bs=teBudget(p,R),nyB={};TE_NY.forEach(([k,,fn])=>nyB[k]=fn(p,R));
+ const mk=(y,isB)=>{const X={y,isB,name:isB?"BUDGET (own est.)":(y.n||"Yard"),secs:{},ny:{}};
+  let A1=0;for(const [k] of TE_SEC){const v=isB?(bs[k]||0):N(y.s&&y.s[k],0);X.secs[k]=v;A1+=v}
+  X.A1=A1;X.unf=A1*P.unf;X.A2=A1+X.unf;const steel=X.secs["06"];
+  X.fdP=isB?0:N(y.fd,0);X.disc=isB?0:(X.A2-(y.fdx?steel:0))*X.fdP/100+N(y.fdl,0)+N(y.od,0);X.net=X.A2-X.disc;
+  X.B=0;for(const [k] of TE_NY){const v=isB?nyB[k]:N(y.ny&&y.ny[k],N(t.ny[k],nyB[k]));X.ny[k]=v;X.B+=v}
+  X.berth=isB?c.afloat:N(y.berth,0);X.dock=isB?c.dock:N(y.dock,0);X.days=X.berth+X.dock;
+  X.nm=isB?(+o.devNm||0):N(y.nm,0);X.devD=isB?c.devD:(X.nm?r1(X.nm/(P.spd*24)):N(y.dd,0));
+  X.tc=isB?0:N(y.tc,0);X.st=isB?0:N(y.st,0);X.bwe=isB?0:N(y.bwe,0);X.offD=r1(X.devD+X.tc+X.st);
+  X.c3=X.offD*P.rate;X.c5=X.bwe*P.rate;
+  X.c61=P.mfC*X.devD*P.mfP;X.c62=P.goC*X.devD*P.goP;X.c63=P.mfC*X.tc*P.mfP;X.c64=P.goC*X.tc*P.goP;X.c65=P.goY*X.days*P.goP;X.c6=X.c61+X.c62+X.c63+X.c64+X.c65;return X};
+ const cols=[mk({},true),...t.yards.map(y=>mk(y,false))],ys=cols.slice(1);
+ const dz=ys.filter(x=>x.days>0),minD=dz.length?Math.min(...dz.map(x=>x.days)):cols[0].days;
+ for(const X of cols)if(!X.days)X.days=0;
+ for(const X of cols){X.dDiff=X.days?Math.max(0,X.days-minD):0;X.c4=X.dDiff*P.rate;X.C=X.c3+X.c4+X.c5+X.c6;X.D=X.net+X.B+X.C}
+ const best=ys.length?ys.reduce((a,b)=>b.D<a.D?b:a):null;for(const X of cols)X.dl=best?X.D-best.D:0;
+ return {P,cols,ys,best,nyB}
+}
+function tTE(p,R){
+ const t=teInit(p),E=teCalc(p,R),{P,cols,ys,best}=E,c=R.c;
+ const showSec=k=>k!=="16"||c.type!=="B"||cols.some(x=>x.secs["16"]);
+ const m=x=>x?fmt(x):"–";
+ let h=`<div class="card"><h2>⚖️ Tender Evaluation & Budget Summary</h2>
+ <p class="note">${T("Τα <b>yard costs</b> έρχονται από τα επιμέρους (import της προσφοράς του ναυπηγείου ή πληκτρολόγηση ανά section) και το comparison χτίζεται μόνο του. Τα <b>non-yard</b> και <b>deviation</b> τα βάζεις εσύ (προ-συμπληρωμένα από το budget). Πρώτη στήλη = το δικό μας BUDGET για σύγκριση.","<b>Yard costs</b> come from the individual quotations (import the yard's quote or type per section) and the comparison builds itself. <b>Non-yard</b> and <b>deviation</b> costs are entered by you (pre-filled from the budget). First column = our own BUDGET as benchmark.")}</p>
+ <div class="row"><button class="btn p" id="tey">＋ Yard</button><button class="btn" id="tei1">⬆ Import ${T("προσφορά ναυπηγείου","yard quotation")} (RFQ)</button><button class="btn" id="tei2">⬆ Import Samios Evaluation</button><button class="btn" id="tex">📊 Export Excel</button></div></div>`;
+ if(ys.length){h+=`<div class="card"><h2>🏆 ${T("Κατάταξη","Ranking")}</h2><div style="overflow-x:auto"><table style="font-size:12px"><tr><th>Yard</th><th class="n">${T("Ημ.","Days")}</th><th class="n">A Yard net</th><th class="n">B Non-yard</th><th class="n">C Dev/Off-hire</th><th class="n">D Total</th><th class="n">Δ</th></tr>`;
+  for(const X of [...ys].sort((a,b)=>a.D-b.D).concat([cols[0]]))h+=`<tr style="${X===best?"background:var(--okb);font-weight:800":X.isB?"color:var(--muted);font-style:italic":""}"><td>${X===best?"🏆 ":""}${esc(X.name)}</td><td class="n">${X.days}</td><td class="n">${fmt(X.net)}</td><td class="n">${fmt(X.B)}</td><td class="n">${fmt(X.C)}</td><td class="n"><b>${fmt(X.D)}</b></td><td class="n">${X===best?"":(X.dl>0?"+":"")+fmt(X.dl)}</td></tr>`;
+  h+=`</table></div>${best?`<div class="okb">🏆 ${esc(best.name)}: $${fmt(best.D)} · ${T("φθηνότερο σύνολο (yard + non-yard + deviation/off-hire)","lowest total (yard + non-yard + deviation/off-hire)")}${cols[0].D?` · vs budget ${best.D>cols[0].D?"+":""}${fmt(best.D-cols[0].D)}`:""}</div>`:""}</div>`;
+  // full grid
+  const row=(lbl,fn,o={})=>{const vals=cols.map(fn);const nums=vals.map((v,i)=>i&&typeof v==="number"?v:null).filter(v=>v!=null&&v>0);const mn=o.best&&nums.length>1?Math.min(...nums):null;
+   return `<tr class="${o.tot?"tot":""}"><td style="position:sticky;left:0;z-index:1;background:${o.tot?"var(--yel)":"var(--card)"};min-width:112px;max-width:128px;white-space:normal;font-size:10.5px;line-height:1.25;box-shadow:1px 0 0 var(--line)">${lbl}</td>${vals.map((v,i)=>`<td class="n" style="${i===0?"color:var(--muted);font-style:italic;":""}${mn!=null&&v===mn&&i?"background:var(--okb);color:var(--ok);font-weight:700":""}">${typeof v==="number"?m(v):esc(v??"")}</td>`).join("")}</tr>`};
+  const hd=(t_)=>`<tr><th colspan="${cols.length+1}" style="background:#1f3864;color:#fff;text-align:left"><span style="position:sticky;left:4px">${t_}</span></th></tr>`;
+  let g=`<div class="card"><h2>📋 ${T("Πίνακας σύγκρισης","Comparison sheet")}</h2><p class="note">${T("Πράσινο = καλύτερη τιμή στη γραμμή. Σύρε δεξιά για όλα τα ναυπηγεία.","Green = best value in the row. Swipe right for all yards.")}</p><div style="overflow-x:auto"><table style="font-size:11px;white-space:nowrap"><tr><th style="position:sticky;left:0;background:var(--card)">SHIPYARD</th>${cols.map(x=>`<th class="n">${esc(x.name)}</th>`).join("")}</tr>`;
+  g+=hd("GENERAL INFORMATION")+row("AREA",x=>x.isB?regionName(p).split(" (")[0]:x.y.area)+row("BROKER",x=>x.isB?"":x.y.brk)+row("E.T.A.",x=>x.isB?(p.o.date||""):x.y.eta)+row("EARLIEST BERTH / DD",x=>x.isB?"":[x.y.bA,x.y.dA].filter(Boolean).join(" / "))
+   +row("BERTH REPAIR DAYS",x=>x.berth,{best:1})+row("DOCK DAYS",x=>x.dock,{best:1})+row("TOTAL DAYS",x=>x.days,{best:1,tot:1})
+   +row("PAYMENT",x=>x.isB?(p.o.pay||[]).map((v,i)=>`${v}%@${p.o.payD[i]}d`).join(" "):tePay(x.y))+row("GROSS / ITEMIZED DISC.",x=>x.isB?Math.round(p.o.disc*100)+"%":x.y.idisc)+row("PENALTY $/DAY · LIMIT",x=>x.isB?"":[x.y.pen,x.y.penL].filter(Boolean).join(" · "));
+  g+=hd("A · SHIPYARD COSTS");for(const [k,n] of TE_SEC)if(showSec(k))g+=row(`${k} ${n}`,x=>x.secs[k],{best:1});
+  g+=row("A1 SHIPYARD SUBTOTAL",x=>x.A1,{best:1,tot:1})+row(`UNFORESEEN ${Math.round(P.unf*100)}%`,x=>x.unf)+row("A2 SUBTOTAL + UNFORESEEN",x=>x.A2,{best:1})
+   +row("FINAL INVOICE DISCOUNT",x=>x.isB?"":(x.fdP?`${x.fdP}% ${x.y.fdx?"excl. steel":"incl. steel"}`:"")+(teNum(x.y.fdl,0)?` + $${fmt(x.y.fdl)}`:""))+row("DISCOUNT AMOUNT",x=>x.disc?-x.disc:0)+row("A · SHIPYARD TOTAL – NET",x=>x.net,{best:1,tot:1});
+  g+=hd("B · OWNER / NON-SHIPYARD COSTS");for(const [k,n] of TE_NY)if(cols.some(x=>x.ny[k]))g+=row(`${k} ${n}`,x=>x.ny[k]);
+  g+=row("B · NON-SHIPYARD SUBTOTAL",x=>x.B,{best:1,tot:1});
+  g+=hd(`C · DEVIATION OFF-HIRE & BUNKERS (rate $${fmt(P.rate)}/day)`)+row("c1/c2 Discharge / loading port",x=>x.isB?"":[x.y.dp,x.y.lp].filter(Boolean).join(" → "))
+   +row("c3.1 Deviation distance (nm)",x=>x.nm)+row(`c3.2 Deviation time (days @ ${P.spd} kn)`,x=>x.devD)+row("c3.3 Tank cleaning (days)",x=>x.tc)+row("c3.4 Steaming to yard (days)",x=>x.st)+row("c3 Off-hire deviation (days)",x=>x.offD)
+   +row("Subtotal c3",x=>x.c3,{best:1})+row("c4 Repair period difference (days)",x=>x.dDiff)+row("Subtotal c4",x=>x.c4)+row("c5 Ballast water exchange (days)",x=>x.bwe)+row("Subtotal c5",x=>x.c5)
+   +row(`c6.1 Voyage cons. HFO/VLSFO (${fmt1(P.mfC)} t/d × $${fmt(P.mfP)})`,x=>x.c61)+row(`c6.2 Voyage cons. DO/GO (${fmt1(P.goC)} t/d × $${fmt(P.goP)})`,x=>x.c62)+row("c6.3 Tank cleaning cons. HFO/VLSFO",x=>x.c63)+row("c6.4 Tank cleaning cons. DO/GO",x=>x.c64)+row(`c6.5 DO/GO in yard (${fmt1(P.goY)} t/d)`,x=>x.c65)+row("Subtotal c6",x=>x.c6,{best:1})
+   +row("C · OFF-HIRE & BUNKERS",x=>x.C,{best:1,tot:1});
+  g+=hd("D")+row("D · GRAND TOTAL (A+B+C)",x=>x.D,{best:1,tot:1})+row("Δ vs best",x=>x.isB?"":x===best?"🏆":"+"+fmt(x.dl));
+  h+=g+`</table></div></div>`;
+ }
+ h+=`<div class="card"><h2>🚢 Yards (${ys.length})</h2>${ys.map((X,i)=>`<div class="pc" style="padding:8px 0;border-bottom:1px solid var(--line)" data-ye="${i}"><div><b>${X===best?"🏆 ":""}${esc(X.name)}</b><div class="note">${esc(X.y.area||"")} · ${X.days} ${T("ημ.","d")} · A $${fmt(X.net)}</div></div><div style="text-align:right"><b>$${fmt(X.D)}</b><div class="note">${T("Επεξεργασία","Edit")} ›</div></div></div>`).join("")||`<p class="note">${T("Πρόσθεσε ναυπηγεία με ＋ Yard ή κάνε import.","Add yards with ＋ Yard or import.")}</p>`}</div>`;
+ const pi=(k,l,ph)=>`<label>${l}<input data-tg="${k}" type="number" inputmode="decimal" step="any" value="${t[k]??""}" placeholder="${ph}"></label>`;
+ h+=`<div class="card"><h2>⚙️ ${T("Παράμετροι σύγκρισης","Comparison parameters")}</h2><div class="g3">${pi("rate","Charter rate $/day",fmt(+p.o.tce||0))}${pi("spd","Avg speed kn",12)}${pi("unf","Unforeseen %",5)}
+ ${pi("mfC","HFO/VLSFO t/day",fmt1(c.fuel.hfoC+c.fuel.vlsC))}${pi("mfP","HFO/VLSFO $/t",c.fuel.hfoC>0?c.fuel.hfoP:c.fuel.vlsP)}${pi("goC","DO/GO at sea t/day",c.fuel.mgoC)}${pi("goP","DO/GO $/t",c.fuel.mgoP)}${pi("goY","DO/GO in yard t/day",c.fuel.mgoY)}</div>
+ <p class="note">${T("Κενό = από το budget (tab ⛽ Deviation / Logistics). c4 = επιπλέον ημέρες επισκευής έναντι του γρηγορότερου ναυπηγείου × charter rate.","Empty = from the budget (⛽ Deviation / Logistics tabs). c4 = extra repair days vs the fastest yard × charter rate.")}</p></div>
+ <div class="card"><h2>B · Non-yard costs (${T("ίδια για όλα τα ναυπηγεία","same for all yards")})</h2>${TE_NY.map(([k,n])=>`<div class="ln"><div class="d">${k} ${n}</div><div class="a"><input data-tn="${k}" type="number" inputmode="decimal" value="${t.ny[k]??""}" placeholder="${fmt(E.nyB[k])}" style="width:100px;padding:5px;text-align:right"></div></div>`).join("")}
+ <p class="note">${T("Γκρι = από το budget. Διαφορές ανά ναυπηγείο (π.χ. port expenses) → μέσα στο ναυπηγείο.","Grey = from the budget. Differences per yard (e.g. port expenses) → inside the yard.")}</p></div>`;
+ $("#app").innerHTML=h;
+ $("#tey").onclick=()=>{t.yards.push({id:uid(),n:"",s:{},ny:{}});save();teEdit(p,t.yards.length-1)};
+ $("#app").querySelectorAll("[data-ye]").forEach(el=>el.onclick=()=>teEdit(p,+el.dataset.ye));
+ $("#app").querySelectorAll("[data-tg]").forEach(el=>el.onchange=()=>{t[el.dataset.tg]=el.value===""?"":+el.value;save();renderP()});
+ $("#app").querySelectorAll("[data-tn]").forEach(el=>el.onchange=()=>{t.ny[el.dataset.tn]=el.value===""?"":+el.value;save();renderP()});
+ $("#tex").onclick=()=>exportTE(p);
+ $("#tei1").onclick=()=>tePick(f=>teImportRFQ(p,f));$("#tei2").onclick=()=>tePick(f=>teImportSamios(p,f));
+}
+const tePay=y=>{const P=y.pay||{};return [["b","before sailing"],["d30","30d"],["d60","60d"],["d90","90d"],["d120","120d"],["d150","150d"],["d180","180d"]].filter(([k])=>+P[k]).map(([k,n])=>`${P[k]}% ${n}`).join(" · ")};
+function teEdit(p,i){
+ const t=teInit(p),y=t.yards[i];y.s=y.s||{};y.ny=y.ny||{};y.pay=y.pay||{};
+ const ti=(k,l,type="text")=>`<label>${l}<input data-yy="${k}" type="${type}" ${type==="number"?'inputmode="decimal" step="any"':""} value="${esc(y[k]??"")}"></label>`;
+ const R=compute(p),E=teCalc(p,R);
+ const m=modal(`<h2>🚢 ${esc(y.n||"Yard")}</h2>
+ <h3>General information</h3><div class="g2">${ti("n","Shipyard")}${ti("area","Area")}${ti("brk","Broker")}${ti("eta","E.T.A.")}${ti("bA","Earliest berth")}${ti("dA","Earliest DD")}${ti("berth","Berth repair days","number")}${ti("dock","Dock days","number")}${ti("idisc","Gross / itemized disc.")}${ti("pen","Penalty $/day")}${ti("penL","Penalty limit")}${ti("rem","Remarks")}</div>
+ <h3>Payment %</h3><div class="g3">${[["b","Before sailing"],["d30","30 days"],["d60","60 days"],["d90","90 days"],["d120","120 days"],["d150","150 days"],["d180","180 days"]].map(([k,l])=>`<label>${l}<input data-yp="${k}" type="number" inputmode="decimal" value="${y.pay[k]??""}"></label>`).join("")}</div>
+ <h3>A · Shipyard costs (USD, ${T("μετά το itemized discount","after itemized discount")})</h3><div class="g2">${TE_SEC.map(([k,n])=>`<label>${k} ${n}<input data-ys="${k}" type="number" inputmode="decimal" value="${y.s[k]??""}"></label>`).join("")}</div>
+ <h3>${T("Έκπτωση final invoice","Final invoice discount")}</h3><div class="g3">${ti("fd","Discount %","number")}${ti("fdl","Lumpsum $","number")}${ti("od","Other disc. $","number")}</div>
+ <label style="flex-direction:row;align-items:center;gap:6px;color:var(--ink);font-size:14px;margin-top:6px"><input type="checkbox" data-yc="fdx" ${y.fdx?"checked":""} style="width:auto">${T("Η έκπτωση % ΔΕΝ ισχύει στο steel (excluding steel)","Discount % does NOT apply to steel (excluding steel)")}</label>
+ <h3>C · Deviation</h3><div class="g2">${ti("dp","Discharge port")}${ti("lp","Loading port")}${ti("nm","Deviation distance nm","number")}${ti("dd",T("ή deviation ημέρες","or deviation days"),"number")}${ti("tc","Tank cleaning days","number")}${ti("st","Steaming to yard days","number")}${ti("bwe","Ballast water exch. days","number")}</div>
+ <h3>B · Non-yard (${T("μόνο αν διαφέρει","only if different")})</h3><div class="g2">${TE_NY.map(([k,n])=>`<label>${k} ${n}<input data-yn="${k}" type="number" inputmode="decimal" value="${y.ny[k]??""}" placeholder="${fmt(teNum(t.ny[k],E.nyB[k]))}"></label>`).join("")}</div>
+ <div class="row" style="margin-top:12px"><button class="btn d" id="ydel">🗑 ${T("Διαγραφή","Delete")}</button><button class="btn" id="ydup">⧉</button><span class="sp"></span><button class="btn p" id="yok">OK</button></div>`,mm=>{
+  const v=el=>el.value===""?"":(el.type==="number"?+el.value:el.value);
+  mm.querySelectorAll("[data-yy]").forEach(el=>el.oninput=()=>{y[el.dataset.yy]=v(el);save()});
+  mm.querySelectorAll("[data-yp]").forEach(el=>el.oninput=()=>{y.pay[el.dataset.yp]=v(el);save()});
+  mm.querySelectorAll("[data-ys]").forEach(el=>el.oninput=()=>{y.s[el.dataset.ys]=v(el);save()});
+  mm.querySelectorAll("[data-yn]").forEach(el=>el.oninput=()=>{y.ny[el.dataset.yn]=v(el);save()});
+  mm.querySelectorAll("[data-yc]").forEach(el=>el.onchange=()=>{y[el.dataset.yc]=el.checked?1:0;save()});
+  mm.querySelector("#yok").onclick=()=>{mm.remove();renderP()};
+  mm.querySelector("#ydup").onclick=()=>{const q=JSON.parse(JSON.stringify(y));q.id=uid();q.n=(q.n||"")+" (2)";t.yards.push(q);save();mm.remove();renderP()};
+  mm.querySelector("#ydel").onclick=()=>{if(!confirm(T("Διαγραφή ναυπηγείου;","Delete yard?")))return;t.yards.splice(i,1);save();mm.remove();renderP()};
+ });
+ const ob=new MutationObserver(()=>{if(!document.body.contains(m)){ob.disconnect();if(tab==="te")renderP()}});ob.observe(document.body,{childList:true});
+}
+function tePick(cb){const i=document.createElement("input");i.type="file";i.accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";i.onchange=()=>{if(i.files[0])cb(i.files[0])};i.click()}
+const teCv=v=>{if(v==null)return null;if(v instanceof Date)return v.toLocaleDateString("en-GB");if(typeof v==="object"){if("result" in v)return teCv(v.result);if(v.richText)return v.richText.map(x=>x.text).join("");if("text" in v)return v.text;return null}return v};
+const teN=v=>{v=teCv(v);if(typeof v==="number")return v;if(typeof v==="string"){const x=parseFloat(v.replace(/,/g,""));return isNaN(x)?null:x}return null};
+async function teImportSamios(p,file){
+ try{await loadXL();const wb=new ExcelJS.Workbook();await wb.xlsx.load(await file.arrayBuffer());const ws=wb.worksheets[0],t=teInit(p);
+  let hr=0;ws.eachRow((r,n)=>{if(!hr&&String(teCv(r.getCell(3).value)||"").trim().toUpperCase()==="SHIPYARD")hr=n});
+  if(!hr)throw new Error(T("Δεν βρέθηκε η γραμμή SHIPYARD","SHIPYARD row not found"));
+  const yc=[];for(let j=7;j<=ws.columnCount;j++){const v=String(teCv(ws.getRow(hr).getCell(j).value)||"").trim();if(/^REMARKS/i.test(v))break;if(v&&!/^(DDO|BY|TSI)$/i.test(v))yc.push(j)}
+  const lab=n=>String(teCv(ws.getRow(n).getCell(3).value)||"").trim().toUpperCase(),code=n=>String(teCv(ws.getRow(n).getCell(2).value)||"").trim();
+  const find=(re,from=1)=>{for(let n=from;n<=ws.rowCount;n++)if(re.test(lab(n)))return n;return 0};
+  const ys=yc.map(j=>({id:uid(),n:String(teCv(ws.getRow(hr).getCell(j).value)).trim(),s:{},ny:{},pay:{}}));
+  const each=(n,fn)=>{if(!n)return;yc.forEach((j,i)=>{const cl=ws.getRow(n).getCell(j);if(cl.isMerged&&cl.master&&cl.master.address!==cl.address&&cl.master.row!==n)return;const v=cl.value;fn(ys[i],teCv(v),teN(v))})};
+  const txt=(re,k)=>each(find(re),(y,v)=>{if(v!=null&&String(v).trim())y[k]=String(v).trim()});
+  txt(/^AREA/,"area");txt(/^BROKER/,"brk");txt(/^E\.?T\.?A/,"eta");txt(/EARLIEST\s+BERTH/,"bA");txt(/EARLIEST\s+DD/,"dA");each(find(/GROSS.*ITEMI/),(y,v,x)=>{if(v==null||v==="")return;y.idisc=typeof v==="number"&&v<=1?Math.round(v*100)+"%":String(v).trim()});txt(/AMOUNT.*DAY OF DELAY/,"pen");txt(/^LIMIT/,"penL");
+  each(find(/BERTH.?REPAIR TIME/),(y,v,x)=>{if(x!=null)y.berth=x});each(find(/^DOCK DAYS/),(y,v,x)=>{if(x!=null)y.dock=x});
+  const pr=find(/BEFORE SAILING/);if(pr){each(pr,(y,v,x)=>{if(x)y.pay.b=x<=1?Math.round(x*100):x});[30,60,90,120,150,180].forEach((d,i)=>each(pr+1+i,(y,v,x)=>{if(x)y.pay["d"+d]=x<=1?Math.round(x*100):x}))}
+  const a0=find(/^SHIPYARD COSTS/),a1=find(/^SHIPYARD SUBTOTAL/);
+  for(let n=a0+1;n<a1;n++){const k=code(n);if(TE_SEC.some(s=>s[0]===k))each(n,(y,v,x)=>{if(x)y.s[k]=(y.s[k]||0)+x})}
+  each(find(/DISCNT ON FINAL INVOICE - %/),(y,v,x)=>{if(v==null||v==="")return;const s=String(v).toUpperCase();
+   if(typeof v==="number"){if(v>0&&v<=1)y.fd=Math.round(v*1000)/10;else if(v>100)y.fdl=v;else if(v>1)y.fd=v}else{const m_=s.match(/([\d.]+)\s*%/);if(m_)y.fd=+m_[1];y.fdx=/EXCL/.test(s)?1:0}});
+  const b0=find(/OWNER\/NON-SHIPYARD COSTS/),b1=find(/NON-SHIPYARD SUBTOTAL/);
+  for(let n=b0+1;n<b1;n++){const k=code(n);if(TE_NY.some(s=>s[0]===k))each(n,(y,v,x)=>{if(x)y.ny[k]=x})}
+  txt(/^DISCHARGE PORT/,"dp");txt(/^LOADING PORT/,"lp");
+  each(find(/DISTANCE DEVIATION/),(y,v,x)=>{if(x)y.nm=x});each(find(/TANK CLEANING TIME/),(y,v,x)=>{if(x)y.tc=x});each(find(/STEAMING TIME TO YARD/),(y,v,x)=>{if(x)y.st=x});
+  const bw=find(/BALLAST WATER EXCHANGE/);if(bw)each(bw+1,(y,v,x)=>{if(x)y.bwe=x});
+  const rr=find(/DEVIATION OFF-HIRE/);if(rr){const cr=ws.getRow(rr);for(let j=1;j<=ws.columnCount;j++)if(/CHARTER RATE/i.test(String(teCv(cr.getCell(j).value)||""))){const x=teN(cr.getCell(j+2).value)??teN(cr.getCell(j+1).value);if(x)t.rate=x}}
+  ws.eachRow(r=>{for(let j=1;j<=r.cellCount;j++){const s=String(teCv(r.getCell(j).value)||"").toUpperCase().trim();
+   if(s==="AVG SPEED"){const x=teN(r.getCell(j+1).value);if(x)t.spd=x}
+   if(s==="HFO TN/DAY"){const a=teN(r.getCell(j+1).value),b=teN(r.getCell(j+3).value);if(a)t.mfC=a;if(b)t.mfP=b}
+   if(s==="DO/GO TNS"&&/VOYAGE/i.test(String(teCv(r.getCell(3).value)))){const a=teN(r.getCell(j+1).value),b=teN(r.getCell(j+3).value);if(a)t.goC=a;if(b)t.goP=b}}});
+  const keep=ys.filter(y=>Object.keys(y.s).length||y.berth||y.dock);
+  if(!keep.length)throw new Error(T("Δεν βρέθηκαν ναυπηγεία με τιμές","No yards with prices found"));
+  if(t.yards.length&&!confirm(T(`Βρέθηκαν ${keep.length} ναυπηγεία. Αντικατάσταση των ${t.yards.length} υπαρχόντων; (Άκυρο = προσθήκη)`,`Found ${keep.length} yards. Replace the existing ${t.yards.length}? (Cancel = add)`)))t.yards.push(...keep);else t.yards=keep;
+  save();toast(`✓ ${keep.length} yards`);renderP()
+ }catch(e){toast("⚠ "+e.message);console.error(e)}
+}
+async function teImportRFQ(p,file){
+ try{await loadXL();const wb=new ExcelJS.Workbook();await wb.xlsx.load(await file.arrayBuffer());const ws=wb.getWorksheet("SPECIFICATION");
+  if(!ws)throw new Error(T("Δεν είναι tender spec του DD Budget (λείπει το SPECIFICATION)","Not a DD Budget tender spec (SPECIFICATION sheet missing)"));
+  const y={id:uid(),n:"",s:{},ny:{},pay:{}};let sub="05.1/2",items=0,priced=0;
+  ws.eachRow((r,n)=>{if(n<4)return;const id=String(teCv(r.getCell(1).value)||"").trim(),d=String(teCv(r.getCell(2).value)||"").toUpperCase();
+   if(/^05\.\d+$/.test(id))sub=/WATER BALLAST/.test(d)?"05.3/4":/CARGO HOLD/.test(d)?"05.5":"05.1/2";
+   if(!/^\d\d\.\d+\.\d+$/.test(id))return;items++;const q=teN(r.getCell(4).value)||0,pr=teN(r.getCell(5).value),dc=teN(r.getCell(6).value)||0;if(pr==null)return;priced++;
+   let k=id.slice(0,2);if(k==="05")k=sub;y.s[k]=(y.s[k]||0)+q*pr*(1-dc/100)});
+  const ys=wb.getWorksheet("YARD QUOTATION SUMMARY");
+  if(ys)ys.eachRow(r=>{const l=String(teCv(r.getCell(2).value)||"").toLowerCase(),v=teCv(r.getCell(3).value),x=teN(r.getCell(3).value);if(v==null||v==="")return;
+   if(l.startsWith("overall discount"))y.fd=x;else if(l.startsWith("days in dry dock"))y.dock=x;else if(l.startsWith("days afloat"))y.berth=x;else if(l.startsWith("earliest"))y.bA=String(v);
+   else if(l.startsWith("payment"))y.rem="Payment: "+v;else if(l.startsWith("delay penalty"))y.pen=String(v);else if(l.startsWith("yard name"))y.n=String(v)});
+  if(!priced)throw new Error(T("Δεν βρέθηκαν τιμές (κίτρινα κελιά UNIT PRICE)","No prices found (yellow UNIT PRICE cells)"));
+  const nm=prompt(T("Όνομα ναυπηγείου","Shipyard name"),y.n||file.name.replace(/\.xlsx$/i,""));if(nm==null)return;y.n=nm.trim();
+  for(const k in y.s)y.s[k]=Math.round(y.s[k]*100)/100;teInit(p).yards.push(y);save();toast(`✓ ${y.n}: ${priced}/${items} items`);renderP();teEdit(p,p.te.yards.length-1)
+ }catch(e){toast("⚠ "+e.message);console.error(e)}
+}
+async function exportTE(p){
+ try{toast("📊 Excel…");await loadXL();const R=compute(p),E=teCalc(p,R),{P,cols,best}=E,v=p.v,wb=new ExcelJS.Workbook();wb.creator="DD Budget – Created by GB";
+  const ws=wb.addWorksheet("TENDER EVALUATION",{views:[{state:"frozen",xSplit:3,ySplit:9}],pageSetup:{orientation:"landscape",fitToPage:true,fitToWidth:1,fitToHeight:0,paperSize:9}});
+  const nC=cols.length,L=i=>ws.getColumn(4+i).letter;ws.columns=[{width:8},{width:8},{width:44},...cols.map(()=>({width:17})),{width:30}];
+  const HF={type:"pattern",pattern:"solid",fgColor:{argb:"FF1F3864"}},SF={type:"pattern",pattern:"solid",fgColor:{argb:"FFD9E1F2"}},YF={type:"pattern",pattern:"solid",fgColor:{argb:"FFFFF2CC"}},GF={type:"pattern",pattern:"solid",fgColor:{argb:"FFE2EFDA"}},BF={type:"pattern",pattern:"solid",fgColor:{argb:"FFF2F2F2"}};
+  const f9={name:"Arial",size:9},b9={name:"Arial",size:9,bold:true},w9={name:"Arial",size:9,bold:true,color:{argb:"FFFFFFFF"}},thin={style:"thin",color:{argb:"FFBFBFBF"}},BX={top:thin,left:thin,bottom:thin,right:thin};
+  const NF='#,##0;(#,##0);"-"';
+  ws.getCell("A1").value=(p.tp&&p.tp.issuer)||"Tender Evaluation & Budget Summary";ws.getCell("A1").font={name:"Arial",size:14,bold:true,color:{argb:"FF1F3864"}};
+  ws.getCell("A2").value="Tender Evaluation & Budget Summary";ws.getCell("A2").font={name:"Arial",size:11,bold:true};
+  ws.getCell("C4").value=`VESSEL: ${v.name||""}${v.imo?" (IMO "+v.imo+")":""}`;ws.getCell("C5").value=`SCOPE: ${p.o.survey==="SS"?"Special Survey No."+R.c.ssNo:"Intermediate Survey"} + Dry-docking`;ws.getCell("C6").value=`Date issued: ${today()} · Charter rate $${fmt(P.rate)}/day · Avg speed ${P.spd} kn · Unforeseen ${Math.round(P.unf*100)}%`;
+  ["C4","C5","C6"].forEach(a=>ws.getCell(a).font=b9);
+  ws.getCell("A7").value="First column = Owners' own budget estimate (benchmark). Green = best value in row.";ws.getCell("A7").font={name:"Arial",size:8,italic:true};
+  let r=9;const hrow=(a,b,txt,vals)=>{const row=ws.getRow(r);row.getCell(1).value=a;row.getCell(2).value=b;row.getCell(3).value=txt;(vals||[]).forEach((x,i)=>row.getCell(4+i).value=x);for(let j=1;j<=nC+4;j++){const cl=row.getCell(j);cl.fill=HF;cl.font=w9;cl.border=BX;cl.alignment={horizontal:j>3?"center":"left",vertical:"middle",wrapText:true}}row.height=24;return r++};
+  const line=(a,b,txt,fn,o={})=>{const row=ws.getRow(r);row.getCell(1).value=a;row.getCell(2).value=b;row.getCell(3).value=txt;const vals=cols.map((X,i)=>fn(X,i,r));
+   vals.forEach((x,i)=>{const cl=row.getCell(4+i);cl.value=x==null?null:x;cl.font=o.tot?b9:f9;cl.border=BX;if(typeof x==="number"||(x&&x.formula))cl.numFmt=o.nf||NF;if(o.tot)cl.fill=YF;else if(i===0)cl.fill=BF});
+   [1,2,3].forEach(j=>{const cl=row.getCell(j);cl.font=o.tot?b9:f9;cl.border=BX;if(o.tot)cl.fill=YF});
+   if(o.best&&cols.length>2){const nums=cols.slice(1).map(X=>o.best(X)).filter(x=>x>0);if(nums.length){const mn=Math.min(...nums);cols.forEach((X,i)=>{if(i&&o.best(X)===mn){row.getCell(4+i).fill=GF;row.getCell(4+i).font=b9}})}}
+   if(o.rem)row.getCell(nC+4).value=o.rem;return r++};
+  hrow("","","GENERAL INFORMATION",cols.map(x=>x.name));
+  line("","","AREA",X=>X.isB?regionName(p):X.y.area||"");line("","","BROKER",X=>X.isB?"":X.y.brk||"");line("","","E.T.A.",X=>X.isB?p.o.date||"":X.y.eta||"");
+  line("","","EARLIEST BERTH AVAILABILITY",X=>X.isB?"":X.y.bA||"");line("","","EARLIEST DD AVAILABILITY",X=>X.isB?"":X.y.dA||"");
+  const rb=line("TIME","","BERTH-REPAIR TIME QUOTED",X=>X.berth,{nf:"0",best:X=>X.berth});const rd=line("","","DOCK DAYS",X=>X.dock,{nf:"0",best:X=>X.dock});
+  const rtd=line("","","TOTAL DAYS",(X,i)=>({formula:`${L(i)}${rb}+${L(i)}${rd}`,result:X.days}),{nf:"0",tot:1,best:X=>X.days});
+  [["b","BEFORE SAILING"],["d30","30 DAYS"],["d60","60 DAYS"],["d90","90 DAYS"],["d120","120 DAYS"],["d150","150 DAYS"],["d180","180 DAYS"]].forEach(([k,n],j)=>line(j?"":"PAYMENT","",n,X=>{if(X.isB){const ix=(p.o.payD||[]).findIndex(d=>k==="b"?d===0:"d"+d===k);return ix>=0?(+p.o.pay[ix]||0)/100:null}const x=+((X.y.pay||{})[k]);return x?x/100:null},{nf:"0%"}));
+  line("DISC","","GROSS / ITEMIZED %",X=>X.isB?Math.round(p.o.disc*100)+"%":X.y.idisc||"");line("PEN","","AMOUNT - $ / DAY OF DELAY",X=>X.isB?"":X.y.pen||"");line("","","LIMIT - % AGREED INVOICE",X=>X.isB?"":X.y.penL||"");
+  hrow("A","","SHIPYARD COSTS",cols.map(x=>x.name));const s0=r;
+  for(const [k,n] of TE_SEC){if(k==="16"&&R.c.type==="B"&&!cols.some(X=>X.secs[k]))continue;line("",k,n,X=>X.secs[k]||null,{best:X=>X.secs[k]})}
+  const s1=r-1;const rA1=line("","A1","SHIPYARD SUBTOTAL",(X,i)=>({formula:`SUM(${L(i)}${s0}:${L(i)}${s1})`,result:X.A1}),{tot:1,best:X=>X.A1});
+  const rU=line("",P.unf,"UNFORESEEN",(X,i)=>({formula:`${L(i)}${rA1}*$B$${r}`,result:X.unf}));ws.getCell(`B${rU}`).numFmt="0%";
+  const rA2=line("","A2","SHIPYARD SUBTOTAL + UNFORESEEN",(X,i)=>({formula:`${L(i)}${rA1}+${L(i)}${rU}`,result:X.A2}),{best:X=>X.A2});
+  line("","","DISCNT ON FINAL INVOICE - %",X=>X.isB?"":(X.fdP?`${X.fdP}% ${X.y.fdx?"EXCLUDING STEEL":"INCLUDING STEEL"}`:"")+(teNum(X.y.fdl,0)?` + LUMPSUM ${fmt(X.y.fdl)}`:""));
+  const rSt=s0+TE_SEC.findIndex(s=>s[0]==="06");
+  const rDs=line("","","DISCNT ON FINAL INVOICE - AMOUNT",(X,i)=>X.isB?0:({formula:`-((${L(i)}${rA2}-${X.y.fdx?`${L(i)}${rSt}`:"0"})*${X.fdP/100}+${teNum(X.y.fdl,0)})`,result:-(X.disc-teNum(X.y.od,0))}),{rem:"Excl. steel: discount on (A2 − steel), steel kept at full price"});
+  const rOd=line("","","OTHER DISCNT",X=>X.isB?0:-teNum(X.y.od,0));
+  const rA=line("A","","SHIPYARD TOTAL - NET",(X,i)=>({formula:`${L(i)}${rA2}+${L(i)}${rDs}+${L(i)}${rOd}`,result:X.net}),{tot:1,best:X=>X.net});
+  hrow("B","","OWNER/NON-SHIPYARD COSTS",cols.map(x=>x.name));const n0=r;for(const [k,n] of TE_NY)line("",k,n,X=>X.ny[k]||null,{best:X=>X.ny[k]});
+  const rB=line("B","","OWNER/NON-SHIPYARD SUBTOTAL",(X,i)=>({formula:`SUM(${L(i)}${n0}:${L(i)}${r-1})`,result:X.B}),{tot:1,best:X=>X.B});
+  hrow("C","",`DEVIATION OFF-HIRE & BUNKER COSTS (charter rate $${fmt(P.rate)}/day)`,cols.map(x=>x.name));
+  line("","c1","Discharge Port",X=>X.isB?"":X.y.dp||"");line("","c2","Loading Port",X=>X.isB?"":X.y.lp||"");
+  line("","c3.1","Total Voyage Distance Deviation (miles)",X=>X.nm||null);const r32=line("","c3.2",`Total Voyage Time Deviation (days @ ${P.spd} kn)`,X=>X.devD,{nf:"0.0"});
+  const r33=line("","c3.3","Tank Cleaning Time (days)",X=>X.tc,{nf:"0.0"});const r34=line("","c3.4","Steaming Time to Yard (days)",X=>X.st,{nf:"0.0"});
+  const r35=line("","c3.5","Total Off-hire Time (days)",(X,i)=>({formula:`${L(i)}${r32}+${L(i)}${r33}+${L(i)}${r34}`,result:X.offD}),{nf:"0.0"});
+  const rc3=line("","","Subtotal c3",(X,i)=>({formula:`${L(i)}${r35}*${P.rate}`,result:X.c3}),{best:X=>X.c3});
+  const r41=line("","c4","Shipyard Repair Period Difference (days vs fastest yard)",X=>X.dDiff,{nf:"0.0"});const rc4=line("","","Subtotal c4",(X,i)=>({formula:`${L(i)}${r41}*${P.rate}`,result:X.c4}));
+  const r51=line("","c5","Ballast Water Exchange – period (days)",X=>X.bwe,{nf:"0.0"});const rc5=line("","","Subtotal c5",(X,i)=>({formula:`${L(i)}${r51}*${P.rate}`,result:X.c5}));
+  const k0=r;line("","c6.1",`Voyage Consumption HFO/VLSFO (${fmt1(P.mfC)} t/d × $${fmt(P.mfP)}/t)`,X=>X.c61);line("","c6.2",`Voyage Consumption DO/GO (${fmt1(P.goC)} t/d × $${fmt(P.goP)}/t)`,X=>X.c62);
+  line("","c6.3","Tank Cleaning, Re-inert etc. Cons. HFO/VLSFO",X=>X.c63);line("","c6.4","Tank Cleaning, Re-inert etc. Cons. DO/GO",X=>X.c64);line("","c6.5",`DO/GO in yard (${fmt1(P.goY)} t/d × total days)`,X=>X.c65);
+  const rc6=line("","","Subtotal c6",(X,i)=>({formula:`SUM(${L(i)}${k0}:${L(i)}${r-1})`,result:X.c6}),{best:X=>X.c6});
+  const rC=line("C","","OFF-HIRE & BUNKERS CONSUMPTION",(X,i)=>({formula:`${L(i)}${rc3}+${L(i)}${rc4}+${L(i)}${rc5}+${L(i)}${rc6}`,result:X.C}),{tot:1,best:X=>X.C});
+  r++;const rD=line("D","","GRAND TOTAL (A+B+C)",(X,i)=>({formula:`${L(i)}${rA}+${L(i)}${rB}+${L(i)}${rC}`,result:X.D}),{tot:1,best:X=>X.D});
+  ws.getRow(rD).height=22;for(let i=0;i<nC;i++)ws.getRow(rD).getCell(4+i).font={name:"Arial",size:11,bold:true};
+  r+=2;ws.getCell(`A${r}`).value="E";ws.getCell(`C${r}`).value="MEMORANDA - RESERVES";ws.getCell(`C${r}`).font=b9;r++;
+  cols.slice(1).forEach(X=>{if(X.y.rem){ws.getCell(`C${r}`).value=`${X.name}: ${X.y.rem}`;ws.getCell(`C${r}`).font=f9;r++}});
+  r++;ws.getCell(`A${r}`).value="F";ws.getCell(`C${r}`).value="PROPOSAL";ws.getCell(`C${r}`).font=b9;ws.getCell(`D${r}`).value=`FIRM BOOKED TO ${best?best.name:"…………"} SHIPYARD, DUE TO ……………………………………`;ws.getCell(`D${r}`).font=f9;r+=2;
+  ["TECHNICAL SUPERINTENDENT","VESSEL OPERATOR","TM","GM","MD"].forEach((x,i)=>{const cl=ws.getRow(r).getCell(3+i);cl.value=x;cl.font=b9;cl.border={top:thin}});
+  ws.getCell(`C${r+3}`).value="Created by GB";ws.getCell(`C${r+3}`).font={name:"Arial",size:8,italic:true,color:{argb:"FF808080"}};
+  const buf=await wb.xlsx.writeBuffer();const name=`Tender_Evaluation_${(v.name||"vessel").replace(/\W+/g,"_")}_${today()}.xlsx`;
+  const blob=new Blob([buf],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}),file=new File([blob],name,{type:blob.type});
+  if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:name}).catch(()=>dl(blob,name))}else dl(blob,name);
+ }catch(e){toast("⚠ "+e.message);console.error(e)}
 }
 /* ===================== EXCEL EXPORT ===================== */
 function loadXL(){return new Promise((res,rej)=>{if(window.ExcelJS)return res();const s=document.createElement("script");s.src="exceljs.min.js";s.onload=res;s.onerror=()=>rej(new Error("ExcelJS δεν φορτώθηκε – άνοιξε μία φορά online"));document.head.appendChild(s)})}
