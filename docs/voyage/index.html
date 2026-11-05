@@ -47,7 +47,7 @@ table{border-collapse:collapse;width:100%;font-size:13.5px}td,th{padding:5px 6px
 </style>
 </head>
 <body>
-<header><div class="r"><button id="back" class="hide">‹</button><div style="flex:1;min-width:0"><h1 id="ttl">Voyage Calc</h1><div class="sub" id="sub">Voyage estimate · TCE · offline</div><div style="font-size:11px;opacity:.6">Created by George Barbaris</div></div><button id="lng" style="background:rgba(255,255,255,.15);border:0;color:#fff;border-radius:10px;padding:8px 10px;font:700 13px system-ui">EN</button></div></header>
+<header><div class="r"><button id="back" class="hide">‹</button><div style="flex:1;min-width:0"><h1 id="ttl">Voyage Calc</h1><div class="sub" id="sub">Voyage estimate · TCE · offline</div><div style="font-size:11px;opacity:.6">Created by George Barbaris · ⚓ Approved by SmarShip Management LLC</div></div><button id="lng" style="background:rgba(255,255,255,.15);border:0;color:#fff;border-radius:10px;padding:8px 10px;font:700 13px system-ui">EN</button></div></header>
 <main>
  <!-- LIST -->
  <section id="v-list">
@@ -56,7 +56,7 @@ table{border-collapse:collapse;width:100%;font-size:13.5px}td,th{padding:5px 6px
   <div id="cList"></div>
   <button class="btn d" id="clrAll" style="width:100%;margin:8px 0;display:none">🧹 Καθαρισμός όλων</button>
   <div class="card note"><b>Πηγές αποστάσεων (με σειρά):</b><br><span class="chip mine">✔ δική σου</span> ό,τι έγραψες εσύ (BP/Netpas) — το θυμάμαι<br><span class="chip pub">📘 Pub.151</span> NGA Distances Between Ports (2001, public domain) — απευθείας ή μέσω junction points<br><span class="chip est">≈ εκτίμηση</span> δική μου διαδρομή (Suez/Panama/Cape, ≈ ±5%)<br>Corinth Canal εξαιρείται (όχι για bulkers).</div>
-  <p class="cred">Created by George Barbaris</p>
+  <p class="cred">Created by George Barbaris<br>⚓ Approved by SmarShip Management LLC</p>
  </section>
  <!-- EDIT -->
  <section id="v-edit" class="hide">
@@ -284,9 +284,9 @@ function buildPrint(c,R){const L=c.legs.map((l,i)=>{const r=R.legs[i];return `<t
  <br><b>VOYAGE INCOME</b><table>${c.cargo.map(x=>m(`${esc(x.n)} ${f0(n(x.qty))} MT · Rate ${f2(n(x.rate))}${n(x.lump)?" · Lumpsum "+usd(n(x.lump)):""}`,usd(n(x.lump)>0?n(x.lump):n(x.qty)*n(x.rate)))).join("")}
  ${m("<b>Gross Freight</b>",usd(R.gross))}${m(`Commission ${f2(R.cpct*100)}%`,usd(R.comm))}${n(c.dem)?m("Demurrage / despatch",usd(n(c.dem))):""}${m("<b>Net Freight</b>",usd(R.net))}</table><br>
  <table>${m("<b>Gross Surplus</b>",usd(R.res))}${m("Gross Daily",usd(R.tce),"b")}${m("Daily Running Cost",usd(n(c.opex)))}${m("<b>Net Daily</b>",usd(R.nd))}${m("<b>T/C Equivalent</b>","<b>"+usd(R.tce)+"</b>","b")}${m("Break-even rate (TCE 0)","$"+f2(R.be0)+"/MT")}${m("CO₂ estimate",f0(R.co2)+" t")}</table>
- <p style="font-size:9px;margin-top:10px">Voyage Calc · Created by George Barbaris · distances: ${c.legs.some(l=>l.src==="est")?"includes estimates (≈)":"user figures"}</p>`;}
+ <p style="font-size:9px;margin-top:10px">Voyage Calc · Created by George Barbaris · Approved by SmarShip Management LLC · distances: ${c.legs.some(l=>l.src==="est")?"includes estimates (≈)":"user figures"}</p>`;}
 function loadXL(){return new Promise((res,rej)=>{if(window.ExcelJS)return res();const s=document.createElement("script");s.src="exceljs.min.js";s.onload=res;s.onerror=()=>rej(new Error("Άνοιξε μία φορά online"));document.head.appendChild(s);});}
-async function xlsx(c,R){try{toast("📊 Excel…");await loadXL();const wb=new ExcelJS.Workbook();wb.creator="Voyage Calc – Created by George Barbaris";const ws=wb.addWorksheet("Voyage");
+async function xlsx(c,R){try{toast("📊 Excel…");await loadXL();const wb=new ExcelJS.Workbook();wb.creator="Voyage Calc – Created by George Barbaris – Approved by SmarShip Management LLC";const ws=wb.addWorksheet("Voyage");
  ws.columns=[{width:22},{width:22},{width:10},{width:6},{width:8},{width:9},{width:9},{width:8},{width:8},{width:8},{width:8},{width:10},{width:10}];
  ws.addRow(["VOYAGE CALCULATION",c.vessel||"",c.name]).font={bold:true,size:13};ws.addRow([]);
  const h=ws.addRow(["From","To","N.Miles","L/B","Knots","AtSea d","InPort d","IFO sea/d","MDO sea/d","IFO port/d","MDO port/d","Total IFO","Total MDO"]);h.font={bold:true};
