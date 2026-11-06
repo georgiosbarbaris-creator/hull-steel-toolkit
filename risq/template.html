@@ -118,6 +118,7 @@ button{font:inherit;cursor:pointer}
         <button data-pg="docs">📁 Έγγραφα hybrid 72h<small>Λίστα για upload</small></button>
         <button data-pg="psc">🛂 PSC ανά περιοχή<small>AMSA · Paris · Tokyo · USCG · Canada</small></button>
         <button data-pg="man">📘 Manuals<small>Field Manual · Zero Deficiency Canada</small></button>
+        <button data-pg="trn">🎓 Training 44<small>Εκπαιδεύσεις & familiarization ανά RISQ</small></button>
         <button data-pg="fleet">⚓ Ιστορικό στόλου<small id="fleetSt">Εισαγωγή αρχείου</small></button>
       </div>
       <p class="note" style="margin:10px 0 0">Στόχος για validity 12 μηνών: <b>≤23 low/medium, το πολύ 1 High, καλό close-out</b>. Τα Sections 3 & 13: ~4 findings = 1 High.</p></div>
@@ -146,7 +147,7 @@ button{font:inherit;cursor:pointer}
     <div class="card tog"><div><b>★ Μόνο high-risk</b><div class="note">Γρήγορη επιθεώρηση: οι ερωτήσεις με το μεγαλύτερο βάρος</div></div><label class="sw"><input type="checkbox" id="hrOnly"><span></span></label></div>
     <div class="row" style="margin:0 0 10px"><button class="btn ai" id="snapGo" style="flex:1">📷 Φωτογράφισε → AI βρίσκει την ερώτηση</button></div>
     <div class="tiles" id="tiles"></div>
-    <div class="row" style="margin-top:12px"><button class="btn" id="editIns">✎ Στοιχεία</button><button class="btn" id="docsIns">📁 Έγγραφα 72h</button><button class="btn" id="trapsIns">🎯 Παγίδες</button><button class="btn" id="pscIns">🛂 PSC</button><button class="btn" id="manIns">📘 Manuals</button></div>
+    <div class="row" style="margin-top:12px"><button class="btn" id="editIns">✎ Στοιχεία</button><button class="btn" id="docsIns">📁 Έγγραφα 72h</button><button class="btn" id="trapsIns">🎯 Παγίδες</button><button class="btn" id="pscIns">🛂 PSC</button><button class="btn" id="manIns">📘 Manuals</button><button class="btn" id="trnIns">🎓 Training</button></div>
   </section>
 
   <!-- PAGES (traps, mind, crew, drill, docs, fleet) -->
@@ -192,7 +193,7 @@ button{font:inherit;cursor:pointer}
 const DATA=/*DATA*/;
 const X=/*EXTRA*/;const PSC=/*PSC*/;
 const PACKK="risq_pack",PSCK="risq_psc_r",LG=x=>Array.isArray(x)?x[0]:x;
-const ML={fmX:"Audit P/F/N/A ανά κεφάλαιο, stop conditions, 15 No-Go, decision tree, case files, itinerary επιθεωρητή. Κείμενο στα αγγλικά (πρωτότυπο).",caX:"Walk-round A–L πριν τον Καναδά με ★ / CA, rounds T-14 / T-5 / golden hour, pre-arrival, drills. Τα ◆ του πλοίου από το ιδιωτικό ship pack.",open:"Άνοιγμα",packT:"Ship pack (ιδιωτικό)",packX:"Τα ◆ open items του πλοίου (όνομα, πιστοποιητικά, ιστορικό PSC) ΔΕΝ είναι μέσα στη δημόσια εφαρμογή. Εισάγεις το αρχείο .json μία φορά — μένει μόνο σε αυτό το κινητό.",packNo:"Δεν έχει φορτωθεί ship pack.",packIn:"Εισαγωγή ship pack",del:"Αφαίρεση",bad:"Λάθος αρχείο",openIns:"Άνοιξε μια επιθεώρηση για να κρατάς P/F/N/A και ✔.",open2:"Ανοιχτά",shFail:"FAIL & No-Go στο γραφείο",shOpen:"Ανοιχτά στο πλοίο",dec:"Οι 10 πρώτες αποφάσεις",camp:"Καμπάνια 30 ημερών πριν την άφιξη",ladder:"Κλίμακα κλιμάκωσης A/B/C",ev:"Evidence room — 7 φάκελοι",how:"Πώς το ελέγχει ο Superintendent",tree:"Red-flag decision tree",cases:"5 case files: defect → CAPA",itin:"Πρόγραμμα επίσκεψης Superintendent",nogo:"Οι 15 No-Go ερωτήσεις",nogoX:"ΟΧΙ ή «?» = ανοιχτό A-grade θέμα μέχρι να επιβεβαιωθεί.",src:"Πηγές",caRules:"Κανόνες Καναδά & detentions 2025",rounds:"Τα 3 rounds",pre:"Pre-arrival — γραφείο, agent, πλοίο",drills:"Drills πριν την άφιξη",golden:"Χρυσοί κανόνες ημέρας επιθεώρησης"};
+const ML={trX:"44 εκπαιδεύσεις / πιστοποιητικά / familiarization που ζητάει ο inspector, με το κεφάλαιο RISQ. Σε κάθε γραμμή: ✓ Done, ✗ λείπει, N/A + σχόλιο/ημερομηνία. Το → πάει στην ερώτηση.",trRem:"Remarks / ημερομηνία",trMiss:"Λείπει",trAll:"Όλα",trBy:"Verified by",trShM:"Ελλείψεις στο πλοίο",trShA:"Όλη η λίστα",fmX:"Audit P/F/N/A ανά κεφάλαιο, stop conditions, 15 No-Go, decision tree, case files, itinerary επιθεωρητή. Κείμενο στα αγγλικά (πρωτότυπο).",caX:"Walk-round A–L πριν τον Καναδά με ★ / CA, rounds T-14 / T-5 / golden hour, pre-arrival, drills. Τα ◆ του πλοίου από το ιδιωτικό ship pack.",open:"Άνοιγμα",packT:"Ship pack (ιδιωτικό)",packX:"Τα ◆ open items του πλοίου (όνομα, πιστοποιητικά, ιστορικό PSC) ΔΕΝ είναι μέσα στη δημόσια εφαρμογή. Εισάγεις το αρχείο .json μία φορά — μένει μόνο σε αυτό το κινητό.",packNo:"Δεν έχει φορτωθεί ship pack.",packIn:"Εισαγωγή ship pack",del:"Αφαίρεση",bad:"Λάθος αρχείο",openIns:"Άνοιξε μια επιθεώρηση για να κρατάς P/F/N/A και ✔.",open2:"Ανοιχτά",shFail:"FAIL & No-Go στο γραφείο",shOpen:"Ανοιχτά στο πλοίο",dec:"Οι 10 πρώτες αποφάσεις",camp:"Καμπάνια 30 ημερών πριν την άφιξη",ladder:"Κλίμακα κλιμάκωσης A/B/C",ev:"Evidence room — 7 φάκελοι",how:"Πώς το ελέγχει ο Superintendent",tree:"Red-flag decision tree",cases:"5 case files: defect → CAPA",itin:"Πρόγραμμα επίσκεψης Superintendent",nogo:"Οι 15 No-Go ερωτήσεις",nogoX:"ΟΧΙ ή «?» = ανοιχτό A-grade θέμα μέχρι να επιβεβαιωθεί.",src:"Πηγές",caRules:"Κανόνες Καναδά & detentions 2025",rounds:"Τα 3 rounds",pre:"Pre-arrival — γραφείο, agent, πλοίο",drills:"Drills πριν την άφιξη",golden:"Χρυσοί κανόνες ημέρας επιθεώρησης"};
 /*MANJS*/const QM=Object.fromEntries(DATA.q.map(q=>[q.id,q]));const HI=new Set(X.hi);
 const TRAPQ={};X.traps.forEach((t,i)=>t.q.forEach(q=>{(TRAPQ[q]=TRAPQ[q]||[]).push(i+1);}));
 let FLEET=null;try{FLEET=JSON.parse(localStorage.getItem("risq_fleet")||"null");}catch(e){}
@@ -416,10 +417,10 @@ function rValid(ins,fl){const c={L:0,M:0,H:0},sec={};fl.forEach(q=>{const v=sevO
    <p class="note" style="margin:6px 0 0">Η σοβαρότητα κάθε finding αλλάζει μέσα στο finding (Low/Med/High). Default: High στις ερωτήσεις του RightShip high-risk list (4.5, 4.18, 9A.13, 13.33, 4.37, 10.4, 4.11). Πρόβλεψη με βάση το δημοσιευμένο validity matrix· η RightShip κάνει και peer review.</p>`;}
 
 /* ---------- pages ---------- */
-const PGT={traps:"🎯 Οι 10 παγίδες",mind:"🧠 Το μυαλό του inspector",crew:"👷 Briefing πληρώματος",drill:"🎤 Drill συνέντευξης",docs:"📁 Έγγραφα hybrid 72h",psc:"🛂 PSC ανά περιοχή",man:"📘 Manuals",fm:"📘 PSC Field Manual",ca:"🇨🇦 Zero Deficiency Canada",fleet:"⚓ Ιστορικό στόλου"};
+const PGT={traps:"🎯 Οι 10 παγίδες",mind:"🧠 Το μυαλό του inspector",crew:"👷 Briefing πληρώματος",drill:"🎤 Drill συνέντευξης",docs:"📁 Έγγραφα hybrid 72h",psc:"🛂 PSC ανά περιοχή",man:"📘 Manuals",fm:"📘 PSC Field Manual",ca:"🇨🇦 Zero Deficiency Canada",trn:"🎓 Training & Familiarization",fleet:"⚓ Ιστορικό στόλου"};
 function openPage(k,from){page=k;pageFrom=from||(view==="list"?"list":"home");go("page");}
 $$("[data-pg]").forEach(b=>b.onclick=()=>{cur=null;openPage(b.dataset.pg,"list");});
-$("#docsIns").onclick=()=>openPage("docs","home");$("#trapsIns").onclick=()=>openPage("traps","home");$("#pscIns").onclick=()=>openPage("psc","home");$("#manIns").onclick=()=>openPage("man","home");
+$("#docsIns").onclick=()=>openPage("docs","home");$("#trapsIns").onclick=()=>openPage("traps","home");$("#pscIns").onclick=()=>openPage("psc","home");$("#manIns").onclick=()=>openPage("man","home");$("#trnIns").onclick=()=>openPage("trn","home");
 const qref=id=>QM[id]?`<b>${esc(id)}</b>`:"";
 function rPage(){const ins=pageFrom!=="list"?I():null,box=$("#pg");let h="";
   if(page==="traps"){h=`<div class="card note" style="margin-top:0">Από ανάλυση <b>15 RightShip επιθεωρήσεων του στόλου (2023–2026, ~300 findings)</b> + RightShip high-risk list 2025 + Fleet Alerts 09/26, 13/26, 14/26. Στην επιθεώρηση οι ερωτήσεις αυτές έχουν σήμα 🎯.</div>`+
@@ -442,7 +443,7 @@ function rPage(){const ins=pageFrom!=="list"?I():null,box=$("#pg");let h="";
      R.s.map((S,si)=>`<div class="card"><h2 style="margin-top:0">${esc(S.t[0])}</h2>${S.i.map((it,ii)=>{const k=R.id+"_"+si+"_"+ii;return `<label class="chk pchk"><input type="checkbox" data-pc="${k}" ${pc&&pc[k]?"checked":""} ${pc?"":"disabled"}><span style="flex:1">${it[0]!=="*"?`<b>${esc(it[0])}</b> `:""}${esc(it[1])}</span>${ins&&it[0]!=="*"&&QM[it[0]]?`<button class="pgo" data-goq="${it[0]}">→</button>`:""}</label>`;}).join("")}</div>`).join("")+
      `<div class="card note psrc">Ενημέρωση ${esc(PSC.u)} · Πηγές: ${R.src.map(x=>`<a href="${x[1]}" target="_blank" rel="noopener">${esc(x[0])}</a>`).join(" · ")}${ins?"":"<br>Άνοιξε μια επιθεώρηση για να κρατάς ✔."}</div>`;
     page_psc=R;}
-  else if(["man","fm","ca"].includes(page)){h=MANR(page,ins);}
+  else if(["man","fm","ca","trn"].includes(page)){h=MANR(page,ins);}
   else if(page==="fleet"){const n=FLEET?Object.values(FLEET.f).reduce((a,b)=>a+b.length,0):0;
     h=`<div class="card"><h2 style="margin-top:0">⚓ Ιστορικό findings του στόλου</h2>
      <p>Το αρχείο με τα πραγματικά findings των πλοίων μας <b>δεν</b> είναι μέσα στην εφαρμογή, γιατί η σελίδα είναι δημόσια. Το εισάγεις μία φορά από το αρχείο <b>.json</b> και μένει μόνο σε αυτό το κινητό.</p>
@@ -454,7 +455,7 @@ function rPage(){const ins=pageFrom!=="list"?I():null,box=$("#pg");let h="";
   box.innerHTML=h;hdr();
   box.querySelectorAll("[data-goq]").forEach(b=>b.onclick=()=>{const q=QM[b.dataset.goq];area=q.a;aflt="all";go("area");setTimeout(()=>{const e=$(`#qs [data-id="${q.id}"]`);if(e)e.scrollIntoView({block:"center"});},60);});
   box.querySelectorAll(".qa").forEach(e=>e.onclick=()=>e.classList.toggle("open"));
-  if(["man","fm","ca"].includes(page))MANB(page,ins,box);
+  if(["man","fm","ca","trn"].includes(page))MANB(page,ins,box);
   box.querySelectorAll("[data-open]").forEach(b=>{if(!b.onclick)b.onclick=()=>{openPage(b.dataset.open,pageFrom);window.scrollTo(0,0);};});
   if(page==="psc"){const R=page_psc,pc=ins?ins.pc:null;
     box.querySelectorAll("[data-pr]").forEach(b=>b.onclick=()=>{if(ins){ins.pr=b.dataset.pr;save();}try{localStorage.setItem("risq_psc_r",b.dataset.pr);}catch(e){}rPage();window.scrollTo(0,0);});

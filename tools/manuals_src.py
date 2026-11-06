@@ -522,7 +522,57 @@ CA = {
   ["Shipping Federation of Canada — Transport Canada PSC presentation","https://shipfed.ca/wp-content/uploads/pdfs/circular_letters/PortStateControlPresentation-AhmedSewelam.pdf"]]
 }
 
-out = {"u": "2026-11-05", "fm": FM, "ca": CA}
+# 🎓 RightShip Training & Familiarization Master Checklist (RISQ 3.2, bulk) — from George's PDF, Nov 2026
+# item: [no, training, personnel, evidence, [RISQ refs]]  — ref with a dot = question (PDF "Q9.2" = RISQ 9A.2)
+TR = {"t": "RightShip Training & Familiarization Master Checklist", "v": "RISQ 3.2 | Bulk Carrier | Chapter / Section cross-reference",
+ "a": [[1,"Medical First Aid / Medical Care Certificate","Chief Officer & Assistant","Crew File",["2","15"]],
+  [2,"Security Awareness Training","All crew","Mathreex",["12"]],
+  [3,"IMSBC Code Training","All crew","Mathreex",["2","8A"]],
+  [4,"Specific Hatch Cover Inspection and Maintenance","Deck officers & crew","Mathreex",["9A","9A.2"]],
+  [5,"Emergency Hatch Cover Operation Arrangement","All officers","Mathreex",["9A"]],
+  [6,"Ballast Operations","All officers","Company Form",["5"]],
+  [7,"Cyber Security Awareness","All crew","Mathreex",["11","12"]],
+  [8,"Mental Health Help","Top 4","Mathreex",["15"]],
+  [9,"Harassment & Bullying Prevention","All crew","Mathreex",["15"]],
+  [10,"Mooring Operations - Learner Engagement","Deck crew","Mathreex",["10"]],
+  [11,"Line Management Plan","Deck officers","Company Form",["10"]],
+  [12,"Bridge Resource Management (BRM)","Deck officers","Crew File",["3"]],
+  [13,"ECDIS Generic","Deck officers","Crew File",["2","3"]],
+  [14,"ECDIS Type Specific","Deck officers","Crew File",["2.14","3"]],
+  [15,"Ship Handling","Master (<36 months in rank)","Certificate / record",["2.6"]],
+  [16,"Dangerous, Hazardous & Harmful Cargoes (IMDG / HAZMAT)","Officers & ratings","Mathreex",["2","8"]],
+  [17,"Safety Officer Training","Chief Officer & Assistant","Crew File",["4"]],
+  [18,"Enclosed Space Entry and Rescue","All crew","Mathreex",["4"]],
+  [19,"Stop Work Authority (SWA)","All crew","Company Form",["4"]],
+  [20,"Ship Fire-Extinguishing Systems","All crew","Company Form",["4"]],
+  [21,"Davit-Launched Life Rafts","All crew","Company Form",["4"]],
+  [22,"EEBD Use","All crew","Company Form",["4"]],
+  [23,"Pilot Ladder Rigging and Inspection","Deck crew","Mathreex",["4"]],
+  [24,"Helicopter Operations","All crew","Company Form",["4"]],
+  [25,"Personal Protective Equipment (PPE)","All crew","Mathreex",["4","15"]],
+  [26,"Cargo Securing Manual / Operations","Deck crew","Company Form",["8C","14"]],
+  [27,"Self-Unloading System Operation","Deck crew","Company Form / N/A",["8E"]],
+  [28,"Lifting Operations","Deck ratings","Company Form",["9A"]],
+  [29,"Ship Security Officer Certificate","Chief Officer & Assistant","Crew File",["12"]],
+  [30,"ShaPoLi / EPL","All officers","Company Form / N/A",["3","13"]],
+  [31,"Emergency Local Engine Control","Engine officers & crew","Company Form",["13"]],
+  [32,"STS Plan and Operations","All crew","Company Form / N/A",["17"]],
+  [33,"Welding Safety","Fitter","Mathreex",["4"]],
+  [34,"Lockout / Tagout - Hazardous Energy","ETO","Mathreex",["4"]]],
+ "b": [[35,"Radar / ARPA equipment familiarization","Deck officers","Ship-specific record",["3"]],
+  [36,"ECDIS failure and contingency procedures","Deck officers","Drill / familiarization",["3"]],
+  [37,"Bridge equipment and navigation procedures","Deck officers","Familiarization record",["3"]],
+  [38,"Hot work permit and safe working practices","Deck / engine crew","Permit / toolbox talk",["4","4.7"]],
+  [39,"Cargo hold entry and emergency response","Deck crew","Drill / familiarization",["4"]],
+  [40,"Cargo hold ventilation and dew-point / 3-degree rule","Deck officers","Training / ventilation log",["8A"]],
+  [41,"Bunkering and oil spill response","Deck / engine crew","Drill / familiarization",["5","7A"]],
+  [42,"Shipboard crane operation and safety","Operators / deck crew","Competence record",["9A"]],
+  [43,"Engine room critical equipment and emergencies","Engine officers & crew","Drill / familiarization",["13"]],
+  [44,"Onboarding / ship-specific safety familiarization","All joining crew","Induction record",["4"]]],
+ "c": ["Certificates and training records available and current","Crew training and familiarization records verified","Outstanding items and target completion dates identified","N/A items justified and documented"],
+ "note": "Chapter / Section is a topic-based cross-reference to RISQ 3.2, not a statement that each listed item is an independent formal certificate requirement. Verify applicability against vessel equipment, cargo and operations."}
+
+out = {"u": "2026-11-06", "fm": FM, "ca": CA, "tr": TR}
 p = pathlib.Path(__file__).resolve().parent.parent / "risq/manuals.json"
 p.write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
 print("risq/manuals.json", sum(len(c["i"]) for c in FM["ch"]), "FM items,", sum(len(s["i"]) for s in CA["sec"]), "CA items")

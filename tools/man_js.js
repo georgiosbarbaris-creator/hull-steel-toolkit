@@ -7,10 +7,11 @@ function mPFN(k,st,en){const v=st&&st[k]||"";return `<span class="pfn" data-mk="
 function mYN(k,st,en){const v=st&&st[k]||"";return `<span class="pfn" data-mk="${k}">${[["y","YES"],["f","NO"],["u","?"]].map(([x,l])=>`<button class="${v===x?"on "+(x==="y"?"p":x):""}" data-v="${x}" ${en?"":"disabled"}>${l}</button>`).join("")}</span>`;}
 const mDet=(sum,body)=>`<details class="card mdet"><summary>${sum}</summary><div style="margin-top:8px">${body}</div></details>`;
 const mQ=(qs,ins)=>ins&&qs&&qs.length?`<div class="row" style="margin-top:6px">${qs.filter(q=>QM[q]).map(q=>`<button class="pgo" data-goq="${q}">→ ${q}</button>`).join("")}</div>`:"";
-function MANR(pg,ins){const P=manPack();let h="";
+function MANR(pg,ins){if(pg==="trn")return TRR(ins);const P=manPack();let h="";
  if(pg==="man"){
   h=`<div class="card"><h2 style="margin-top:0">📘 ${esc(MAN.fm.t)}</h2><p class="note">${esc(MAN.fm.v)}</p><p>${ML.fmX}</p><button class="btn p" data-open="fm">${ML.open}</button></div>
    <div class="card"><h2 style="margin-top:0">🇨🇦 ${esc(MAN.ca.t)}</h2><p class="note">${esc(MAN.ca.v)}</p><p>${ML.caX}</p><button class="btn p" data-open="ca">${ML.open}</button></div>
+   <div class="card"><h2 style="margin-top:0">🎓 Training & Familiarization</h2><p>${ML.trX}</p><button class="btn p" data-open="trn">${ML.open}</button></div>
    <div class="card"><h2 style="margin-top:0">🔒 ${ML.packT}</h2><p class="note">${ML.packX}</p>${P?`<p>✅ <b>${esc(P.ship)}</b> · ${Object.keys(P.n||{}).length} ◆ · ${esc(P.made||"")}</p>`:`<p class="note">${ML.packNo}</p>`}
    <div class="row"><label class="btn p">📥 ${ML.packIn}<input type="file" id="packIn" accept=".json,application/json" style="display:none"></label>${P?`<button class="btn d" id="packDel">${ML.del}</button>`:""}</div></div>
    ${ins?"":`<p class="note">${ML.openIns}</p>`}`;}
@@ -50,7 +51,7 @@ function MANR(pg,ins){const P=manPack();let h="";
    mDet("⭐ "+ML.golden,`<ol>${C.golden.map(g=>`<li>${esc(LG(g))}</li>`).join("")}</ol>`)+
    mDet("📚 "+ML.src,`<div class="psrc">${C.src.map(s=>`<p><a href="${s[1]}" target="_blank" rel="noopener">${esc(s[0])}</a></p>`).join("")}</div>`);}
  return h;}
-function MANB(pg,ins,box){
+function MANB(pg,ins,box){if(pg==="trn"){TRB(ins,box);return;}
  box.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{if(b.dataset.reg){if(ins){ins.pr=b.dataset.reg;save();}try{localStorage.setItem(PSCK,b.dataset.reg);}catch(e){}}openPage(b.dataset.open,pageFrom);window.scrollTo(0,0);});
  box.querySelectorAll(".pfn button").forEach(b=>b.onclick=e=>{e.preventDefault();if(!ins)return;const k=b.parentNode.dataset.mk,st=ins.mf=ins.mf||{};st[k]=st[k]===b.dataset.v?"":b.dataset.v;save();
   const op=[...box.querySelectorAll("details")].map(d=>d.open),y=window.scrollY;rPage();[...$("#pg").querySelectorAll("details")].forEach((d,i)=>d.open=!!op[i]);window.scrollTo(0,y);});
@@ -66,3 +67,40 @@ function MANB(pg,ins,box){
   MAN.ca.sec.forEach(s=>{const op=s.i.filter(x=>!st[x[0]]);if(op.length)o.push(s.k+" · "+LG(s.t).toUpperCase()+"\n"+op.map(x=>`☐ ${x[0]} ${x[1]?"["+x[1]+"] ":""}${LG([x[2],x[6]])} — ${LG([x[3],x[7]])} (${x[4]})${P&&P.n&&P.n[x[0]]?"\n   ◆ "+P.n[x[0]]:""}`).join("\n"));});
   shareText("Zero Deficiency Canada – open items","ZERO DEFICIENCY CANADA – OPEN ITEMS\n"+(ins.vessel||"")+"\n\n"+(o.join("\n\n")||"All ticked ✔"));};
 }
+
+/* ---------- 🎓 Training & Familiarization checklist (MAN.tr) ---------- */
+let trF="all";
+const trSecQ=sec=>DATA.q.find(q=>q.s===sec)||DATA.q.find(q=>q.s.startsWith(sec)&&/^\d+$/.test(sec));
+function trRef(r,ins){if(r.includes(".")&&QM[r])return ins?`<button class="pgo" style="margin-left:0" data-goq="${r}">→ ${r}</button>`:`<span class="note"><b>${r}</b></span>`;
+ const q=trSecQ(r);return q&&ins?`<button class="pgo" style="margin-left:0" data-gos="${r}">§${r}</button>`:`<span class="note">§${r}${q?"":" (N/A bulk)"}</span>`;}
+function trPFN(k,st,en){const v=st&&st[k]||"";return `<span class="pfn tpfn" data-tk="${k}">${[["p","✓"],["f","✗"],["n","N/A"]].map(([x,l])=>`<button class="${v===x?"on "+x:""}" data-v="${x}" ${en?"":"disabled"}>${l}</button>`).join("")}</span>`;}
+function trCnt(ins){const st=ins&&ins.tt||{},all=[...MAN.tr.a,...MAN.tr.b];let p=0,f=0,n=0;all.forEach(x=>{const v=st[x[0]];if(v==="p")p++;else if(v==="f")f++;else if(v==="n")n++;});return {p,f,n,o:all.length-p-f-n,t:all.length};}
+function TRR(ins){const T=MAN.tr,st=ins?(ins.tt=ins.tt||{}):null,rm=ins?(ins.tm=ins.tm||{}):null,fv=ins?(ins.tv=ins.tv||{}):null,c=trCnt(ins);
+ const show=x=>{const v=st&&st[x[0]]||"";return trF==="all"||(trF==="open"&&!v)||(trF==="f"&&v==="f");};
+ const item=x=>`<div class="mi"><span class="mg" style="background:var(--navy,#1d3a5c)">${x[0]}</span><div style="flex:1;min-width:0"><b>${esc(x[1])}</b><div class="note">👥 ${esc(x[2])} · 📄 ${esc(x[3])}</div>
+   <div class="row" style="margin-top:4px;gap:4px">${x[4].map(r=>trRef(r,ins)).join("")}</div>${ins?`<input class="trm" data-tm="${x[0]}" value="${esc(rm[x[0]]||"")}" placeholder="${ML.trRem}" style="margin-top:6px;width:100%">`:""}</div>${trPFN(x[0],st,!!ins)}</div>`;
+ const sec=(h,l)=>{const v=l.filter(show);return v.length?`<div class="card"><h2 style="margin-top:0">${h}</h2>${v.map(item).join("")}</div>`:"";};
+ return `<div class="card" style="margin-top:0"><h2 style="margin-top:0">🎓 ${esc(T.t)}</h2><p class="note">${esc(T.v)}</p><p>${ML.trX}</p>
+   ${ins?`<p class="note" style="margin:0">Vessel: <b>${esc(ins.vessel||"")}</b> · IMO: ${esc(ins.imo||"-")} · ${esc(ins.date||"")}</p><label style="margin-top:6px">${ML.trBy}<input id="trBy" value="${esc(ins.tvb||ins.by||"")}"></label>
+   <div class="tiles" style="grid-template-columns:repeat(4,1fr);margin-top:8px"><div class="tile"><b style="color:#5b8f6f" id="trP">${c.p}</b><span class="note">✓ Done</span></div><div class="tile"><b style="color:#c0392b" id="trFn">${c.f}</b><span class="note">✗ ${ML.trMiss}</span></div><div class="tile"><b id="trN">${c.n}</b><span class="note">N/A</span></div><div class="tile"><b id="trO">${c.o}</b><span class="note">${ML.open2}</span></div></div>`:`<p class="note">${ML.openIns}</p>`}</div>
+  <div class="pscr">${[["all",ML.trAll],["open",ML.open2],["f","✗ "+ML.trMiss]].map(([k,l])=>`<button class="pchip${trF===k?" on":""}" data-trf="${k}">${l}</button>`).join("")}</div>
+  <div class="row" style="margin-bottom:6px"><button class="btn p" id="trShM">📤 ${ML.trShM}</button><button class="btn" id="trShA">📤 ${ML.trShA}</button></div>
+  ${sec("A. Company training / certification list (34)",T.a)}${sec("B. Additional RISQ familiarization / competence checks",T.b)}
+  <div class="card"><h2 style="margin-top:0">C. Final verification</h2>${T.c.map((x,i)=>`<label class="chk pchk"><input type="checkbox" data-tv="${i}" ${fv&&fv[i]?"checked":""} ${ins?"":"disabled"}><span style="flex:1">${esc(x)}</span></label>`).join("")}</div>
+  <div class="card note">${esc(T.note)}</div>`;}
+function trTxt(ins,onlyOpen){const T=MAN.tr,st=ins&&ins.tt||{},rm=ins&&ins.tm||{},L2={p:"DONE",f:"MISSING",n:"N/A"},o=[];
+ [["A. COMPANY TRAINING / CERTIFICATION LIST",T.a],["B. ADDITIONAL RISQ FAMILIARIZATION / COMPETENCE CHECKS",T.b]].forEach(([h,l])=>{const v=l.filter(x=>!onlyOpen||st[x[0]]!=="p"&&st[x[0]]!=="n");
+  if(v.length)o.push(h+"\n"+v.map(x=>`${st[x[0]]==="p"?"☑":st[x[0]]==="f"?"✗":st[x[0]]==="n"?"–":"☐"} ${x[0]}. ${x[1]} — ${x[2]} — ${x[3]} — RISQ ${x[4].join(" / ")}${st[x[0]]?" ["+L2[st[x[0]]]+"]":""}${rm[x[0]]?"\n   Remarks: "+rm[x[0]]:""}`).join("\n"));});
+ const c=trCnt(ins);return `RIGHTSHIP TRAINING & FAMILIARIZATION – ${onlyOpen?"MISSING / OPEN ITEMS":"MASTER CHECKLIST"}\n${T.v}\nVessel: ${ins&&ins.vessel||"________"}  IMO: ${ins&&ins.imo||"______"}  Date: ${ins&&ins.date||"______"}  Verified by: ${ins&&(ins.tvb||ins.by)||"______"}\nDone ${c.p} · Missing ${c.f} · N/A ${c.n} · Open ${c.o} / ${c.t}\n\n`+(o.join("\n\n")||"All items done ✔")+
+  (onlyOpen?"":"\n\nC. FINAL VERIFICATION\n"+T.c.map((x,i)=>`${ins&&ins.tv&&ins.tv[i]?"☑":"☐"} ${x}`).join("\n"))+"\n\n"+T.note;}
+function TRB(ins,box){
+ box.querySelectorAll("[data-trf]").forEach(b=>b.onclick=()=>{trF=b.dataset.trf;rPage();});
+ box.querySelectorAll(".tpfn button").forEach(b=>b.onclick=e=>{e.preventDefault();if(!ins)return;const sp=b.parentNode,k=sp.dataset.tk,st=ins.tt=ins.tt||{};st[k]=st[k]===b.dataset.v?"":b.dataset.v;save();
+  sp.querySelectorAll("button").forEach(x=>x.className=st[k]===x.dataset.v?"on "+x.dataset.v:"");const c=trCnt(ins);[["trP","p"],["trFn","f"],["trN","n"],["trO","o"]].forEach(([i,f])=>{const e2=document.getElementById(i);if(e2)e2.textContent=c[f];});});
+ box.querySelectorAll("[data-tm]").forEach(i=>i.onchange=()=>{ins.tm[i.dataset.tm]=i.value.trim();save();});
+ box.querySelectorAll("[data-tv]").forEach(c=>c.onchange=()=>{ins.tv[c.dataset.tv]=c.checked;save();});
+ const by=$("#trBy");if(by)by.onchange=()=>{ins.tvb=by.value.trim();save();};
+ box.querySelectorAll("[data-gos]").forEach(b=>b.onclick=e=>{e.preventDefault();const q=trSecQ(b.dataset.gos);if(!q)return;area=q.a;aflt="all";go("area");setTimeout(()=>{const x=$(`#qs [data-id="${q.id}"]`);if(x)x.scrollIntoView({block:"start"});},60);});
+ box.querySelectorAll("[data-goq]").forEach(b=>b.onclick=e=>{e.preventDefault();const q=QM[b.dataset.goq];area=q.a;aflt="all";go("area");setTimeout(()=>{const x=$(`#qs [data-id="${q.id}"]`);if(x)x.scrollIntoView({block:"center"});},60);});
+ const m=$("#trShM");if(m)m.onclick=()=>shareText("RightShip training – missing/open",trTxt(ins,true));
+ const a=$("#trShA");if(a)a.onclick=()=>shareText("RightShip training checklist",trTxt(ins,false));}
