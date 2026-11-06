@@ -60,6 +60,9 @@ canvas{width:100%;background:#0a1522;border-radius:12px;border:1px solid var(--l
 .sunt th{color:var(--mut);font-weight:600;font-size:.85em;padding:4px 2px;position:sticky;top:62px;background:var(--bg)}
 .sunt td{text-align:center;padding:6px 2px;border-bottom:1px solid var(--line)}
 .smh td{text-align:left;background:var(--card);color:var(--yel);font-weight:800;padding:10px 8px;cursor:pointer}.smh.cur td{background:#3a2a10}
+#al{position:fixed;inset:0;z-index:90;background:#b00000;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;gap:6px}
+#al .big{max-width:420px}
+#gbar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:#1d3557;color:#fff;text-align:center;font-weight:700;padding:10px 10px calc(env(safe-area-inset-bottom) + 10px);border-top:2px solid var(--blu)}
 </style></head><body>
 <header><button class="hb" id="bk" onclick="back()" aria-label="Πίσω">◀</button><h1 id="ttl">Επιβίωση 72+</h1>
 <button class="hb" onclick="fz(-1)">A−</button><button class="hb" onclick="fz(1)">A+</button><button class="hb" onclick="go('home')" aria-label="Αρχική">🏠</button></header>
@@ -93,6 +96,9 @@ function render(r){
  if(a==='morse')return morse();
  if(a==='wx')return wx();
  if(a==='sun')return sun();
+ if(a==='tools')return tools();
+ if(a==='near')return tNear(b);
+ if(a==='t')return tool(b);
  home();
 }
 function home(){T('Επιβίωση 72+');
@@ -110,6 +116,8 @@ function home(){T('Επιβίωση 72+');
  <button class="tile" onclick="go('wx')"><span class="e">🌦️</span>Καιρός & Υψόμετρο<small>βαρόμετρο, GPS ύψος</small></button>
  <button class="tile" onclick="go('morse')"><span class="e">📡</span>Morse<small>λέξεις με φως & ήχο</small></button>
  <button class="tile" onclick="go('sun')"><span class="e">🌅</span>Ήλιος<small>ανατολή – δύση, όλο τον χρόνο</small></button>
+ <button class="tile" onclick="go('near')" style="grid-column:1/-1;min-height:80px;background:#3a1014;border-color:var(--red)"><span class="e" style="font-size:1.6em">📍</span>Κοντά μου – χωρίς internet<small>πιο κοντινό νοσοκομείο · φαρμακείο · απινιδωτής · νερό · χώρος συγκέντρωσης</small></button>
+ <button class="tile" onclick="go('tools')" style="grid-column:1/-1;min-height:80px;background:#1d3557;border-color:var(--blu)"><span class="e" style="font-size:1.6em">🧰</span>Εργαλεία κινητού<small>φύλακας πτώσης · check-in · παλμοί · σεισμογράφος · σελήνη · έγγραφα…</small></button>
  <button class="tile" onclick="go('search')" style="grid-column:1/-1;min-height:70px"><span class="e" style="font-size:1.4em">🔎</span>Αναζήτηση</button>
  </div>
  <div class="tip">Δουλεύει χωρίς internet. Τα δεδομένα σου μένουν μόνο σε αυτό το κινητό. <b>A+</b> πάνω δεξιά για μεγαλύτερα γράμματα.</div>
@@ -212,7 +220,7 @@ function sos(){T('SOS');M.innerHTML=`<button class="big grn" onclick="go('morse'
  <div class="tip">Σήμα κινδύνου = <b>3</b> από οτιδήποτε: 3 σφυρίγματα, 3 λάμψεις, 3 φωτιές. Κράτα μπαταρία: χρησιμοποίησε το SOS όταν ακούς ή βλέπεις διασώστες.</div>
  <button class="btn" onclick="go('a/w_signal')">📖 Όλα τα σήματα (εδάφους, χεριών, Morse)</button>`}
 function ovOn(bg,t){const o=$('#ov');o.style.display='flex';o.style.background=bg;$('#ovt').textContent=t;wake(1)}
-function ovOff(){if($('#ov').dataset.mo)return moStop();$('#ov').style.display='none';if(sosT){clearTimeout(sosT);sosT=null}wake(0)}
+function ovOff(){if($('#ov').dataset.mo)return moStop();$('#ov').style.display='none';$('#ov').style.alignItems='';if(sosT){clearTimeout(sosT);sosT=null}if(!grd.on)wake(0)}
 const SOSP=[1,1,1,1,1,3,3,1,3,1,3,3,1,1,1,1,1,7];// on,off pairs in units
 function sosLight(){ovOn('#000','SOS – πάτα για κλείσιμο');const o=$('#ov');let i=0;const u=250;
  const stp=()=>{if($('#ov').style.display==='none')return;const on=i%2===0;o.style.background=on?'#fff':'#000';const d=SOSP[i%SOSP.length]*u;i=(i+1)%SOSP.length;sosT=setTimeout(stp,d)};stp()}
@@ -333,6 +341,276 @@ function sunYear(){const e=$('#syr');if(!e)return;if(LS.g('sunp','Αθήνα')==
   h+=`<tbody><tr class="smh${m===CM?' cur':''}" onclick="sunOpen=sunOpen===${m}?-1:${m};sunYear()"><td colspan="6">${op?'▼':'▶'} ${MON[m]} ${y}</td></tr>`;
   const days=op?[...Array(nd)].map((_,j)=>j+1):[1,15];days.forEach(d=>h+=row(y,m,d,y===Y&&m===CM&&d===CD));h+='</tbody>'}
  e.innerHTML=h+'</table>'}
+
+/* ================= 🧰 PHONE TOOLS ================= */
+const TOOLS=[['near','📍','Κοντά μου – χωρίς internet','νοσοκομείο, φαρμακείο, νερό, απινιδωτής…'],['guard','🛡️','Φύλακας – «Είμαι καλά;»','Πτώση ή ακινησία → συναγερμός + SMS'],['dm','⏰','Χρονόμετρο ελέγχου','«Αν δεν πατήσω ΟΚ μέχρι…»'],['level','📐','Αλφάδι & κλίση','πλαγιά, αυτοκίνητο, σκηνή'],['lightning','⚡','Πόσο μακριά η καταιγίδα','αστραπή → βροντή'],['pulse','❤️','Παλμοί & αναπνοές','κάμερα ή μέτρηση με το χέρι'],['sound','👂','Ηχόμετρο & σφυρίχτρα','για εγκλωβισμένους'],['seismo','📈','Σεισμογράφος','δονήσεις & μετασεισμοί'],['moon','🌙','Σελήνη','φάση, ανατολή, δύση, φως τη νύχτα'],['suncomp','🧭','Ηλιακή πυξίδα','Βορράς από τον ήλιο'],['battery','🔋','Μπαταρία','οικονομία & powerbank'],['docs','📄','Τα έγγραφά μου','φωτογραφίες offline'],['diary','📓','Ημερολόγιο επιβίωσης','σημειώσεις, φωνή, θέση']];
+let TS=[];function toolStop(){TS.forEach(f=>{try{f()}catch(e){}});TS=[]}
+function tools(){T('🧰 Εργαλεία κινητού');M.innerHTML=TOOLS.map(t=>`<button class="row" onclick="go('t/${t[0]}')"><span class="e">${t[1]}</span><span><b>${t[2]}</b><small>${t[3]}</small></span></button>`).join('')+`<div class="tip">Όλα δουλεύουν χωρίς internet. Ό,τι χρησιμοποιεί αισθητήρες θέλει την εφαρμογή <b>ανοιχτή</b> και την οθόνη αναμμένη.</div>`}
+function tool(id){if(id==='near')return go('near');const f={guard:tGuard,dm:tDm,level:tLevel,lightning:tLight,pulse:tPulse,sound:tSound,seismo:tSeismo,moon:tMoon,suncomp:tSunc,battery:tBatt,docs:tDocs,diary:tDiary}[id];f?f():tools()}
+const vib=p=>{try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}};
+async function motionPerm(){if(typeof DeviceMotionEvent!=='undefined'&&typeof DeviceMotionEvent.requestPermission==='function'){try{return(await DeviceMotionEvent.requestPermission())==='granted'}catch(e){return false}}return true}
+async function orientPerm(){if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){try{return(await DeviceOrientationEvent.requestPermission())==='granted'}catch(e){return false}}return true}
+const tnow=t=>hm(t);
+const tdt=t=>new Date(t).toLocaleString('el-GR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'});
+/* last fix (for SMS) */
+function fixNow(cb){if(!navigator.geolocation){cb&&cb(null);return}navigator.geolocation.getCurrentPosition(p=>{const f={lat:p.coords.latitude,lon:p.coords.longitude,acc:p.coords.accuracy,t:Date.now()};LS.s('lastfix',f);cb&&cb(f)},()=>cb&&cb(LS.g('lastfix',null)),{enableHighAccuracy:true,timeout:20000,maximumAge:120000})}
+function emNums(){return(LS.g('me',{}).contacts||'').split('\n').map(c=>(c.match(/[+\d][\d\s]{6,}/)||[''])[0].replace(/\s/g,'')).filter(Boolean)}
+function helpText(why){const me=LS.g('me',{}),f=pos||LS.g('lastfix',null);let t='ΧΡΕΙΑΖΟΜΑΙ ΒΟΗΘΕΙΑ. '+(me.name?me.name+'. ':'')+(why?why+'. ':'');
+ if(f)t+=`Θέση: ${f.lat.toFixed(5)}, ${f.lon.toFixed(5)} (${ddm(f.lat,'N','S')} ${ddm(f.lon,'E','W')}) ±${Math.round(f.acc||0)}m, ${tnow(f.t||Date.now())}. https://maps.google.com/?q=${f.lat.toFixed(5)},${f.lon.toFixed(5)}`;else t+='Θέση άγνωστη.';
+ if(me.blood)t+=' Ομάδα αίματος '+me.blood+'.';if(me.meds)t+=' Φάρμακα: '+me.meds+'.';return t}
+function smsHelp(why){location.href='sms:'+emNums().join(',')+'?&body='+encodeURIComponent(helpText(why))}
+/* full-screen alarm */
+let alT=null;
+function alarmOn(title,sec,why){alarmOff();wake(1);let n=sec;const d=document.createElement('div');d.id='al';document.body.appendChild(d);
+ const draw=()=>{d.innerHTML=n>0?`<div style="font-size:1.6em;font-weight:900">${esc(title)}</div><div style="font-size:5em;font-weight:900">${n}</div><div>Αν δεν πατήσεις, ετοιμάζεται SMS βοήθειας με τη θέση σου.</div><button class="big grn" style="margin-top:20px;font-size:1.6em" onclick="alarmOk()">✅ ΕΙΜΑΙ ΚΑΛΑ</button>`
+  :`<div style="font-size:1.8em;font-weight:900">🆘 ΒΟΗΘΕΙΑ</div><div>${esc(why||title)}</div><button class="big" style="background:#fff;color:#b00" onclick="smsHelp('${esc(why||title)}')">📩 Στείλε SMS με τη θέση μου<small>${emNums().length?'στις επαφές της κάρτας μου':'γράψε επαφές στην «Κάρτα μου»'}</small></button><a class="big" style="background:#000;color:#fff;text-decoration:none" href="tel:112">📞 112</a><button class="big grn" onclick="alarmOk()">✅ Είμαι καλά – σταμάτα</button>`};
+ draw();fixNow();let k=0;alT=setInterval(()=>{k++;beep(k%2?3150:2600,350,1);vib(400);if(k%2===0&&n>0){n--;draw();if(n===0){vib([800,200,800]);setTimeout(()=>{if($('#al'))smsHelp(why||title)},500)}}},500)}
+function alarmOff(){if(alT){clearInterval(alT);alT=null}const d=$('#al');if(d)d.remove()}
+function alarmOk(){alarmOff();grd.last=Date.now();const m=LS.g('dm',null);if(m&&m.fired){LS.s('dm',null)}grdBar()}
+
+/* 1. Guardian */
+const grd={on:false,last:Date.now(),imp:0,pv:null,fx:null};
+function grdMotion(e){const a=e.accelerationIncludingGravity;if(!a||a.x==null)return;const g=Math.hypot(a.x,a.y,a.z),v=[a.x,a.y,a.z];
+ if(grd.pv&&Math.hypot(v[0]-grd.pv[0],v[1]-grd.pv[1],v[2]-grd.pv[2])>0.8)grd.last=Date.now();grd.pv=v;
+ if(LS.g('gfall',1)&&g>27&&!grd.imp&&!$('#al')){grd.imp=Date.now();setTimeout(()=>{if(grd.on&&Date.now()-grd.last>2500&&!$('#al'))alarmOn('Έπεσες;',30,'Πιθανή πτώση/χτύπημα');grd.imp=0},6000)}}
+async function grdStart(){if(!(await motionPerm())){alert('Δεν δόθηκε άδεια για τους αισθητήρες κίνησης.');return}grd.on=true;grd.last=Date.now();window.addEventListener('devicemotion',grdMotion);wake(1);fixNow();
+ grd.fx=setInterval(()=>{fixNow();const m=LS.g('gstill',30);if(m&&Date.now()-grd.last>m*6e4&&!$('#al'))alarmOn('Δεν κουνήθηκες '+m+' λεπτά',30,'Ακίνητος για '+m+' λεπτά')},10000);grdBar();tGuard()}
+function grdStop(){grd.on=false;window.removeEventListener('devicemotion',grdMotion);if(grd.fx)clearInterval(grd.fx);grd.fx=null;grdBar();if(location.hash==='#t/guard')tGuard()}
+function tGuard(){T('🛡️ Φύλακας');const st=LS.g('gstill',30);
+ M.innerHTML=`<div class="box" style="text-align:center"><div style="font-size:3em">${grd.on?'🟢':'⚪'}</div><b>${grd.on?'ΕΝΕΡΓΟΣ':'Ανενεργός'}</b>${grd.on?`<div class="muted">Τελευταία κίνηση: ${tnow(grd.last)}</div>`:''}</div>
+ ${grd.on?`<button class="big red" onclick="grdStop()">⏹ Σταμάτα τον φύλακα</button>`:`<button class="big grn" onclick="grdStart()">▶ Ξεκίνα τον φύλακα</button>`}
+ <div class="box"><label style="display:flex;gap:8px;align-items:center;font-weight:400"><input type="checkbox" style="width:auto;margin:0" ${LS.g('gfall',1)?'checked':''} onchange="LS.s('gfall',this.checked?1:0)"> Ανίχνευση πτώσης / δυνατού χτυπήματος</label>
+ <label>Συναγερμός αν δεν κουνηθώ για:</label><select onchange="LS.s('gstill',+this.value)">${[[0,'Ποτέ'],[5,'5 λεπτά'],[15,'15 λεπτά'],[30,'30 λεπτά'],[60,'1 ώρα'],[120,'2 ώρες']].map(o=>`<option value="${o[0]}" ${o[0]===st?'selected':''}>${o[1]}</option>`).join('')}</select>
+ <button class="btn" onclick="alarmOn('Δοκιμή συναγερμού',10,'Δοκιμή')">🔔 Δοκιμή συναγερμού (10″)</button></div>
+ <div class="box"><b>Πώς δουλεύει</b><div class="li">Αν πέσεις ή χτυπήσεις και μετά μείνεις ακίνητος, ή αν δεν κουνηθείς για τον χρόνο που διάλεξες, το κινητό χτυπάει δυνατά για 30″.</div><div class="li">Αν δεν πατήσεις <b>«Είμαι καλά»</b>, ανοίγει έτοιμο SMS με τη θέση σου, την ομάδα αίματος και τα φάρμακα από την «Κάρτα μου», προς τις επαφές σου. Εσύ ή όποιος σε βρει πατάει «Αποστολή».</div>
+ <div class="warn" style="font-weight:400">Κράτα την εφαρμογή <b>ανοιχτή</b>, το κινητό στην τσέπη ή στη ζώνη και φορτισμένο. Το iPhone δεν αφήνει web εφαρμογές να στείλουν SMS μόνες τους ή να δουλεύουν κλειστές. Για αυτόματη κλήση, άνοιξε επίσης στο iPhone <b>Ρυθμίσεις → SOS έκτακτης ανάγκης</b> και <b>Ανίχνευση σύγκρουσης / πτώσης</b> (Apple Watch).</div></div>`}
+function grdBar(){let b=$('#gbar');const m=LS.g('dm',null);const txt=[grd.on?'🛡️ Φύλακας ενεργός':'',m&&!m.fired?'⏰ έλεγχος '+tnow(m.due):''].filter(Boolean).join(' · ');
+ if(!txt){if(b)b.remove();return}if(!b){b=document.createElement('div');b.id='gbar';document.body.appendChild(b)}b.innerHTML=`<span onclick="go('${grd.on?'t/guard':'t/dm'}')">${txt}</span>`}
+
+/* 2. Dead-man check-in timer */
+setInterval(()=>{const m=LS.g('dm',null);if(m&&!m.fired&&Date.now()>=m.due){m.fired=1;LS.s('dm',m);grdBar();alarmOn('⏰ Δεν έκανες check-in',60,'Δεν απάντησα στο χρονόμετρο ελέγχου ('+(m.note||'')+')')}},10000);
+function dmSet(){const h=+$('#dmh').value,tm=$('#dmt').value;let due;if(tm){const [a,b]=tm.split(':').map(Number),d=new Date();d.setHours(a,b,0,0);if(d<Date.now())d.setDate(d.getDate()+1);due=+d}else due=Date.now()+h*36e5;
+ LS.s('dm',{due,note:$('#dmn').value.trim(),set:Date.now()});grdBar();tDm()}
+function dmOk(){LS.s('dm',null);grdBar();tDm()}
+function dmAdd(m){const x=LS.g('dm',null);if(x){x.due+=m*6e4;LS.s('dm',x);grdBar();tDm()}}
+function dmPlan(){const m=LS.g('dm',null),me=LS.g('me',{}),f=pos||LS.g('lastfix',null);const t=`Φεύγω: ${m&&m.note?m.note:'(διαδρομή)'}. Αν δεν σου στείλω μήνυμα μέχρι ${m?tdt(m.due):'…'}, κάλεσέ με και αν δεν απαντώ κάλεσε 112. ${f?`Τελευταία θέση: https://maps.google.com/?q=${f.lat.toFixed(5)},${f.lon.toFixed(5)}`:''} ${me.name||''}`;
+ if(navigator.share)navigator.share({text:t}).catch(()=>{});else location.href='sms:?&body='+encodeURIComponent(t)}
+function dmIcs(){const m=LS.g('dm',null);if(!m)return;const z=t=>new Date(t).toISOString().replace(/[-:]/g,'').slice(0,15)+'Z';
+ const ics=`BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Epiviosi72//EL\r\nBEGIN:VEVENT\r\nUID:${m.set}@sv\r\nDTSTAMP:${z(Date.now())}\r\nDTSTART:${z(m.due)}\r\nDTEND:${z(m.due+9e5)}\r\nSUMMARY:⏰ Check-in επιβίωσης\r\nDESCRIPTION:${(m.note||'').replace(/[,;\n]/g,' ')}\r\nBEGIN:VALARM\r\nTRIGGER:-PT15M\r\nACTION:DISPLAY\r\nDESCRIPTION:Check-in σε 15 λεπτά\r\nEND:VALARM\r\nBEGIN:VALARM\r\nTRIGGER:PT0M\r\nACTION:DISPLAY\r\nDESCRIPTION:Κάνε check-in τώρα\r\nEND:VALARM\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n`;
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([ics],{type:'text/calendar'}));a.download='checkin.ics';document.body.appendChild(a);a.click();a.remove()}
+function tDm(){T('⏰ Χρονόμετρο ελέγχου');const m=LS.g('dm',null);
+ if(m&&!m.fired){const left=m.due-Date.now();M.innerHTML=`<div class="box" style="text-align:center"><div class="muted">Check-in μέχρι</div><div class="hd">${tnow(m.due)}</div><div>σε <b id="dml">${dur(Math.max(0,left))}</b></div>${m.note?`<div class="muted">${esc(m.note)}</div>`:''}</div>
+  <button class="big grn" onclick="dmOk()">✅ Είμαι καλά – σταμάτα</button><div class="tools"><button class="btn" onclick="dmAdd(30)">+30′</button><button class="btn" onclick="dmAdd(60)">+1 ώρα</button><button class="btn" onclick="dmAdd(120)">+2 ώρες</button></div>
+  <button class="big blu" onclick="dmPlan()">📤 Στείλε το σχέδιο σε κάποιον<small>Δουλεύει ακόμα κι αν κλείσει το κινητό</small></button><button class="btn" onclick="dmIcs()">📅 Βάλε υπενθύμιση στο ημερολόγιο</button>`;
+  const iv=setInterval(()=>{const e=$('#dml');if(e)e.textContent=dur(Math.max(0,m.due-Date.now()))},15000);TS.push(()=>clearInterval(iv));return}
+ M.innerHTML=`<div class="box"><b>Πότε πρέπει να έχεις πατήσει «Είμαι καλά»;</b><label>Σε πόσες ώρες</label><select id="dmh">${[0.5,1,2,3,4,6,8,12,24].map(h=>`<option value="${h}" ${h===3?'selected':''}>${h<1?'30 λεπτά':h+(h===1?' ώρα':' ώρες')}</option>`).join('')}</select>
+ <label>ή ακριβής ώρα</label><input id="dmt" type="time"><label>Πού πάω / τι κάνω</label><input id="dmn" placeholder="π.χ. Ανάβαση Πάρνηθα από Μόλα, 2 άτομα, μπλε Land Cruiser">
+ <button class="big org" onclick="dmSet()">▶ Ξεκίνα</button></div>
+ <div class="box"><div class="li">Όταν λήξει ο χρόνος και η εφαρμογή είναι ανοιχτή, χτυπάει συναγερμός για 60″ και μετά ανοίγει SMS βοήθειας με τη θέση σου.</div><div class="li"><b>Το πιο σίγουρο:</b> πριν φύγεις, πάτα «📤 Στείλε το σχέδιο» σε έναν δικό σου. Αν δεν του στείλεις μέχρι την ώρα αυτή, ξέρει ότι πρέπει να ψάξει και πού.</div><div class="li">Το «📅 Ημερολόγιο» βάζει υπενθύμιση στο κινητό που χτυπάει ακόμα κι αν η εφαρμογή είναι κλειστή.</div></div>`}
+
+/* 3. Level & inclinometer */
+let lvZ=LS.g('lvz',[0,0]),lvLast=[0,0];
+function lvOr(e){if(e.beta==null)return;const b=e.beta-lvZ[0],g=e.gamma-lvZ[1];lvLast=[e.beta,e.gamma];const tot=Math.acos(Math.cos(b*SR)*Math.cos(g*SR))/SR,el=$('#lvb');if(!el)return;
+ const k=Math.max(-1,Math.min(1,g/30)),j=Math.max(-1,Math.min(1,b/30));el.style.transform=`translate(${k*95}px,${j*95}px)`;el.style.background=tot<0.5?'#2a9d8f':tot<2?'#fcbf49':'#d62828';
+ $('#lvt').textContent=tot.toFixed(1)+'°';$('#lvp').textContent=Math.round(Math.tan(tot*SR)*100)+' %';$('#lvx').innerHTML=`Μπρος–πίσω <b>${b.toFixed(1)}°</b> · Πλάγια <b>${g.toFixed(1)}°</b>`;
+ let w='';if(tot>=28&&tot<=45)w='⚠️ 30–45°: ζώνη χιονοστιβάδας σε χιόνι. Απόφυγε πλαγιές με χιόνι στη γωνία αυτή.';else if(tot>45)w='Πολύ απότομο – μόνο με σκοινί/αναρρίχηση.';else if(Math.abs(g)>25)w='Πλευρική κλίση >25°: τα περισσότερα 4×4 κινδυνεύουν να ανατραπούν.';const W=$('#lvw');W.textContent=w;W.style.display=w?'':'none'}
+async function tLevel(){T('📐 Αλφάδι & κλίση');M.innerHTML=`<div style="position:relative;width:240px;height:240px;margin:10px auto;border-radius:50%;background:#0a1522;border:2px solid var(--line)"><div style="position:absolute;left:50%;top:50%;width:60px;height:60px;margin:-30px;border:2px dashed var(--mut);border-radius:50%"></div><div id="lvb" style="position:absolute;left:50%;top:50%;width:46px;height:46px;margin:-23px;border-radius:50%;background:#2a9d8f;transition:transform .1s"></div></div>
+ <div class="hd" id="lvt">—</div><div style="text-align:center" class="muted"><span id="lvp"></span></div><div style="text-align:center" id="lvx">Πάτα «Ενεργοποίηση»</div><div class="warn" id="lvw" style="font-weight:400;display:none"></div>
+ <div class="tools" style="justify-content:center"><button class="btn p" onclick="lvGo()">▶ Ενεργοποίηση</button><button class="btn" onclick="lvZ=lvLast.slice();LS.s('lvz',lvZ)">⊙ Μηδένισε εδώ</button><button class="btn" onclick="lvZ=[0,0];LS.s('lvz',lvZ)">↺ Εργοστασιακό</button></div>
+ <div class="box"><div class="li"><b>Κλίση πλαγιάς:</b> ακούμπα το κινητό στο έδαφος (ή πάνω σε μπαστούνι στο έδαφος), με την πάνω άκρη προς την ανηφόρα.</div><div class="li"><b>Αυτοκίνητο:</b> ακούμπα το επίπεδα στο πάτωμα ή στο ταμπλό. «Πλάγια» = side slope, «Μπρος–πίσω» = ανηφόρα. Πάτα «Μηδένισε» σε επίπεδο έδαφος πρώτα.</div><div class="li"><b>Σκηνή/κρεβάτι:</b> το κεφάλι λίγο πιο ψηλά (1–3°) από τα πόδια.</div><div class="tip">100 % = 45°. 30 % ≈ 17°. Τα περισσότερα αυτοκίνητα: όριο πλευρικής κλίσης ~30–35° στα χαρτιά, στην πράξη μην περνάς τις 20–25°.</div></div>`;
+ if(!$('#lvb'))return}
+async function lvGo(){if(!(await orientPerm())){alert('Δεν δόθηκε άδεια.');return}window.addEventListener('deviceorientation',lvOr,true);TS.push(()=>window.removeEventListener('deviceorientation',lvOr,true));wake(1)}
+
+/* 4. Lightning distance */
+let ltF=null;
+function tLight(){T('⚡ Απόσταση καταιγίδας');const L=LS.g('lt',[]).filter(x=>Date.now()-x.t<3*36e5),last=L[L.length-1];let tr='';
+ if(L.length>1){const d=L[L.length-1].km-L[L.length-2].km;tr=d<-0.5?'🔴 ΠΛΗΣΙΑΖΕΙ':d>0.5?'🟢 απομακρύνεται':'🟡 σταθερή απόσταση'}
+ const safe=last?last.t+30*6e4:0;
+ M.innerHTML=`<button class="big" style="background:#fcbf49;color:#000" onclick="ltF=Date.now();$('#ltm').textContent='Μετράω… πάτα στη ΒΡΟΝΤΗ';vib(50)">⚡ ΛΑΜΨΗ – πάτα μόλις δεις αστραπή</button><button class="big blu" onclick="ltT()">🔊 ΒΡΟΝΤΗ – πάτα μόλις ακούσεις</button><div class="muted" id="ltm" style="text-align:center"></div>
+ ${last?`<div class="box" style="text-align:center"><div class="hd">${last.km.toFixed(1)} km</div><div>${last.s.toFixed(1)}″ · ${tnow(last.t)} ${tr?'· <b>'+tr+'</b>':''}</div>${last.s<30?`<div class="warn">Κάτω από 10 km (30″): ΜΠΕΣ ΜΕΣΑ ΤΩΡΑ – σε κτίριο ή κλειστό αυτοκίνητο.</div>`:''}<div class="muted">Βγες έξω μετά τις <b>${tnow(safe)}</b> (30′ χωρίς βροντή).</div></div>`:''}
+ ${L.length?L.slice().reverse().map(x=>`<div class="wp"><b>${tnow(x.t)}</b><span class="mono">${x.s.toFixed(1)}″ → ${x.km.toFixed(1)} km</span></div>`).join('')+`<button class="btn" onclick="LS.s('lt',[]);tLight()">🗑 Καθαρισμός</button>`:''}
+ <div class="box"><b>Κανόνας 30/30</b><div class="li">Ο ήχος κάνει ~3 δευτερόλεπτα το χιλιόμετρο. Μέτρα από τη λάμψη μέχρι τη βροντή.</div><div class="li">Κάτω από <b>30″</b> (10 km): κινδυνεύεις – μπες μέσα.</div><div class="li">Περίμενε <b>30 λεπτά</b> μετά την τελευταία βροντή.</div><div class="li">Χωρίς καταφύγιο: μακριά από κορυφές, μεμονωμένα δέντρα, νερό και μέταλλα. Κάτσε στις φτέρνες, πόδια ενωμένα, πάνω σε υπόστρωμα. Η ομάδα σκορπίζει 15 m.</div></div>`}
+function ltT(){if(!ltF){alert('Πρώτα πάτα ΛΑΜΨΗ όταν δεις την αστραπή.');return}const s=(Date.now()-ltF)/1000;ltF=null;if(s>120){alert('Πάνω από 2 λεπτά – μάλλον ξέχασες. Ξαναδοκίμασε.');return}const L=LS.g('lt',[]);L.push({t:Date.now(),s,km:s*0.343});while(L.length>30)L.shift();LS.s('lt',L);vib(100);tLight()}
+
+/* 5. Pulse */
+let pTap=[];
+function tPulse(){T('❤️ Παλμοί & αναπνοές');pTap=[];
+ M.innerHTML=`<div class="box" style="text-align:center"><b>👆 Πάτα σε κάθε χτύπο</b><div class="muted">Πιάσε σφυγμό στον καρπό ή στον λαιμό και πάτα το κουμπί σε κάθε χτύπο.</div><button class="metro" id="ptb" onclick="pBeat()" style="border:0;color:#fff">❤️</button><div class="hd" id="ptv">—</div><div class="muted" id="pts">παλμοί/λεπτό</div><button class="btn" onclick="pTap=[];$('#ptv').textContent='—'">↺</button></div>
+ <div class="box"><b>📷 Με την κάμερα</b><div class="muted">Βάλε το δάχτυλο να σκεπάζει την πίσω κάμερα, ακίνητο, για 20″. Στο iPhone ο φακός δεν ανάβει από εδώ: κράτα το δάχτυλο κάτω από δυνατό φως (λάμπα ή φακό άλλου κινητού). Στο Android ανάβει μόνος του.</div>
+ <button class="btn p" onclick="pCam()">▶ Μέτρηση με κάμερα</button><video id="pv" playsinline muted style="width:1px;height:1px;opacity:0;position:absolute"></video><canvas id="pc" width="300" height="80" style="margin-top:8px"></canvas><div class="hd" id="pcv" style="font-size:2em">—</div><div class="muted" id="pcs" style="text-align:center"></div></div>
+ <div class="box"><b>⏱️ Αναπνοές</b><div class="muted">Μέτρα πόσες φορές ανεβαίνει το στήθος σε 30″ (μην το πεις στον ασθενή – αλλάζει την αναπνοή του).</div><button class="btn p" onclick="pBr()" id="pbr">▶ Έναρξη 30″</button><div id="pbo"></div></div>
+ <div class="box"><b>Φυσιολογικά (σε ηρεμία)</b><div class="li">Ενήλικας: σφυγμός <b>60–100</b>, αναπνοές <b>12–20</b>/λεπτό.</div><div class="li">Παιδί 1–10 ετών: σφυγμός 70–130, αναπνοές 20–30.</div><div class="li">Βρέφος: σφυγμός 100–160, αναπνοές 30–60.</div><div class="warn">Σφυγμός >120 ή <50 με ζάλη, ιδρώτα, πόνο στο στήθος ή λιποθυμία, ή αναπνοές >30 ή <8: κάλεσε 112. Αν δεν αναπνέει φυσιολογικά: ΚΑΡΠΑ.</div><button class="btn" onclick="go('cpr')">❤️ ΚΑΡΠΑ με μετρονόμο</button></div>`}
+function pBeat(){const t=Date.now();if(pTap.length&&t-pTap[pTap.length-1]>2500)pTap=[];pTap.push(t);if(pTap.length>12)pTap.shift();vib(30);const b=$('#ptb');b.classList.add('b');setTimeout(()=>b.classList.remove('b'),90);
+ if(pTap.length>=4){const bpm=60000*(pTap.length-1)/(pTap[pTap.length-1]-pTap[0]);$('#ptv').textContent=Math.round(bpm);$('#pts').textContent='παλμοί/λεπτό ('+pTap.length+' χτύποι)'}}
+function pBr(){const b=$('#pbr');b.disabled=true;let n=30;b.textContent=n+'″';const iv=setInterval(()=>{n--;b.textContent=n+'″';if(n<=0){clearInterval(iv);beep(1200,400,.6,'sine');vib(300);b.disabled=false;b.textContent='▶ Έναρξη 30″';$('#pbo').innerHTML=`<label>Πόσες μέτρησες;</label><input type="number" inputmode="numeric" oninput="this.nextElementSibling.textContent=this.value?'= '+this.value*2+' αναπνοές/λεπτό':''"><div class="hd" style="font-size:1.6em"></div>`}},1000);TS.push(()=>clearInterval(iv));beep(1200,200,.6,'sine')}
+async function pCam(){let st;try{st=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:{ideal:320},height:{ideal:240}},audio:false})}catch(e){alert('Η κάμερα δεν άνοιξε (άδεια;).');return}
+ const tr=st.getVideoTracks()[0];try{await tr.applyConstraints({advanced:[{torch:true}]})}catch(e){}
+ const v=$('#pv');v.srcObject=st;await v.play().catch(()=>{});const cv=document.createElement('canvas');cv.width=40;cv.height=30;const cx=cv.getContext('2d',{willReadFrequently:true}),P=$('#pc').getContext('2d');
+ const S=[],t0=performance.now();let raf,done=false;const stop=()=>{done=true;cancelAnimationFrame(raf);st.getTracks().forEach(t=>t.stop())};TS.push(stop);
+ const step=()=>{if(done)return;cx.drawImage(v,0,0,40,30);const d=cx.getImageData(0,0,40,30).data;let r=0,g=0;for(let i=0;i<d.length;i+=4){r+=d[i];g+=d[i+1]}r/=1200;g/=1200;const t=(performance.now()-t0)/1000;
+  const ok=r>90&&r>g*1.6;S.push([t,r]);$('#pcs').textContent=ok?`Μετράω… ${Math.max(0,20-t).toFixed(0)}″`:'⚠️ Σκέπασε καλά την κάμερα με το δάχτυλο, με φως από πίσω';
+  const w=S.filter(x=>x[0]>t-6);if(w.length>5){const mn=Math.min(...w.map(x=>x[1])),mx=Math.max(...w.map(x=>x[1]))||1;P.clearRect(0,0,300,80);P.strokeStyle='#d62828';P.lineWidth=2;P.beginPath();w.forEach((x,i)=>{const X=(x[0]-(t-6))/6*300,Y=75-(x[1]-mn)/(mx-mn+0.01)*70;i?P.lineTo(X,Y):P.moveTo(X,Y)});P.stroke()}
+  if(t>8){const b=pBpm(S.filter(x=>x[0]>2));if(b)$('#pcv').textContent=b}
+  if(t>=22){stop();const b=pBpm(S.filter(x=>x[0]>2));$('#pcv').textContent=b||'—';$('#pcs').textContent=b?'Αποτέλεσμα (ενδεικτικό, ±10). Επιβεβαίωσε με το χέρι.':'Δεν βγήκε καθαρό σήμα. Δοκίμασε με περισσότερο φως ή μέτρα με το χέρι.';beep(1000,200,.5,'sine');return}
+  raf=requestAnimationFrame(step)};raf=requestAnimationFrame(step)}
+function pBpm(S){if(S.length<60)return 0;const sm=S.map((x,i)=>{let a=0,n=0;for(let j=Math.max(0,i-2);j<=Math.min(S.length-1,i+2);j++){a+=S[j][1];n++}return[x[0],a/n]});
+ const hp=sm.map((x,i)=>{let a=0,n=0;for(let j=i;j>=0&&sm[j][0]>x[0]-0.6;j--){a+=sm[j][1];n++}for(let j=i+1;j<sm.length&&sm[j][0]<x[0]+0.6;j++){a+=sm[j][1];n++}return[x[0],x[1]-a/n]});
+ const pk=[];for(let i=1;i<hp.length-1;i++)if(hp[i][1]>0&&hp[i][1]>=hp[i-1][1]&&hp[i][1]>hp[i+1][1]&&(!pk.length||hp[i][0]-pk[pk.length-1]>0.33))pk.push(hp[i][0]);
+ if(pk.length<5)return 0;const iv=[];for(let i=1;i<pk.length;i++)iv.push(pk[i]-pk[i-1]);iv.sort((a,b)=>a-b);const med=iv[iv.length>>1],b=Math.round(60/med);return b>35&&b<220?b:0}
+
+/* 6. Sound meter & whistle detector */
+async function tSound(){T('👂 Ηχόμετρο & σφυρίχτρα');M.innerHTML=`<button class="big org" id="snb" onclick="snGo()">🎤 Ξεκίνα να ακούς</button>
+ <div class="box" style="text-align:center"><div class="hd" id="snd">—</div><div class="muted">ένταση (περίπου dB)</div><div class="bar"><i id="snbar" style="width:0"></i></div><div id="snf" class="muted"></div><div id="snh" style="font-size:1.4em;font-weight:900;min-height:1.5em"></div></div>
+ <div id="snl"></div>
+ <div class="box"><b>Για τι το χρησιμοποιείς</b><div class="li"><b>Ψάχνεις εγκλωβισμένους:</b> φώναξε «Ακούει κανείς; Χτύπα 3 φορές!», μετά ΗΣΥΧΙΑ όλοι και άφησε το κινητό να ακούει. Καταγράφει σφυρίχτρες και χτυπήματα με την ώρα.</div><div class="li"><b>Είσαι εγκλωβισμένος:</b> μη φωνάζεις συνέχεια (σκόνη, κούραση). Χτύπα σε σωλήνα ή τοίχο 3 φορές ή σφύρα. Η σφυρίχτρα SOS της εφαρμογής ακούγεται μακριά.</div>
+ <button class="btn" onclick="go('sos')">🔦 SOS – σφυρίχτρα</button><button class="btn" onclick="[0,700,1400].forEach(d=>setTimeout(()=>beep(3150,450,1),d))">📣 3 σφυριγμοί</button></div>`}
+async function snGo(){let st;try{st=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}})}catch(e){alert('Το μικρόφωνο δεν άνοιξε (άδεια;).');return}
+ const c=ac(),src=c.createMediaStreamSource(st),an=c.createAnalyser();an.fftSize=2048;src.connect(an);const td=new Float32Array(an.fftSize),fd=new Float32Array(an.frequencyBinCount),bw=c.sampleRate/an.fftSize;
+ let floor=-60,wh=0,lastEv=0,iv;const log=[];const stop=()=>{clearInterval(iv);st.getTracks().forEach(t=>t.stop());try{src.disconnect()}catch(e){}};TS.push(stop);$('#snb').style.display='none';wake(1);
+ const add=k=>{if(Date.now()-lastEv<1500)return;lastEv=Date.now();log.unshift([Date.now(),k]);vib(200);$('#snl').innerHTML='<h3>Ακούστηκαν</h3>'+log.slice(0,20).map(x=>`<div class="wp"><b>${new Date(x[0]).toLocaleTimeString('el-GR',{hourCycle:'h23'})}</b><span>${x[1]}</span></div>`).join('')};
+ iv=setInterval(()=>{an.getFloatTimeDomainData(td);let s=0;for(const x of td)s+=x*x;const db=20*Math.log10(Math.sqrt(s/td.length)+1e-9),spl=Math.max(20,Math.round(db+94));
+  $('#snd').textContent=spl;$('#snbar').style.width=Math.min(100,(spl-20)/1)+'%';
+  an.getFloatFrequencyData(fd);let pk=-200,pi=0,avg=0,n=0;for(let i=Math.floor(300/bw);i<Math.floor(8000/bw);i++){avg+=fd[i];n++;if(fd[i]>pk&&i*bw>1500&&i*bw<5000){pk=fd[i];pi=i}}avg/=n;const hz=Math.round(pi*bw);
+  $('#snf').textContent=db>-55?'συχνότητα κορυφής ~'+hz+' Hz':'';
+  if(pk-avg>28&&db>-50){wh++;if(wh>=3){$('#snh').textContent='🔔 ΣΦΥΡΙΧΤΡΑ!';add('🔔 Σφυρίχτρα ~'+hz+' Hz')}}else{wh=0}
+  if(db>floor+18&&db>-45){$('#snh').textContent='👊 Χτύπος / φωνή';add('👊 Χτύπος / δυνατός ήχος')}
+  if(Date.now()-lastEv>2000)$('#snh').textContent='';floor=floor*0.97+db*0.03},100)}
+
+/* 7. Seismograph */
+async function tSeismo(){T('📈 Σεισμογράφος');M.innerHTML=`<button class="big org" id="sgb" onclick="sgGo()">▶ Ξεκίνα την καταγραφή</button><canvas id="sgc" width="600" height="200"></canvas>
+ <div class="box" style="text-align:center"><div>Τώρα <b id="sgn">—</b> · Μέγιστο <b id="sgm">—</b> m/s²</div><label>Ευαισθησία – καταγραφή από</label><select id="sgt">${[[0.05,'0,05 (πολύ ευαίσθητο)'],[0.15,'0,15'],[0.4,'0,4'],[1,'1,0 (μόνο δυνατά)']].map(o=>`<option value="${o[0]}" ${o[0]===0.15?'selected':''}>${o[1]} m/s²</option>`).join('')}</select></div><div id="sgl"></div>
+ <div class="box"><div class="li">Ακούμπα το κινητό <b>επίπεδα στο πάτωμα</b> (όχι σε τραπέζι ή κρεβάτι), με την οθόνη πάνω, και μην περπατάς δίπλα.</div><div class="li">Καταγράφει κάθε δόνηση πάνω από το όριο με ώρα και ένταση: βλέπεις αν οι μετασεισμοί λιγοστεύουν.</div><div class="warn" style="font-weight:400">Δεν είναι επιστημονικός σεισμογράφος και δεν δίνει Ρίχτερ ούτε προειδοποίηση. Για επίσημα στοιχεία: Γεωδυναμικό Ινστιτούτο (ΕΑΑ). Αν ο σεισμός είναι δυνατός: Σκύψε – Κάλυψε – Κρατήσου.</div><button class="btn" onclick="go('a/quake')">🏚️ Τι κάνω στον σεισμό</button></div>`}
+async function sgGo(){if(!(await motionPerm())){alert('Δεν δόθηκε άδεια για τους αισθητήρες κίνησης.');return}$('#sgb').style.display='none';wake(1);
+ const C=$('#sgc').getContext('2d'),buf=[],ev=[];let mx=0,g=null,cur=null,lastT=0;
+ const on=e=>{let a=e.acceleration,v;if(a&&a.x!=null)v=Math.hypot(a.x,a.y,a.z);else{const b=e.accelerationIncludingGravity;if(!b||b.x==null)return;if(!g)g=[b.x,b.y,b.z];g=g.map((x,i)=>x*0.95+[b.x,b.y,b.z][i]*0.05);v=Math.hypot(b.x-g[0],b.y-g[1],b.z-g[2])}
+  buf.push(v);if(buf.length>600)buf.shift();mx=Math.max(mx,v);const th=+$('#sgt').value,now=Date.now();
+  if(v>th){if(!cur||now-lastT>3000){cur={t:now,p:v};ev.unshift(cur);if(ev.length>50)ev.pop();vib(100)}cur.p=Math.max(cur.p,v);lastT=now}};
+ window.addEventListener('devicemotion',on);const iv=setInterval(()=>{if(!$('#sgc'))return;C.clearRect(0,0,600,200);C.strokeStyle='#2a4060';C.beginPath();C.moveTo(0,100);C.lineTo(600,100);C.stroke();
+  const sc=Math.max(0.3,...buf)*1.1;C.strokeStyle='#fcbf49';C.lineWidth=2;C.beginPath();buf.forEach((v,i)=>{const x=i/600*600,y=100-((i%2?1:-1)*v/sc)*95;i?C.lineTo(x,y):C.moveTo(x,y)});C.stroke();
+  $('#sgn').textContent=(buf[buf.length-1]||0).toFixed(2);$('#sgm').textContent=mx.toFixed(2);
+  $('#sgl').innerHTML=ev.length?'<h3>Δονήσεις</h3>'+ev.slice(0,25).map(x=>`<div class="wp"><b>${new Date(x.t).toLocaleTimeString('el-GR',{hourCycle:'h23'})}</b><span class="mono">${x.p.toFixed(2)} m/s² ${x.p>2?'🔴':x.p>0.5?'🟠':'🟢'}</span></div>`).join(''):''},200);
+ TS.push(()=>{window.removeEventListener('devicemotion',on);clearInterval(iv)})}
+
+/* 8. Moon (suncalc moon formulas) */
+const toD=ms=>ms/864e5-0.5+2440588-2451545,OB=SR*23.4397;
+const raF=(l,b)=>Math.atan2(Math.sin(l)*Math.cos(OB)-Math.tan(b)*Math.sin(OB),Math.cos(l)),deF=(l,b)=>Math.asin(Math.sin(b)*Math.cos(OB)+Math.cos(b)*Math.sin(OB)*Math.sin(l));
+function sunC(d){const M=SR*(357.5291+0.98560028*d),L=M+SR*(1.9148*Math.sin(M)+0.02*Math.sin(2*M)+0.0003*Math.sin(3*M))+SR*102.9372+Math.PI;return{dec:deF(L,0),ra:raF(L,0)}}
+function moonC(d){const L=SR*(218.316+13.176396*d),M=SR*(134.963+13.064993*d),F=SR*(93.272+13.22935*d),l=L+SR*6.289*Math.sin(M),b=SR*5.128*Math.sin(F);return{ra:raF(l,b),dec:deF(l,b),dist:385001-20905*Math.cos(M)}}
+function bodyPos(ms,lat,lon,moon){const lw=SR*-lon,ph=SR*lat,d=toD(ms),c=moon?moonC(d):sunC(d),H=SR*(280.16+360.9856235*d)-lw-c.ra;
+ let h=Math.asin(Math.sin(ph)*Math.sin(c.dec)+Math.cos(ph)*Math.cos(c.dec)*Math.cos(H));if(moon){const hh=Math.max(0,h);h+=0.0002967/Math.tan(hh+0.00312536/(hh+0.08901179))}
+ const az=Math.atan2(Math.sin(H),Math.cos(H)*Math.sin(ph)-Math.tan(c.dec)*Math.cos(ph));return{alt:h/SR,az:(az/SR+180+360)%360}}
+function moonIll(ms){const d=toD(ms),s=sunC(d),m=moonC(d),sd=149598000,phi=Math.acos(Math.sin(s.dec)*Math.sin(m.dec)+Math.cos(s.dec)*Math.cos(m.dec)*Math.cos(s.ra-m.ra)),inc=Math.atan2(sd*Math.sin(phi),m.dist-sd*Math.cos(phi)),
+ an=Math.atan2(Math.cos(s.dec)*Math.sin(s.ra-m.ra),Math.sin(s.dec)*Math.cos(m.dec)-Math.cos(s.dec)*Math.sin(m.dec)*Math.cos(s.ra-m.ra));return{f:(1+Math.cos(inc))/2,p:0.5+0.5*inc*(an<0?-1:1)/Math.PI}}
+function athMid(y,m,d){const h=+new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Athens',hour:'2-digit',hourCycle:'h23'}).format(new Date(Date.UTC(y,m,d,12)));return Date.UTC(y,m,d)-(h-12)*36e5}
+function moonTimes(t0,lat,lon){const hc=0.133,f=t=>bodyPos(t,lat,lon,1).alt-hc;let h0=f(t0),rise=null,set=null;
+ for(let i=1;i<=24;i+=2){const h1=f(t0+i*36e5),h2=f(t0+(i+1)*36e5),a=(h0+h2)/2-h1,b=(h2-h0)/2,xe=-b/(2*a),ye=(a*xe+b)*xe+h1,D=b*b-4*a*h1;let n=0,x1=0,x2=0;
+  if(D>=0){const dx=Math.sqrt(D)/(Math.abs(a)*2);x1=xe-dx;x2=xe+dx;if(Math.abs(x1)<=1)n++;if(Math.abs(x2)<=1)n++;if(x1<-1)x1=x2}
+  if(n===1){if(h0<0)rise=i+x1;else set=i+x1}else if(n===2){rise=i+(ye<0?x2:x1);set=i+(ye<0?x1:x2)}if(rise!=null&&set!=null)break;h0=h2}
+ return{rise:rise!=null?t0+rise*36e5:null,set:set!=null?t0+set*36e5:null}}
+const MPH=[['🌑','Νέα σελήνη'],['🌒','Αύξων μηνίσκος'],['🌓','Πρώτο τέταρτο'],['🌔','Αύξουσα (σχεδόν γεμάτη)'],['🌕','Πανσέληνος'],['🌖','Φθίνουσα'],['🌗','Τελευταίο τέταρτο'],['🌘','Φθίνων μηνίσκος']];
+const mph=p=>MPH[Math.round(p*8)%8];
+function placeSel(fn){const k=LS.g('sunp','Αθήνα'),g=LS.g('sungps',null);return`<label>Τόπος</label><select onchange="LS.s('sunp',this.value);if(this.value==='gps')fixNow(f=>{if(f)LS.s('sungps',{lat:+f.lat.toFixed(4),lon:+f.lon.toFixed(4)});${fn}()});else ${fn}()"><option value="gps" ${k==='gps'?'selected':''}>📍 Η θέση μου (GPS)${g?'':' – πάτα για εύρεση'}</option>${SUNP.map(p=>`<option ${p[0]===k?'selected':''}>${p[0]}</option>`).join('')}</select>`}
+function tMoon(){T('🌙 Σελήνη');const [nm,la,lo]=sunPlace(),now=Date.now(),[Y,Mo,Dd]=grDate(now),il=moonIll(now),ph=mph(il.p),mt=moonTimes(athMid(Y,Mo,Dd),la,lo),mp=bodyPos(now,la,lo,1);
+ let nf=null,nn=null,pv=moonIll(now).p;for(let t=now+36e5;t<now+31*864e5&&(!nf||!nn);t+=36e5){const p=moonIll(t).p;if(!nf&&pv<0.5&&p>=0.5)nf=t;if(!nn&&p<pv-0.5)nn=t;pv=p}
+ let rows='';for(let i=0;i<30;i++){const [y,m,d]=grDate(now+i*864e5),t0=athMid(y,m,d),q=moonIll(t0+20*36e5),r=moonTimes(t0,la,lo);rows+=`<tr${i?'':' style="background:#2a4060"'}><td>${d}/${m+1}</td><td style="font-size:1.3em">${mph(q.p)[0]}</td><td>${Math.round(q.f*100)}%</td><td>${hm(r.rise)}</td><td>${hm(r.set)}</td></tr>`}
+ M.innerHTML=placeSel('tMoon')+`<div class="box" style="text-align:center"><div style="font-size:4em;line-height:1.1">${ph[0]}</div><b>${ph[1]}</b> · φωτισμένη <b>${Math.round(il.f*100)}%</b>
+ <div class="grid" style="margin-top:8px"><div><div class="muted">Ανατολή σελήνης</div><div class="hd" style="font-size:1.7em">${hm(mt.rise)}</div></div><div><div class="muted">Δύση σελήνης</div><div class="hd" style="font-size:1.7em">${hm(mt.set)}</div></div></div>
+ <div class="muted">Τώρα: ${mp.alt>0?`πάνω από τον ορίζοντα, ${Math.round(mp.alt)}° ύψος, προς ${Math.round(mp.az)}° (${pt16(mp.az)})`:'κάτω από τον ορίζοντα'}</div>
+ <div style="margin-top:6px">🌕 Επόμενη πανσέληνος <b>${nf?tdt(nf):'—'}</b><br>🌑 Επόμενη νέα σελήνη <b>${nn?tdt(nn):'—'}</b></div></div>
+ <h3>📅 Επόμενες 30 μέρες – ${esc(nm)}</h3><table class="sunt"><thead><tr><th>Ημ/νία</th><th>Φάση</th><th>Φως</th><th>Ανατολή</th><th>Δύση</th></tr></thead><tbody>${rows}</tbody></table>
+ <div class="box"><b>💡 Χρήσιμα</b><div class="li"><b>Πανσέληνος (>80%)</b>: αρκετό φως για να περπατήσεις χωρίς φακό σε ανοιχτό μέρος, αλλά σε βλέπουν κι εσένα.</div><div class="li"><b>Νέα σελήνη</b>: απόλυτο σκοτάδι, καλύτερα αστέρια για προσανατολισμό (Πολικός). Μην κινείσαι χωρίς φακό.</div><div class="li"><b>Μηνίσκος για Νότο:</b> ένωσε τις δυο μύτες του μηνίσκου και συνέχισε τη γραμμή ως τον ορίζοντα – δείχνει περίπου Νότο.</div><div class="li">Το φεγγάρι ανατέλλει κάθε μέρα ~50′ αργότερα. Αύξουσα: φαίνεται το απόγευμα–βράδυ. Φθίνουσα: τα ξημερώματα.</div><button class="btn" onclick="go('sun')">🌅 Ήλιος</button></div>`}
+
+/* 9. Sun compass */
+function tSunc(){T('🧭 Ηλιακή πυξίδα');const [nm,la,lo]=sunPlace(),now=Date.now(),s=bodyPos(now,la,lo,0),az=s.az,up=s.alt>0;
+ const left=az<=180,ang=left?Math.round(az):Math.round(360-az),sh=up&&s.alt>2?1/Math.tan(s.alt*SR):null;
+ M.innerHTML=placeSel('tSunc')+(up?`<div class="box" style="text-align:center"><div class="muted">Ήλιος τώρα (${tnow(now)}) – ${esc(nm)}</div><div class="hd">${Math.round(az)}° <span style="font-size:.5em">${pt16(az)}</span></div><div>ύψος ${Math.round(s.alt)}° πάνω από τον ορίζοντα</div>
+ <svg viewBox="-110 -110 220 220" style="width:min(70vw,260px);margin:10px auto;display:block"><circle r="100" fill="#0a1522" stroke="#2a4060" stroke-width="3"/><text y="-80" text-anchor="middle" font-size="22" fill="#fcbf49">☀️</text><line x1="0" y1="0" x2="0" y2="-62" stroke="#fcbf49" stroke-width="3" stroke-dasharray="6 5"/>
+ <g transform="rotate(${-az})">${[['Β',0,'#d62828'],['Α',90,'#f4f6f8'],['Ν',180,'#f4f6f8'],['Δ',270,'#f4f6f8']].map(x=>`<g transform="rotate(${x[1]})"><text y="-68" text-anchor="middle" font-size="20" font-weight="900" fill="${x[2]}" transform="rotate(${-x[1]+az} 0 -75)">${x[0]}</text></g>`).join('')}<polygon points="0,-58 9,0 -9,0" fill="#d62828"/><polygon points="0,58 9,0 -9,0" fill="#a9b8c8"/></g><circle r="5" fill="#fff"/></svg>
+ <div class="tip" style="text-align:left">Στάσου με <b>το πρόσωπο στον ήλιο</b>. Ο <b>Βορράς</b> είναι <b>${ang}° ${left?'αριστερά':'δεξιά'}</b> σου${ang>80&&ang<100?' (περίπου στο '+(left?'αριστερό':'δεξί')+' σου χέρι)':ang>150?' (σχεδόν πίσω σου)':''}.</div>
+ ${sh?`<div class="muted">Σκιά ραβδιού 1 m: <b>${sh>20?'>20':sh.toFixed(1)} m</b> → η σκιά δείχνει προς ${Math.round((az+180)%360)}° (${pt16(az+180)}).</div>`:''}</div>`:`<div class="warn">Ο ήλιος είναι κάτω από τον ορίζοντα. Τη νύχτα: βρες τον Πολικό αστέρα (Βορράς) ή χρησιμοποίησε τον μηνίσκο της σελήνης.</div><button class="btn" onclick="go('t/moon')">🌙 Σελήνη</button>`)+
+ `<div class="box"><b>Πότε τη χρειάζεσαι</b><div class="li">Η μαγνητική πυξίδα κάνει λάθη δίπλα σε αυτοκίνητο, σίδερα, καλώδια ή μέσα σε θήκη με μαγνήτη. Ο ήλιος δεν κάνει ποτέ.</div><div class="li"><b>Έλεγχος πυξίδας:</b> σύγκρινε τη γωνία του ήλιου εδώ με αυτό που δείχνει η πυξίδα της εφαρμογής προς τον ήλιο. Διαφορά >10° = η πυξίδα επηρεάζεται.</div><div class="li"><b>Με αναλογικό ρολόι:</b> στρέψε τον ωροδείκτη στον ήλιο. Η διχοτόμος ανάμεσα στον ωροδείκτη και το 12 (το 1 με θερινή ώρα) δείχνει Νότο.</div><div class="li"><b>Ραβδί και σκιά:</b> σημάδεψε την άκρη της σκιάς, περίμενε 15′, σημάδεψε ξανά. Η γραμμή από το 1ο στο 2ο σημάδι δείχνει Ανατολή.</div><button class="btn" onclick="go('compass')">🧭 Πυξίδα & GPS</button><button class="btn" onclick="go('a/w_navi')">📖 Προσανατολισμός χωρίς πυξίδα</button></div>`;
+ const iv=setInterval(()=>{if(location.hash==='#t/suncomp')tSunc()},60000);TS.push(()=>clearInterval(iv))}
+
+/* 10. Battery */
+async function tBatt(){T('🔋 Μπαταρία');let bh='<div class="muted">Το iPhone δεν δείχνει μπαταρία σε web εφαρμογές – δες την πάνω δεξιά στην οθόνη.</div>';
+ try{if(navigator.getBattery){const b=await navigator.getBattery();const t=b.charging?(b.chargingTime&&isFinite(b.chargingTime)?'γεμίζει σε '+dur(b.chargingTime*1000):'φορτίζει'):(b.dischargingTime&&isFinite(b.dischargingTime)?'φτάνει για ~'+dur(b.dischargingTime*1000):'');bh=`<div class="hd">${Math.round(b.level*100)}%</div><div class="bar"><i style="width:${b.level*100}%;background:${b.level<.2?'#d62828':b.level<.5?'#fcbf49':'#2a9d8f'}"></i></div><div style="text-align:center">${b.charging?'⚡ ':''}${t}</div>`}}catch(e){}
+ M.innerHTML=`<div class="box">${bh}</div>
+ <div class="box"><b>🔌 Πόσες φορτίσεις μου δίνει το powerbank;</b><div class="grid"><div><label>Powerbank (mAh)</label><input id="pbm" type="number" inputmode="numeric" value="${LS.g('pbm',20000)}" oninput="pbC()"></div><div><label>Μπαταρία κινητού (mAh)</label><input id="phm" type="number" inputmode="numeric" value="${LS.g('phm',3500)}" oninput="pbC()"></div></div><div id="pbo" class="tip"></div><div class="muted">iPhone 13–15 ≈ 3.200–4.400 mAh · Android ≈ 4.500–5.000 mAh. Οι απώλειες είναι ~35%.</div></div>
+ <div class="box"><b>📉 Κάνε την μπαταρία να κρατήσει μέρες</b>${['<b>Λειτουργία χαμηλής ενέργειας</b> (iPhone: Ρυθμίσεις → Μπαταρία) / Εξοικονόμηση ενέργειας (Android).','<b>Λειτουργία πτήσης</b> όταν δεν έχει σήμα: το κινητό που ψάχνει κεραία αδειάζει γρήγορα. Το GPS δουλεύει και σε λειτουργία πτήσης.','Ανοίγε το κινητό 2 φορές τη μέρα σε σταθερή ώρα (π.χ. 9:00 και 21:00) για μηνύματα – συμφωνήστε το με την οικογένεια.','Φωτεινότητα στο ελάχιστο, σκοτεινή εμφάνιση (dark mode).','Κλείσε Bluetooth, Wi-Fi, ανανέωση στο παρασκήνιο, ειδοποιήσεις.','<b>SMS αντί για κλήση</b>: περνάνε ακόμα και όταν το δίκτυο είναι πεσμένο και τρώνε λιγότερη ενέργεια.','<b>Κρύο:</b> κράτα το κινητό και το powerbank μέσα στα ρούχα, κοντά στο σώμα. Στους 0°C η μπαταρία χάνει 20–40%.','Φόρτιζε όταν έχεις ευκαιρία (αυτοκίνητο, ηλιακό πάνελ), μέχρι 80–100%.','Κράτα τον φακό του κινητού μόνο για ανάγκη – πάρε κανονικό φακό με μπαταρίες AA.'].map(x=>`<div class="li">${x}</div>`).join('')}</div>
+ <div class="box"><b>☀️ Ηλιακό πάνελ</b><div class="li">Πάνελ 20–30 W με θύρα USB: γεμίζει κινητό σε 2–3 ώρες ήλιου. Τα μικρά powerbank με «ηλιακό» στο καπάκι γεμίζουν ελάχιστα – μην τα εμπιστεύεσαι.</div><div class="li">Στρέψε το πάνελ κάθετα στον ήλιο, φόρτιζε πρώτα powerbank και από αυτό το κινητό.</div></div>`;pbC()}
+function pbC(){const a=+$('#pbm').value||0,b=+$('#phm').value||1;LS.s('pbm',a);LS.s('phm',b);$('#pbo').innerHTML=`≈ <b>${(a*0.65/b).toFixed(1)}</b> πλήρεις φορτίσεις`}
+
+/* IndexedDB (docs, diary) */
+const IDB={db:null,open(){return this.db?Promise.resolve(this.db):new Promise((ok,no)=>{const r=indexedDB.open('sv_db',1);r.onupgradeneeded=()=>{const d=r.result;['docs','diary','poi'].forEach(s=>{if(!d.objectStoreNames.contains(s))d.createObjectStore(s,{keyPath:'id',autoIncrement:true})})};r.onsuccess=()=>{this.db=r.result;ok(r.result)};r.onerror=()=>no(r.error)})},
+ tx(s,m,f){return this.open().then(d=>new Promise((ok,no)=>{const t=d.transaction(s,m),r=f(t.objectStore(s));t.oncomplete=()=>ok(r&&r.result);t.onerror=()=>no(t.error)}))},
+ all(s){return this.tx(s,'readonly',st=>st.getAll())},put(s,v){return this.tx(s,'readwrite',st=>st.put(v))},del(s,id){return this.tx(s,'readwrite',st=>st.delete(id))},get(s,id){return this.tx(s,'readonly',st=>st.get(id))}};
+function shrink(file,max=1600,q=0.72){return new Promise((ok,no)=>{const u=URL.createObjectURL(file),im=new Image();im.onload=()=>{const k=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);c.toBlob(b=>b?ok(b):no(),'image/jpeg',q)};im.onerror=no;im.src=u})}
+
+/* 11. Documents */
+const DCAT=['🪪 Ταυτότητα','🛂 Διαβατήριο','🚗 Δίπλωμα / άδεια οχήματος','💊 Συνταγές / φάρμακα','🏥 Ιατρικά / εμβόλια','🛡️ Ασφάλειες','🏠 Σπίτι / συμβόλαια','🐾 Κατοικίδια','👪 Οικογένεια (φωτογραφίες για αναζήτηση)','📄 Άλλο'];
+let URLS=[];function freeUrls(){URLS.forEach(u=>URL.revokeObjectURL(u));URLS=[]}
+async function tDocs(){T('📄 Τα έγγραφά μου');freeUrls();let L=[];try{L=await IDB.all('docs')}catch(e){}
+ M.innerHTML=`<div class="box"><label>Κατηγορία</label><select id="dcc">${DCAT.map(c=>`<option>${c}</option>`).join('')}</select><label>Όνομα (π.χ. Ταυτότητα Γιώργου – μπροστά)</label><input id="dcn">
+ <label class="big blu" style="display:block;cursor:pointer">📷 Φωτογράφισε / διάλεξε<input type="file" accept="image/*" multiple style="display:none" onchange="dcAdd(this.files)"></label></div>
+ <div id="dcl">${L.length?'':'<div class="muted">Δεν έχεις αποθηκεύσει έγγραφα ακόμα.</div>'}</div>
+ <div class="box"><div class="li">Οι φωτογραφίες μένουν <b>μόνο σε αυτό το κινητό</b>, χωρίς internet. Αποθηκεύονται σε χαμηλή ανάλυση για να μη γεμίζει η μνήμη.</div><div class="li">Βάλε κωδικό/Face ID στο κινητό. Κράτα και αντίγραφα σε στικάκι USB στο σακίδιο και χάρτινες φωτοτυπίες σε αδιάβροχη θήκη.</div><div class="li">Βγάλε φωτογραφία όλη την οικογένεια (και τα κατοικίδια) πρόσφατα: αν χαθεί κάποιος, τη δείχνεις στους διασώστες.</div><div class="warn" style="font-weight:400">Αν σβήσεις τα δεδομένα του Safari ή διαγράψεις την εφαρμογή, σβήνονται και τα έγγραφα.</div></div>`;
+ const by={};L.forEach(x=>(by[x.c]=by[x.c]||[]).push(x));const el=$('#dcl');
+ DCAT.filter(c=>by[c]).forEach(c=>{el.insertAdjacentHTML('beforeend',`<h3>${c}</h3><div class="grid">`+by[c].map(x=>{const u=URL.createObjectURL(x.b);URLS.push(u);return`<div class="box" style="margin:0;padding:6px;text-align:center"><img src="${u}" style="width:100%;height:110px;object-fit:cover;border-radius:8px" onclick="dcView(${x.id})"><div style="font-size:.8em">${esc(x.n||'')}</div><div class="tools" style="justify-content:center;margin:2px"><button class="btn" onclick="dcShare(${x.id})">📤</button><button class="btn" onclick="dcDel(${x.id})">🗑</button></div></div>`}).join('')+'</div>')})}
+async function dcAdd(fs){const c=$('#dcc').value,n=$('#dcn').value.trim();let i=0;for(const f of fs){try{const b=await shrink(f);await IDB.put('docs',{c,n:n?(fs.length>1?n+' '+(++i):n):c.replace(/^\S+\s/,''),b,t:Date.now()})}catch(e){alert('Δεν αποθηκεύτηκε: '+f.name)}}tDocs()}
+async function dcDel(id){if(!confirm('Διαγραφή;'))return;await IDB.del('docs',id);tDocs()}
+async function dcView(id){const x=await IDB.get('docs',id);if(!x)return;const u=URL.createObjectURL(x.b);URLS.push(u);const o=$('#ov');o.style.display='flex';o.style.background='#000';o.style.alignItems='center';$('#ovt').innerHTML=`<img src="${u}" style="max-width:100vw;max-height:90vh">`}
+async function dcShare(id){const x=await IDB.get('docs',id);if(!x)return;const f=new File([x.b],(x.n||'doc')+'.jpg',{type:'image/jpeg'});if(navigator.canShare&&navigator.canShare({files:[f]}))navigator.share({files:[f]}).catch(()=>{});else{const a=document.createElement('a');a.href=URL.createObjectURL(x.b);a.download=f.name;a.click()}}
+
+/* 12. Survival diary */
+const DQ=['💧 Ήπια νερό','🍞 Έφαγα','💊 Πήρα φάρμακο','😴 Κοιμήθηκα','🩹 Τραυματισμός','🚶 Ξεκίνησα','🏕️ Σταμάτησα','📞 Επικοινώνησα','⚠️ Κίνδυνος','👍 Όλα καλά'];
+let dRec=null;
+async function tDiary(){T('📓 Ημερολόγιο');freeUrls();let L=[];try{L=await IDB.all('diary')}catch(e){}L.sort((a,b)=>b.t-a.t);
+ M.innerHTML=`<div class="box"><div class="tools">${DQ.map(q=>`<button class="btn" onclick="dSave('${q}')">${q}</button>`).join('')}</div>
+ <label>Σημείωση (πάτα το 🎤 του πληκτρολογίου για υπαγόρευση)</label><textarea id="dtx" rows="3"></textarea>
+ <div class="tools"><button class="btn p" onclick="dSave()">💾 Αποθήκευση</button><button class="btn r" id="drb" onclick="dVoice()">🎙️ Φωνητικό</button><button class="btn" onclick="dExp()">📤 Εξαγωγή</button></div><div class="muted">Κάθε εγγραφή κρατάει ώρα και θέση GPS (αν βρεθεί).</div></div>
+ <div id="dl">${L.length?'':'<div class="muted">Κενό. Γράφε τι έγινε, πότε ήπιες νερό, φάρμακα, πού πήγες. Βοηθάει γιατρούς και διασώστες και σε κρατάει ψύχραιμο.</div>'}${L.map(x=>{let a='';if(x.a){const u=URL.createObjectURL(x.a);URLS.push(u);a=`<audio controls src="${u}" style="width:100%"></audio>`}
+  return`<div class="box" style="margin:6px 0;padding:10px"><div style="display:flex;gap:6px"><b style="flex:1">${tdt(x.t)}</b>${x.p?`<a class="muted" href="https://maps.google.com/?q=${x.p.lat},${x.p.lon}">📍 ${x.p.lat.toFixed(4)}, ${x.p.lon.toFixed(4)}</a>`:''}<button class="btn" style="padding:4px 8px" onclick="dDel(${x.id})">🗑</button></div>${x.x?`<div>${esc(x.x)}</div>`:''}${a}</div>`}).join('')}</div>`}
+function dSave(q,a){const x=q||$('#dtx').value.trim();if(!x&&!a)return;const rec={t:Date.now(),x:x||'🎙️ Φωνητικό'};if(a)rec.a=a;
+ const save=f=>{if(f&&Date.now()-(f.t||0)<15*6e4)rec.p={lat:+f.lat.toFixed(5),lon:+f.lon.toFixed(5)};IDB.put('diary',rec).then(()=>{vib(40);if(location.hash==='#t/diary')tDiary()})};
+ if(pos)save({...pos,t:Date.now()});else fixNow(save)}
+async function dVoice(){const b=$('#drb');if(dRec){dRec.stop();return}let st;try{st=await navigator.mediaDevices.getUserMedia({audio:true})}catch(e){alert('Το μικρόφωνο δεν άνοιξε.');return}
+ const mt=['audio/mp4','audio/webm','audio/ogg'].find(t=>window.MediaRecorder&&MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t));let r;try{r=new MediaRecorder(st,mt?{mimeType:mt}:{})}catch(e){alert('Η ηχογράφηση δεν υποστηρίζεται.');st.getTracks().forEach(t=>t.stop());return}
+ const ch=[];r.ondataavailable=e=>e.data.size&&ch.push(e.data);r.onstop=()=>{st.getTracks().forEach(t=>t.stop());dRec=null;const bl=new Blob(ch,{type:r.mimeType||mt||'audio/mp4'});if(bl.size)dSave($('#dtx')?$('#dtx').value.trim():'',bl)};
+ r.start();dRec=r;b.textContent='⏹ Σταμάτα';TS.push(()=>{if(dRec)dRec.stop()})}
+async function dDel(id){if(!confirm('Διαγραφή εγγραφής;'))return;await IDB.del('diary',id);tDiary()}
+async function dExp(){const L=(await IDB.all('diary')).sort((a,b)=>a.t-b.t),me=LS.g('me',{});const t='ΗΜΕΡΟΛΟΓΙΟ ΕΠΙΒΙΩΣΗΣ'+(me.name?' – '+me.name:'')+'\n\n'+L.map(x=>`${tdt(x.t)}  ${x.x||''}${x.p?`  [${x.p.lat}, ${x.p.lon}]`:''}`).join('\n');
+ if(navigator.share)navigator.share({text:t}).catch(()=>{});else(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>alert('Αντιγράφηκε.'),()=>prompt('Αντέγραψε:',t))}
+
+/* 13. 📍 Near me – offline POIs (downloaded from OpenStreetMap while online) */
+const POIC=[['hosp','🏥','Νοσοκομεία & Κέντρα Υγείας'],['pharm','💊','Φαρμακεία'],['aed','❤️‍🩹','Απινιδωτές'],['doc','🩺','Γιατροί / ιατρεία'],['assy','🟩','Χώροι συγκέντρωσης'],['water','🚰','Πόσιμο νερό & πηγές'],['shel','🛖','Καταφύγια'],['fire','🚒','Πυροσβεστική'],['pol','🚓','Αστυνομία'],['fuel','⛽','Βενζινάδικα']];
+function poiCat(t){const a=t.amenity,e=t.emergency;if(a==='hospital'||a==='clinic'||t.healthcare==='hospital')return'hosp';if(a==='pharmacy')return'pharm';if(e==='defibrillator')return'aed';if(a==='doctors')return'doc';if(e==='assembly_point')return'assy';
+ if(a==='drinking_water'||a==='water_point'||t.natural==='spring'||t.man_made==='water_tap')return'water';if(a==='shelter'||t.tourism==='alpine_hut'||t.tourism==='wilderness_hut')return'shel';if(a==='fire_station')return'fire';if(a==='police')return'pol';if(a==='fuel')return'fuel';return null}
+async function poiDl(){const r=+$('#pr').value,src=$('#pa').value;let c;
+ if(src==='gps'){const f=await new Promise(ok=>fixNow(ok));if(!f){alert('Δεν βρέθηκε θέση GPS. Διάλεξε πόλη.');return}c={n:'Γύρω από τη θέση μου',lat:f.lat,lon:f.lon}}else{const p=SUNP.find(x=>x[0]===src);c={n:p[0],lat:p[1],lon:p[2]}}
+ const st=$('#pst');st.innerHTML='⬇️ Κατεβάζω από OpenStreetMap… (10–60″)';const R=r*1000,A=`(around:${R},${c.lat},${c.lon})`;
+ const q=`[out:json][timeout:90];(nwr[amenity~"^(hospital|clinic|pharmacy|doctors|police|fire_station|drinking_water|water_point|shelter|fuel)$"]${A};nwr[emergency~"^(assembly_point|defibrillator)$"]${A};nwr[healthcare=hospital]${A};nwr[natural=spring]${A};nwr[man_made=water_tap]${A};nwr[tourism~"^(alpine_hut|wilderness_hut)$"]${A};);out center tags;`;
+ let js=null;for(const u of['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter','https://maps.mail.ru/osm/tools/overpass/api/interpreter']){try{const res=await fetch(u,{method:'POST',body:'data='+encodeURIComponent(q),headers:{'Content-Type':'application/x-www-form-urlencoded'}});if(res.ok){js=await res.json();break}}catch(e){}}
+ if(!js){st.innerHTML='<div class="warn">Δεν κατέβηκε. Χρειάζεται internet. Δοκίμασε ξανά σε λίγο ή με μικρότερη ακτίνα.</div>';return}
+ const pts=[];for(const e of js.elements||[]){const t=e.tags||{},k=poiCat(t),la=e.lat??(e.center&&e.center.lat),lo=e.lon??(e.center&&e.center.lon);if(!k||la==null)continue;
+  pts.push([k,+la.toFixed(5),+lo.toFixed(5),t['name:el']||t.name||'',t.phone||t['contact:phone']||'',t.opening_hours||'',t.emergency==='yes'?1:0])}
+ await IDB.put('poi',{id:'a'+Date.now(),n:c.n,lat:c.lat,lon:c.lon,r,t:Date.now(),pts});st.innerHTML=`✅ Αποθηκεύτηκαν <b>${pts.length}</b> σημεία. Δουλεύουν πλέον χωρίς internet.`;setTimeout(tNear,1200)}
+async function poiAll(){let A=[];try{A=await IDB.all('poi')}catch(e){}return A}
+async function tNear(cat){T('📍 Κοντά μου');const A=await poiAll(),me=pos||LS.g('lastfix',null);
+ const dl=`<div class="box"><b>⬇️ Κατέβασε περιοχή για offline</b> <span class="muted">(χρειάζεται internet μία φορά)</span><div class="grid"><div><label>Πού</label><select id="pa"><option value="gps">📍 Γύρω μου</option>${SUNP.map(p=>`<option>${p[0]}</option>`).join('')}</select></div><div><label>Ακτίνα</label><select id="pr"><option value="10">10 km</option><option value="25" selected>25 km</option><option value="50">50 km</option></select></div></div><button class="big blu" onclick="poiDl()">⬇️ Κατέβασε</button><div id="pst"></div>
+ ${A.map(a=>`<div class="wp"><b>${esc(a.n)} · ${a.r} km</b><span class="muted">${a.pts.length} σημεία · ${new Date(a.t).toLocaleDateString('el-GR')}</span><button class="btn" onclick="if(confirm('Διαγραφή περιοχής;'))IDB.del('poi','${a.id}').then(()=>tNear())">🗑</button></div>`).join('')}
+ <div class="muted">Κατέβασε το σπίτι σου, τη δουλειά, το εξοχικό και όπου ταξιδεύεις. Ανανέωνε κάθε λίγους μήνες. Δεδομένα © OpenStreetMap contributors – μπορεί να λείπουν σημεία.</div></div>`;
+ if(!A.length){M.innerHTML=`<div class="tip">Βρίσκει το πιο κοντινό <b>νοσοκομείο, φαρμακείο, απινιδωτή, βρύση ή πηγή, χώρο συγκέντρωσης, καταφύγιο</b>, πυροσβεστική, αστυνομία και βενζινάδικο, <b>χωρίς internet</b>. Σε πηγαίνει με το βέλος της πυξίδας.</div>`+dl;return}
+ const all=[];const seen=new Set();A.forEach(a=>a.pts.forEach(p=>{const k=p[0]+p[1]+','+p[2];if(!seen.has(k)){seen.add(k);all.push(p)}}));
+ const ref=me||{lat:A[0].lat,lon:A[0].lon},D=p=>dist(ref,{lat:p[1],lon:p[2]}),fmt=m=>m<1000?Math.round(m/10)*10+' m':(m/1000).toFixed(m<10000?1:0)+' km';
+ if(!me)fixNow(f=>{if(f&&location.hash.startsWith('#near'))tNear(cat)});
+ const head=`<div class="muted" style="text-align:center">${me?'Απόσταση από τη θέση σου (±'+Math.round(me.acc||0)+' m)':'⏳ Περιμένω GPS – απόσταση από το κέντρο της περιοχής'}</div>`;
+ if(!cat){const near=c=>{let b=null,bd=1e12;for(const p of all)if(p[0]===c){const d=D(p);if(d<bd){bd=d;b=p}}return[b,bd]};
+  M.innerHTML=head+`<div class="grid">`+POIC.map(c=>{const [b,bd]=near(c[0]),n=all.filter(p=>p[0]===c[0]).length;return`<button class="tile" onclick="go('near/${c[0]}')" ${c[0]==='hosp'?'style="grid-column:1/-1;border-color:var(--red)"':''}><span class="e">${c[1]}</span>${c[2]}<small>${n?`πιο κοντά: <b>${fmt(bd)}</b> ${pt16(brg(ref,{lat:b[1],lon:b[2]}))}`:'κανένα'} · ${n}</small></button>`}).join('')+`</div>`+dl;return}
+ const c=POIC.find(x=>x[0]===cat)||POIC[0],L=all.filter(p=>p[0]===c[0]).map(p=>[p,D(p)]).sort((a,b)=>a[1]-b[1]).slice(0,40);
+ M.innerHTML=`<h2>${c[1]} ${c[2]}</h2>`+head+(L.length?L.map(([p,d],i)=>{const b=brg(ref,{lat:p[1],lon:p[2]});return`<div class="box" style="margin:6px 0;padding:10px"><div style="display:flex;gap:8px;align-items:center"><span style="font-size:1.6em;display:inline-block;transform:rotate(${Math.round(b)}deg)">⬆️</span><div style="flex:1"><b>${esc(p[3]||c[2].split(' ')[0])}</b>${p[6]?' <span style="color:var(--red)">ΤΕΠ</span>':''}<br><span class="mono">${fmt(d)} · ${Math.round(b)}° ${pt16(b)}</span>${p[5]?`<br><small class="muted">🕒 ${esc(p[5])}</small>`:''}</div></div>
+  <div class="tools" style="margin:6px 0 0"><button class="btn p" onclick="poiGo(${p[1]},${p[2]},'${esc((p[3]||c[2]).replace(/'/g,''))}')">🧭 Πήγαινέ με</button>${p[4]?`<a class="btn g" style="text-decoration:none" href="tel:${p[4].split(/[;,]/)[0].replace(/\s/g,'')}">📞</a>`:''}<a class="btn" style="text-decoration:none" href="https://maps.google.com/?q=${p[1]},${p[2]}">🗺️</a></div></div>`}).join(''):'<div class="muted">Κανένα σημείο σε αυτή την κατηγορία.</div>')+
+ (c[0]==='pharm'?'<div class="tip">Για το <b>εφημερεύον</b> φαρμακείο: 1434 (Αττική) ή ο Φαρμακευτικός Σύλλογος της περιοχής σου. Η εφαρμογή δεν ξέρει τις εφημερίες.</div>':c[0]==='hosp'?'<div class="tip">Για τα <b>εφημερεύοντα</b> νοσοκομεία: 1434 ή 14944 (Αττική). Για επείγον: 166 (ΕΚΑΒ). Η εφαρμογή δεν ξέρει τις εφημερίες.</div>':c[0]==='water'?'<div class="warn" style="font-weight:400">Νερό από πηγή ή βρύση στη φύση: βράσε ή φιλτράρισέ το πριν το πιεις.</div>':'')}
+function poiGo(lat,lon,n){const w=LS.g('wps',[]);w.push({n:'📍 '+n,lat,lon,t:Date.now()});LS.s('wps',w);tgt=w.length-1;LS.s('tgt',tgt);go('compass')}
 
 /* ---- Weather (barometer log) & altitude ---- */
 const qnh=(p,h)=>p*Math.pow(1-0.0065*h/288.15,-5.255);
@@ -464,9 +742,10 @@ function draw(){const cv=$('#cv');if(!cv)return;const x=cv.getContext('2d'),W=cv
  if(pos){const [a,b]=P(pos);x.fillStyle='rgba(58,134,255,.25)';x.beginPath();x.arc(a,b,Math.max(10,pos.acc*sc),0,7);x.fill();x.fillStyle='#3a86ff';x.strokeStyle='#fff';x.lineWidth=4;x.beginPath();x.arc(a,b,13,0,7);x.fill();x.stroke()}}
 
 function stopAll(){if(moOn||moTorch)moStop();if(cprT){clearInterval(cprT);cprT=null}if(whT){clearTimeout(whT);whT=null}if(window.speechSynthesis)speechSynthesis.cancel();speaking=false;
- if(!rec)stopGeo();if(!rec)wake(0);if(orientOn){window.removeEventListener('deviceorientation',onOr,true);window.removeEventListener('deviceorientationabsolute',onOr,true);orientOn=false;hdg=null}}
+ toolStop();if(!rec)stopGeo();if(!rec&&!grd.on)wake(0);if(orientOn){window.removeEventListener('deviceorientation',onOr,true);window.removeEventListener('deviceorientationabsolute',onOr,true);orientOn=false;hdg=null}}
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&WL){WL=null;wake(1)}});
 if(rec)startGeo();
+setTimeout(grdBar,300);
 render(location.hash.slice(1)||'home');
 /*SW*/
 </script></body></html>
