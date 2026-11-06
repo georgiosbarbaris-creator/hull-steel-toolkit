@@ -916,6 +916,288 @@ function impDo(){const o=impShow.o,m=LS.g('me',{});Object.entries(o.p||{}).forEa
  alert('✅ Πέρασε! Δες την «Κάρτα μου» και την Πυξίδα για τα σημεία.');history.replaceState(null,'','#me');render('me')}
 {const _r=render;render=function(r){const [a,b]=r.split('/');if(a==='imp'&&b){let o;try{o=JSON.parse(b64u.d(b))}catch(e){return home()}return impShow(o)}return _r(r)}}
 
+/* ===================== v13: 📶 ΕΠΙΚΟΙΝΩΝΙΑ ΧΩΡΙΣ ΔΙΚΤΥΟ ===================== */
+CATS.comm=['📶','Επικοινωνία χωρίς δίκτυο','blu'];
+const MK={ok:['✅','ΕΙΜΑΙ ΚΑΛΑ','grn'],help:['🆘','ΧΡΕΙΑΖΟΜΑΙ ΒΟΗΘΕΙΑ','red'],come:['📣','ΕΛΑ ΕΔΩ','org'],go:['🚶','ΦΕΥΓΩ – ΑΚΟΛΟΥΘΗΣΕ','blu'],pos:['📍','Η ΘΕΣΗ ΜΟΥ','blu'],txt:['💬','Μήνυμα','blu'],buzz:['🔔','ΣΕ ΦΩΝΑΖΩ!','org']};
+const MKC=['txt','ok','help','come','go','pos','buzz'];
+let CM={k:'ok',x:'',p:true};
+let CS=[];function commStop(){CS.forEach(f=>{try{f()}catch(e){}});CS=[]}
+{const _s=stopAll;stopAll=function(){commStop();_s();if(NET.dc&&NET.dc.readyState==='open')wake(1)}}
+
+/* ---- σύνθεση μηνύματος (κοινό για QR, ήχο, chat) ---- */
+function cmpHtml(lbl,act,noText){return `<div class="box"><div class="grid" style="gap:6px">${['ok','help','come','go','pos','txt'].map(k=>`<button class="btn${CM.k===k?' p':''}" data-ck="${k}" onclick="cmK('${k}')">${MK[k][0]} ${MK[k][1]}</button>`).join('')}</div>
+ ${noText?'':`<label style="display:block;margin-top:10px">Γράψε κάτι ακόμα (προαιρετικό)</label><input id="cmx" maxlength="${noText===0?40:80}" value="${esc(CM.x||'')}" placeholder="π.χ. είμαστε 3, έχουμε νερό">`}
+ <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="cmp" ${CM.p?'checked':''} style="width:auto;margin:0" onchange="CM.p=this.checked"> 📍 Βάλε και τη θέση μου (GPS)</label></div>
+ <button class="big grn" id="cmgo" onclick="${act}">${lbl}</button><div id="cms" class="muted" style="text-align:center"></div>`}
+function cmK(k){CM.k=k;if(k==='pos'){CM.p=true;const c=$('#cmp');if(c)c.checked=true}document.querySelectorAll('[data-ck]').forEach(b=>b.classList.toggle('p',b.dataset.ck===k));if(k==='txt'&&$('#cmx'))$('#cmx').focus()}
+function cmBuild(cb,noName){const x=$('#cmx');CM.x=x?x.value.trim():'';const o={k:CM.k,t:Date.now()};if(CM.x)o.x=CM.x;const nm=(LS.g('me',{}).name||'').trim();if(nm&&!noName)o.n=nm;
+ if(!CM.p&&CM.k!=='pos')return cb(o);const st=$('#cms');if(st)st.textContent='📡 Βρίσκω τη θέση σου… (έως 20″)';
+ fixNow(f=>{if(f){o.la=+f.lat.toFixed(5);o.lo=+f.lon.toFixed(5);o.a=Math.round(f.acc||0)}if(st)st.textContent=f?'📍 Θέση ±'+Math.round(f.acc||0)+' m':'⚠️ Χωρίς θέση GPS – στέλνεται χωρίς συντεταγμένες';cb(o)})}
+function msgHtml(o,via){const k=MK[o.k]||MK.txt,me=pos||LS.g('lastfix',null);let d='';
+ if(o.la!=null&&me){const m=dist(me,{lat:o.la,lon:o.lo});d=` · ${m<1000?Math.round(m)+' m':(m/1000).toFixed(1)+' km'} από σένα`}
+ return `<div class="box" style="border:2px solid var(--${k[2]})"><div style="font-size:1.35em;font-weight:900">${k[0]} ${k[1]}</div>${o.n?`<div class="muted">από <b>${esc(o.n)}</b></div>`:''}${o.x?`<div style="font-size:1.15em;margin:6px 0">${esc(o.x)}</div>`:''}
+ ${o.la!=null?`<div class="coord mono">${o.la.toFixed(5)}, ${o.lo.toFixed(5)}${o.a?` <small class="muted">±${o.a} m</small>`:''}</div><div class="muted" style="text-align:center">${ddm(o.la,'N','S')} ${ddm(o.lo,'E','W')}${d}</div><div class="tools" style="justify-content:center"><button class="btn p" onclick="cmWp(${o.la},${o.lo},'${esc((o.n||k[1]).replace(/'/g,''))}')">🧭 Οδήγησέ με εκεί</button></div>`:''}
+ <div class="muted">${via||''}${o.t?' · '+tdt(o.t):''}</div></div>`}
+function cmWp(la,lo,n){const w=LS.g('wps',[]);let i=w.findIndex(p=>Math.abs(p.lat-la)<1e-5&&Math.abs(p.lon-lo)<1e-5);if(i<0){w.push({n:'📶 '+n,lat:la,lon:lo,t:Date.now()});i=w.length-1;LS.s('wps',w)}tgt=i;LS.s('tgt',tgt);go('compass')}
+function inboxAdd(o,via){const L=LS.g('inbox',[]);if(L.some(x=>x.o.t===o.t&&x.o.k===o.k&&(x.o.x||'')===(o.x||'')))return false;L.unshift({o,via,r:Date.now()});LS.s('inbox',L.slice(0,40));vib([300,100,300]);beep(1320,120,.6,'sine');return true}
+
+/* ---- αρχική σελίδα ενότητας ---- */
+function comm(sub){if(sub==='qr')return cQr();if(sub==='snd')return cSnd();if(sub==='net')return cNet();if(sub==='light')return cLight();if(sub==='inbox')return cInbox();
+ T('📶 Χωρίς δίκτυο');const L=LS.g('inbox',[]),on=NET.dc&&NET.dc.readyState==='open';
+ const R=(r,e,t,s,c)=>`<button class="row" onclick="go('${r}')"${c?` style="border-color:var(--${c})"`:''}><span class="e">${e}</span><span><b>${t}</b><small>${s}</small></span></button>`;
+ M.innerHTML=`<div class="muted">Δύο κινητά μιλάνε <b>χωρίς internet και χωρίς σήμα</b>. Και τα δύο πρέπει να έχουν την εφαρμογή.</div>
+ ${R('comm/net','📶','Chat μέσω hotspot',on?'🟢 ΣΥΝΔΕΔΕΜΕΝΟ – πάτα για το chat':'30–50 m · κανονική συζήτηση, θέση, «φώναξέ τον»',on?'grn':'')}
+ ${R('comm/qr','🔳','Μήνυμα με QR','1–2 m · δείχνεις την οθόνη, ο άλλος σκανάρει')}
+ ${R('comm/snd','🔊','Μήνυμα με ήχο','1–5 m · «σφυρίγματα» από ηχείο σε μικρόφωνο')}
+ ${R('comm/light','💡','Morse με φως – λήψη με κάμερα','σε οπτική επαφή · τη νύχτα εκατοντάδες m')}
+ ${R('morse','📡','Morse – αποστολή','φως οθόνης, φακός, ήχος')}
+ ${R('t/ok','✉️','SMS με τη θέση μου','θέλει λίγο σήμα κινητής – όχι internet')}
+ <h3>📥 Μηνύματα που έλαβα ${L.length?`<small class="muted">(${L.length})</small>`:''}</h3>${L.length?L.slice(0,3).map(x=>msgHtml(x.o,x.via)).join('')+(L.length>3?`<button class="btn" onclick="go('comm/inbox')">Όλα τα μηνύματα (${L.length})</button>`:''):'<div class="muted">Κανένα ακόμα.</div>'}
+ <h3>📖 Οδηγοί</h3>
+ ${D.filter(a=>a.cat==='comm').map(a=>`<button class="row" onclick="go('a/${a.id}')"><span class="e">${a.emoji}</span><span><b>${esc(a.title)}</b><small>${esc(a.sub)}</small></span></button>`).join('')}
+ <div class="tip">Δοκιμάστε τα <b>τώρα</b>, με την οικογένεια, σε λειτουργία πτήσης. Στην κρίση δεν είναι ώρα για πρώτη φορά.</div>`}
+function cInbox(){T('📥 Μηνύματα');const L=LS.g('inbox',[]);M.innerHTML=(L.length?L.map(x=>msgHtml(x.o,x.via)).join(''):'<div class="muted">Κανένα μήνυμα.</div>')+(L.length?`<button class="btn r" onclick="if(confirm('Να σβηστούν όλα τα μηνύματα;')){LS.s('inbox',[]);cInbox()}">🗑️ Σβήσε όλα</button>`:'')}
+
+/* ---- QR σκανάρισμα (BarcodeDetector ή jsQR) ---- */
+let jsqrP=null;function loadJsQR(){if(window.jsQR)return Promise.resolve();if(!jsqrP)jsqrP=new Promise((ok,no)=>{const s=document.createElement('script');s.src='jsqr.js';s.onload=ok;s.onerror=()=>{jsqrP=null;no()};document.head.appendChild(s)});return jsqrP}
+async function qrScan(el,onRes,stream){let st=stream,tm=null,dead=false;const stop=()=>{dead=true;if(tm)clearTimeout(tm);if(st&&!stream)st.getTracks().forEach(t=>t.stop());if(el)el.innerHTML=''};
+ try{if(!st)st=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:{ideal:1280},height:{ideal:720}}})}catch(e){alert('Δεν δόθηκε άδεια για την κάμερα.');return null}
+ el.innerHTML='<div style="position:relative"><video playsinline muted autoplay style="width:100%;border-radius:12px;display:block"></video><div style="position:absolute;inset:18%;border:3px solid var(--yel);border-radius:14px;pointer-events:none"></div></div><div class="muted" style="text-align:center">Στόχευσε το QR του άλλου κινητού</div><button class="btn r" id="qrx">✖ Κλείσιμο κάμερας</button>';
+ el.querySelector('#qrx').onclick=stop;const v=el.querySelector('video');v.srcObject=st;try{await v.play()}catch(e){}
+ let bd=null;if('BarcodeDetector'in window){try{bd=new BarcodeDetector({formats:['qr_code']})}catch(e){}}
+ if(!bd){try{await loadJsQR()}catch(e){alert('Δεν φορτώθηκε ο αναγνώστης QR. Άνοιξε την εφαρμογή μία φορά με internet.');stop();return null}}
+ const cv=document.createElement('canvas'),cx=cv.getContext('2d',{willReadFrequently:true});
+ const tick=async()=>{if(dead)return;if(v.readyState>=2&&v.videoWidth){let txt=null;try{if(bd){const r=await bd.detect(v);if(r&&r[0])txt=r[0].rawValue}else{const s=Math.min(1,800/v.videoWidth);cv.width=Math.round(v.videoWidth*s);cv.height=Math.round(v.videoHeight*s);cx.drawImage(v,0,0,cv.width,cv.height);const d=cx.getImageData(0,0,cv.width,cv.height),q=jsQR(d.data,cv.width,cv.height,{inversionAttempts:'dontInvert'});if(q)txt=q.data}}catch(e){}
+  if(txt&&!dead){vib(150);beep(1500,80,.5,'sine');stop();onRes(txt);return}}tm=setTimeout(tick,200)};tick();CS.push(stop);return stop}
+
+/* ===== 1. QR μήνυμα ===== */
+let qrMode='send';
+function msgUrl(o){return location.origin+location.pathname+'#msg/'+b64u.e(JSON.stringify(o))}
+function msgParse(t){const m=t.match(/#msg\/([A-Za-z0-9_-]+)/);if(!m)return null;try{return JSON.parse(b64u.d(m[1]))}catch(e){return null}}
+function cQr(){T('🔳 Μήνυμα με QR');
+ M.innerHTML=`<div class="tools"><button class="btn ${qrMode==='send'?'p':''}" onclick="qrMode='send';cQr()">📤 Στείλε</button><button class="btn ${qrMode==='recv'?'p':''}" onclick="qrMode='recv';cQr()">📥 Λάβε</button></div>`+
+ (qrMode==='send'?cmpHtml('🔳 Δείξε το QR','qrShow()')+'<div id="qro"></div>':`<button class="big blu" onclick="qrRecv()">📷 Σκάναρε το QR του άλλου</button><div id="qrv"></div><div id="qrr"></div><div class="tip">Δουλεύει σε iPhone και Android, χωρίς internet. Αν η κάμερα δεν «πιάνει», ο άλλος να ανεβάσει τη φωτεινότητα στο τέρμα.</div>`)}
+function qrShow(){cmBuild(o=>{const s=qrSvg(msgUrl(o));wake(1);$('#qro').innerHTML=`<div style="background:#fff;padding:10px;border-radius:14px;margin:10px 0">${s}</div><div class="muted" style="text-align:center">Ανέβασε φωτεινότητα. Ο άλλος: Χωρίς δίκτυο → Μήνυμα με QR → 📥 Λάβε.</div>${msgHtml(o,'Αυτό στέλνεις')}`;$('#qro').scrollIntoView({behavior:'smooth'})})}
+function qrRecv(){qrScan($('#qrv'),t=>{const o=msgParse(t);if(!o){$('#qrr').innerHTML='<div class="warn">Αυτό το QR δεν είναι μήνυμα της Επιβίωσης 72+.</div>';return}inboxAdd(o,'🔳 QR');$('#qrr').innerHTML=msgHtml(o,'🔳 Ελήφθη με QR')+'<button class="btn" onclick="qrRecv();$(\'#qrr\').innerHTML=\'\'">📷 Σκάναρε άλλο</button>'})}
+{const _r=render;render=function(r){const [a,b]=r.split('/');if(a==='comm')return comm(b);if(a==='msg'&&b){let o=null;try{o=JSON.parse(b64u.d(b))}catch(e){}if(!o)return home();inboxAdd(o,'🔳 QR');history.replaceState(null,'','#comm');T('📥 Μήνυμα');M.innerHTML=msgHtml(o,'🔳 Ελήφθη με QR (κάμερα κινητού)')+`<button class="btn" onclick="go('comm')">📶 Χωρίς δίκτυο</button>`;return}return _r(r)}}
+
+/* ===== 2. Δεδομένα με ήχο (17 τόνοι MFSK, αυτο-χρονιζόμενο) ===== */
+const SND={f0:1800,df:200,n:17,mk:1400,ts:.1};
+const sndF=i=>i===17?SND.mk:SND.f0+i*SND.df;
+function crc8(b){let c=0;for(const x of b){c^=x;for(let i=0;i<8;i++)c=c&0x80?((c<<1)^7)&255:(c<<1)&255}return c}
+function sndPack(o){const te=new TextEncoder();let fl=Math.max(0,MKC.indexOf(o.k));const hp=o.la!=null;if(hp)fl|=8;const out=[fl];
+ if(hp){const dv=new DataView(new ArrayBuffer(8));dv.setInt32(0,Math.round(o.la*1e5));dv.setInt32(4,Math.round(o.lo*1e5));out.push(...new Uint8Array(dv.buffer))}
+ let tx=te.encode(o.x||'');if(tx.length>60){let s=o.x;while(te.encode(s).length>60)s=s.slice(0,-1);tx=te.encode(s)}out.push(...tx);return out}
+function sndUnpack(b){const fl=b[0],o={k:MKC[fl&7]||'txt',t:Date.now()};let i=1;if(fl&8){const dv=new DataView(new Uint8Array(b.slice(1,9)).buffer);o.la=dv.getInt32(0)/1e5;o.lo=dv.getInt32(4)/1e5;i=9}const x=new TextDecoder().decode(new Uint8Array(b.slice(i)));if(x)o.x=x;return o}
+function sndSyms(p){const fr=[p.length,...p,crc8(p)],s=[];let prev=0;fr.forEach(by=>[by>>4,by&15].forEach(v=>{const t=(prev+1+v)%SND.n;s.push(t);prev=t}));return s}
+function sndPCM(p,sr,ts){ts=ts||SND.ts;const seq=[[17,.45],...sndSyms(p).map(t=>[t,ts]),[17,.3]],tot=seq.reduce((a,x)=>a+x[1],0)+.1,N=Math.ceil(tot*sr),y=new Float32Array(N);let ph=0,k=0;
+ seq.forEach(([t,d])=>{const n=Math.round(d*sr),w=2*Math.PI*sndF(t)/sr;for(let j=0;j<n&&k<N;j++,k++){ph+=w;y[k]=.85*Math.sin(ph)}});const r=Math.round(.006*sr),e=k;for(let j=0;j<r;j++){y[j]*=j/r;if(e-1-j>=0)y[e-1-j]*=j/r}return y}
+let sndPl=null;
+function sndSend(rep){cmBuild(o=>{const p=sndPack(o),c=ac(),sl=LS.g('sslow',0)?.16:SND.ts,y=sndPCM(p,c.sampleRate,sl);const n=rep?3:1,gap=Math.round(.5*c.sampleRate),buf=c.createBuffer(1,y.length*n+gap*(n-1),c.sampleRate),ch=buf.getChannelData(0);for(let i=0;i<n;i++)ch.set(y,i*(y.length+gap));
+  if(sndPl)try{sndPl.stop()}catch(e){}const s=c.createBufferSource();s.buffer=buf;s.connect(c.destination);s.start();sndPl=s;wake(1);const sec=buf.duration;const st=$('#cms');if(st)st.innerHTML=`🔊 Παίζει… ${sec.toFixed(1)}″ – κράτα το ηχείο προς το άλλο κινητό`;
+  s.onended=()=>{sndPl=null;const q=$('#cms');if(q)q.textContent='✅ Στάλθηκε. Αν ο άλλος δεν το έπιασε, ξαναπάτα (ή «3 φορές»).'};CS.push(()=>{try{s.stop()}catch(e){}})},true)}
+let sndMode='send';
+function cSnd(){T('🔊 Μήνυμα με ήχο');const sl=LS.g('sslow',0);
+ M.innerHTML=`<div class="tools"><button class="btn ${sndMode==='send'?'p':''}" onclick="sndMode='send';cSnd()">📤 Στείλε</button><button class="btn ${sndMode==='recv'?'p':''}" onclick="sndMode='recv';cSnd()">👂 Άκου</button></div>`+
+ (sndMode==='send'?cmpHtml('🔊 Παίξε το μήνυμα','sndSend(0)',0)+`<div class="tools" style="justify-content:center"><button class="btn" onclick="sndSend(1)">🔁 Παίξε 3 φορές</button><button class="btn ${sl?'p':''}" onclick="LS.s('sslow',${sl?0:1});cSnd()">🐢 Αργά (πιο σίγουρο)</button></div><div class="tip">Ένταση στο <b>τέρμα</b>, ηχείο προς το μικρόφωνο του άλλου, 1–3 m. Κοντά κείμενα = πιο γρήγορα (~5 γράμματα/δευτ.).</div>`
+ :`<button class="big blu" id="sndb" onclick="sndListen()">👂 Ξεκίνα να ακούς</button><canvas id="sndc" width="600" height="90" style="height:70px"></canvas><div id="snds" class="muted" style="text-align:center"></div><div id="sndr"></div><div class="tip">Ησυχία γύρω. Ο αποστολέας να διαλέξει το ίδιο: κανονικά ή 🐢 αργά (τα πιάνει και τα δύο). Το κινητό πρέπει να μείνει ανοιχτό σε αυτή την οθόνη.</div>`)}
+/* αποκωδικοποιητής: δέχεται διαδοχικές «αποφάσεις τόνου» (−1 = τίποτα) */
+function sndDecoder(onMsg,onSt){let cand=-1,cnt=0,acc=-1,state=0,prev=0,nib=[],need=0,lastT=0;
+ const reset=()=>{state=0;nib=[];prev=0;need=0};
+ return function(t,now){if(t===cand)cnt++;else{cand=t;cnt=1}if(cnt!==3||t<0||t===acc){if(state===2&&now-lastT>900){reset();onSt&&onSt('⏳ Χάθηκε – περιμένω ξανά')}return}
+  acc=t;lastT=now;if(t===17){if(state===2&&nib.length)onSt&&onSt('⏳ Διακοπή');reset();state=1;onSt&&onSt('🎵 Ακούω μήνυμα…');return}
+  if(state===0)return;state=2;const v=(t-prev-1+SND.n)%SND.n;prev=t;if(v>15){reset();onSt&&onSt('⚠️ Θόρυβος – περιμένω ξανά');return}nib.push(v);
+  if(nib.length===2)need=2*((nib[0]<<4|nib[1])+2);if(need&&nib.length>=need){const by=[];for(let i=0;i<nib.length;i+=2)by.push(nib[i]<<4|nib[i+1]);const p=by.slice(1,-1);reset();
+   if(crc8(p)===by[by.length-1]){acc=-1;onMsg(p)}else onSt&&onSt('⚠️ Λάθος στη λήψη – ζήτα να το ξαναπαίξει')}else onSt&&onSt(`🎵 Λαμβάνω… ${need?Math.round(100*nib.length/need)+'%':''}`)}}
+let sndRx=null;
+async function sndListen(){if(sndRx){sndRx();return}let st;try{st=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}})}catch(e){alert('Δεν δόθηκε άδεια για το μικρόφωνο.');return}
+ const c=ac(),src=c.createMediaStreamSource(st),an=c.createAnalyser();an.fftSize=2048;an.smoothingTimeConstant=0;src.connect(an);const F=new Float32Array(an.frequencyBinCount),bw=c.sampleRate/an.fftSize;
+ const bins=[...Array(18)].map((_,i)=>Math.round(sndF(i)/bw)),lo=Math.round(1200/bw),hi=Math.round(5600/bw);
+ let lastP='',lastPt=0;const dec=sndDecoder(p=>{const ks=p.join(','),nw=Date.now();if(ks===lastP&&nw-lastPt<20000){lastPt=nw;return}lastP=ks;lastPt=nw;const o=sndUnpack(p);inboxAdd(o,'🔊 Ήχος');const r=$('#sndr');if(r)r.insertAdjacentHTML('afterbegin',msgHtml(o,'🔊 Ελήφθη με ήχο'));const s=$('#snds');if(s)s.textContent='✅ Ελήφθη! Ακούω για επόμενο…'},m=>{const s=$('#snds');if(s)s.textContent=m});
+ const cv=$('#sndc'),cx=cv&&cv.getContext('2d');wake(1);
+ const iv=setInterval(()=>{an.getFloatFrequencyData(F);const lv=bins.map(b=>Math.max(F[b-1],F[b],F[b+1]));let bi=0;lv.forEach((v,i)=>{if(v>lv[bi])bi=i});const band=Array.from(F.slice(lo,hi)).sort((a,b)=>a-b),med=band[band.length>>1];
+  dec(lv[bi]-med>20?bi:-1,performance.now());
+  if(cx){cx.fillStyle='#0a1522';cx.fillRect(0,0,600,90);lv.forEach((v,i)=>{const h=Math.max(0,Math.min(86,(v-med)*2));cx.fillStyle=i===17?'#f77f00':(i===bi&&v-med>20?'#2a9d8f':'#3a86ff');cx.fillRect(i*33+4,88-h,26,h)})}},12);
+ sndRx=()=>{clearInterval(iv);st.getTracks().forEach(t=>t.stop());try{src.disconnect()}catch(e){}sndRx=null;const b=$('#sndb');if(b)b.textContent='👂 Ξεκίνα να ακούς';const s=$('#snds');if(s)s.textContent=''};CS.push(()=>sndRx&&sndRx());
+ $('#sndb').textContent='⏹ Σταμάτα';$('#snds').textContent='👂 Ακούω… (οι μπάρες δείχνουν τους τόνους)'}
+
+/* ===== 3. Chat μέσω hotspot (WebRTC, σύνδεση με QR, χωρίς server) ===== */
+const NET={pc:null,dc:null,role:'',peer:'',st:'',stream:null};
+async function sdpZip(s){const b=new TextEncoder().encode(s);if(window.CompressionStream){try{const z=new Uint8Array(await new Response(new Blob([b]).stream().pipeThrough(new CompressionStream('deflate-raw'))).arrayBuffer());let bin='';z.forEach(x=>bin+=String.fromCharCode(x));return 'Z'+btoa(bin).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}catch(e){}}return 'P'+b64u.e(s)}
+async function sdpUnzip(c){const t=c[0],d=c.slice(1);if(t==='P')return b64u.d(d);const bin=atob(d.replace(/-/g,'+').replace(/_/g,'/')),u=Uint8Array.from(bin,x=>x.charCodeAt(0));return new TextDecoder().decode(await new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer())}
+function sdpMin(s){const keep=/^(v=|o=|s=|t=|a=group|m=|c=|a=ice-ufrag|a=ice-pwd|a=fingerprint|a=setup|a=mid|a=sctp-port|a=max-message-size|a=candidate)/;const seen=new Set();
+ return s.split(/\r?\n/).filter(l=>{if(!keep.test(l))return false;if(l.startsWith('a=candidate')){if(/ tcp /i.test(l))return false;const k=l.split(' ').slice(4,6).join(':');if(seen.has(k))return false;seen.add(k)}return true}).join('\r\n')+'\r\n'}
+function netCode(kind,sdp){return sdpZip(sdpMin(sdp)).then(z=>'E72'+kind+':'+z)}
+async function netParse(t){const m=t.trim().match(/E72([OA]):([A-Za-z0-9_-]+)/);if(!m)return null;return{kind:m[1],sdp:await sdpUnzip(m[2])}}
+function netGather(pc){return new Promise(ok=>{if(pc.iceGatheringState==='complete')return ok();const to=setTimeout(ok,5000);pc.addEventListener('icegatheringstatechange',()=>{if(pc.iceGatheringState==='complete'){clearTimeout(to);ok()}})})}
+function netClose(){try{NET.dc&&NET.dc.close()}catch(e){}try{NET.pc&&NET.pc.close()}catch(e){}NET.pc=NET.dc=null;NET.st='';NET.role='';if(NET.stream){NET.stream.getTracks().forEach(t=>t.stop());NET.stream=null}netBadge()}
+function netNew(){netClose();const pc=new RTCPeerConnection({iceServers:[]});NET.pc=pc;
+ pc.onconnectionstatechange=()=>{const s=pc.connectionState;if(s==='failed'){NET.st='failed';netRef()}else if(s==='disconnected'){NET.st='lost';netRef()}};
+ pc.ondatachannel=e=>netDc(e.channel);return pc}
+function netDc(dc){NET.dc=dc;dc.onopen=()=>{NET.st='open';if(NET.stream){NET.stream.getTracks().forEach(t=>t.stop());NET.stream=null}commStop();wake(1);vib([200,100,200]);beep(1200,150,.6,'sine');netSend({k:'hi'});netBadge();netRef()};
+ dc.onclose=()=>{if(NET.st==='open'){NET.st='lost';netBadge();netRef()}};
+ dc.onmessage=e=>{let o;try{o=JSON.parse(e.data)}catch(x){return}if(o.k==='hi'){NET.peer=o.n||'';netRef();return}chatAdd(o,0);
+  if(o.k==='buzz'||o.k==='help'){let i=0;const iv=setInterval(()=>{beep(i%2?2600:3150,300,1);vib(300);if(++i>7)clearInterval(iv)},400)}else{beep(1320,120,.7,'sine');vib([200,80,200])}
+  if(location.hash!=='#comm/net')netToast(o)}}
+function netSend(o){if(!NET.dc||NET.dc.readyState!=='open')return false;if(!o.n){const nm=(LS.g('me',{}).name||'').trim();if(nm)o.n=nm}if(!o.t)o.t=Date.now();NET.dc.send(JSON.stringify(o));return true}
+function chatAdd(o,mine){const L=LS.g('chat',[]);L.push({o,m:mine?1:0});LS.s('chat',L.slice(-150));const b=$('#chl');if(b){b.insertAdjacentHTML('beforeend',chatRow({o,m:mine}));b.scrollTop=b.scrollHeight}}
+function chatRow(x){const o=x.o,k=MK[o.k]||MK.txt,txt=(o.k==='txt'?'':k[0]+' '+k[1])+(o.x?(o.k==='txt'?'':' – ')+o.x:'');
+ return `<div style="display:flex;justify-content:${x.m?'flex-end':'flex-start'};margin:5px 0"><div style="max-width:85%;background:${x.m?'#1d3557':(o.k==='help'||o.k==='buzz'?'#4a1014':'#16283d')};border:1px solid var(--line);border-radius:14px;padding:8px 11px">${!x.m&&o.n?`<div class="muted">${esc(o.n)}</div>`:''}<div>${esc(txt)}</div>${o.la!=null?`<button class="btn p" style="margin-top:6px;padding:6px 10px" onclick="cmWp(${o.la},${o.lo},'${esc((o.n||'Θέση').replace(/'/g,''))}')">📍 ${o.la.toFixed(4)}, ${o.lo.toFixed(4)} → 🧭</button>`:''}<div class="muted" style="font-size:.7em;text-align:right">${tnow(o.t)}</div></div></div>`}
+function netToast(o){const k=MK[o.k]||MK.txt;let d=$('#ntst');if(!d){d=document.createElement('div');d.id='ntst';d.style.cssText='position:fixed;left:10px;right:10px;top:calc(env(safe-area-inset-top) + 70px);z-index:60;background:#2a9d8f;color:#fff;padding:14px;border-radius:14px;font-weight:800;box-shadow:0 6px 20px #000a';document.body.appendChild(d)}
+ d.innerHTML=`💬 ${esc(o.n||'Μήνυμα')}: ${k[0]} ${esc(o.x||k[1])}`;d.onclick=()=>{d.remove();go('comm/net')};clearTimeout(d._t);d._t=setTimeout(()=>d.remove(),8000)}
+function netBadge(){const on=NET.dc&&NET.dc.readyState==='open';let b=$('#nbadge');if(!on){if(b)b.remove();return}if(!b){b=document.createElement('div');b.id='nbadge';b.style.cssText='position:fixed;right:10px;bottom:calc(env(safe-area-inset-bottom) + 56px);z-index:21;background:#2a9d8f;color:#fff;border-radius:22px;padding:9px 14px;font-weight:800;box-shadow:0 4px 14px #0008';b.onclick=()=>go('comm/net');document.body.appendChild(b)}b.textContent='📶 Chat 🟢'}
+function netRef(){if(location.hash==='#comm/net')cNet()}
+async function netCam(){if(NET.stream&&NET.stream.active)return NET.stream;try{NET.stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:{ideal:1280},height:{ideal:720}}})}catch(e){NET.stream=null}return NET.stream}
+async function netStartA(){netClose();await netCam();const pc=netNew();NET.role='A';NET.st='mkoffer';cNet();netDc(pc.createDataChannel('chat'));
+ await pc.setLocalDescription(await pc.createOffer());await netGather(pc);NET.code=await netCode('O',pc.localDescription.sdp);NET.st='showoffer';cNet()}
+function netScanAns(){qrScan($('#nqv'),t=>netGotA(t),NET.stream&&NET.stream.active?NET.stream:null)}
+async function netGotA(t){let r=null;try{r=await netParse(t)}catch(e){}if(!r||r.kind!=='A'){alert(r&&r.kind==='O'?'Αυτό είναι κωδικός «Ξεκινάω εγώ». Ο άλλος πρέπει να πατήσει «Συνδέομαι».':'Δεν διαβάστηκε ο κωδικός απάντησης.');return}
+ try{await NET.pc.setRemoteDescription({type:'answer',sdp:r.sdp});NET.st='connecting';cNet();netWatch()}catch(e){alert('Η σύνδεση απέτυχε: '+e.message)}}
+async function netStartB(){netClose();await netCam();NET.role='B';NET.st='scanoffer';cNet()}
+async function netGotO(t){let r=null;try{r=await netParse(t)}catch(e){}if(!r||r.kind!=='O'){alert(r&&r.kind==='A'?'Αυτός είναι κωδικός απάντησης – σκάναρε τον ΠΡΩΤΟ κωδικό του άλλου.':'Δεν διαβάστηκε ο κωδικός.');return}
+ const pc=netNew();NET.role='B';NET.st='mkans';cNet();try{await pc.setRemoteDescription({type:'offer',sdp:r.sdp});await pc.setLocalDescription(await pc.createAnswer());await netGather(pc);NET.code=await netCode('A',pc.localDescription.sdp);NET.st='showans';cNet();netWatch()}catch(e){alert('Σφάλμα: '+e.message)}}
+function netWatch(){clearTimeout(NET.wt);NET.wt=setTimeout(()=>{if(NET.dc&&NET.dc.readyState==='open')return;if(NET.st==='connecting'||NET.st==='showans'){NET.st='failed';cNet()}},25000)}
+function netPaste(){const t=prompt('Επικόλλησε τον κωδικό του άλλου (αρχίζει με E72):');if(!t)return;if(/E72O:/.test(t))netGotO(t);else netGotA(t)}
+function netCopy(){const c=NET.code;(navigator.clipboard?navigator.clipboard.writeText(c):Promise.reject()).then(()=>alert('Αντιγράφηκε.'),()=>prompt('Αντέγραψε:',c))}
+function chatSend(k){const x=$('#chx'),o={k:k||'txt'};const v=x?x.value.trim():'';if(k==='txt'&&!v)return;if(v&&(k==='txt'))o.x=v;
+ const fin=()=>{if(netSend(o)){chatAdd(o,1);if(x&&k==='txt')x.value=''}else alert('Δεν υπάρχει σύνδεση.')};if(k==='pos'){fixNow(f=>{if(f){o.la=+f.lat.toFixed(5);o.lo=+f.lon.toFixed(5);o.a=Math.round(f.acc||0);fin()}else alert('Δεν βρέθηκε θέση GPS.')})}else fin()}
+function cNet(){T('📶 Chat μέσω hotspot');const on=NET.dc&&NET.dc.readyState==='open',s=NET.st;
+ if(on){const L=LS.g('chat',[]);M.innerHTML=`<div class="box" style="text-align:center;padding:8px"><b>🟢 Συνδεδεμένοι</b>${NET.peer?' με <b>'+esc(NET.peer)+'</b>':''}</div>
+  <div id="chl" style="max-height:48vh;overflow:auto;padding:4px">${L.slice(-60).map(chatRow).join('')}</div>
+  <div style="display:flex;gap:6px;margin-top:6px"><input id="chx" placeholder="Γράψε μήνυμα…" style="margin:0" onkeydown="if(event.key==='Enter')chatSend('txt')"><button class="btn p" onclick="chatSend('txt')">➤</button></div>
+  <div class="grid" style="gap:6px;margin-top:8px"><button class="btn g" onclick="chatSend('ok')">✅ Είμαι καλά</button><button class="btn" onclick="chatSend('pos')">📍 Η θέση μου</button><button class="btn" onclick="chatSend('come')">📣 Έλα εδώ</button><button class="btn r" onclick="chatSend('buzz')">🔔 Φώναξέ τον</button><button class="btn r" onclick="chatSend('help')" style="grid-column:1/-1">🆘 ΧΡΕΙΑΖΟΜΑΙ ΒΟΗΘΕΙΑ</button></div>
+  <div class="tip">Κράτα την εφαρμογή <b>ανοιχτή</b> και το Wi-Fi στο hotspot. Αν κλειδώσει η οθόνη, η σύνδεση μπορεί να κοπεί – τότε ξανασυνδεθείτε (30″).</div>
+  <div class="tools"><button class="btn" onclick="if(confirm('Να σβηστεί το ιστορικό του chat;')){LS.s('chat',[]);cNet()}">🗑️ Σβήσε ιστορικό</button><button class="btn r" onclick="netClose();cNet()">✖ Αποσύνδεση</button></div>`;const b=$('#chl');b.scrollTop=b.scrollHeight;return}
+ const qrBox=(lbl)=>`<div class="box" style="text-align:center"><b>${lbl}</b><div style="background:#fff;padding:8px;border-radius:12px;margin-top:8px">${qrSvg(NET.code)}</div><div class="tools" style="justify-content:center"><button class="btn" onclick="netCopy()">📋 Αντιγραφή κωδικού</button></div></div>`;
+ let h='';
+ if(s==='mkoffer'||s==='mkans')h=`<div class="box" style="text-align:center">⏳ Ετοιμάζω τη σύνδεση…</div>`;
+ else if(s==='showoffer')h=`<div class="step"><span class="n">1</span><span>Ο άλλος πατάει <b>🅱️ Συνδέομαι</b> και σκανάρει αυτό:</span></div>${qrBox('🅰️ Κωδικός 1 – δείξ\' τον στον άλλον')}<div class="step"><span class="n">2</span><span>Μετά σκανάρεις <b>εσύ</b> τον κωδικό που θα σου δείξει:</span></div><button class="big blu" onclick="netScanAns()">📷 Σκάναρε την απάντηση</button><div id="nqv"></div>`;
+ else if(s==='scanoffer')h=`<div class="step"><span class="n">1</span><span>Σκάναρε τον <b>κωδικό 1</b> από το άλλο κινητό:</span></div><div id="nqv"></div>`;
+ else if(s==='showans')h=`<div class="step"><span class="n">2</span><span>Δείξε αυτό στον άλλον να το σκανάρει. Το chat ανοίγει μόνο του.</span></div>${qrBox('🅱️ Κωδικός 2 – απάντηση')}<div class="muted" style="text-align:center">⏳ Περιμένω σύνδεση…</div>`;
+ else if(s==='connecting')h=`<div class="box" style="text-align:center">⏳ Συνδέομαι… (έως 25″)</div>`;
+ else if(s==='failed'||s==='lost')h=`<div class="warn">${s==='lost'?'Η σύνδεση κόπηκε.':'Δεν έγινε σύνδεση.'} Έλεγξε: είστε και οι δύο στο <b>ίδιο Wi-Fi/hotspot</b>; Ξεκινήστε από την αρχή. Αν ξαναποτύχει, βάλτε ένα <b>τρίτο</b> κινητό ή router για hotspot, ώστε και τα δύο να είναι «πελάτες».</div>`;
+ M.innerHTML=h+(s&&s!=='failed'&&s!=='lost'?`<div class="tools"><button class="btn" onclick="netPaste()">⌨️ Επικόλληση κωδικού</button><button class="btn r" onclick="commStop();netClose();cNet()">✖ Ακύρωση</button></div>`:
+ `<div class="box"><b>Πριν ξεκινήσετε</b><div class="step"><span class="n">1</span><span>Ένα κινητό ανοίγει <b>Hotspot</b> (Android: Ρυθμίσεις → Σημείο πρόσβασης). <b>Δεν χρειάζονται δεδομένα ούτε σήμα.</b></span></div><div class="step"><span class="n">2</span><span>Το άλλο συνδέεται σε αυτό το Wi-Fi. Αν πει «χωρίς internet», πάτα <b>Παραμονή</b>.</span></div><div class="step"><span class="n">3</span><span>Ο ένας πατάει 🅰️, ο άλλος 🅱️. Σκανάρετε ο ένας τον κωδικό του άλλου – μία φορά.</span></div></div>
+ <button class="big grn" onclick="netStartA()">🅰️ Ξεκινάω εγώ</button><button class="big blu" onclick="netStartB()">🅱️ Συνδέομαι σε άλλον</button>
+ <button class="btn" onclick="netPaste()">⌨️ Έχω κωδικό σε κείμενο (επικόλληση)</button>
+ <div class="tip">Η κάμερα χρειάζεται για το σκανάρισμα. Εμβέλεια 30–50 m (στο ανοιχτό περισσότερο). Δείτε τον οδηγό <a href="#a/c_hot" style="color:var(--yel)">📖 Hotspot – βήμα βήμα</a>.</div>`);
+ if(s==='scanoffer'&&$('#nqv'))qrScan($('#nqv'),t=>netGotO(t),NET.stream&&NET.stream.active?NET.stream:null)}
+
+/* ===== 4. Morse με φως – λήψη με κάμερα ===== */
+const MO_RL={},MO_RG={};Object.entries(Object.assign({},MO_LAT,MO_NUM,MO_PUN)).forEach(([k,v])=>{if(!MO_RL[v])MO_RL[v]=k});Object.entries(Object.assign({},MO_GR,MO_NUM,MO_PUN)).forEach(([k,v])=>{if(!MO_RG[v])MO_RG[v]=k});
+/* runs: [[on(1/0), ms],...] → {u, codes:[...'.-' | ' '], lat, gr} */
+function moDecodeRuns(runs){const on=runs.filter(r=>r[0]).map(r=>r[1]);if(!on.length)return{u:0,lat:'',gr:'',codes:[]};
+ const s=[...on].sort((a,b)=>a-b);let u=s[0];
+ if(s.length>=3){let a=s[0],b=s[s.length-1];for(let it=0;it<8;it++){const A=s.filter(x=>Math.abs(x-a)<=Math.abs(x-b)),B=s.filter(x=>Math.abs(x-a)>Math.abs(x-b));if(A.length)a=A.reduce((p,x)=>p+x,0)/A.length;if(B.length)b=B.reduce((p,x)=>p+x,0)/B.length}u=(b/a>2)?(a+b/3)/2:a;
+  if(b/a<=2){const offs=runs.filter(r=>!r[0]).map(r=>r[1]).sort((x,y)=>x-y);if(offs.length&&offs[0]<a*.6)u=offs[Math.floor(offs.length*.2)]||a}}
+ const codes=[];let cur='';runs.forEach(([o,d])=>{if(o)cur+=d<2*u?'.':'-';else if(d>=2*u){if(cur){codes.push(cur);cur=''}if(d>=5*u)codes.push(' ')}});if(cur)codes.push(cur);
+ const tr=m=>codes.map(c=>c===' '?' ':(c==='...---...'?'SOS':(m[c]||'?'))).join('').replace(/\s+/g,' ').trim();return{u,codes,lat:tr(MO_RL),gr:tr(MO_RG)}}
+let ltRx=null;
+async function ltStart(){if(ltRx){ltRx();return}let st;try{st=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:{ideal:640},height:{ideal:480},frameRate:{ideal:60}}})}catch(e){alert('Δεν δόθηκε άδεια για την κάμερα.');return}
+ const vb=$('#ltv');vb.innerHTML='<div style="position:relative"><video playsinline muted autoplay style="width:100%;border-radius:12px;display:block"></video><div id="ltbx" style="position:absolute;left:42%;top:42%;width:16%;height:16%;border:3px solid var(--yel);border-radius:8px"></div></div>';
+ const v=vb.querySelector('video');v.srcObject=st;try{await v.play()}catch(e){}
+ const cv=document.createElement('canvas');cv.width=cv.height=24;const cx=cv.getContext('2d',{willReadFrequently:true});
+ let lastShow=0,mn=255,mx=0,state=0,t0=performance.now(),runs=[],lastDraw=0;const gr=$('#ltg'),gx=gr.getContext('2d'),hist=[];wake(1);
+ const show=()=>{const r=moDecodeRuns(runs.concat([[state,performance.now()-t0]]).slice(1));$('#ltcode').textContent=r.codes.map(c=>c===' '?' / ':moSym(c)).join(' ');$('#ltl').textContent=r.lat||'…';$('#ltgr').textContent=r.gr||'…';$('#ltu').textContent=r.u?`τελεία ≈ ${Math.round(r.u)} ms (${Math.round(1200/r.u)} λ/λ)`:''};
+ const iv=setInterval(()=>{if(v.readyState<2||!v.videoWidth)return;const w=v.videoWidth,h=v.videoHeight,sz=Math.min(w,h)*.16;cx.drawImage(v,(w-sz)/2,(h-sz)/2,sz,sz,0,0,24,24);const d=cx.getImageData(0,0,24,24).data;let L=0;for(let i=0;i<d.length;i+=4)L+=.3*d[i]+.59*d[i+1]+.11*d[i+2];L/=576;
+  mn=Math.min(L,mn+.15);mx=Math.max(L,mx-.15);const rg=mx-mn,now=performance.now();let ns=state;if(rg>25){const th=mn+rg*(state?.4:.6);ns=L>th?1:0}
+  if(ns!==state){runs.push([state,now-t0]);t0=now;state=ns;if(runs.length>400)runs=runs.slice(-400);show()}else if(now-lastShow>500){lastShow=now;show()}
+  hist.push(L);if(hist.length>200)hist.shift();if(now-lastDraw>60){lastDraw=now;gx.fillStyle='#0a1522';gx.fillRect(0,0,600,80);gx.strokeStyle='#fcbf49';gx.beginPath();hist.forEach((y,i)=>{const Y=78-(y/255)*76;i?gx.lineTo(i*3,Y):gx.moveTo(0,Y)});gx.stroke();$('#ltbx').style.borderColor=state?'#2a9d8f':(rg>25?'#fcbf49':'#d62828');$('#lts').textContent=rg>25?(state?'💡 ΦΩΣ':'⚫ σβηστό'):'Στόχευσε το φως στο κίτρινο τετράγωνο'}},16);
+ ltRx=()=>{clearInterval(iv);st.getTracks().forEach(t=>t.stop());vb.innerHTML='';ltRx=null;const b=$('#ltb');if(b)b.textContent='📷 Ξεκίνα λήψη'};CS.push(()=>ltRx&&ltRx());$('#ltb').textContent='⏹ Σταμάτα';
+ ltClr=()=>{runs=[];t0=performance.now();show()}}
+let ltClr=()=>{};
+function cLight(){T('💡 Morse με φως – λήψη');
+ M.innerHTML=`<div class="muted">Ο άλλος στέλνει Morse με φως (οθόνη ή φακό) από την εφαρμογή ή με οποιονδήποτε φακό. Εσύ στοχεύεις την κάμερα στο φως και η εφαρμογή γράφει τα γράμματα.</div>
+ <button class="big blu" id="ltb" onclick="ltStart()">📷 Ξεκίνα λήψη</button><div id="ltv"></div><canvas id="ltg" width="600" height="80" style="height:60px;margin-top:6px"></canvas><div id="lts" class="muted" style="text-align:center"></div>
+ <div class="box"><div class="muted">Κώδικας</div><div id="ltcode" class="mono" style="word-break:break-word;min-height:1.4em"></div><div class="muted" style="margin-top:8px">🇬🇷 Ελληνικά</div><div id="ltgr" class="hd" style="font-size:1.6em;text-align:left;word-break:break-word">…</div><div class="muted" style="margin-top:6px">🔤 Λατινικά</div><div id="ltl" class="hd" style="font-size:1.6em;text-align:left;word-break:break-word">…</div><div id="ltu" class="muted"></div></div>
+ <div class="tools"><button class="btn" onclick="ltClr()">↺ Καθάρισε</button><button class="btn p" onclick="go('morse')">📡 Αποστολή Morse</button></div>
+ <div class="tip">Κράτα το κινητό <b>σταθερό</b> (ακούμπησέ το κάπου). Το φως μέσα στο κίτρινο τετράγωνο. Ο αποστολέας σε <b>8–10 λέξεις/λεπτό</b>. Τη νύχτα πιάνει από πολύ μακριά, τη μέρα θέλει κοντά και σκιά.</div>
+ <div class="muted">Τα ελληνικά και τα λατινικά μοιράζονται πολλά σήματα – διάβασε τη γραμμή που βγάζει νόημα.</div>`}
+
+/* ---- αρχική: πλακίδιο ---- */
+{const _h=home;home=function(){_h();const t=M.querySelector(`button[onclick="go('tools')"]`);if(t)t.insertAdjacentHTML('beforebegin',`<button class="tile" onclick="go('comm')" style="grid-column:1/-1;min-height:80px;background:#123a36;border-color:var(--grn)"><span class="e" style="font-size:1.6em">📶</span>Επικοινωνία χωρίς δίκτυο<small>κινητό με κινητό: QR · ήχος · hotspot · φως · Meshtastic</small></button>`)}}
+
+/* ---- οδηγοί (άρθρα, μπαίνουν και στην αναζήτηση) ---- */
+(function(){const A=(id,emoji,title,sub,b)=>{const a={cat:'comm',id,emoji,title,sub,blocks:b.map(([t,x])=>({t,x}))};D.push(a);byId[id]=a};
+A('c_which','🧭','Ποιο να χρησιμοποιήσω;','ανάλογα με την απόσταση και την κατάσταση',[
+['h','Από κοντά προς μακριά'],
+['li','Δίπλα-δίπλα, θέλεις να δώσεις θέση ή σημείο συνάντησης → 🔳 QR (το πιο σίγουρο).'],
+['li','Στο ίδιο δωμάτιο, ή πίσω από πόρτα → 🔊 Μήνυμα με ήχο (1–5 m).'],
+['li','Ίδιο κτίριο, κατασκήνωση, γειτονιά ως 50 m → 📶 Chat μέσω hotspot.'],
+['li','Βλέπει ο ένας τον άλλον από μακριά (απέναντι πλαγιά, νύχτα) → 💡 Morse με φως.'],
+['li','Υπάρχει λίγο σήμα κινητής αλλά όχι internet → ✉️ SMS με τη θέση σου. Το 112 δουλεύει από κάθε δίκτυο.'],
+['li','Χιλιόμετρα μακριά, χωρίς κανένα δίκτυο → 📻 Meshtastic (θέλει συσκευή – αγόρασέ τη από τώρα).'],
+['li','Πολύς κόσμος γύρω με κινητά (πόλη, συναυλία, καταυλισμός) → 📲 bitchat / Briar (Bluetooth από κινητό σε κινητό).'],
+['h','Δορυφόρος'],
+['tip','Πολλά νεότερα κινητά (π.χ. iPhone 14 και μετά, κάποια Android) έχουν «SOS μέσω δορυφόρου». Δεν είναι διαθέσιμο σε όλες τις χώρες – κοίτα στις Ρυθμίσεις του κινητού σου αν υπάρχει στην Ελλάδα και κάνε τη δοκιμή (demo) από τώρα.'],
+['h','Κανόνες'],
+['step','Συμφωνήστε από πριν: ποιος κάνει τι, πού συναντιέστε, ποια ώρα ανοίγετε τα κινητά (π.χ. κάθε ώρα στο :00 για 10 λεπτά – κρατάει μπαταρία).'],
+['step','Δοκιμάστε κάθε μέθοδο με την οικογένεια, σε λειτουργία πτήσης.'],
+['step','Γράψε στην «Κάρτα μου» όνομα και επαφές – μπαίνουν αυτόματα στα μηνύματα.'],
+['warn','Καμία από αυτές δεν αντικαθιστά το 112. Αν έχεις έστω και λίγο σήμα, κάλεσε πρώτα 112.']]);
+A('c_hot','📶','Hotspot – βήμα βήμα','chat χωρίς internet, 30–50 m',[
+['h','Τι χρειάζεται'],
+['li','Δύο κινητά με την Επιβίωση 72+. Το ένα κάνει «Hotspot» (σημείο πρόσβασης Wi-Fi). Δεν χρειάζονται δεδομένα, σήμα ή internet.'],
+['li','Καλύτερα να κάνει hotspot ένα Android. Στο iPhone το «Προσωπικό hotspot» συχνά δεν ανοίγει χωρίς ενεργή κάρτα SIM με πακέτο δεδομένων.'],
+['li','Ακόμα καλύτερα: ένα μικρό φορητό router μπαταρίας (travel router) ή το Wi-Fi του αυτοκινήτου. Τότε και τα δύο κινητά είναι απλοί «πελάτες» και η σύνδεση πιάνει πιο σίγουρα.'],
+['h','Βήματα'],
+['step','Android: Ρυθμίσεις → Συνδέσεις (ή Δίκτυο) → Σημείο πρόσβασης κινητής → Σημείο πρόσβασης Wi-Fi. Βάλε όνομα και κωδικό, άνοιξέ το.'],
+['step','Το άλλο κινητό: Wi-Fi → διάλεξε αυτό το δίκτυο → κωδικός. Αν πει «Χωρίς internet – να μείνω συνδεδεμένος;», πάτα ΝΑΙ / Παραμονή.'],
+['step','Σε Android κλείσε την «αυτόματη αλλαγή σε δεδομένα κινητής» (Έξυπνη εναλλαγή / Adaptive Wi-Fi), για να μη φεύγει από το Wi-Fi.'],
+['step','Και οι δύο: Επιβίωση 72+ → 📶 Χωρίς δίκτυο → Chat μέσω hotspot.'],
+['step','Ο ένας πατάει 🅰️ «Ξεκινάω εγώ» και δείχνει τον κωδικό 1. Ο άλλος πατάει 🅱️ «Συνδέομαι» και τον σκανάρει.'],
+['step','Ο 🅱️ δείχνει τον κωδικό 2 (απάντηση). Ο 🅰️ πατάει «Σκάναρε την απάντηση». Σε λίγα δευτερόλεπτα ανοίγει το chat 🟢.'],
+['h','Στο chat'],
+['li','Κείμενο, ✅ Είμαι καλά, 📍 Η θέση μου (ο άλλος πατάει και η πυξίδα τον οδηγεί σε σένα), 📣 Έλα εδώ.'],
+['li','🔔 Φώναξέ τον: το άλλο κινητό χτυπάει δυνατά και δονείται – για να ξυπνήσει ή να κοιτάξει.'],
+['h','Αν δεν συνδέεται'],
+['li','Είστε και οι δύο στο ΙΔΙΟ Wi-Fi; Κλείστε VPN.'],
+['li','Αλλάξτε ρόλους: όποιος ήταν 🅰️ να γίνει 🅱️.'],
+['li','Βάλτε τρίτη συσκευή (router ή τρίτο κινητό) για hotspot.'],
+['li','Το iPhone πρέπει να έχει την εφαρμογή ανοιχτή στην οθόνη – αν κλειδώσει, η σύνδεση μπορεί να κοπεί. Ξανασυνδεθείτε (30″).'],
+['tip','Εμβέλεια: 30–50 m, στο ανοιχτό και ψηλά περισσότερο. Τοίχοι από μπετό τη μικραίνουν. Το hotspot τρώει μπαταρία – κλείσ\' το όταν δεν το χρειάζεσαι.']]);
+A('c_mesh','📻','Meshtastic – μηνύματα σε χιλιόμετρα','μικρή συσκευή LoRa + το κινητό σου, χωρίς δίκτυο',[
+['h','Τι είναι'],
+['li','Μικρό ραδιοπομπό (LoRa, 868 MHz στην Ευρώπη) που ζευγαρώνει με το κινητό σου μέσω Bluetooth. Γράφεις στην εφαρμογή Meshtastic και το μήνυμα φεύγει με ραδιοκύματα – όχι από κεραίες κινητής.'],
+['li','Εμβέλεια: 1–3 km σε πόλη, 5–15 km στο ανοιχτό, πολύ περισσότερο από κορυφή σε κορυφή. Κάθε άλλη συσκευή Meshtastic ενδιάμεσα αναμεταδίδει (mesh), οπότε φτάνει και πιο μακριά.'],
+['li','Στέλνει και τη θέση GPS: βλέπεις την οικογένεια πάνω στον χάρτη της εφαρμογής.'],
+['li','Στην Ευρώπη η μπάντα 868 MHz είναι ελεύθερη, χωρίς άδεια.'],
+['h','Τι να αγοράσω (μία για κάθε μέλος)'],
+['li','SenseCAP T1000-E (Seeed): μέγεθος πιστωτικής κάρτας, αδιάβροχη IP65, με GPS και μπαταρία. Η πιο εύκολη – ανοίγεις και δουλεύει. Περίπου 40–60 €.'],
+['li','Heltec LoRa 32 V4: η φθηνότερη (περίπου 25–40 €), αλλά είναι γυμνή πλακέτα – θέλει κουτί, μπαταρία και λίγο «μαστόρεμα».'],
+['li','LilyGO T-Echo / Heltec MeshPocket: με οθόνη e-ink και GPS, μεγάλη διάρκεια μπαταρίας.'],
+['li','LilyGO T-Deck: έχει πληκτρολόγιο – στέλνεις και χωρίς κινητό.'],
+['warn','Πάρε έκδοση 868 MHz (Ευρώπη), ΟΧΙ 915 MHz (Αμερική). Στο T1000-E διάλεξε την έκδοση «for Meshtastic», όχι τη LoRaWAN.'],
+['warn','Συσκευή με βιδωτή κεραία (π.χ. Heltec): ΠΟΤΕ μην την ανάψεις χωρίς κεραία – καίγεται ο πομπός.'],
+['h','Στήσιμο (μία φορά, με internet)'],
+['step','Φόρτισε τη συσκευή. Κατέβασε τη δωρεάν εφαρμογή «Meshtastic» (App Store / Google Play).'],
+['step','Άνοιξε Bluetooth → στην εφαρμογή πάτα + / σύνδεση συσκευής → διάλεξε τη δική σου. PIN: δείχνεται στην οθόνη της· αν δεν έχει οθόνη, συνήθως 123456.'],
+['step','Ρυθμίσεις → LoRa → Region: EU_868. Χωρίς αυτό ΔΕΝ εκπέμπει.'],
+['step','Ρυθμίσεις → User: βάλε όνομα (π.χ. «Γιώργος») και σύντομο (ΓΜΠ).'],
+['step','Οικογενειακό κανάλι: Channels → πρόσθεσε κανάλι (π.χ. «Οικογένεια») με τυχαίο κλειδί → Share/QR. Οι άλλοι το σκανάρουν από την εφαρμογή τους. Κράτα και το προεπιλεγμένο (LongFast) για να μιλάς με άλλους χρήστες στην περιοχή.'],
+['step','Δοκιμή: ο ένας μένει σπίτι, ο άλλος απομακρύνεται 1, 3, 5 km. Σημειώστε πού πιάνει.'],
+['h','Στην κρίση'],
+['li','Όσο πιο ψηλά, τόσο πιο μακριά: σε μπαλκόνι, ταράτσα, λόφο, κεραία κάθετα. Το σώμα και τα αυτοκίνητα κόβουν το σήμα.'],
+['li','Μια συσκευή μόνιμα ψηλά (ταράτσα ή αυτοκίνητο σε ύψωμα) με powerbank/ηλιακό γίνεται αναμεταδότης για όλη την οικογένεια.'],
+['li','Η μπαταρία κρατάει μέρες. Βάλ\' τη στο σακίδιο 72 ωρών και φόρτιζέ τη μία φορά τον μήνα.'],
+['tip','Συμφωνήστε ώρες επικοινωνίας και ένα απλό σύστημα: «ΟΚ» = όλα καλά, «ΒΟΗΘΕΙΑ + θέση» = ελάτε.']]);
+A('c_bt','📲','bitchat, Briar, Bridgefy','εφαρμογές Bluetooth από κινητό σε κινητό',[
+['h','Τι κάνουν'],
+['li','Στέλνουν μηνύματα από κινητό σε κινητό με Bluetooth (και Wi-Fi), χωρίς internet και χωρίς σήμα. Τα μηνύματα «πηδάνε» από κινητό σε κινητό μέσω όσων έχουν την ίδια εφαρμογή (mesh).'],
+['li','Εμβέλεια περίπου 10–100 m ανά κινητό. Σε γεμάτη πόλη φτάνει πιο μακριά, γιατί αναμεταδίδουν οι άλλοι.'],
+['h','Ποια να βάλω'],
+['li','bitchat: iPhone (App Store) και Android (επίσημα από τη σελίδα GitHub «permissionlesstech/bitchat-android»). iPhone και Android μιλάνε μεταξύ τους. Χωρίς λογαριασμό, χωρίς αριθμό τηλεφώνου. Νέα εφαρμογή, χωρίς ανεξάρτητο έλεγχο ασφαλείας ακόμα.'],
+['li','Briar: μόνο Android (Google Play / F-Droid). Πολύ ασφαλής, Bluetooth + Wi-Fi χωρίς internet. Προσθέτεις επαφές πρόσωπο με πρόσωπο με QR. Το έργο πλέον κάνει μόνο διορθώσεις, όχι νέες λειτουργίες – δουλεύει κανονικά.'],
+['li','Bridgefy: iPhone και Android, Bluetooth mesh. Γνωστή από διαδηλώσεις και συναυλίες. Για απλά μηνύματα, όχι για ευαίσθητα.'],
+['tip','Οικογένεια με iPhone ΚΑΙ Android → bitchat. Όλοι με Android → Briar. Για χιλιόμετρα → Meshtastic.'],
+['warn','Στο Google Play υπάρχουν ψεύτικες «bitchat». Κατέβασε μόνο την επίσημη.'],
+['h','Ετοιμάσου τώρα (θέλει internet)'],
+['step','Εγκατάσταση σε όλα τα κινητά της οικογένειας. Βάλτε ψευδώνυμα που αναγνωρίζετε.'],
+['step','Briar: προσθέστε ο ένας τον άλλον με QR, ενώ είστε μαζί. Δεν γίνεται από μακριά χωρίς internet.'],
+['step','Δοκιμή: λειτουργία πτήσης + άνοιξε ξανά Bluetooth (και Wi-Fi). Στείλτε μήνυμα από δωμάτιο σε δωμάτιο και μετά από τον δρόμο.'],
+['step','Στην κρίση: Bluetooth ανοιχτό, εφαρμογή ανοιχτή στην οθόνη (το iPhone την «κοιμίζει» στο παρασκήνιο), φορτιστής/powerbank.']]);
+})();
+
 if(rec)startGeo();
 setTimeout(grdBar,300);
 render(location.hash.slice(1)||'home');
