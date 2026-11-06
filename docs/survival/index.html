@@ -58,6 +58,10 @@ footer{text-align:center;color:var(--mut);font-size:.8em;margin-top:28px}
 .sel{outline:3px solid var(--yel)}
 canvas{width:100%;background:#0a1522;border-radius:12px;border:1px solid var(--line)}
 .card{background:#fff;color:#000;border-radius:14px;padding:14px;font-size:1.05em}.card b{color:#900}
+.sunt{width:100%;border-collapse:collapse;font-size:.82em;margin:8px 0;font-variant-numeric:tabular-nums}
+.sunt th{color:var(--mut);font-weight:600;font-size:.85em;padding:4px 2px;position:sticky;top:62px;background:var(--bg)}
+.sunt td{text-align:center;padding:6px 2px;border-bottom:1px solid var(--line)}
+.smh td{text-align:left;background:var(--card);color:var(--yel);font-weight:800;padding:10px 8px;cursor:pointer}.smh.cur td{background:#3a2a10}
 </style></head><body>
 <header><button class="hb" id="bk" onclick="back()" aria-label="Πίσω">◀</button><h1 id="ttl">Επιβίωση 72+</h1>
 <button class="hb" onclick="fz(-1)">A−</button><button class="hb" onclick="fz(1)">A+</button><button class="hb" onclick="go('home')" aria-label="Αρχική">🏠</button></header>
@@ -90,6 +94,7 @@ function render(r){
  if(a==='cpr')return cprPage();
  if(a==='morse')return morse();
  if(a==='wx')return wx();
+ if(a==='sun')return sun();
  home();
 }
 function home(){T('Επιβίωση 72+');
@@ -106,6 +111,7 @@ function home(){T('Επιβίωση 72+');
  <button class="tile" onclick="go('cat/tips')"><span class="e">💡</span>Συμβουλές<small>και για παιδιά</small></button>
  <button class="tile" onclick="go('wx')"><span class="e">🌦️</span>Καιρός & Υψόμετρο<small>βαρόμετρο, GPS ύψος</small></button>
  <button class="tile" onclick="go('morse')"><span class="e">📡</span>Morse<small>λέξεις με φως & ήχο</small></button>
+ <button class="tile" onclick="go('sun')"><span class="e">🌅</span>Ήλιος<small>ανατολή – δύση, όλο τον χρόνο</small></button>
  <button class="tile" onclick="go('search')" style="grid-column:1/-1;min-height:70px"><span class="e" style="font-size:1.4em">🔎</span>Αναζήτηση</button>
  </div>
  <div class="tip">Δουλεύει χωρίς internet. Τα δεδομένα σου μένουν μόνο σε αυτό το κινητό. <b>A+</b> πάνω δεξιά για μεγαλύτερα γράμματα.</div>
@@ -271,6 +277,64 @@ function moSeq(codes){const s=[];codes.forEach((c,ci)=>{if(c===' '){s.push([0,4]
 function moGo(){if(moOn)return moStop();const w=moEnc($('#mot').value);if(!w.length)return;const codes=[];w.forEach((x,wi)=>{if(wi)codes.push(' ');x.forEach(([c,v])=>codes.push(v))});moRun(moSeq(codes),$('#mot').value.trim().slice(0,20))}
 function moPlay(k){const v=MO_ALL[k];if(v)moRun(moSeq([v]),k)}
 function moRaw(v){moRun(moSeq([v]),moSym(v))}
+
+/* ---- Sun: sunrise / sunset (offline, NOAA/suncalc formulas, Greek time) ---- */
+const SUNP=[['Αθήνα',37.98,23.73],['Θεσσαλονίκη',40.64,22.94],['Πάτρα',38.25,21.73],['Ηράκλειο',35.34,25.13],['Χανιά',35.51,24.02],['Λάρισα',39.64,22.42],['Βόλος',39.36,22.94],['Ιωάννινα',39.66,20.85],['Κέρκυρα',39.62,19.92],['Καλαμάτα',37.04,22.11],['Τρίπολη',37.51,22.37],['Καβάλα',40.94,24.41],['Αλεξανδρούπολη',40.85,25.87],['Κοζάνη',40.30,21.79],['Φλώρινα',40.78,21.41],['Μυτιλήνη',39.11,26.55],['Χίος',38.37,26.14],['Σύρος',37.44,24.94],['Ρόδος',36.43,28.22],['Σητεία',35.21,26.10]];
+const SR=Math.PI/180;
+function sunT(y,m,d,lat,lon){const J=Date.UTC(y,m,d,12)/864e5-0.5+2440588-2451545,lw=-lon*SR,ph=lat*SR,J0=0.0009,
+ n=Math.round(J-J0-lw/(2*Math.PI)),ds=J0+lw/(2*Math.PI)+n,M=SR*(357.5291+0.98560028*ds),
+ L=M+SR*(1.9148*Math.sin(M)+0.02*Math.sin(2*M)+0.0003*Math.sin(3*M))+SR*102.9372+Math.PI,
+ dec=Math.asin(Math.sin(SR*23.4397)*Math.sin(L)),Jn=2451545+ds+0.0053*Math.sin(M)-0.0069*Math.sin(2*L),
+ ms=j=>(j+0.5-2440588)*864e5,r={noon:ms(Jn),dec};
+ for(const [h,a,b] of [[-0.833,'rise','set'],[-6,'dawn','dusk']]){const c=(Math.sin(h*SR)-Math.sin(ph)*Math.sin(dec))/(Math.cos(ph)*Math.cos(dec));
+  if(c<-1||c>1){r[a]=r[b]=null;continue}const w=Math.acos(c),Js=2451545+J0+(w+lw)/(2*Math.PI)+n+0.0053*Math.sin(M)-0.0069*Math.sin(2*L);r[b]=ms(Js);r[a]=ms(Jn-(Js-Jn))}
+ r.az=Math.acos(Math.max(-1,Math.min(1,Math.sin(dec)/Math.cos(ph))))/SR;return r}
+const GRT=new Intl.DateTimeFormat('el-GR',{timeZone:'Europe/Athens',hour:'2-digit',minute:'2-digit',hourCycle:'h23'});
+const hm=t=>t==null?'—':GRT.format(new Date(t));
+const dur=ms=>{const m=Math.round(ms/6e4);return Math.floor(m/60)+'ω '+String(m%60).padStart(2,'0')+'′'};
+const pts16=['Β','ΒΒΑ','ΒΑ','ΑΒΑ','Α','ΑΝΑ','ΝΑ','ΝΝΑ','Ν','ΝΝΔ','ΝΔ','ΔΝΔ','Δ','ΔΒΔ','ΒΔ','ΒΒΔ'],pt16=a=>pts16[Math.round(((a%360)+360)%360/22.5)%16];
+const MON=['Ιανουάριος','Φεβρουάριος','Μάρτιος','Απρίλιος','Μάιος','Ιούνιος','Ιούλιος','Αύγουστος','Σεπτέμβριος','Οκτώβριος','Νοέμβριος','Δεκέμβριος'];
+let sunOpen=-1;
+function sunPlace(){const k=LS.g('sunp','Αθήνα');if(k==='gps'){const g=LS.g('sungps',null);if(g)return['📍 Η θέση μου',g.lat,g.lon]}return SUNP.find(p=>p[0]===k)||SUNP[0]}
+function sun(){T('☀️ Ήλιος');const k=LS.g('sunp','Αθήνα'),g=LS.g('sungps',null);
+ M.innerHTML=`<label>Τόπος</label><select id="sps" onchange="sunSel(this.value)"><option value="gps">📍 Η θέση μου (GPS)${g?'':' – πάτα για εύρεση'}</option>${SUNP.map(p=>`<option ${p[0]===k?'selected':''}>${p[0]}</option>`).join('')}</select>
+ <div id="snow"></div>
+ <h3>📅 Όλο τον χρόνο</h3><div class="muted">Ώρα Ελλάδας (με τη θερινή ώρα). Πάτα έναν μήνα για να δεις κάθε μέρα.</div><div id="syr"></div>
+ <div class="box"><b>💡 Τι σημαίνουν και πώς τα χρησιμοποιείς</b>
+ <div class="li"><b>Πρώτο φως / Τελευταίο φως</b> (πολιτικό λυκόφως): ο ήλιος είναι κάτω από τον ορίζοντα αλλά βλέπεις να περπατάς και να δουλεύεις χωρίς φακό. Περίπου 25–30′ πριν την ανατολή και μετά τη δύση.</div>
+ <div class="li"><b>Στήσε καταφύγιο 2 ώρες πριν τη δύση.</b> Νερό, ξύλα και κρεβάτι θέλουν φως. Στο σκοτάδι όλα γίνονται αργά και επικίνδυνα.</div>
+ <div class="li"><b>Πόσο φως μένει – με το χέρι:</b> τέντωσε το χέρι, παλάμη οριζόντια κάτω από τον ήλιο. Κάθε δάχτυλο ανάμεσα στον ήλιο και τον ορίζοντα ≈ 15 λεπτά. 4 δάχτυλα ≈ 1 ώρα.</div>
+ <div class="li"><b>Προσανατολισμός:</b> ο ήλιος ανατέλλει ακριβώς Ανατολικά και δύει ακριβώς Δυτικά μόνο στις ισημερίες (~21 Μαρτίου, ~23 Σεπτεμβρίου). Το καλοκαίρι ανατέλλει πιο βόρεια (ΒΑ), τον χειμώνα πιο νότια (ΝΑ). Το μεσημέρι (ηλιακό) ο ήλιος είναι ακριβώς Νότια.</div>
+ <div class="li"><b>Αλλαγή ώρας:</b> τελευταία Κυριακή Μαρτίου +1 ώρα (θερινή), τελευταία Κυριακή Οκτωβρίου −1 ώρα (χειμερινή). Ο πίνακας τη λογαριάζει ήδη.</div>
+ <div class="tip">Σε βουνό ή φαράγγι ο ήλιος «χάνεται» πίσω από την κορυφή πολύ πριν τη δύση. Λογάριασε ακόμα 30–60′ λιγότερο φως.</div></div>`;
+ if(k==='gps'&&!g)sunGps();sunNow();sunYear()}
+function sunSel(v){LS.s('sunp',v);if(v==='gps')sunGps();else{sunNow();sunYear()}}
+function sunGps(){const e=$('#snow');if(e)e.innerHTML='<div class="box muted">📡 Βρίσκω τη θέση σου… βγες σε ανοιχτό χώρο.</div>';
+ if(!navigator.geolocation){if(e)e.innerHTML='<div class="warn">Δεν υπάρχει GPS. Διάλεξε πόλη.</div>';return}
+ navigator.geolocation.getCurrentPosition(p=>{LS.s('sungps',{lat:+p.coords.latitude.toFixed(4),lon:+p.coords.longitude.toFixed(4)});if($('#sps')){sunNow();sunYear()}},
+  er=>{const e2=$('#snow');if(e2)e2.innerHTML='<div class="warn">'+(er.code===1?'Δεν δόθηκε άδεια τοποθεσίας. Διάλεξε την πιο κοντινή πόλη.':'Δεν βρέθηκε θέση. Διάλεξε την πιο κοντινή πόλη.')+'</div>'},{enableHighAccuracy:true,timeout:30000,maximumAge:600000})}
+function grDate(t){const p=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Athens',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(t)).split('-').map(Number);return[p[0],p[1]-1,p[2]]}
+function sunNow(){const e=$('#snow');if(!e)return;if(LS.g('sunp','Αθήνα')==='gps'&&!LS.g('sungps',null))return;
+ const [nm,la,lo]=sunPlace(),now=Date.now(),[y,m,d]=grDate(now),s=sunT(y,m,d,la,lo);
+ let st='';if(now<s.dawn)st=`🌙 Νύχτα. Πρώτο φως σε <b>${dur(s.dawn-now)}</b>.`;
+ else if(now<s.rise)st=`🌅 Χαράζει. Ο ήλιος βγαίνει σε <b>${dur(s.rise-now)}</b>.`;
+ else if(now<s.set){const left=s.set-now;st=`☀️ Μένει φως ήλιου <b>${dur(left)}</b> (+ ~${Math.round((s.dusk-s.set)/6e4)}′ λυκόφως).`+(left<2*36e5?`<div class="warn" style="margin-top:8px">Λιγότερο από 2 ώρες φως! Στήσε τώρα καταφύγιο, μάζεψε νερό και ξύλα.</div>`:'')}
+ else if(now<s.dusk)st=`🌇 Σουρουπώνει. Σκοτάδι σε <b>${dur(s.dusk-now)}</b>. Άναψε φακό, μην κινείσαι μακριά.`;
+ else{const t=sunT(...grDate(now+864e5),la,lo);st=`🌙 Νύχτα. Πρώτο φως σε <b>${dur(t.dawn-now)}</b>.`}
+ e.innerHTML=`<div class="box"><b>Σήμερα – ${esc(nm)}</b> <span class="muted">${la.toFixed(2)}°, ${lo.toFixed(2)}°</span>
+ <div class="grid" style="margin-top:8px;text-align:center">
+  <div><div class="muted">🌄 Ανατολή</div><div class="hd" style="font-size:2em">${hm(s.rise)}</div><div class="muted">προς ${Math.round(s.az)}° (${pt16(s.az)})</div></div>
+  <div><div class="muted">🌇 Δύση</div><div class="hd" style="font-size:2em">${hm(s.set)}</div><div class="muted">προς ${Math.round(360-s.az)}° (${pt16(360-s.az)})</div></div></div>
+ <div style="text-align:center;margin-top:6px">Πρώτο φως <b>${hm(s.dawn)}</b> · Τελευταίο φως <b>${hm(s.dusk)}</b><br>Μέρα <b>${dur(s.set-s.rise)}</b> · Μεσημέρι ήλιου (ήλιος στον Νότο) <b>${hm(s.noon)}</b></div>
+ <div class="tip" style="margin-top:10px">${st}</div></div>`}
+function sunYear(){const e=$('#syr');if(!e)return;if(LS.g('sunp','Αθήνα')==='gps'&&!LS.g('sungps',null)){e.innerHTML='';return}
+ const [,la,lo]=sunPlace(),[Y,CM,CD]=grDate(Date.now());
+ const row=(y,m,d,b)=>{const s=sunT(y,m,d,la,lo);return`<tr${b?' style="background:#2a4060"':''}><td>${d}/${m+1}</td><td>${hm(s.dawn)}</td><td><b>${hm(s.rise)}</b></td><td><b>${hm(s.set)}</b></td><td>${hm(s.dusk)}</td><td>${dur(s.set-s.rise)}</td></tr>`};
+ let h=`<table class="sunt"><thead><tr><th>Ημ/νία</th><th>Πρώτο<br>φως</th><th>🌄<br>Ανατ.</th><th>🌇<br>Δύση</th><th>Τελ.<br>φως</th><th>Μέρα</th></tr></thead>`;
+ for(let i=0;i<12;i++){const m=(CM+i)%12,y=Y+(CM+i>11?1:0),nd=new Date(Date.UTC(y,m+1,0)).getUTCDate(),op=sunOpen===m;
+  h+=`<tbody><tr class="smh${m===CM?' cur':''}" onclick="sunOpen=sunOpen===${m}?-1:${m};sunYear()"><td colspan="6">${op?'▼':'▶'} ${MON[m]} ${y}</td></tr>`;
+  const days=op?[...Array(nd)].map((_,j)=>j+1):[1,15];days.forEach(d=>h+=row(y,m,d,y===Y&&m===CM&&d===CD));h+='</tbody>'}
+ e.innerHTML=h+'</table>'}
 
 /* ---- Weather (barometer log) & altitude ---- */
 const qnh=(p,h)=>p*Math.pow(1-0.0065*h/288.15,-5.255);
