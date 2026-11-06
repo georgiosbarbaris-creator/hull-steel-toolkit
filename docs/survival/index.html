@@ -1198,6 +1198,97 @@ A('c_bt','📲','bitchat, Briar, Bridgefy','εφαρμογές Bluetooth από 
 ['step','Στην κρίση: Bluetooth ανοιχτό, εφαρμογή ανοιχτή στην οθόνη (το iPhone την «κοιμίζει» στο παρασκήνιο), φορτιστής/powerbank.']]);
 })();
 
+/* ===================== v14: 🆘 ΚΟΥΜΠΙ ΠΑΝΙΚΟΥ ===================== */
+if(!PH.some(p=>p[0]==='15900'))PH.splice(5,0,['15900','SOS γραμμή για τη βία κατά των γυναικών','24 ώρες, δωρεάν, όλο τον χρόνο',0]);
+if(!PH.some(p=>p[0]==='116000'))PH.push(['116000','Εξαφανισμένα παιδιά','Ευρωπαϊκή γραμμή – 24 ώρες',0]);
+const PNK=()=>LS.g('panic',{who:'child',name:'',l1:'',n1:'',n2:'',siren:1});
+const PNOK=()=>!!(PNK().n1||'').replace(/\D/g,'');
+let PN={on:false,kind:'',t:0,fx:null,sir:null,flash:null,rem:null};
+function pnNums(){const p=PNK();return[p.n1,p.n2].map(x=>(x||'').replace(/[^\d+]/g,'')).filter(Boolean)}
+function pnText(kind,f,bat){const p=PNK(),nm=(p.name||LS.g('me',{}).name||'').trim();
+ let t={danger:'🆘 ΚΙΝΔΥΝΕΥΩ! ΕΛΑ ΤΩΡΑ / ΚΑΛΕΣΕ 100.',lost:'😟 ΧΑΘΗΚΑ. Είμαι εδώ και περιμένω, έλα να με βρεις.',upd:'📍 ΝΕΑ ΘΕΣΗ – ακόμα χρειάζομαι βοήθεια.',safe:'✅ ΕΙΜΑΙ ΑΣΦΑΛΗΣ ΤΩΡΑ. Όλα καλά.',test:'🧪 ΔΟΚΙΜΗ κουμπιού πανικού – όλα καλά.'}[kind];
+ t+=' '+(nm?nm+'. ':'');
+ if(f&&kind!=='safe')t+=`Θέση: https://maps.google.com/?q=${f.lat.toFixed(5)},${f.lon.toFixed(5)} (±${Math.round(f.acc||0)} m, ${tnow(f.t||Date.now())}). `;
+ else if(kind!=='safe')t+='(Χωρίς GPS – πάρε με τηλέφωνο.) ';
+ if(bat!=null)t+=`Μπαταρία ${bat}%. `;return t+'– Επιβίωση 72+'}
+async function pnBat(){try{if(navigator.getBattery){const b=await navigator.getBattery();return Math.round(b.level*100)}}catch(e){}return null}
+function pnFix(max,cb){const lf=LS.g('lastfix',null);let done=false;const fin=f=>{if(done)return;done=true;cb(f)};
+ if(pos&&Date.now()-(pos.t||0)<60000)return fin(pos);
+ const to=setTimeout(()=>fin(lf&&Date.now()-lf.t<15*60000?lf:null),max);
+ if(!navigator.geolocation){clearTimeout(to);return fin(lf)}
+ navigator.geolocation.getCurrentPosition(p=>{clearTimeout(to);const f={lat:p.coords.latitude,lon:p.coords.longitude,acc:p.coords.accuracy,t:Date.now()};LS.s('lastfix',f);fin(f)},()=>{},{enableHighAccuracy:true,timeout:max,maximumAge:60000})}
+function pnSms(kind,cb){const n=pnNums();pnFix(kind==='safe'||kind==='test'?1500:7000,async f=>{const t=pnText(kind,f,await pnBat());cb&&cb(f);location.href='sms:'+n.join(',')+'?&body='+encodeURIComponent(t)})}
+/* σειρήνα: δυνατός ήχος + αναβοσβήνει η οθόνη */
+function pnSiren(on){if(on===undefined)on=!PN.sir;if(PN.sir){clearInterval(PN.sir);PN.sir=null}if(PN.flash){clearInterval(PN.flash);PN.flash=null;document.body.style.background=''}
+ if(on){let i=0;wake(1);PN.sir=setInterval(()=>{beep(i%2?1050:1650,240,1,'square');vib(200);i++},250);let k=0;PN.flash=setInterval(()=>{document.body.style.background=(k++%2)?'#ff0000':'#ffffff'},250)}
+ const b=$('#pnsir');if(b)b.innerHTML=PN.sir?'⏹ ΣΤΟΠ σειρήνα':'📣 ΣΕΙΡΗΝΑ<small>δυνατός ήχος + φως – τρομάζει, σε βρίσκουν</small>'}
+function pnFire(kind){if(!PNOK()){go('panic/set');return}PN.on=true;PN.kind=kind;PN.t=Date.now();LS.s('pact',{kind,t:PN.t});vib([400,100,400]);wake(1);M.style.pointerEvents='none';setTimeout(()=>M.style.pointerEvents='',800);
+ go('panic');setTimeout(()=>{const s=$('#pnst');if(s)s.innerHTML='📡 Βρίσκω τη θέση σου… (έως 7″)';pnSms(kind,f=>{const s2=$('#pnst');if(s2)s2.innerHTML=(f?'📍 Θέση ±'+Math.round(f.acc||0)+' m':'⚠️ Χωρίς GPS')+' · <b>Πάτα «Αποστολή» στο SMS!</b>'})},150);
+ clearInterval(PN.rem);PN.rem=setInterval(()=>{if(!PN.on)return clearInterval(PN.rem);beep(880,150,.5,'sine');vib(300);const s=$('#pnst');if(s)s.innerHTML='⏰ Πέρασαν 3 λεπτά – <b>στείλε νέα θέση</b>'},180000)}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&PN.on&&PN.kind==='danger'&&PNK().siren&&!PN.sir&&!PN.sirAsked){PN.sirAsked=1;if(location.hash==='#panic')pnSiren(true)}});
+function pnSafe(){if(!confirm('Είσαι ασφαλής; Θα σταλεί SMS «Είμαι ασφαλής».'))return;pnSiren(false);PN.on=false;PN.sirAsked=0;clearInterval(PN.rem);LS.s('pact',null);pnSms('safe');setTimeout(()=>go('home'),500)}
+function pnEnd(){pnSiren(false);PN.on=false;PN.sirAsked=0;clearInterval(PN.rem);LS.s('pact',null);go('home')}
+function panic(sub){if(sub==='set')return pnSet();if(sub==='guide')return go('a/p_auto');const p=PNK(),n=pnNums(),me=LS.g('me',{});
+ if(!PN.on){T('🆘 Κουμπί πανικού');if(!PNOK())return pnSet();
+  M.innerHTML=`<button class="big red" style="padding:30px 14px;font-size:1.6em" onclick="pnFire('danger')">🆘 ΚΙΝΔΥΝΕΥΩ<small>SMS με τη θέση μου στον/στη ${esc(p.l1||'δικό μου')} + σειρήνα</small></button>
+  <button class="big org" style="padding:22px 14px" onclick="pnFire('lost')">😟 ΧΑΘΗΚΑ<small>SMS με τη θέση μου – περιμένω να με βρουν</small></button>
+  <div class="tools" style="justify-content:center"><button class="btn" onclick="go('panic/set')">⚙️ Ρυθμίσεις</button><button class="btn" onclick="pnSms('test')">🧪 Δοκιμή</button><button class="btn" onclick="go('a/p_auto')">📖 Αυτόματο SOS κινητού</button></div>
+  <div class="tip">Στην αρχική οθόνη: <b>κράτα πατημένο</b> το κόκκινο κουμπί 🆘 για 1 δευτερόλεπτο και ξεκινάει αμέσως το «ΚΙΝΔΥΝΕΥΩ».</div>`;return}
+ const dg=PN.kind==='danger';T(dg?'🆘 ΚΙΝΔΥΝΕΥΩ':'😟 ΧΑΘΗΚΑ');
+ M.innerHTML=`<div class="box" style="text-align:center;border:2px solid var(--red)"><div id="pnst" style="font-size:1.1em">✉️ Πάτα <b>«Αποστολή»</b> στο SMS που άνοιξε.</div><div class="muted">Προς: ${esc(n.join(', '))}</div><button class="btn" style="margin-top:6px" onclick="pnSms(PN.kind)">✉️ Δεν άνοιξε το SMS; Πάτα εδώ</button></div>
+ ${dg?`<button class="big red" id="pnsir" onclick="pnSiren()">📣 ΣΕΙΡΗΝΑ<small>δυνατός ήχος + φως – τρομάζει, σε βρίσκουν</small></button>`:''}
+ <a class="big org" href="tel:${n[0]||''}" style="text-decoration:none">📞 Πάρε ${esc(p.l1||'τηλέφωνο')}<small>${esc(n[0]||'')}</small></a>
+ <a class="big red" href="tel:112" style="text-decoration:none;background:#7a0000">📞 112${dg?' / 100':''}</a>
+ <button class="big blu" onclick="pnSms('upd')">📍 Στείλε ξανά τη θέση μου</button>
+ ${dg?`<div class="tip">Φώναξε δυνατά «<b>ΒΟΗΘΕΙΑ! ΔΕΝ ΤΟΝ ΞΕΡΩ!</b>». Τρέξε προς κόσμο, μαγαζί, φως. Μην μπεις σε αυτοκίνητο.</div>`:
+ `<div class="warn" style="font-weight:400"><b>Μείνε εκεί που είσαι.</b> Μην φύγεις με άγνωστο. Ζήτα βοήθεια από <b>αστυνομικό</b>, από <b>ταμία σε μαγαζί</b> ή από <b>μια μαμά με παιδιά</b> – δείξε τους την κάρτα από κάτω.</div>
+ <div class="card" style="text-align:center;font-size:1.25em">${p.name||me.name?`Με λένε <b>${esc(p.name||me.name)}</b>.<br>`:''}Χάθηκα. Πάρτε τηλέφωνο ${esc(p.l1||'τους δικούς μου')}:<br><a href="tel:${n[0]||''}" style="font-size:1.6em;font-weight:900;color:#900">${esc(n[0]||'')}</a>${me.blood||me.allergy?`<div style="font-size:.7em;margin-top:6px">${me.allergy?'Αλλεργίες: '+esc(me.allergy):''}</div>`:''}</div>
+ <button class="big org" id="wh" onclick="whistle()" style="margin-top:12px">📣 Σφυρίχτρα<small>για να σε ακούσουν</small></button>`}
+ <button class="big grn" onclick="pnSafe()">✅ ΕΙΜΑΙ ΑΣΦΑΛΗΣ<small>SMS «όλα καλά» + τέλος</small></button>
+ <button class="btn" onclick="pnEnd()">Κλείσιμο χωρίς SMS</button>`;
+ if(dg&&PN.sir)pnSiren(true)}
+function pnSet(){T('⚙️ Κουμπί πανικού');const p=PNK(),me=LS.g('me',{});
+ M.innerHTML=`<div class="muted">Ένα πάτημα στέλνει SMS με τη θέση GPS στο τηλέφωνο που θα βάλεις εδώ. Ρύθμισέ το <b>εσύ</b> στο κινητό του παιδιού.</div>
+ <div class="box"><label>Ποιος κρατάει αυτό το κινητό;</label><div class="tools"><button class="btn ${p.who==='child'?'p':''}" onclick="pnW('child')">🧒 Παιδί</button><button class="btn ${p.who==='adult'?'p':''}" onclick="pnW('adult')">🧑 Ενήλικας</button></div>
+ <label>Όνομα (αυτός που κρατάει το κινητό)</label><input id="pn_name" value="${esc(p.name||me.name||'')}" placeholder="π.χ. Μαρία">
+ <label>Σε ποιον πάει το μήνυμα; (π.χ. «τη μαμά», «τον μπαμπά»)</label><input id="pn_l1" value="${esc(p.l1||'')}" placeholder="τη μαμά">
+ <label>📞 Τηλέφωνο 1 (κύριο)</label><input id="pn_n1" type="tel" inputmode="tel" value="${esc(p.n1||'')}" placeholder="69xxxxxxxx">
+ <label>📞 Τηλέφωνο 2 (προαιρετικό – πάει και σε αυτό)</label><input id="pn_n2" type="tel" inputmode="tel" value="${esc(p.n2||'')}" placeholder="69xxxxxxxx">
+ <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="pn_s" ${p.siren?'checked':''} style="width:auto;margin:0"> 📣 Σειρήνα αυτόματα στο «ΚΙΝΔΥΝΕΥΩ» (μόλις στείλεις το SMS)</label></div>
+ <button class="big grn" onclick="pnSave()">💾 Αποθήκευση</button>
+ <button class="btn" onclick="pnSave(1)">🧪 Αποθήκευση & δοκιμαστικό SMS</button>
+ <div class="tip">Μια εφαρμογή web <b>δεν επιτρέπεται</b> να στείλει SMS μόνη της – ανοίγει το SMS έτοιμο και πατάς «Αποστολή» (1 πάτημα). Για <b>100% αυτόματο</b>, ενεργοποίησε και το SOS του ίδιου του κινητού: <a href="#a/p_auto" style="color:var(--yel)">📖 οδηγός</a>.</div>`}
+function pnW(w){const p=PNK();p.who=w;if(w==='adult'&&p.siren==null)p.siren=1;LS.s('panic',Object.assign(p,pnRead()));pnSet()}
+function pnRead(){const v=id=>{const e=$('#'+id);return e?e.value.trim():''};const s=$('#pn_s');return{name:v('pn_name'),l1:v('pn_l1'),n1:v('pn_n1'),n2:v('pn_n2'),siren:s?(s.checked?1:0):1}}
+function pnSave(test){const p=Object.assign(PNK(),pnRead());if(!p.n1.replace(/\D/g,'')){alert('Βάλε τουλάχιστον το τηλέφωνο 1.');return}LS.s('panic',p);if(test)pnSms('test');else{alert('✅ Αποθηκεύτηκε.');go('panic')}}
+/* αρχική: κουμπί πανικού (πάτημα → σελίδα, κράτημα 1″ → ΚΙΝΔΥΝΕΥΩ αμέσως) */
+function pnHold(el){let t0=0,tm=null,raf=0;const bar=el.querySelector('i');
+ const st=e=>{e.preventDefault();try{ac()}catch(x){}t0=Date.now();const step=()=>{const k=Math.min(1,(Date.now()-t0)/1000);bar.style.width=(k*100)+'%';if(k<1)raf=requestAnimationFrame(step)};step();tm=setTimeout(()=>{tm=null;cancelAnimationFrame(raf);bar.style.width='0';pnFire('danger')},1000)};
+ const en=e=>{cancelAnimationFrame(raf);bar.style.width='0';if(tm){clearTimeout(tm);tm=null;if(Date.now()-t0<1000)go('panic')}};
+ el.addEventListener('pointerdown',st);el.addEventListener('pointerup',en);el.addEventListener('pointerleave',()=>{if(tm){clearTimeout(tm);tm=null;cancelAnimationFrame(raf);bar.style.width='0'}});el.addEventListener('contextmenu',e=>e.preventDefault())}
+{const _h=home;home=function(){_h();const r=M.querySelector('.big.red');if(!r)return;const p=PNK();
+ r.insertAdjacentHTML('beforebegin',`<button class="big" id="pnhome" style="background:#7a0000;border:3px solid #ff4d4d;position:relative;overflow:hidden;user-select:none;-webkit-user-select:none;touch-action:none"><i style="position:absolute;left:0;top:0;bottom:0;width:0;background:#ff4d4d;opacity:.55"></i><span style="position:relative">🆘 ΚΟΥΜΠΙ ΠΑΝΙΚΟΥ<small>${PN.on?'🔴 ΕΝΕΡΓΟ – πάτα για τη σελίδα βοήθειας':PNOK()?'κράτα πατημένο 1″ → SMS με θέση σε '+esc(p.l1||'δικό μου'):'πάτα για ρύθμιση – βάλε τηλέφωνο'}</small></span></button>`);pnHold($('#pnhome'))}}
+{const _r=render;render=function(r){const [a,b]=r.split('/');if(a==='panic')return panic(b);return _r(r)}}
+{const _s=stopAll;stopAll=function(){const keep=PN.sir&&location.hash==='#panic';_s();if(!keep&&PN.sir)pnSiren(false);if(PN.on)wake(1)}}
+{const a=LS.g('pact',null);if(a&&Date.now()-a.t<3*36e5){PN.on=true;PN.kind=a.kind;PN.t=a.t;PN.sirAsked=1}}
+(function(){const A=(id,emoji,title,sub,b)=>{const a={cat:'comm',id,emoji,title,sub,blocks:b.map(([t,x])=>({t,x}))};D.push(a);byId[id]=a};
+A('p_auto','🆘','Αυτόματο SOS του κινητού','στέλνει μόνο του, χωρίς να ανοίξεις εφαρμογή',[
+['tip','Το κουμπί πανικού της εφαρμογής θέλει 1 πάτημα «Αποστολή». Το SOS του ίδιου του κινητού στέλνει ΜΟΝΟ ΤΟΥ, ακόμα και με κλειδωμένη οθόνη, μέσα από την τσέπη. Ρύθμισέ το και τα δύο.'],
+['h','iPhone'],
+['step','Ρυθμίσεις → Υγεία (εφαρμογή Υγεία) → Ιατρικό ID → Επαφές έκτακτης ανάγκης: βάλε μαμά/μπαμπά.'],
+['step','Ρυθμίσεις → SOS έκτακτης ανάγκης: άνοιξε «Κλήση με πάτημα 5 φορές» (ή κράτημα πλαϊνού + έντασης). Καλεί 112 και μετά στέλνει μόνο του SMS με τη θέση στις επαφές έκτακτης ανάγκης.'],
+['step','Αθόρυβο SMS (χωρίς κλήση): Συντομεύσεις → + → «Λήψη τρέχουσας τοποθεσίας» → «Αποστολή μηνύματος» (κείμενο «ΚΙΝΔΥΝΕΥΩ» + τοποθεσία) προς τη μαμά. Τρέξ\' το μία φορά και πάτα «Να επιτρέπεται πάντα».'],
+['step','Ρυθμίσεις → Προσβασιμότητα → Αφή → Πάτημα πίσω πλευράς → Τριπλό πάτημα → διάλεξε αυτή τη συντόμευση. Τώρα 3 χτυπήματα στην πλάτη του κινητού = SMS με θέση, κρυφά.'],
+['h','Samsung'],
+['step','Ρυθμίσεις → Ασφάλεια και έκτακτη ανάγκη (σε παλιά: Προηγμένες λειτουργίες) → Αποστολή μηνυμάτων SOS → ΝΑΙ.'],
+['step','Πρόσθεσε παραλήπτες. Διάλεξε πόσες φορές πατάς το πλαϊνό κουμπί (3 ή 4). Μπορεί να στέλνει και φωτογραφίες + ηχογράφηση.'],
+['h','Άλλα Android (Pixel, Xiaomi κ.λπ.)'],
+['step','Ρυθμίσεις → Ασφάλεια και έκτακτη ανάγκη → SOS έκτακτης ανάγκης: πάτημα 5 φορές το κουμπί λειτουργίας → κλήση 112, κοινοποίηση τοποθεσίας στις επαφές, βίντεο.'],
+['h','Μετά'],
+['step','ΔΟΚΙΜΗ μαζί με το παιδί (στο Samsung/συντόμευση δεν καλεί 112 – στο iPhone «SOS» ΚΑΛΕΙ, γι\' αυτό δοκίμασε μόνο τη συντόμευση).'],
+['step','Μάθε στο παιδί: «Αν φοβηθείς, πάτα το κουμπί 5 φορές / χτύπα την πλάτη 3 φορές, μετά φώναξε και τρέξε σε κόσμο.»'],
+['warn','Το παιδί πρέπει να ξέρει απέξω ένα τηλέφωνο γονιού και να έχει γραμμένο χαρτάκι στην τσέπη – το κινητό μπορεί να πέσει ή να το πάρουν.']]);})();
+
 if(rec)startGeo();
 setTimeout(grdBar,300);
 render(location.hash.slice(1)||'home');
