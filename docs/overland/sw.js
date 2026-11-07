@@ -1,4 +1,4 @@
-const C="overland-v6",TC="ovtiles";const TH=/(tile\.openstreetmap\.org|tile\.opentopomap\.org|server\.arcgisonline\.com)$/;const FILES=["./","index.html","manifest.webmanifest","i18n.js","en-ui.js","academy-en.js","data.js","port.js","map.js","convoy.js","rally.js","academy-data.js","academy.js","lib/leaflet.js","lib/leaflet.css","../grade/data.js","icon-192.png","icon-512.png","apple-touch-icon.png"];
+const C="overland-v7",TC="ovtiles";const TH=/(tile\.openstreetmap\.org|tile\.opentopomap\.org|server\.arcgisonline\.com)$/;const FILES=["./","index.html","manifest.webmanifest","i18n.js","en-ui.js","academy-en.js","data.js","port.js","map.js","convoy.js","rally.js","academy-data.js","academy.js","lib/leaflet.js","lib/leaflet.css","../grade/data.js","icon-192.png","icon-512.png","apple-touch-icon.png"];
 self.addEventListener("install",e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(FILES)));self.skipWaiting();});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x.startsWith("overland")&&x!==C).map(x=>caches.delete(x)))));self.clients.claim();});
 // network first (updates when online), cache fallback (offline)

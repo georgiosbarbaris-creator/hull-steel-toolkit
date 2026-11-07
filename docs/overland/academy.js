@@ -5,8 +5,8 @@ const ABYID=Object.fromEntries(ALL.map(l=>[l.id,l]));
 /* πρόσθεσε στις λίστες εξοπλισμού ό,τι αναφέρουν τα βιβλία */
 (function(){const nm=s=>s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-zα-ω0-9]/g,'');
  Object.entries(ACD.lists||{}).forEach(([id,items])=>{const l=LISTS.find(x=>x.id===id);if(!l)return;const have=new Set(l.i.map(nm));items.forEach(x=>{const k=nm(x);if(k&&!have.has(k)){l.i.push(x);have.add(k)}})})})();
-const SRCS=[['all','Όλα'],['k','📕 Καθαρόαιμος Οδηγός'],['x','📗 Έξω από τους Τοίχους'],['o','🌄 Overland Habit']];
-const srcK=l=>/Καθαρόαιμος|Thoroughbred/.test(l.src)?'k':/Έξω|Outside the Walls/.test(l.src)?'x':'o';
+const SRCS=[['all','Όλα'],['o','🌄 Overland Habit'],['x','📗 Έξω από τους Τοίχους']];
+const srcK=l=>/Έξω|Outside the Walls/.test(l.src)?'x':'o';
 const done=id=>{const r=LS.g('read',{})[id],q=LS.g('quiz',{})[id],L=ABYID[id];return !!r&&(!L||!L.q||!L.q.length||(q&&q.best>=Math.ceil(L.q.length*2/3)))};
 function learn(id){if(id==='index')return acIndex();if(id)return lesson(id);T('🎓 Ακαδημία');const f=LS.g('acf',{lv:'all',s:'all'}),dn=ALL.filter(l=>done(l.id)).length;
  const badges=LEVELS.map(([lv,e,nm])=>{const L=ALL.filter(x=>x.lv===lv),d=L.filter(x=>done(x.id)).length;return`<div style="text-align:center;opacity:${d===L.length&&L.length?1:.45}"><div style="font-size:1.8em">${d===L.length&&L.length?'🏅':e}</div><div class="muted" style="font-size:.75em">${nm}<br>${d}/${L.length}</div></div>`}).join('');
@@ -19,7 +19,7 @@ function learn(id){if(id==='index')return acIndex();if(id)return lesson(id);T('�
  <div id="acl"></div>`;acList()}
 function acF(k,v){const f=LS.g('acf',{lv:'all',s:'all'});f[k]=v;LS.s('acf',f);learn()}
 function acList(){const f=LS.g('acf',{lv:'all',s:'all'}),q=norm2(($('#acq')||{value:''}).value.trim()),e=$('#acl');if(!e)return;
- const L=ALL.filter(l=>(f.lv==='all'||l.lv===f.lv)&&(f.s==='all'||srcK(l)===f.s)&&(!q||norm2(l.n+' '+l.p.map(x=>x[0]+' '+x[1]).join(' ')).includes(q)));
+ const L=ALL.filter(l=>(f.lv==='all'||l.lv===f.lv)&&(f.s==='all'||f.s==='k'||srcK(l)===f.s)&&(!q||norm2(l.n+' '+l.p.map(x=>x[0]+' '+x[1]).join(' ')).includes(q)));
  let h='',cur='';L.forEach(l=>{const g=l.src.split('—')[0].trim();if(g!==cur){cur=g;h+=`<h3>${esc(g)}</h3>`}const lv=LEVELS.find(x=>x[0]===l.lv)||LEVELS[0];
   h+=`<button class="row" onclick="go('learn/${l.id}')"><span class="e">${l.e||'📘'}</span><span style="flex:1"><b>${esc(l.n)}</b><small>${lv[1]} ${lv[2]} · ${l.p.length} ενότητες${l.q&&l.q.length?' · quiz '+l.q.length:''}</small></span>${done(l.id)?'✅':LS.g('read',{})[l.id]?'📖':''}</button>`});
  e.innerHTML=h||'<div class="muted">Τίποτα δεν ταιριάζει.</div>'}
