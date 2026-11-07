@@ -98,8 +98,8 @@ function cvBroker(b){const me=cvMe();me.b=b;LS.s('cvme',me);cvStop();convoy()}
 function cvSos(){const on=LS.g('cvsos',0)?0:1;if(on&&!confirm('Να σταλεί SOS σε όλο το κομβόι με τη θέση σου;'))return;LS.s('cvsos',on);cvSend(true);cvPage()}
 async function cvEnd(){if(!confirm('Τέλος εκδρομής; Θα βγουν όλοι από το κομβόι και θα σβηστούν οι θέσεις.'))return;await cvCmd('Τέλος',true);for(const id of Object.keys(CV.mem))CV.mq&&CV.mq.pub(CV.topic+'/m/'+id,new Uint8Array(0),true);setTimeout(()=>cvLeave(true),600)}
 function cvLeave(silent){if(!silent&&!confirm('Να βγεις από το κομβόι;'))return;const me=cvMe();if(me&&CV.mq)CV.mq.pub(CV.topic+'/m/'+me.id,new Uint8Array(0),true);LS.s('cvsos',0);setTimeout(()=>{cvStop();LS.s('cvme',null);CV.alarms={};cvBanner();if(location.hash.startsWith('#convoy'))convoy()},300)}
-function cvMap(){const c=LS.g('mview',{lat:38.6,lon:22.6,z:7});CV.map=L.map('cvmap',{zoomControl:false}).setView([c.lat,c.lon],Math.max(c.z,10));const l=LAYERS[LS.g('mlay','topo')]||LAYERS.topo;
- L.tileLayer(l[1],{maxZoom:l[2],attribution:l[3],crossOrigin:'anonymous'}).addTo(CV.map);CV.lay=L.layerGroup().addTo(CV.map);CV.fitted=false}
+function cvMap(){const c=LS.g('mview',{lat:38.6,lon:22.6,z:7});CV.map=L.map('cvmap',{zoomControl:false}).setView([c.lat,c.lon],Math.max(c.z,10));const l=LAYERS[LAYK()];
+ L.tileLayer(l[1],{maxZoom:19,maxNativeZoom:l[2],attribution:l[3],crossOrigin:'anonymous'}).addTo(CV.map);CV.lay=L.layerGroup().addTo(CV.map);CV.fitted=false}
 function cvFit(){const P=Object.values(CV.mem).filter(m=>m.lat!=null).map(m=>[m.lat,m.lon]);if(!CV.map||!P.length)return;if(P.length===1)CV.map.setView(P[0],14);else CV.map.fitBounds(L.latLngBounds(P).pad(.25))}
 function cvAgeTxt(ms){const s=Math.round(ms/1000);return s<60?s+'″':Math.round(s/60)+'′'}
 function cvRender(){const me=cvMe();if(!me)return;const now=Date.now(),lostMs=(me.lostMin||3)*60000,Ld=cvLeader(),ref=Ld&&Ld.lat!=null?Ld:null,A=Object.values(CV.mem).sort((a,b)=>(b.lead-a.lead)||(a.n>b.n?1:-1));

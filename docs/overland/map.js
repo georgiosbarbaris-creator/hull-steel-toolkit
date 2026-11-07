@@ -36,9 +36,13 @@ const TAGL={opening_hours:'Ωράριο',fee:'Χρέωση',charge:'Τιμή',ph
 const YN=v=>({yes:'ναι',no:'όχι',customers:'μόνο πελάτες',private:'ιδιωτικό',permissive:'επιτρέπεται',wlan:'Wi-Fi',required:'απαιτείται'}[v]||v);
 
 /* ---------- Χάρτες ---------- */
-const LAYERS={osm:['Δρόμοι (OSM)','https://tile.openstreetmap.org/{z}/{x}/{y}.png',19,'© OpenStreetMap contributors'],
- topo:['Τοπογραφικός','https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',17,'© OpenStreetMap contributors, SRTM · © OpenTopoMap (CC-BY-SA)'],
- sat:['Δορυφόρος','https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',19,'Tiles © Esri, Esri, Maxar, Earthstar Geographics']};
+/* Γρήγοροι χάρτες σε CDN (φορτώνουν και με αδύναμο 4G). Ο παλιός OpenTopoMap μένει ως επιλογή. */
+const LAYERS={carto:['Απλός (γρήγορος)','https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',19,'© OpenStreetMap contributors © CARTO','🗺️'],
+ topo:['Τοπογραφικός','https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',18,'Tiles © Esri, HERE, Garmin, © OpenStreetMap contributors','⛰️'],
+ sat:['Δορυφόρος','https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',19,'Tiles © Esri, Esri, Maxar, Earthstar Geographics','🛰️'],
+ osm:['Δρόμοι (OSM)','https://tile.openstreetmap.org/{z}/{x}/{y}.png',19,'© OpenStreetMap contributors','🛣️'],
+ otm:['Ισοϋψείς (OpenTopoMap, αργός)','https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',17,'© OpenStreetMap contributors, SRTM · © OpenTopoMap (CC-BY-SA)','〰️']};
+const LAYK=()=>{const k=LS.g('mlay2',null);return LAYERS[k]?k:'carto'};
 let MP={map:null,tl:null,poiL:null,myL:null,rtL:null,hiL:null,cv:null,meM:null,acc:null,follow:true,add:false,plan:null,card:null,iv:null,dt:null,P:[],S:[],tick:0,trkN:0};
 const filt=()=>LS.g('mfilt',Object.fromEntries(PC.map(c=>[c.id,!!c.on])));
 const PCOL={camp:'#5f9e7a',caravan:'#4f8a6a',water:'#4a90c8',dump:'#8a6d4a',shower:'#6aa9d0',wc:'#7a8a9a',fuel:'#e8b86d',hut:'#a0785a',view:'#b07ac0',picnic:'#8fae5a',health:'#d9534f',repair:'#9a9a9a',laundry:'#6a9fb5'};
@@ -61,13 +65,13 @@ function mCss(){if($('#mcss'))return;const st=document.createElement('style');st
 
 /* ---------- Σελίδα χάρτη ---------- */
 async function mapPage(sub,arg){if(sub==='list')return mList();if(sub==='dl')return mDl();if(sub==='p')return mPoi(arg);if(sub==='my')return mMy();if(sub==='edit')return mEdit(arg);if(sub==='routes')return mRoutes();if(sub==='r')return mRoute(arg);
- T('🗺️ '+L2('Χάρτης','Map'));mCss();const f=filt(),lay=LS.g('mlay','topo');
+ T('🗺️ '+L2('Χάρτης','Map'));mCss();const f=filt(),lay=LAYK();
  M.innerHTML=`<div style="display:flex;gap:6px;margin:0 0 6px"><input id="mq" placeholder="🔎 ${L2('Βρες σημείο…','Find a place…')}" oninput="mSearch()" style="flex:1;margin:0;min-width:0">
  <button class="hb" onclick="go('map/dl')" title="${L2('Κατέβασε σημεία','Download places')}">⬇️</button><button class="hb" onclick="go('map/list')" title="${L2('Λίστα','List')}">📋</button><button class="hb" onclick="go('map/my')" title="${L2('Δικά μου','My places')}">⭐</button><button class="hb" onclick="go('map/routes')" title="${L2('Διαδρομές','Routes')}">🛣️</button></div>
  <div class="tools mtb" style="margin:0 0 6px;flex-wrap:nowrap;overflow-x:auto">${PC.map(c=>`<button class="btn ${f[c.id]?'p':''}" style="padding:6px 9px;white-space:nowrap" onclick="mFilt('${c.id}',this)" title="${c.n}">${c.e}</button>`).join('')}</div>
  <div style="position:relative"><div id="map" style="height:60vh;border-radius:14px;border:1px solid var(--line)"></div>
  <div id="mcross"><svg viewBox="0 0 46 46" width="46" height="46"><circle cx="23" cy="23" r="9" fill="none" stroke="#d97757" stroke-width="3"/><path d="M23 0v14M23 32v14M0 23h14M32 23h14" stroke="#d97757" stroke-width="3"/><circle cx="23" cy="23" r="2" fill="#d97757"/></svg></div>
- <div id="msr"></div>
+ <div id="msr"></div><div id="mld" style="display:none;position:absolute;left:50%;transform:translateX(-50%);top:46px;z-index:480;background:#1f1e1dcc;border-radius:10px;padding:3px 10px;font-size:.75em;pointer-events:none">⏳ ${L2('φορτώνει ο χάρτης…','loading map…')}</div>
  <div style="position:absolute;right:8px;top:8px;z-index:500;display:flex;flex-direction:column;gap:6px">
   <button class="hb" onclick="mLayer()" title="${L2('Είδος χάρτη','Map type')}">🗂️</button><button class="hb" id="mfol" onclick="mFollow()" title="${L2('Η θέση μου','My location')}">📍</button><button class="hb" onclick="mFitRoute()" title="${L2('Διαδρομή','Route')}">🛣️</button><button class="hb" onclick="mGoogle()" title="Google Maps" style="font-size:.75em;font-weight:900">G</button>
   <button class="hb" onclick="MP.map.zoomIn()" style="font-size:1.3em">+</button><button class="hb" onclick="MP.map.zoomOut()" style="font-size:1.3em">−</button></div>
@@ -88,8 +92,14 @@ async function mapPage(sub,arg){if(sub==='list')return mList();if(sub==='dl')ret
  await mDrawRoute();mDrawMy();mDrawPoi();
  if(LS.g('mplan',null))mPlanStart();else if(fo)mCard(fo.k,fo.id);else mBarHome();if(LS.g('maddon',0)){LS.s('maddon',0);mAddOn()}
  if(!MP.P.length&&!fo)mToast(L2('Για κάμπινγκ, νερό, καύσιμα κ.λπ. πάτα <b>⬇️</b> πάνω δεξιά (θέλει internet μία φορά). Για δικό σου σημείο: <b>➕ Σημείο</b> ή κράτα το δάχτυλο πατημένο στον χάρτη.','For campsites, water, fuel etc. tap <b>⬇️</b> at the top (needs internet once). For your own place: <b>➕ Place</b> or long-press the map.'))}
-function mSetLayer(k){const l=LAYERS[k]||LAYERS.topo;if(MP.tl)MP.map.removeLayer(MP.tl);MP.tl=L.tileLayer(l[1],{maxZoom:19,maxNativeZoom:l[2],attribution:l[3],crossOrigin:'anonymous',keepBuffer:3,updateWhenIdle:true}).addTo(MP.map);MP.te=0;MP.tl.on('tileerror',()=>{if(++MP.te===4)mToast('📶 '+L2('Αδύναμο ή καθόλου σήμα: ο χάρτης δεν φορτώνει εδώ. Τα σημεία σου δουλεύουν κανονικά. Δοκίμασε 🗂️ (ο «Δρόμοι (OSM)» είναι πιο ελαφρύς). Ό,τι έχεις ήδη δει με σήμα μένει αποθηκευμένο.','Weak or no signal: the map can\'t load here. Your places still work. Try 🗂️ (“Roads (OSM)” is lighter). Anything you viewed with signal stays saved.'))});MP.tl.on('tileload',()=>{MP.ok=1});MP.tl.on('load',()=>{MP.te=0});MP.ok=0;if(k!=='osm')setTimeout(()=>{if(MP.map&&!MP.ok&&MP.te>=4&&LS.g('mlay','topo')===k){mSetLayer('osm');mToast('🗂️ '+L2('Ο χάρτης δεν φόρτωνε, άλλαξα στον πιο ελαφρύ «Δρόμοι (OSM)».','The map wasn\'t loading, switched to the lighter “Roads (OSM)”.'))}},9000);MP.map.setMaxZoom(19);LS.s('mlay',k)}
-function mLayer(){const ks=Object.keys(LAYERS),cur=LS.g('mlay','topo'),nx=ks[(ks.indexOf(cur)+1)%ks.length];mSetLayer(nx);mToast('🗂️ '+LAYERS[nx][0])}
+function mSetLayer(k){const l=LAYERS[k]||LAYERS.carto;if(MP.tl)MP.map.removeLayer(MP.tl);
+ MP.tl=L.tileLayer(l[1],{maxZoom:19,maxNativeZoom:l[2],attribution:l[3],crossOrigin:'anonymous',keepBuffer:4,updateWhenIdle:true,updateWhenZooming:false}).addTo(MP.map);MP.map.setMaxZoom(19);LS.s('mlay2',k);LS.s('mlay',k);
+ MP.te=0;MP.ok=0;
+ MP.tl.on('tileerror',e=>{const t=e.tile,u=t.src;MP.te++;if((t._r||0)<2){t._r=(t._r||0)+1;setTimeout(()=>{if(MP.map){t.src='';t.src=u}},1200*t._r)}
+  if(MP.te===8&&!MP.ok)mToast('📶 '+L2('Αδύναμο σήμα: ο χάρτης φορτώνει αργά, ξαναδοκιμάζω μόνος μου. Τα σημεία σου δουλεύουν κανονικά. Ό,τι έχεις δει με σήμα μένει αποθηκευμένο.','Weak signal: the map loads slowly, I keep retrying. Your places still work. Anything viewed with signal stays saved.'))});
+ MP.tl.on('tileload',()=>{MP.ok=1});MP.tl.on('loading',()=>{const e=$('#mld');if(e)e.style.display='block'});MP.tl.on('load',()=>{MP.te=0;const e=$('#mld');if(e)e.style.display='none'});
+ if(k!=='carto')setTimeout(()=>{if(MP.map&&!MP.ok&&MP.te>=4&&LAYK()===k){mSetLayer('carto');mToast('🗂️ '+L2('Ο χάρτης δεν φόρτωνε, άλλαξα στον «Απλό (γρήγορο)».','The map wasn\'t loading, switched to “Simple (fast)”.'))}},10000)}
+function mLayer(){const cur=LAYK();$('#mbar').innerHTML=`<div class="msh"><b>🗂️ ${L2('Είδος χάρτη','Map type')}</b><div class="mg" style="grid-template-columns:1fr 1fr">${Object.entries(LAYERS).map(([k,l])=>`<button class="${k===cur?'o':''}" onclick="mSetLayer('${k}');MP.plan?mPlanUI():mBarHome()">${l[4]} ${l[0]}</button>`).join('')}</div><div class="mg"><button onclick="MP.plan?mPlanUI():mBarHome()">✖ ${L2('Κλείσε','Close')}</button></div></div>`}
 function mToast(t){const i=$('#minfo');if(i)i.innerHTML=t}
 function mFilt(id,b){const f=filt();f[id]=!f[id];LS.s('mfilt',f);b.classList.toggle('p',f[id]);mDrawPoi()}
 function mFollow(){MP.follow=true;$('#mfol').style.background='var(--org)';if(pos)MP.map.setView([pos.lat,pos.lon],Math.max(MP.map.getZoom(),14));else mToast('📡 '+L2('Περιμένω GPS…','Waiting for GPS…'))}
