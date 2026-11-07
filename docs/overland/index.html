@@ -3,6 +3,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Overland Habit</title>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png"><link rel="stylesheet" href="lib/leaflet.css">
+<script src="i18n.js"></script>
+<script>if(LANG==='en')document.write('<script src="en-ui.js"><\/script>')</script>
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Overland Habit">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#1f1e1d">
 <style>
@@ -74,7 +76,7 @@ table.t{width:100%;border-collapse:collapse;font-size:.9em}table.t td,table.t th
 html.night header,html.night main,html.night nav{filter:grayscale(1) sepia(1) saturate(12) hue-rotate(-50deg) brightness(.55)}html.night,html.night body{background:#000}
 </style></head><body>
 <header><button class="hb" id="bk" onclick="back()" aria-label="Πίσω">◀</button><h1 id="ttl">Overland Habit</h1>
-<button class="hb" onclick="fz(-1)">A−</button><button class="hb" onclick="fz(1)">A+</button></header>
+<button class="hb" data-nt onclick="setLang(LANG==='en'?'el':'en')" aria-label="Language">🌐 <script>document.write(LANG==='en'?'ΕΛ':'EN')</script></button><button class="hb" onclick="fz(-1)">A−</button><button class="hb" onclick="fz(1)">A+</button></header>
 <main id="m"></main>
 <nav id="nv">
 <button data-r="home" onclick="go('home')"><span>🌄</span>Αρχική</button>
@@ -99,7 +101,7 @@ function T(t){$('#ttl').textContent=t;$('#bk').style.visibility=(t===TITLE)?'hid
 function go(r){if(location.hash.slice(1)===r){stopAll();render(r);window.scrollTo(0,0)}else location.hash=r}
 function back(){history.length>1?history.back():go('home')}
 const n=v=>{const x=parseFloat(String(v).replace(',','.'));return isNaN(x)?0:x};
-const f1=x=>(Math.round(x*10)/10).toLocaleString('el-GR'),f0=x=>Math.round(x).toLocaleString('el-GR');
+const f1=x=>(Math.round(x*10)/10).toLocaleString(LOC),f0=x=>Math.round(x).toLocaleString(LOC);
 const vib=p=>{try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}};
 const SUN_SVG=`<svg viewBox="0 0 120 72"><g fill="#d97757">${[1,2,3,4,5,6,7,8,9,10,11].map(k=>{const a=Math.PI+Math.PI*k/12,r1=32,r2=k%2?44:52,w=k%2?.05:.07,cx=60,cy=60;return`<polygon points="${cx+r1*Math.cos(a-w)},${cy+r1*Math.sin(a-w)} ${cx+r2*Math.cos(a)},${cy+r2*Math.sin(a)} ${cx+r1*Math.cos(a+w)},${cy+r1*Math.sin(a+w)}"/>`}).join('')}<path d="M34 60 A26 26 0 0 1 86 60 Z"/></g><rect x="6" y="60" width="108" height="3" fill="#f5f0e8"/></svg>`;
 
@@ -145,7 +147,7 @@ function home(){T(TITLE);const read=LS.g('read',{});
  <button class="row" onclick="go('t/walk')"><span class="e">🔎</span><span><b>Walk-round πριν φύγεις</b><small>έλεγχος οχήματος σαν superintendent</small></span></button>
  <button class="row" onclick="go('learn')"><span class="e">🎓</span><span><b>Ακαδημία</b><small>${ALL.filter(l=>done(l.id)).length}/${ALL.length} μαθήματα · quiz · από τα βιβλία, από αρχάριο μέχρι expert</small></span></button>
 ${SOON.length?'<h3>Έρχονται</h3>':''}${SOON.map(s=>`<button class="row soon" onclick="go('${s[0]}')"><span class="e">${s[1]}</span><span><b>${s[2]}</b><small>${s[3]} · ${s[4]}</small></span></button>`).join('')}
- <footer>Overland Habit v0.5 · Created by George Barbaris<br>Τα δεδομένα μένουν μόνο στο κινητό σου.<br>Χάρτες & σημεία © OpenStreetMap contributors · OpenTopoMap · Esri · Leaflet</footer>`}
+ <footer>Overland Habit v0.6 · Created by George Barbaris<br>Τα δεδομένα μένουν μόνο στο κινητό σου.<br>Χάρτες & σημεία © OpenStreetMap contributors · OpenTopoMap · Esri · Leaflet</footer>`}
 function soon(id){const s=SOON.find(x=>x[0]===id);T(s[1]+' '+s[2]);const det={
  map:['Χάρτης με όλα τα σημεία από το OpenStreetMap: κάμπινγκ, χώροι για camper, πόσιμο νερό & πηγές, dump station, ντους, WC, καύσιμα/LPG, θέες, καταφύγια.','«Κατέβασε περιοχή» όταν έχεις σήμα → μετά τα βρίσκεις offline, με απόσταση από σένα.','Τα δικά σου σημεία με φωτογραφία, σημείωση, βαθμολογία και πρόσβαση (2WD / 4×4) — τα στέλνεις στους φίλους σου.','Διαδρομή online που μένει μέσα offline, με camper stops κατά μήκος της, και export GPX.'],
  convoy:['Ο αρχηγός φτιάχνει ομάδα και δίνει κωδικό / QR.','Όλα τα αυτοκίνητα στον χάρτη: απόσταση από τον αρχηγό, ταχύτητα, τελευταία ενημέρωση.','Συναγερμός όταν κάποιος μείνει πίσω ή χαθεί το σήμα του. SOS από κάθε μέλος, «ΣΤΟΠ όλοι» από τον αρχηγό.','Θέλει σήμα κινητής. Χωρίς σήμα: τελευταία γνωστή θέση + ασύρματος (δες «Ασύρματοι & κομβόι»).'],
@@ -446,6 +448,7 @@ window.addEventListener('hashchange',()=>{stopAll();render(location.hash.slice(1
 <script src="convoy.js"></script>
 <script src="rally.js"></script>
 <script src="academy-data.js"></script>
+<script>if(LANG==='en')document.write('<script src="academy-en.js"><\/script>')</script>
 <script src="academy.js"></script>
 <script>
 render(location.hash.slice(1)||'home');if(keepOn)wake(1);

@@ -219,7 +219,7 @@ function mPlanDraw(){if(!MP.map)return;MP.rtL.clearLayers();const p=MP.plan,line
 let planT=null;function mPlanRoute(){clearTimeout(planT);const p=MP.plan;if(!p)return;p.geo=null;mPlanDraw();if(!p.snap||p.pts.length<2)return;
  planT=setTimeout(async()=>{try{const u=`https://router.project-osrm.org/route/v1/driving/${p.pts.map(q=>q[1]+','+q[0]).join(';')}?overview=full&geometries=geojson`;const j=await (await fetch(u)).json();
   if(j.routes&&j.routes[0]){p.geo=j.routes[0].geometry.coordinates.map(c=>[c[1],c[0]]);mPlanDraw()}}catch(e){mToast('Χωρίς internet — σχεδιάζω με ευθείες.')}},600)}
-async function mPlanSave(){const p=MP.plan;const line=p.geo||p.pts;if(line.length<2)return alert('Βάλε τουλάχιστον 2 σημεία.');const n=prompt('Όνομα διαδρομής:','Διαδρομή '+new Date().toLocaleDateString('el-GR'));if(!n)return;
+async function mPlanSave(){const p=MP.plan;const line=p.geo||p.pts;if(line.length<2)return alert('Βάλε τουλάχιστον 2 σημεία.');const n=prompt('Όνομα διαδρομής:','Διαδρομή '+new Date().toLocaleDateString(LOC));if(!n)return;
  const P=line.map(q=>[q[0],q[1],null]),s=rStats(P),r={id:'r'+Date.now(),n,pts:P,wps:[],km:s.km,up:0,dn:0,t:Date.now()};await DB.put('routes',r);LS.s('ract',r.id);LS.s('mplan',null);MP.plan=null;go('map/r/'+r.id)}
 
 /* ---------- Google Maps (άνοιγμα της εφαρμογής) ---------- */

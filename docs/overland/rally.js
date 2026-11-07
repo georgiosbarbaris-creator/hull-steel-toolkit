@@ -68,7 +68,7 @@ function rlCal(){const r=n($('#ccr').value),m=n($('#ccm').value);if(!r||!m)retur
 /* ---------- Roadbook ---------- */
 function rlRBPage(){T('📒 Roadbook');const B=rlRB(),s=RL();
  M.innerHTML=`<div class="tools"><button class="btn p" onclick="rlBoxAdd(true)">➕ Κουτί εδώ (τώρα: ${fk(s.tot)} km)</button><button class="btn" onclick="rlBoxAdd(false)">➕ Κενό κουτί</button><button class="btn" onclick="rlCsv()">📋 Επικόλληση CSV</button><button class="btn" onclick="rlExp()">📤 Export</button>${B.length?`<button class="btn r" onclick="if(confirm('Σβήσιμο όλου του roadbook;')){LS.s('rlrb',[]);rlRBPage()}">🗑</button>`:''}</div>
- <div class="muted">«Κουτί εδώ» κρατάει το Total και το CAP της στιγμής — φτιάχνεις roadbook οδηγώντας την αναγνώριση. CSV: απόσταση;σύμβολο;CAP;σημείωση (μία γραμμή ανά κουτί).</div>`+
+ ${rlMem()}<div class="muted">«Κουτί εδώ» κρατάει το Total και το CAP της στιγμής — φτιάχνεις roadbook οδηγώντας την αναγνώριση. CSV: απόσταση;σύμβολο;CAP;σημείωση (μία γραμμή ανά κουτί).</div>`+
  (B.length?B.map((b,i)=>`<div class="box" style="padding:10px"><div style="display:flex;gap:8px;align-items:center"><b style="min-width:2em">${i+1}</b>
  <select style="width:auto;margin:0;font-size:1.4em;padding:4px" onchange="rlBx(${i},'s',this.value)">${RSYM.map(x=>`<option ${x===b.s?'selected':''}>${x}</option>`).join('')}</select>
  <input type="number" step="0.01" inputmode="decimal" style="margin:0" value="${b.d.toFixed(2)}" onchange="rlBx(${i},'d',n(this.value))" title="km"><input type="number" inputmode="numeric" style="margin:0;width:80px" placeholder="CAP" value="${b.cap??''}" onchange="rlBx(${i},'cap',this.value===''?'':Math.round(n(this.value)))">
@@ -79,3 +79,21 @@ function rlBx(i,k,v){const B=rlRB();B[i][k]=v;LS.s('rlrb',k==='d'?rlSort(B):B);i
 function rlBoxDel(i){const B=rlRB();B.splice(i,1);LS.s('rlrb',B);rlRBPage()}
 function rlCsv(){const t=prompt('Επικόλλησε γραμμές: απόσταση;σύμβολο;CAP;σημείωση');if(!t)return;const B=rlRB();t.split(/\n/).forEach(l=>{const p=l.split(/[;\t]/);const d=n(p[0]);if(!p[0]||isNaN(parseFloat(String(p[0]).replace(',','.'))))return;B.push({d,s:(p[1]||'⬆️').trim()||'⬆️',cap:p[2]?Math.round(n(p[2])):'',t:(p[3]||'').trim()})});LS.s('rlrb',rlSort(B));rlRBPage()}
 function rlExp(){const t=rlRB().map(b=>[b.d.toFixed(2),b.s,b.cap,b.t].join(';')).join('\n');if(navigator.share)navigator.share({text:t}).catch(()=>{});else(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>alert('Αντιγράφηκε.'),()=>prompt('Αντέγραψε:',t))}
+
+/* ===== Μνήμες roadbook: αποθήκευση / άνοιγμα / σβήσιμο / νέο ===== */
+const rlSv=()=>LS.g('rlsaved',[]);
+function rlMem(){const S=rlSv(),cur=LS.g('rlcur',''),B=rlRB();
+ return `<div class="box" style="padding:10px"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b>💾 ${L2('Μνήμες roadbook','Saved roadbooks')}</b><span class="muted">${cur?'📒 '+esc(cur):L2('χωρίς όνομα','unsaved')}${B.length?' · '+B.length+' '+L2('κουτιά','boxes'):''}</span></div>
+ <div class="tools" style="margin-top:6px"><button class="btn p" onclick="rlMemSave()">💾 ${L2('Αποθήκευση','Save')}</button><button class="btn" onclick="rlMemNew()">🆕 ${L2('Νέο roadbook','New roadbook')}</button></div>
+ ${S.length?S.map((r,i)=>`<div class="row" style="margin:6px 0 0;padding:8px"><span style="flex:1"><b>${esc(r.n)}</b><small>${r.B.length} ${L2('κουτιά','boxes')} · ${r.B.length?r.B[r.B.length-1].d.toFixed(2)+' km · ':''}${new Date(r.t).toLocaleDateString(LOC)}</small></span><button class="btn" onclick="rlMemOpen(${i})">📂</button><button class="btn r" onclick="rlMemDel(${i})">🗑</button></div>`).join(''):`<div class="muted" style="margin-top:6px">${L2('Καμία αποθηκευμένη. Αποθήκευσε το roadbook με όνομα για να το ξαναβρείς.','None saved yet. Save the roadbook with a name to find it again.')}</div>`}</div>`}
+function rlMemSave(){const B=rlRB();if(!B.length)return alert(L2('Το roadbook είναι κενό.','The roadbook is empty.'));const S=rlSv(),cur=LS.g('rlcur','');
+ const nm=(prompt(L2('Όνομα roadbook (ίδιο όνομα = αντικατάσταση):','Roadbook name (same name = overwrite):'),cur||(L2('Roadbook ','Roadbook ')+new Date().toLocaleDateString(LOC)))||'').trim();if(!nm)return;
+ const i=S.findIndex(r=>r.n===nm);if(i>=0&&nm!==cur&&!confirm(L2('Υπάρχει ήδη «'+nm+'». Αντικατάσταση;','“'+nm+'” already exists. Overwrite?')))return;
+ const r={n:nm,t:Date.now(),B:JSON.parse(JSON.stringify(B))};if(i>=0)S[i]=r;else S.unshift(r);LS.s('rlsaved',S);LS.s('rlcur',nm);vib(40);rlRBPage()}
+function rlDirty(){const cur=LS.g('rlcur',''),B=rlRB();if(!B.length)return false;const r=rlSv().find(x=>x.n===cur);return !r||JSON.stringify(r.B)!==JSON.stringify(B)}
+function rlMemOpen(i){const r=rlSv()[i];if(!r)return;if(rlDirty()&&!confirm(L2('Το τρέχον roadbook έχει αλλαγές που δεν αποθηκεύτηκαν. Να ανοίξει το «'+r.n+'»;','The current roadbook has unsaved changes. Open “'+r.n+'” anyway?')))return;
+ LS.s('rlrb',JSON.parse(JSON.stringify(r.B)));LS.s('rlcur',r.n);const s=RL();s.box=0;rlSave(s);rlRBPage()}
+function rlMemDel(i){const S=rlSv(),r=S[i];if(!r||!confirm(L2('Σβήσιμο της μνήμης «'+r.n+'»; (το τρέχον roadbook στην οθόνη δεν πειράζεται)','Delete saved “'+r.n+'”? (the roadbook on screen is not touched)')))return;S.splice(i,1);LS.s('rlsaved',S);if(LS.g('rlcur','')===r.n)LS.s('rlcur','');rlRBPage()}
+function rlMemNew(){if(rlDirty()&&confirm(L2('Να αποθηκευτεί πρώτα το τρέχον roadbook;','Save the current roadbook first?')))rlMemSave();
+ if(rlRB().length&&!confirm(L2('Νέο roadbook: καθαρίζουν τα κουτιά της οθόνης (οι μνήμες μένουν).','New roadbook: the boxes on screen are cleared (saved ones stay).')))return;
+ LS.s('rlrb',[]);LS.s('rlcur','');const s=RL();s.box=0;if(confirm(L2('Μηδενισμός και Total/Partial του tripmaster;','Also zero the tripmaster Total/Partial?'))){s.tot=0;s.par=0}rlSave(s);rlRBPage()}

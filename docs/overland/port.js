@@ -62,8 +62,8 @@ function sunT(y,m,d,lat,lon){const J=Date.UTC(y,m,d,12)/864e5-0.5+2440588-245154
  r.az=Math.acos(Math.max(-1,Math.min(1,Math.sin(dec)/Math.cos(ph))))/SR;return r}
 const GRT=new Intl.DateTimeFormat('el-GR',{timeZone:'Europe/Athens',hour:'2-digit',minute:'2-digit',hourCycle:'h23'});
 const hm=t=>t==null?'—':GRT.format(new Date(t));
-const dur=ms=>{const m=Math.round(ms/6e4);return Math.floor(m/60)+'ω '+String(m%60).padStart(2,'0')+'′'};
-const pts16=['Β','ΒΒΑ','ΒΑ','ΑΒΑ','Α','ΑΝΑ','ΝΑ','ΝΝΑ','Ν','ΝΝΔ','ΝΔ','ΔΝΔ','Δ','ΔΒΔ','ΒΔ','ΒΒΔ'],pt16=a=>pts16[Math.round(((a%360)+360)%360/22.5)%16];
+const dur=ms=>{const m=Math.round(ms/6e4);return Math.floor(m/60)+(LANG==='en'?'h ':'ω ')+String(m%60).padStart(2,'0')+'′'};
+const pts16=LANG==='en'?['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW']:['Β','ΒΒΑ','ΒΑ','ΑΒΑ','Α','ΑΝΑ','ΝΑ','ΝΝΑ','Ν','ΝΝΔ','ΝΔ','ΔΝΔ','Δ','ΔΒΔ','ΒΔ','ΒΒΔ'],pt16=a=>pts16[Math.round(((a%360)+360)%360/22.5)%16];
 const MON=['Ιανουάριος','Φεβρουάριος','Μάρτιος','Απρίλιος','Μάιος','Ιούνιος','Ιούλιος','Αύγουστος','Σεπτέμβριος','Οκτώβριος','Νοέμβριος','Δεκέμβριος'];
 let sunOpen=-1;
 function sunPlace(){const k=LS.g('sunp','Αθήνα');if(k==='gps'){const g=LS.g('sungps',null);if(g)return['📍 Η θέση μου',g.lat,g.lon]}return SUNP.find(p=>p[0]===k)||SUNP[0]}
@@ -151,7 +151,7 @@ function wxList(){const L=LS.g('baro',[]),r=$('#wxr'),l=$('#wxl');if(!r)return;
  r.innerHTML=h;
  const sp=L.slice(-24);if(sp.length>1){const mn=Math.min(...sp.map(x=>x.q)),mx=Math.max(...sp.map(x=>x.q)),rg=Math.max(4,mx-mn),t0=sp[0].t,tr=Math.max(1,sp[sp.length-1].t-t0);
   l.innerHTML=`<svg viewBox="0 0 300 90" style="width:100%;background:#141312;border-radius:10px;margin:6px 0"><polyline fill="none" stroke="#e8b86d" stroke-width="2.5" points="${sp.map(x=>`${10+280*(x.t-t0)/tr},${80-70*(x.q-(mn+mx-rg)/2)/rg}`).join(' ')}"/><text x="6" y="12" font-size="10" fill="#a8a29e">${mx.toFixed(1)}</text><text x="6" y="88" font-size="10" fill="#a8a29e">${mn.toFixed(1)}</text></svg>`}
- l.innerHTML+=L.map((x,i)=>[x,i]).reverse().slice(0,12).map(([x,i])=>`<div class="wp"><b>${new Date(x.t).toLocaleString('el',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</b><span class="mono">${x.q.toFixed(1)}${x.q!==x.p?` <small class="muted">(${x.p} @${x.h}m)</small>`:''}</span><button class="btn" onclick="wxDel(${i})">🗑</button></div>`).join('')}
+ l.innerHTML+=L.map((x,i)=>[x,i]).reverse().slice(0,12).map(([x,i])=>`<div class="wp"><b>${new Date(x.t).toLocaleString(LOC,{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</b><span class="mono">${x.q.toFixed(1)}${x.q!==x.p?` <small class="muted">(${x.p} @${x.h}m)</small>`:''}</span><button class="btn" onclick="wxDel(${i})">🗑</button></div>`).join('')}
 function wxAlt(){const e=$('#alt');if(!e)return;if(!pos||pos.alt==null){if(pos)$('#alta').textContent='Το GPS δεν έδωσε ακόμα υψόμετρο – περίμενε λίγο σε ανοιχτό χώρο.';return}
  const a=pos.alt,acc=pos.altAcc;let s=LS.g('alt',null);
  if(!s)s={min:a,max:a,gain:0,last:a};else{s.min=Math.min(s.min,a);s.max=Math.max(s.max,a);if(acc==null||acc<25){const d=a-s.last;if(Math.abs(d)>=5){if(d>0)s.gain+=d;s.last=a}}}
@@ -166,7 +166,7 @@ const DEC=()=>+LS.g('dec',0);
 const R=6371000,rad=x=>x*Math.PI/180,deg=x=>x*180/Math.PI;
 function dist(a,b){const dl=rad(b.lat-a.lat),dn=rad(b.lon-a.lon),h=Math.sin(dl/2)**2+Math.cos(rad(a.lat))*Math.cos(rad(b.lat))*Math.sin(dn/2)**2;return 2*R*Math.asin(Math.sqrt(h))}
 function brg(a,b){const y=Math.sin(rad(b.lon-a.lon))*Math.cos(rad(b.lat)),x=Math.cos(rad(a.lat))*Math.sin(rad(b.lat))-Math.sin(rad(a.lat))*Math.cos(rad(b.lat))*Math.cos(rad(b.lon-a.lon));return (deg(Math.atan2(y,x))+360)%360}
-const card=h=>['Β','ΒΑ','Α','ΝΑ','Ν','ΝΔ','Δ','ΒΔ'][Math.round(h/45)%8];
+const card=h=>(LANG==='en'?['N','NE','E','SE','S','SW','W','NW']:['Β','ΒΑ','Α','ΝΑ','Ν','ΝΔ','Δ','ΒΔ'])[Math.round(h/45)%8];
 const fmD=m=>m<1000?Math.round(m)+' m':(m/1000).toFixed(m<10000?2:1)+' km';
 function ddm(v,p,n){const s=v<0?n:p,a=Math.abs(v),d=Math.floor(a),m=(a-d)*60;return `${d}°${m.toFixed(3).padStart(6,'0')}′${s}`}
 function dms(v,p,n){const s=v<0?n:p,a=Math.abs(v),d=Math.floor(a),mm=(a-d)*60,m=Math.floor(mm),ss=((mm-m)*60).toFixed(1);return `${d}°${m}′${ss}″${s}`}
@@ -174,7 +174,7 @@ function compass(){T('Πυξίδα & GPS');const wps=LS.g('wps',[]);
  M.innerHTML=`<div class="tools" id="cbtns"><button class="btn p" onclick="startOrient()">🧭 Ενεργοποίηση πυξίδας</button></div>
  <div class="comp"><svg viewBox="-150 -150 300 300"><circle r="146" fill="#141312" stroke="#3d3935" stroke-width="3"/>
  <g id="rose">${Array.from({length:72},(_,i)=>{const a=i*5,l=a%30===0?18:a%10===0?11:6;return `<line x1="0" y1="-140" x2="0" y2="${-140+l}" stroke="#a8a29e" stroke-width="${a%30===0?3:1.5}" transform="rotate(${a})"/>`}).join('')}
- ${[['Β',0,'#e5735a'],['Α',90,'#fff'],['Ν',180,'#fff'],['Δ',270,'#fff']].map(c=>`<text transform="rotate(${c[1]}) translate(0,-100)" text-anchor="middle" dominant-baseline="middle" font-size="30" font-weight="900" fill="${c[2]}">${c[0]}</text>`).join('')}
+ ${(LANG==='en'?[['N',0,'#e5735a'],['E',90,'#fff'],['S',180,'#fff'],['W',270,'#fff']]:[['Β',0,'#e5735a'],['Α',90,'#fff'],['Ν',180,'#fff'],['Δ',270,'#fff']]).map(c=>`<text transform="rotate(${c[1]}) translate(0,-100)" text-anchor="middle" dominant-baseline="middle" font-size="30" font-weight="900" fill="${c[2]}">${c[0]}</text>`).join('')}
  ${[30,60,120,150,210,240,300,330].map(a=>`<text transform="rotate(${a}) translate(0,-112)" text-anchor="middle" dominant-baseline="middle" font-size="13" fill="#a8a29e">${a}</text>`).join('')}</g>
  <g id="tarr" style="display:none"><path d="M0,-135 L14,-108 L-14,-108 Z" fill="#e8b86d"/></g>
  <path d="M0,-80 L12,0 L0,-12 L-12,0 Z" fill="#d9534f"/><path d="M0,80 L12,0 L0,12 L-12,0 Z" fill="#a8a29e"/><circle r="6" fill="#fff"/>
@@ -197,7 +197,7 @@ function delWp(i){const w=LS.g('wps',[]);if(!confirm('Διαγραφή «'+w[i].
 function saveWp(){if(!pos){alert('Περίμενε να βρεθεί η θέση σου (GPS).');return}const n=prompt('Όνομα σημείου (π.χ. Σπίτι, Αυτοκίνητο, Συνάντηση):','Σημείο '+(LS.g('wps',[]).length+1));if(!n)return;const w=LS.g('wps',[]);w.push({n,lat:pos.lat,lon:pos.lon,t:Date.now()});LS.s('wps',w);refWps();draw()}
 function addWpMan(){const n=prompt('Όνομα σημείου:');if(!n)return;const s=prompt('Συντεταγμένες σε δεκαδικό (π.χ. 37.97510, 23.73480):');if(!s)return;const m=s.replace(/,/g,' ').split(/\s+/).filter(Boolean).map(Number);if(m.length<2||m.some(isNaN)||Math.abs(m[0])>90||Math.abs(m[1])>180){alert('Λάθος μορφή. Γράψε: 37.97510, 23.73480');return}const w=LS.g('wps',[]);w.push({n,lat:m[0],lon:m[1],t:Date.now()});LS.s('wps',w);refWps();draw()}
 function posTxt(){return `Η θέση μου: ${pos.lat.toFixed(5)}, ${pos.lon.toFixed(5)} (${ddm(pos.lat,'N','S')} ${ddm(pos.lon,'E','W')}) ±${Math.round(pos.acc)} m. https://maps.google.com/?q=${pos.lat.toFixed(5)},${pos.lon.toFixed(5)}`}
-function sendPos(){if(!pos){alert('Περίμενε να βρεθεί η θέση σου (GPS).');return}const me=LS.g('me',{});location.href='sms:?&body='+encodeURIComponent('ΧΡΕΙΑΖΟΜΑΙ ΒΟΗΘΕΙΑ. '+(me.name?me.name+'. ':'')+posTxt())}
+function sendPos(){if(!pos){alert('Περίμενε να βρεθεί η θέση σου (GPS).');return}const me=LS.g('me',{});location.href='sms:?&body='+encodeURIComponent(tr('ΧΡΕΙΑΖΟΜΑΙ ΒΟΗΘΕΙΑ. ')+(me.name?me.name+'. ':'')+tr(posTxt()))}
 function copyPos(){if(!pos)return alert('Περίμενε το GPS.');const t=posTxt();(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>alert('Αντιγράφηκε.'),()=>prompt('Αντέγραψε:',t))}
 function startGeo(){if(geoW!==null)return;if(!navigator.geolocation){$('#gps').textContent='Το κινητό δεν έχει GPS διαθέσιμο.';return}
  geoW=navigator.geolocation.watchPosition(p=>{const c=p.coords;pos={lat:c.latitude,lon:c.longitude,acc:c.accuracy,alt:c.altitude,altAcc:c.altitudeAccuracy,spd:c.speed,hd:c.heading,t:p.timestamp};
