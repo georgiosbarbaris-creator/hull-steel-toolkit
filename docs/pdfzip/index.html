@@ -3,95 +3,180 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>PDF Compressor</title>
+<title>PDF Tools</title>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png">
-<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="PDF Zip">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="PDF Tools">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#123d5e">
 <style>
 :root{--bg:#eef1f4;--card:#fff;--ink:#14212e;--muted:#5a6876;--line:#d3dae1;--navy:#123d5e;--acc:#c8551c;--ok:#2f7d4f;--f:#c0392b}
 @media (prefers-color-scheme:dark){:root{--bg:#0f1720;--card:#17222e;--ink:#e3e9ef;--muted:#97a5b3;--line:#2a3846;--navy:#8fb4dc;--acc:#ef8a55;--ok:#5fbf86;--f:#f07a6c}}
 *{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 -apple-system,system-ui,Segoe UI,Roboto,sans-serif}
-header{position:sticky;top:0;z-index:5;background:#123d5e;color:#fff;padding:calc(env(safe-area-inset-top) + 10px) 14px 10px}
+header{position:sticky;top:0;z-index:5;background:#123d5e;color:#fff;padding:calc(env(safe-area-inset-top) + 10px) 14px 8px}
 header h1{font-size:19px;margin:0}header .sub{font-size:12px;opacity:.8}
-main{padding:10px 12px 40px;max-width:720px;margin:0 auto}.hide{display:none!important}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:8px 0 2px;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex:0 0 auto;border:0;background:rgba(255,255,255,.14);color:#fff;border-radius:18px;padding:7px 12px;font:600 13.5px system-ui;cursor:pointer}
+.tabs button.on{background:#fff;color:#123d5e}
+main{padding:6px 12px 40px;max-width:720px;margin:0 auto}.hide{display:none!important}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:10px 0}
 h2{font-size:15px;color:var(--navy);margin:0 0 10px}
-.btn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:11px;padding:11px 14px;font:600 15px system-ui;cursor:pointer}
+.btn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:11px;padding:10px 13px;font:600 15px system-ui;cursor:pointer;text-decoration:none;display:inline-block}
 .btn.p{background:var(--navy);border-color:var(--navy);color:#fff}@media (prefers-color-scheme:dark){.btn.p{color:#0f1720}}
-.btn.o{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.o{background:var(--acc);border-color:var(--acc);color:#fff;width:100%;padding:15px;font-size:17px}
+.btn.s{padding:5px 9px;font-size:13px}
 .btn:disabled{opacity:.45}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 label{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--muted)}
 input,select{font:16px system-ui;padding:9px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);width:100%}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.drop{border:2px dashed var(--line);border-radius:14px;padding:26px 12px;text-align:center;cursor:pointer}
+@media (max-width:380px){.g2{grid-template-columns:1fr}}
+.drop{border:2px dashed var(--line);border-radius:14px;padding:22px 12px;text-align:center;cursor:pointer}
 .drop.over{border-color:var(--acc);background:rgba(200,85,28,.07)}
 .drop b{font-size:17px;display:block;margin-bottom:4px}
 .note{font-size:12.5px;color:var(--muted)}
 .bar{height:14px;background:var(--line);border-radius:8px;overflow:hidden}.bar div{height:100%;width:0;background:var(--acc);transition:width .2s}
-.out{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--line)}
-.out:last-child{border-bottom:0}.out .n{font-weight:600;word-break:break-all}.ok{color:var(--ok);font-weight:700}.bad{color:var(--f);font-weight:700}
+.out{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--line)}
+.out .n{font-weight:600;word-break:break-all;font-size:14px}.ok{color:var(--ok);font-weight:700}.bad{color:var(--f);font-weight:700}
 .big{font-size:22px;font-weight:800}
 .cred{text-align:center;font-size:11px;color:var(--muted);margin:16px 0}
-.chk{flex-direction:row;align-items:center;gap:8px;font-size:14px;color:var(--ink)}.chk input{width:20px;height:20px}
+.chk{flex-direction:row;align-items:center;gap:8px;font-size:14px;color:var(--ink)}.chk input{width:20px;height:20px;flex:0 0 auto}
+.th{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--line)}
+.th img{width:46px;height:46px;object-fit:cover;border-radius:6px;background:var(--line)}
+.th .n{flex:1;min-width:0;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#outs .more{max-height:360px;overflow:auto}
 </style>
 </head>
 <body>
-<header><h1>📄 PDF Compressor</h1><div class="sub">Μικραίνει μεγάλα PDF για email · offline · τίποτα δεν ανεβαίνει πουθενά</div></header>
+<header>
+ <h1>📄 PDF Tools</h1><div class="sub">Συμπίεση · μετατροπές · resize φωτό — offline, τίποτα δεν ανεβαίνει πουθενά</div>
+ <nav class="tabs" id="tabs">
+  <button data-t="cmp">🗜 Συμπίεση PDF</button>
+  <button data-t="i2p">🖼→📄 Φωτό σε PDF</button>
+  <button data-t="p2i">📄→🖼 PDF σε φωτό</button>
+  <button data-t="off">📝 Word/Excel→PDF</button>
+  <button data-t="rsz">📐 Resize φωτό</button>
+ </nav>
+</header>
 <main>
- <section class="card">
-  <div class="drop" id="drop"><b>📂 Διάλεξε PDF</b><span class="note">ή σύρε το εδώ (desktop) — έως ~300MB</span></div>
-  <input type="file" id="file" accept="application/pdf,.pdf" class="hide">
-  <div id="fInfo" class="note" style="margin-top:8px"></div>
- </section>
 
- <section class="card">
+<!-- ============ COMPRESS ============ -->
+<section id="t-cmp" class="tab">
+ <div class="card">
+  <div class="drop" id="cDrop"><b>📂 Διάλεξε PDF</b><span class="note">ή σύρε το εδώ (desktop) — έως ~300MB</span></div>
+  <input type="file" id="cFile" accept="application/pdf,.pdf" class="hide">
+  <div id="cInfo" class="note" style="margin-top:8px"></div>
+ </div>
+ <div class="card">
   <h2>⚙ Ρυθμίσεις</h2>
   <div class="g2">
-   <label>Μέγιστο μέγεθος (MB)<input type="number" id="target" value="14" min="1" max="100" step="0.5"></label>
+   <label>Μέγιστο μέγεθος (MB)<input type="number" id="cTarget" value="14" min="1" max="100" step="0.5"></label>
    <label>Τρόπος
-    <select id="mode">
-     <option value="one">Ένα αρχείο κάτω από το όριο</option>
-     <option value="split">Κομμάτια κάτω από το όριο (καλύτερη ποιότητα)</option>
-    </select></label>
+    <select id="cMode"><option value="one">Ένα αρχείο κάτω από το όριο</option><option value="split">Κομμάτια κάτω από το όριο (καλύτερη ποιότητα)</option></select></label>
    <label>Ποιότητα
-    <select id="qual">
-     <option value="auto">Αυτόματη (η καλύτερη που χωράει)</option>
-     <option value="high">Υψηλή — σχέδια/drawings (200 dpi)</option>
-     <option value="std" >Κανονική — έγγραφα (150 dpi)</option>
-     <option value="low">Χαμηλή — μόνο ανάγνωση (100 dpi)</option>
-    </select></label>
-   <label class="chk" style="margin-top:20px"><input type="checkbox" id="gray"> Ασπρόμαυρο (μικρότερο)</label>
+    <select id="cQual"><option value="auto">Αυτόματη (η καλύτερη που χωράει)</option><option value="high">Υψηλή — σχέδια (200 dpi)</option><option value="std">Κανονική — έγγραφα (150 dpi)</option><option value="low">Χαμηλή — μόνο ανάγνωση (100 dpi)</option></select></label>
+   <label class="chk" style="margin-top:20px"><input type="checkbox" id="cGray"> Ασπρόμαυρο (μικρότερο)</label>
   </div>
   <p class="note" style="margin:10px 0 0">Gmail δέχεται 25MB, Outlook/εταιρικά συνήθως 10–20MB. Με «Κομμάτια» στέλνεις π.χ. 3 email αλλά τα σχέδια διαβάζονται καθαρά.</p>
- </section>
+ </div>
+ <button class="btn o" id="cGo" disabled>🗜 Συμπίεση</button>
+</section>
 
- <button class="btn o" id="go" style="width:100%;padding:15px;font-size:17px" disabled>🗜 Συμπίεση</button>
+<!-- ============ IMAGES -> PDF ============ -->
+<section id="t-i2p" class="tab hide">
+ <div class="card">
+  <div class="drop" id="iDrop"><b>📷 Διάλεξε φωτογραφίες</b><span class="note">πολλές μαζί — μπαίνουν με τη σειρά της λίστας</span></div>
+  <input type="file" id="iFile" accept="image/*" multiple class="hide">
+  <div id="iList" style="margin-top:8px"></div>
+  <div class="row" style="margin-top:8px"><button class="btn s" id="iSort">🔤 Ταξινόμηση κατά όνομα</button><button class="btn s" id="iClr">🧹 Καθαρισμός</button></div>
+ </div>
+ <div class="card">
+  <h2>⚙ Ρυθμίσεις</h2>
+  <div class="g2">
+   <label>Σελίδα<select id="iPage"><option value="a4">A4 (όρθια/πλάγια αυτόματα)</option><option value="fit">Μέγεθος φωτογραφίας</option></select></label>
+   <label>Ανάλυση φωτό<select id="iSide"><option value="2000">Υψηλή (2000 px)</option><option value="1600" selected>Κανονική (1600 px)</option><option value="1200">Ελαφριά (1200 px)</option></select></label>
+   <label>Όνομα αρχείου<input id="iName" value="Photos"></label>
+   <label>Μέγιστο (MB)<input type="number" id="iTarget" value="14" min="1" max="100" step="0.5"></label>
+  </div>
+  <p class="note" style="margin:8px 0 0">Αν δεν χωράει στο όριο, η εφαρμογή ρίχνει μόνη της την ποιότητα.</p>
+ </div>
+ <button class="btn o" id="iGo" disabled>📄 Φτιάξε PDF</button>
+</section>
 
+<!-- ============ PDF -> IMAGES ============ -->
+<section id="t-p2i" class="tab hide">
+ <div class="card">
+  <div class="drop" id="pDrop"><b>📂 Διάλεξε PDF</b><span class="note">κάθε σελίδα γίνεται μία εικόνα JPG</span></div>
+  <input type="file" id="pFile" accept="application/pdf,.pdf" class="hide">
+  <div id="pInfo" class="note" style="margin-top:8px"></div>
+ </div>
+ <div class="card">
+  <h2>⚙ Ρυθμίσεις</h2>
+  <div class="g2">
+   <label>Ανάλυση<select id="pDpi"><option value="100">Ελαφριά (100 dpi)</option><option value="150" selected>Κανονική (150 dpi)</option><option value="220">Υψηλή (220 dpi)</option></select></label>
+   <label>Σελίδες (π.χ. 1-3,7 — κενό = όλες)<input id="pRange" placeholder="όλες"></label>
+  </div>
+ </div>
+ <button class="btn o" id="pGo" disabled>🖼 Μετατροπή σε φωτό</button>
+</section>
+
+<!-- ============ OFFICE -> PDF ============ -->
+<section id="t-off" class="tab hide">
+ <div class="card">
+  <div class="drop" id="oDrop"><b>📝 Διάλεξε Word ή Excel</b><span class="note">.docx · .xlsx · .xls · .csv — ένα ή περισσότερα</span></div>
+  <input type="file" id="oFile" accept=".docx,.xlsx,.xls,.xlsm,.csv,.ods,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" multiple class="hide">
+  <div id="oInfo" class="note" style="margin-top:8px"></div>
+ </div>
+ <div class="card">
+  <h2>⚙ Ρυθμίσεις</h2>
+  <div class="g2">
+   <label>Προσανατολισμός<select id="oOri"><option value="auto">Αυτόματα (Excel πλάγια αν είναι φαρδύ)</option><option value="p">Όρθια</option><option value="l">Πλάγια</option></select></label>
+   <label class="chk" style="margin-top:20px"><input type="checkbox" id="oGrid" checked> Excel: γραμμές πλέγματος</label>
+  </div>
+  <p class="note" style="margin:8px 0 0">Offline μετατροπή: κείμενο, πίνακες, εικόνες και φύλλα Excel περνάνε σωστά. Headers/footers, πλαίσια κειμένου και ακριβής διάταξη σελίδας του Word δεν περνάνε. Για παλιό .doc: άνοιξέ το και κάνε «Αποθήκευση ως .docx».</p>
+ </div>
+ <button class="btn o" id="oGo" disabled>📄 Μετατροπή σε PDF</button>
+</section>
+
+<!-- ============ RESIZE ============ -->
+<section id="t-rsz" class="tab hide">
+ <div class="card">
+  <div class="drop" id="rDrop"><b>📷 Διάλεξε φωτογραφίες</b><span class="note">όσες θέλεις μαζί — μικραίνουν όλες με μία κίνηση</span></div>
+  <input type="file" id="rFile" accept="image/*" multiple class="hide">
+  <div id="rInfo" class="note" style="margin-top:8px"></div>
+ </div>
+ <div class="card">
+  <h2>⚙ Ρυθμίσεις</h2>
+  <div class="g2">
+   <label>Μέγιστη πλευρά<select id="rSide"><option value="2560">2560 px (πολύ καλή)</option><option value="1920">1920 px (Full HD)</option><option value="1600" selected>1600 px (email — προτείνεται)</option><option value="1280">1280 px</option><option value="1024">1024 px (αναφορές)</option><option value="800">800 px (πολύ ελαφριά)</option></select></label>
+   <label>Ποιότητα JPG<select id="rQ"><option value="0.88">Υψηλή</option><option value="0.78" selected>Κανονική</option><option value="0.65">Χαμηλή</option></select></label>
+   <label class="chk"><input type="checkbox" id="rLimOn" checked> Όλες μαζί κάτω από</label>
+   <label>MB<input type="number" id="rTarget" value="14" min="1" max="200" step="0.5"></label>
+  </div>
+  <p class="note" style="margin:8px 0 0">Με το «όλες μαζί κάτω από 14MB» χωράνε σε ένα email. Βγαίνουν ως JPG (όνομα_s.jpg) — στείλ' τες όλες ή κατέβασέ τες σε ZIP.</p>
+ </div>
+ <button class="btn o" id="rGo" disabled>📐 Resize όλων</button>
+</section>
+
+ <!-- progress + results (shared) -->
  <section class="card hide" id="prog">
   <div class="row" style="justify-content:space-between"><b id="pTxt">…</b><span class="note" id="pEta"></span></div>
   <div class="bar" style="margin:10px 0"><div id="pBar"></div></div>
   <div class="note" id="pSub"></div>
   <button class="btn" id="stop" style="margin-top:10px">✋ Ακύρωση</button>
  </section>
-
  <section class="card hide" id="res">
   <h2>✅ Έτοιμο</h2>
   <div id="sum" style="margin-bottom:6px"></div>
   <div id="outs"></div>
-  <p class="note">Στο iPhone: «📤 Αποστολή» → Mail. Ή «💾 Αποθήκευση» → Αρχεία.</p>
+  <p class="note">Στο iPhone: «📤» → Mail ή «Αποθήκευση στα Αρχεία». Στο PC: «💾» ή «📦 ZIP».</p>
  </section>
 
  <details class="card"><summary style="cursor:pointer;font-weight:700">❓ Οδηγίες</summary>
-  <ol style="padding-left:20px;margin:8px 0">
-   <li>Πάτα «Διάλεξε PDF» και επίλεξε το αρχείο (Αρχεία / Downloads).</li>
-   <li>Όριο: 14MB (άλλαξέ το αν θέλεις).</li>
-   <li>«Ένα αρχείο»: η εφαρμογή ρίχνει ανάλυση/ποιότητα μόνη της ώστε να χωρέσει.</li>
-   <li>«Κομμάτια»: κρατάει καλή ποιότητα και σπάει σε part1, part2… κάτω από το όριο.</li>
-   <li>Πάτα «Συμπίεση», άφησε την οθόνη ανοιχτή μέχρι να τελειώσει.</li>
-   <li>Στείλε ή αποθήκευσε το αποτέλεσμα.</li>
-  </ol>
-  <p class="note">Κάθε σελίδα γίνεται εικόνα (JPEG). Το κείμενο δεν μπορεί πια να επιλεγεί/αναζητηθεί — για αναφορές, πιστοποιητικά, scans και σχέδια δεν πειράζει. Όλα γίνονται μέσα στη συσκευή: δουλεύει offline και το αρχείο δεν φεύγει ποτέ από το κινητό/PC σου. Σε iPhone ένα PDF 200MB θέλει μερικά λεπτά.</p>
+  <p style="margin:8px 0 4px"><b>🗜 Συμπίεση PDF</b> — βάζεις PDF (και 200MB), βγαίνει κάτω από 14MB. «Ένα αρχείο»: ρίχνει ποιότητα όσο χρειάζεται. «Κομμάτια»: κρατά καλή ποιότητα και σπάει σε part1, part2…</p>
+  <p style="margin:4px 0"><b>🖼→📄 Φωτό σε PDF</b> — διαλέγεις πολλές φωτό, τις βάζεις σε σειρά (↑) και βγαίνει ένα PDF, μία φωτό ανά σελίδα.</p>
+  <p style="margin:4px 0"><b>📄→🖼 PDF σε φωτό</b> — κάθε σελίδα γίνεται JPG. Μπορείς να διαλέξεις σελίδες (π.χ. 1-3,7).</p>
+  <p style="margin:4px 0"><b>📝 Word/Excel→PDF</b> — .docx και .xlsx/.xls/.csv σε PDF. Κάθε φύλλο Excel στη σειρά του, με το όνομά του.</p>
+  <p style="margin:4px 0"><b>📐 Resize φωτό</b> — μικραίνει όλες τις φωτό μαζί, ώστε να χωρούν σε email.</p>
+  <p class="note">Στη συμπίεση/μετατροπή PDF οι σελίδες γίνονται εικόνες: το κείμενο διαβάζεται αλλά δεν επιλέγεται/αναζητείται. Όλα γίνονται μέσα στη συσκευή — δουλεύει offline. Κράτα την οθόνη ανοιχτή σε μεγάλα αρχεία.</p>
  </details>
  <p class="cred">Created by George Barbaris</p>
 </main>
@@ -103,26 +188,63 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = "./pdf.worker.min.mjs";
 const $ = id => document.getElementById(id);
 const MB = 1024*1024;
 const fmt = b => b >= MB ? (b/MB).toFixed(1)+" MB" : Math.max(1,Math.round(b/1024))+" KB";
-let FILE = null, CANCEL = false, URLS = [];
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const stem = n => n.replace(/\.[^.]+$/, "");
+let CANCEL = false, URLS = [], BUSY = false;
 
-// ---- file picking ----
-$("drop").onclick = () => $("file").click();
-$("file").onchange = e => pick(e.target.files[0]);
-["dragover","dragenter"].forEach(ev => $("drop").addEventListener(ev, e => {e.preventDefault(); $("drop").classList.add("over");}));
-["dragleave","drop"].forEach(ev => $("drop").addEventListener(ev, e => {e.preventDefault(); $("drop").classList.remove("over");}));
-$("drop").addEventListener("drop", e => { const f = e.dataTransfer.files[0]; if (f) pick(f); });
-function pick(f){
-  if (!f) return;
-  if (!/pdf$/i.test(f.type) && !/\.pdf$/i.test(f.name)) { $("fInfo").innerHTML = '<span class="bad">Δεν είναι PDF.</span>'; return; }
-  FILE = f; $("go").disabled = false;
-  const t = +$("target").value * MB;
-  $("fInfo").innerHTML = `<b>${f.name}</b> — ${fmt(f.size)}` + (f.size <= t ? ' <span class="ok">· είναι ήδη κάτω από το όριο</span>' : "");
-  $("res").classList.add("hide");
+// ---------- tabs ----------
+function tab(t){
+  document.querySelectorAll("#tabs button").forEach(b => b.classList.toggle("on", b.dataset.t === t));
+  document.querySelectorAll(".tab").forEach(s => s.classList.toggle("hide", s.id !== "t-"+t));
+  if (!BUSY) { $("res").classList.add("hide"); $("prog").classList.add("hide"); }
+  try { localStorage.setItem("pdfzip_tab", t); } catch(e){}
 }
+document.querySelectorAll("#tabs button").forEach(b => b.onclick = () => tab(b.dataset.t));
+let t0tab = "cmp"; try { t0tab = localStorage.getItem("pdfzip_tab") || "cmp"; } catch(e){}
+tab(t0tab);
 
-// ---- helpers ----
-const toBlob = (cv, q) => new Promise(r => cv.toBlob(r, "image/jpeg", q));
-function shrink(cv, f){ // downscale existing canvas by factor f
+// ---------- drop zones ----------
+function dropzone(dropId, inputId, onFiles){
+  const d = $(dropId), inp = $(inputId);
+  d.onclick = () => inp.click();
+  inp.onchange = e => { onFiles([...e.target.files]); inp.value = ""; };
+  ["dragover","dragenter"].forEach(ev => d.addEventListener(ev, e => {e.preventDefault(); d.classList.add("over");}));
+  ["dragleave","drop"].forEach(ev => d.addEventListener(ev, e => {e.preventDefault(); d.classList.remove("over");}));
+  d.addEventListener("drop", e => onFiles([...e.dataTransfer.files]));
+}
+const isPdf = f => /pdf$/i.test(f.type) || /\.pdf$/i.test(f.name);
+const isImg = f => /^image\//i.test(f.type) || /\.(jpe?g|png|heic|heif|webp|gif|bmp)$/i.test(f.name);
+
+// ---------- progress ----------
+let T0 = 0;
+function startProg(txt){
+  CANCEL = false; BUSY = true; T0 = Date.now();
+  URLS.forEach(u => URL.revokeObjectURL(u)); URLS = [];
+  document.querySelectorAll(".btn.o").forEach(b => b.disabled = true);
+  $("res").classList.add("hide"); $("prog").classList.remove("hide");
+  $("pTxt").textContent = txt; $("pBar").style.width = "0"; $("pSub").textContent = ""; $("pEta").textContent = "";
+}
+function tick(i, N, txt, sub){
+  $("pBar").style.width = (i/N*100).toFixed(1) + "%";
+  $("pTxt").textContent = txt;
+  const el = (Date.now()-T0)/1000, rem = el/i*(N-i);
+  $("pEta").textContent = rem > 5 ? "απομένουν ~" + (rem > 90 ? Math.round(rem/60)+" λεπτά" : Math.round(rem)+" δευτ.") : "";
+  $("pSub").textContent = sub || "";
+}
+function endProg(err){
+  BUSY = false; refreshButtons();
+  if (err) { $("pTxt").innerHTML = '<span class="bad">' + esc(err.message || err) + '</span>'; $("pEta").textContent = ""; }
+  else $("prog").classList.add("hide");
+}
+$("stop").onclick = () => { CANCEL = true; $("pTxt").textContent = "Ακύρωση…"; };
+const chk = () => { if (CANCEL) throw new Error("Ακυρώθηκε."); };
+const nap = () => new Promise(r => setTimeout(r, 0));
+async function wake(){ try { return await navigator.wakeLock?.request("screen"); } catch(e){ return null; } }
+
+// ---------- canvas / jpeg helpers ----------
+const toBlob = (cv, q, type="image/jpeg") => new Promise(r => cv.toBlob(r, type, q));
+const MAXPX = 4.5e6; // safe canvas size for iPhone
+function shrink(cv, f){
   const c = document.createElement("canvas");
   c.width = Math.max(1, Math.round(cv.width*f)); c.height = Math.max(1, Math.round(cv.height*f));
   const x = c.getContext("2d"); x.imageSmoothingQuality = "high"; x.drawImage(cv, 0, 0, c.width, c.height);
@@ -133,165 +255,413 @@ function grayify(cv){
   for (let i=0;i<a.length;i+=4){ const g = (a[i]*77 + a[i+1]*150 + a[i+2]*29) >> 8; a[i]=a[i+1]=a[i+2]=g; }
   x.putImageData(d,0,0);
 }
-const MAXPX = 4.5e6; // safe canvas size for iPhone
-
-// render a page to canvas at given dpi (capped by MAXPX)
-async function render(page, dpi, gray){
-  const v1 = page.getViewport({scale:1});
-  let s = dpi/72;
-  const px = v1.width*s * v1.height*s;
-  if (px > MAXPX) s *= Math.sqrt(MAXPX/px);
-  const vp = page.getViewport({scale:s});
-  const cv = document.createElement("canvas");
-  cv.width = Math.ceil(vp.width); cv.height = Math.ceil(vp.height);
-  const ctx = cv.getContext("2d", {alpha:false});
-  ctx.fillStyle = "#fff"; ctx.fillRect(0,0,cv.width,cv.height);
-  await page.render({canvasContext:ctx, viewport:vp}).promise;
-  if (gray) grayify(cv);
-  return {cv, w:v1.width, h:v1.height, dpi: s*72};
-}
-
-// encode a page to JPEG that fits budget (bytes). Returns {bytes,w,h,dpi,q}
-async function encode(page, budget, dpi, gray, qTop){
-  const r = await render(page, dpi, gray);
-  let cv = r.cv, curDpi = r.dpi;
+// encode canvas to JPEG within budget (bytes). Destroys cv. Returns {bytes, w, h, q, f}
+async function fitJpeg(cv, budget, qTop, minSide = 300){
   const Q = [qTop, qTop-0.12, qTop-0.24, qTop-0.34].filter(q => q >= 0.3);
-  let blob;
+  let blob, f = 1;
   for (let round=0; round<12; round++){
     for (const q of Q){
       blob = await toBlob(cv, q);
-      if (blob.size <= budget || curDpi <= 40) {
-        const out = {bytes:new Uint8Array(await blob.arrayBuffer()), w:r.w, h:r.h, dpi:curDpi, q, renderDpi:r.dpi};
+      if (!budget || blob.size <= budget || Math.max(cv.width, cv.height) <= minSide) {
+        const out = {bytes:new Uint8Array(await blob.arrayBuffer()), w:cv.width, h:cv.height, q, f};
         cv.width = cv.height = 0; return out;
       }
     }
-    // didn't fit: scale down by the needed ratio (area ~ bytes)
-    const f = Math.max(0.5, Math.min(0.85, Math.sqrt(budget/blob.size)*0.95));
-    const c2 = shrink(cv, f); cv.width = cv.height = 0; cv = c2; curDpi *= f;
+    const k = Math.max(0.5, Math.min(0.85, Math.sqrt(budget/blob.size)*0.95));
+    const c2 = shrink(cv, k); cv.width = cv.height = 0; cv = c2; f *= k;
   }
-  const out = {bytes:new Uint8Array(await blob.arrayBuffer()), w:r.w, h:r.h, dpi:curDpi, q:Q.at(-1), renderDpi:r.dpi};
+  const out = {bytes:new Uint8Array(await blob.arrayBuffer()), w:cv.width, h:cv.height, q:Q.at(-1), f};
   cv.width = cv.height = 0; return out;
 }
-
+function loadImg(file){
+  return new Promise((res, rej) => {
+    const u = URL.createObjectURL(file), im = new Image();
+    im.onload = () => { res(im); setTimeout(() => URL.revokeObjectURL(u), 1000); };
+    im.onerror = () => { URL.revokeObjectURL(u); rej(new Error("Δεν διαβάζεται η εικόνα: " + file.name)); };
+    im.src = u;
+  });
+}
+function imgCanvas(im, maxSide){
+  let w = im.naturalWidth, h = im.naturalHeight, s = Math.min(1, maxSide / Math.max(w, h));
+  if (w*s*h*s > MAXPX) s *= Math.sqrt(MAXPX/(w*s*h*s));
+  const c = document.createElement("canvas"); c.width = Math.max(1, Math.round(w*s)); c.height = Math.max(1, Math.round(h*s));
+  const x = c.getContext("2d", {alpha:false}); x.fillStyle = "#fff"; x.fillRect(0,0,c.width,c.height);
+  x.imageSmoothingQuality = "high"; x.drawImage(im, 0, 0, c.width, c.height);
+  return c;
+}
+// render PDF page to canvas at dpi (capped)
+async function renderPage(page, dpi, gray){
+  const v1 = page.getViewport({scale:1});
+  let s = dpi/72; const px = v1.width*s * v1.height*s;
+  if (px > MAXPX) s *= Math.sqrt(MAXPX/px);
+  const vp = page.getViewport({scale:s});
+  const cv = document.createElement("canvas"); cv.width = Math.ceil(vp.width); cv.height = Math.ceil(vp.height);
+  const ctx = cv.getContext("2d", {alpha:false}); ctx.fillStyle = "#fff"; ctx.fillRect(0,0,cv.width,cv.height);
+  await page.render({canvasContext:ctx, viewport:vp}).promise;
+  if (gray) grayify(cv);
+  return {cv, w:v1.width, h:v1.height, dpi:s*72};
+}
+async function openPdf(file){
+  const data = new Uint8Array(await file.arrayBuffer());
+  return pdfjsLib.getDocument({data, isEvalSupported:false}).promise;
+}
+// items: [{bytes, pw, ph, x, y, dw, dh}] -> PDF blob
 async function buildPdf(items){
   const doc = await PDFLib.PDFDocument.create();
   for (const it of items){
     const img = await doc.embedJpg(it.bytes);
-    const p = doc.addPage([it.w, it.h]);
-    p.drawImage(img, {x:0, y:0, width:it.w, height:it.h});
+    const p = doc.addPage([it.pw, it.ph]);
+    p.drawImage(img, {x:it.x||0, y:it.y||0, width:it.dw||it.pw, height:it.dh||it.ph});
   }
-  doc.setProducer("PDF Compressor — Created by George Barbaris");
+  doc.setProducer("PDF Tools — Created by George Barbaris");
   return new Blob([await doc.save({useObjectStreams:true})], {type:"application/pdf"});
 }
 
-// ---- main ----
-$("stop").onclick = () => { CANCEL = true; $("pTxt").textContent = "Ακύρωση…"; };
-$("go").onclick = run;
+// ---------- tiny ZIP writer (store) ----------
+const CRC = (() => { const t = new Uint32Array(256); for (let n=0;n<256;n++){ let c=n; for(let k=0;k<8;k++) c = c&1 ? 0xEDB88320^(c>>>1) : c>>>1; t[n]=c>>>0; } return t; })();
+function crc32(u){ let c = 0xFFFFFFFF; for (let i=0;i<u.length;i++) c = CRC[(c^u[i])&255] ^ (c>>>8); return (c^0xFFFFFFFF)>>>0; }
+async function makeZip(files){
+  const enc = new TextEncoder(), parts = [], cen = []; let off = 0;
+  for (const f of files){
+    const data = new Uint8Array(await f.blob.arrayBuffer()), name = enc.encode(f.name), crc = crc32(data);
+    const h = new DataView(new ArrayBuffer(30));
+    h.setUint32(0,0x04034b50,true); h.setUint16(4,20,true); h.setUint16(6,0x0800,true); h.setUint16(8,0,true);
+    h.setUint32(14,crc,true); h.setUint32(18,data.length,true); h.setUint32(22,data.length,true); h.setUint16(26,name.length,true);
+    parts.push(h.buffer, name, data);
+    const c = new DataView(new ArrayBuffer(46));
+    c.setUint32(0,0x02014b50,true); c.setUint16(4,20,true); c.setUint16(6,20,true); c.setUint16(8,0x0800,true);
+    c.setUint32(16,crc,true); c.setUint32(20,data.length,true); c.setUint32(24,data.length,true); c.setUint16(28,name.length,true); c.setUint32(42,off,true);
+    cen.push(c.buffer, name);
+    off += 30 + name.length + data.length;
+  }
+  const cenSize = cen.reduce((s,b) => s + b.byteLength, 0);
+  const e = new DataView(new ArrayBuffer(22));
+  e.setUint32(0,0x06054b50,true); e.setUint16(8,files.length,true); e.setUint16(10,files.length,true); e.setUint32(12,cenSize,true); e.setUint32(16,off,true);
+  return new Blob([...parts, ...cen, e.buffer], {type:"application/zip"});
+}
 
-async function run(){
-  if (!FILE) return;
-  CANCEL = false; URLS.forEach(u => URL.revokeObjectURL(u)); URLS = [];
-  const T = Math.max(0.5, +$("target").value || 14) * MB;
-  const mode = $("mode").value, qual = $("qual").value, gray = $("gray").checked;
+// ---------- results ----------
+async function share(files){
+  const fs = files.map(o => new File([o.blob], o.name, {type:o.blob.type}));
+  if (navigator.canShare?.({files:fs})) { try { await navigator.share({files:fs}); } catch(e){} return true; }
+  return false;
+}
+function dl(blob, name){ const u = URL.createObjectURL(blob); URLS.push(u); const a = document.createElement("a"); a.href = u; a.download = name; document.body.appendChild(a); a.click(); a.remove(); }
+function show(outs, summary, limit, zipName){
+  $("sum").innerHTML = summary;
+  const box = $("outs"); box.innerHTML = "";
+  const list = document.createElement("div"); if (outs.length > 6) list.className = "more";
+  outs.forEach(o => {
+    const u = URL.createObjectURL(o.blob); URLS.push(u);
+    const d = document.createElement("div"); d.className = "out";
+    const fits = !limit || o.blob.size <= limit;
+    d.innerHTML = `<div style="min-width:0"><div class="n">${esc(o.name)}</div><div class="note">${o.note ? esc(o.note)+" · " : ""}<span class="${fits?"ok":"bad"}">${fmt(o.blob.size)}${limit ? (fits?" ✔":" ✖ πάνω από το όριο") : ""}</span></div></div>
+      <div class="row" style="flex-wrap:nowrap"><a class="btn s" href="${u}" target="_blank">👁</a><a class="btn s" href="${u}" download="${esc(o.name)}">💾</a><button class="btn s p sh">📤</button></div>`;
+    d.querySelector(".sh").onclick = async () => { if (!await share([o])) dl(o.blob, o.name); };
+    list.appendChild(d);
+  });
+  box.appendChild(list);
+  if (outs.length > 1){
+    const r = document.createElement("div"); r.className = "row"; r.style.marginTop = "10px";
+    const b1 = document.createElement("button"); b1.className = "btn p"; b1.style.flex = "1"; b1.textContent = "📤 Αποστολή όλων";
+    b1.onclick = async () => { if (!await share(outs)) alert("Η αποστολή όλων μαζί δεν υποστηρίζεται εδώ — πάτα «📦 ZIP»."); };
+    const b2 = document.createElement("button"); b2.className = "btn"; b2.style.flex = "1"; b2.textContent = "📦 ZIP";
+    b2.onclick = async () => { b2.disabled = true; b2.textContent = "…"; const z = await makeZip(outs); dl(z, zipName || "files.zip"); b2.disabled = false; b2.textContent = `📦 ZIP (${fmt(z.size)})`; };
+    r.append(b1, b2); box.appendChild(r);
+  }
+  $("res").classList.remove("hide"); $("res").scrollIntoView({behavior:"smooth"});
+}
+const secs = () => Math.round((Date.now()-T0)/1000) + " δευτ.";
+
+// ---------- state & buttons ----------
+let C_FILE = null, P_FILE = null, I_FILES = [], O_FILES = [], R_FILES = [];
+function refreshButtons(){
+  $("cGo").disabled = BUSY || !C_FILE; $("pGo").disabled = BUSY || !P_FILE;
+  $("iGo").disabled = BUSY || !I_FILES.length; $("oGo").disabled = BUSY || !O_FILES.length; $("rGo").disabled = BUSY || !R_FILES.length;
+}
+
+// =====================================================================
+// 1) COMPRESS PDF
+// =====================================================================
+dropzone("cDrop", "cFile", fs => {
+  const f = fs.find(isPdf); if (!f) { $("cInfo").innerHTML = '<span class="bad">Δεν είναι PDF.</span>'; return; }
+  C_FILE = f; refreshButtons();
+  $("cInfo").innerHTML = `<b>${esc(f.name)}</b> — ${fmt(f.size)}` + (f.size <= +$("cTarget").value*MB ? ' <span class="ok">· είναι ήδη κάτω από το όριο</span>' : "");
+});
+async function encodePage(page, budget, dpi, gray, qTop){
+  const r = await renderPage(page, dpi, gray);
+  const j = await fitJpeg(r.cv, budget, qTop, 250);
+  return {bytes:j.bytes, pw:r.w, ph:r.h, dpi:r.dpi*j.f, renderDpi:r.dpi, q:j.q};
+}
+$("cGo").onclick = async () => {
+  const T = Math.max(0.5, +$("cTarget").value || 14) * MB;
+  const mode = $("cMode").value, qual = $("cQual").value, gray = $("cGray").checked;
   const preset = {auto:[200,0.8], high:[200,0.8], std:[150,0.75], low:[100,0.65]}[qual];
-  let lock = null; try { lock = await navigator.wakeLock?.request("screen"); } catch(e){}
-  $("go").disabled = true; $("res").classList.add("hide"); $("prog").classList.remove("hide");
-  $("pTxt").textContent = "Άνοιγμα PDF…"; $("pBar").style.width = "0"; $("pSub").textContent = ""; $("pEta").textContent = "";
-  const t0 = Date.now();
+  const lock = await wake(); startProg("Άνοιγμα PDF…");
   let pdf;
   try {
-    const data = new Uint8Array(await FILE.arrayBuffer());
-    pdf = await pdfjsLib.getDocument({data, isEvalSupported:false, disableFontFace:false}).promise;
-  } catch(e){
-    finish(lock); $("pTxt").innerHTML = '<span class="bad">Δεν άνοιξε το PDF: ' + (e.message||e) + '</span>'; return;
-  }
-  const N = pdf.numPages;
-  const base = FILE.name.replace(/\.pdf$/i, "");
-  const outs = [];
-  try {
+    pdf = await openPdf(C_FILE);
+    const N = pdf.numPages, base = stem(C_FILE.name), outs = [];
     if (mode === "one"){
-      // overhead: ~1.5KB/page + 30KB; keep 4% margin
       const total = T*0.96 - 30000 - N*1500;
       if (total < N*8000) throw new Error(`Πολλές σελίδες (${N}) για ${fmt(T)} — διάλεξε «Κομμάτια».`);
       let used = 0, dpi = preset[0]; const items = [];
       for (let i=1; i<=N; i++){
-        if (CANCEL) throw new Error("Ακυρώθηκε.");
+        chk();
         const budget = (total - used) / (N - i + 1);
         const page = await pdf.getPage(i);
-        const it = await encode(page, budget, dpi, gray, preset[1]);
-        page.cleanup();
+        const it = await encodePage(page, budget, dpi, gray, preset[1]); page.cleanup();
         items.push(it); used += it.bytes.length;
-        // adapt starting dpi for next pages
         if (it.dpi < it.renderDpi*0.98) dpi = Math.max(40, it.dpi*1.05);
         else if (qual === "auto" && it.q === preset[1] && it.bytes.length < budget*0.45) dpi = Math.min(preset[0], dpi*1.15);
-        tick(i, N, t0, `~${Math.round(it.dpi)} dpi · ${fmt(used)} μέχρι τώρα`);
+        tick(i, N, `Σελίδα ${i} / ${N}`, `~${Math.round(it.dpi)} dpi · ${fmt(used)} μέχρι τώρα`);
       }
       $("pTxt").textContent = "Δημιουργία PDF…";
-      const blob = await buildPdf(items);
-      outs.push({name:`${base}_${Math.round(T/MB)}MB.pdf`, blob, pages:`1–${N}`});
+      outs.push({name:`${base}_${Math.round(T/MB)}MB.pdf`, blob: await buildPdf(items), note:`σελ. 1–${N}`});
     } else {
-      // split: fixed good quality, new part when the next page would overflow
       const lim = T*0.96 - 30000;
-      let cur = [], curSize = 0, from = 1, part = 1; const parts = [];
+      let cur = [], curSize = 0, from = 1; const parts = [];
       for (let i=1; i<=N; i++){
-        if (CANCEL) throw new Error("Ακυρώθηκε.");
+        chk();
         const page = await pdf.getPage(i);
-        const it = await encode(page, lim - 1500, preset[0], gray, preset[1]);
-        page.cleanup();
+        const it = await encodePage(page, lim - 1500, preset[0], gray, preset[1]); page.cleanup();
         const sz = it.bytes.length + 1500;
         if (cur.length && curSize + sz > lim){
-          $("pTxt").textContent = `Κομμάτι ${part}…`;
-          parts.push({blob: await buildPdf(cur), pages:`${from}–${i-1}`});
-          cur = []; curSize = 0; from = i; part++;
+          parts.push({blob: await buildPdf(cur), note:`σελ. ${from}–${i-1}`});
+          cur = []; curSize = 0; from = i;
         }
         cur.push(it); curSize += sz;
-        tick(i, N, t0, `κομμάτι ${part} · ${fmt(curSize)}`);
+        tick(i, N, `Σελίδα ${i} / ${N}`, `κομμάτι ${parts.length+1} · ${fmt(curSize)}`);
       }
-      if (cur.length) parts.push({blob: await buildPdf(cur), pages:`${from}–${N}`});
+      if (cur.length) parts.push({blob: await buildPdf(cur), note:`σελ. ${from}–${N}`});
       parts.forEach((p,k) => outs.push({...p, name: parts.length>1 ? `${base}_part${k+1}of${parts.length}.pdf` : `${base}_${Math.round(T/MB)}MB.pdf`}));
     }
-  } catch(e){
-    finish(lock); $("pTxt").innerHTML = '<span class="bad">' + (e.message||e) + '</span>'; pdf.destroy(); return;
-  }
-  pdf.destroy(); finish(lock);
-  $("prog").classList.add("hide"); show(outs, T, N, t0);
-}
-function tick(i, N, t0, sub){
-  $("pBar").style.width = (i/N*100).toFixed(1) + "%";
-  $("pTxt").textContent = `Σελίδα ${i} / ${N}`;
-  const el = (Date.now()-t0)/1000, rem = el/i*(N-i);
-  $("pEta").textContent = rem > 5 ? "απομένουν ~" + (rem > 90 ? Math.round(rem/60)+" λεπτά" : Math.round(rem)+" δευτ.") : "";
-  $("pSub").textContent = sub;
-}
-function finish(lock){ $("go").disabled = !FILE; $("stop").classList.remove("hide"); try{ lock?.release(); }catch(e){} }
+    const tot = outs.reduce((s,o) => s + o.blob.size, 0);
+    endProg();
+    show(outs, `<span class="big">${fmt(C_FILE.size)} → ${fmt(tot)}</span><div class="note">${N} σελίδες · ${outs.length} αρχεί${outs.length>1?"α":"ο"} · ${secs()}</div>`, T, base+"_parts.zip");
+  } catch(e){ endProg(e); }
+  finally { pdf?.destroy(); try{ lock?.release(); }catch(e){} }
+};
 
-function show(outs, T, N, t0){
-  const tot = outs.reduce((s,o) => s + o.blob.size, 0);
-  $("sum").innerHTML = `<span class="big">${fmt(FILE.size)} → ${fmt(tot)}</span><div class="note">${N} σελίδες · ${outs.length} αρχεί${outs.length>1?"α":"ο"} · ${Math.round((Date.now()-t0)/1000)} δευτ.</div>`;
-  $("outs").innerHTML = "";
-  outs.forEach(o => {
-    const u = URL.createObjectURL(o.blob); URLS.push(u);
-    const d = document.createElement("div"); d.className = "out";
-    const fits = o.blob.size <= T;
-    d.innerHTML = `<div><div class="n">${o.name}</div><div class="note">σελ. ${o.pages} · <span class="${fits?"ok":"bad"}">${fmt(o.blob.size)} ${fits?"✔":"✖ πάνω από το όριο"}</span></div></div>
-      <div class="row" style="flex-wrap:nowrap"><a class="btn" href="${u}" target="_blank">👁</a><a class="btn" href="${u}" download="${o.name}">💾</a><button class="btn p sh">📤</button></div>`;
-    d.querySelector(".sh").onclick = async () => {
-      const f = new File([o.blob], o.name, {type:"application/pdf"});
-      if (navigator.canShare?.({files:[f]})) { try { await navigator.share({files:[f], title:o.name}); } catch(e){} }
-      else { const a = document.createElement("a"); a.href = u; a.download = o.name; a.click(); }
-    };
-    $("outs").appendChild(d);
+// =====================================================================
+// 2) IMAGES -> PDF
+// =====================================================================
+dropzone("iDrop", "iFile", fs => { I_FILES.push(...fs.filter(isImg)); drawIList(); });
+$("iClr").onclick = () => { I_FILES = []; drawIList(); };
+$("iSort").onclick = () => { I_FILES.sort((a,b) => a.name.localeCompare(b.name, undefined, {numeric:true})); drawIList(); };
+let I_THUMBS = new Map();
+function thumbUrl(f){ if (!I_THUMBS.has(f)) I_THUMBS.set(f, URL.createObjectURL(f)); return I_THUMBS.get(f); }
+function drawIList(){
+  const box = $("iList"); box.innerHTML = "";
+  for (const [f,u] of I_THUMBS) if (!I_FILES.includes(f)) { URL.revokeObjectURL(u); I_THUMBS.delete(f); }
+  I_FILES.forEach((f,i) => {
+    const d = document.createElement("div"); d.className = "th";
+    d.innerHTML = `<img loading="lazy" src="${thumbUrl(f)}" alt=""><span class="note" style="width:22px">${i+1}</span><span class="n">${esc(f.name)}<br><span class="note">${fmt(f.size)}</span></span><button class="btn s up">↑</button><button class="btn s rm">✕</button>`;
+    d.querySelector(".up").onclick = () => { if (i>0){ [I_FILES[i-1], I_FILES[i]] = [I_FILES[i], I_FILES[i-1]]; drawIList(); } };
+    d.querySelector(".rm").onclick = () => { I_FILES.splice(i,1); drawIList(); };
+    box.appendChild(d);
   });
-  if (outs.length > 1){
-    const b = document.createElement("button"); b.className = "btn p"; b.style.cssText = "width:100%;margin-top:10px"; b.textContent = "📤 Αποστολή όλων";
-    b.onclick = async () => {
-      const fs = outs.map(o => new File([o.blob], o.name, {type:"application/pdf"}));
-      if (navigator.canShare?.({files:fs})) { try { await navigator.share({files:fs}); } catch(e){} } else alert("Η αποστολή όλων μαζί δεν υποστηρίζεται εδώ — στείλε ένα-ένα.");
-    };
-    $("outs").appendChild(b);
-  }
-  $("res").classList.remove("hide"); $("res").scrollIntoView({behavior:"smooth"});
+  if (I_FILES.length) { const s = document.createElement("div"); s.className = "note"; s.style.marginTop = "6px"; s.textContent = `${I_FILES.length} φωτό · ${fmt(I_FILES.reduce((a,f)=>a+f.size,0))}`; box.appendChild(s); }
+  refreshButtons();
 }
+$("iGo").onclick = async () => {
+  const T = Math.max(0.5, +$("iTarget").value || 14) * MB, side = +$("iSide").value, pageMode = $("iPage").value;
+  const N = I_FILES.length, total = T*0.96 - 30000 - N*1500;
+  const lock = await wake(); startProg("Φωτογραφίες…");
+  try {
+    let used = 0; const items = [];
+    for (let i=0; i<N; i++){
+      chk();
+      const im = await loadImg(I_FILES[i]);
+      const j = await fitJpeg(imgCanvas(im, side), (total-used)/(N-i), 0.8, 400);
+      used += j.bytes.length;
+      if (pageMode === "a4"){
+        const land = j.w > j.h, pw = land ? 842 : 595, ph = land ? 595 : 842, m = 20;
+        const s = Math.min((pw-2*m)/j.w, (ph-2*m)/j.h), dw = j.w*s, dh = j.h*s;
+        items.push({bytes:j.bytes, pw, ph, x:(pw-dw)/2, y:(ph-dh)/2, dw, dh});
+      } else {
+        const k = 72/150;
+        let pw = j.w*k, ph = j.h*k; const mx = Math.max(pw, ph); if (mx > 1400) { pw *= 1400/mx; ph *= 1400/mx; }
+        items.push({bytes:j.bytes, pw, ph});
+      }
+      tick(i+1, N, `Φωτό ${i+1} / ${N}`, `${fmt(used)} μέχρι τώρα`); await nap();
+    }
+    $("pTxt").textContent = "Δημιουργία PDF…";
+    const name = (($("iName").value || "Photos").trim().replace(/[\\/:*?"<>|]+/g, "_")) + ".pdf";
+    const blob = await buildPdf(items);
+    endProg();
+    show([{name, blob, note:`${N} σελίδες`}], `<span class="big">${N} φωτό → ${fmt(blob.size)}</span><div class="note">${secs()}</div>`, T);
+  } catch(e){ endProg(e); }
+  finally { try{ lock?.release(); }catch(e){} }
+};
+
+// =====================================================================
+// 3) PDF -> IMAGES
+// =====================================================================
+dropzone("pDrop", "pFile", fs => {
+  const f = fs.find(isPdf); if (!f) { $("pInfo").innerHTML = '<span class="bad">Δεν είναι PDF.</span>'; return; }
+  P_FILE = f; refreshButtons(); $("pInfo").innerHTML = `<b>${esc(f.name)}</b> — ${fmt(f.size)}`;
+});
+function parseRange(s, N){
+  s = (s||"").trim(); if (!s) return [...Array(N)].map((_,i)=>i+1);
+  const out = new Set();
+  for (const part of s.split(/[,;\s]+/)){
+    const m = part.match(/^(\d+)(?:-(\d*))?$/); if (!m) continue;
+    const a = +m[1], b = m[2] === undefined ? a : (m[2] === "" ? N : +m[2]);
+    for (let i=Math.max(1,Math.min(a,b)); i<=Math.min(N,Math.max(a,b)); i++) out.add(i);
+  }
+  return [...out].sort((a,b)=>a-b);
+}
+$("pGo").onclick = async () => {
+  const dpi = +$("pDpi").value; const lock = await wake(); startProg("Άνοιγμα PDF…");
+  let pdf;
+  try {
+    pdf = await openPdf(P_FILE);
+    const N = pdf.numPages, pages = parseRange($("pRange").value, N), base = stem(P_FILE.name), outs = [], w = String(N).length;
+    if (!pages.length) throw new Error("Λάθος σελίδες (το PDF έχει " + N + ").");
+    for (let k=0; k<pages.length; k++){
+      chk();
+      const i = pages[k], page = await pdf.getPage(i);
+      const r = await renderPage(page, dpi, false); page.cleanup();
+      const j = await fitJpeg(r.cv, 0, 0.86);
+      outs.push({name:`${base}_p${String(i).padStart(Math.max(2,w),"0")}.jpg`, blob:new Blob([j.bytes], {type:"image/jpeg"}), note:`${j.w}×${j.h}`});
+      tick(k+1, pages.length, `Σελίδα ${i} (${k+1} / ${pages.length})`);
+    }
+    const tot = outs.reduce((s,o) => s + o.blob.size, 0);
+    endProg();
+    show(outs, `<span class="big">${outs.length} εικόνες · ${fmt(tot)}</span><div class="note">${secs()}</div>`, 0, base+"_images.zip");
+  } catch(e){ endProg(e); }
+  finally { pdf?.destroy(); try{ lock?.release(); }catch(e){} }
+};
+
+// =====================================================================
+// 4) WORD / EXCEL -> PDF
+// =====================================================================
+const LIBS = {};
+function need(src){
+  return LIBS[src] ||= new Promise((res, rej) => { const s = document.createElement("script"); s.src = src; s.onload = res; s.onerror = () => rej(new Error("Δεν φόρτωσε το " + src + " — άνοιξε την εφαρμογή μία φορά με internet.")); document.head.appendChild(s); });
+}
+dropzone("oDrop", "oFile", fs => {
+  const ok = fs.filter(f => /\.(docx|xlsx|xlsm|xls|csv|ods)$/i.test(f.name));
+  const bad = fs.filter(f => !ok.includes(f));
+  O_FILES = ok; refreshButtons();
+  $("oInfo").innerHTML = ok.map(f => `<b>${esc(f.name)}</b> — ${fmt(f.size)}`).join("<br>") +
+    (bad.length ? `<br><span class="bad">Δεν υποστηρίζεται: ${bad.map(f=>esc(f.name)).join(", ")}${bad.some(f=>/\.doc$/i.test(f.name)) ? " (σώσε το .doc ως .docx)" : ""}</span>` : "");
+});
+async function officeHtml(file){
+  if (/\.docx$/i.test(file.name)){
+    await need("mammoth.browser.min.js");
+    const r = await mammoth.convertToHtml({arrayBuffer: await file.arrayBuffer()}, {styleMap:["p[style-name='Title'] => h1.title:fresh","p[style-name='Subtitle'] => h2:fresh"]});
+    return {html: r.value || "<p>(κενό έγγραφο)</p>", kind:"word"};
+  }
+  await need("xlsx.full.min.js");
+  const wb = XLSX.read(new Uint8Array(await file.arrayBuffer()), {type:"array", cellDates:true});
+  let html = "";
+  for (const name of wb.SheetNames){
+    const ws = wb.Sheets[name]; if (!ws || !ws["!ref"]) continue;
+    const doc = new DOMParser().parseFromString(XLSX.utils.sheet_to_html(ws, {editable:false}), "text/html");
+    const t = doc.querySelector("table"); if (!t) continue;
+    // drop fully empty trailing rows
+    [...t.rows].reverse().every(r => { if (r.textContent.trim()) return false; r.remove(); return true; });
+    if (!t.rows.length) continue;
+    html += `<h3 class="sheet">${esc(name)}</h3>` + t.outerHTML;
+  }
+  return {html: html || "<p>(κενό αρχείο)</p>", kind:"excel"};
+}
+async function htmlToPdfItems(html, kind, ori, grid, onPage){
+  await need("html2canvas.min.js");
+  const box = document.createElement("div"); box.id = "rbox";
+  box.style.cssText = "position:absolute;left:0;top:0;z-index:-5;background:#fff;color:#000;padding:36px 44px;font:13px/1.45 Arial,Helvetica,sans-serif;width:794px";
+  box.innerHTML = `<style>
+   #rbox *{color:#000}#rbox p{margin:0 0 8px}#rbox img{max-width:100%;height:auto}#rbox h1,#rbox h2,#rbox h3{margin:10px 0 8px}#rbox h1{font-size:22px}#rbox h1.title{font-size:26px;color:#123d5e!important}
+   #rbox table{border-collapse:collapse;margin:0 0 12px}#rbox td,#rbox th{padding:2px 5px;vertical-align:top;font-size:${kind==="excel"?"11px":"12.5px"};${grid||kind==="word"?"border:1px solid #999;":""}}
+   #rbox td{max-width:320px;word-break:break-word;${kind==="excel"?"white-space:pre-wrap;":""}}
+   #rbox h3.sheet{font-size:14px;background:#123d5e;color:#fff!important;padding:4px 8px;margin:4px 0 6px}
+   #rbox h3.sheet ~ h3.sheet{margin-top:18px}</style>` + html;
+  document.body.appendChild(box);
+  await Promise.all([...box.querySelectorAll("img")].map(im => im.complete ? 0 : new Promise(r => { im.onload = im.onerror = r; })));
+  window.scrollTo(0, 0);
+  let W = Math.max(794, box.scrollWidth);
+  const land = ori === "l" || (ori === "auto" && kind === "excel" && W > 900);
+  if (land && W < 1123) W = 1123;
+  box.style.width = W + "px";
+  W = box.offsetWidth;
+  const pw = land ? 842 : 595, ph = land ? 595 : 842, m = 22;
+  const pageH = W * (ph - 2*m) / pw;
+  const top = box.getBoundingClientRect().top + window.scrollY, total = box.scrollHeight;
+  const ends = [...new Set([...box.querySelectorAll("p,h1,h2,h3,h4,h5,h6,li,tr,img,table,ul,ol,blockquote")]
+    .map(e => Math.round(e.getBoundingClientRect().bottom + window.scrollY - top)))].sort((a,b)=>a-b);
+  const cuts = []; let s = 0;
+  while (s < total - 2){
+    const lim = s + pageH;
+    if (lim >= total) { cuts.push([s, total]); break; }
+    let b = 0; for (const e of ends) { if (e > s + pageH*0.4 && e <= lim) b = e; if (e > lim) break; }
+    if (!b) b = Math.floor(lim);
+    cuts.push([s, b]); s = b;
+  }
+  const scale = Math.min(2, 1600 / W * 1.4), items = [];
+  try {
+    for (let k=0; k<cuts.length; k++){
+      chk();
+      const [a, b] = cuts[k];
+      const cv = await html2canvas(box, {scale, backgroundColor:"#ffffff", x:0, y:top + a, width:W, height:b - a, scrollX:0, scrollY:0, windowWidth:Math.max(W, document.documentElement.clientWidth), logging:false, useCORS:true});
+      const j = await fitJpeg(cv, 0, 0.82);
+      const dw = pw, sc = pw / W; // box already has side padding
+      const dh = (b - a) * sc;
+      items.push({bytes:j.bytes, pw, ph, x:0, y:ph - m - dh, dw, dh});
+      onPage(k+1, cuts.length);
+    }
+  } finally { box.remove(); }
+  return items;
+}
+$("oGo").onclick = async () => {
+  const ori = $("oOri").value, grid = $("oGrid").checked, lock = await wake(); startProg("Μετατροπή…");
+  try {
+    const outs = [];
+    for (let f=0; f<O_FILES.length; f++){
+      chk();
+      const file = O_FILES[f];
+      $("pTxt").textContent = `Ανάγνωση ${file.name}…`; await nap();
+      const {html, kind} = await officeHtml(file);
+      const items = await htmlToPdfItems(html, kind, ori, grid, (k, n) => tick(k, n, `${file.name} — σελίδα ${k} / ${n}`, O_FILES.length > 1 ? `αρχείο ${f+1} / ${O_FILES.length}` : ""));
+      outs.push({name: stem(file.name) + ".pdf", blob: await buildPdf(items), note:`${items.length} σελίδ${items.length>1?"ες":"α"}`});
+    }
+    endProg();
+    show(outs, `<span class="big">${outs.length} PDF</span><div class="note">${secs()}</div>`, 0, "converted_pdf.zip");
+  } catch(e){ document.getElementById("rbox")?.remove(); endProg(e); }
+  finally { try{ lock?.release(); }catch(e){} }
+};
+
+// =====================================================================
+// 5) BULK RESIZE PHOTOS
+// =====================================================================
+dropzone("rDrop", "rFile", fs => {
+  R_FILES.push(...fs.filter(isImg)); refreshButtons();
+  $("rInfo").innerHTML = R_FILES.length ? `<b>${R_FILES.length} φωτό</b> — ${fmt(R_FILES.reduce((a,f)=>a+f.size,0))} <button class="btn s" id="rClr">🧹</button>` : "";
+  $("rClr") && ($("rClr").onclick = () => { R_FILES = []; $("rInfo").innerHTML = ""; refreshButtons(); });
+});
+$("rGo").onclick = async () => {
+  const side = +$("rSide").value, q = +$("rQ").value, limOn = $("rLimOn").checked, T = Math.max(0.5, +$("rTarget").value || 14) * MB;
+  const N = R_FILES.length, total = T*0.97, lock = await wake(); startProg("Resize…");
+  try {
+    let used = 0; const outs = [], names = new Set();
+    for (let i=0; i<N; i++){
+      chk();
+      const f = R_FILES[i], im = await loadImg(f);
+      const j = await fitJpeg(imgCanvas(im, side), limOn ? (total-used)/(N-i) : 0, q, 320);
+      used += j.bytes.length;
+      let n = stem(f.name) + "_s.jpg", c = 2; while (names.has(n)) n = stem(f.name) + `_s${c++}.jpg`; names.add(n);
+      outs.push({name:n, blob:new Blob([j.bytes], {type:"image/jpeg"}), note:`${j.w}×${j.h}`});
+      tick(i+1, N, `Φωτό ${i+1} / ${N}`, `${fmt(used)} μέχρι τώρα`); await nap();
+    }
+    const before = R_FILES.reduce((a,f)=>a+f.size,0);
+    endProg();
+    show(outs, `<span class="big">${fmt(before)} → ${fmt(used)}</span><div class="note">${N} φωτό · ${secs()}${limOn ? (used <= T ? ' · <span class="ok">χωράνε σε ένα email ✔</span>' : '') : ""}</div>`, 0, "photos_resized.zip");
+  } catch(e){ endProg(e); }
+  finally { try{ lock?.release(); }catch(e){} }
+};
+
+refreshButtons();
 if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");
 </script>
 </body>
