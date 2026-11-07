@@ -19,9 +19,9 @@ const YN=v=>({yes:'ναι',no:'όχι',customers:'μόνο πελάτες',priva
 const OVP=['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter','https://maps.mail.ru/osm/tools/overpass/api/interpreter'];
 
 /* ---------- Χάρτες: OpenTopoMap (απόφαση Καπετάνιου) + δορυφόρος ---------- */
-const LAYERS={topo:['Τοπογραφικός','https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',17,'© OpenStreetMap contributors, SRTM · © OpenTopoMap (CC-BY-SA)','⛰️'],
- sat:['Δορυφόρος','https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',19,'Tiles © Esri, Esri, Maxar, Earthstar Geographics','🛰️']};
-const LAYK=()=>{const k=LS.g('mlay3',null);return LAYERS[k]?k:'topo'};
+/* Απόφαση Καπετάνιου (7 Nov): ΜΟΝΟ ορεινός χάρτης (μονοπάτια, ισοϋψείς), χωρίς δορυφόρο. Κατεβαίνει ανά περιοχή για offline. */
+const LAYERS={topo:['Ορεινός χάρτης','https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',17,'© OpenStreetMap contributors, SRTM · © OpenTopoMap (CC-BY-SA)','⛰️']};
+const LAYK=()=>'topo';
 let MP={map:null,tl:null,hL:null,myL:null,rtL:null,hiL:null,meM:null,acc:null,follow:false,add:false,card:null,iv:null,S:[],H:[],tick:0,trkN:0};
 function mapIcon(e,bg,sz){sz=sz||30;return L.divIcon({className:'',html:`<div style="width:${sz}px;height:${sz}px;border-radius:50%;background:${bg||'#262422'};border:2px solid #f5f0e8;display:flex;align-items:center;justify-content:center;font-size:${sz*.55}px;box-shadow:0 1px 4px #000a">${e}</div>`,iconSize:[sz,sz],iconAnchor:[sz/2,sz/2]})}
 const ACC=[['2wd','🚗','Κάθε αυτοκίνητο','#5f9e7a'],['awd','🚙','SUV / AWD','#6a9fb5'],['4x4','🛻','4×4 με κοντά','#e8b86d'],['hard','⛰️','4×4 + μπλοκέ / δύσκολο','#d9534f']];
@@ -48,7 +48,7 @@ async function mapPage(sub,arg){if(sub==='huts'||sub==='list'||sub==='dl'||sub==
  <button id="mpos" onclick="mMe()">📡 ${L2('Περιμένω GPS…','Waiting for GPS…')}</button>
  <div id="mld" style="display:none;position:absolute;left:50%;transform:translateX(-50%);bottom:84px;z-index:480;background:#1f1e1dcc;border-radius:10px;padding:3px 10px;font-size:.75em;pointer-events:none">⏳ ${L2('φορτώνει ο χάρτης…','loading map…')}</div>
  <div style="position:absolute;right:8px;top:8px;z-index:500;display:flex;flex-direction:column;gap:6px">
-  <button class="hb" onclick="mLayer()" title="${L2('Τοπογραφικός / Δορυφόρος','Topo / Satellite')}">🗂️</button><button class="hb" id="mfol" onclick="mFollow()" title="${L2('Η θέση μου','My location')}">📍</button><button class="hb" onclick="MP.map.zoomIn()" style="font-size:1.3em">+</button><button class="hb" onclick="MP.map.zoomOut()" style="font-size:1.3em">−</button></div>
+  <button class="hb" onclick="offPanel()" title="${L2('Offline περιοχές','Offline areas')}">⬇️</button><button class="hb" id="mfol" onclick="mFollow()" title="${L2('Η θέση μου','My location')}">📍</button><button class="hb" onclick="MP.map.zoomIn()" style="font-size:1.3em">+</button><button class="hb" onclick="MP.map.zoomOut()" style="font-size:1.3em">−</button></div>
  <div id="mrb" style="position:absolute;left:8px;top:62px;right:60px;z-index:490;pointer-events:none"></div>
  <div id="mbar" style="position:absolute;left:8px;right:8px;bottom:10px;z-index:500"></div></div>
  <div class="muted" id="minfo" style="margin-top:6px"></div>`;
@@ -59,10 +59,10 @@ async function mapPage(sub,arg){if(sub==='huts'||sub==='list'||sub==='dl'||sub==
  MP.map.on('moveend',()=>{const ce=MP.map.getCenter();LS.s('mview',{lat:ce.lat,lon:ce.lng,z:MP.map.getZoom()})});
  MP.map.on('dragstart',()=>{MP.follow=false;const b=$('#mfol');if(b)b.style.background=''});
  MP.map.on('click',mClick);MP.map.on('contextmenu',e=>mQuick(e.latlng.lat,e.latlng.lng));
- TS.push(()=>{if(MP.iv)clearInterval(MP.iv);MP.iv=null;if(MP.map){MP.map.remove();MP.map=null}MP.add=false;MP.card=null;MP.meM=null;MP.acc=null});
+ TS.push(()=>{if(MP.iv)clearInterval(MP.iv);MP.iv=null;if(MP.map){MP.map.remove();MP.map=null}MP.offL=null;OFFRUN&&(OFFRUN.stop=1);MP.add=false;MP.card=null;MP.meM=null;MP.acc=null});
  MP.follow=false;MP.H=[];startGeo();MP.iv=setInterval(mPos,1000);mPos();
  MP.S=await DB.all('spots').catch(()=>[]);if(fo&&fo.k==='h'){const x=await DB.get('huts',fo.id).catch(()=>null);if(x)MP.H=[x]}if(!MP.map)return;
- await mDrawRoute();mDrawMy();mDrawH();
+ await mDrawRoute();mDrawMy();mDrawH();offDraw();
  if(fo)mCard(fo.k,fo.id);else mBarHome();if(LS.g('maddon',0)){LS.s('maddon',0);mAddOn()}
  if(!fo&&!c0)mFollow()}
 function mSetLayer(k){const l=LAYERS[k]||LAYERS.topo;if(MP.tl)MP.map.removeLayer(MP.tl);
@@ -70,7 +70,6 @@ function mSetLayer(k){const l=LAYERS[k]||LAYERS.topo;if(MP.tl)MP.map.removeLayer
  MP.tl.on('tileerror',e=>{const t=e.tile,u=t.src;MP.te++;if((t._r||0)<2){t._r=(t._r||0)+1;setTimeout(()=>{if(MP.map){t.src='';t.src=u}},1500*t._r)}
   if(MP.te===8)mToast('📶 '+L2('Αδύναμο σήμα: ο χάρτης φορτώνει αργά, ξαναδοκιμάζω μόνος μου. Ό,τι έχεις δει με σήμα μένει αποθηκευμένο.','Weak signal: the map loads slowly, I keep retrying. Anything viewed with signal stays saved.'))});
  MP.tl.on('loading',()=>{const e=$('#mld');if(e)e.style.display='block'});MP.tl.on('load',()=>{MP.te=0;const e=$('#mld');if(e)e.style.display='none'})}
-function mLayer(){const nx=LAYK()==='topo'?'sat':'topo';mSetLayer(nx);mToast(LAYERS[nx][4]+' '+LAYERS[nx][0])}
 function mToast(t){const i=$('#minfo');if(i)i.innerHTML=t}
 function mFollow(){MP.follow=true;const b=$('#mfol');if(b)b.style.background='var(--org)';if(pos)MP.map.setView([pos.lat,pos.lon],Math.max(MP.map.getZoom(),14));else mToast('📡 '+L2('Περιμένω GPS…','Waiting for GPS…'))}
 const norm2=s=>String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
@@ -104,10 +103,12 @@ function mCopy(lat,lon){const t=(+lat).toFixed(6)+', '+(+lon).toFixed(6),ok=()=>
  (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(ok,()=>prompt(L2('Αντέγραψε:','Copy:'),t))}
 function mCard(k,id){const it=mItem(k,id),b=$('#mbar');if(!it||!b)return mBarHome();MP.card={k,id};mHi(it.lat,it.lon);const ref=pos||LS.g('lastfix',null),nm=esc(it.n.replace(/'/g,''));
  const img=it.ph?`<img src="${URL.createObjectURL(it.ph)}" style="width:64px;height:64px;object-fit:cover;border-radius:10px">`:`<span style="font-size:2em">${it.e}</span>`;
- const third=k==='s'?`<button onclick="go('map/edit/${id}')">✏️ ${L2('Αλλαγή','Edit')}</button>`:k==='h'?`<button onclick="go('map/h/${encodeURIComponent(id)}')">ℹ️ ${L2('Στοιχεία','Details')}</button>`:`<button onclick="mQuick(${it.lat},${it.lon},'${it.me?'':nm}')">➕ ${L2('Στίγμα','Pin')}</button>`;
+ const third=k==='w'?`<button onclick="mWpDel(${id})">🗑 ${L2('Σβήσε','Delete')}</button>`:k==='s'?`<button onclick="go('map/edit/${id}')">✏️ ${L2('Αλλαγή','Edit')}</button>`:k==='h'?`<button onclick="go('map/h/${encodeURIComponent(id)}')">ℹ️ ${L2('Στοιχεία','Details')}</button>`:`<button onclick="mQuick(${it.lat},${it.lon},'${it.me?'':nm}')">➕ ${L2('Στίγμα','Pin')}</button>`;
  b.innerHTML=`<div class="msh"><div style="display:flex;gap:10px;align-items:center">${img}<div style="flex:1;min-width:0"><b style="font-size:1.05em">${esc(it.n)}</b><div class="muted" style="font-size:.8em">${esc(it.sub)}${ref&&!it.me?' · '+fmD(dist(ref,it))+' '+L2('σε ευθεία','straight line'):''}</div>
  <div class="mono" style="font-size:.85em">${it.lat.toFixed(5)}, ${it.lon.toFixed(5)}${it.ele!=null?' · ⛰️ '+(it.eleA?'≈':'')+it.ele+' m':''}</div>${it.note?`<div style="font-size:.8em;margin-top:2px">${esc(it.note).slice(0,120)}</div>`:''}</div><button class="hb" onclick="mBarHome()">✖</button></div>
  <div class="mg">${it.me?'':`<button class="o" onclick="mGoTo(${it.lat},${it.lon},'${nm}')">➡️ ${L2('Πάμε','Go')}</button>`}<button ${it.me?'class="o"':''} onclick="mCopy(${it.lat},${it.lon})">📋 ${L2('Συντεταγμένες','Coordinates')}</button>${third}${mApps(it.lat,it.lon,it.n)}</div></div>`}
+function mWpDel(i){const w=LS.g('wps',[]);if(!w[i]||!confirm(L2('Να σβηστεί το ⭐ «','Delete the ⭐ «')+w[i].n+'»;'))return;w.splice(i,1);LS.s('wps',w);
+ if(tgt===i)tgt=null;else if(tgt!=null&&tgt>i)tgt--;LS.s('tgt',tgt);if(MP.map){mDrawMy();mBarHome();mToast('🗑 '+L2('Σβήστηκε.','Deleted.'))}else mMy()}
 function mBarHome(){MP.card=null;MP.hiL&&MP.hiL.clearLayers();const b=$('#mbar');if(!b)return;
  b.innerHTML=`<div class="mfab"><button onclick="mAddOn()">➕ ${L2('Στίγμα','Pin')}</button><button class="b" onclick="mMe()">🧍 ${L2('Εδώ είμαι','I am here')}</button></div>`;
  mToast(L2(`${MP.S.length} δικά μου στίγματα. Κράτα το δάχτυλο πατημένο στον χάρτη για νέο στίγμα. Για καταφύγια & camper stops: 🛖.`,`${MP.S.length} pins of mine. Long-press the map for a new pin. For huts & camper stops: 🛖.`))}
@@ -137,7 +138,11 @@ function mGoTo(lat,lon,nm){const w=LS.g('wps',[]);let i=w.findIndex(p=>Math.abs(
 async function mMy(){T('⭐ Τα δικά μου σημεία');const S=(await DB.all('spots').catch(()=>[])).sort((a,b)=>b.t-a.t),ref=pos||LS.g('lastfix',null);
  M.innerHTML=`<div class="tools"><button class="btn p" onclick="LS.s('maddon',1);go('map')">➕ Νέο σημείο</button><button class="btn" onclick="mExport()">📤 Στείλε / export</button><label class="btn" style="color:var(--tx);font-size:.92em">📥 Import<input type="file" accept=".json,.gpx,application/json,application/gpx+xml" style="display:none" onchange="mImport(this.files[0])"></label></div>
  <div class="muted">Export: αρχείο που ανοίγει κάθε Overland’s Habit (με φωτογραφίες), έτσι ανταλλάσσετε σημεία στην παρέα. Import δέχεται και GPX (waypoints).</div>`+
- (S.length?S.map(s=>{const c=SPC.find(x=>x[0]===s.cat)||SPC.find(x=>x[0]==='other'),a=ACC.find(x=>x[0]===s.acc)||ACC[0];return`<button class="row" onclick="mFocus('s','${s.id}',${s.lat},${s.lon})"><span class="e">${c[1]}</span><span style="flex:1"><b>${esc(s.n||c[2])}</b><small>${'★'.repeat(s.r||0)}${'☆'.repeat(5-(s.r||0))} · ${a[1]} ${a[2]}${s.ph?' · 📷':''}</small></span>${ref?`<b class="mono">${fmD(dist(ref,s))}</b>`:''}</button>`}).join(''):'<div class="note">Κανένα δικό σου σημείο ακόμα. Κράτα εδώ τα καλά σημεία για ελεύθερο κάμπινγκ, πηγές, δύσκολα περάσματα.</div>')}
+ (S.length?S.map(s=>{const c=SPC.find(x=>x[0]===s.cat)||SPC.find(x=>x[0]==='other'),a=ACC.find(x=>x[0]===s.acc)||ACC[0];return`<button class="row" onclick="mFocus('s','${s.id}',${s.lat},${s.lon})"><span class="e">${c[1]}</span><span style="flex:1"><b>${esc(s.n||c[2])}</b><small>${'★'.repeat(s.r||0)}${'☆'.repeat(5-(s.r||0))} · ${a[1]} ${a[2]}${s.ph?' · 📷':''}</small></span>${ref?`<b class="mono">${fmD(dist(ref,s))}</b>`:''}</button>`}).join(''):'<div class="note">Κανένα δικό σου σημείο ακόμα. Κράτα εδώ τα καλά σημεία για ελεύθερο κάμπινγκ, πηγές, δύσκολα περάσματα.</div>')+mWpHtml()}
+function mWpHtml(){const w=LS.g('wps',[]);if(!w.length)return'';
+ return `<h3>⭐ ${L2('Σημεία πυξίδας («Πάμε»)','Compass points («Go»)')}</h3><div class="muted">${L2('Μπαίνουν μόνα τους όταν πατάς ➡️ Πάμε. Σβήσε όσα δεν χρειάζεσαι.','Added automatically when you tap ➡️ Go. Delete the ones you don\'t need.')}</div>`+
+ w.map((p,i)=>`<div class="wp"><b style="flex:1">${esc(p.n||'⭐')}<br><small class="muted mono">${(+p.lat).toFixed(5)}, ${(+p.lon).toFixed(5)}</small></b><button class="btn" onclick="mFocus('w',${i},${p.lat},${p.lon})">🗺️</button><button class="btn r" onclick="mWpDel(${i})">🗑</button></div>`).join('')+
+ `<button class="btn r" style="margin-top:6px" onclick="if(confirm(L2('Να σβηστούν όλα τα ⭐ πυξίδας;','Delete all compass ⭐?'))){LS.s('wps',[]);tgt=null;LS.s('tgt',null);mMy()}">🗑 ${L2('Σβήσε όλα τα ⭐','Delete all ⭐')}</button>`}
 async function mEdit(id){const dr=LS.g('spdraft',null);let s=(id==='new'||(dr&&dr.id===id))?dr:await DB.get('spots',id).catch(()=>null);if(!s)return go('map/my');T(s.new?'➕ Νέο σημείο':'✏️ '+(s.n||'Σημείο'));let ph='';
  if(s.ph){const u=URL.createObjectURL(s.ph);ph=`<img src="${u}" style="width:100%;border-radius:12px;margin:6px 0">`}
  M.innerHTML=`<div class="mono muted">${s.lat.toFixed(5)}, ${s.lon.toFixed(5)}</div><label>Όνομα</label><input id="spn" value="${esc(s.n)}" placeholder="π.χ. Πλάτωμα κάτω από τα έλατα">
@@ -199,3 +204,33 @@ async function mDrawRoute(){MP.rtL.clearLayers();RC=null;const id=LS.g('ract',nu
 function mRouteBar(){const b=$('#mrb');if(!b)return;if(MP.plan||!RC||!pos){b.innerHTML='';return}let bi=0,bd=1e12;const P=RC.r.pts,st=Math.max(1,Math.floor(P.length/1500));
  for(let i=0;i<P.length;i+=st){const d=dist(pos,{lat:P[i][0],lon:P[i][1]});if(d<bd){bd=d;bi=i}}const left=RC.cum[RC.cum.length-1]-RC.cum[bi],off=bd>150;
  b.innerHTML=`<div style="display:inline-block;background:${off?'#4a1c18':'#1f1e1dee'};border:1px solid ${off?'var(--red)':'var(--line)'};border-radius:12px;padding:5px 10px;font-size:.85em"><b>🏁 ${fmD(left)}</b> ${L2('μέχρι το τέλος','to the end')}${off?` · <b>⚠️ ${fmD(bd)} ${L2('εκτός διαδρομής','off route')}</b>`:''}</div>`}
+
+/* ---------- Offline περιοχές ορεινού χάρτη ----------
+   Κατεβάζει τα πλακίδια OpenTopoMap της περιοχής που βλέπεις στην cache «ovarea» (δεν σβήνεται μόνη της).
+   Ο service worker τα βρίσκει με caches.match, άρα ο χάρτης και η πυξίδα δουλεύουν χωρίς σήμα. */
+const OFFC='ovarea',OFFMAX=5000,OFFKB=22;
+const t2x=(lon,z)=>Math.floor((lon+180)/360*2**z),t2y=(lat,z)=>{const r=lat*Math.PI/180;return Math.floor((1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*2**z)};
+function offTiles(b,z0,z1){const U=[];for(let z=z0;z<=z1;z++){const x0=t2x(b.w,z),x1=t2x(b.e,z),y0=t2y(b.n,z),y1=t2y(b.s,z);
+ for(let x=x0;x<=x1;x++)for(let y=y0;y<=y1;y++)U.push(`https://${'abc'[Math.abs(x+y)%3]}.tile.opentopomap.org/${z}/${x}/${y}.png`)}return U}
+function offView(){const B=MP.map.getBounds();return{n:+B.getNorth().toFixed(4),s:+B.getSouth().toFixed(4),w:+B.getWest().toFixed(4),e:+B.getEast().toFixed(4)}}
+const offMB=n=>(n*OFFKB/1024).toFixed(n*OFFKB<10240?1:0)+' MB';
+function offDraw(){if(!MP.map)return;if(!MP.offL)MP.offL=L.layerGroup().addTo(MP.map);MP.offL.clearLayers();
+ LS.g('offa',[]).forEach(a=>L.rectangle([[a.b.s,a.b.w],[a.b.n,a.b.e]],{color:'#5f9e7a',weight:2,dashArray:'6 6',fill:false,interactive:false}).addTo(MP.offL))}
+function offPanel(){if(!MP.map)return;MP.card=null;const z=MP.map.getZoom(),b=offView(),A=LS.g('offa',[]),z0=Math.max(6,Math.min(z,14)-3);
+ const opt=[15,16].map(z1=>{const n=offTiles(b,z0,z1).length;return`<button ${n>OFFMAX?'disabled style="opacity:.4"':z1===15?'class="o"':''} onclick="offGet(${z0},${z1})">⬇️ ${L2('ως ζουμ','to zoom')} ${z1}<br><small>${n} ${L2('πλακίδια','tiles')} · ~${offMB(n)}</small></button>`}).join('');
+ $('#mbar').innerHTML=`<div class="msh"><div style="display:flex;justify-content:space-between;align-items:center"><b>⬇️ ${L2('Ορεινός χάρτης offline','Mountain map offline')}</b><button class="hb" onclick="mBarHome()">✖</button></div>
+ <div class="muted" style="font-size:.8em">${L2('Κατεβάζει ό,τι βλέπεις τώρα στην οθόνη (μονοπάτια, χωματόδρομοι, ισοϋψείς), για χρήση χωρίς σήμα μαζί με την πυξίδα. Με WiFi. Οι περιοχές σου φαίνονται με πράσινο διακεκομμένο.','Downloads what you see on screen now (trails, dirt roads, contours) for use without signal with the compass. On WiFi. Your areas show as green dashed boxes.')}${z<9?' <b>'+L2('Ζούμαρε πιο κοντά για μικρότερη περιοχή.','Zoom in for a smaller area.')+'</b>':''}</div>
+ <div class="mg" style="grid-template-columns:1fr 1fr">${opt}</div><div id="offp" style="font-size:.85em;margin-top:6px"></div>
+ ${A.length?`<div style="margin-top:8px;max-height:28vh;overflow:auto">${A.map((a,i)=>`<div class="wp" style="margin:4px 0"><b style="flex:1;font-size:.85em">🟩 ${esc(a.n)}<br><small class="muted">${a.c} ${L2('πλακίδια','tiles')} · ~${offMB(a.c)} · z${a.z0}–${a.z1}</small></b><button class="btn" onclick="MP.map.fitBounds([[${a.b.s},${a.b.w}],[${a.b.n},${a.b.e}]])">🗺️</button><button class="btn r" onclick="offDel(${i})">🗑</button></div>`).join('')}</div>`:''}</div>`}
+let OFFRUN=null;
+async function offGet(z0,z1){if(OFFRUN)return;const b=offView(),U=offTiles(b,z0,z1),p=$('#offp');if(U.length>OFFMAX)return;
+ try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
+ const c=await caches.open(OFFC);let i=0,ok=0,bad=0;OFFRUN={stop:0};wake(1);
+ const ui=()=>{if(p)p.innerHTML=`⏳ ${ok+bad} / ${U.length}${bad?' · ⚠️ '+bad:''} <button class="btn" style="padding:4px 10px" onclick="OFFRUN&&(OFFRUN.stop=1)">✖ ${L2('Σταμάτα','Stop')}</button>`};ui();
+ const work=async()=>{while(i<U.length&&!OFFRUN.stop){const u=U[i++];try{if(await c.match(u)){ok++;continue}const r=await fetch(u,{mode:'cors'});if(r.ok){await c.put(u,r);ok++}else bad++}catch(e){bad++}if((ok+bad)%20===0)ui()}};
+ await Promise.all([work(),work(),work(),work()]);const stopped=OFFRUN.stop;OFFRUN=null;wake(0);
+ if(ok){const A=LS.g('offa',[]),ce=MP.map?MP.map.getCenter():{lat:(b.n+b.s)/2,lng:(b.w+b.e)/2},nm=prompt(L2('Όνομα περιοχής:','Area name:'),L2('Περιοχή ','Area ')+(A.length+1)+' ('+ce.lat.toFixed(2)+', '+ce.lng.toFixed(2)+')')||L2('Περιοχή ','Area ')+(A.length+1);
+  A.push({n:nm,b,z0,z1,c:ok,t:Date.now()});LS.s('offa',A);offDraw()}
+ if(MP.map){offPanel();const q=$('#offp');if(q)q.innerHTML=(stopped?'⏹ ':'✅ ')+ok+' '+L2('πλακίδια κατέβηκαν','tiles downloaded')+(bad?` · ⚠️ ${bad} ${L2('απέτυχαν (ξαναπάτα για να συμπληρωθούν)','failed (tap again to fill in)')}`:'')}}
+async function offDel(i){const A=LS.g('offa',[]),a=A[i];if(!a||!confirm(L2('Να σβηστεί η offline περιοχή «','Delete offline area «')+a.n+'»;'))return;A.splice(i,1);LS.s('offa',A);
+ const keep=new Set();A.forEach(x=>offTiles(x.b,x.z0,x.z1).forEach(u=>keep.add(u)));const c=await caches.open(OFFC);for(const u of offTiles(a.b,a.z0,a.z1))if(!keep.has(u))await c.delete(u);offDraw();offPanel()}
