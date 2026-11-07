@@ -61,7 +61,16 @@ const EXACT = {
 "Η αποστολή όλων μαζί δεν υποστηρίζεται εδώ — πάτα «📦 ZIP».":"Sending all at once isn't supported here — tap “📦 ZIP”.",
 "📤 Αποστολή όλων":"📤 Send all","✏️ Συνέχεια επεξεργασίας":"✏️ Keep editing","🗜 Συμπίεση αυτού":"🗜 Compress this",
 "Δεν είναι PDF.":"Not a PDF.","Άνοιγμα PDF…":"Opening PDF…","Δημιουργία PDF…":"Building PDF…","Φωτογραφίες…":"Photos…","Μετατροπή…":"Converting…","Resize…":"Resize…",
-"Ακύρωση…":"Cancelling…","📲 Δώσε την εφαρμογή":"📲 Share the app","Ο άλλος σκανάρει το QR με την κάμερα του κινητού του":"The other person scans the QR with their phone camera",
+"Ακύρωση…":"Cancelling…","📷 Σκάνερ":"📷 Scanner","📷 Σκανάρισμα με κάμερα":"📷 Scan with camera","📸 Κάμερα κινητού":"📸 Phone camera","🖼 Από φωτογραφίες":"🖼 From photos",
+"Βάλε το χαρτί σε":"Put the paper on a","πιο σκούρο φόντο":"darker background","(τραπέζι, ντοσιέ) με καλό φως. Η εφαρμογή βρίσκει μόνη της τις άκρες, ισιώνει τη σελίδα και σβήνει τις σκιές. Με «Αυτόματη λήψη» τραβάει μόλις κρατήσεις σταθερά.":"(table, folder) with good light. The app finds the edges, straightens the page and removes shadows. With “AUTO” it shoots as soon as you hold steady.",
+"📑 Σελίδες (":"📑 Pages (","Πάτα μια σελίδα για να διορθώσεις γωνίες, φίλτρο ή περιστροφή. ◀ ▶ αλλάζουν σειρά.":"Tap a page to fix corners, filter or rotation. ◀ ▶ change order.",
+"⚙ Αποτέλεσμα":"⚙ Output","Φίλτρο νέων σελίδων":"Filter for new pages","📄 Έγγραφο":"📄 Document","⚫ Ασπρόμαυρο":"⚫ Black & white","🎨 Χρώμα+":"🎨 Colour+","◐ Γκρι":"◐ Grey","🖼 Πρωτότυπο":"🖼 Original",
+"Εφαρμογή σε όλες":"Apply to all","Μορφή":"Format","Εικόνες JPG":"JPG images","Όσο το χαρτί":"Same as paper","Ελαφριά (~140 dpi)":"Light (~140 dpi)","Κανονική (~200 dpi)":"Normal (~200 dpi)","Υψηλή (~300 dpi)":"High (~300 dpi)",
+"Μέγιστο MB (0 = χωρίς)":"Max MB (0 = none)","Scan_ημερομηνία":"Scan_date","📄 Δημιουργία":"📄 Create","✔ Τέλος":"✔ Done","Γωνίες & φίλτρο":"Corners & filter","🔲 Αυτόματα":"🔲 Auto","⛶ Όλη":"⛶ Whole",
+"Μην κουνιέσαι…":"Hold still…","Κράτα σταθερά για αυτόματη λήψη":"Hold steady for auto capture","Πάτα τον κύκλο για λήψη":"Tap the circle to shoot","Βάλε το χαρτί μέσα στην εικόνα, σε πιο σκούρο φόντο":"Fit the paper in view, on a darker background",
+"Δεν βρέθηκαν άκρες — σύρε τις γωνίες":"No edges found — drag the corners","Διαγραφή σελίδας;":"Delete page?","Να σβηστούν όλες οι σελίδες;":"Delete all pages?",
+"Δεν δόθηκε πρόσβαση στην κάμερα. Χρησιμοποίησε «📸 Κάμερα κινητού» ή άνοιξε τις ρυθμίσεις του browser.":"Camera access was not given. Use “📸 Phone camera” or check the browser settings.",
+"Η κάμερα δεν υποστηρίζεται εδώ — χρησιμοποίησε «Κάμερα κινητού»":"Camera not supported here — use “Phone camera”","Δεν φόρτωσε το σκάνερ — άνοιξε την εφαρμογή μία φορά με internet.":"The scanner didn't load — open the app once with internet.","📲 Δώσε την εφαρμογή":"📲 Share the app","Ο άλλος σκανάρει το QR με την κάμερα του κινητού του":"The other person scans the QR with their phone camera",
 "Σκανάρει το QR → ανοίγει η σελίδα.":"Scan the QR → the page opens.","iPhone: Safari → Share ⬆ → «Add to Home Screen». Android: Chrome → ⋮ → «Install app».":"iPhone: Safari → Share ⬆ → “Add to Home Screen”. Android: Chrome → ⋮ → “Install app”.",
 "Δουλεύει μετά και offline, όπως σε σένα.":"After that it works offline too.","📤 Στείλε link":"📤 Send link","💾 QR εικόνα":"💾 QR image","✔ Αντιγράφηκε":"✔ Copied","Μοιράσου την εφαρμογή":"Share the app","📅 Ημερομηνία κάτω δεξιά σε όλες":"📅 Date bottom-right on all","Ποια ημερομηνία":"Which date","Λήψης φωτογραφίας":"When the photo was taken",
 "Σημερινή":"Today","Δική μου":"My own","Ημερομηνία":"Date","Μικρό":"Small","Κανονικό":"Normal","Μεγάλο":"Large","+ ώρα":"+ time","Ακυρώθηκε.":"Cancelled.","(κενό έγγραφο)":"(empty document)","(κενό αρχείο)":"(empty file)","Created by George Barbaris":"Created by George Barbaris"
@@ -75,7 +84,7 @@ const PHRASES = [
 ["Πολλές σελίδες","Too many pages"],["διάλεξε «Κομμάτια»","choose “Parts”"],["Δεν διαβάζεται η εικόνα","Can't read the image"],["Δεν άνοιξε το αρχείο","Couldn't open the file"],
 ["Σφάλμα αποθήκευσης","Save error"],["Διαγραφή σελίδας","Delete page"],["Αποθηκεύτηκε","Saved"],["Δεν φόρτωσε το","Failed to load"],["Δεν άνοιξε το PDF","Couldn't open the PDF"],
 ["μέχρι τώρα","so far"],["απομένουν","remaining"],["Ανάγνωση","Reading"],["Μπήκε σε","Added to"],["κομμάτι","part"],["αρχείο","file"],["αρχεία","files"],
-["σελίδες","pages"],["σελίδα","page"],["Σελίδα","Page"],["σελ.","pp."],["εικόνες","images"],["Φωτό","Photo"],["φωτό","photos"],["λεπτά","min"],["δευτ.","sec"]
+["εικόνες","images"],["εικόνα","image"],["Δεν διαβάζεται","Can't read"],["σελίδες","pages"],["σελίδα","page"],["Σελίδα","Page"],["σελ.","pp."],["εικόνες","images"],["Φωτό","Photo"],["φωτό","photos"],["λεπτά","min"],["δευτ.","sec"]
 ].sort((a,b) => b[0].length - a[0].length);
 
 export let LANG = "el";

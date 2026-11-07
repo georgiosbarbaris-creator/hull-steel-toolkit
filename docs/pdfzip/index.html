@@ -73,6 +73,26 @@ input,select{font:16px system-ui;padding:9px;border:1px solid var(--line);border
 #edOv .edSvg path{pointer-events:stroke;cursor:move}
 #edOv .rubber{position:absolute;border:2px dashed #c8551c;background:rgba(200,85,28,.12);pointer-events:none}
 #edOv .cropmask{position:absolute;box-shadow:0 0 0 9999px rgba(0,0,0,.55);outline:2px solid #ffb347;pointer-events:none}
+.scGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;margin-top:10px}
+.scTh{position:relative;background:var(--bg);border-radius:10px;padding:4px;text-align:center}
+.scTh img{width:100%;aspect-ratio:.72;object-fit:contain;background:#fff;border-radius:6px;display:block;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.scN{position:absolute;top:6px;left:6px;background:#123d5e;color:#fff;border-radius:6px;font:700 11px system-ui;padding:1px 6px}
+.scBtns{display:flex;gap:2px;margin-top:4px}.scBtns button{flex:1;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:6px;padding:4px 0;font-size:12px;cursor:pointer}
+#scCam{position:fixed;inset:0;z-index:60;background:#000}
+#scVideo,#scOv{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#scFlash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;transition:opacity .15s}
+.scTop{position:absolute;left:0;right:0;top:0;display:flex;gap:6px;padding:calc(env(safe-area-inset-top) + 8px) 10px 8px;background:linear-gradient(rgba(0,0,0,.5),transparent)}
+.scTop .sp{flex:1}.eb.on{background:#2fb45a}
+.scHintC{position:absolute;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top) + 62px);background:rgba(0,0,0,.55);color:#fff;padding:6px 12px;border-radius:16px;font:600 13px system-ui;white-space:nowrap}
+.scBot{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:space-between;padding:14px 22px calc(env(safe-area-inset-bottom) + 18px);background:linear-gradient(transparent,rgba(0,0,0,.6))}
+#scShutter{width:74px;height:74px;border-radius:50%;border:5px solid #fff;background:rgba(255,255,255,.35);cursor:pointer}
+#scShutter:active{background:#fff}
+#scCamThumb{width:54px;height:54px;border-radius:10px;border:2px solid #fff;background:#333 center/cover;display:flex;align-items:flex-end;justify-content:flex-end}
+#scCamThumb b{background:#c8551c;color:#fff;border-radius:9px;font:700 12px system-ui;padding:1px 6px;margin:-8px -8px 0 0}
+#scEd{position:fixed;inset:0;z-index:60;background:#20262d;display:flex;flex-direction:column}
+#scStage{flex:1;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;touch-action:none}
+#scSvg{position:absolute;left:0;top:0;width:100%;height:100%;touch-action:none}#scSvg circle{cursor:grab}
+#scLoupe{position:fixed;display:none;z-index:65;pointer-events:none;border-radius:50%;box-shadow:0 2px 10px rgba(0,0,0,.6)}
 .edToast{position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:#123d5e;color:#fff;padding:9px 14px;border-radius:10px;z-index:40;font-size:14px}
 </style>
 </head>
@@ -81,6 +101,7 @@ input,select{font:16px system-ui;padding:9px;border:1px solid var(--line);border
  <div class="hrow"><h1>📄 PDF Tools</h1><button class="hb" id="shareApp" title="Μοιράσου την εφαρμογή">📲</button><button class="hb" id="newTask" title="Νέα εργασία">🧹 Νέα εργασία</button><button class="hb" id="lang">EN</button></div>
  <div class="sub">Συμπίεση · μετατροπές · επεξεργασία · resize φωτό — offline, τίποτα δεν ανεβαίνει πουθενά</div>
  <nav class="tabs" id="tabs">
+  <button data-t="scn">📷 Σκάνερ</button>
   <button data-t="edt">✏️ Επεξεργασία PDF</button>
   <button data-t="cmp">🗜 Συμπίεση PDF</button>
   <button data-t="i2p">🖼→📄 Φωτό σε PDF</button>
@@ -90,6 +111,38 @@ input,select{font:16px system-ui;padding:9px;border:1px solid var(--line);border
  </nav>
 </header>
 <main>
+
+<!-- ============ SCANNER ============ -->
+<section id="t-scn" class="tab hide">
+ <div class="card">
+  <button class="btn o" id="scCamBtn">📷 Σκανάρισμα με κάμερα</button>
+  <div class="row" style="margin-top:8px;flex-wrap:nowrap">
+   <button class="btn" id="scNative" style="flex:1">📸 Κάμερα κινητού</button>
+   <button class="btn" id="scFiles" style="flex:1">🖼 Από φωτογραφίες</button>
+  </div>
+  <input type="file" id="scNativeIn" accept="image/*" capture="environment" class="hide">
+  <input type="file" id="scFilesIn" accept="image/*" multiple class="hide">
+  <p class="note" style="margin:10px 0 0">Βάλε το χαρτί σε <b>πιο σκούρο φόντο</b> (τραπέζι, ντοσιέ) με καλό φως. Η εφαρμογή βρίσκει μόνη της τις άκρες, ισιώνει τη σελίδα και σβήνει τις σκιές. Με «Αυτόματη λήψη» τραβάει μόλις κρατήσεις σταθερά.</p>
+ </div>
+ <div class="card hide" id="scPagesCard">
+  <div class="row" style="justify-content:space-between"><h2 style="margin:0">📑 Σελίδες (<span id="scCount">0</span>)</h2><button class="btn s" id="scClear">🧹</button></div>
+  <div id="scPages" class="scGrid"></div>
+  <p class="note" style="margin:6px 0 0">Πάτα μια σελίδα για να διορθώσεις γωνίες, φίλτρο ή περιστροφή. ◀ ▶ αλλάζουν σειρά.</p>
+ </div>
+ <div class="card hide" id="scOutCard">
+  <h2>⚙ Αποτέλεσμα</h2>
+  <div class="g2">
+   <label>Φίλτρο νέων σελίδων<select id="scDefFilter"><option value="doc">📄 Έγγραφο</option><option value="bw">⚫ Ασπρόμαυρο</option><option value="color">🎨 Χρώμα+</option><option value="gray">◐ Γκρι</option><option value="orig">🖼 Πρωτότυπο</option></select></label>
+   <label>&nbsp;<button class="btn" id="scAllFilter">Εφαρμογή σε όλες</button></label>
+   <label>Μορφή<select id="scFmt"><option value="pdf">PDF</option><option value="jpg">Εικόνες JPG</option></select></label>
+   <label>Σελίδα<select id="scSize"><option value="a4">A4</option><option value="letter">Letter</option><option value="fit">Όσο το χαρτί</option></select></label>
+   <label>Ανάλυση<select id="scQ"><option value="l">Ελαφριά (~140 dpi)</option><option value="n" selected>Κανονική (~200 dpi)</option><option value="h">Υψηλή (~300 dpi)</option></select></label>
+   <label>Μέγιστο MB (0 = χωρίς)<input type="number" id="scLim" value="14" min="0" step="0.5"></label>
+   <label style="grid-column:1/-1">Όνομα αρχείου<input id="scName" placeholder="Scan_ημερομηνία"></label>
+  </div>
+  <button class="btn o" id="scGo" style="margin-top:12px">📄 Δημιουργία</button>
+ </div>
+</section>
 
 <!-- ============ EDIT ============ -->
 <section id="t-edt" class="tab hide">
@@ -252,6 +305,24 @@ input,select{font:16px system-ui;padding:9px;border:1px solid var(--line);border
   <div class="row" style="flex-wrap:nowrap"><button class="btn p" id="qrShare" style="flex:1">📤 Στείλε link</button><button class="btn" id="qrSave" style="flex:1">💾 QR εικόνα</button></div>
   <button class="btn" id="qrClose" style="width:100%;margin-top:8px">Κλείσιμο</button>
  </div>
+</div>
+
+<!-- scanner camera -->
+<div id="scCam" class="hide">
+ <video id="scVideo" playsinline muted autoplay></video>
+ <canvas id="scOv"></canvas>
+ <div id="scFlash"></div>
+ <div class="scTop"><button class="eb" id="scClose">✕</button><span class="sp"></span><button class="eb" id="scTorch">🔦</button><button class="eb" id="scAuto">AUTO</button></div>
+ <div class="scHintC" id="scHint"></div>
+ <div class="scBot"><div id="scCamThumb"><b id="scCamN">0</b></div><button id="scShutter"></button><button class="eb sv" id="scDone">✔ Τέλος</button></div>
+</div>
+<!-- scanner page editor -->
+<div id="scEd" class="hide">
+ <div class="edTop"><button class="eb" id="scEdCancel">✕</button><div class="edName">Γωνίες & φίλτρο</div><button class="eb sv" id="scEdOk">✔ OK</button></div>
+ <div id="scStage"><canvas id="scEdCv"></canvas><svg id="scSvg"></svg></div>
+ <div class="edTools" id="scFilt"></div>
+ <div class="edBot"><button class="eb" id="scRotL">↺</button><button class="eb" id="scRotR">↻</button><span class="sp"></span><button class="eb" id="scAutoQ" style="font-size:13px">🔲 Αυτόματα</button><button class="eb" id="scFullQ" style="font-size:13px">⛶ Όλη</button><span class="sp"></span><button class="eb" id="scDel">🗑</button></div>
+ <canvas id="scLoupe" width="120" height="120"></canvas>
 </div>
 
 <div id="ed" class="hide">
@@ -858,7 +929,13 @@ $("rGo").onclick = async () => {
 // =====================================================================
 // 6) EDITOR
 // =====================================================================
-window.PT = {show, fmt};
+window.PT = {show, fmt, fitJpeg, buildPdf};
+let scMod = null;
+document.querySelector('#tabs button[data-t="scn"]').addEventListener("click", async () => {
+  if (scMod) return;
+  try { scMod = await import("./scanner.js"); scMod.setupScanner(); } catch(e){ scMod = null; alert("Δεν φόρτωσε το σκάνερ — άνοιξε την εφαρμογή μία φορά με internet."); }
+});
+if ((localStorage.getItem("pdfzip_tab")||"") === "scn") import("./scanner.js").then(m => { if (!scMod){ scMod = m; m.setupScanner(); } });
 let edMod = null, edReady = false;
 async function openEd(file){
   try { edMod ||= await import("./editor.js"); if (!edReady){ edMod.setupEditor(); edReady = true; } }
@@ -885,6 +962,7 @@ function newTask(){
   ["cFile","pFile","oFile","rFile","iFile","eFile"].forEach(id => $(id).value = "");
   $("pRange").value = ""; $("iName").value = "Photos";
   $("res").classList.add("hide"); $("prog").classList.add("hide");
+  scMod?.resetScanner?.();
   refreshButtons(); window.scrollTo({top:0, behavior:"smooth"});
 }
 // ---------- share the app (QR) ----------
