@@ -145,7 +145,7 @@ function home(){T(TITLE);const read=LS.g('read',{});
  <h3>Το ταξίδι</h3>
  <button class="row" onclick="go('trip')"><span class="e">🎒</span><span><b>Ταξίδι & λίστες εξοπλισμού</b><small>${tripProg()}</small></span></button>
  <button class="row" onclick="go('t/walk')"><span class="e">🔎</span><span><b>Walk-round πριν φύγεις</b><small>έλεγχος οχήματος σαν superintendent</small></span></button>
- <button class="row" onclick="go('learn')"><span class="e">🎓</span><span><b>Ακαδημία</b><small>${ALL.filter(l=>done(l.id)).length}/${ALL.length} μαθήματα · quiz · από τα βιβλία, από αρχάριο μέχρι expert</small></span></button>
+ <button class="row" onclick="go('learn')"><span class="e">🎓</span><span><b>Ακαδημία</b><small>${ALL.filter(l=>done(l.id)).length}/${ALL.length} μαθήματα · quiz · από αρχάριο μέχρι expert</small></span></button>
 ${SOON.length?'<h3>Έρχονται</h3>':''}${SOON.map(s=>`<button class="row soon" onclick="go('${s[0]}')"><span class="e">${s[1]}</span><span><b>${s[2]}</b><small>${s[3]} · ${s[4]}</small></span></button>`).join('')}
  <footer>Overland Habit v0.7 · Created by George Barbaris<br>Τα δεδομένα μένουν μόνο στο κινητό σου.<br>Χάρτες & σημεία © OpenStreetMap contributors · OpenTopoMap · Esri · Leaflet</footer>`}
 function soon(id){const s=SOON.find(x=>x[0]===id);T(s[1]+' '+s[2]);const det={

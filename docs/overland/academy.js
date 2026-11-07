@@ -1,4 +1,4 @@
-/* ===== Overland Habit — Φάση 5: Ακαδημία (μαθήματα από τα βιβλία, quiz, badges, ευρετήριο) ===== */
+/* ===== Overland Habit — Ακαδημία (μαθήματα, quiz, badges, ευρετήριο «Έξω από τους Τοίχους») ===== */
 const ACD=(typeof ACAD!=='undefined'?ACAD:{lessons:[],lists:{},coverage:[]});
 const ALL=LESSONS.map(l=>Object.assign({src:'Overland Habit'},l)).concat(ACD.lessons||[]);
 const ABYID=Object.fromEntries(ALL.map(l=>[l.id,l]));
@@ -15,7 +15,7 @@ function learn(id){if(id==='index')return acIndex();if(id)return lesson(id);T('�
  <input id="acq" placeholder="🔎 Ψάξε (π.χ. λάσπη, υπνόσακος, εργάτης, ΕΓΣΑ)…" oninput="acList()">
  <div class="seg">${[['all','Όλα']].concat(LEVELS.map(l=>[l[0],l[1]+' '+l[2]])).map(([v,t])=>`<button class="${f.lv===v?'on':''}" onclick="acF('lv','${v}')">${t}</button>`).join('')}</div>
  <div class="seg">${SRCS.map(([v,t])=>`<button class="${f.s===v?'on':''}" onclick="acF('s','${v}')">${t}</button>`).join('')}</div>
- <button class="row" onclick="go('learn/index')"><span class="e">📑</span><span><b>Ευρετήριο βιβλίων</b><small>κάθε κεφάλαιο και ενότητα των βιβλίων → σε ποιο μάθημα είναι</small></span></button><button class="row" onclick="acReset()"><span class="e">🧹</span><span><b>${L2('Καθαρισμός προόδου','Reset progress')}</b><small>${L2('σβήνει όλα τα «διάβασα», τα quiz και τα 🏅 — ξεκινάς από την αρχή','clears all “read”, quiz scores and 🏅 — start fresh')}</small></span></button>
+ <button class="row" onclick="go('learn/index')"><span class="e">📑</span><span><b>${L2('Ευρετήριο «Έξω από τους Τοίχους»','Index of “Outside the Walls”')}</b><small>${L2('κάθε κεφάλαιο του βιβλίου → σε ποιο μάθημα είναι','each chapter of the book → which lesson covers it')}</small></span></button><button class="row" onclick="acReset()"><span class="e">🧹</span><span><b>${L2('Καθαρισμός προόδου','Reset progress')}</b><small>${L2('σβήνει όλα τα «διάβασα», τα quiz και τα 🏅 — ξεκινάς από την αρχή','clears all “read”, quiz scores and 🏅 — start fresh')}</small></span></button>
  <div id="acl"></div>`;acList()}
 function acF(k,v){const f=LS.g('acf',{lv:'all',s:'all'});f[k]=v;LS.s('acf',f);learn()}
 function acList(){const f=LS.g('acf',{lv:'all',s:'all'}),q=norm2(($('#acq')||{value:''}).value.trim()),e=$('#acl');if(!e)return;
@@ -36,8 +36,8 @@ function acAns(i,j){if(QZ.ans[i]!=null)return;const x=ABYID[QZ.id],q=x.q[i],ok=j
  $('#qz'+i).querySelector('.qzw').innerHTML=`<div class="${ok?'tip':'warn'}" style="font-weight:400">${ok?'✅ Σωστό.':'❌ Όχι.'} ${esc(q.w||'')}</div>`;vib(ok?30:[60,40,60]);
  if(Object.keys(QZ.ans).length===x.q.length){const sc=Object.values(QZ.ans).filter(Boolean).length,Q=LS.g('quiz',{}),pr=Q[QZ.id]||{best:0};Q[QZ.id]={best:Math.max(pr.best,sc),last:sc,t:Date.now()};LS.s('quiz',Q);
   const pass=sc>=Math.ceil(x.q.length*2/3);$('#qzs').innerHTML=`<div class="res"><div class="v">${sc}/${x.q.length}</div><div>${pass?'🎉 Πέρασες!':'Ξαναδιάβασε και δοκίμασε πάλι.'}</div><button class="btn" onclick="acQuiz('${QZ.id}')">↻ Ξανά</button></div>`}}
-function acIndex(){T('📑 Ευρετήριο βιβλίων');const C=ACD.coverage||[];
- M.innerHTML=`<div class="muted">Κάθε κεφάλαιο και ενότητα των βιβλίων, και σε ποιο μάθημα θα τη βρεις. Έτσι ελέγχεις ότι δεν λείπει τίποτα.</div>`+
+function acIndex(){T('📑 '+L2('Ευρετήριο «Έξω από τους Τοίχους»','Index of “Outside the Walls”'));const C=ACD.coverage||[];
+ M.innerHTML=`<div class="muted">${L2('Κάθε κεφάλαιο του βιβλίου «Έξω από τους Τοίχους» και σε ποιο μάθημα θα το βρεις.','Each chapter of “Outside the Walls” and the lesson where you will find it.')}</div>`+
  (C.length?C.map(c=>`<div class="box"><b>${esc(c[0])}</b><div class="muted" style="margin:4px 0">${esc(c[1])}</div>${(c[2]||[]).filter(id=>ABYID[id]).map(id=>`<button class="btn" style="margin:3px 3px 0 0" onclick="go('learn/${id}')">${ABYID[id].e||'📘'} ${esc(ABYID[id].n)}</button>`).join('')}</div>`).join(''):'<div class="note">Το ευρετήριο ετοιμάζεται.</div>')}
 
 /* καθαρισμός προσπαθειών: όλη η Ακαδημία ή ένα μάθημα */
