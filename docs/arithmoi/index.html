@@ -20,7 +20,7 @@ label{display:block;font-size:13px;color:var(--muted);margin:8px 0 3px}
 select{width:100%;font:inherit;padding:11px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
 .meter{height:10px;background:var(--bg);border-radius:6px;overflow:hidden;margin:6px 0}.meter i{display:block;height:100%;background:linear-gradient(90deg,#b8860b,#7a4fd1)}
 input{width:100%;font:inherit;padding:11px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.g2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
 button{font:inherit;border:0;border-radius:10px;padding:11px 14px;background:var(--pri);color:var(--card);font-weight:600;cursor:pointer}
 button.ghost{background:transparent;color:var(--pri);border:1px solid var(--line)}
 button.acc{background:var(--acc);color:#fff}
@@ -50,6 +50,21 @@ table{border-collapse:collapse;width:100%;font-size:14px}td,th{border:1px solid 
 .list-item{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);align-items:center}.list-item:last-child{border:0}
 .empty{text-align:center;color:var(--muted);padding:20px}
 .muted{color:var(--muted);font-size:13.5px}
+nav button{font-size:10.5px;padding:8px 1px;letter-spacing:-.2px}nav button b{font-size:19px}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px}
+.cal .h{font-size:11px;color:var(--muted);text-align:center;font-weight:700}
+.cal .d{min-width:0;background:var(--bg);border-radius:9px;padding:4px 1px;text-align:center;min-height:52px;border:2px solid transparent;cursor:pointer}
+.cal .d .dn{font-size:11px;color:var(--muted)}.cal .d .pn{font-size:20px;font-weight:800;color:var(--hi);line-height:1.1}.cal .d .pw{font-size:8.5px;color:var(--muted);line-height:1.1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cal .d.best{border-color:var(--acc);background:#fff6df}.cal .d.today{outline:2px solid var(--hi)}
+@media (prefers-color-scheme:dark){.cal .d.best{background:#3a2e10}}
+.cal .d.x{visibility:hidden}
+.numpick{display:flex;flex-wrap:wrap;gap:6px}.numpick button{min-width:44px;padding:9px 0;font-size:17px;background:var(--bg);color:var(--ink);border:1px solid var(--line)}
+.numpick button.on,#toolTabs button.on{background:var(--pri);color:var(--card)}
+.numpick small{display:block;width:100%;font-size:11.5px;color:var(--muted);margin-top:4px}
+.medi{background:linear-gradient(135deg,#1d1630,#3a2a60);color:#ece6f8;border:0}.medi p{font-size:16px;line-height:1.7}
+.pill{display:inline-block;background:var(--bg);border-radius:20px;padding:3px 10px;margin:2px;font-size:13px}
+.hl{background:#fff6df;border-left:4px solid var(--acc);padding:8px 10px;border-radius:8px;margin:8px 0}
+@media (prefers-color-scheme:dark){.hl{background:#2e2410}}
 </style>
 </head>
 <body>
@@ -82,7 +97,35 @@ table{border-collapse:collapse;width:100%;font-size:14px}td,th{border:1px solid 
  <div class="row" style="margin-bottom:12px"><button class="acc" id="cmp">Σύγκρινε</button></div>
  <div id="cmpOut"></div>
 </section>
-<section class="view" id="v-people"><div class="card"><h2>👥 Αποθηκευμένα πρόσωπα</h2><div id="people"></div></div></section>
+<section class="view" id="v-people"><div class="card"><h2>👥 Αποθηκευμένα πρόσωπα</h2><p class="muted" style="margin-top:0">Πάτα ⭐ για να ορίσεις ποιος είσαι «εσύ»: τον χρησιμοποιούν οι Ημέρες και η κάρτα της ημέρας.</p><div id="people"></div></div></section>
+
+<section class="view" id="v-days">
+ <div id="todayCard"></div>
+ <div class="card"><h2>📅 Προσωπικό ημερολόγιο</h2>
+  <label>Για ποιον</label><select id="dsel"></select>
+  <div class="g2"><div><label>Μήνας</label><input id="dmon" type="month"></div>
+  <div><label>Τι θέλεις να κάνεις;</label><select id="dgoal"></select></div></div>
+  <p class="muted" style="margin:6px 0 0">Κάθε κουτί είναι η <b>Προσωπική Ημέρα</b> σου. Με χρυσό πλαίσιο οι καλύτερες μέρες για τον στόχο που διάλεξες.</p>
+ </div>
+ <div id="calOut"></div>
+</section>
+
+<section class="view" id="v-tools">
+ <div class="card"><h2>🧰 Εργαλεία</h2>
+  <div class="row" id="toolTabs" style="gap:6px">
+   <button class="ghost on" data-t="house">🏠 Σπίτι</button><button class="ghost" data-t="phone">📞 Αριθμός</button><button class="ghost" data-t="word">🔤 Λέξη / Εταιρεία</button><button class="ghost" data-t="names">👶 Επιλογή ονόματος</button>
+  </div>
+ </div>
+ <div id="toolOut"></div>
+</section>
+
+<section class="view" id="v-book">
+ <div class="card"><h2>📖 Το βιβλίο των αριθμών</h2>
+  <p class="muted" style="margin-top:0">Διάλεξε αριθμό για το πλήρες πορτρέτο: ενέργεια, ευλογία, πρόκληση, μάθημα, σχέσεις, πώς ανεβάζεις τη δόνησή του και διαλογισμός.</p>
+  <div id="numPick" class="numpick"></div>
+ </div>
+ <div id="numOut"></div>
+</section>
 
 <section class="view" id="v-help">
  <div class="card">
@@ -103,7 +146,7 @@ table{border-collapse:collapse;width:100%;font-size:14px}td,th{border:1px solid 
   </ol>
   <p><b>Η λέξη σου</b>: μία λέξη-σύμβολο από τον συνδυασμό Πορείας Ζωής × Ψυχής (81 συνδυασμοί).</p>
   <h3>Πώς γίνεται η αναγωγή</h3>
-  <p>Προσθέτουμε τα ψηφία μέχρι να μείνει ένα (π.χ. 38 → 3+8 = 11). Τα <b>11, 22, 33</b> είναι <b>κύριοι αριθμοί</b> και δεν τα ανάγουμε. Στην Πορεία Ζωής ανάγουμε χωριστά μήνα, ημέρα και έτος και μετά τα προσθέτουμε. Στο όνομα ανάγουμε κάθε όνομα χωριστά και μετά τα προσθέτουμε.</p>
+  <p>Προσθέτουμε τα ψηφία μέχρι να μείνει ένα (π.χ. 38 → 3+8 = 11). Τα <b>11, 22, 33</b> είναι <b>κύριοι αριθμοί</b> και δεν τα ανάγουμε. Στην Πορεία Ζωής ανάγουμε χωριστά μήνα, ημέρα και έτος σε ένα ψηφίο και μετά τα προσθέτουμε (2η μέθοδος του βιβλίου). Στο όνομα ανάγουμε κάθε όνομα χωριστά σε ένα ψηφίο και μετά τα προσθέτουμε· κύριος αριθμός κρατιέται <b>μόνο στο τελικό άθροισμα</b>.</p>
   <h3>Οι κύκλοι</h3>
   <ul>
    <li><b>Προσωπικό Έτος</b> = μήνας + ημέρα γέννησης + τρέχον έτος (κύκλος 1→9, αλλάζει την 1η Ιανουαρίου).</li>
@@ -118,8 +161,11 @@ table{border-collapse:collapse;width:100%;font-size:14px}td,th{border:1px solid 
 </main>
 
 <nav>
- <button data-v="calc" class="on"><b>🔢</b>Υπολογισμός</button>
+ <button data-v="calc" class="on"><b>🔢</b>Προφίλ</button>
+ <button data-v="days"><b>📅</b>Ημέρες</button>
  <button data-v="love"><b>💞</b>Ταίριασμα</button>
+ <button data-v="tools"><b>🧰</b>Εργαλεία</button>
+ <button data-v="book"><b>🌀</b>Αριθμοί</button>
  <button data-v="people"><b>👥</b>Πρόσωπα</button>
  <button data-v="help"><b>📖</b>Οδηγός</button>
 </nav>
@@ -319,7 +365,7 @@ async function aiProfile(){
 function nameNum(parts,filter){
  let tot=0,debts=[],lines=[];
  for(const p of parts){const L=letters(p).filter(filter);if(!L.length)continue;
-  const s=L.reduce((a,b)=>a+b.v,0);const tr=[];const r=red(s,true,tr);debts.push(...debtIn(tr));
+  const s=L.reduce((a,b)=>a+b.v,0);const tr=[];const r=red(s,false,tr);debts.push(...debtIn(tr));
   tot+=r;lines.push(`${clean(p)}: ${L.map(x=>x.v).join("+")} = ${tr.join("→")}`);}
  const tr=[];const r=red(tot,true,tr);debts.push(...debtIn(tr));
  lines.push(`Σύνολο: ${tot}${tr.length>1?" → "+tr.slice(1).join("→"):""}`);
@@ -328,7 +374,7 @@ function nameNum(parts,filter){
 function compute(fn,mn,ln,bd,rd){
  const parts=[fn,mn,ln].map(s=>(s||"").trim()).filter(Boolean);
  const [Y,M,D]=bd.split("-").map(Number);
- const tm=[],td=[],ty=[];const m=red(M,true,tm),d=red(D,true,td),y=red(Y,true,ty);
+ const tm=[],td=[],ty=[];const m=red(M,false,tm),d=red(D,false,td),y=red(Y,false,ty);
  const lt=[];const lp=red(m+d+y,true,lt);
  const lpDebt=[...new Set([...debtIn(td),...debtIn(lt)])];
  const lpCalc=`Μήνας ${tm.join("→")} · Ημέρα ${td.join("→")} · Έτος ${Y}→${ty.slice(1).join("→")||Y}\n${m}+${d}+${y} = ${lt.join("→")}`;
@@ -350,7 +396,7 @@ function compute(fn,mn,ln,bd,rd){
  const missing=Object.keys(cnt).filter(k=>cnt[k]===0).map(Number);
  const mx=Math.max(...Object.values(cnt));const hp=mx?Object.keys(cnt).filter(k=>cnt[k]===mx).map(Number):[];
  const debts=[...new Set([...lpDebt,...ex.debts,...su.debts,...pe.debts,...(KD.includes(D)?[D]:[])])].sort();
- return{parts,lp,lpCalc,ex,su,pe,ma,maCalc:`${lp} + ${ex.n} = ${mt.join("→")}`,bdn,D,py,pyRaw,pm,pdy,RY,RM,RD,pin,ch:[c1,c2,c3,c4],ages,age,cnt,missing,hp,debts,all};
+ return{Y,M,parts,lp,lpCalc,ex,su,pe,ma,maCalc:`${lp} + ${ex.n} = ${mt.join("→")}`,bdn,D,py,pyRaw,pm,pdy,RY,RM,RD,pin,ch:[c1,c2,c3,c4],ages,age,cnt,missing,hp,debts,all};
 }
 
 // ---------- ΕΜΦΑΝΙΣΗ ----------
@@ -490,5 +536,7 @@ function show(v){document.querySelectorAll(".view").forEach(x=>x.classList.toggl
 document.querySelectorAll("#v-calc input").forEach(i=>i.addEventListener("keydown",e=>{if(e.key==="Enter")run()}));
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 </script>
+<script src="book.js"></script>
+<script src="extra.js"></script>
 </body>
 </html>
