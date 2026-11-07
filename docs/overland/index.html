@@ -89,6 +89,7 @@ html.night header,html.night main,html.night nav{filter:grayscale(1) sepia(1) sa
 <div id="ov" onclick="ovOff()"><div id="ovt"></div></div>
 <script src="../grade/data.js"></script>
 <script src="data.js"></script>
+<script src="walk-guide.js"></script>
 <script>
 /* ===== Overland Habit, Created by George Barbaris ===== */
 const $=s=>document.querySelector(s),M=$('#m');
@@ -360,8 +361,14 @@ function pwC(){const st=LS.g('pw',{});Object.assign(st,{ah:n($('#pwah').value),v
 /* ---------- Walk-round ---------- */
 function tWalk(){T('🔎 Walk-round');const w=LS.g('walk',{d:new Date().toISOString().slice(0,10),s:{},nt:{}}),v=veh();let tot=0,k=0,dfc=0;WALK.forEach(([,L],gi)=>L.forEach((_,ii)=>{tot++;const x=w.s[gi+'_'+ii];if(x)k++;if(x==='d')dfc++}));
  M.innerHTML=`<div class="box"><b>${esc(v?v.name||v.model:'Όχημα')}</b> · <input type="date" value="${w.d}" style="width:auto;display:inline-block;margin:0" onchange="wkD(this.value)"><div class="bar"><i style="width:${k/tot*100}%"></i></div><div class="muted">${k}/${tot} ελέγχθηκαν · <b class="${dfc?'bad':'ok'}">${dfc} ευρήματα</b></div></div>
- <div class="tools"><button class="btn p" onclick="wkShare()">📤 Στείλε / αντίγραψε αναφορά</button><button class="btn" onclick="wkNew()">🆕 Νέος έλεγχος</button></div>`+
- WALK.map(([g,L],gi)=>`<h3>${g}</h3>`+L.map((it,ii)=>{const key=gi+'_'+ii,s=w.s[key];return`<div class="wp" style="flex-wrap:wrap"><b style="flex:1 1 55%;font-weight:600">${it}</b><div class="wst"><button class="k ${s==='k'?'on':''}" onclick="wkS('${key}','k')">OK</button><button class="d ${s==='d'?'on':''}" onclick="wkS('${key}','d')">Defect</button><button class="n ${s==='n'?'on':''}" onclick="wkS('${key}','n')">N/A</button></div>${s==='d'?`<input style="margin:6px 0 0" placeholder="Τι βρήκες;" value="${esc(w.nt[key]||'')}" onchange="wkN('${key}',this.value)">`:''}</div>`}).join('')).join('')}
+ <div class="tools"><button class="btn p" onclick="wkShare()">📤 Στείλε / αντίγραψε αναφορά</button><button class="btn" onclick="wkNew()">🆕 Νέος έλεγχος</button></div><div class="tip" style="font-weight:400">ℹ️ ${L2('Πάτα το ℹ️ δίπλα σε κάθε σημείο: τι είναι, πώς το ελέγχεις, πότε είναι <b>defect</b> και τι κάνεις.','Tap ℹ️ next to each item: what it is, how to check it, when it is a <b>defect</b> and what to do.')}</div>`+
+ WALK.map(([g,L],gi)=>`<h3>${g}</h3>`+L.map((it,ii)=>{const key=gi+'_'+ii,s=w.s[key];return`<div class="wp" style="flex-wrap:wrap"><b style="flex:1 1 55%;font-weight:600">${it}</b>${wkG(key)?`<button class="btn" style="padding:6px 10px;margin:0 6px 0 0" onclick="wkT('${key}')" aria-label="Οδηγός">${WKO[key]?'✖️':'ℹ️'}</button>`:''}<div class="wst"><button class="k ${s==='k'?'on':''}" onclick="wkS('${key}','k')">OK</button><button class="d ${s==='d'?'on':''}" onclick="wkS('${key}','d')">Defect</button><button class="n ${s==='n'?'on':''}" onclick="wkS('${key}','n')">N/A</button></div>${s==='d'?`<input style="margin:6px 0 0" placeholder="Τι βρήκες;" value="${esc(w.nt[key]||'')}" onchange="wkN('${key}',this.value)">`:''}${WKO[key]&&wkG(key)?wkGH(wkG(key)):''}</div>`}).join('')).join('')}
+/* Οδηγός ανά σημείο: τι είναι, πώς το ελέγχεις, πότε είναι defect */
+const WKO={};
+function wkG(k){return typeof WKGUIDE!=='undefined'&&WKGUIDE[k]?(WKGUIDE[k][(typeof LANG!=='undefined'&&LANG==='en')?'en':'el']||WKGUIDE[k].el):null}
+function wkT(k){WKO[k]=!WKO[k];const y=window.scrollY;tWalk();window.scrollTo(0,y)}
+function wkGH(g){const r=(i,t,x,c)=>x?`<div style="margin-top:6px${c?';border-left:4px solid var(--'+c+');padding-left:8px':''}"><b>${i} ${t}</b><div>${x}</div></div>`:'';
+ return `<div class="box" style="flex:1 1 100%;margin:8px 0 2px;font-size:.95em">${r('📖',L2('Τι είναι','What it is'),g.what)}${r('🔎',L2('Πώς το ελέγχεις','How to check'),g.how)}${r('✅',L2('Εντάξει όταν','OK when'),g.ok,'grn')}${r('❌',L2('Defect όταν','Defect when'),g.bad,'red')}${r('🛠️',L2('Τι κάνεις','What to do'),g.act)}</div>`}
 function wkS(k,s){const w=LS.g('walk',{s:{},nt:{}});w.s[k]=w.s[k]===s?undefined:s;LS.s('walk',w);const y=window.scrollY;tWalk();window.scrollTo(0,y)}
 function wkN(k,t){const w=LS.g('walk',{s:{},nt:{}});w.nt[k]=t;LS.s('walk',w)}
 function wkD(d){const w=LS.g('walk',{s:{},nt:{}});w.d=d;LS.s('walk',w)}
