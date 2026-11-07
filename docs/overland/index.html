@@ -147,7 +147,7 @@ function home(){T(TITLE);const read=LS.g('read',{});
  <button class="row" onclick="go('t/walk')"><span class="e">🔎</span><span><b>Walk-round πριν φύγεις</b><small>έλεγχος οχήματος σαν superintendent</small></span></button>
  <button class="row" onclick="go('learn')"><span class="e">🎓</span><span><b>Ακαδημία</b><small>${ALL.filter(l=>done(l.id)).length}/${ALL.length} μαθήματα · quiz · από τα βιβλία, από αρχάριο μέχρι expert</small></span></button>
 ${SOON.length?'<h3>Έρχονται</h3>':''}${SOON.map(s=>`<button class="row soon" onclick="go('${s[0]}')"><span class="e">${s[1]}</span><span><b>${s[2]}</b><small>${s[3]} · ${s[4]}</small></span></button>`).join('')}
- <footer>Overland Habit v0.6 · Created by George Barbaris<br>Τα δεδομένα μένουν μόνο στο κινητό σου.<br>Χάρτες & σημεία © OpenStreetMap contributors · OpenTopoMap · Esri · Leaflet</footer>`}
+ <footer>Overland Habit v0.7 · Created by George Barbaris<br>Τα δεδομένα μένουν μόνο στο κινητό σου.<br>Χάρτες & σημεία © OpenStreetMap contributors · OpenTopoMap · Esri · Leaflet</footer>`}
 function soon(id){const s=SOON.find(x=>x[0]===id);T(s[1]+' '+s[2]);const det={
  map:['Χάρτης με όλα τα σημεία από το OpenStreetMap: κάμπινγκ, χώροι για camper, πόσιμο νερό & πηγές, dump station, ντους, WC, καύσιμα/LPG, θέες, καταφύγια.','«Κατέβασε περιοχή» όταν έχεις σήμα → μετά τα βρίσκεις offline, με απόσταση από σένα.','Τα δικά σου σημεία με φωτογραφία, σημείωση, βαθμολογία και πρόσβαση (2WD / 4×4) — τα στέλνεις στους φίλους σου.','Διαδρομή online που μένει μέσα offline, με camper stops κατά μήκος της, και export GPX.'],
  convoy:['Ο αρχηγός φτιάχνει ομάδα και δίνει κωδικό / QR.','Όλα τα αυτοκίνητα στον χάρτη: απόσταση από τον αρχηγό, ταχύτητα, τελευταία ενημέρωση.','Συναγερμός όταν κάποιος μείνει πίσω ή χαθεί το σήμα του. SOS από κάθε μέλος, «ΣΤΟΠ όλοι» από τον αρχηγό.','Θέλει σήμα κινητής. Χωρίς σήμα: τελευταία γνωστή θέση + ασύρματος (δες «Ασύρματοι & κομβόι»).'],
@@ -160,7 +160,7 @@ const TOOLS=[
  ['Στο πεδίο',[['incl','📐','Κλισιόμετρο','πλευρική κλίση & ανηφόρα με όρια του οχήματος'],['compass','🧭','Πυξίδα, GPS & σημεία','θέση, σημεία, διαδρομή, βέλος επιστροφής, GPX'],['pass','🚧','Θα περάσω;','σκαλί, ράμπα, νερό, κλίση — σε σχέση με το όχημα'],['wade','🌊','Πέρασμα νερού','βάθος, ρεύμα, πάτος — περνάω ή όχι;']]],
  ['Ελαστικά & ανάκτηση',[['tyre','🛞','Πίεση ελαστικών ανά έδαφος','πόσο ξεφουσκώνω και πόσο γρήγορα πάω'],['tsize','📏','Σύγκριση μεγέθους ελαστικών','κοντέρ, ύψος, σχέσεις'],['winch','🪝','Ανάκτηση & εργάτης','πόση δύναμη, τροχαλία, shackle, ιμάντας']]],
  ['Σχεδιασμός',[['payload','⚖️','Βάρος & φορτίο (GVM)','πόσο φορτωμένος είσαι, σχάρα'],['fuel','⛽','Καύσιμο & αυτονομία','πόσα km βγάζεις, πόσο θες'],['water','💧','Νερό για την εκδρομή','λίτρα ανά άτομο και μέρα'],['power','🔋','Μπαταρία, ψυγείο & solar','πόσες μέρες χωρίς να βάλεις μπρος'],['walk','🔎','Walk-round πριν φύγεις','έλεγχος οχήματος με OK / Defect']]],
- ['Ουρανός & επικοινωνία',[['sun','🌇','Ήλιος — ώρα για στρατόπεδο','πόσο φως μένει, ανατολή, δύση'],['wx','🌡️','Υψόμετρο & βαρόμετρο','υψόμετρο GPS, τάση πίεσης, πρόγνωση'],['radio','📻','Ασύρματοι & κομβόι','PMR446, κανόνες ασυρμάτου'],['morse','📡','Morse με φως & ήχο','SOS και λέξεις'],['ggrs','🗺️','WGS84 ↔ ΕΓΣΑ 87','μετατροπή συντεταγμένων για ελληνικούς χάρτες'],['knots','🪢','Κόμποι','7 κόμποι που χρειάζεσαι'],['night','🌙','Κόκκινη οθόνη νύχτας',''],['awake','💡','Οθόνη πάντα ανοιχτή','']]]];
+ ['Ουρανός & επικοινωνία',[['sun','🌇','Ήλιος — ώρα για στρατόπεδο','πόσο φως μένει, ανατολή, δύση'],['wx','🌡️','Υψόμετρο & βαρόμετρο','υψόμετρο GPS, τάση πίεσης, πρόγνωση'],['radio','📻','Ασύρματοι & κομβόι','PMR446, κανόνες ασυρμάτου'],['morse','📡','Morse με φως & ήχο','SOS και λέξεις'],['ggrs','🗺️','WGS84 ↔ ΕΓΣΑ 87','μετατροπή συντεταγμένων για ελληνικούς χάρτες'],['knots','🪢','Κόμποι','13 κόμποι με σχέδια βήμα-βήμα'],['night','🌙','Κόκκινη οθόνη νύχτας',''],['awake','💡','Οθόνη πάντα ανοιχτή','']]]];
 function tools(){T('🧰 Εργαλεία');M.innerHTML=TOOLS.map(([g,L])=>`<h3>${g}</h3>`+L.map(t=>`<button class="row" onclick="go('t/${t[0]}')"><span class="e">${t[1]}</span><span><b>${t[2]}</b><small>${t[0]==='night'?(night?'🔴 ΑΝΟΙΧΤΗ':'κρατάει την όραση νύχτας'):t[0]==='awake'?(keepOn?'💡 ΑΝΟΙΧΤΗ':'να μη σβήνει η οθόνη'):t[3]}</small></span></button>`).join('')).join('')}
 let TS=[];function toolStop(){TS.forEach(f=>{try{f()}catch(e){}});TS=[]}
 function tool(id){const f={incl:tIncl,compass:tCompass,pass:tPass,wade:tWade,tyre:tTyre,tsize:tTsize,winch:tWinch,payload:tPayload,fuel:tFuel,water:tWater,power:tPower,walk:tWalk,sun,wx,radio:tRadio,morse,ggrs:tGgrs,knots:tKnots,night:tNight,awake:tAwake}[id];f?f():tools()}
@@ -356,7 +356,7 @@ function tRadio(){T('📻 Ασύρματοι & κομβόι');M.innerHTML=`<h3>�
  <h3>PMR446 — κανάλια</h3><table class="t"><tr><th>Κανάλι</th><th>MHz</th></tr>${PMR.map(p=>`<tr><td><b>${p[0]}</b></td><td class="mono">${p[1]}</td></tr>`).join('')}</table>
  <div class="muted">Πολλοί ασύρματοι έχουν και «κωδικούς» CTCSS/DCS (π.χ. 3-12). Όλοι στην ομάδα πρέπει να έχουν το ίδιο κανάλι <b>και</b> τον ίδιο κωδικό.</div>
  <h3>CB 27 MHz</h3><div class="box"><div class="li">Κανάλι <b>9</b>: έκτακτη ανάγκη · κανάλι <b>19</b>: οδηγοί / δρόμος (διεθνής πρακτική).</div><div class="li">Χρησιμοποίησε FM όπου γίνεται και καλή κεραία με ρυθμισμένο SWR.</div></div>`}
-function tKnots(){T('🪢 Κόμποι');M.innerHTML=KNOTS.map(k=>`<div class="box"><b>${k[0]}</b><div class="muted">${k[1]}</div><div style="margin-top:6px">${k[2]}</div></div>`).join('')+'<div class="tip">Μάθε τους στο σπίτι με ένα κορδόνι, όχι τη στιγμή που τους χρειάζεσαι.</div>'}
+/* tKnots → knots.js (σχέδια βήμα-βήμα) */
 
 /* ---------- WGS84 ↔ ΕΓΣΑ 87 (EPSG:2100) ---------- */
 const GR={a:6378137,f:1/298.257222101,k0:0.9996,lon0:24,FE:500000,dx:-199.87,dy:74.79,dz:246.62};
@@ -450,6 +450,7 @@ window.addEventListener('hashchange',()=>{stopAll();render(location.hash.slice(1
 <script src="academy-data.js"></script>
 <script>if(LANG==='en')document.write('<script src="academy-en.js"><\/script>')</script>
 <script src="academy.js"></script>
+<script src="knots.js"></script>
 <script>
 render(location.hash.slice(1)||'home');if(keepOn)wake(1);
 if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
