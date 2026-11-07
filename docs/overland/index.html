@@ -143,9 +143,9 @@ function home(){T(TITLE);const read=LS.g('read',{});
  <h3>Το ταξίδι</h3>
  <button class="row" onclick="go('trip')"><span class="e">🎒</span><span><b>Ταξίδι & λίστες εξοπλισμού</b><small>${tripProg()}</small></span></button>
  <button class="row" onclick="go('t/walk')"><span class="e">🔎</span><span><b>Walk-round πριν φύγεις</b><small>έλεγχος οχήματος σαν superintendent</small></span></button>
- <button class="row" onclick="go('learn')"><span class="e">🎓</span><span><b>Ακαδημία</b><small>${Object.keys(read).length}/${LESSONS.length} μαθήματα · από αρχάριο μέχρι expert</small></span></button>
+ <button class="row" onclick="go('learn')"><span class="e">🎓</span><span><b>Ακαδημία</b><small>${ALL.filter(l=>done(l.id)).length}/${ALL.length} μαθήματα · quiz · από τα βιβλία, από αρχάριο μέχρι expert</small></span></button>
 ${SOON.length?'<h3>Έρχονται</h3>':''}${SOON.map(s=>`<button class="row soon" onclick="go('${s[0]}')"><span class="e">${s[1]}</span><span><b>${s[2]}</b><small>${s[3]} · ${s[4]}</small></span></button>`).join('')}
- <footer>Overland Habit v0.4 · Created by George Barbaris<br>Τα δεδομένα μένουν μόνο στο κινητό σου.<br>Χάρτες & σημεία © OpenStreetMap contributors · OpenTopoMap · Esri · Leaflet</footer>`}
+ <footer>Overland Habit v0.5 · Created by George Barbaris<br>Τα δεδομένα μένουν μόνο στο κινητό σου.<br>Χάρτες & σημεία © OpenStreetMap contributors · OpenTopoMap · Esri · Leaflet</footer>`}
 function soon(id){const s=SOON.find(x=>x[0]===id);T(s[1]+' '+s[2]);const det={
  map:['Χάρτης με όλα τα σημεία από το OpenStreetMap: κάμπινγκ, χώροι για camper, πόσιμο νερό & πηγές, dump station, ντους, WC, καύσιμα/LPG, θέες, καταφύγια.','«Κατέβασε περιοχή» όταν έχεις σήμα → μετά τα βρίσκεις offline, με απόσταση από σένα.','Τα δικά σου σημεία με φωτογραφία, σημείωση, βαθμολογία και πρόσβαση (2WD / 4×4) — τα στέλνεις στους φίλους σου.','Διαδρομή online που μένει μέσα offline, με camper stops κατά μήκος της, και export GPX.'],
  convoy:['Ο αρχηγός φτιάχνει ομάδα και δίνει κωδικό / QR.','Όλα τα αυτοκίνητα στον χάρτη: απόσταση από τον αρχηγό, ταχύτητα, τελευταία ενημέρωση.','Συναγερμός όταν κάποιος μείνει πίσω ή χαθεί το σήμα του. SOS από κάθε μέλος, «ΣΤΟΠ όλοι» από τον αρχηγό.','Θέλει σήμα κινητής. Χωρίς σήμα: τελευταία γνωστή θέση + ασύρματος (δες «Ασύρματοι & κομβόι»).'],
@@ -445,6 +445,8 @@ window.addEventListener('hashchange',()=>{stopAll();render(location.hash.slice(1
 <script src="map.js"></script>
 <script src="convoy.js"></script>
 <script src="rally.js"></script>
+<script src="academy-data.js"></script>
+<script src="academy.js"></script>
 <script>
 render(location.hash.slice(1)||'home');if(keepOn)wake(1);
 if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
