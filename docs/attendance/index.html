@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Attendance Forms 2.6</title>
+<title>Attendance Forms 2.7</title>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png">
 <meta name="robots" content="noindex,nofollow"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Attendance"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#123d63">
@@ -109,6 +109,8 @@ details.guide p{margin:4px 0 0;font-size:.82rem;color:var(--muted)}
 .rg .ff{background:var(--no-bg);border-left:3px solid var(--no);border-radius:6px;padding:5px 8px;margin-top:6px}
 .rg .ff b{color:var(--no);font-size:.8rem} details.rgx summary{cursor:pointer;font-size:.78rem;color:var(--accent);list-style:none;margin-top:6px}
 details.rgx summary::-webkit-details-marker{display:none} details.rgx pre{white-space:pre-wrap;font:inherit;font-size:.84rem;background:var(--soft);border-radius:6px;padding:8px;margin:4px 0 0}
+.ffpick{margin:4px 0 6px}.ffpick .lk{font-size:.74rem;font-weight:700;color:var(--no);margin-bottom:4px}
+.chip{display:block;width:100%;text-align:left;font:inherit;font-size:.82rem;background:var(--no-bg);color:var(--ink);border:1px solid var(--no);border-radius:6px;padding:6px 8px;margin:0 0 4px;cursor:pointer}
 .hrk{font-size:.68rem;font-weight:700;color:var(--no);border:1px solid var(--no);border-radius:4px;padding:0 4px;margin-left:6px;white-space:nowrap}
 .tag{font-family:var(--f-mono);font-size:.7rem;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:0 4px;margin-left:6px;white-space:nowrap}
 .nsgrid{display:flex;flex-wrap:wrap;gap:4px}
@@ -334,9 +336,10 @@ function pShip(){const h='h.';
    <div class="grid" style="margin-top:10px">${tf(h+'lastDD','Date of last dry dock','date')}${tf(h+'nextDD','Next dry dock','date')}</div></div>${navRow()}`;}
 function photoBlock(path,photos){
   return `<div class="wide"><div class="mini" style="margin-bottom:4px">Photos (go to Appendix 5 of the report)</div><div class="photos">${(photos||[]).map((p,i)=>`<div class="ph"><img data-thumb="${p.id}" alt="Photo ${i+1}"><input type="text" placeholder="Caption" data-bind="${path}.photos.${i}.cap" id="cap-${p.id}" value="${esc(p.cap||'')}"><button class="x" data-delph="${path}" data-i="${i}">Remove photo</button></div>`).join('')}<button class="addph" data-addph="${path}">+ Add photos</button></div></div>`;}
-function remarkFields(path,o,no,withRef){const b=fid(path);
+function remarkFields(path,o,no,withRef,qref){const b=fid(path);const rf=qref||(o.ref||'').trim().toUpperCase();const ff=(RG[rf]&&RG[rf].f)||[];
   return `<div class="defect"><div class="ref">Remark no. ${no}</div>
    ${withRef?`<label class="f">RISQ ref. no.<input type="text" data-bind="${path}.ref" id="${b}-ref" value="${esc(o.ref||'')}" placeholder="e.g. 10.4"></label>`:''}
+   ${ff.length?`<div class="ffpick"><div class="lk">🔥 Tap to add a common finding to the description (then edit it for this ship)</div>${ff.map((x,i)=>`<button class="chip" data-ffp="${path}" data-ffr="${esc(rf)}" data-ffi="${i}">+ ${esc(x)}</button>`).join('')}</div>`:''}
    <label class="f wide">Description of remark<textarea data-bind="${path}.what" id="${b}-what" rows="2">${esc(o.what||'')}</textarea></label>
    <label class="f">Root cause<select data-bind="${path}.cause" id="${b}-cause"><option value="">–</option>${Object.entries(ROOT).map(([k,v])=>`<option value="${k}" ${o.cause===k?'selected':''}>[${k}] ${v}</option>`).join('')}</select></label>
    <label class="f">Severity<select data-bind="${path}.sev" id="${b}-sev"><option value="">–</option>${[['L','Low'],['M','Medium'],['H','High']].map(([k,v])=>`<option value="${k}" ${o.sev===k?'selected':''}>${k} – ${v}</option>`).join('')}</select></label>
@@ -345,7 +348,7 @@ function remarkFields(path,o,no,withRef){const b=fid(path);
 function qCard(q,rs){const o=S.q[q.id]||{};const no=rs.findIndex(r=>r.src==='q'&&r.id===q.id)+1;const tag=(q.t.match(/\((V & M|V|M)\)\s*\??\s*$/)||[])[1];
   const t=q.t.replace(/\s*\((V & M|V|M)\)\s*\??\s*$/,'');
   return `<div class="it v-${o.v||''}"><div class="row"><div class="no">${q.ref}</div><div class="tx"><div class="ti" style="font-weight:500">${esc(t)}${tag?`<span class="tag">${tag}</span>`:''}${RG[q.ref]&&RG[q.ref].h?'<span class="hrk">★ high-risk</span>':''}${RG[q.ref]&&RG[q.ref].f&&RG[q.ref].f.length?'<span class="tag" style="border:0">🔥</span>':''}</div>${rgBlock(q)}${q.k?`<details class="guide"><summary>RISQ guidance</summary><p>${esc(q.k)}</p></details>`:''}</div>${yn('q.'+q.id+'.v')}</div>
-  ${o.v==='N'?remarkFields('q.'+q.id,o,no,false):''}</div>`;}
+  ${o.v==='N'?remarkFields('q.'+q.id,o,no,false,q.ref):''}</div>`;}
 function pSec(sec){const rs=remarks();const qs=D.risq.filter(q=>q.sec===sec);const groups=[...new Set(qs.map(q=>q.s))];
   return `<h2>Section ${sec}. ${esc(SECNAME[sec])}</h2><p class="lead">Yes = satisfactory · No = remark (fill it in, it goes to Appendix 4) · N/S = not seen (goes to Appendix 3) · N/A = not applicable to this ship.</p>
   <div class="bulk" style="margin:0 0 8px"><button class="btn" id="rgTog">${RGON?'Hide':'Show'} RISQ app guidance (👀 what to check)</button></div>
@@ -420,6 +423,7 @@ function keep(){const y=window.scrollY;render();window.scrollTo({top:y});}
 let photoTarget=null;
 document.addEventListener('click',async e=>{
   const t=e.target.closest('button');if(!t)return;
+  if(t.dataset.ffp){const p=t.dataset.ffp,x=((RG[t.dataset.ffr]||{}).f||[])[+t.dataset.ffi];if(x){const cur=(get(p+'.what')||'').trim();if(!cur.includes(x)){set(p+'.what',cur?cur+'\n'+x:x);save();keep();}}return;}
   if(t.id==='rgTog'){RGON=!RGON;try{localStorage.setItem('m021-rg',RGON?'1':'0');}catch(e){}keep();return;}
   if(t.dataset.page){page=t.dataset.page;render();window.scrollTo({top:0});return;}
   if(t.dataset.yn){const p=t.dataset.yn;set(p,get(p)===t.dataset.v?'':t.dataset.v);save();keep();return;}
@@ -667,7 +671,7 @@ function renderHome(){
   const tf2=(k,l,t='text')=>`<label class="f">${esc(l)}<input type="${t}" data-bind="h.${k}" id="hh-${k}" value="${esc(h[k]||'')}"></label>`;
   const card=f=>{let p='',u=0;if(f.c==='m021'){const c=counts();p=c.done+'/'+c.t+' RISQ · '+remarks().length+' remarks';u=S.updated;}else if(f.c==='RSP'){const r=rHomeProg();p=r.p;u=r.u;}else if(f.c==='DD'){const r=ddHomeProg();p=r.p;u=r.u;}else{const k=aCounts(f.c);p=k.t?k.done+'/'+k.t+' answered'+(k.n?' · '+k.n+' No':''):'';u=(AS[f.c]||{}).updated;}
     return `<button class="fcard" data-form="${f.c}"><span class="form2">${esc(f.code)}</span><b>${esc(f.t)}</b><span class="mini">${esc(f.d)}</span><span class="fprog">${esc(p)}${u?' · '+new Date(u).toLocaleDateString():''}</span></button>`;};
-  $('#main').innerHTML=`<h2>Attendance Forms <span class="mini">v2.6</span></h2><p class="lead">Pick the form for this attendance. Ship details below fill in automatically on every form (Ship, IMO, Master, C/E, place, date, auditor). Everything is saved on this device; use Save file for a copy.</p>
+  $('#main').innerHTML=`<h2>Attendance Forms <span class="mini">v2.7</span></h2><p class="lead">Pick the form for this attendance. Ship details below fill in automatically on every form (Ship, IMO, Master, C/E, place, date, auditor). Everything is saved on this device; use Save file for a copy.</p>
   <div class="card"><h3>Ship & attendance</h3><div class="grid"><label class="f">Ship${shipPick('data-bind','h.ship',h.ship||'','hh-ship')}</label>${tf2('imo','IMO number')}${tf2('master','Master')}${tf2('ce','Chief Engineer')}${tf2('place','Place / port')}${tf2('inspDate','Date of attendance','date')}${tf2('sup1','Superintendent / auditor')}</div></div>
   ${fleetCard()}<div class="fgrid">${AF.map(card).join('')}</div>`;}
 function render(){document.body.dataset.form=form;if(typeof fleetDatalist==='function')fleetDatalist();
