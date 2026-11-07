@@ -61,7 +61,9 @@ const EXACT = {
 "Η αποστολή όλων μαζί δεν υποστηρίζεται εδώ — πάτα «📦 ZIP».":"Sending all at once isn't supported here — tap “📦 ZIP”.",
 "📤 Αποστολή όλων":"📤 Send all","✏️ Συνέχεια επεξεργασίας":"✏️ Keep editing","🗜 Συμπίεση αυτού":"🗜 Compress this",
 "Δεν είναι PDF.":"Not a PDF.","Άνοιγμα PDF…":"Opening PDF…","Δημιουργία PDF…":"Building PDF…","Φωτογραφίες…":"Photos…","Μετατροπή…":"Converting…","Resize…":"Resize…",
-"Ακύρωση…":"Cancelling…","📅 Ημερομηνία κάτω δεξιά σε όλες":"📅 Date bottom-right on all","Ποια ημερομηνία":"Which date","Λήψης φωτογραφίας":"When the photo was taken",
+"Ακύρωση…":"Cancelling…","📲 Δώσε την εφαρμογή":"📲 Share the app","Ο άλλος σκανάρει το QR με την κάμερα του κινητού του":"The other person scans the QR with their phone camera",
+"Σκανάρει το QR → ανοίγει η σελίδα.":"Scan the QR → the page opens.","iPhone: Safari → Share ⬆ → «Add to Home Screen». Android: Chrome → ⋮ → «Install app».":"iPhone: Safari → Share ⬆ → “Add to Home Screen”. Android: Chrome → ⋮ → “Install app”.",
+"Δουλεύει μετά και offline, όπως σε σένα.":"After that it works offline too.","📤 Στείλε link":"📤 Send link","💾 QR εικόνα":"💾 QR image","✔ Αντιγράφηκε":"✔ Copied","Μοιράσου την εφαρμογή":"Share the app","📅 Ημερομηνία κάτω δεξιά σε όλες":"📅 Date bottom-right on all","Ποια ημερομηνία":"Which date","Λήψης φωτογραφίας":"When the photo was taken",
 "Σημερινή":"Today","Δική μου":"My own","Ημερομηνία":"Date","Μικρό":"Small","Κανονικό":"Normal","Μεγάλο":"Large","+ ώρα":"+ time","Ακυρώθηκε.":"Cancelled.","(κενό έγγραφο)":"(empty document)","(κενό αρχείο)":"(empty file)","Created by George Barbaris":"Created by George Barbaris"
 };
 // phrase-level (longest first) for dynamic strings

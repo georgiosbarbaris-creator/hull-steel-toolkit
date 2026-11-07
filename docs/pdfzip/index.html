@@ -78,7 +78,7 @@ input,select{font:16px system-ui;padding:9px;border:1px solid var(--line);border
 </head>
 <body>
 <header>
- <div class="hrow"><h1>📄 PDF Tools</h1><button class="hb" id="newTask" title="Νέα εργασία">🧹 Νέα εργασία</button><button class="hb" id="lang">EN</button></div>
+ <div class="hrow"><h1>📄 PDF Tools</h1><button class="hb" id="shareApp" title="Μοιράσου την εφαρμογή">📲</button><button class="hb" id="newTask" title="Νέα εργασία">🧹 Νέα εργασία</button><button class="hb" id="lang">EN</button></div>
  <div class="sub">Συμπίεση · μετατροπές · επεξεργασία · resize φωτό — offline, τίποτα δεν ανεβαίνει πουθενά</div>
  <nav class="tabs" id="tabs">
   <button data-t="edt">✏️ Επεξεργασία PDF</button>
@@ -238,6 +238,22 @@ input,select{font:16px system-ui;padding:9px;border:1px solid var(--line);border
  <p class="cred">Created by George Barbaris</p>
 </main>
 
+<div id="qrBox" class="hide" style="position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:16px">
+ <div class="card" style="max-width:360px;width:100%;text-align:center;margin:0">
+  <h2 style="margin-bottom:4px">📲 Δώσε την εφαρμογή</h2>
+  <p class="note" style="margin:0 0 10px">Ο άλλος σκανάρει το QR με την κάμερα του κινητού του</p>
+  <div id="qrImg" style="background:#fff;padding:12px;border-radius:12px;display:inline-block"></div>
+  <div class="note" id="qrUrl" style="word-break:break-all;margin:8px 0"></div>
+  <ol class="note" style="text-align:left;padding-left:20px;margin:6px 0 12px">
+   <li>Σκανάρει το QR → ανοίγει η σελίδα.</li>
+   <li>iPhone: Safari → Share ⬆ → «Add to Home Screen». Android: Chrome → ⋮ → «Install app».</li>
+   <li>Δουλεύει μετά και offline, όπως σε σένα.</li>
+  </ol>
+  <div class="row" style="flex-wrap:nowrap"><button class="btn p" id="qrShare" style="flex:1">📤 Στείλε link</button><button class="btn" id="qrSave" style="flex:1">💾 QR εικόνα</button></div>
+  <button class="btn" id="qrClose" style="width:100%;margin-top:8px">Κλείσιμο</button>
+ </div>
+</div>
+
 <div id="ed" class="hide">
  <div class="edTop">
   <button class="eb" id="edClose" title="Κλείσιμο">✕</button>
@@ -271,6 +287,7 @@ input,select{font:16px system-ui;padding:9px;border:1px solid var(--line);border
 </div>
 
 <script src="pdf-lib.min.js"></script>
+<script src="qrcode.js"></script>
 <script type="module">
 import * as pdfjsLib from "./pdf.min.mjs";
 import {applyLang, LANG} from "./i18n.js";
@@ -870,6 +887,36 @@ function newTask(){
   $("res").classList.add("hide"); $("prog").classList.add("hide");
   refreshButtons(); window.scrollTo({top:0, behavior:"smooth"});
 }
+// ---------- share the app (QR) ----------
+const APP_URL = "https://georgiosbarbaris-creator.github.io/hull-steel-toolkit/pdfzip/";
+function qrCanvas(px){
+  const q = qrcode(0, "M"); q.addData(APP_URL); q.make();
+  const n = q.getModuleCount(), m = 4, k = Math.floor(px/(n+2*m)), c = document.createElement("canvas");
+  c.width = c.height = k*(n+2*m); const x = c.getContext("2d");
+  x.fillStyle = "#fff"; x.fillRect(0,0,c.width,c.height); x.fillStyle = "#000";
+  for (let r=0;r<n;r++) for (let col=0;col<n;col++) if (q.isDark(r,col)) x.fillRect((col+m)*k, (r+m)*k, k, k);
+  return c;
+}
+$("shareApp").onclick = () => {
+  const c = qrCanvas(240); c.style.cssText = "width:220px;height:220px;display:block;image-rendering:pixelated";
+  $("qrImg").innerHTML = ""; $("qrImg").appendChild(c); $("qrUrl").textContent = APP_URL;
+  $("qrBox").classList.remove("hide");
+};
+$("qrClose").onclick = () => $("qrBox").classList.add("hide");
+$("qrBox").onclick = e => { if (e.target.id === "qrBox") $("qrBox").classList.add("hide"); };
+$("qrShare").onclick = async () => {
+  try { if (navigator.share) { await navigator.share({title:"PDF Tools", text:"PDF Tools — Created by George Barbaris", url:APP_URL}); return; } } catch(e){ return; }
+  try { await navigator.clipboard.writeText(APP_URL); $("qrShare").textContent = "✔ Αντιγράφηκε"; } catch(e){ prompt("Link:", APP_URL); }
+};
+$("qrSave").onclick = async () => {
+  const big = qrCanvas(900), c = document.createElement("canvas"); c.width = big.width; c.height = big.height + 110;
+  const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0,0,c.width,c.height); x.drawImage(big, 0, 0);
+  x.fillStyle = "#123d5e"; x.font = "700 46px system-ui, sans-serif"; x.textAlign = "center"; x.fillText("📄 PDF Tools", c.width/2, big.height + 40);
+  x.fillStyle = "#5a6876"; x.font = "28px system-ui, sans-serif"; x.fillText("Created by George Barbaris", c.width/2, big.height + 85);
+  const blob = await new Promise(r => c.toBlob(r, "image/png")), f = new File([blob], "PDF_Tools_QR.png", {type:"image/png"});
+  if (navigator.canShare?.({files:[f]})) { try { await navigator.share({files:[f]}); } catch(e){} } else dl(blob, "PDF_Tools_QR.png");
+};
+
 $("newTask").onclick = newTask; $("newTask2").onclick = newTask;
 
 refreshButtons();

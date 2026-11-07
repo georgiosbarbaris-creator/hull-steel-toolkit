@@ -1,4 +1,4 @@
-const C="pdfzip-v5";const FILES=["i18n.js","editor.js","fontkit.umd.min.js","fonts/DejaVuSans.ttf","fonts/DejaVuSans-Bold.ttf","fonts/DejaVuSerif.ttf","mammoth.browser.min.js","xlsx.full.min.js","html2canvas.min.js","./","index.html","manifest.webmanifest","pdf.min.mjs","pdf.worker.min.mjs","pdf-lib.min.js","icon-192.png","icon-512.png","apple-touch-icon.png"];
+const C="pdfzip-v6";const FILES=["qrcode.js","i18n.js","editor.js","fontkit.umd.min.js","fonts/DejaVuSans.ttf","fonts/DejaVuSans-Bold.ttf","fonts/DejaVuSerif.ttf","mammoth.browser.min.js","xlsx.full.min.js","html2canvas.min.js","./","index.html","manifest.webmanifest","pdf.min.mjs","pdf.worker.min.mjs","pdf-lib.min.js","icon-192.png","icon-512.png","apple-touch-icon.png"];
 self.addEventListener("install",e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(FILES)));self.skipWaiting();});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x.startsWith("pdfzip")&&x!==C).map(x=>caches.delete(x)))));self.clients.claim();});
 self.addEventListener("fetch",e=>{if(e.request.method!=="GET")return;
