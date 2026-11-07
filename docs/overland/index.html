@@ -89,7 +89,7 @@ html.night header,html.night main,html.night nav{filter:grayscale(1) sepia(1) sa
 <script src="../grade/data.js"></script>
 <script src="data.js"></script>
 <script>
-/* ===== Overland Habit — Created by George Barbaris ===== */
+/* ===== Overland Habit, Created by George Barbaris ===== */
 const $=s=>document.querySelector(s),M=$('#m');
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const LS={g(k,d){try{const v=localStorage.getItem('ov_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},s(k,v){try{localStorage.setItem('ov_'+k,JSON.stringify(v))}catch(e){}}};
@@ -99,7 +99,11 @@ const TITLE='Overland Habit';
 const fmD0=m=>m<1000?Math.round(m)+' m':(m/1000).toFixed(1)+' km';
 function T(t){$('#ttl').textContent=t;$('#bk').style.visibility=(t===TITLE)?'hidden':'visible'}
 function go(r){if(location.hash.slice(1)===r){stopAll();render(r);window.scrollTo(0,0)}else location.hash=r}
-function back(){history.length>1?history.back():go('home')}
+function back(){const r=location.hash.slice(1),ret=LS.g('vret','');
+ if(r.startsWith('veh/'))return go(ret||'veh');
+ if(r==='veh'&&ret){LS.s('vret','');return go(ret)}
+ history.length>1?history.back():go('home')}
+function vehGo(r){LS.s('vret',location.hash.slice(1)||'home');go(r)}
 const n=v=>{const x=parseFloat(String(v).replace(',','.'));return isNaN(x)?0:x};
 const f1=x=>(Math.round(x*10)/10).toLocaleString(LOC),f0=x=>Math.round(x).toLocaleString(LOC);
 const vib=p=>{try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}};
@@ -114,34 +118,46 @@ const VF=[['name','Όνομα (π.χ. «Το Cruiser»)','text'],['model','Μο�
  ['side','Όριο πλευρικής κλίσης κατασκευαστή (°)','number'],['track','Μετατρόχιο (m)','number'],['h','Ύψος οχήματος (m)','number'],['wb','Μεταξόνιο (mm)','number'],
  ['tyre','Ελαστικά (π.χ. 265/70R16)','text'],['pf','Πίεση δρόμου εμπρός (bar)','number'],['pr','Πίεση δρόμου πίσω (bar)','number'],
  ['tank','Ρεζερβουάρ (L)','number'],['fuel','Καύσιμο (diesel / βενζίνη)','text'],['cr','Κατανάλωση δρόμου (L/100km)','number'],['co','Κατανάλωση εκτός δρόμου (L/100km)','number'],
- ['lock','Μπλοκέ / LSD (π.χ. κεντρικό + πίσω)','text'],['winch','Εργάτης — ονομαστική έλξη (kg)','number'],['snork','Snorkel (ναι/όχι)','text']];
+ ['lock','Μπλοκέ / LSD (π.χ. κεντρικό + πίσω)','text'],['winch','Εργάτης, ονομαστική έλξη (kg)','number'],['snork','Snorkel (ναι/όχι)','text']];
 function sideLim(v){if(!v)return 30;if(v.side)return +v.side;if(v.track&&v.h){const cg=v.h*0.42;return Math.round(Math.atan(v.track/(2*cg))/SR-15)}return 30}
 function vehPage(){T('🚙 Το όχημά μου');const L=vehs(),a=veh();
  M.innerHTML=(L.length?L.map(v=>`<div class="vcard" style="${a&&a.id===v.id?'':'opacity:.7;background:var(--card);border-color:var(--line)'}"><span class="e">🚙</span><div style="flex:1"><b>${esc(v.name||v.model)}</b><small class="muted">${esc(v.model||'')}</small></div>
  ${a&&a.id===v.id?'<span class="btn g">✓ Ενεργό</span>':`<button class="btn" onclick="LS.s('vact','${v.id}');vehPage()">Ενεργό</button>`}<button class="btn" onclick="go('veh/${v.id}')">✏️</button></div>`).join(''):'<div class="note">Πρόσθεσε το αυτοκίνητό σου. Όλα τα εργαλεία (κλισιόμετρο, νερό, ανάκτηση, πίεση, καύσιμο) παίρνουν τα στοιχεία από εδώ.</div>')+
- `<h3>➕ Πρόσθεσε όχημα</h3><label>Από τη βάση (${VDB.length} μοντέλα με γεωμετρία)</label><select id="vdb"><option value="">— διάλεξε —</option>${VDB.map(v=>`<option value="${v.id}">${esc(v.name)}</option>`).join('')}</select>
- <div class="tools"><button class="btn p" onclick="vehAdd($('#vdb').value)">➕ Πρόσθεσε από βάση</button><button class="btn" onclick="vehAdd('')">✍️ Κενό — γράφω μόνος μου</button></div>
- <div class="muted">Η βάση είναι κοινή με την εφαρμογή <a href="../grade/" style="color:var(--yel)">Off-Road Gradeability</a>. Έλεγξε πάντα τα νούμερα με το εγχειρίδιο του αυτοκινήτου σου — οι βελτιώσεις (lift, ελαστικά) τα αλλάζουν.</div>`}
-function vehAdd(dbid){const d=VDB.find(x=>x.id===dbid),g=d?d.geo:{},id='v'+Date.now();
+ `<h3>➕ Πρόσθεσε όχημα</h3><label>Από τη βάση (${VDB.length} μοντέλα με γεωμετρία)</label><select id="vdb"><option value="">διάλεξε…</option>${VDB.map(v=>`<option value="${v.id}">${esc(v.name)}</option>`).join('')}</select>
+ <div class="tools"><button class="btn p" onclick="vehAdd($('#vdb').value)">➕ Πρόσθεσε από βάση</button><button class="btn" onclick="vehAdd('')">✍️ Κενό, γράφω μόνος μου</button></div>
+ <div class="muted">Η βάση είναι κοινή με την εφαρμογή <a href="../grade/" style="color:var(--yel)">Off-Road Gradeability</a>. Έλεγξε πάντα τα νούμερα με το εγχειρίδιο του αυτοκινήτου σου, οι βελτιώσεις (lift, ελαστικά) τα αλλάζουν.</div>`}
+function vehAdd(dbid,stay){const d=VDB.find(x=>x.id===dbid),g=d?d.geo:{},id='v'+Date.now();
  const v={id,name:d?'':'Το αυτοκίνητό μου',model:d?d.name:'',curb:d&&d.curb||'',gvw:d&&d.gvw||'',roof:'',clr:g.clr||'',app:g.app||'',dep:g.dep||'',brk:g.brk||'',wade:g.wade||'',side:g.side||'',track:g.track||'',h:g.h||'',wb:g.wb||'',tyre:'',pf:'',pr:'',tank:'',fuel:'diesel',cr:'',co:'',lock:'',winch:'',snork:'όχι',src:g.s||''};
- const L=vehs();L.push(v);LS.s('vehs',L);if(!LS.g('vact',null)||L.length===1)LS.s('vact',id);go('veh/'+id)}
+ const L=vehs();L.push(v);LS.s('vehs',L);LS.s('vact',id);if(!stay)go('veh/'+id)}
 function vehEdit(id){const v=vehs().find(x=>x.id===id);if(!v)return vehPage();T('✏️ '+(v.name||v.model||'Όχημα'));
  M.innerHTML=(v.src?`<div class="muted">Πηγή γεωμετρίας: ${esc(v.src)}</div>`:'')+VF.map(([k,l,t])=>`<label>${l}</label><input id="vf_${k}" type="${t}" ${t==='number'?'inputmode="decimal" step="any"':''} value="${esc(v[k])}">`).join('')+
  `<div class="note">Όριο πλευρικής κλίσης: αν δεν το ξέρεις, άφησέ το κενό. Η εφαρμογή το υπολογίζει από μετατρόχιο & ύψος με περιθώριο ασφαλείας 15° (τώρα: <b>${sideLim(v)}°</b>).</div>
  <button class="big org" onclick="vehSave('${id}')">💾 Αποθήκευση</button><button class="btn r" onclick="vehDel('${id}')">🗑 Διαγραφή οχήματος</button>`}
-function vehSave(id){const L=vehs(),v=L.find(x=>x.id===id);VF.forEach(([k,,t])=>{const e=$('#vf_'+k);if(e)v[k]=t==='number'?(e.value===''?'':n(e.value)):e.value.trim()});LS.s('vehs',L);go('veh')}
+function vehSave(id){const L=vehs(),v=L.find(x=>x.id===id);VF.forEach(([k,,t])=>{const e=$('#vf_'+k);if(e)v[k]=t==='number'?(e.value===''?'':n(e.value)):e.value.trim()});LS.s('vehs',L);const ret=LS.g('vret','');if(ret){LS.s('vret','');go(ret)}else go('veh')}
 function vehDel(id){if(!confirm('Διαγραφή του οχήματος;'))return;LS.s('vehs',vehs().filter(x=>x.id!==id));if(LS.g('vact',null)===id)LS.s('vact',null);go('veh')}
+/* Επιλογή οχήματος μέσα σε κάθε εργαλείο, διαλέγεις εδώ, χωρίς να φύγεις */
+function vehBar(){const L=vehs(),a=veh();
+ const dbSel=`<select id="vbdb"><option value="">${L2('Μοντέλο από τη βάση…','Model from the database…')}</option>${VDB.map(v=>`<option value="${v.id}">${esc(v.name)}</option>`).join('')}</select>`;
+ const noDb=VDB.length?'':`<div class="note">${L2('Η βάση μοντέλων δεν φορτώθηκε (π.χ. πρώτο άνοιγμα χωρίς internet). Γράψε τα στοιχεία μόνος σου ή άνοιξε την εφαρμογή μία φορά με internet.','The model database did not load (e.g. first start without internet). Enter the figures yourself, or open the app once online.')}</div>`;
+ if(!a)return `<div class="box"><b>🚙 ${L2('Διάλεξε το όχημά σου','Choose your vehicle')}</b><div class="muted">${L2('Το εργαλείο συγκρίνει με τις γωνίες, τα ύψη και τα όρια του οχήματος.','This tool compares against your vehicle\'s angles, heights and limits.')}</div>${noDb}${VDB.length?dbSel:''}
+ <div class="tools">${VDB.length?`<button class="btn p" onclick="vehQuick($('#vbdb').value)">✅ ${L2('Αυτό','Use this')}</button>`:''}<button class="btn" onclick="vehManual()">✍️ ${L2('Γράφω τα στοιχεία','Enter figures')}</button></div></div>`;
+ return `<div class="box"><div class="tools" style="align-items:center"><span>🚙</span><select id="vbsel" style="flex:1" onchange="vehSwitch(this.value)">${L.map(v=>`<option value="${v.id}" ${v.id===a.id?'selected':''}>${esc(v.name||v.model)}${v.name&&v.model?', '+esc(v.model):''}</option>`).join('')}<option value="+">➕ ${L2('Άλλο όχημα…','Another vehicle…')}</option></select><button class="btn" onclick="vehGo('veh/${a.id}')">✏️</button></div>
+ <div id="vbadd" style="display:none">${noDb}${VDB.length?dbSel:''}<div class="tools">${VDB.length?`<button class="btn p" onclick="vehQuick($('#vbdb').value)">✅ ${L2('Πρόσθεσε','Add')}</button>`:''}<button class="btn" onclick="vehManual()">✍️ ${L2('Γράφω τα στοιχεία','Enter figures')}</button></div></div></div>`}
+function vehRe(){['tyre','tsz','wn','pl','fu','wd'].forEach(k=>localStorage.removeItem('ov_'+k));const r=location.hash.slice(1);stopAll();render(r)}
+function vehSwitch(id){if(id==='+'){$('#vbadd').style.display='block';return}LS.s('vact',id);vehRe()}
+function vehQuick(dbid){if(!dbid){alert(L2('Διάλεξε μοντέλο από τη λίστα.','Pick a model from the list.'));return}vehAdd(dbid,1);vehRe()}
+function vehManual(){LS.s('vret',location.hash.slice(1)||'home');vehAdd('')}
 function vehBox(){const v=veh();return v?`<div class="vcard" onclick="go('veh')"><span class="e">🚙</span><div style="flex:1"><b>${esc(v.name||v.model)}</b><small class="muted">${esc(v.model||'')}</small></div><span class="muted">✏️</span></div>`:
- `<button class="row" onclick="go('veh')"><span class="e">🚙</span><span><b>Πρόσθεσε το όχημά σου</b><small>γωνίες, βάθος νερού, βάρη — τα χρησιμοποιούν όλα τα εργαλεία</small></span></button>`}
+ `<button class="row" onclick="go('veh')"><span class="e">🚙</span><span><b>Πρόσθεσε το όχημά σου</b><small>γωνίες, βάθος νερού, βάρη, τα χρησιμοποιούν όλα τα εργαλεία</small></span></button>`}
 
 /* ===================== ΑΡΧΙΚΗ ===================== */
 const SOON=[];
 function home(){T(TITLE);const read=LS.g('read',{});
- M.innerHTML=`<div class="hero">${SUN_SVG}<h2>Overland Habit</h2><div>ο ελληνικός οδηγός για το overlanding — από αρχάριο μέχρι expert</div></div>${vehBox()}
- <div class="g3">${[['incl','📐','Κλισιόμετρο'],['tyre','🛞','Πίεση'],['compass','🧭','Πυξίδα & GPS'],['winch','🪝','Ανάκτηση'],['wade','🌊','Νερό — περνάω;'],['sun','🌇','Ώρα για στρατόπεδο']].map(t=>`<button class="tile" onclick="go('t/${t[0]}')"><span class="e">${t[1]}</span>${t[2]}</button>`).join('')}</div>
- <button class="row" onclick="go('map')" style="border-color:var(--org)"><span class="e">🗺️</span><span><b>Χάρτης & camper stops</b><small>κάμπινγκ, νερό, πηγές, dump station, καταφύγια — offline · δικά μου σημεία · διαδρομές GPX</small></span></button>
- <button class="row" onclick="go('convoy')"><span class="e">🚐</span><span><b>Κομβόι — ζωντανά</b><small>${cvMe()?'🟢 ενεργό · κωδικός '+cvMe().code:'όλα τα αυτοκίνητα στον χάρτη, συναγερμός αν χαθεί κάποιος, SOS'}</small></span></button>
- <button class="row" onclick="go('rally')"><span class="e">🏁</span><span><b>Ράλι — Tripmaster & Roadbook</b><small>${RL().run?'🟢 μετράει · ':''}Total/Partial, regularity, CAP, roadbook με κουτιά</small></span></button>
+ M.innerHTML=`<div class="hero">${SUN_SVG}<h2>Overland Habit</h2><div>ο ελληνικός οδηγός για το overlanding, από αρχάριο μέχρι expert</div></div>${vehBox()}
+ <div class="g3">${[['incl','📐','Κλισιόμετρο'],['tyre','🛞','Πίεση'],['compass','🧭','Πυξίδα & GPS'],['winch','🪝','Ανάκτηση'],['wade','🌊','Νερό, περνάω;'],['sun','🌇','Ώρα για στρατόπεδο']].map(t=>`<button class="tile" onclick="go('t/${t[0]}')"><span class="e">${t[1]}</span>${t[2]}</button>`).join('')}</div>
+ <button class="row" onclick="go('map')" style="border-color:var(--org)"><span class="e">🗺️</span><span><b>Χάρτης & camper stops</b><small>κάμπινγκ, νερό, πηγές, dump station, καταφύγια, offline · δικά μου σημεία · διαδρομές GPX</small></span></button>
+ <button class="row" onclick="go('convoy')"><span class="e">🚐</span><span><b>Κομβόι, ζωντανά</b><small>${cvMe()?'🟢 ενεργό · κωδικός '+cvMe().code:'όλα τα αυτοκίνητα στον χάρτη, συναγερμός αν χαθεί κάποιος, SOS'}</small></span></button>
+ <button class="row" onclick="go('rally')"><span class="e">🏁</span><span><b>Ράλι, Tripmaster & Roadbook</b><small>${RL().run?'🟢 μετράει · ':''}Total/Partial, regularity, CAP, roadbook με κουτιά</small></span></button>
  <h3>Το ταξίδι</h3>
  <button class="row" onclick="go('trip')"><span class="e">🎒</span><span><b>Ταξίδι & λίστες εξοπλισμού</b><small>${tripProg()}</small></span></button>
  <button class="row" onclick="go('t/walk')"><span class="e">🔎</span><span><b>Walk-round πριν φύγεις</b><small>έλεγχος οχήματος σαν superintendent</small></span></button>
@@ -149,18 +165,18 @@ function home(){T(TITLE);const read=LS.g('read',{});
 ${SOON.length?'<h3>Έρχονται</h3>':''}${SOON.map(s=>`<button class="row soon" onclick="go('${s[0]}')"><span class="e">${s[1]}</span><span><b>${s[2]}</b><small>${s[3]} · ${s[4]}</small></span></button>`).join('')}
  <footer>Overland Habit v0.7 · Created by George Barbaris<br>Τα δεδομένα μένουν μόνο στο κινητό σου.<br>Χάρτες & σημεία © OpenStreetMap contributors · OpenTopoMap · Esri · Leaflet</footer>`}
 function soon(id){const s=SOON.find(x=>x[0]===id);T(s[1]+' '+s[2]);const det={
- map:['Χάρτης με όλα τα σημεία από το OpenStreetMap: κάμπινγκ, χώροι για camper, πόσιμο νερό & πηγές, dump station, ντους, WC, καύσιμα/LPG, θέες, καταφύγια.','«Κατέβασε περιοχή» όταν έχεις σήμα → μετά τα βρίσκεις offline, με απόσταση από σένα.','Τα δικά σου σημεία με φωτογραφία, σημείωση, βαθμολογία και πρόσβαση (2WD / 4×4) — τα στέλνεις στους φίλους σου.','Διαδρομή online που μένει μέσα offline, με camper stops κατά μήκος της, και export GPX.'],
+ map:['Χάρτης με όλα τα σημεία από το OpenStreetMap: κάμπινγκ, χώροι για camper, πόσιμο νερό & πηγές, dump station, ντους, WC, καύσιμα/LPG, θέες, καταφύγια.','«Κατέβασε περιοχή» όταν έχεις σήμα → μετά τα βρίσκεις offline, με απόσταση από σένα.','Τα δικά σου σημεία με φωτογραφία, σημείωση, βαθμολογία και πρόσβαση (2WD / 4×4), τα στέλνεις στους φίλους σου.','Διαδρομή online που μένει μέσα offline, με camper stops κατά μήκος της, και export GPX.'],
  convoy:['Ο αρχηγός φτιάχνει ομάδα και δίνει κωδικό / QR.','Όλα τα αυτοκίνητα στον χάρτη: απόσταση από τον αρχηγό, ταχύτητα, τελευταία ενημέρωση.','Συναγερμός όταν κάποιος μείνει πίσω ή χαθεί το σήμα του. SOS από κάθε μέλος, «ΣΤΟΠ όλοι» από τον αρχηγό.','Θέλει σήμα κινητής. Χωρίς σήμα: τελευταία γνωστή θέση + ασύρματος (δες «Ασύρματοι & κομβόι»).'],
- rally:['Total & Partial με διόρθωση ±10 m και calibration factor.','CAP (πορεία), ταχύτητα, μέση ταχύτητα / regularity: «μπροστά/πίσω» σε δευτερόλεπτα.','Tulip roadbook: κουτάκια με απόσταση, CAP, σύμβολο, σημείωση. Μεγάλα ψηφία, landscape, οθόνη που δεν σβήνει.','Ακρίβεια GPS κινητού ~1–2% — για προπόνηση, regularity και navigation.']}[id];
- M.innerHTML=`<div class="note"><b>${s[4]}</b> — χτίζεται τώρα. Θα εμφανιστεί εδώ μόλις είναι έτοιμο.</div><div class="box">${det.map(x=>`<div class="li">${x}</div>`).join('')}</div>
- ${id==='convoy'?`<button class="row" onclick="go('t/radio')"><span class="e">📻</span><span><b>Ασύρματοι & κομβόι</b><small>κανάλια PMR446 και κανόνες — διαθέσιμο τώρα</small></span></button>`:''}`}
+ rally:['Total & Partial με διόρθωση ±10 m και calibration factor.','CAP (πορεία), ταχύτητα, μέση ταχύτητα / regularity: «μπροστά/πίσω» σε δευτερόλεπτα.','Tulip roadbook: κουτάκια με απόσταση, CAP, σύμβολο, σημείωση. Μεγάλα ψηφία, landscape, οθόνη που δεν σβήνει.','Ακρίβεια GPS κινητού ~1–2%, για προπόνηση, regularity και navigation.']}[id];
+ M.innerHTML=`<div class="note"><b>${s[4]}</b>, χτίζεται τώρα. Θα εμφανιστεί εδώ μόλις είναι έτοιμο.</div><div class="box">${det.map(x=>`<div class="li">${x}</div>`).join('')}</div>
+ ${id==='convoy'?`<button class="row" onclick="go('t/radio')"><span class="e">📻</span><span><b>Ασύρματοι & κομβόι</b><small>κανάλια PMR446 και κανόνες, διαθέσιμο τώρα</small></span></button>`:''}`}
 
 /* ===================== ΕΡΓΑΛΕΙΑ ===================== */
 const TOOLS=[
- ['Στο πεδίο',[['incl','📐','Κλισιόμετρο','πλευρική κλίση & ανηφόρα με όρια του οχήματος'],['compass','🧭','Πυξίδα, GPS & σημεία','θέση, σημεία, διαδρομή, βέλος επιστροφής, GPX'],['pass','🚧','Θα περάσω;','σκαλί, ράμπα, νερό, κλίση — σε σχέση με το όχημα'],['wade','🌊','Πέρασμα νερού','βάθος, ρεύμα, πάτος — περνάω ή όχι;']]],
+ ['Στο πεδίο',[['incl','📐','Κλισιόμετρο','πλευρική κλίση & ανηφόρα με όρια του οχήματος'],['compass','🧭','Πυξίδα, GPS & σημεία','θέση, σημεία, διαδρομή, βέλος επιστροφής, GPX'],['pass','🚧','Θα περάσω;','σκαλί, ράμπα, νερό, κλίση, σε σχέση με το όχημα'],['wade','🌊','Πέρασμα νερού','βάθος, ρεύμα, πάτος, περνάω ή όχι;']]],
  ['Ελαστικά & ανάκτηση',[['tyre','🛞','Πίεση ελαστικών ανά έδαφος','πόσο ξεφουσκώνω και πόσο γρήγορα πάω'],['tsize','📏','Σύγκριση μεγέθους ελαστικών','κοντέρ, ύψος, σχέσεις'],['winch','🪝','Ανάκτηση & εργάτης','πόση δύναμη, τροχαλία, shackle, ιμάντας']]],
  ['Σχεδιασμός',[['payload','⚖️','Βάρος & φορτίο (GVM)','πόσο φορτωμένος είσαι, σχάρα'],['fuel','⛽','Καύσιμο & αυτονομία','πόσα km βγάζεις, πόσο θες'],['water','💧','Νερό για την εκδρομή','λίτρα ανά άτομο και μέρα'],['power','🔋','Μπαταρία, ψυγείο & solar','πόσες μέρες χωρίς να βάλεις μπρος'],['walk','🔎','Walk-round πριν φύγεις','έλεγχος οχήματος με OK / Defect']]],
- ['Ουρανός & επικοινωνία',[['sun','🌇','Ήλιος — ώρα για στρατόπεδο','πόσο φως μένει, ανατολή, δύση'],['wx','🌡️','Υψόμετρο & βαρόμετρο','υψόμετρο GPS, τάση πίεσης, πρόγνωση'],['radio','📻','Ασύρματοι & κομβόι','PMR446, κανόνες ασυρμάτου'],['morse','📡','Morse με φως & ήχο','SOS και λέξεις'],['ggrs','🗺️','WGS84 ↔ ΕΓΣΑ 87','μετατροπή συντεταγμένων για ελληνικούς χάρτες'],['knots','🪢','Κόμποι','13 κόμποι με σχέδια βήμα-βήμα'],['night','🌙','Κόκκινη οθόνη νύχτας',''],['awake','💡','Οθόνη πάντα ανοιχτή','']]]];
+ ['Ουρανός & επικοινωνία',[['sun','🌇','Ήλιος, ώρα για στρατόπεδο','πόσο φως μένει, ανατολή, δύση'],['wx','🌡️','Υψόμετρο & βαρόμετρο','υψόμετρο GPS, τάση πίεσης, πρόγνωση'],['radio','📻','Ασύρματοι & κομβόι','PMR446, κανόνες ασυρμάτου'],['morse','📡','Morse με φως & ήχο','SOS και λέξεις'],['ggrs','🗺️','WGS84 ↔ ΕΓΣΑ 87','μετατροπή συντεταγμένων για ελληνικούς χάρτες'],['knots','🪢','Κόμποι','13 κόμποι με σχέδια βήμα-βήμα'],['night','🌙','Κόκκινη οθόνη νύχτας',''],['awake','💡','Οθόνη πάντα ανοιχτή','']]]];
 function tools(){T('🧰 Εργαλεία');M.innerHTML=TOOLS.map(([g,L])=>`<h3>${g}</h3>`+L.map(t=>`<button class="row" onclick="go('t/${t[0]}')"><span class="e">${t[1]}</span><span><b>${t[2]}</b><small>${t[0]==='night'?(night?'🔴 ΑΝΟΙΧΤΗ':'κρατάει την όραση νύχτας'):t[0]==='awake'?(keepOn?'💡 ΑΝΟΙΧΤΗ':'να μη σβήνει η οθόνη'):t[3]}</small></span></button>`).join('')).join('')}
 let TS=[];function toolStop(){TS.forEach(f=>{try{f()}catch(e){}});TS=[]}
 function tool(id){const f={incl:tIncl,compass:tCompass,pass:tPass,wade:tWade,tyre:tTyre,tsize:tTsize,winch:tWinch,payload:tPayload,fuel:tFuel,water:tWater,power:tPower,walk:tWalk,sun,wx,radio:tRadio,morse,ggrs:tGgrs,knots:tKnots,night:tNight,awake:tAwake}[id];f?f():tools()}
@@ -174,7 +190,7 @@ function inLimits(){const v=veh();return{side:sideLim(v),pitch:LS.g('plim',35)}}
 function carRear(){return `<svg viewBox="-80 -70 160 120"><line x1="-78" y1="40" x2="78" y2="40" stroke="#3d3935" stroke-width="2"/><g id="crr"><rect x="-46" y="-40" width="92" height="56" rx="10" fill="#3a2a20" stroke="#d97757" stroke-width="3"/><rect x="-36" y="-32" width="72" height="22" rx="4" fill="#141312"/><rect x="-60" y="10" width="20" height="30" rx="5" fill="#f5f0e8"/><rect x="40" y="10" width="20" height="30" rx="5" fill="#f5f0e8"/><rect x="-30" y="-52" width="60" height="10" rx="3" fill="#a8a29e"/></g></svg>`}
 function carSide(){return `<svg viewBox="-90 -70 180 120"><line x1="-88" y1="40" x2="88" y2="40" stroke="#3d3935" stroke-width="2"/><g id="crs"><path d="M-70 18 L-70 -8 L-40 -10 L-25 -38 L40 -38 L52 -10 L72 -6 L72 18 Z" fill="#3a2a20" stroke="#d97757" stroke-width="3"/><rect x="-18" y="-33" width="52" height="20" rx="3" fill="#141312"/><circle cx="-45" cy="24" r="16" fill="#f5f0e8"/><circle cx="48" cy="24" r="16" fill="#f5f0e8"/><text x="62" y="-14" font-size="14" fill="#a8a29e">▶</text></g></svg>`}
 function tIncl(){T('📐 Κλισιόμετρο');const L=inLimits(),v=veh();
- M.innerHTML=`${v?'':'<div class="note">Πρόσθεσε το όχημά σου για να ξέρει το κλισιόμετρο τα όριά του. Τώρα: γενικά όρια.</div>'}
+ M.innerHTML=`${vehBar()}${v?'':`<div class="note">${L2('Χωρίς όχημα: γενικά όρια.','No vehicle: general limits.')}</div>`}
  <div class="incl"><div class="box"><div class="muted">Πλευρική (roll)</div>${carRear()}<div class="v" id="inr">—</div><div class="muted" id="inrl">όριο ${L.side}°</div></div>
  <div class="box"><div class="muted">Μπρος–πίσω (pitch)</div>${carSide()}<div class="v" id="inp">—</div><div class="muted" id="inpl">όριο ${L.pitch}°</div></div></div>
  <div id="inw" class="tip" style="text-align:center">Κινητό <b>όρθιο σε βάση</b> με την οθόνη προς εσένα, ή <b>ξαπλωμένο</b> με την πάνω άκρη προς το μπροστινό του αυτοκινήτου. Σε <b>επίπεδο έδαφος</b>: «Ξεκίνα» και μετά «Μηδένισε».</div>
@@ -182,7 +198,7 @@ function tIncl(){T('📐 Κλισιόμετρο');const L=inLimits(),v=veh();
  <div class="box" id="inmx" class="muted">Μέγιστο: —</div>
  <div class="box"><label>Όριο ανηφόρας/κατηφόρας για συναγερμό (°)</label><input type="number" inputmode="decimal" value="${L.pitch}" onchange="LS.s('plim',n(this.value));tIncl()">
  <div class="tools"><button class="btn ${LS.g('inxr',0)?'p':''}" onclick="LS.s('inxr',LS.g('inxr',0)?0:1);tIncl()">↔ Αντιστροφή αριστερά/δεξιά</button><button class="btn ${LS.g('inxp',0)?'p':''}" onclick="LS.s('inxp',LS.g('inxp',0)?0:1);tIncl()">↕ Αντιστροφή μπρος/πίσω</button><button class="btn ${LS.g('insnd',1)?'p':''}" onclick="LS.s('insnd',LS.g('insnd',1)?0:1);tIncl()">🔊 Ήχος συναγερμού</button></div>
- <div class="muted">Δοκιμή: γείρε το κινητό δεξιά — το αυτοκινητάκι πρέπει να γέρνει δεξιά. Αν όχι, πάτα «Αντιστροφή».</div></div>
+ <div class="muted">Δοκιμή: γείρε το κινητό δεξιά, το αυτοκινητάκι πρέπει να γέρνει δεξιά. Αν όχι, πάτα «Αντιστροφή».</div></div>
  <div class="box"><b>Πώς διαβάζεται</b><div class="li">🟢 μέχρι 60% του ορίου · 🟡 60–85% · 🔴 πάνω από 85% → ήχος & δόνηση.</div><div class="li">Το όριο πλευρικής κλίσης είναι <b>στατικό</b>. Πέτρα κάτω από τον πάνω τροχό, λακκούβα κάτω από τον κάτω, φορτίο στη σχάρα ή απότομη κίνηση το ρίχνουν πολύ.</div><div class="li">Αν νιώσεις ότι γέρνει: <b>τιμόνι προς την κατηφόρα</b> και λίγο γκάζι.</div>
  <button class="btn" onclick="go('learn/side')">🎓 Μάθημα: Πλευρική κλίση</button></div>`;
  if(IN.on)inShow()}
@@ -200,9 +216,9 @@ function inShow(){const r=$('#inr');if(!r)return;const L=inLimits(),fr=Math.abs(
  $('#inrl').innerHTML=`${IN.r>0.5?'γέρνει ΔΕΞΙΑ':IN.r<-0.5?'γέρνει ΑΡΙΣΤΕΡΑ':'ίσιο'} · όριο ${L.side}°`;$('#inpl').innerHTML=`${IN.p>0.5?'ΑΝΗΦΟΡΑ':IN.p<-0.5?'ΚΑΤΗΦΟΡΑ':'ίσιο'} · ${Math.round(Math.tan(Math.abs(IN.p)*SR)*100)}% · όριο ${L.pitch}°`;
  const cr=$('#crr'),cs=$('#crs');if(cr)cr.setAttribute('transform',`rotate(${Math.max(-60,Math.min(60,IN.r))})`);if(cs)cs.setAttribute('transform',`rotate(${Math.max(-60,Math.min(60,-IN.p))})`);
  $('#inmx').innerHTML=`Μέγιστο αυτής της διαδρομής: πλευρική <b>${IN.mr.toFixed(1)}°</b> · ανηφόρα/κατηφόρα <b>${IN.mp.toFixed(1)}°</b>`;
- const w=$('#inw'),hi=Math.max(fr,fp);if(hi>=.85){w.className='warn';w.innerHTML=fr>=fp?'⚠️ ΚΟΝΤΑ ΣΤΟ ΟΡΙΟ ΠΛΕΥΡΙΚΗΣ ΚΛΙΣΗΣ — τιμόνι προς την κατηφόρα!':'⚠️ ΠΟΛΥ ΑΠΟΤΟΜΟ — ευθεία στην κλίση, low range, σταθερά.';
+ const w=$('#inw'),hi=Math.max(fr,fp);if(hi>=.85){w.className='warn';w.innerHTML=fr>=fp?'⚠️ ΚΟΝΤΑ ΣΤΟ ΟΡΙΟ ΠΛΕΥΡΙΚΗΣ ΚΛΙΣΗΣ, τιμόνι προς την κατηφόρα!':'⚠️ ΠΟΛΥ ΑΠΟΤΟΜΟ, ευθεία στην κλίση, low range, σταθερά.';
   if(Date.now()-IN.beep>1200){IN.beep=Date.now();if(LS.g('insnd',1))beep(880,250,.9,'square');vib(200)}}
- else if(hi>=.6){w.className='note';w.textContent='Προσοχή — αργά, χωρίς απότομες κινήσεις.'}else{w.className='tip';w.textContent='Μέσα στα όρια.'}}
+ else if(hi>=.6){w.className='note';w.textContent='Προσοχή, αργά, χωρίς απότομες κινήσεις.'}else{w.className='tip';w.textContent='Μέσα στα όρια.'}}
 async function inGo(){if(IN.on){inStop();tIncl();return}if(!(await motionPerm())){alert('Δεν δόθηκε άδεια για τους αισθητήρες κίνησης.');return}
  IN.on=true;window.addEventListener('devicemotion',inMotion,true);TS.push(inStop);wake(1);const b=$('#inb');if(b){b.textContent='⏹ Σταμάτα';b.className='btn r'}}
 function inStop(){IN.on=false;window.removeEventListener('devicemotion',inMotion,true)}
@@ -213,12 +229,12 @@ function inZero(){if(!IN.on||!IN.raw){alert('Πάτα πρώτα «Ξεκίνα�
 
 /* ---------- Πίεση ελαστικών ---------- */
 function tTyre(){T('🛞 Πίεση ελαστικών');const v=veh()||{},st=LS.g('tyre',{pf:v.pf||2.2,pr:v.pr||2.4,t:'sand',load:0});
- M.innerHTML=`<div class="grid"><div>${inp('tpf','Πίεση δρόμου εμπρός (bar)',st.pf,'tyC()')}</div><div>${inp('tpr','Πίεση δρόμου πίσω (bar)',st.pr,'tyC()')}</div></div>
+ M.innerHTML=vehBar()+`<div class="grid"><div>${inp('tpf','Πίεση δρόμου εμπρός (bar)',st.pf,'tyC()')}</div><div>${inp('tpr','Πίεση δρόμου πίσω (bar)',st.pr,'tyC()')}</div></div>
  <div class="muted" style="margin-top:-6px">Από το αυτοκόλλητο στην πόρτα του οδηγού (κρύα ελαστικά).</div>
  <label>Φορτίο</label>${seg('load',[[0,'Κανονικό'],[1,'Φορτωμένο (overland)']],st.load,'tyL')}
  <label>Έδαφος</label><div class="grid">${TERR.map(t=>`<button class="tile" style="min-height:76px;${t.id===st.t?'border-color:var(--org);background:#3a2a20':''}" onclick="tyT('${t.id}')"><span class="e" style="font-size:1.5em">${t.e}</span>${t.n}</button>`).join('')}</div>
  <div id="tyo"></div>
- <div class="box"><b>Κανόνες</b><div class="li">Μέτρα με μανόμετρο, με κρύα ελαστικά όπου γίνεται. Ζεστά ελαστικά δείχνουν ~0,2–0,3 bar παραπάνω.</div><div class="li">Χαμηλή πίεση = χαμηλή ταχύτητα, ομαλό τιμόνι, χωρίς απότομα φρένα.</div><div class="li">Κάτω από 1,0 bar υπάρχει κίνδυνος να βγει το λάστιχο από τη ζάντα (εκτός beadlock).</div><div class="li"><b>Ποτέ</b> άσφαλτος με ξεφουσκωμένα — φούσκωσε πριν βγεις.</div><div class="li">Ελαστικά LT / C (πιο σκληρά πλαϊνά) θέλουν λίγο μεγαλύτερο ποσοστό από τα P (επιβατικά).</div></div>`;tyC()}
+ <div class="box"><b>Κανόνες</b><div class="li">Μέτρα με μανόμετρο, με κρύα ελαστικά όπου γίνεται. Ζεστά ελαστικά δείχνουν ~0,2–0,3 bar παραπάνω.</div><div class="li">Χαμηλή πίεση = χαμηλή ταχύτητα, ομαλό τιμόνι, χωρίς απότομα φρένα.</div><div class="li">Κάτω από 1,0 bar υπάρχει κίνδυνος να βγει το λάστιχο από τη ζάντα (εκτός beadlock).</div><div class="li"><b>Ποτέ</b> άσφαλτος με ξεφουσκωμένα, φούσκωσε πριν βγεις.</div><div class="li">Ελαστικά LT / C (πιο σκληρά πλαϊνά) θέλουν λίγο μεγαλύτερο ποσοστό από τα P (επιβατικά).</div></div>`;tyC()}
 function tyL(l){const st=LS.g('tyre',{});st.load=+l;LS.s('tyre',st);tTyre()}
 function tyT(t){const st=LS.g('tyre',{});st.t=t;LS.s('tyre',st);tTyre()}
 function tyC(){const st=LS.g('tyre',{t:'sand',load:0});st.pf=n($('#tpf').value);st.pr=n($('#tpr').value);LS.s('tyre',st);const t=TERR.find(x=>x.id===st.t)||TERR[0];
@@ -231,26 +247,26 @@ function tyC(){const st=LS.g('tyre',{t:'sand',load:0});st.pf=n($('#tpf').value);
 function tyreD(s){s=String(s).toUpperCase().replace(/\s/g,'');let m=s.match(/^(\d{3})\/(\d{2,3})Z?R?(\d{2}(?:\.\d)?)/);if(m)return(+m[3]*25.4)+2*(+m[1])*(+m[2])/100;
  m=s.match(/^(\d{2}(?:\.\d+)?)[X×](\d{1,2}(?:\.\d+)?)R?(\d{2})/);if(m)return +m[1]*25.4;return null}
 function tTsize(){T('📏 Μέγεθος ελαστικών');const v=veh()||{},st=LS.g('tsz',{a:v.tyre||'265/70R16',b:'285/75R16'});
- M.innerHTML=`<label>Σημερινά ελαστικά</label><input id="tsa" value="${esc(st.a)}" oninput="tsC()" placeholder="265/70R16"><label>Νέα ελαστικά</label><input id="tsb" value="${esc(st.b)}" oninput="tsC()" placeholder="285/75R16 ή 33x12.5R15"><div id="tso"></div>
- <div class="box"><div class="li">Μεγαλύτερη διάμετρος = περισσότερη απόσταση από το έδαφος (μόνο στους άξονες — η μισή διαφορά), αλλά «μακρύτερες» σχέσεις και λιγότερη δύναμη στο low range.</div><div class="li">Πάνω από ~3% διαφορά: έλεγξε ABS/ESP, κοντέρ και νομιμότητα (έγκριση/ΚΤΕΟ).</div></div>`;tsC()}
+ M.innerHTML=vehBar()+`<label>Σημερινά ελαστικά</label><input id="tsa" value="${esc(st.a)}" oninput="tsC()" placeholder="265/70R16"><label>Νέα ελαστικά</label><input id="tsb" value="${esc(st.b)}" oninput="tsC()" placeholder="285/75R16 ή 33x12.5R15"><div id="tso"></div>
+ <div class="box"><div class="li">Μεγαλύτερη διάμετρος = περισσότερη απόσταση από το έδαφος (μόνο στους άξονες, η μισή διαφορά), αλλά «μακρύτερες» σχέσεις και λιγότερη δύναμη στο low range.</div><div class="li">Πάνω από ~3% διαφορά: έλεγξε ABS/ESP, κοντέρ και νομιμότητα (έγκριση/ΚΤΕΟ).</div></div>`;tsC()}
 function tsC(){const a=$('#tsa').value,b=$('#tsb').value;LS.s('tsz',{a,b});const A=tyreD(a),B=tyreD(b),o=$('#tso');if(!A||!B){o.innerHTML='<div class="muted">Γράψε μεγέθη όπως 265/70R16 ή 33x12.5R15.</div>';return}
  const d=(B/A-1)*100;o.innerHTML=`<div class="res"><div class="grid"><div><div class="muted">Διάμετρος τώρα</div><div class="v" style="font-size:1.6em">${f0(A)} mm</div><div class="muted">${f1(A/25.4)}″</div></div><div><div class="muted">Νέα διάμετρος</div><div class="v" style="font-size:1.6em">${f0(B)} mm</div><div class="muted">${f1(B/25.4)}″</div></div></div>
  <div style="margin-top:8px">Διαφορά <b class="${Math.abs(d)>3?'bad':'ok'}">${d>0?'+':''}${d.toFixed(1)}%</b> · ύψος στους άξονες <b>${d>0?'+':''}${f0((B-A)/2)} mm</b></div>
- <div>Όταν το κοντέρ δείχνει <b>100</b>, πας πραγματικά <b>${f1(100*B/A)} km/h</b></div><div>Στροφές τροχού ανά km: ${f0(1e6/(Math.PI*A))} → ${f0(1e6/(Math.PI*B))}</div><div class="muted">Οι τελικές σχέσεις «μακραίνουν» ${f1(Math.abs(d))}% — η ροπή στον τροχό ${d>0?'πέφτει':'ανεβαίνει'} αντίστοιχα.</div></div>`}
+ <div>Όταν το κοντέρ δείχνει <b>100</b>, πας πραγματικά <b>${f1(100*B/A)} km/h</b></div><div>Στροφές τροχού ανά km: ${f0(1e6/(Math.PI*A))} → ${f0(1e6/(Math.PI*B))}</div><div class="muted">Οι τελικές σχέσεις «μακραίνουν» ${f1(Math.abs(d))}%, η ροπή στον τροχό ${d>0?'πέφτει':'ανεβαίνει'} αντίστοιχα.</div></div>`}
 
 /* ---------- Ανάκτηση & εργάτης ---------- */
 function tWinch(){T('🪝 Ανάκτηση & εργάτης');const v=veh()||{},st=LS.g('wn',{w:v.gvw?Math.round(v.gvw*0.9):2600,r:4,s:0,wr:v.winch||4300,ly:2,b:1});
- M.innerHTML=`${inp('wnw','Βάρος οχήματος όπως είναι τώρα (kg)',st.w)}<label>Έδαφος / πόσο έχει κολλήσει</label><select id="wnr" onchange="calc()">${RES.map((r,i)=>`<option value="${i}" ${i==st.r?'selected':''}>${r[0]} (×${r[1]})</option>`).join('')}</select>
+ M.innerHTML=vehBar()+`${inp('wnw','Βάρος οχήματος όπως είναι τώρα (kg)',st.w)}<label>Έδαφος / πόσο έχει κολλήσει</label><select id="wnr" onchange="calc()">${RES.map((r,i)=>`<option value="${i}" ${i==st.r?'selected':''}>${r[0]} (×${r[1]})</option>`).join('')}</select>
  ${inp('wns','Κλίση ανηφόρας προς το σημείο έλξης (°)',st.s)}<div class="grid"><div>${inp('wnwr','Εργάτης ονομαστικά (kg)',st.wr)}</div><div>${inp('wnly','Στρώσεις σχοινιού στο τύμπανο (1–5)',st.ly)}</div></div>
  <label>Τροχαλία (snatch block)</label>${seg('b',[[1,'Χωρίς (1:1)'],[2,'Μία (2:1)'],[3,'Δύο (3:1)']],st.b,'wnB')}<div id="wno"></div>
- <div class="box"><b>🛑 Ασφάλεια — πάντα</b><div class="li">Κανείς στη γραμμή του σχοινιού. Ζώνη ασφαλείας 1,5× το μήκος του σχοινιού γύρω του.</div><div class="li">Damper / κουβέρτα στη μέση του σχοινιού.</div><div class="li">Μόνο σε recovery points — ποτέ σε μπίλια κοτσαδόρου.</div><div class="li">Αφήνεις τουλάχιστον 5 σπείρες στο τύμπανο.</div><div class="li">Ο εργάτης δουλεύει με μηχανή αναμμένη, σε μικρά διαστήματα — ξεκουράζεται.</div>
+ <div class="box"><b>🛑 Ασφάλεια, πάντα</b><div class="li">Κανείς στη γραμμή του σχοινιού. Ζώνη ασφαλείας 1,5× το μήκος του σχοινιού γύρω του.</div><div class="li">Damper / κουβέρτα στη μέση του σχοινιού.</div><div class="li">Μόνο σε recovery points, ποτέ σε μπίλια κοτσαδόρου.</div><div class="li">Αφήνεις τουλάχιστον 5 σπείρες στο τύμπανο.</div><div class="li">Ο εργάτης δουλεύει με μηχανή αναμμένη, σε μικρά διαστήματα, ξεκουράζεται.</div>
  <button class="btn" onclick="go('learn/rec')">🎓 Μάθημα: Ασφάλεια στην ανάκτηση</button></div>`;calc=wnC;wnC()}
 function wnB(b){const st=LS.g('wn',{});st.b=+b;LS.s('wn',st);tWinch()}
 function wnC(){const st=LS.g('wn',{b:1});Object.assign(st,{w:n($('#wnw').value),r:+$('#wnr').value,s:n($('#wns').value),wr:n($('#wnwr').value),ly:Math.max(1,Math.min(5,Math.round(n($('#wnly').value)||1)))});LS.s('wn',st);
  const a=st.s*SR,need=st.w*(RES[st.r][1]*Math.cos(a)+Math.sin(a)),avail=st.wr*LAYER[st.ly-1]*st.b*(st.b>1?0.92:1),line=need/st.b,ok=avail>=need*1.0;
  $('#wno').innerHTML=`<div class="res"><div class="muted">Χρειάζεσαι περίπου</div><div class="v">${f0(need)} kg</div><div class="muted">${f0(need*9.81/1000)} kN</div>
  <div style="margin-top:8px">Ο εργάτης δίνει (με ${st.ly}η στρώση${st.b>1?`, τροχαλία ${st.b}:1`:''}): <b class="${ok?'ok':'bad'}">${f0(avail)} kg</b></div>
- <div style="margin-top:6px">${ok?(avail<need*1.3?'<span class="mid">🟡 Οριακά — βάλε τροχαλία για να ξεκουράσεις τον εργάτη.</span>':'<span class="ok">✅ Φτάνει.</span>'):`<span class="bad">❌ Δεν φτάνει.</span> ${st.b<3?'Βάλε τροχαλία (2:1) ή':''} ξεφόρτωσε, σκάψε μπροστά από τους τροχούς, ξεφούσκωσε, ή βοήθα με τη μηχανή στην 1η.`}</div></div>
+ <div style="margin-top:6px">${ok?(avail<need*1.3?'<span class="mid">🟡 Οριακά, βάλε τροχαλία για να ξεκουράσεις τον εργάτη.</span>':'<span class="ok">✅ Φτάνει.</span>'):`<span class="bad">❌ Δεν φτάνει.</span> ${st.b<3?'Βάλε τροχαλία (2:1) ή':''} ξεφόρτωσε, σκάψε μπροστά από τους τροχούς, ξεφούσκωσε, ή βοήθα με τη μηχανή στην 1η.`}</div></div>
  <div class="box"><b>Τι εξοπλισμό θέλεις</b><table class="t"><tr><th>Κομμάτι</th><th>Τουλάχιστον</th></tr>
  <tr><td>Shackle / soft shackle (WLL)</td><td><b>${f1(Math.ceil(line/500)*0.5)} t</b></td></tr>
  <tr><td>Ιμάντας δέντρου / extension (MBS)</td><td><b>${f1(Math.ceil(line*2/1000))} t</b></td></tr>
@@ -261,36 +277,36 @@ function wnC(){const st=LS.g('wn',{b:1});Object.assign(st,{w:n($('#wnw').value),
 
 /* ---------- Πέρασμα νερού ---------- */
 function tWade(){T('🌊 Πέρασμα νερού');const v=veh()||{},st=LS.g('wd',{d:40,c:'0',b:'g',sn:(v.snork||'').startsWith('ν')?1:0});
- M.innerHTML=`${inp('wdd','Βάθος που μέτρησες στο βαθύτερο σημείο (cm)',st.d,'wdC()')}<div class="muted" style="margin-top:-6px">Βάθος οχήματος: <b>${v.wade?v.wade/10+' cm':'— (πρόσθεσε όχημα)'}</b></div>
+ M.innerHTML=vehBar()+`${inp('wdd','Βάθος που μέτρησες στο βαθύτερο σημείο (cm)',st.d,'wdC()')}<div class="muted" style="margin-top:-6px">Βάθος οχήματος: <b>${v.wade?v.wade/10+' cm':'(πρόσθεσε όχημα)'}</b></div>
  <label>Ρεύμα</label>${seg('c',[['0','Ακίνητο'],['1','Αργό'],['2','Γρήγορο']],st.c,'wdS')}
  <label>Πάτος</label>${seg('b',[['g','Χαλίκι/πέτρα'],['s','Άμμος'],['m','Λάσπη'],['u','Δεν ξέρω']],st.b,'wdB')}
  <label>Snorkel</label>${seg('sn',[[0,'Όχι'],[1,'Ναι']],st.sn,'wdN')}<div id="wdo"></div>
- <div class="box"><b>Πριν μπεις</b>${['Περπάτα ή μέτρα με κοντάρι — ποτέ «στα τυφλά».','Δες την έξοδο: πρέπει να μπορείς να ανέβεις στην απέναντι όχθη.','Κλείσε air-con / ανεμιστήρα (μη ρουφήξει νερό η φτερωτή).','Χαλάρωσε τις ζώνες, ξεκλείδωσε πόρτες, παράθυρα μισάνοιχτα σε βαθύ νερό.','Low range, 2η — χωρίς αλλαγές μέσα στο νερό.','Σταθερά, με μικρό κύμα μπροστά από τον προφυλακτήρα (~5 km/h).','Σε ρεύμα: λίγο λοξά προς τα κάτω (με το ρεύμα).'].map(x=>`<div class="li">${x}</div>`).join('')}
- <b>Μετά</b><div class="li">Πάτα ελαφρά φρένα για να στεγνώσουν.</div><div class="li">Μετά από βαθύ: έλεγξε λάδια διαφορικών/κιβωτίου — γαλακτώδες = νερό.</div>
+ <div class="box"><b>Πριν μπεις</b>${['Περπάτα ή μέτρα με κοντάρι, ποτέ «στα τυφλά».','Δες την έξοδο: πρέπει να μπορείς να ανέβεις στην απέναντι όχθη.','Κλείσε air-con / ανεμιστήρα (μη ρουφήξει νερό η φτερωτή).','Χαλάρωσε τις ζώνες, ξεκλείδωσε πόρτες, παράθυρα μισάνοιχτα σε βαθύ νερό.','Low range, 2η, χωρίς αλλαγές μέσα στο νερό.','Σταθερά, με μικρό κύμα μπροστά από τον προφυλακτήρα (~5 km/h).','Σε ρεύμα: λίγο λοξά προς τα κάτω (με το ρεύμα).'].map(x=>`<div class="li">${x}</div>`).join('')}
+ <b>Μετά</b><div class="li">Πάτα ελαφρά φρένα για να στεγνώσουν.</div><div class="li">Μετά από βαθύ: έλεγξε λάδια διαφορικών/κιβωτίου, γαλακτώδες = νερό.</div>
  <button class="btn" onclick="go('learn/water')">🎓 Μάθημα: Πέρασμα νερού</button></div>`;wdC()}
 function wdS(c){const st=LS.g('wd',{});st.c=c;LS.s('wd',st);tWade()}function wdB(b){const st=LS.g('wd',{});st.b=b;LS.s('wd',st);tWade()}function wdN(s){const st=LS.g('wd',{});st.sn=+s;LS.s('wd',st);tWade()}
 function wdC(){const st=LS.g('wd',{c:'0',b:'g',sn:0});st.d=n($('#wdd').value);LS.s('wd',st);const v=veh()||{},lim=(v.wade||500)/10,p=st.d/lim;
  let lv=p<=.5?0:p<=.8?1:p<=1?2:3;if(st.c==='2')lv=Math.max(lv,st.d>30?3:2);else if(st.c==='1'&&lv<3&&st.d>50)lv++;if(st.b==='m'||st.b==='u')lv=Math.min(3,lv+(lv>=1?1:0));
  const txt=[['ok','✅ Περνάς','Μέσα στα όρια. Σταθερά, χωρίς βιασύνη.'],['mid','🟡 Με προσοχή','Αργά, σταθερό κύμα, έλεγξε ξανά την έξοδο.'],['bad','🟠 Οριακά','Μόνο με snorkel και αφού το περπατήσεις όλο. Φρόντισε για recovery στην απέναντι όχθη.'],['bad','❌ Μην περάσεις','Πάνω από τα όρια, ή γρήγορο ρεύμα. Αν η μηχανή ρουφήξει νερό: ζημιά. Το ρεύμα σηκώνει αυτοκίνητα από τα 50–60 cm.']][lv];
- $('#wdo').innerHTML=`<div class="res"><div class="muted">${f0(p*100)}% του βάθους του οχήματος (${f0(lim)} cm)</div><div class="v ${txt[0]}" style="font-size:1.7em">${txt[1]}</div><div>${txt[2]}</div>${!st.sn&&p>.7?'<div class="muted" style="margin-top:6px">Χωρίς snorkel η εισαγωγή αέρα είναι χαμηλά — μην το ρισκάρεις.</div>':''}</div>`}
+ $('#wdo').innerHTML=`<div class="res"><div class="muted">${f0(p*100)}% του βάθους του οχήματος (${f0(lim)} cm)</div><div class="v ${txt[0]}" style="font-size:1.7em">${txt[1]}</div><div>${txt[2]}</div>${!st.sn&&p>.7?'<div class="muted" style="margin-top:6px">Χωρίς snorkel η εισαγωγή αέρα είναι χαμηλά, μην το ρισκάρεις.</div>':''}</div>`}
 
 /* ---------- Θα περάσω; ---------- */
-function tPass(){T('🚧 Θα περάσω;');const v=veh();if(!v){M.innerHTML='<div class="note">Πρόσθεσε πρώτα το όχημά σου — αυτό το εργαλείο συγκρίνει με τις γωνίες και τα ύψη του.</div><button class="big org" onclick="go(\'veh\')">🚙 Το όχημά μου</button>';return}
+function tPass(){T('🚧 Θα περάσω;');const v=veh();if(!v){M.innerHTML=vehBar();return}
  const st=LS.g('ps',{step:25,ra:25,cr:15,w:40,sd:20});
- M.innerHTML=`<div class="kv box"><span>Από το έδαφος</span><b>${v.clr||'—'} mm</b><span>Προσέγγιση / απομάκρυνση</span><b>${v.app||'—'}° / ${v.dep||'—'}°</b><span>Ράμπα (breakover)</span><b>${v.brk||'—'}°</b><span>Νερό</span><b>${v.wade||'—'} mm</b><span>Πλευρική</span><b>${sideLim(v)}°</b></div>
+ M.innerHTML=vehBar()+`<div class="kv box"><span>Από το έδαφος</span><b>${v.clr||'—'} mm</b><span>Προσέγγιση / απομάκρυνση</span><b>${v.app||'—'}° / ${v.dep||'—'}°</b><span>Ράμπα (breakover)</span><b>${v.brk||'—'}°</b><span>Νερό</span><b>${v.wade||'—'} mm</b><span>Πλευρική</span><b>${sideLim(v)}°</b></div>
  ${inp('pss','Ύψος σκαλιού / πέτρας που θα πατήσει ο τροχός (cm)',st.step,'psC()')}${inp('psr','Γωνία ράμπας στην είσοδο/έξοδο (°)',st.ra,'psC()')}${inp('psc','Γωνία «κορυφής» που θα περάσει κάτω από το σασί (°)',st.cr,'psC()')}${inp('psw','Βάθος νερού (cm)',st.w,'psC()')}${inp('psd','Πλευρική κλίση (°)',st.sd,'psC()')}
  <div id="pso"></div><div class="tip">Γωνίες μετράς με το <a href="#t/incl" style="color:var(--yel)">κλισιόμετρο</a> ακουμπώντας το κινητό στο έδαφος. Για «έχει η μηχανή δύναμη να ανέβει;» δες την <a href="../grade/" style="color:var(--yel)">Off-Road Gradeability</a>.</div>`;psC()}
 function psC(){const v=veh(),st={step:n($('#pss').value),ra:n($('#psr').value),cr:n($('#psc').value),w:n($('#psw').value),sd:n($('#psd').value)};LS.s('ps',st);
  const r=(lbl,val,lim,u)=>{if(!lim)return`<tr><td>${lbl}</td><td colspan="2" class="muted">δεν υπάρχει στοιχείο</td></tr>`;const p=val/lim;return`<tr><td>${lbl}</td><td>${val}${u} / ${lim}${u}</td><td class="${p<=.8?'ok':p<=1?'mid':'bad'}">${p<=.8?'✅':p<=1?'🟡 οριακά':'❌'}</td></tr>`};
  const stepLim=v.clr?Math.round(v.clr/10*0.9):0;
  $('#pso').innerHTML=`<div class="box"><table class="t"><tr><th>Έλεγχος</th><th>Εμπόδιο / όριο</th><th></th></tr>
- ${r('Σκαλί (έναντι ~90% απόστ. εδάφους)',st.step,stepLim,' cm')}${r('Ράμπα — μπροστά',st.ra,v.app,'°')}${r('Ράμπα — πίσω',st.ra,v.dep,'°')}${r('Κορυφή κάτω από σασί',st.cr,v.brk,'°')}${r('Νερό',st.w,v.wade?v.wade/10:0,' cm')}${r('Πλευρική κλίση',st.sd,sideLim(v),'°')}</table>
+ ${r('Σκαλί (έναντι ~90% απόστ. εδάφους)',st.step,stepLim,' cm')}${r('Ράμπα, μπροστά',st.ra,v.app,'°')}${r('Ράμπα, πίσω',st.ra,v.dep,'°')}${r('Κορυφή κάτω από σασί',st.cr,v.brk,'°')}${r('Νερό',st.w,v.wade?v.wade/10:0,' cm')}${r('Πλευρική κλίση',st.sd,sideLim(v),'°')}</table>
  <div class="muted">Τα όρια είναι στατικά, με άδειο αυτοκίνητο. Με φορτίο το αυτοκίνητο κάθεται χαμηλότερα. Όταν βλέπεις 🟡: spotter έξω από το αυτοκίνητο.</div></div>`}
 
 /* ---------- Βάρος & φορτίο ---------- */
 function tPayload(){T('⚖️ Βάρος & φορτίο');const v=veh()||{},st=LS.g('pl',{curb:v.curb||2100,gvw:v.gvw||2850,roofL:v.roof||100,ppl:2,pkg:80,items:[['Recovery kit',25],['Ψυγείο γεμάτο',35],['Κουζίνα & γκαζάκι',20],['Σκηνή οροφής',60],['Νερό (L = kg)',40],['Ρούχα & ύπνος',30],['Εργαλεία & ανταλλακτικά',25]],roof:[['Σκηνή οροφής',60]],fuelL:v.tank||80,fd:(v.fuel||'').startsWith('β')?0.74:0.84,jer:0});LS.s('pl',st);
- M.innerHTML=`<div class="grid"><div>${inp('plc','Απόβαρο (kg)',st.curb,'plC()')}</div><div>${inp('plg','GVM (kg)',st.gvw,'plC()')}</div><div>${inp('plp','Άτομα',st.ppl,'plC()')}</div><div>${inp('plk','kg ανά άτομο',st.pkg,'plC()')}</div><div>${inp('plf','Καύσιμο στο ρεζερβουάρ (L)',st.fuelL,'plC()')}</div><div>${inp('plj','Επιπλέον μπιτόνια (L)',st.jer,'plC()')}</div></div>
- <div class="muted" style="margin-top:-6px">Το απόβαρο συνήθως περιλαμβάνει γεμάτο ρεζερβουάρ — αν ναι, βάλε 0 στο καύσιμο.</div>
+ M.innerHTML=vehBar()+`<div class="grid"><div>${inp('plc','Απόβαρο (kg)',st.curb,'plC()')}</div><div>${inp('plg','GVM (kg)',st.gvw,'plC()')}</div><div>${inp('plp','Άτομα',st.ppl,'plC()')}</div><div>${inp('plk','kg ανά άτομο',st.pkg,'plC()')}</div><div>${inp('plf','Καύσιμο στο ρεζερβουάρ (L)',st.fuelL,'plC()')}</div><div>${inp('plj','Επιπλέον μπιτόνια (L)',st.jer,'plC()')}</div></div>
+ <div class="muted" style="margin-top:-6px">Το απόβαρο συνήθως περιλαμβάνει γεμάτο ρεζερβουάρ, αν ναι, βάλε 0 στο καύσιμο.</div>
  <h3>Εξοπλισμός (μέσα & πίσω)</h3><div id="pli"></div><button class="btn" onclick="plAdd('items')">➕ Γραμμή</button>
  <h3>Στη σχάρα</h3>${inp('plrl','Όριο σχάρας εν κινήσει (kg)',st.roofL,'plC()')}<div id="plr"></div><button class="btn" onclick="plAdd('roof')">➕ Γραμμή</button><div id="plo"></div>`;plRows();plC()}
 function plRows(){const st=LS.g('pl',{});['items','roof'].forEach(k=>{const e=$(k==='items'?'#pli':'#plr');e.innerHTML=st[k].map((r,i)=>`<div class="wp"><input style="flex:2;margin:0" value="${esc(r[0])}" onchange="plSet('${k}',${i},0,this.value)"><input style="flex:1;margin:0" type="number" inputmode="decimal" value="${r[1]}" oninput="plSet('${k}',${i},1,n(this.value))"><button class="btn" onclick="plDel('${k}',${i})">🗑</button></div>`).join('')})}
@@ -302,13 +318,13 @@ function plC(){const st=LS.g('pl',{});Object.assign(st,{curb:n($('#plc').value),
  $('#plo').innerHTML=`<div class="res"><div class="muted">Συνολικό βάρος</div><div class="v ${p<=.95?'ok':p<=1?'mid':'bad'}">${f0(tot)} kg</div><div>${f0(p*100)}% του GVM · ${tot<=st.gvw?`περισσεύουν <b>${f0(st.gvw-tot)} kg</b>`:`<b class="bad">${f0(tot-st.gvw)} kg πάνω από το όριο!</b>`}</div>
  <div class="bar"><i style="width:${Math.min(100,p*100)}%;background:${p<=.95?'var(--grn)':p<=1?'var(--yel)':'var(--red)'}"></i></div>
  <div class="muted">Άτομα ${f0(st.ppl*st.pkg)} · εξοπλισμός ${f0(it)} · σχάρα ${f0(rf)} · καύσιμο ${f0(fu)} kg</div>
- ${st.roofL?`<div style="margin-top:6px">Σχάρα: <b class="${rf<=st.roofL?'ok':'bad'}">${f0(rf)} / ${f0(st.roofL)} kg</b> ${rf>st.roofL?'— κατέβασε βάρος από τη σχάρα!':''}</div>`:''}</div>
+ ${st.roofL?`<div style="margin-top:6px">Σχάρα: <b class="${rf<=st.roofL?'ok':'bad'}">${f0(rf)} / ${f0(st.roofL)} kg</b> ${rf>st.roofL?'· κατέβασε βάρος από τη σχάρα!':''}</div>`:''}</div>
  <div class="tip">Βαρύ χαμηλά και ανάμεσα στους άξονες. Ό,τι πάει ψηλά (σχάρα) ανεβάζει το κέντρο βάρους και ρίχνει το όριο πλευρικής κλίσης.</div>`}
 
 /* ---------- Καύσιμο ---------- */
 function tFuel(){T('⛽ Καύσιμο & αυτονομία');const v=veh()||{},st=LS.g('fu',{tank:v.tank||80,jer:20,cr:v.cr||12,co:v.co||18,off:40,res:20,trip:400});
- M.innerHTML=`<div class="grid"><div>${inp('fut','Ρεζερβουάρ (L)',st.tank)}</div><div>${inp('fuj','Μπιτόνια (L)',st.jer)}</div><div>${inp('fucr','Δρόμος (L/100km)',st.cr)}</div><div>${inp('fuco','Εκτός δρόμου (L/100km)',st.co)}</div><div>${inp('fuof','% διαδρομής εκτός δρόμου',st.off)}</div><div>${inp('furs','Αποθεματικό ασφαλείας %',st.res)}</div></div>${inp('futr','Απόσταση εκδρομής χωρίς πρατήριο (km)',st.trip)}<div id="fuo"></div>
- <div class="box"><div class="li">Low range, άμμος, λάσπη και σχάρα ανεβάζουν την κατανάλωση 30–100%.</div><div class="li">Γέμιζε σε κάθε πρατήριο μετά τη μέση του ρεζερβουάρ — στα ορεινά δεν ξέρεις πότε θα βρεις επόμενο.</div><div class="li">Μπιτόνια: μέταλλο ή εγκεκριμένο πλαστικό, ποτέ μέσα στην καμπίνα με βενζίνη.</div></div>`;calc=fuC;fuC()}
+ M.innerHTML=vehBar()+`<div class="grid"><div>${inp('fut','Ρεζερβουάρ (L)',st.tank)}</div><div>${inp('fuj','Μπιτόνια (L)',st.jer)}</div><div>${inp('fucr','Δρόμος (L/100km)',st.cr)}</div><div>${inp('fuco','Εκτός δρόμου (L/100km)',st.co)}</div><div>${inp('fuof','% διαδρομής εκτός δρόμου',st.off)}</div><div>${inp('furs','Αποθεματικό ασφαλείας %',st.res)}</div></div>${inp('futr','Απόσταση εκδρομής χωρίς πρατήριο (km)',st.trip)}<div id="fuo"></div>
+ <div class="box"><div class="li">Low range, άμμος, λάσπη και σχάρα ανεβάζουν την κατανάλωση 30–100%.</div><div class="li">Γέμιζε σε κάθε πρατήριο μετά τη μέση του ρεζερβουάρ, στα ορεινά δεν ξέρεις πότε θα βρεις επόμενο.</div><div class="li">Μπιτόνια: μέταλλο ή εγκεκριμένο πλαστικό, ποτέ μέσα στην καμπίνα με βενζίνη.</div></div>`;calc=fuC;fuC()}
 function fuC(){const st={tank:n($('#fut').value),jer:n($('#fuj').value),cr:n($('#fucr').value),co:n($('#fuco').value),off:n($('#fuof').value),res:n($('#furs').value),trip:n($('#futr').value)};LS.s('fu',st);
  const c=st.cr*(1-st.off/100)+st.co*st.off/100,tot=st.tank+st.jer,use=tot*(1-st.res/100),rng=c?use/c*100:0,need=st.trip*c/100*(1+st.res/100);
  $('#fuo').innerHTML=`<div class="res"><div class="muted">Μέση κατανάλωση ${f1(c)} L/100km</div><div class="v">${f0(rng)} km</div><div class="muted">αυτονομία με ${f0(tot)} L, κρατώντας ${st.res}% αποθεματικό</div>
@@ -318,7 +334,7 @@ function fuC(){const st={tank:n($('#fut').value),jer:n($('#fuj').value),cr:n($('
 function tWater(){T('💧 Νερό');const st=LS.g('wa',{p:2,d:3,dr:3,ck:1,ws:1,hot:0,dog:0});
  M.innerHTML=`<div class="grid"><div>${inp('wap','Άτομα',st.p)}</div><div>${inp('wad','Μέρες',st.d)}</div><div>${inp('wadr','Πόσιμο L/άτομο/μέρα',st.dr)}</div><div>${inp('wack','Μαγείρεμα L/άτομο/μέρα',st.ck)}</div><div>${inp('wws','Πλύσιμο L/άτομο/μέρα',st.ws)}</div><div>${inp('wadg','Σκύλοι',st.dog)}</div></div>
  <label>Εποχή</label>${seg('hot',[[0,'Κανονική'],[1,'Ζέστη / καλοκαίρι']],st.hot,'waH')}<div id="wao"></div>
- <div class="box"><div class="li">Το νερό είναι ο <b>πρώτος</b> λόγος που τελειώνει μια εκδρομή. Πάντα +1 μέρα αποθεματικό.</div><div class="li">1 L νερό = 1 kg. Χώρισέ το σε 2+ δοχεία — αν σπάσει ένα, δεν τα χάνεις όλα.</div><div class="li">Πηγή/βρύση στο βουνό: φίλτρο ή βράσιμο, εκτός αν ξέρεις ότι είναι πόσιμη.</div><div class="li">Σε ζέστη ο άνθρωπος θέλει 4–6 L την ημέρα μόνο για να πιει.</div></div>`;calc=waC;waC()}
+ <div class="box"><div class="li">Το νερό είναι ο <b>πρώτος</b> λόγος που τελειώνει μια εκδρομή. Πάντα +1 μέρα αποθεματικό.</div><div class="li">1 L νερό = 1 kg. Χώρισέ το σε 2+ δοχεία, αν σπάσει ένα, δεν τα χάνεις όλα.</div><div class="li">Πηγή/βρύση στο βουνό: φίλτρο ή βράσιμο, εκτός αν ξέρεις ότι είναι πόσιμη.</div><div class="li">Σε ζέστη ο άνθρωπος θέλει 4–6 L την ημέρα μόνο για να πιει.</div></div>`;calc=waC;waC()}
 function waH(h){const st=LS.g('wa',{});st.hot=+h;LS.s('wa',st);tWater()}
 function waC(){const st=LS.g('wa',{hot:0});Object.assign(st,{p:n($('#wap').value),d:n($('#wad').value),dr:n($('#wadr').value),ck:n($('#wack').value),ws:n($('#wws').value),dog:n($('#wadg').value)});LS.s('wa',st);
  const dr=st.dr*(st.hot?1.5:1),day=st.p*(dr+st.ck+st.ws)+st.dog*1.5,tot=day*(st.d+1),drink=st.p*dr*(st.d+1);
@@ -337,7 +353,7 @@ function pwSet(i,j,v){const st=LS.g('pw',{});st.ld[i][j]=v;LS.s('pw',st);pwC()}f
 function pwC(){const st=LS.g('pw',{});Object.assign(st,{ah:n($('#pwah').value),v:n($('#pwv').value)||12,sol:n($('#pwsol').value),sh:n($('#pwsh').value),drv:n($('#pwdrv').value),dc:n($('#pwdc').value)});LS.s('pw',st);
  const use=st.ld.reduce((a,r)=>a+n(r[1])*n(r[2]),0)*1.1,cap=st.ah*st.v*(st.ty==='li'?0.9:0.5),sol=st.sol*st.sh*0.7,drv=st.drv*st.dc*st.v*0.9,net=sol+drv-use,days=net>=0?Infinity:cap/(-net);
  $('#pwo').innerHTML=`<div class="res"><div class="muted">Κατανάλωση ${f0(use)} Wh/μέρα · φόρτιση ${f0(sol+drv)} Wh/μέρα</div><div class="v ${net>=0?'ok':days>=3?'mid':'bad'}">${net>=0?'∞':f1(days)+' μέρες'}</div>
- <div>${net>=0?'Η φόρτιση καλύπτει την κατανάλωση — μένεις όσο θέλεις (με ήλιο).':`χωρίς να βάλεις μπρος, με ωφέλιμο απόθεμα <b>${f0(cap)} Wh</b>`}</div><div class="muted" style="margin-top:6px">Ωφέλιμο: ${st.ty==='li'?'90% (λιθίου)':'50% (AGM — κάτω από 50% καταστρέφεται)'} · ηλιακά ×0,7 για γωνία, ζέστη, σκιά.</div></div>`}
+ <div>${net>=0?'Η φόρτιση καλύπτει την κατανάλωση, μένεις όσο θέλεις (με ήλιο).':`χωρίς να βάλεις μπρος, με ωφέλιμο απόθεμα <b>${f0(cap)} Wh</b>`}</div><div class="muted" style="margin-top:6px">Ωφέλιμο: ${st.ty==='li'?'90% (λιθίου)':'50% (AGM, κάτω από 50% καταστρέφεται)'} · ηλιακά ×0,7 για γωνία, ζέστη, σκιά.</div></div>`}
 
 /* ---------- Walk-round ---------- */
 function tWalk(){T('🔎 Walk-round');const w=LS.g('walk',{d:new Date().toISOString().slice(0,10),s:{},nt:{}}),v=veh();let tot=0,k=0,dfc=0;WALK.forEach(([,L],gi)=>L.forEach((_,ii)=>{tot++;const x=w.s[gi+'_'+ii];if(x)k++;if(x==='d')dfc++}));
@@ -348,12 +364,12 @@ function wkS(k,s){const w=LS.g('walk',{s:{},nt:{}});w.s[k]=w.s[k]===s?undefined:
 function wkN(k,t){const w=LS.g('walk',{s:{},nt:{}});w.nt[k]=t;LS.s('walk',w)}
 function wkD(d){const w=LS.g('walk',{s:{},nt:{}});w.d=d;LS.s('walk',w)}
 function wkNew(){if(!confirm('Νέος έλεγχος; Σβήνουν τα σημερινά.'))return;LS.s('walk',{d:new Date().toISOString().slice(0,10),s:{},nt:{}});tWalk()}
-function wkShare(){const w=LS.g('walk',{s:{},nt:{}}),v=veh();let t=`WALK-ROUND ${w.d} — ${v?v.name||v.model:''}\n`;const D=[];WALK.forEach(([g,L],gi)=>L.forEach((it,ii)=>{const k=gi+'_'+ii;if(w.s[k]==='d')D.push(`❌ ${g} / ${it}${w.nt[k]?': '+w.nt[k]:''}`)}));
- t+=D.length?`Ευρήματα (${D.length}):\n${D.join('\n')}`:'✅ Χωρίς ευρήματα.';t+='\n— Overland Habit';if(navigator.share)navigator.share({text:t}).catch(()=>{});else(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>alert('Αντιγράφηκε.'),()=>prompt('Αντέγραψε:',t))}
+function wkShare(){const w=LS.g('walk',{s:{},nt:{}}),v=veh();let t=`WALK-ROUND ${w.d}, ${v?v.name||v.model:''}\n`;const D=[];WALK.forEach(([g,L],gi)=>L.forEach((it,ii)=>{const k=gi+'_'+ii;if(w.s[k]==='d')D.push(`❌ ${g} / ${it}${w.nt[k]?': '+w.nt[k]:''}`)}));
+ t+=D.length?`Ευρήματα (${D.length}):\n${D.join('\n')}`:'✅ Χωρίς ευρήματα.';t+='\nOverland Habit';if(navigator.share)navigator.share({text:t}).catch(()=>{});else(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>alert('Αντιγράφηκε.'),()=>prompt('Αντέγραψε:',t))}
 
 /* ---------- Ασύρματοι, κόμποι ---------- */
 function tRadio(){T('📻 Ασύρματοι & κομβόι');M.innerHTML=`<h3>Κανόνες κομβόι</h3><div class="box">${RADIO_RULES.map(x=>`<div class="li">${x}</div>`).join('')}</div>
- <h3>PMR446 — κανάλια</h3><table class="t"><tr><th>Κανάλι</th><th>MHz</th></tr>${PMR.map(p=>`<tr><td><b>${p[0]}</b></td><td class="mono">${p[1]}</td></tr>`).join('')}</table>
+ <h3>PMR446, κανάλια</h3><table class="t"><tr><th>Κανάλι</th><th>MHz</th></tr>${PMR.map(p=>`<tr><td><b>${p[0]}</b></td><td class="mono">${p[1]}</td></tr>`).join('')}</table>
  <div class="muted">Πολλοί ασύρματοι έχουν και «κωδικούς» CTCSS/DCS (π.χ. 3-12). Όλοι στην ομάδα πρέπει να έχουν το ίδιο κανάλι <b>και</b> τον ίδιο κωδικό.</div>
  <h3>CB 27 MHz</h3><div class="box"><div class="li">Κανάλι <b>9</b>: έκτακτη ανάγκη · κανάλι <b>19</b>: οδηγοί / δρόμος (διεθνής πρακτική).</div><div class="li">Χρησιμοποίησε FM όπου γίνεται και καλή κεραία με ρυθμισμένο SWR.</div></div>`}
 /* tKnots → knots.js (σχέδια βήμα-βήμα) */
@@ -375,7 +391,7 @@ function tGgrs(){T('🗺️ WGS84 ↔ ΕΓΣΑ 87');M.innerHTML=`<div class="box
  <div class="tools"><button class="btn p" onclick="ggA()">➡️ Μετατροπή</button><button class="btn" onclick="ggMe()">📍 Η θέση μου</button></div><div id="gga"></div></div>
  <div class="box"><b>ΕΓΣΑ 87 → WGS84</b><div class="grid"><div><label>X (m) Ανατολικά</label><input id="gx" inputmode="decimal" placeholder="476000"></div><div><label>Y (m) Βόρεια</label><input id="gy" inputmode="decimal" placeholder="4202000"></div></div>
  <button class="btn p" onclick="ggB()">➡️ Μετατροπή</button><div id="ggb"></div></div>
- <div class="muted">ΕΓΣΑ 87 (EPSG:2100): Εγκάρσια Μερκατορική, κεντρικός μεσημβρινός 24°, k=0,9996. Μετατόπιση datum 3 παραμέτρων — ακρίβεια ~1–3 m, αρκετή για χάρτες πεζοπορίας και κτηματολόγιο σε επίπεδο οικοπέδου όχι για τοπογράφο.</div>`}
+ <div class="muted">ΕΓΣΑ 87 (EPSG:2100): Εγκάρσια Μερκατορική, κεντρικός μεσημβρινός 24°, k=0,9996. Μετατόπιση datum 3 παραμέτρων, ακρίβεια ~1–3 m, αρκετή για χάρτες πεζοπορίας και κτηματολόγιο σε επίπεδο οικοπέδου όχι για τοπογράφο.</div>`}
 function ggA(){const la=n($('#gla').value),lo=n($('#glo').value);if(!la||!lo)return;const[x,y]=wgs2gr(la,lo);$('#gga').innerHTML=`<div class="res"><div class="mono" style="font-size:1.3em">X = <b>${x.toFixed(1)}</b><br>Y = <b>${y.toFixed(1)}</b></div></div>`}
 function ggB(){const x=n($('#gx').value),y=n($('#gy').value);if(!x||!y)return;const[la,lo]=gr2wgs(x,y);$('#ggb').innerHTML=`<div class="res"><div class="mono" style="font-size:1.2em">${la.toFixed(6)}, ${lo.toFixed(6)}</div><div class="muted">${ddm(la,'N','S')} ${ddm(lo,'E','W')}</div><a class="btn" href="https://maps.google.com/?q=${la.toFixed(6)},${lo.toFixed(6)}" target="_blank">🗺️ Άνοιξε στον χάρτη</a></div>`}
 function ggMe(){$('#gga').innerHTML='<div class="muted">📡 Βρίσκω τη θέση…</div>';navigator.geolocation.getCurrentPosition(p=>{$('#gla').value=p.coords.latitude.toFixed(6);$('#glo').value=p.coords.longitude.toFixed(6);ggA()},()=>{$('#gga').innerHTML='<div class="warn">Δεν βρέθηκε θέση.</div>'},{enableHighAccuracy:true,timeout:30000})}
@@ -393,7 +409,7 @@ function gpxOut(){const w=LS.g('wps',[]),t=new Date().toISOString();let g=`<?xml
 
 /* ===================== ΤΑΞΙΔΙ ===================== */
 function trip(){T('🗺️ Ταξίδι & λίστες');const tr=LS.g('trip',{n:'',d1:'',nights:2,ppl:2,ter:'',wx:''});
- M.innerHTML=`<div class="box"><label>Όνομα εκδρομής</label><input value="${esc(tr.n)}" placeholder="π.χ. Άγραφα — Νοέμβριος" onchange="trS('n',this.value)">
+ M.innerHTML=`<div class="box"><label>Όνομα εκδρομής</label><input value="${esc(tr.n)}" placeholder="π.χ. Άγραφα, Νοέμβριος" onchange="trS('n',this.value)">
  <div class="grid"><div><label>Αναχώρηση</label><input type="date" value="${tr.d1}" onchange="trS('d1',this.value)"></div><div><label>Νύχτες</label><input type="number" inputmode="numeric" value="${tr.nights}" onchange="trS('nights',n(this.value))"></div><div><label>Άτομα</label><input type="number" inputmode="numeric" value="${tr.ppl}" onchange="trS('ppl',n(this.value))"></div><div><label>Έδαφος</label><input value="${esc(tr.ter)}" placeholder="χωματόδρομοι, βουνό" onchange="trS('ter',this.value)"></div></div>
  <label>Καιρός / ελάχιστη θερμοκρασία νύχτας</label><input value="${esc(tr.wx)}" placeholder="π.χ. 2 °C, βροχή" onchange="trS('wx',this.value)"></div>
  <div class="tools"><button class="btn" onclick="go('t/water')">💧 Πόσο νερό;</button><button class="btn" onclick="go('t/fuel')">⛽ Πόσο καύσιμο;</button><button class="btn" onclick="go('t/payload')">⚖️ Βάρος</button><button class="btn" onclick="go('t/walk')">🔎 Walk-round</button></div>
@@ -418,7 +434,7 @@ function trShare(){let t='ΛΕΙΠΟΥΝ ('+(LS.g('trip',{}).n||'εκδρομή'
 function learn(id){if(id)return lesson(id);T('🎓 Ακαδημία');const rd=LS.g('read',{});
  M.innerHTML=`<div class="box" style="text-align:center"><div class="muted">Πρόοδος</div><div class="hd">${Object.keys(rd).length}/${LESSONS.length}</div><div class="bar"><i style="width:${Object.keys(rd).length/LESSONS.length*100}%;background:var(--org)"></i></div></div>`+
  LEVELS.map(([lv,e,nm])=>{const L=LESSONS.filter(x=>x.lv===lv);return`<h3>${e} ${nm}</h3>`+(L.length?L.map(x=>`<button class="row" onclick="go('learn/${x.id}')"><span class="e">${x.e}</span><span style="flex:1"><b>${x.n}</b><small>${x.p.length} ενότητες</small></span>${rd[x.id]?'<span>✅</span>':''}</button>`).join(''):'<div class="muted">Έρχονται στη Φάση 5: X-treme καταστάσεις, ανάκτηση με τροχαλίες, πλοήγηση χωρίς GPS, κομβόι ως αρχηγός, προετοιμασία expedition.</div>')}).join('')+
- `<div class="note">Η Ακαδημία μεγαλώνει: έρχονται μαθήματα για camping (από το «Έξω από τους Τοίχους»), οδήγηση ανά έδαφος, ανάκτηση, πλοήγηση, κομβόι, ελαστικά και βελτιώσεις — με quiz και badges.</div>`}
+ `<div class="note">Η Ακαδημία μεγαλώνει: έρχονται μαθήματα για camping (από το «Έξω από τους Τοίχους»), οδήγηση ανά έδαφος, ανάκτηση, πλοήγηση, κομβόι, ελαστικά και βελτιώσεις, με quiz και badges.</div>`}
 function lesson(id){const x=LESSONS.find(l=>l.id===id);if(!x)return learn();const lv=LEVELS.find(l=>l[0]===x.lv);T(x.e+' '+x.n);const rd=LS.g('read',{});
  M.innerHTML=`<div class="muted">${lv[1]} ${lv[2]}</div>`+x.p.map((p,i)=>`<div class="box"><b>${i+1}. ${p[0]}</b><div style="margin-top:6px">${p[1]}</div></div>`).join('')+
  (rd[id]?'<div class="tip" style="text-align:center">✅ Το έχεις διαβάσει</div>':`<button class="big grn" onclick="lsRead('${id}')">✅ Το διάβασα</button>`)}
@@ -426,13 +442,13 @@ function lsRead(id){const rd=LS.g('read',{});rd[id]=Date.now();LS.s('read',rd);l
 
 /* ===================== SOS ===================== */
 function sosPage(){T('🆘 SOS');startGeo();
- M.innerHTML=`<a class="big red" href="tel:112">📞 112<small>Ευρωπαϊκός αριθμός έκτακτης ανάγκης — δουλεύει χωρίς SIM</small></a>
+ M.innerHTML=`<a class="big red" href="tel:112">📞 112<small>Ευρωπαϊκός αριθμός έκτακτης ανάγκης, δουλεύει χωρίς SIM</small></a>
  <div class="grid"><a class="big org" style="font-size:1.05em" href="tel:166">🚑 166<small>ΕΚΑΒ</small></a><a class="big org" style="font-size:1.05em" href="tel:199">🚒 199<small>Πυροσβεστική</small></a><a class="big blu" style="font-size:1.05em" href="tel:100">🚓 100<small>Αστυνομία</small></a><a class="big blu" style="font-size:1.05em" href="tel:108">⚓ 108<small>Λιμενικό</small></a></div>
  <div class="box"><b>📍 Η θέση μου</b><div id="gps" class="coord" style="margin-top:6px">Αναζήτηση δορυφόρων…</div><div class="tools" style="justify-content:center"><button class="btn r" onclick="sendPos()">✉️ SMS με τη θέση μου</button><button class="btn" onclick="copyPos()">📋 Αντιγραφή</button></div></div>
  <div class="tools"><button class="btn" onclick="go('t/morse')">📡 Morse / SOS με φως</button><button class="btn" onclick="go('t/compass')">🧭 Πυξίδα & γύρνα πίσω</button><button class="btn" onclick="go('t/radio')">📻 Ασύρματος</button></div>
- <h3>🩹 Πρώτες βοήθειες — τα βασικά</h3>${AID.map((a,i)=>`<button class="row" onclick="let d=this.nextElementSibling;d.style.display=d.style.display?'':'none'"><span class="e">${a[0]}</span><span><b>${a[1]}</b></span></button><div class="box" style="display:none;margin-top:-4px">${a[2].map(x=>`<div class="li">${x}</div>`).join('')}</div>`).join('')}
- <a class="row" href="../survival/"><span class="e">🎒</span><span><b>Επιβίωση 72+ — πλήρης οδηγός</b><small>ΚΑΡΠΑ με μετρονόμο, σεισμός, πυρκαγιά, πλημμύρα, χρονόμετρα ζωής</small></span></a>
- <div class="muted">Οι οδηγίες δεν αντικαθιστούν εκπαίδευση πρώτων βοηθειών. Κάνε ένα σεμινάριο — αξίζει περισσότερο από κάθε εξοπλισμό.</div>`;upd()}
+ <h3>🩹 Πρώτες βοήθειες, τα βασικά</h3>${AID.map((a,i)=>`<button class="row" onclick="let d=this.nextElementSibling;d.style.display=d.style.display?'':'none'"><span class="e">${a[0]}</span><span><b>${a[1]}</b></span></button><div class="box" style="display:none;margin-top:-4px">${a[2].map(x=>`<div class="li">${x}</div>`).join('')}</div>`).join('')}
+ <a class="row" href="../survival/"><span class="e">🎒</span><span><b>Επιβίωση 72+, πλήρης οδηγός</b><small>ΚΑΡΠΑ με μετρονόμο, σεισμός, πυρκαγιά, πλημμύρα, χρονόμετρα ζωής</small></span></a>
+ <div class="muted">Οι οδηγίες δεν αντικαθιστούν εκπαίδευση πρώτων βοηθειών. Κάνε ένα σεμινάριο, αξίζει περισσότερο από κάθε εξοπλισμό.</div>`;upd()}
 /* upd() of the compass writes #gps when it exists */
 
 /* ===================== ROUTER ===================== */

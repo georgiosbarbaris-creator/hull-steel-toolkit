@@ -1,4 +1,4 @@
-/* ===== Overland Habit — Ακαδημία (μαθήματα, quiz, badges, ευρετήριο «Έξω από τους Τοίχους») ===== */
+/* ===== Overland Habit, Ακαδημία (μαθήματα, quiz, badges, ευρετήριο «Έξω από τους Τοίχους») ===== */
 const ACD=(typeof ACAD!=='undefined'?ACAD:{lessons:[],lists:{},coverage:[]});
 const ALL=LESSONS.map(l=>Object.assign({src:'Overland Habit'},l)).concat(ACD.lessons||[]);
 const ABYID=Object.fromEntries(ALL.map(l=>[l.id,l]));
@@ -15,12 +15,12 @@ function learn(id){if(id==='index')return acIndex();if(id)return lesson(id);T('�
  <input id="acq" placeholder="🔎 Ψάξε (π.χ. λάσπη, υπνόσακος, εργάτης, ΕΓΣΑ)…" oninput="acList()">
  <div class="seg">${[['all','Όλα']].concat(LEVELS.map(l=>[l[0],l[1]+' '+l[2]])).map(([v,t])=>`<button class="${f.lv===v?'on':''}" onclick="acF('lv','${v}')">${t}</button>`).join('')}</div>
  <div class="seg">${SRCS.map(([v,t])=>`<button class="${f.s===v?'on':''}" onclick="acF('s','${v}')">${t}</button>`).join('')}</div>
- <button class="row" onclick="go('learn/index')"><span class="e">📑</span><span><b>${L2('Ευρετήριο «Έξω από τους Τοίχους»','Index of “Outside the Walls”')}</b><small>${L2('κάθε κεφάλαιο του βιβλίου → σε ποιο μάθημα είναι','each chapter of the book → which lesson covers it')}</small></span></button><button class="row" onclick="acReset()"><span class="e">🧹</span><span><b>${L2('Καθαρισμός προόδου','Reset progress')}</b><small>${L2('σβήνει όλα τα «διάβασα», τα quiz και τα 🏅 — ξεκινάς από την αρχή','clears all “read”, quiz scores and 🏅 — start fresh')}</small></span></button>
+ <button class="row" onclick="go('learn/index')"><span class="e">📑</span><span><b>${L2('Ευρετήριο «Έξω από τους Τοίχους»','Index of “Outside the Walls”')}</b><small>${L2('κάθε κεφάλαιο του βιβλίου → σε ποιο μάθημα είναι','each chapter of the book → which lesson covers it')}</small></span></button><button class="row" onclick="acReset()"><span class="e">🧹</span><span><b>${L2('Καθαρισμός προόδου','Reset progress')}</b><small>${L2('σβήνει όλα τα «διάβασα», τα quiz και τα 🏅, ξεκινάς από την αρχή','clears all “read”, quiz scores and 🏅, start fresh')}</small></span></button>
  <div id="acl"></div>`;acList()}
 function acF(k,v){const f=LS.g('acf',{lv:'all',s:'all'});f[k]=v;LS.s('acf',f);learn()}
 function acList(){const f=LS.g('acf',{lv:'all',s:'all'}),q=norm2(($('#acq')||{value:''}).value.trim()),e=$('#acl');if(!e)return;
  const L=ALL.filter(l=>(f.lv==='all'||l.lv===f.lv)&&(f.s==='all'||f.s==='k'||srcK(l)===f.s)&&(!q||norm2(l.n+' '+l.p.map(x=>x[0]+' '+x[1]).join(' ')).includes(q)));
- let h='',cur='';L.forEach(l=>{const g=l.src.split('—')[0].trim();if(g!==cur){cur=g;h+=`<h3>${esc(g)}</h3>`}const lv=LEVELS.find(x=>x[0]===l.lv)||LEVELS[0];
+ let h='',cur='';L.forEach(l=>{const g=l.src.split(':')[0].trim();if(g!==cur){cur=g;h+=`<h3>${esc(g)}</h3>`}const lv=LEVELS.find(x=>x[0]===l.lv)||LEVELS[0];
   h+=`<button class="row" onclick="go('learn/${l.id}')"><span class="e">${l.e||'📘'}</span><span style="flex:1"><b>${esc(l.n)}</b><small>${lv[1]} ${lv[2]} · ${l.p.length} ενότητες${l.q&&l.q.length?' · quiz '+l.q.length:''}</small></span>${done(l.id)?'✅':LS.g('read',{})[l.id]?'📖':''}</button>`});
  e.innerHTML=h||'<div class="muted">Τίποτα δεν ταιριάζει.</div>'}
 function lesson(id){const x=ABYID[id];if(!x)return learn();const lv=LEVELS.find(l=>l[0]===x.lv)||LEVELS[0];T((x.e||'📘')+' '+x.n);const rd=LS.g('read',{}),i=ALL.indexOf(x),nx=ALL[i+1];

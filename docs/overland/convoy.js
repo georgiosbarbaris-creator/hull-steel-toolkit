@@ -1,4 +1,4 @@
-/* ===== Overland Habit — Φάση 3: Κομβόι ζωντανά =====
+/* ===== Overland Habit, Φάση 3: Κομβόι ζωντανά =====
    Χωρίς λογαριασμό: μηνύματα μέσω δημόσιου MQTT broker (WebSocket), κρυπτογραφημένα AES-GCM με κλειδί από τον κωδικό ομάδας.
    Ο broker βλέπει μόνο ακατανόητα bytes σε ένα τυχαίο topic. */
 
@@ -34,7 +34,7 @@ async function cvDec(b){if(b.length<13)return null;try{const p=await crypto.subt
 
 /* ---------- Κατάσταση ---------- */
 const CV_COL=['#d97757','#6a9fb5','#5f9e7a','#e8b86d','#b07cc6','#e5735a','#4fb3bf','#c9a227','#8fd19e','#f08fb0'];
-const CV_MSG=['⛔ ΣΤΟΠ — σταματήστε όλοι','⏸️ Στάση 5 λεπτά','⛽ Στάση για καύσιμα','⚠️ Εμπόδιο μπροστά — αργά','✅ Συνεχίζουμε','🔁 Γυρνάμε πίσω','📻 Ανοίξτε τον ασύρματο','👍 Όλα καλά'];
+const CV_MSG=['⛔ ΣΤΟΠ, σταματήστε όλοι','⏸️ Στάση 5 λεπτά','⛽ Στάση για καύσιμα','⚠️ Εμπόδιο μπροστά, αργά','✅ Συνεχίζουμε','🔁 Γυρνάμε πίσω','📻 Ανοίξτε τον ασύρματο','👍 Όλα καλά'];
 let CV={mq:null,key:null,topic:'',mem:{},st:'off',iv:null,map:null,mk:{},lay:null,lastSent:0,lastPos:null,alarms:{},ack:{},cmd0:0,beepT:null};
 const cvMe=()=>LS.g('cvme',null);// {code,b,id,n,col,lead,maxKm,lostMin}
 async function cvStart(){const me=cvMe();if(!me||CV.mq)return;const k=await cvKeys(me.code);CV.key=k.key;CV.topic=k.topic;CV.cmd0=Date.now();
@@ -64,7 +64,7 @@ function cvBanner(){let d=$('#cval');const A=Object.entries(CV.alarms);if(!A.len
  d.innerHTML=A.map(([k,a])=>`<div class="warn" style="display:flex;gap:8px;align-items:center;box-shadow:0 4px 14px #000"><span style="flex:1">${esc(a.txt)}</span>${a.m&&a.m.lat!=null?`<button class="btn" onclick="mGoTo(${a.m.lat},${a.m.lon},'${esc(a.m.n.replace(/'/g,''))}')">➡️</button>`:''}<button class="btn p" onclick="cvAck('${k}')">OK</button></div>`).join('')}
 function cvAck(k){delete CV.alarms[k];cvBanner()}
 function cvToast(t){const e=$('#cvst2');if(e){e.textContent=t;setTimeout(()=>{if(e.textContent===t)e.textContent=''},4000)}}
-function cvStatus(){const e=$('#cvst');if(!e)return;const me=cvMe();e.innerHTML={up:'🟢 Συνδεδεμένο',connecting:'🟡 Σύνδεση…',down:'🔴 Χωρίς σύνδεση — ξαναδοκιμάζω',off:'⚪'}[CV.st]+` · ${BROKERS[(me&&me.b)||0][0]}`}
+function cvStatus(){const e=$('#cvst');if(!e)return;const me=cvMe();e.innerHTML={up:'🟢 Συνδεδεμένο',connecting:'🟡 Σύνδεση…',down:'🔴 Χωρίς σύνδεση, ξαναδοκιμάζω',off:'⚪'}[CV.st]+` · ${BROKERS[(me&&me.b)||0][0]}`}
 
 /* ---------- Σελίδες ---------- */
 function convoy(sub,arg){if(sub==='join'&&arg){const[c,b]=arg.split('.');LS.s('cvjoin',{code:c.toUpperCase(),b:+b||0});location.replace('#convoy');return}
@@ -82,15 +82,15 @@ function cvJoin(){const b=cvBase();if(!b)return;const c=$('#cvc').value.trim().t
  LS.s('cvme',Object.assign(b,{code:c,b:j&&j.code===c?j.b:0,lead:0}));LS.s('cvjoin',null);convoy()}
 function cvCreate(){const b=cvBase();if(!b)return;LS.s('cvme',Object.assign(b,{code:cvCode(),b:0,lead:1}));convoy()}
 function cvLink(){const me=cvMe();return location.origin+location.pathname+'#convoy/join/'+me.code+'.'+(me.b||0)}
-function cvInvite(){const me=cvMe(),t=`🚐 Κομβόι Overland Habit\nΜπες από εδώ: ${cvLink()}\nΚωδικός: ${me.code}`;if(navigator.share)navigator.share({text:t}).catch(()=>{});else(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>alert('Αντιγράφηκε — στείλ\' το στην παρέα.'),()=>prompt('Αντέγραψε:',t))}
+function cvInvite(){const me=cvMe(),t=`🚐 Κομβόι Overland Habit\nΜπες από εδώ: ${cvLink()}\nΚωδικός: ${me.code}`;if(navigator.share)navigator.share({text:t}).catch(()=>{});else(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>alert('Αντιγράφηκε, στείλ\' το στην παρέα.'),()=>prompt('Αντέγραψε:',t))}
 function cvPage(){const me=cvMe();T('🚐 Κομβόι'+(me.lead?' 👑':''));
  M.innerHTML=`<div class="box" style="display:flex;gap:10px;align-items:center;padding:10px"><div style="flex:1"><div class="muted">Κωδικός ομάδας</div><div class="mono" style="font-size:1.4em;font-weight:900;letter-spacing:3px">${me.code}</div><div class="muted" id="cvst"></div></div><button class="btn p" onclick="cvInvite()">📤 Κάλεσε</button></div>
  <div style="position:relative"><div id="cvmap" style="height:42vh;border-radius:14px;border:1px solid var(--line)"></div><button class="hb" style="position:absolute;right:8px;top:8px;z-index:500" onclick="cvFit()">🔍</button></div>
  <div id="cvst2" class="muted" style="min-height:1.2em"></div><div id="cvl"></div>
  <h3>📢 ${me.lead?'Εντολές αρχηγού':'Μήνυμα σε όλους'}</h3><div class="grid">${CV_MSG.map((m,i)=>`<button class="btn${i===0?' r':''}" onclick="cvCmd(CV_MSG[${i}])">${m}</button>`).join('')}</div>
- <button class="big ${LS.g('cvsos',0)?'grn':'red'}" style="margin-top:12px" onclick="cvSos()">${LS.g('cvsos',0)?'✅ Ακύρωσε το SOS':'🆘 SOS — χρειάζομαι βοήθεια'}<small>${LS.g('cvsos',0)?'όλοι βλέπουν ότι έχεις πρόβλημα':'ειδοποιεί όλο το κομβόι με τη θέση σου'}</small></button>
+ <button class="big ${LS.g('cvsos',0)?'grn':'red'}" style="margin-top:12px" onclick="cvSos()">${LS.g('cvsos',0)?'✅ Ακύρωσε το SOS':'🆘 SOS, χρειάζομαι βοήθεια'}<small>${LS.g('cvsos',0)?'όλοι βλέπουν ότι έχεις πρόβλημα':'ειδοποιεί όλο το κομβόι με τη θέση σου'}</small></button>
  <div class="box"><b>⚙️ Ρυθμίσεις</b><div class="grid"><div><label>Συναγερμός απόστασης (km)</label><input type="number" inputmode="decimal" value="${me.maxKm||3}" onchange="cvSet('maxKm',Math.max(.2,n(this.value)))"></div><div><label>Χαμένο σήμα μετά από (λεπτά)</label><input type="number" inputmode="decimal" value="${me.lostMin||3}" onchange="cvSet('lostMin',Math.max(1,n(this.value)))"></div></div>
- ${me.lead?`<label>Διακομιστής μηνυμάτων</label><select onchange="cvBroker(+this.value)">${BROKERS.map((b,i)=>`<option value="${i}" ${i===(me.b||0)?'selected':''}>${b[0]}</option>`).join('')}</select><div class="muted">Αν αλλάξεις, ξαναστείλε το link — όλοι πρέπει να είναι στον ίδιο.</div>`:''}</div>
+ ${me.lead?`<label>Διακομιστής μηνυμάτων</label><select onchange="cvBroker(+this.value)">${BROKERS.map((b,i)=>`<option value="${i}" ${i===(me.b||0)?'selected':''}>${b[0]}</option>`).join('')}</select><div class="muted">Αν αλλάξεις, ξαναστείλε το link, όλοι πρέπει να είναι στον ίδιο.</div>`:''}</div>
  <div class="tools">${me.lead?`<button class="btn r" onclick="cvEnd()">🏁 Τέλος εκδρομής (για όλους)</button>`:''}<button class="btn" onclick="cvLeave()">🚪 Βγες από το κομβόι</button></div>`;
  cvStatus();cvMap();cvRender();TS.push(()=>{if(CV.map){CV.map.remove();CV.map=null;CV.mk={}}})}
 function cvSet(k,v){const me=cvMe();me[k]=v;LS.s('cvme',me)}
@@ -110,5 +110,5 @@ function cvRender(){const me=cvMe();if(!me)return;const now=Date.now(),lostMs=(m
  const e=$('#cvl');if(!e)return;e.innerHTML=A.length?A.map(m=>{const age=now-m.t,st=age<30000?'🟢':age<lostMs?'🟡':'🔴',d=ref&&m.lat!=null&&m.id!==ref.id?dist(ref,m):null;
   return`<div class="row" style="border-left:6px solid ${m.col};${m.sos?'background:#4a1c18;':''}"><span class="e">${m.sos?'🆘':m.lead?'👑':'🚙'}</span><span style="flex:1"><b>${esc(m.n)}${m.id===me.id?' (εγώ)':''}</b><small>${esc(m.veh||'')} ${st} ${cvAgeTxt(age)} πριν${m.spd!=null?` · ${Math.round(m.spd)} km/h`:''}${m.acc?` · ±${m.acc} m`:''}</small></span>${d!=null?`<b class="mono ${d>(me.maxKm||3)*1000?'bad':''}">${fmD(d)}</b>`:''}${m.lat!=null&&m.id!==me.id?`<button class="btn" onclick="mGoTo(${m.lat},${m.lon},'${esc((m.n||'').replace(/'/g,''))}')">➡️</button>`:''}</div>`}).join('')+
   `<div class="muted">Απόσταση σε ευθεία από τον αρχηγό. 🟢 τώρα · 🟡 πριν λίγο · 🔴 χαμένο σήμα</div>`:`<div class="note">Περιμένω τους άλλους… Πάτα <b>📤 Κάλεσε</b> και στείλε το link. ${pos?'':'<br>📡 Περιμένω και το δικό σου GPS.'}</div>`}
-/* το κομβόι μένει ενεργό και όταν αλλάζεις σελίδα — οι συναγερμοί έρχονται παντού */
+/* το κομβόι μένει ενεργό και όταν αλλάζεις σελίδα, οι συναγερμοί έρχονται παντού */
 window.addEventListener('load',()=>{if(cvMe())cvStart()});

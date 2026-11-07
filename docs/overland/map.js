@@ -1,4 +1,4 @@
-/* ===== Overland Habit — Φάση 2: Χάρτης, camper stops (OpenStreetMap), δικά μου σημεία, διαδρομές ===== */
+/* ===== Overland Habit, Φάση 2: Χάρτης, camper stops (OpenStreetMap), δικά μου σημεία, διαδρομές ===== */
 /* Δεδομένα σημείων © OpenStreetMap contributors (ODbL), μέσω Overpass API. */
 
 /* ---------- IndexedDB ---------- */
@@ -38,7 +38,7 @@ const YN=v=>({yes:'ναι',no:'όχι',customers:'μόνο πελάτες',priva
 /* ---------- Χάρτες ---------- */
 const LAYERS={osm:['Δρόμοι (OSM)','https://tile.openstreetmap.org/{z}/{x}/{y}.png',19,'© OpenStreetMap contributors'],
  topo:['Τοπογραφικός','https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',17,'© OpenStreetMap contributors, SRTM · © OpenTopoMap (CC-BY-SA)'],
- sat:['Δορυφόρος','https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',19,'Tiles © Esri — Esri, Maxar, Earthstar Geographics']};
+ sat:['Δορυφόρος','https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',19,'Tiles © Esri, Esri, Maxar, Earthstar Geographics']};
 let MP={map:null,tl:null,poiL:null,myL:null,rtL:null,meM:null,acc:null,follow:true,add:false,plan:null,iv:null,P:[],S:[],lastFix:0};
 const filt=()=>LS.g('mfilt',Object.fromEntries(PC.map(c=>[c.id,!!c.on])));
 function mapIcon(e,bg,sz){sz=sz||30;return L.divIcon({className:'',html:`<div style="width:${sz}px;height:${sz}px;border-radius:50%;background:${bg||'#262422'};border:2px solid #f5f0e8;display:flex;align-items:center;justify-content:center;font-size:${sz*.55}px;box-shadow:0 1px 4px #000a">${e}</div>`,iconSize:[sz,sz],iconAnchor:[sz/2,sz/2]})}
@@ -87,7 +87,7 @@ function mDraw(){if(!MP.map)return;MP.poiL.clearLayers();MP.myL.clearLayers();co
  if(!MP.add&&!MP.plan)mToast(z<9&&MP.P.length?`Ζούμαρε πιο κοντά για να δεις τα σημεία (${MP.P.length} κατεβασμένα).`:MP.P.length?`${inb} σημεία εδώ${inb>shown?` (δείχνω ${shown})`:''} · ${MP.S.length} δικά μου`:'')}
 
 /* ---------- Πάτημα στον χάρτη: νέο σημείο / σχεδίαση ---------- */
-function mAddMode(){MP.add=!MP.add;$('#madd').classList.toggle('p',MP.add);mToast(MP.add?'👆 Πάτα στον χάρτη όπου είναι το σημείο — ή <button class="btn" onclick="mAddHere()">📍 Εδώ που είμαι</button>':'')}
+function mAddMode(){MP.add=!MP.add;$('#madd').classList.toggle('p',MP.add);mToast(MP.add?'👆 Πάτα στον χάρτη όπου είναι το σημείο, ή <button class="btn" onclick="mAddHere()">📍 Εδώ που είμαι</button>':'')}
 function mAddHere(){if(!pos)return alert('Περιμένω GPS…');MP.add=false;mNewSpot(pos.lat,pos.lon)}
 function mClick(e){if(MP.plan)return mPlanAdd(e.latlng);if(MP.add){MP.add=false;mNewSpot(e.latlng.lat,e.latlng.lng)}}
 function mNewSpot(lat,lon){const id='s'+Date.now();LS.s('spdraft',{id,lat:+lat.toFixed(6),lon:+lon.toFixed(6),n:'',cat:'wild',acc:'2wd',r:0,note:'',t:Date.now(),new:1});go('map/edit/'+id)}
@@ -95,10 +95,10 @@ function mNewSpot(lat,lon){const id='s'+Date.now();LS.s('spdraft',{id,lat:+lat.t
 /* ---------- Κατέβασμα σημείων (Overpass) ---------- */
 const OVP=['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter'];
 function mDl(){T('⬇️ Κατέβασε σημεία');const f=filt(),v=LS.g('mview',{lat:38.6,lon:22.6,z:7}),rt=LS.g('ract',null);
- M.innerHTML=`<div class="note">Θέλει internet <b>μία φορά</b>. Μετά τα σημεία μένουν στο κινητό και δουλεύουν offline. Πηγή: OpenStreetMap — ό,τι έχουν καταγράψει εθελοντές· στα ορεινά λείπουν πράγματα, γι' αυτό υπάρχουν και τα «Δικά μου».</div>
+ M.innerHTML=`<div class="note">Θέλει internet <b>μία φορά</b>. Μετά τα σημεία μένουν στο κινητό και δουλεύουν offline. Πηγή: OpenStreetMap, ό,τι έχουν καταγράψει εθελοντές· στα ορεινά λείπουν πράγματα, γι' αυτό υπάρχουν και τα «Δικά μου».</div>
  <h3>Τι να κατεβάσω</h3>${PC.map(c=>`<div class="chk ${f[c.id]?'on':''}" onclick="mFilt('${c.id}',{classList:{toggle:()=>{}}});this.classList.toggle('on');this.querySelector('.bx').textContent=this.classList.contains('on')?'✓':''"><div class="bx">${f[c.id]?'✓':''}</div><span>${c.e} ${c.n}</span></div>`).join('')}
  <h3>Πού</h3>
- <button class="row" onclick="mDlGo('view')"><span class="e">🗺️</span><span><b>Η περιοχή που βλέπω στον χάρτη</b><small>${v.z<8?'⚠️ πολύ μεγάλη — ζούμαρε λίγο πρώτα':'κέντρο '+v.lat.toFixed(2)+', '+v.lon.toFixed(2)}</small></span></button>
+ <button class="row" onclick="mDlGo('view')"><span class="e">🗺️</span><span><b>Η περιοχή που βλέπω στον χάρτη</b><small>${v.z<8?'⚠️ πολύ μεγάλη, ζούμαρε λίγο πρώτα':'κέντρο '+v.lat.toFixed(2)+', '+v.lon.toFixed(2)}</small></span></button>
  <div class="box"><b>📍 Γύρω μου</b><div class="seg" style="margin-top:6px">${[10,25,50,100].map(r=>`<button onclick="mDlGo('me',${r})">${r} km</button>`).join('')}</div></div>
  ${rt?`<button class="row" onclick="mDlGo('route')"><span class="e">🛣️</span><span><b>Κατά μήκος της ενεργής διαδρομής</b><small>ζώνη ${LS.g('corr',5)} km δεξιά-αριστερά</small></span></button><label>Ζώνη (km)</label><input type="number" inputmode="decimal" value="${LS.g('corr',5)}" onchange="LS.s('corr',Math.max(1,Math.min(20,n(this.value))))">`:'<div class="muted">Για σημεία κατά μήκος διαδρομής, φόρτωσε ή σχεδίασε πρώτα μια διαδρομή (🛣️ Διαδρομές).</div>'}
  <div id="dlo"></div><h3>Αποθηκευμένα</h3><div id="dls" class="muted">…</div>`;mDlStats()}
@@ -143,7 +143,7 @@ async function mToSpot(k){const p=await DB.get('poi',k),c=PCI[p.c],cat={camp:'ca
 /* ---------- Δικά μου σημεία ---------- */
 async function mMy(){T('⭐ Τα δικά μου σημεία');const S=(await DB.all('spots').catch(()=>[])).sort((a,b)=>b.t-a.t),ref=pos||LS.g('lastfix',null);
  M.innerHTML=`<div class="tools"><button class="btn p" onclick="go('map');setTimeout(mAddMode,400)">➕ Νέο σημείο</button><button class="btn" onclick="mExport()">📤 Στείλε / export</button><label class="btn" style="color:var(--tx);font-size:.92em">📥 Import<input type="file" accept=".json,.gpx,application/json,application/gpx+xml" style="display:none" onchange="mImport(this.files[0])"></label></div>
- <div class="muted">Export: αρχείο που ανοίγει κάθε Overland Habit (με φωτογραφίες) — έτσι ανταλλάσσετε σημεία στην παρέα. Import δέχεται και GPX (waypoints).</div>`+
+ <div class="muted">Export: αρχείο που ανοίγει κάθε Overland Habit (με φωτογραφίες), έτσι ανταλλάσσετε σημεία στην παρέα. Import δέχεται και GPX (waypoints).</div>`+
  (S.length?S.map(s=>{const c=SPC.find(x=>x[0]===s.cat)||SPC[7],a=ACC.find(x=>x[0]===s.acc)||ACC[0];return`<button class="row" onclick="go('map/edit/${s.id}')"><span class="e">${c[1]}</span><span style="flex:1"><b>${esc(s.n||c[2])}</b><small>${'★'.repeat(s.r||0)}${'☆'.repeat(5-(s.r||0))} · ${a[1]} ${a[2]}${s.ph?' · 📷':''}</small></span>${ref?`<b class="mono">${fmD(dist(ref,s))}</b>`:''}</button>`}).join(''):'<div class="note">Κανένα δικό σου σημείο ακόμα. Κράτα εδώ τα καλά σημεία για ελεύθερο κάμπινγκ, πηγές, δύσκολα περάσματα.</div>')}
 async function mEdit(id){let s=id==='new'||(LS.g('spdraft',{}).id===id)?LS.g('spdraft',null):await DB.get('spots',id);if(!s)return go('map/my');T(s.new?'➕ Νέο σημείο':'✏️ '+(s.n||'Σημείο'));let ph='';
  if(s.ph){const u=URL.createObjectURL(s.ph);ph=`<img src="${u}" style="width:100%;border-radius:12px;margin:6px 0">`}
@@ -166,7 +166,7 @@ async function spDel(id){if(!confirm('Διαγραφή του σημείου;'))
 const b2d=b=>new Promise(ok=>{const r=new FileReader();r.onload=()=>ok(r.result);r.readAsDataURL(b)});
 async function mExport(){const S=await DB.all('spots');if(!S.length)return alert('Δεν έχεις σημεία.');const out=[];for(const s of S){const o=Object.assign({},s);if(s.ph)o.ph=await b2d(s.ph);out.push(o)}
  const f=new File([JSON.stringify({app:'overland-habit',v:1,spots:out})],'overland-spots-'+new Date().toISOString().slice(0,10)+'.json',{type:'application/json'});
- if(navigator.canShare&&navigator.canShare({files:[f]}))navigator.share({files:[f],title:'Overland Habit — σημεία'}).catch(()=>{});else{const a=document.createElement('a');a.href=URL.createObjectURL(f);a.download=f.name;a.click()}}
+ if(navigator.canShare&&navigator.canShare({files:[f]}))navigator.share({files:[f],title:'Overland Habit, σημεία'}).catch(()=>{});else{const a=document.createElement('a');a.href=URL.createObjectURL(f);a.download=f.name;a.click()}}
 async function mImport(file){if(!file)return;const t=await file.text();let n=0;
  try{if(/^\s*</.test(t)){const g=parseGpx(t);for(const w of g.wps){await DB.put('spots',{id:'s'+Date.now()+'_'+n,lat:w.lat,lon:w.lon,n:w.n,cat:'other',acc:'2wd',r:0,note:'από GPX',t:Date.now()});n++}}
  else{const o=JSON.parse(t);for(const s of o.spots||[]){if(s.ph&&typeof s.ph==='string'){s.ph=await (await fetch(s.ph)).blob()}await DB.put('spots',s);n++}}
@@ -218,7 +218,7 @@ function mPlanDraw(){if(!MP.map)return;MP.rtL.clearLayers();const p=MP.plan,line
  p.pts.forEach((q,i)=>L.marker(q,{icon:mapIcon(String(i+1),'#d97757',22)}).addTo(MP.rtL));let km=0;for(let i=1;i<line.length;i++)km+=dist({lat:line[i-1][0],lon:line[i-1][1]},{lat:line[i][0],lon:line[i][1]})/1000;p.km=km;const e=$('#pkm');if(e)e.textContent=line.length>1?f1(km)+' km':'—'}
 let planT=null;function mPlanRoute(){clearTimeout(planT);const p=MP.plan;if(!p)return;p.geo=null;mPlanDraw();if(!p.snap||p.pts.length<2)return;
  planT=setTimeout(async()=>{try{const u=`https://router.project-osrm.org/route/v1/driving/${p.pts.map(q=>q[1]+','+q[0]).join(';')}?overview=full&geometries=geojson`;const j=await (await fetch(u)).json();
-  if(j.routes&&j.routes[0]){p.geo=j.routes[0].geometry.coordinates.map(c=>[c[1],c[0]]);mPlanDraw()}}catch(e){mToast('Χωρίς internet — σχεδιάζω με ευθείες.')}},600)}
+  if(j.routes&&j.routes[0]){p.geo=j.routes[0].geometry.coordinates.map(c=>[c[1],c[0]]);mPlanDraw()}}catch(e){mToast('Χωρίς internet, σχεδιάζω με ευθείες.')}},600)}
 async function mPlanSave(){const p=MP.plan;const line=p.geo||p.pts;if(line.length<2)return alert('Βάλε τουλάχιστον 2 σημεία.');const n=prompt('Όνομα διαδρομής:','Διαδρομή '+new Date().toLocaleDateString(LOC));if(!n)return;
  const P=line.map(q=>[q[0],q[1],null]),s=rStats(P),r={id:'r'+Date.now(),n,pts:P,wps:[],km:s.km,up:0,dn:0,t:Date.now()};await DB.put('routes',r);LS.s('ract',r.id);LS.s('mplan',null);MP.plan=null;go('map/r/'+r.id)}
 
