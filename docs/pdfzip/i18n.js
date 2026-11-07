@@ -61,7 +61,8 @@ const EXACT = {
 "Η αποστολή όλων μαζί δεν υποστηρίζεται εδώ — πάτα «📦 ZIP».":"Sending all at once isn't supported here — tap “📦 ZIP”.",
 "📤 Αποστολή όλων":"📤 Send all","✏️ Συνέχεια επεξεργασίας":"✏️ Keep editing","🗜 Συμπίεση αυτού":"🗜 Compress this",
 "Δεν είναι PDF.":"Not a PDF.","Άνοιγμα PDF…":"Opening PDF…","Δημιουργία PDF…":"Building PDF…","Φωτογραφίες…":"Photos…","Μετατροπή…":"Converting…","Resize…":"Resize…",
-"Ακύρωση…":"Cancelling…","Ακυρώθηκε.":"Cancelled.","(κενό έγγραφο)":"(empty document)","(κενό αρχείο)":"(empty file)","Created by George Barbaris":"Created by George Barbaris"
+"Ακύρωση…":"Cancelling…","📅 Ημερομηνία κάτω δεξιά σε όλες":"📅 Date bottom-right on all","Ποια ημερομηνία":"Which date","Λήψης φωτογραφίας":"When the photo was taken",
+"Σημερινή":"Today","Δική μου":"My own","Ημερομηνία":"Date","Μικρό":"Small","Κανονικό":"Normal","Μεγάλο":"Large","+ ώρα":"+ time","Ακυρώθηκε.":"Cancelled.","(κενό έγγραφο)":"(empty document)","(κενό αρχείο)":"(empty file)","Created by George Barbaris":"Created by George Barbaris"
 };
 // phrase-level (longest first) for dynamic strings
 const PHRASES = [

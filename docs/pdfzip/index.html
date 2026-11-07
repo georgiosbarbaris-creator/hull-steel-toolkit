@@ -39,6 +39,7 @@ input,select{font:16px system-ui;padding:9px;border:1px solid var(--line);border
 .out .n{font-weight:600;word-break:break-all;font-size:14px}.ok{color:var(--ok);font-weight:700}.bad{color:var(--f);font-weight:700}
 .big{font-size:22px;font-weight:800}
 .cred{text-align:center;font-size:11px;color:var(--muted);margin:16px 0}
+.dateopt{margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}
 .chk{flex-direction:row;align-items:center;gap:8px;font-size:14px;color:var(--ink)}.chk input{width:20px;height:20px;flex:0 0 auto}
 .th{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--line)}
 .th img{width:46px;height:46px;object-fit:cover;border-radius:6px;background:var(--line)}
@@ -148,6 +149,7 @@ input,select{font:16px system-ui;padding:9px;border:1px solid var(--line);border
    <label>Όνομα αρχείου<input id="iName" value="Photos"></label>
    <label>Μέγιστο (MB)<input type="number" id="iTarget" value="14" min="1" max="100" step="0.5"></label>
   </div>
+  <div class="dateopt" data-p="i"></div>
   <p class="note" style="margin:8px 0 0">Αν δεν χωράει στο όριο, η εφαρμογή ρίχνει μόνη της την ποιότητα.</p>
  </div>
  <button class="btn o" id="iGo" disabled>📄 Φτιάξε PDF</button>
@@ -203,6 +205,7 @@ input,select{font:16px system-ui;padding:9px;border:1px solid var(--line);border
    <label class="chk"><input type="checkbox" id="rLimOn" checked> Όλες μαζί κάτω από</label>
    <label>MB<input type="number" id="rTarget" value="14" min="1" max="200" step="0.5"></label>
   </div>
+  <div class="dateopt" data-p="r"></div>
   <p class="note" style="margin:8px 0 0">Με το «όλες μαζί κάτω από 14MB» χωράνε σε ένα email. Βγαίνουν ως JPG (όνομα_s.jpg) — στείλ' τες όλες ή κατέβασέ τες σε ZIP.</p>
  </div>
  <button class="btn o" id="rGo" disabled>📐 Resize όλων</button>
@@ -368,6 +371,82 @@ function loadImg(file){
     im.src = u;
   });
 }
+// ---------- date stamp ----------
+async function exifDate(file){
+  try {
+    const b = new DataView(await file.slice(0, 196608).arrayBuffer());
+    if (b.getUint16(0) !== 0xFFD8) return null;
+    let o = 2;
+    while (o + 4 < b.byteLength){
+      const m = b.getUint16(o), len = b.getUint16(o+2);
+      if (m === 0xFFE1 && b.getUint32(o+4) === 0x45786966){          // "Exif"
+        const t = o + 10, le = b.getUint16(t) === 0x4949;
+        const u16 = x => b.getUint16(x, le), u32 = x => b.getUint32(x, le);
+        const str = (x, n) => { let r = ""; for (let i=0;i<n-1;i++) r += String.fromCharCode(b.getUint8(x+i)); return r; };
+        const ifd = (start, want) => { const n = u16(start); const res = {};
+          for (let i=0;i<n;i++){ const e = start + 2 + i*12, tag = u16(e);
+            if (want.includes(tag)){ const cnt = u32(e+4), val = cnt > 4 ? t + u32(e+8) : e+8; res[tag] = tag === 0x8769 ? u32(e+8) : str(val, cnt); } }
+          return res; };
+        const i0 = ifd(t + u32(t+4), [0x0132, 0x8769]);
+        let d = null;
+        if (i0[0x8769]) d = ifd(t + i0[0x8769], [0x9003, 0x9004])[0x9003];
+        d = d || i0[0x0132];
+        const mm = d && d.match(/^(\d{4}):(\d\d):(\d\d) (\d\d):(\d\d)/);
+        return mm ? new Date(+mm[1], +mm[2]-1, +mm[3], +mm[4], +mm[5]) : null;
+      }
+      if ((m & 0xFF00) !== 0xFF00) break;
+      o += 2 + len;
+    }
+  } catch(e){}
+  return null;
+}
+function dateOpts(p){
+  if (!$(p+"Date").checked) return null;
+  return {src:$(p+"DateSrc").value, val:$(p+"DateVal").value, time:$(p+"DateTime").checked, color:$(p+"DateCol").value, size:+$(p+"DateSize").value};
+}
+async function stampText(file, o){
+  let d;
+  if (o.src === "custom" && o.val) { const [y,m,dd] = o.val.split("-").map(Number); d = new Date(y, m-1, dd, 12, 0); }
+  else if (o.src === "today") d = new Date();
+  else d = await exifDate(file) || new Date(file.lastModified || Date.now());
+  const z = n => String(n).padStart(2, "0");
+  return `${z(d.getDate())}/${z(d.getMonth()+1)}/${d.getFullYear()}` + (o.time && o.src !== "custom" ? `  ${z(d.getHours())}:${z(d.getMinutes())}` : "");
+}
+function stamp(cv, text, o){
+  const x = cv.getContext("2d"), fs = Math.max(12, Math.round(Math.min(cv.width, cv.height) * o.size));
+  x.font = `700 ${fs}px "Courier New", ui-monospace, monospace`;
+  x.textAlign = "right"; x.textBaseline = "alphabetic";
+  // keep clear of the edges: 10x15 / 4x6 prints of 4:3 photos crop ~6% top & bottom
+  const px = cv.width - Math.max(fs*0.7, cv.width*0.045), py = cv.height - Math.max(fs*0.6, cv.height*0.075);
+  x.lineJoin = "round"; x.lineWidth = Math.max(2, fs*0.14); x.strokeStyle = "rgba(0,0,0,.55)"; x.strokeText(text, px, py);
+  x.fillStyle = o.color; x.fillText(text, px, py);
+}
+function buildDateBlocks(){
+  let saved = {}; try { saved = JSON.parse(localStorage.getItem("pdfzip_date") || "{}"); } catch(e){}
+  document.querySelectorAll(".dateopt").forEach(box => {
+    const p = box.dataset.p;
+    box.innerHTML = `<label class="chk"><input type="checkbox" id="${p}Date"> 📅 Ημερομηνία κάτω δεξιά σε όλες</label>
+      <div class="g2" id="${p}DateOpts" style="margin-top:8px">
+       <label>Ποια ημερομηνία<select id="${p}DateSrc"><option value="exif">Λήψης φωτογραφίας</option><option value="today">Σημερινή</option><option value="custom">Δική μου</option></select></label>
+       <label>Ημερομηνία<input type="date" id="${p}DateVal"></label>
+       <label>Μέγεθος<select id="${p}DateSize"><option value="0.03">Μικρό</option><option value="0.042" selected>Κανονικό</option><option value="0.06">Μεγάλο</option></select></label>
+       <label>Χρώμα<input type="color" id="${p}DateCol" value="#ff1a1a" style="height:42px;padding:3px"></label>
+       <label class="chk"><input type="checkbox" id="${p}DateTime"> + ώρα</label>
+      </div>`;
+    const st = saved[p] || {};
+    $(p+"Date").checked = !!st.on; $(p+"DateSrc").value = st.src || "exif"; $(p+"DateVal").value = st.val || new Date().toISOString().slice(0,10);
+    $(p+"DateSize").value = st.size || "0.042"; $(p+"DateCol").value = st.color || "#ff1a1a"; $(p+"DateTime").checked = !!st.time;
+    const upd = () => {
+      $(p+"DateOpts").classList.toggle("hide", !$(p+"Date").checked);
+      $(p+"DateVal").closest("label").classList.toggle("hide", $(p+"DateSrc").value !== "custom");
+      saved[p] = {on:$(p+"Date").checked, src:$(p+"DateSrc").value, val:$(p+"DateVal").value, size:$(p+"DateSize").value, color:$(p+"DateCol").value, time:$(p+"DateTime").checked};
+      try { localStorage.setItem("pdfzip_date", JSON.stringify(saved)); } catch(e){}
+    };
+    box.querySelectorAll("input,select").forEach(el => el.addEventListener("change", upd)); upd();
+  });
+}
+buildDateBlocks();
+
 function imgCanvas(im, maxSide){
   let w = im.naturalWidth, h = im.naturalHeight, s = Math.min(1, maxSide / Math.max(w, h));
   if (w*s*h*s > MAXPX) s *= Math.sqrt(MAXPX/(w*s*h*s));
@@ -562,14 +641,15 @@ function drawIList(){
 }
 $("iGo").onclick = async () => {
   const T = Math.max(0.5, +$("iTarget").value || 14) * MB, side = +$("iSide").value, pageMode = $("iPage").value;
-  const N = I_FILES.length, total = T*0.96 - 30000 - N*1500;
+  const N = I_FILES.length, total = T*0.96 - 30000 - N*1500, dOpt = dateOpts("i");
   const lock = await wake(); startProg("Φωτογραφίες…");
   try {
     let used = 0; const items = [];
     for (let i=0; i<N; i++){
       chk();
-      const im = await loadImg(I_FILES[i]);
-      const j = await fitJpeg(imgCanvas(im, side), (total-used)/(N-i), 0.8, 400);
+      const im = await loadImg(I_FILES[i]), cv = imgCanvas(im, side);
+      if (dOpt) stamp(cv, await stampText(I_FILES[i], dOpt), dOpt);
+      const j = await fitJpeg(cv, (total-used)/(N-i), 0.8, 400);
       used += j.bytes.length;
       if (pageMode === "a4"){
         const land = j.w > j.h, pw = land ? 842 : 595, ph = land ? 595 : 842, m = 20;
@@ -738,16 +818,17 @@ dropzone("rDrop", "rFile", fs => {
 });
 $("rGo").onclick = async () => {
   const side = +$("rSide").value, q = +$("rQ").value, limOn = $("rLimOn").checked, T = Math.max(0.5, +$("rTarget").value || 14) * MB;
-  const N = R_FILES.length, total = T*0.97, lock = await wake(); startProg("Resize…");
+  const N = R_FILES.length, total = T*0.97, dOpt = dateOpts("r"), lock = await wake(); startProg("Resize…");
   try {
     let used = 0; const outs = [], names = new Set();
     for (let i=0; i<N; i++){
       chk();
-      const f = R_FILES[i], im = await loadImg(f);
-      const j = await fitJpeg(imgCanvas(im, side), limOn ? (total-used)/(N-i) : 0, q, 320);
+      const f = R_FILES[i], im = await loadImg(f), cv = imgCanvas(im, side);
+      let dt = ""; if (dOpt) { dt = await stampText(f, dOpt); stamp(cv, dt, dOpt); }
+      const j = await fitJpeg(cv, limOn ? (total-used)/(N-i) : 0, q, 320);
       used += j.bytes.length;
       let n = stem(f.name) + "_s.jpg", c = 2; while (names.has(n)) n = stem(f.name) + `_s${c++}.jpg`; names.add(n);
-      outs.push({name:n, blob:new Blob([j.bytes], {type:"image/jpeg"}), note:`${j.w}×${j.h}`});
+      outs.push({name:n, blob:new Blob([j.bytes], {type:"image/jpeg"}), note:`${j.w}×${j.h}` + (dt ? ` · 📅 ${dt}` : "")});
       tick(i+1, N, `Φωτό ${i+1} / ${N}`, `${fmt(used)} μέχρι τώρα`); await nap();
     }
     const before = R_FILES.reduce((a,f)=>a+f.size,0);
