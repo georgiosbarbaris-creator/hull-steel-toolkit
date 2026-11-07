@@ -1,4 +1,4 @@
-/* Overland Habit · 🧰 Εξοπλισμός (εγκυκλοπαίδεια εξοπλισμού). Δεδομένα: equip-data.js (EQD). */
+/* Overland’s Habit · 🧰 Εξοπλισμός (εγκυκλοπαίδεια εξοπλισμού). Δεδομένα: equip-data.js (EQD). */
 const EQL=()=>(typeof LANG!=='undefined'&&LANG==='en')?'en':'el';
 const EQC=()=>(typeof EQD!=='undefined'?EQD.cats:[]);
 const EQK=id=>(typeof EQD!=='undefined'?EQD.cards[id]:null);
@@ -60,7 +60,7 @@ function eqAns(i,j){if(EQZ.ans[i]!=null)return;const c=EQC().find(x=>x.cat===EQZ
   const pass=sc>=Math.ceil(c.quiz.length*2/3);$('#eqzs').innerHTML=`<div class="res"><div class="v">${sc}/${c.quiz.length}</div><div>${pass?'🎉 '+L2('Πέρασες!','You passed!'):L2('Ξαναδιάβασε και δοκίμασε πάλι.','Read again and retry.')}</div><button class="btn" onclick="eqQuiz('${c.cat}')">↻ ${L2('Ξανά','Again')}</button></div>`}}
 function eqPrint(){T('🖨️ '+L2('Οδηγός εξοπλισμού','Gear guide'));
  M.innerHTML=`<button class="big org" onclick="window.print()">🖨️ ${L2('Εκτύπωση / Αποθήκευση ως PDF','Print / Save as PDF')}</button><div class="muted">${L2('Στο κινητό: Κοινοποίηση ή Εκτύπωση → Αποθήκευση ως PDF.','On the phone: Share or Print → Save as PDF.')}</div>
- <h1 style="margin-top:14px">🧰 Overland Habit · ${L2('Εξοπλισμός του overlander','The overlander\'s gear')}</h1><div class="muted">Created by George Barbaris</div>`+
+ <h1 style="margin-top:14px">🧰 Overland’s Habit · ${L2('Εξοπλισμός του overlander','The overlander\'s gear')}</h1><div class="muted">Created by George Barbaris</div>`+
  EQC().map(c=>{const t=eqT(c);return `<h1 style="margin-top:28px;page-break-before:always">${c.e} ${esc(t.n)}</h1><div class="tip" style="font-weight:400">${t.intro||''}</div>`+
   c.order.map(id=>EQK(id)).filter(Boolean).map(k=>`<div style="page-break-inside:auto">${eqCardHTML(k,1)}</div>`).join('')+(c.compare||[]).map(eqTable).join('')}).join('')}
 

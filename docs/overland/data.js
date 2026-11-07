@@ -1,4 +1,4 @@
-/* Overland Habit, περιεχόμενο (Created by George Barbaris). Κείμενα γραμμένα με δικά μας λόγια. */
+/* Overland’s Habit, περιεχόμενο (Created by George Barbaris). Κείμενα γραμμένα με δικά μας λόγια. */
 
 /* ---------- Πίεση ελαστικών ανά έδαφος: % της πίεσης δρόμου (placard), μέγιστη ταχύτητα ---------- */
 const TERR=[

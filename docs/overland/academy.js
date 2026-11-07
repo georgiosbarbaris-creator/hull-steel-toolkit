@@ -1,11 +1,11 @@
-/* ===== Overland Habit, Ακαδημία (μαθήματα, quiz, badges, ευρετήριο «Έξω από τους Τοίχους») ===== */
+/* ===== Overland’s Habit, Ακαδημία (μαθήματα, quiz, badges, ευρετήριο «Έξω από τους Τοίχους») ===== */
 const ACD=(typeof ACAD!=='undefined'?ACAD:{lessons:[],lists:{},coverage:[]});
-const ALL=LESSONS.map(l=>Object.assign({src:'Overland Habit'},l)).concat(ACD.lessons||[]);
+const ALL=LESSONS.map(l=>Object.assign({src:'Overland’s Habit'},l)).concat(ACD.lessons||[]);
 const ABYID=Object.fromEntries(ALL.map(l=>[l.id,l]));
 /* πρόσθεσε στις λίστες εξοπλισμού ό,τι αναφέρουν τα βιβλία */
 (function(){const nm=s=>s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-zα-ω0-9]/g,'');
  Object.entries(ACD.lists||{}).forEach(([id,items])=>{const l=LISTS.find(x=>x.id===id);if(!l)return;const have=new Set(l.i.map(nm));items.forEach(x=>{const k=nm(x);if(k&&!have.has(k)){l.i.push(x);have.add(k)}})})})();
-const SRCS=[['all','Όλα'],['o','🌄 Overland Habit'],['x','📗 Έξω από τους Τοίχους']];
+const SRCS=[['all','Όλα'],['o','🌄 Overland’s Habit'],['x','📗 Έξω από τους Τοίχους']];
 const srcK=l=>/Έξω|Outside the Walls/.test(l.src)?'x':'o';
 const done=id=>{const r=LS.g('read',{})[id],q=LS.g('quiz',{})[id],L=ABYID[id];return !!r&&(!L||!L.q||!L.q.length||(q&&q.best>=Math.ceil(L.q.length*2/3)))};
 function learn(id){if(id==='index')return acIndex();if(id)return lesson(id);T('🎓 Ακαδημία');const f=LS.g('acf',{lv:'all',s:'all'}),dn=ALL.filter(l=>done(l.id)).length;

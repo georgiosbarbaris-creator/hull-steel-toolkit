@@ -1,4 +1,4 @@
-/* ===== Overland Habit, Φάση 4: Ράλι Tripmaster & Roadbook ===== */
+/* ===== Overland’s Habit, Φάση 4: Ράλι Tripmaster & Roadbook ===== */
 const RLD={tot:0,par:0,fac:1,run:0,dir:1,v:40,stT:0,stD:0,box:0,beep:1,big:0};
 const RL=()=>Object.assign({},RLD,LS.g('rl',{}));
 let RT={w:null,last:null,spd:0,cap:null,save:0,ticker:null,warned:-1};

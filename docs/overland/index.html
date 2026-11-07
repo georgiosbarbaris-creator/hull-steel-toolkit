@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="el"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Overland Habit</title>
+<title>Overland’s Habit</title>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png"><link rel="stylesheet" href="lib/leaflet.css">
 <script src="i18n.js"></script>
 <script>if(LANG==='en')document.write('<script src="en-ui.js"><\/script>')</script>
-<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Overland Habit">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Overland’s Habit">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#1f1e1d">
 <style>
 :root{--fs:18px;--bg:#1a1918;--card:#262422;--line:#3d3935;--tx:#f5f0e8;--mut:#a8a29e;--red:#d9534f;--org:#d97757;--grn:#5f9e7a;--yel:#e8b86d;--blu:#6a9fb5;--sun:#d97757}
@@ -77,7 +77,7 @@ table.t{width:100%;border-collapse:collapse;font-size:.9em}table.t td,table.t th
 html.night header,html.night main,html.night nav{filter:grayscale(1) sepia(1) saturate(12) hue-rotate(-50deg) brightness(.55)}html.night,html.night body{background:#000}
 @media print{header,#nv,nav,button,.big,input{display:none!important}body{background:#fff!important;color:#000!important}.box,.tip,.note,.kv{background:#fff!important;color:#000!important;border:1px solid #999!important;break-inside:avoid}.muted{color:#444!important}h1,h2,h3,b{color:#000!important}}
 </style></head><body>
-<script>if(navigator.standalone||matchMedia("(display-mode: standalone)").matches)document.body.classList.add("sa")</script><header><button class="hb" id="bk" onclick="back()" aria-label="Πίσω">◀</button><h1 id="ttl">Overland Habit</h1>
+<script>if(navigator.standalone||matchMedia("(display-mode: standalone)").matches)document.body.classList.add("sa")</script><header><button class="hb" id="bk" onclick="back()" aria-label="Πίσω">◀</button><h1 id="ttl">Overland’s Habit</h1>
 <button class="hb" data-nt onclick="setLang(LANG==='en'?'el':'en')" aria-label="Language">🌐 <script>document.write(LANG==='en'?'ΕΛ':'EN')</script></button><button class="hb" onclick="fz(-1)">A−</button><button class="hb" onclick="fz(1)">A+</button></header>
 <main id="m"></main>
 <nav id="nv">
@@ -92,13 +92,13 @@ html.night header,html.night main,html.night nav{filter:grayscale(1) sepia(1) sa
 <script src="data.js"></script>
 <script src="walk-guide.js"></script>
 <script>
-/* ===== Overland Habit, Created by George Barbaris ===== */
+/* ===== Overland’s Habit, Created by George Barbaris ===== */
 const $=s=>document.querySelector(s),M=$('#m');
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const LS={g(k,d){try{const v=localStorage.getItem('ov_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},s(k,v){try{localStorage.setItem('ov_'+k,JSON.stringify(v))}catch(e){}}};
 let fs=LS.g('fs',18);document.documentElement.style.setProperty('--fs',fs+'px');
 function fz(d){fs=Math.max(14,Math.min(28,fs+d*2));LS.s('fs',fs);document.documentElement.style.setProperty('--fs',fs+'px')}
-const TITLE='Overland Habit';
+const TITLE='Overland’s Habit';
 const fmD0=m=>m<1000?Math.round(m)+' m':(m/1000).toFixed(1)+' km';
 function T(t){$('#ttl').textContent=t;$('#bk').style.visibility=(t===TITLE)?'hidden':'visible'}
 function go(r){if(location.hash.slice(1)===r){stopAll();render(r);window.scrollTo(0,0)}else location.hash=r}
@@ -156,9 +156,10 @@ function vehBox(){const v=veh();return v?`<div class="vcard" onclick="go('veh')"
 /* ===================== ΑΡΧΙΚΗ ===================== */
 const SOON=[];
 function home(){T(TITLE);const read=LS.g('read',{});
- M.innerHTML=`<div class="hero">${SUN_SVG}<h2>Overland Habit</h2><div>ο ελληνικός οδηγός για το overlanding, από αρχάριο μέχρι expert</div></div>${vehBox()}
+ M.innerHTML=`<div class="hero">${SUN_SVG}<h2>Overland’s Habit</h2><div>ο ελληνικός οδηγός για το overlanding, από αρχάριο μέχρι expert</div></div>${vehBox()}
  <div class="g3">${[['incl','📐','Κλισιόμετρο'],['tyre','🛞','Πίεση'],['compass','🧭','Πυξίδα & GPS'],['winch','🪝','Ανάκτηση'],['wade','🌊','Νερό, περνάω;'],['sun','🌇','Ώρα για στρατόπεδο']].map(t=>`<button class="tile" onclick="go('t/${t[0]}')"><span class="e">${t[1]}</span>${t[2]}</button>`).join('')}</div>
- <button class="row" onclick="go('map')" style="border-color:var(--org)"><span class="e">🗺️</span><span><b>Χάρτης & camper stops</b><small>κάμπινγκ, νερό, πηγές, dump station, καταφύγια, offline · δικά μου σημεία · διαδρομές GPX</small></span></button>
+ <button class="row" onclick="go('map')" style="border-color:var(--org)"><span class="e">🗺️</span><span><b>${L2('Χάρτης «Πού είμαι»','Map «Where am I»')}</b><small>${L2('θέση, υψόμετρο, στίγματα · άνοιγμα σε Organic Maps / OsmAnd / Google','position, altitude, pins · open in Organic Maps / OsmAnd / Google')}</small></span></button>
+ <button class="row" onclick="go('map/huts')"><span class="e">🛖</span><span><b>${L2('Καταφύγια & camper stops Ελλάδας','Huts & camper stops of Greece')}</b><small>${L2('καταφύγια, στέγαστρα, camper, dump station, κάμπινγκ, πηγές · offline · export GPX/KML','huts, shelters, camper, dump station, campsites, springs · offline · export GPX/KML')}</small></span></button>
  <button class="row" onclick="go('convoy')"><span class="e">🚐</span><span><b>Κομβόι, ζωντανά</b><small>${cvMe()?'🟢 ενεργό · κωδικός '+cvMe().code:'όλα τα αυτοκίνητα στον χάρτη, συναγερμός αν χαθεί κάποιος, SOS'}</small></span></button>
  <button class="row" onclick="go('rally')"><span class="e">🏁</span><span><b>Ράλι, Tripmaster & Roadbook</b><small>${RL().run?'🟢 μετράει · ':''}Total/Partial, regularity, CAP, roadbook με κουτιά</small></span></button>
  <h3>Το ταξίδι</h3>
@@ -167,7 +168,7 @@ function home(){T(TITLE);const read=LS.g('read',{});
  <button class="row" onclick="go('learn')"><span class="e">🎓</span><span><b>Ακαδημία</b><small>${ALL.filter(l=>done(l.id)).length}/${ALL.length} μαθήματα · quiz · από αρχάριο μέχρι expert</small></span></button>
  <button class="row" onclick="go('gear')"><span class="e">🧰</span><span><b>${L2('Εξοπλισμός του overlander','The overlander\'s gear')}</b><small>${L2('σκηνές οροφής, ψυγεία, ενέργεια, κουζίνα, συρτάρια, πακέτα weekend · τιμές, υπέρ/κατά','rooftop tents, fridges, power, kitchen, drawers, weekend kits · prices, pros/cons')}</small></span></button>
 ${SOON.length?'<h3>Έρχονται</h3>':''}${SOON.map(s=>`<button class="row soon" onclick="go('${s[0]}')"><span class="e">${s[1]}</span><span><b>${s[2]}</b><small>${s[3]} · ${s[4]}</small></span></button>`).join('')}
- <footer>Overland Habit v0.7 · Created by George Barbaris<br>Τα δεδομένα μένουν μόνο στο κινητό σου.<br>Χάρτες & σημεία © OpenStreetMap contributors · OpenTopoMap · Esri · Leaflet</footer>`}
+ <footer>Overland’s Habit v0.7 · Created by George Barbaris<br>Τα δεδομένα μένουν μόνο στο κινητό σου.<br>Χάρτες & σημεία © OpenStreetMap contributors · OpenTopoMap · Esri · Leaflet</footer>`}
 function soon(id){const s=SOON.find(x=>x[0]===id);T(s[1]+' '+s[2]);const det={
  map:['Χάρτης με όλα τα σημεία από το OpenStreetMap: κάμπινγκ, χώροι για camper, πόσιμο νερό & πηγές, dump station, ντους, WC, καύσιμα/LPG, θέες, καταφύγια.','«Κατέβασε περιοχή» όταν έχεις σήμα → μετά τα βρίσκεις offline, με απόσταση από σένα.','Τα δικά σου σημεία με φωτογραφία, σημείωση, βαθμολογία και πρόσβαση (2WD / 4×4), τα στέλνεις στους φίλους σου.','Διαδρομή online που μένει μέσα offline, με camper stops κατά μήκος της, και export GPX.'],
  convoy:['Ο αρχηγός φτιάχνει ομάδα και δίνει κωδικό / QR.','Όλα τα αυτοκίνητα στον χάρτη: απόσταση από τον αρχηγό, ταχύτητα, τελευταία ενημέρωση.','Συναγερμός όταν κάποιος μείνει πίσω ή χαθεί το σήμα του. SOS από κάθε μέλος, «ΣΤΟΠ όλοι» από τον αρχηγό.','Θέλει σήμα κινητής. Χωρίς σήμα: τελευταία γνωστή θέση + ασύρματος (δες «Ασύρματοι & κομβόι»).'],
@@ -375,7 +376,7 @@ function wkN(k,t){const w=LS.g('walk',{s:{},nt:{}});w.nt[k]=t;LS.s('walk',w)}
 function wkD(d){const w=LS.g('walk',{s:{},nt:{}});w.d=d;LS.s('walk',w)}
 function wkNew(){if(!confirm('Νέος έλεγχος; Σβήνουν τα σημερινά.'))return;LS.s('walk',{d:new Date().toISOString().slice(0,10),s:{},nt:{}});tWalk()}
 function wkShare(){const w=LS.g('walk',{s:{},nt:{}}),v=veh();let t=`WALK-ROUND ${w.d}, ${v?v.name||v.model:''}\n`;const D=[];WALK.forEach(([g,L],gi)=>L.forEach((it,ii)=>{const k=gi+'_'+ii;if(w.s[k]==='d')D.push(`❌ ${g} / ${it}${w.nt[k]?': '+w.nt[k]:''}`)}));
- t+=D.length?`Ευρήματα (${D.length}):\n${D.join('\n')}`:'✅ Χωρίς ευρήματα.';t+='\nOverland Habit';if(navigator.share)navigator.share({text:t}).catch(()=>{});else(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>alert('Αντιγράφηκε.'),()=>prompt('Αντέγραψε:',t))}
+ t+=D.length?`Ευρήματα (${D.length}):\n${D.join('\n')}`:'✅ Χωρίς ευρήματα.';t+='\nOverland’s Habit';if(navigator.share)navigator.share({text:t}).catch(()=>{});else(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>alert('Αντιγράφηκε.'),()=>prompt('Αντέγραψε:',t))}
 
 /* ---------- Ασύρματοι, κόμποι ---------- */
 function tRadio(){T('📻 Ασύρματοι & κομβόι');M.innerHTML=`<h3>Κανόνες κομβόι</h3><div class="box">${RADIO_RULES.map(x=>`<div class="li">${x}</div>`).join('')}</div>
@@ -413,8 +414,8 @@ function tAwake(){keepOn=!keepOn;LS.s('keepon',keepOn);wake(keepOn?1:0);tools()}
 
 /* ---------- Πυξίδα + GPX ---------- */
 function tCompass(){compass();const b=document.createElement('div');b.className='box';b.innerHTML=`<b>📤 Διαδρομή & σημεία σε GPX</b><div class="muted">Για OsmAnd, Locus, Google Earth, Garmin.</div><div class="tools"><button class="btn p" onclick="gpxOut()">📤 Export GPX</button></div>`;M.appendChild(b)}
-function gpxOut(){const w=LS.g('wps',[]),t=new Date().toISOString();let g=`<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="Overland Habit" xmlns="http://www.topografix.com/GPX/1/1">\n`;
- w.forEach(p=>g+=`<wpt lat="${p.lat}" lon="${p.lon}"><name>${esc(p.n)}</name></wpt>\n`);if(trk.length)g+=`<trk><name>Overland Habit ${t.slice(0,10)}</name><trkseg>\n${trk.map(p=>`<trkpt lat="${p.lat}" lon="${p.lon}"/>`).join('\n')}\n</trkseg></trk>\n`;g+='</gpx>';
+function gpxOut(){const w=LS.g('wps',[]),t=new Date().toISOString();let g=`<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="Overland’s Habit" xmlns="http://www.topografix.com/GPX/1/1">\n`;
+ w.forEach(p=>g+=`<wpt lat="${p.lat}" lon="${p.lon}"><name>${esc(p.n)}</name></wpt>\n`);if(trk.length)g+=`<trk><name>Overland’s Habit ${t.slice(0,10)}</name><trkseg>\n${trk.map(p=>`<trkpt lat="${p.lat}" lon="${p.lon}"/>`).join('\n')}\n</trkseg></trk>\n`;g+='</gpx>';
  const f=new File([g],'overland-'+t.slice(0,10)+'.gpx',{type:'application/gpx+xml'});if(navigator.canShare&&navigator.canShare({files:[f]}))navigator.share({files:[f]}).catch(()=>{});else{const a=document.createElement('a');a.href=URL.createObjectURL(f);a.download=f.name;a.click()}}
 
 /* ===================== ΤΑΞΙΔΙ ===================== */
@@ -471,6 +472,7 @@ window.addEventListener('hashchange',()=>{stopAll();render(location.hash.slice(1
 <script src="lib/leaflet.js"></script>
 <script src="port.js"></script>
 <script src="map.js"></script>
+<script src="huts.js"></script>
 <script src="convoy.js"></script>
 <script src="rally.js"></script>
 <script src="academy-data.js"></script>

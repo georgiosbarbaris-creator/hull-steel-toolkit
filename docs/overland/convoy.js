@@ -1,4 +1,4 @@
-/* ===== Overland Habit, Φάση 3: Κομβόι ζωντανά =====
+/* ===== Overland’s Habit, Φάση 3: Κομβόι ζωντανά =====
    Χωρίς λογαριασμό: μηνύματα μέσω δημόσιου MQTT broker (WebSocket), κρυπτογραφημένα AES-GCM με κλειδί από τον κωδικό ομάδας.
    Ο broker βλέπει μόνο ακατανόητα bytes σε ένα τυχαίο topic. */
 
@@ -82,7 +82,7 @@ function cvJoin(){const b=cvBase();if(!b)return;const c=$('#cvc').value.trim().t
  LS.s('cvme',Object.assign(b,{code:c,b:j&&j.code===c?j.b:0,lead:0}));LS.s('cvjoin',null);convoy()}
 function cvCreate(){const b=cvBase();if(!b)return;LS.s('cvme',Object.assign(b,{code:cvCode(),b:0,lead:1}));convoy()}
 function cvLink(){const me=cvMe();return location.origin+location.pathname+'#convoy/join/'+me.code+'.'+(me.b||0)}
-function cvInvite(){const me=cvMe(),t=`🚐 Κομβόι Overland Habit\nΜπες από εδώ: ${cvLink()}\nΚωδικός: ${me.code}`;if(navigator.share)navigator.share({text:t}).catch(()=>{});else(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>alert('Αντιγράφηκε, στείλ\' το στην παρέα.'),()=>prompt('Αντέγραψε:',t))}
+function cvInvite(){const me=cvMe(),t=`🚐 Κομβόι Overland’s Habit\nΜπες από εδώ: ${cvLink()}\nΚωδικός: ${me.code}`;if(navigator.share)navigator.share({text:t}).catch(()=>{});else(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>alert('Αντιγράφηκε, στείλ\' το στην παρέα.'),()=>prompt('Αντέγραψε:',t))}
 function cvPage(){const me=cvMe();T('🚐 Κομβόι'+(me.lead?' 👑':''));
  M.innerHTML=`<div class="box" style="display:flex;gap:10px;align-items:center;padding:10px"><div style="flex:1"><div class="muted">Κωδικός ομάδας</div><div class="mono" style="font-size:1.4em;font-weight:900;letter-spacing:3px">${me.code}</div><div class="muted" id="cvst"></div></div><button class="btn p" onclick="cvInvite()">📤 Κάλεσε</button></div>
  <div style="position:relative"><div id="cvmap" style="height:42vh;border-radius:14px;border:1px solid var(--line)"></div><button class="hb" style="position:absolute;right:8px;top:8px;z-index:500" onclick="cvFit()">🔍</button></div>
