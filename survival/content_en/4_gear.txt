@@ -1,0 +1,201 @@
+@@ gear|g_sleep|🛏️|Blanket or sleeping bag?|What keeps you warmer
+## Short answer
+- For SLEEPING in the cold: sleeping bag + sleeping pad. Much more warmth per kilo.
+- For HOME, CAR, FIRE: wool blanket. Tough, does not catch fire easily, stays warm even when wet.
+- For the BACKPACK: emergency (foil) blanket + sleeping bag if it fits.
+## Comparison
+- Wool blanket: + warm when wet, hard to burn, lasts for years, many uses (sling, stretcher). − heavy (2–3 kg), bulky.
+- Fleece blanket: + light, cheap, dries fast. − melts in fire, less warmth.
+- Cotton blanket: − gives no warmth at all when wet. Not for survival.
+- Foil blanket (mylar): + 60 grams, blocks wind, keeps body heat, signalling. − tears, traps moisture inside. Emergencies only.
+- Bivy / survival bag (like a mylar sack): better than a foil blanket, ~100–300 g.
+## Sleeping bag: what to look for
+- COMFORT temperature (ISO 23537 / EN 13537): you sleep comfortably at this. LIMIT means "survive while cold". Ignore EXTREME.
+- Southern Greece / islands, winter: comfort about 0 °C to −5 °C. Summer: +10 °C.
+- NORTHERN Greece, mountains, winter months (and a home with no power): comfort −15 °C to −20 °C. An unheated house in Florina or Metsovo drops below zero within a few days.
+- Better too warm than too cold: if you are warm, open the zip. If you are cold, there is nothing you can do.
+- Down: light, packs small, warm – but gives no warmth when wet. Fill power 600+.
+- Synthetic: heavier and bulkier, but stays warm when damp. Better for home/car/humidity.
+- A "mummy" shape keeps more heat. It needs a hood with a drawcord.
+- Extra: a liner (inner bag) adds +2 to +5 °C.
+## Head outside
+- Keep your nose and mouth OUTSIDE the sleeping bag. Breath inside = moisture = wet filling = cold. Tighten the hood around your face and wear a beanie.
+## Foil blanket (emergency blanket): one for everyone
+- 60 grams, smaller than a wallet, reflects body heat back. One for each family member in the backpack, one in the car, one in the jacket.
+- Use: under the sleeping pad, or wrapped OUTSIDE the sleeping bag/blanket. Inside the sleeping bag only for 1 emergency night (it traps moisture).
+- In a shipwreck/for an injured person: wrap the whole body and head, leave the face free.
+## SLEEPING PAD: the most forgotten item
+- The ground "sucks" the heat out of you. Without insulation you get cold even in the best sleeping bag.
+- R-value: summer 2, winter 4+, snow 5+. Two pads together = values add up.
+- Foam: cannot puncture, cheap. Inflatable: comfortable, small, but needs a repair kit.
++ Sleep in DRY clothes and a beanie. Eat something fatty before bed. Pee before you sleep – the body wastes no heat on extra fluid.
+
+@@ gear|g_swag|🛌|Swag, bivy and one-person tents|A bed-shelter for one person
+- SWAG (Australia): waterproof canvas with a built-in foam mattress and a small "tent" on top. Opens in 1 minute, you put your sleeping bag inside. Ideal for overlanding, a car roof, and also INSIDE the house when there is no heating.
+- BIVY (bivvy bag): a waterproof bag that goes over the sleeping bag. Blocks wind, adds 3–5 °C, light (300–700 g). Some have a hoop over the head like a mini tent.
+- Survival bag (emergency bivy, silver): 100–300 g, for the backpack and the car. Better than a plain foil blanket because it closes around you.
+## The combination that works in the cold
+1. Insulation underneath (foam + inflatable, or the swag mattress).
+2. Sleeping bag comfort −15 to −20 °C for northern Greece/mountains in winter.
+3. Liner inside (+2 to +5 °C).
+4. Bivy or swag outside (wind, moisture, +3–5 °C).
+5. Foil blanket under everything, or on top in very cold weather.
+6. Beanie, wool socks, face outside.
++ All of this also works inside a cold house: a swag or a small tent in the living room makes a huge difference.
+
+@@ gear|g_tent|⛺|Tent – shelter|Do I need a tent?
+- For a disaster in the city: usually NO. Shelters, relatives, the car. But a tent helps if you cannot stay in a house after an earthquake.
+- For outside the city/mountains: yes, or a tarp + rope, which is lighter.
+## What to look for in a tent
+- 3-season for Greece. 4-season only for snow/mountains.
+- Pitched in 5 minutes by 1 person. Try it at home first.
+- Hydrostatic head: fly 2000+ mm, floor 3000+ mm.
+- Capacity: get 1 person bigger (2 people → 3-person tent) for gear.
+- Family tent: can become a "room" in the garden after an earthquake.
+## Tarp
+- 3×3 m with grommets, 300–600 g. A thousand ways to pitch it. Together with rope and pegs.
+- Cheap option: thick builder's plastic sheet + rope.
++ Always pitch higher than water, NEVER in a dry stream bed (flood) and NEVER under a dead branch.
+
+@@ gear|g_light|🔦|Torches and lighting|What to get
+- A HEADLAMP for each member: hands free. The most useful light.
+- LED lantern for the room/table.
+- Sturdy handheld torch, waterproof IPX4 or better IPX7.
+## What to look for
+- Batteries: prefer AA or AAA – found everywhere. Or rechargeable via USB-C + spares.
+- Lumens: 200–400 are enough for everything. 3000 lumens drain the battery quickly.
+- A low mode (5–20 lm) that lasts 50+ hours – this is what you use most of the time.
+- Red light: does not ruin night vision, does not wake others.
+- SOS/strobe mode.
+- Lithium AA batteries: handle cold and 10–20 years of storage. Alkaline ones can leak – take them out of torches in storage.
+## Candles?
+- Only on a stable base, away from curtains, never while sleeping, never with children alone. Prefer LED.
++ Strap a headlamp onto a water bottle with the light facing the bottle = a lantern for the whole room.
+
+@@ gear|g_power|🔋|Power – charging|Power bank, solar, generator
+- Power bank 10,000 mAh ≈ 2 phone charges. 20,000 mAh ≈ 4. Recharge them every 3 months.
+- Foldable solar panel 20–30 W: charges a phone during the day (only in sun).
+- Power station (large battery 300–1000 Wh): light, router, medical devices, charging. Safe inside the house. With a solar panel = independence.
+- Petrol generator: lots of power but noise, fuel, and ONLY outdoors (carbon monoxide).
+- USB car charger.
++ Phone: low power mode, no data/Bluetooth, dim screen, no video. Airplane mode when you don't need signal. GPS still works in airplane mode on most phones.
+
+@@ gear|g_solar|☀️|Solar panels: correct use|Power from the sun when everything is down
++ A solar panel with a battery (power station or powerbank) is the only power source that does not run out. In a crisis lasting many days it is vital.
+## The two numbers you need to know
+- W (Watt) = how “strong” something is RIGHT NOW. 100 W panel, 5 W lamp.
+- Wh (watt-hours) = how much energy is stored or used. 500 Wh battery. 5 W lamp for 10 hours = 50 Wh.
+- Like a tap and a tank: W is how far the tap is open, Wh is how much water is in the tank.
+## How much it really produces
+- In practice a panel gives about 50–70% of the W written on it. 100 W panel ≈ 60–70 W in good sun.
+- Greece: ~3 hours of “strong sun” in winter, ~6–7 in summer.
+- Example: 100 W panel in winter ≈ 100 × 3 × 0.7 ≈ 200 Wh per day. In summer ≈ 450 Wh.
+- Cloud: drops to 10–25%. Shade: almost zero.
+## What can I power with 200 Wh a day
+- Mobile phone: ~15 Wh per full charge → 10+ phones.
+- 5 W LED lamp: 40 hours of light.
+- Radio: practically all day.
+- 10 W internet router: ~20 hours (if the line works).
+- Laptop: 3–4 charges.
+! Fridge, electric heater, air conditioner, kettle, hair dryer: NOT with a small system. A 2000 W kettle empties a 500 Wh battery in 15 minutes.
+## Correct use – step by step
+1. Put the panel OUTSIDE. Behind glass it loses 30–60% (modern insulated glazing even more).
+2. Point it SOUTH (use the app’s compass).
+3. Tilt: in WINTER almost upright (~55° from the ground). In SUMMER flatter (~25°). Simple test: the panel’s shadow behind it should be as small as possible.
+4. Turn it towards the sun every 2–3 hours: morning east, midday south, afternoon west. You gain 20–40%.
+5. NO shade at all – not even a branch or a railing. A little shade on one part drops the WHOLE panel.
+6. Clean off dust, snow, leaves with a cloth.
+7. Leave air space behind it: too much heat lowers output.
+## The big secret: charge a BATTERY, not the phone
+- By day: panel → powerbank or power station. At night: battery → phone, light, radio.
+- When a cloud passes, the phone stops and restarts charging and gets worn out. The battery in between protects it.
+- Start charging in the MORNING. The day’s sun does not come back.
+## What to buy
+[ ] Foldable 60–100 W panel with USB-C (PD) and DC output – for backpack and car
+[ ] 300–1000 Wh power station (LiFePO4 battery: safer, thousands of cycles) with solar input (MPPT)
+[ ] Match the PLUGS before the crisis (MC4, Anderson, DC8020, USB-C). Test the whole system once
+[ ] Small 10–20 W panel + 20,000 mAh powerbank for each backpack
+[ ] Short cables (long cable = lost energy)
+## Safety
+! Lithium batteries: not in a hot car in summer, not covered while charging, not next to a child’s bed. If they swell, smell or smoke: take them outside and move away.
+- Foldable panels can take drizzle, but the sockets and the box on the back CANNOT. Bring them in when it rains.
+- Medical devices (CPAP, oxygen concentrator): measure NOW how many W they draw and how many hours you need. These get first priority for power.
+- The car is also a generator: it charges USB with the engine running – ONLY outdoors, never in a closed garage.
+
+@@ gear|g_radio|📻|Radio|The only news when everything goes down
+- FM + AM (medium wave) at least. Hand crank + solar + AA batteries = 3 ways to charge.
+- Useful: a torch and a USB output for the phone (a little charge).
+- Shortwave (SW): you hear news from abroad if local stations go down.
+- Write on paper the frequencies of the stations in your area (ERT).
+
+@@ gear|g_cook|🍳|Cooking – camping stoves|Hot food without power
+- Camping stove with butane canisters: cheap, easy. In the cold (below ~0 °C) butane works poorly – get an isobutane/propane mix.
+- Alcohol stove: simple, silent, no parts to break. Slow.
+- Wood stove (small, foldable): fuel from nature, for outdoors.
+- Charcoal grill: ONLY outdoors.
+! No flame stove inside a closed space or tent. Carbon monoxide and fire.
+## Cookware
+- Stainless steel or titanium pot with a lid (the lid makes boiling 2 times faster).
+- Stainless steel mug that can go on the fire (for boiling water).
+- Spork (spoon-fork), knife, small sponge, lighter.
+- Family: 2–3 L pot, frying pan, wooden spoon.
+- Thermos: keeps water hot – less fuel.
++ "Haybox" cooking: boil rice/beans 5 minutes, wrap the pot in blankets for 1–2 hours. It cooks with little fuel.
+
+@@ gear|g_water|💧|Water: filters and treatment|What really cleans it
+- Hollow-fibre filter (0.1–0.2 μm): stops bacteria and parasites. Does NOT stop viruses and chemicals.
+- Purifier (0.02 μm or with chemical): also viruses. For cities after a disaster, prefer this or filter + chlorine.
+- Chlorine dioxide tablets: kill almost everything, wait 30 minutes to 4 hours (see instructions).
+- Boiling: the surest against germs. Does not remove chemicals.
+- Activated carbon filter: improves taste, removes some chemicals, not germs.
+- Gravity filter (hanging bucket/bag): ideal for a family.
++ Best combination: pre-filter with cloth → filter → chlorine or boiling.
+
+@@ gear|g_tools|🔪|Knife – tools|The essentials
+- Fixed-blade knife 10–12 cm, stainless or carbon steel. For wood, fire, food.
+- Multitool with pliers: for repairs.
+- Folding saw: clean wood cutting, better and safer than an axe.
+- Paracord 550: 250 kg strength, 7 inner strands.
+- Duct tape: repairs, bandaging, blisters.
+- Folding shovel: toilet, fire, snow.
+- Crowbar: doors after an earthquake.
+! Check the law on carrying knives in the city. In the home backpack it is no problem.
+
+@@ gear|g_fire|🔥|Fire: lighters and tinder|3 ways, always
+- BIC lighter or similar: the most reliable. Get 3.
+- Waterproof / windproof matches (storm matches): burn even in wind.
+- Ferro rod: thousands of sparks, works even when wet.
+- Ready tinder: cotton with petroleum jelly in a film canister/zip bag, fire starter cubes, pine cone pieces with resin.
+
+@@ gear|g_clothes|🧥|Clothes – footwear|Layering system
+1. Base (next to skin): merino wool or synthetic that wicks sweat. NO cotton.
+2. Insulation: fleece or down/synthetic jacket.
+3. Outer: waterproof windproof shell with hood (Gore-Tex or similar).
+- Remove a layer BEFORE you sweat. Sweat in the cold = hypothermia.
+! "Cotton kills" in the cold: when wet, it loses warmth and does not dry.
+## Footwear
+- Hiking boots, broken in, with a good sole. Near fire: leather, not synthetic mesh.
+- Wool socks + one spare pair always dry in a small bag.
+- Beanie: the cheapest way to get warm.
+
+@@ gear|g_masks|😷|Masks – protection|What protects from what
+- FFP2: dust, smoke (particles), viruses. For earthquake, fire.
+- FFP3: more protection against particles, radioactive dust.
+- Respirator with filters (half/full face) A2B2E2K2-P3: gases and vapours – needs training, a fit without a beard.
+! No particle mask protects against gases or carbon monoxide.
+- Closed safety goggles for ash and smoke.
+
+@@ gear|g_nav|🗺️|Map – compass – GPS|Don't rely only on your phone
+- Paper map of your area and your escape routes.
+- Baseplate compass – cheap and needs no battery.
+- On the phone: download offline maps in advance (Google Maps offline, Organic Maps, Maps.me). GPS works without internet.
+- In the app: the 🧭 “Compass” shows coordinates and guides you back to your saved points without internet.
+
+@@ gear|g_store|📦|Storage – rotation|So nothing goes bad
+- Bottled water: in a dark cool place, not next to chemicals. Replace it as the date says.
+- Food: "first in, first out". Eat from the stock and refill.
+- Batteries out of devices. Power bank charging every 3 months.
+- Medicines: check expiry dates every 6 months.
+- Backpack: change clothes by season (March & September).
++ Set a reminder in your phone calendar for 1 March and 1 September: “Survival kit check”.
+

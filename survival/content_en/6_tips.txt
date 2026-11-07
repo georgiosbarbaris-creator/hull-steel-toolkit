@@ -1,0 +1,105 @@
+@@ tips|t_top|💡|30 golden tips|From real experience
+1. The best kit is the one you have WITH you when you need it. A small kit in your bag, a medium one in the car, a big one at home.
+2. Don't save it "for when it happens". Use your gear once on a camping trip so you know it works.
+3. Keep the fuel tank always above half.
+4. Charge your phone every night, keep the powerbank always full.
+5. Keep cash at home. Without power, cards and ATMs don't work.
+6. Write the important phone numbers on paper.
+7. Keep shoes and a torch next to the bed (earthquake at night = broken glass).
+8. Keys in a fixed spot next to the door.
+9. Learn where to shut off gas, water, power – and show everyone.
+10. Take a first aid course. It is the most useful skill of your life.
+11. Fix furniture to the wall.
+12. Smoke and CO detector. Test every month.
+13. Fill bottles with water in the empty spaces of the freezer.
+14. Every time you go to the supermarket, buy 1–2 extra things for your stock. In a few months you have 2 weeks.
+15. A whistle on every backpack and keyring. It costs very little, it saves lives.
+16. Download offline maps of your area to your phone now.
+17. Turn on Medical ID (iPhone: Health → Medical ID / Android: Emergency information) so it shows on the lock screen.
+18. Pick a relative in another town as your "contact centre".
+19. SMS gets through when calls don't.
+20. Take photos of your home and belongings (for insurance/compensation).
+21. If you leave home, leave a note: where you went, when.
+22. Learn your nearest open assembly area and shelter.
+23. Follow official instructions (112, Civil Protection), not rumours on social media.
+24. In a crisis: first YOU are safe, then you help others (like the mask on the plane).
+25. Panic is the biggest enemy. STOP – breathe – think.
+26. Never touch unknown ammunition, fallen cables, or flood water with electricity in it.
+27. No charcoal brazier, camping gas stove or generator inside the house. Ever.
+28. Don't eat wild mushrooms.
+29. Get to know your neighbours. In a disaster, the neighbour arrives first.
+30. Practise with your family: "Earthquake now! Where do we go?". Twice a year.
+
+@@ tips|t_more|🧠|Powerful survival tricks|Small secrets that make a big difference
+## Before it hits (when a warning comes)
+1. Fill the bathtub and containers with water.
+2. Charge EVERYTHING: phones, powerbank, power station, flashlights, laptop.
+3. Fill the fuel tank and withdraw cash (small notes).
+4. Put bottles of water in the freezer: they keep the fridge cold and then become drinking water.
+5. Set the fridge and freezer to the coldest setting.
+## Fridge without power
+- DO NOT open it. A closed fridge stays cold ~4 hours. A full freezer ~48 hours, half full ~24.
+- Order of eating: fridge first, then freezer, canned and dry food LAST.
+! Meat, fish, milk, eggs more than 2 hours in the heat: throw them away. If in doubt, throw it out. Diarrhoea in a crisis is dangerous.
+## Cooking with half the fuel
+- Retained-heat cooking: boil rice, pasta or pulses 5–10 minutes, put the lid on and wrap the pot in a sleeping bag or blankets. It cooks by itself in 1–2 hours. You save up to 2/3 of the gas.
+- Soak pulses overnight: half the boiling time.
+- Pressure cooker = less fuel and less water.
+- Always use a lid. Without a lid you use twice the gas.
+- Warm a can in the sun or on the bonnet of a running car (opened slightly, not sealed).
+## Phone battery
+- In the family: ONE phone on at a time, the others off. Swap every few hours.
+- In the cold the battery “drops”: keep the phone inside your jacket, close to your body. When sleeping, inside the sleeping bag.
+- An old phone with offline maps, this app and a charger = a spare in a bag in the backpack.
+## The car is a tool
+- Shelter, heating, charger, radio, lights for signalling.
+- Heating: engine 10 minutes every hour, with the window slightly open.
+! Snow or mud in the exhaust = carbon monoxide inside the car. Clear it before starting the engine.
+## House without heating
+- Insulation from household items: cardboard on the floor, blankets on the windows, foam or bubble wrap on the glass (spray with water and it sticks).
+- Pitch a tent inside the room: a small space = it warms up from breath and bodies.
+- Flowerpot-and-candle “heater”: gives very little heat and is a fire risk. Better: body, sleeping bag, one room.
+## Water and hygiene
+- Hand sanitiser BEFORE eating and AFTER the toilet. In disasters diarrhoea kills more people than we think.
+- Baby wipes = a bath without water.
+- A hanging bottle with a hole in the cap = a tap for hand washing with very little water.
+- Washing water → toilet. Nothing is thrown away.
+## Communication and searching
+- If you leave home: write with a marker on paper on the door “We are 3, all OK, gone to …, date”.
+- SMS instead of a call. Keep it short: “OK. Home. Tomorrow 10:00 at the meeting point.”
+- 3 whistle blasts / 3 flashes / 3 fires = HELP all over the world.
+## Health
+- Always keep 2 weeks’ extra supply of the medicines you take daily (talk to your doctor).
+- Spare prescription glasses in the backpack. Without glasses many people cannot do anything.
+- Keep on paper: blood group, allergies, medicines, phone numbers.
+## Mind
+- A daily schedule: times for food, water, sleep, chores. Routine keeps you calm.
+- Give children jobs (“you are in charge of the flashlights”). They feel useful and are less afraid.
+- Help your neighbour. In crises neighbourhoods survive, not loners.
+
+@@ tips|t_kids|🧒|For kids|Simple words for little heroes
+- Earthquake: "I drop, I get under the table, I hold on". Then I go out only with a grown-up.
+- Fire: "I go outside, I don't hide, I don't go back in". Never under the bed or in a wardrobe.
+- Smoke: "I go low, on hands and knees".
+- My clothes caught fire: "Stop – drop – roll".
+- I am lost: "I stay where I am, I hug a tree, I whistle 3 times". I am not afraid of the people looking for me, even if they shout my name.
+- I found something strange made of metal: "I DON'T touch it, I walk away, I tell a grown-up".
+- Phone: "I call 112 and say my name, where I am, what happened".
+- I know Mum's or Dad's phone number by heart.
+- I know my family's meeting place.
++ Make it a game: "Who finds the safe spot in the room first?".
+
+@@ tips|t_books|📚|Books and sources|To learn more
+- Greek Civil Protection – advice for each hazard: civilprotection.gov.gr
+- 112 Greece: 112.gr
+- Hellenic Red Cross – first aid courses.
+- EKAB (Greek National Ambulance Service) – CPR courses.
+- "SAS Survival Handbook" – John "Lofty" Wiseman (the classic SAS survival guide).
+- "Bushcraft 101" – Dave Canterbury.
+- "98.6 Degrees: The Art of Keeping Your Ass Alive" – Cody Lundin (cold/overheating).
+- "Deep Survival" – Laurence Gonzales (the psychology of survival).
+- European Union guidance on 72-hour preparedness (Preparedness Union Strategy).
+- Preparedness guides from Sweden "Om krisen eller kriget kommer" and Finland (72tuntia.fi).
+- Ready.gov (USA) and Get Prepared (Canada) – for nuclear/radiological.
+- Seafarers: SOLAS LSA Code, IAMSAR Vol. III (on board), the ship's life-saving appliances instructions.
+
