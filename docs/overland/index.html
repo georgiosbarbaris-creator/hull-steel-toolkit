@@ -11,7 +11,8 @@
 :root{--fs:18px;--bg:#1a1918;--card:#262422;--line:#3d3935;--tx:#f5f0e8;--mut:#a8a29e;--red:#d9534f;--org:#d97757;--grn:#5f9e7a;--yel:#e8b86d;--blu:#6a9fb5;--sun:#d97757}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--tx);font-family:-apple-system,system-ui,"Segoe UI",Roboto,Arial,sans-serif;font-size:var(--fs);line-height:1.45}
-header{position:sticky;top:0;z-index:5;background:#1f1e1d;display:flex;align-items:center;gap:8px;padding:calc(env(safe-area-inset-top) + 8px) 10px 8px;border-bottom:1px solid var(--line)}
+header{position:sticky;top:0;z-index:5;background:#1f1e1d;display:flex;align-items:center;gap:8px;padding:calc(env(safe-area-inset-top) + 14px) 10px 8px;border-bottom:1px solid var(--line)}
+body.sa header{padding-top:calc(max(env(safe-area-inset-top),54px) + 12px)}#bk{min-width:52px;height:48px;font-size:1.1em}
 header h1{flex:1;font-size:1.02em;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hb{background:var(--card);color:var(--tx);border:1px solid var(--line);border-radius:12px;min-width:44px;height:44px;font-size:.95em;font-weight:700;padding:0 9px}
 main{padding:12px 12px calc(env(safe-area-inset-bottom) + 96px);max-width:760px;margin:0 auto}
@@ -76,7 +77,7 @@ table.t{width:100%;border-collapse:collapse;font-size:.9em}table.t td,table.t th
 html.night header,html.night main,html.night nav{filter:grayscale(1) sepia(1) saturate(12) hue-rotate(-50deg) brightness(.55)}html.night,html.night body{background:#000}
 @media print{header,#nv,nav,button,.big,input{display:none!important}body{background:#fff!important;color:#000!important}.box,.tip,.note,.kv{background:#fff!important;color:#000!important;border:1px solid #999!important;break-inside:avoid}.muted{color:#444!important}h1,h2,h3,b{color:#000!important}}
 </style></head><body>
-<header><button class="hb" id="bk" onclick="back()" aria-label="Πίσω">◀</button><h1 id="ttl">Overland Habit</h1>
+<script>if(navigator.standalone||matchMedia("(display-mode: standalone)").matches)document.body.classList.add("sa")</script><header><button class="hb" id="bk" onclick="back()" aria-label="Πίσω">◀</button><h1 id="ttl">Overland Habit</h1>
 <button class="hb" data-nt onclick="setLang(LANG==='en'?'el':'en')" aria-label="Language">🌐 <script>document.write(LANG==='en'?'ΕΛ':'EN')</script></button><button class="hb" onclick="fz(-1)">A−</button><button class="hb" onclick="fz(1)">A+</button></header>
 <main id="m"></main>
 <nav id="nv">
