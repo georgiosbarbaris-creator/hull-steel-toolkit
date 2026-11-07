@@ -211,7 +211,7 @@ function mRouteBar(){const b=$('#mrb');if(!b)return;if(MP.plan||!RC||!pos){b.inn
 /* ---------- Offline περιοχές ορεινού χάρτη ----------
    Κατεβάζει τα πλακίδια OpenTopoMap της περιοχής που βλέπεις στην cache «ovarea» (δεν σβήνεται μόνη της).
    Ο service worker τα βρίσκει με caches.match, άρα ο χάρτης και η πυξίδα δουλεύουν χωρίς σήμα. */
-const OFFC='ovarea',OFFMAX=5000,OFFKB=22;
+const OFFC='ovarea',OFFMAX=5000,OFFKB=22,OFFN=2; /* το πολύ 2 χάρτες μέσα στην εφαρμογή, οι άλλοι σε αρχεία .ohmap */
 const t2x=(lon,z)=>Math.floor((lon+180)/360*2**z),t2y=(lat,z)=>{const r=lat*Math.PI/180;return Math.floor((1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*2**z)};
 function offTiles(b,z0,z1){const U=[];for(let z=z0;z<=z1;z++){const x0=t2x(b.w,z),x1=t2x(b.e,z),y0=t2y(b.n,z),y1=t2y(b.s,z);
  for(let x=x0;x<=x1;x++)for(let y=y0;y<=y1;y++)U.push(`https://${'abc'[Math.abs(x+y)%3]}.tile.opentopomap.org/${z}/${x}/${y}.png`)}return U}
@@ -223,10 +223,11 @@ function offPanel(){if(!MP.map)return;MP.card=null;const z=MP.map.getZoom(),b=of
  const opt=[15,16].map(z1=>{const n=offTiles(b,z0,z1).length;return`<button ${n>OFFMAX?'disabled style="opacity:.4"':z1===15?'class="o"':''} onclick="offGet(${z0},${z1})">⬇️ ${L2('ως ζουμ','to zoom')} ${z1}<br><small>${n} ${L2('πλακίδια','tiles')} · ~${offMB(n)}</small></button>`}).join('');
  $('#mbar').innerHTML=`<div class="msh"><div style="display:flex;justify-content:space-between;align-items:center"><b>⬇️ ${L2('Ορεινός χάρτης offline','Mountain map offline')}</b><button class="hb" onclick="mBarHome()">✖</button></div>
  <div class="muted" style="font-size:.8em">${L2('Κατεβάζει ό,τι βλέπεις τώρα στην οθόνη (μονοπάτια, χωματόδρομοι, ισοϋψείς), για χρήση χωρίς σήμα μαζί με την πυξίδα. Με WiFi. Οι περιοχές σου φαίνονται με πράσινο διακεκομμένο.','Downloads what you see on screen now (trails, dirt roads, contours) for use without signal with the compass. On WiFi. Your areas show as green dashed boxes.')}${z<9?' <b>'+L2('Ζούμαρε πιο κοντά για μικρότερη περιοχή.','Zoom in for a smaller area.')+'</b>':''}</div>
- <div class="mg" style="grid-template-columns:1fr 1fr">${opt}</div><div id="offp" style="font-size:.85em;margin-top:6px"></div>
- ${A.length?`<div style="margin-top:8px;max-height:28vh;overflow:auto">${A.map((a,i)=>`<div class="wp" style="margin:4px 0"><b style="flex:1;font-size:.85em">🟩 ${esc(a.n)}<br><small class="muted">${a.c} ${L2('πλακίδια','tiles')} · ~${offMB(a.c)} · z${a.z0}–${a.z1}</small></b><button class="btn" onclick="MP.map.fitBounds([[${a.b.s},${a.b.w}],[${a.b.n},${a.b.e}]])">🗺️</button><button class="btn r" onclick="offDel(${i})">🗑</button></div>`).join('')}</div>`:''}</div>`}
+ ${A.length>=OFFN?`<div class="warn" style="font-size:.82em;margin-top:6px">${L2('Έχεις ήδη '+OFFN+' χάρτες στην εφαρμογή (το όριο). Βγάλε έναν σε αρχείο με 📤 ή σβήσ\'τον με 🗑 για να κατεβάσεις άλλον.','You already have '+OFFN+' maps in the app (the limit). Move one to a file with 📤 or delete it with 🗑 to download another.')}</div>`:`<div class="mg" style="grid-template-columns:1fr 1fr">${opt}</div>`}
+ <label class="btn" style="display:block;text-align:center;margin-top:6px;color:var(--tx)">📥 ${L2('Φόρτωσε χάρτη από αρχείο (.ohmap)','Load a map from a file (.ohmap)')}<input type="file" style="display:none" onchange="offImp(this.files[0])"></label><div id="offp" style="font-size:.85em;margin-top:6px"></div>
+ ${A.length?`<div style="margin-top:8px;max-height:28vh;overflow:auto">${A.map((a,i)=>`<div class="wp" style="margin:4px 0"><b style="flex:1;font-size:.85em">🟩 ${esc(a.n)}<br><small class="muted">${a.c} ${L2('πλακίδια','tiles')} · ~${offMB(a.c)} · z${a.z0}–${a.z1}</small></b><button class="btn" onclick="MP.map.fitBounds([[${a.b.s},${a.b.w}],[${a.b.n},${a.b.e}]])">🗺️</button><button class="btn" onclick="offExp(${i})">📤</button><button class="btn r" onclick="offDel(${i})">🗑</button></div>`).join('')}</div>`:''}</div>`}
 let OFFRUN=null;
-async function offGet(z0,z1){if(OFFRUN)return;const b=offView(),U=offTiles(b,z0,z1),p=$('#offp');if(U.length>OFFMAX)return;
+async function offGet(z0,z1){if(OFFRUN)return;if(LS.g('offa',[]).length>=OFFN)return offPanel();const b=offView(),U=offTiles(b,z0,z1),p=$('#offp');if(U.length>OFFMAX)return;
  try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
  const c=await caches.open(OFFC);let i=0,ok=0,bad=0;OFFRUN={stop:0};wake(1);
  const ui=()=>{if(p)p.innerHTML=`⏳ ${ok+bad} / ${U.length}${bad?' · ⚠️ '+bad:''} <button class="btn" style="padding:4px 10px" onclick="OFFRUN&&(OFFRUN.stop=1)">✖ ${L2('Σταμάτα','Stop')}</button>`};ui();
@@ -235,5 +236,24 @@ async function offGet(z0,z1){if(OFFRUN)return;const b=offView(),U=offTiles(b,z0,
  if(ok){const A=LS.g('offa',[]),ce=MP.map?MP.map.getCenter():{lat:(b.n+b.s)/2,lng:(b.w+b.e)/2},nm=prompt(L2('Όνομα περιοχής:','Area name:'),L2('Περιοχή ','Area ')+(A.length+1)+' ('+ce.lat.toFixed(2)+', '+ce.lng.toFixed(2)+')')||L2('Περιοχή ','Area ')+(A.length+1);
   A.push({n:nm,b,z0,z1,c:ok,t:Date.now()});LS.s('offa',A);offDraw()}
  if(MP.map){offPanel();const q=$('#offp');if(q)q.innerHTML=(stopped?'⏹ ':'✅ ')+ok+' '+L2('πλακίδια κατέβηκαν','tiles downloaded')+(bad?` · ⚠️ ${bad} ${L2('απέτυχαν (ξαναπάτα για να συμπληρωθούν)','failed (tap again to fill in)')}`:'')}}
-async function offDel(i){const A=LS.g('offa',[]),a=A[i];if(!a||!confirm(L2('Να σβηστεί η offline περιοχή «','Delete offline area «')+a.n+'»;'))return;A.splice(i,1);LS.s('offa',A);
+async function offDel(i,ask=true){const A=LS.g('offa',[]),a=A[i];if(!a||ask&&!confirm(L2('Να σβηστεί η offline περιοχή «','Delete offline area «')+a.n+'»;'))return;A.splice(i,1);LS.s('offa',A);
  const keep=new Set();A.forEach(x=>offTiles(x.b,x.z0,x.z1).forEach(u=>keep.add(u)));const c=await caches.open(OFFC);for(const u of offTiles(a.b,a.z0,a.z1))if(!keep.has(u))await c.delete(u);offDraw();offPanel()}
+
+/* Αρχείο .ohmap: [4 byte μήκος κεφαλίδας][κεφαλίδα JSON][PNG πλακίδια το ένα μετά το άλλο] */
+async function offExp(i){const A=LS.g('offa',[]),a=A[i];if(!a)return;const c=await caches.open(OFFC),T=[],P=[];let off=0;const p=$('#offp');if(p)p.innerHTML='⏳ '+L2('Φτιάχνω το αρχείο…','Building the file…');
+ for(let z=a.z0;z<=a.z1;z++){const x0=t2x(a.b.w,z),x1=t2x(a.b.e,z),y0=t2y(a.b.n,z),y1=t2y(a.b.s,z);for(let x=x0;x<=x1;x++)for(let y=y0;y<=y1;y++){const r=await c.match(`https://${'abc'[Math.abs(x+y)%3]}.tile.opentopomap.org/${z}/${x}/${y}.png`);if(!r)continue;const ab=await r.arrayBuffer();T.push([z,x,y,off,ab.byteLength]);P.push(ab);off+=ab.byteLength}}
+ if(!T.length){if(p)p.innerHTML='⚠️ '+L2('Δεν βρέθηκαν πλακίδια.','No tiles found.');return}
+ const hd=new TextEncoder().encode(JSON.stringify({app:'overland-habit-map',v:1,a:{n:a.n,b:a.b,z0:a.z0,z1:a.z1},t:T})),len=new Uint8Array(4);new DataView(len.buffer).setUint32(0,hd.length);
+ const nm=(a.n.replace(/[^\wΑ-Ωα-ωά-ώΆ-Ώ -]/g,'').trim()||'xartis')+'.ohmap',f=new File([len,hd,...P],nm,{type:'application/octet-stream'});
+ let ok=false;try{if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:a.n});ok=true}}catch(e){if(e&&e.name==='AbortError'){if(p)p.innerHTML='';return}}
+ if(!ok){const l=document.createElement('a');l.href=URL.createObjectURL(f);l.download=nm;l.click();ok=true}
+ if(confirm(L2(`Το αρχείο «${nm}» (${(off/1048576).toFixed(1)} MB) φτιάχτηκε. Αν το αποθήκευσες στα Αρχεία, να σβηστεί ο χάρτης από την εφαρμογή για να ελευθερωθεί χώρος;`,`The file «${nm}» (${(off/1048576).toFixed(1)} MB) is ready. If you saved it to Files, delete the map from the app to free space?`)))await offDel(i,false);else offPanel()}
+async function offImp(file){if(!file)return;const p=$('#offp');if(LS.g('offa',[]).length>=OFFN){alert(L2('Έχεις ήδη '+OFFN+' χάρτες στην εφαρμογή. Βγάλε ή σβήσε έναν πρώτα.','You already have '+OFFN+' maps in the app. Move or delete one first.'));return}
+ if(p)p.innerHTML='⏳ '+L2('Φορτώνω τον χάρτη…','Loading the map…');
+ try{const buf=await file.arrayBuffer(),hl=new DataView(buf).getUint32(0),H=JSON.parse(new TextDecoder().decode(new Uint8Array(buf,4,hl)));if(H.app!=='overland-habit-map')throw 0;
+  if(LS.g('offa',[]).some(x=>JSON.stringify(x.b)===JSON.stringify(H.a.b)&&x.z1===H.a.z1)){if(p)p.innerHTML='ℹ️ '+L2('Αυτός ο χάρτης είναι ήδη μέσα.','This map is already loaded.');return}
+  const base=4+hl,c=await caches.open(OFFC);let n=0;
+  for(const[z,x,y,o,l]of H.t){await c.put(`https://${'abc'[Math.abs(x+y)%3]}.tile.opentopomap.org/${z}/${x}/${y}.png`,new Response(buf.slice(base+o,base+o+l),{headers:{'Content-Type':'image/png'}}));if(++n%200===0&&p)p.innerHTML=`⏳ ${n} / ${H.t.length}`}
+  const A=LS.g('offa',[]);A.push({n:H.a.n,b:H.a.b,z0:H.a.z0,z1:H.a.z1,c:n,t:Date.now()});LS.s('offa',A);offDraw();
+  if(MP.map)MP.map.fitBounds([[H.a.b.s,H.a.b.w],[H.a.b.n,H.a.b.e]]);offPanel();const q=$('#offp');if(q)q.innerHTML='✅ '+L2('Φορτώθηκε','Loaded')+': <b>'+esc(H.a.n)+'</b> ('+n+' '+L2('πλακίδια','tiles')+')'}
+ catch(e){if(p)p.innerHTML='⚠️ '+L2('Δεν είναι αρχείο χάρτη του Overland’s Habit (.ohmap).','This is not an Overland’s Habit map file (.ohmap).')}}
