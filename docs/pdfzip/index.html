@@ -280,7 +280,8 @@ input,select{font:16px system-ui;padding:9px;border:1px solid var(--line);border
  </section>
 
  <details class="card"><summary style="cursor:pointer;font-weight:700">❓ Οδηγίες</summary>
-  <p style="margin:8px 0 4px"><b>✏️ Επεξεργασία PDF</b> — ανοίγεις PDF ή φωτό, διορθώνεις/σβήνεις/γράφεις/κόβεις/υπογράφεις και αποθηκεύεις.</p>
+  <p style="margin:8px 0 4px"><b>📷 Σκάνερ</b> — σκανάρεις έγγραφα με την κάμερα: βρίσκει μόνο του τις άκρες, ισιώνει τη σελίδα, σβήνει σκιές. Πολλές σελίδες → PDF ή JPG.</p>
+  <p style="margin:4px 0"><b>✏️ Επεξεργασία PDF</b> — ανοίγεις PDF ή φωτό, διορθώνεις/σβήνεις/γράφεις/κόβεις/υπογράφεις και αποθηκεύεις.</p>
   <p style="margin:4px 0"><b>🗜 Συμπίεση PDF</b> — βάζεις PDF (και 200MB), βγαίνει κάτω από 14MB. «Ένα αρχείο»: ρίχνει ποιότητα όσο χρειάζεται. «Κομμάτια»: κρατά καλή ποιότητα και σπάει σε part1, part2…</p>
   <p style="margin:4px 0"><b>🖼→📄 Φωτό σε PDF</b> — διαλέγεις πολλές φωτό, τις βάζεις σε σειρά (↑) και βγαίνει ένα PDF, μία φωτό ανά σελίδα.</p>
   <p style="margin:4px 0"><b>📄→🖼 PDF σε φωτό</b> — κάθε σελίδα γίνεται JPG. Μπορείς να διαλέξεις σελίδες (π.χ. 1-3,7).</p>
@@ -361,7 +362,7 @@ input,select{font:16px system-ui;padding:9px;border:1px solid var(--line);border
 <script src="qrcode.js"></script>
 <script type="module">
 import * as pdfjsLib from "./pdf.min.mjs";
-import {applyLang, LANG} from "./i18n.js";
+import {applyLang, LANG} from "./i18n.js?v8";
 pdfjsLib.GlobalWorkerOptions.workerSrc = "./pdf.worker.min.mjs";
 const $ = id => document.getElementById(id);
 const MB = 1024*1024;
@@ -933,12 +934,12 @@ window.PT = {show, fmt, fitJpeg, buildPdf};
 let scMod = null;
 document.querySelector('#tabs button[data-t="scn"]').addEventListener("click", async () => {
   if (scMod) return;
-  try { scMod = await import("./scanner.js"); scMod.setupScanner(); } catch(e){ scMod = null; alert("Δεν φόρτωσε το σκάνερ — άνοιξε την εφαρμογή μία φορά με internet."); }
+  try { scMod = await import("./scanner.js?v8"); scMod.setupScanner(); } catch(e){ scMod = null; alert("Δεν φόρτωσε το σκάνερ — άνοιξε την εφαρμογή μία φορά με internet."); }
 });
-if ((localStorage.getItem("pdfzip_tab")||"") === "scn") import("./scanner.js").then(m => { if (!scMod){ scMod = m; m.setupScanner(); } });
+if ((localStorage.getItem("pdfzip_tab")||"") === "scn") import("./scanner.js?v8").then(m => { if (!scMod){ scMod = m; m.setupScanner(); } });
 let edMod = null, edReady = false;
 async function openEd(file){
-  try { edMod ||= await import("./editor.js"); if (!edReady){ edMod.setupEditor(); edReady = true; } }
+  try { edMod ||= await import("./editor.js?v8"); if (!edReady){ edMod.setupEditor(); edReady = true; } }
   catch(e){ edMod = null; alert("Δεν φόρτωσε ο editor — άνοιξε την εφαρμογή μία φορά με internet."); return; }
   $("res").classList.add("hide");
   try { await edMod.openEditor(file); } catch(e){ alert("Δεν άνοιξε το αρχείο: " + (e.message || e)); }

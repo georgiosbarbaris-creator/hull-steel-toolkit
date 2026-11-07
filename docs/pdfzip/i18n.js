@@ -61,7 +61,7 @@ const EXACT = {
 "Η αποστολή όλων μαζί δεν υποστηρίζεται εδώ — πάτα «📦 ZIP».":"Sending all at once isn't supported here — tap “📦 ZIP”.",
 "📤 Αποστολή όλων":"📤 Send all","✏️ Συνέχεια επεξεργασίας":"✏️ Keep editing","🗜 Συμπίεση αυτού":"🗜 Compress this",
 "Δεν είναι PDF.":"Not a PDF.","Άνοιγμα PDF…":"Opening PDF…","Δημιουργία PDF…":"Building PDF…","Φωτογραφίες…":"Photos…","Μετατροπή…":"Converting…","Resize…":"Resize…",
-"Ακύρωση…":"Cancelling…","📷 Σκάνερ":"📷 Scanner","📷 Σκανάρισμα με κάμερα":"📷 Scan with camera","📸 Κάμερα κινητού":"📸 Phone camera","🖼 Από φωτογραφίες":"🖼 From photos",
+"Ακύρωση…":"Cancelling…","— σκανάρεις έγγραφα με την κάμερα: βρίσκει μόνο του τις άκρες, ισιώνει τη σελίδα, σβήνει σκιές. Πολλές σελίδες → PDF ή JPG.":"— scan documents with the camera: it finds the edges, straightens the page, removes shadows. Many pages → PDF or JPG.","📷 Σκάνερ":"📷 Scanner","📷 Σκανάρισμα με κάμερα":"📷 Scan with camera","📸 Κάμερα κινητού":"📸 Phone camera","🖼 Από φωτογραφίες":"🖼 From photos",
 "Βάλε το χαρτί σε":"Put the paper on a","πιο σκούρο φόντο":"darker background","(τραπέζι, ντοσιέ) με καλό φως. Η εφαρμογή βρίσκει μόνη της τις άκρες, ισιώνει τη σελίδα και σβήνει τις σκιές. Με «Αυτόματη λήψη» τραβάει μόλις κρατήσεις σταθερά.":"(table, folder) with good light. The app finds the edges, straightens the page and removes shadows. With “AUTO” it shoots as soon as you hold steady.",
 "📑 Σελίδες (":"📑 Pages (","Πάτα μια σελίδα για να διορθώσεις γωνίες, φίλτρο ή περιστροφή. ◀ ▶ αλλάζουν σειρά.":"Tap a page to fix corners, filter or rotation. ◀ ▶ change order.",
 "⚙ Αποτέλεσμα":"⚙ Output","Φίλτρο νέων σελίδων":"Filter for new pages","📄 Έγγραφο":"📄 Document","⚫ Ασπρόμαυρο":"⚫ Black & white","🎨 Χρώμα+":"🎨 Colour+","◐ Γκρι":"◐ Grey","🖼 Πρωτότυπο":"🖼 Original",
