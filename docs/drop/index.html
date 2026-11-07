@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ShipDrop</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="ShipDrop">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#123d5e">
+<style>
+:root{--bg:#eef1f4;--card:#fff;--ink:#14212e;--muted:#5a6876;--line:#d3dae1;--navy:#123d5e;--acc:#c8551c;--ok:#2f7d4f;--f:#c0392b}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1720;--card:#17222e;--ink:#e3e9ef;--muted:#97a5b3;--line:#2a3846;--navy:#8fb4dc;--acc:#ef8a55;--ok:#5fbf86;--f:#f07a6c}}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 -apple-system,system-ui,Segoe UI,Roboto,sans-serif}
+header{position:sticky;top:0;z-index:5;background:#123d5e;color:#fff;padding:calc(env(safe-area-inset-top) + 10px) 14px 10px}
+.hrow{display:flex;align-items:center;gap:6px}header h1{font-size:19px;margin:0;flex:1}header .sub{font-size:12px;opacity:.8}
+.hb{background:rgba(255,255,255,.15);border:0;color:#fff;border-radius:10px;padding:7px 10px;font:700 13px system-ui;cursor:pointer}
+main{max-width:640px;margin:0 auto;padding:12px 12px calc(env(safe-area-inset-bottom) + 30px)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+h2{font-size:16px;margin:0 0 8px}
+.big{display:block;width:100%;border:0;border-radius:14px;padding:18px 14px;font:800 18px system-ui;color:#fff;background:var(--navy);margin-bottom:10px;cursor:pointer;text-align:left}
+@media (prefers-color-scheme:dark){.big{color:#0f1720}}
+.big small{display:block;font-weight:500;font-size:13px;opacity:.85;margin-top:2px}
+.big.alt{background:var(--acc)}
+.btn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:9px 12px;font:700 14px system-ui;cursor:pointer}
+.btn.p{background:var(--navy);color:#fff;border-color:var(--navy)}@media (prefers-color-scheme:dark){.btn.p{color:#0f1720}}
+.btn.d{color:var(--f)}
+ol{margin:4px 0 0;padding-left:20px}ol li{margin:4px 0}
+.muted{color:var(--muted);font-size:13px}
+.hide{display:none!important}
+.qrbox{background:#fff;border-radius:12px;padding:10px;display:flex;justify-content:center;margin:8px 0}
+.qrbox canvas{width:min(78vw,330px);height:auto;image-rendering:pixelated}
+video{width:100%;max-height:46vh;border-radius:12px;background:#000;object-fit:cover;display:block}
+.vid-s video{max-height:26vh}
+.status{font-weight:700;margin:6px 0}
+.ok{color:var(--ok)}.err{color:var(--f)}
+.item{border-top:1px solid var(--line);padding:9px 0}.item:first-child{border-top:0}
+.nm{font-weight:700;word-break:break-all}
+.bar{height:8px;background:var(--line);border-radius:6px;overflow:hidden;margin:5px 0}.bar i{display:block;height:100%;background:var(--acc);width:0}
+.item.done .bar i{background:var(--ok)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.row .grow{flex:1}
+textarea{width:100%;min-height:70px;font:12px ui-monospace,monospace;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);padding:6px}
+details summary{cursor:pointer;color:var(--muted);font-size:13px;margin-top:6px}
+.pill{display:inline-block;background:var(--ok);color:#fff;border-radius:20px;padding:3px 10px;font-size:13px;font-weight:700}
+footer{text-align:center;color:var(--muted);font-size:12px;margin-top:16px}
+#toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 20px);transform:translateX(-50%);background:#14212e;color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;transition:.3s;pointer-events:none;max-width:90vw;z-index:9}
+#toast.on{opacity:1}
+</style>
+</head>
+<body>
+<header><div class="hrow"><h1>📲 ShipDrop</h1><button class="hb" id="langBtn">EN</button><button class="hb hide" id="homeBtn">✕</button></div>
+<div class="sub" data-t="sub"></div></header>
+<main>
+
+<section id="sHome">
+ <button class="big" id="bHost">📤 <span data-t="host"></span><small data-t="hostS"></small></button>
+ <button class="big alt" id="bJoin">📷 <span data-t="join"></span><small data-t="joinS"></small></button>
+ <div class="card"><h2 data-t="howT"></h2><ol data-t="how" data-html></ol></div>
+ <div class="card"><h2 data-t="tipsT"></h2><div class="muted" data-t="tips" data-html></div></div>
+ <div class="card hide" id="rxHomeCard"><h2 data-t="saved"></h2><div id="rxHome"></div></div>
+</section>
+
+<section id="sHost" class="hide">
+ <div class="card">
+  <h2 data-t="h1"></h2>
+  <div class="status" id="hostSt"></div>
+  <div class="qrbox"><canvas id="qrOffer"></canvas></div>
+  <h2 data-t="h2"></h2>
+  <div class="vid-s"><video id="vidH" playsinline muted></video></div>
+  <details><summary data-t="manual"></summary><p class="muted" data-t="manH"></p><textarea id="txOffer" readonly></textarea><textarea id="inAnswer" data-ph="pasteAns"></textarea><button class="btn p" id="bApplyAns" data-t="connect"></button></details>
+ </div>
+</section>
+
+<section id="sJoin" class="hide">
+ <div class="card">
+  <div id="joinScan"><h2 data-t="j1"></h2><video id="vidJ" playsinline muted></video><div class="status" id="joinSt"></div>
+   <details><summary data-t="manual"></summary><textarea id="inOffer" data-ph="pasteOff"></textarea><button class="btn p" id="bApplyOff" data-t="next"></button></details></div>
+  <div id="joinAns" class="hide"><h2 data-t="j2"></h2><div class="qrbox"><canvas id="qrAnswer"></canvas></div><div class="status" id="joinSt2"></div>
+   <details><summary data-t="manual"></summary><textarea id="txAnswer" readonly></textarea></details></div>
+ </div>
+</section>
+
+<section id="sX" class="hide">
+ <div class="card"><div class="row"><span class="pill" id="connPill" data-t="conn"></span><span class="grow"></span><button class="btn d" id="bDisc" data-t="disc"></button></div>
+  <p class="muted" data-t="keepOn"></p>
+  <input type="file" id="fileIn" multiple class="hide">
+  <button class="big" id="bPick">➕ <span data-t="pick"></span><small data-t="pickS"></small></button>
+ </div>
+ <div class="card hide" id="outCard"><h2 data-t="out"></h2><div id="outList"></div></div>
+ <div class="card hide" id="inCard"><h2 data-t="in"></h2><div id="inList"></div></div>
+ <div class="card hide" id="rxCard"><h2 data-t="saved"></h2><div id="rxList"></div></div>
+</section>
+
+<footer>ShipDrop v1.0 · Created by George Barbaris</footer>
+</main>
+<div id="toast"></div>
+<script src="qrcode.js"></script>
+<script src="jsQR.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
