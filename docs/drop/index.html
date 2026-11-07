@@ -37,6 +37,7 @@ video{width:100%;max-height:46vh;border-radius:12px;background:#000;object-fit:c
 .nm{font-weight:700;word-break:break-all}
 .bar{height:8px;background:var(--line);border-radius:6px;overflow:hidden;margin:5px 0}.bar i{display:block;height:100%;background:var(--acc);width:0}
 .item.done .bar i{background:var(--ok)}
+.grp{border:1px solid var(--line);border-radius:12px;padding:10px;margin:8px 0}.grp .item{padding:6px 0}.sub-l{max-height:260px;overflow:auto;margin-top:6px}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.row .grow{flex:1}
 textarea{width:100%;min-height:70px;font:12px ui-monospace,monospace;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);padding:6px}
 details summary{cursor:pointer;color:var(--muted);font-size:13px;margin-top:6px}
@@ -84,15 +85,20 @@ footer{text-align:center;color:var(--muted);font-size:12px;margin-top:16px}
 <section id="sX" class="hide">
  <div class="card"><div class="row"><span class="pill" id="connPill" data-t="conn"></span><span class="grow"></span><button class="btn d" id="bDisc" data-t="disc"></button></div>
   <p class="muted" data-t="keepOn"></p>
-  <input type="file" id="fileIn" multiple class="hide">
-  <button class="big" id="bPick">➕ <span data-t="pick"></span><small data-t="pickS"></small></button>
+  <input type="file" id="inMedia" multiple accept="image/*,video/*" class="hide">
+  <input type="file" id="inFiles" multiple class="hide">
+  <input type="file" id="inDir" multiple webkitdirectory class="hide">
+  <button class="big" id="bMedia">📷 <span data-t="pMedia"></span><small data-t="pMediaS"></small></button>
+  <button class="big" id="bFiles">📄 <span data-t="pFiles"></span><small data-t="pFilesS"></small></button>
+  <button class="big alt" id="bDir">📁 <span data-t="pDir"></span><small data-t="pDirS"></small></button>
+  <details><summary data-t="iosT"></summary><p class="muted" data-t="iosH" data-html></p></details>
  </div>
  <div class="card hide" id="outCard"><h2 data-t="out"></h2><div id="outList"></div></div>
  <div class="card hide" id="inCard"><h2 data-t="in"></h2><div id="inList"></div></div>
  <div class="card hide" id="rxCard"><h2 data-t="saved"></h2><div id="rxList"></div></div>
 </section>
 
-<footer>ShipDrop v1.1 · Created by George Barbaris</footer>
+<footer>ShipDrop v1.2 · Created by George Barbaris</footer>
 </main>
 <div id="toast"></div>
 <script src="qrcode.js"></script>

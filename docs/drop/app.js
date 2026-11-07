@@ -32,7 +32,7 @@ const T={el:{
  rejected:"❌ Δεν υπάρχει χώρος στο άλλο κινητό",cancelled:"Ακυρώθηκε",receiving:"Λήψη",
  noSpace:"Δεν υπάρχει αρκετός ελεύθερος χώρος για",gotFile:"Ελήφθη:",missing:"Το αρχείο δεν βρέθηκε",
  confDel:"Διαγραφή του αρχείου από την εφαρμογή;",confDisc:"Αποσύνδεση;",memWarn:"Προσοχή: αυτός ο browser κρατά τα αρχεία στη μνήμη — πολύ μεγάλα αρχεία μπορεί να μην χωρέσουν.",
- left:"απομένουν",give:"Δώσε την εφαρμογή σε άλλον",giveH:"Ο άλλος σκανάρει αυτό το QR με την κάμερά του (θέλει λίγο internet μία φορά), ανοίγει το link και πατάει Share → Add to Home Screen. Μετά δουλεύει offline."
+ left:"απομένουν",pMedia:"Φωτογραφίες & Βίντεο",pMediaS:"Από τη Συλλογή — πολλές μαζί",pFiles:"Αρχεία",pFilesS:"PDF, Word, Excel, ZIP, οτιδήποτε — και GB",pDir:"Φάκελος",pDirS:"Ολόκληρος φάκελος με υποφακέλους",iosT:"ℹ️ Συμβουλές για iPhone",iosH:"• <b>Βίντεο σε πλήρη ποιότητα:</b> αν ένα βίντεο φτάσει μικρότερο από το αρχικό, το iPhone το συμπίεσε κατά την επιλογή. Τότε αποθήκευσέ το πρώτα στα «Αρχεία» και στείλ' το από 📄 Αρχεία.<br>• <b>Φάκελος:</b> αν το iPhone δεν αφήνει επιλογή φακέλου, μπες στον φάκελο από 📄 Αρχεία → Επιλογή → διάλεξε όλα.<br>• <b>Αποθήκευση στις Φωτογραφίες:</b> πάτα 📤 Κοινοποίηση → «Αποθήκευση εικόνων/βίντεο».",files:"αρχεία",shareAll:"📤 Κοινοποίηση όλων",saveAll:"💾 Όλα",zipBtn:"🗜 Αποθήκευση ως ZIP",delAll:"🗑 Όλα",zipping:"Φτιάχνω ZIP…",confDelAll:"Διαγραφή όλων αυτών των αρχείων από την εφαρμογή;",shareFail:"Πολύ μεγάλο για κοινοποίηση όλων μαζί — δοκίμασε ZIP ή ένα-ένα.",total:"Σύνολο",showFiles:"Εμφάνιση αρχείων",cancelAll:"✕ Ακύρωση όλων",pending:"σε αναμονή",give:"Δώσε την εφαρμογή σε άλλον",giveH:"Ο άλλος σκανάρει αυτό το QR με την κάμερά του (θέλει λίγο internet μία φορά), ανοίγει το link και πατάει Share → Add to Home Screen. Μετά δουλεύει offline."
 },en:{
  sub:"Phone-to-phone files — no internet, no mobile data",
  host:"I start (show QR)",hostS:"Tap this on ONE of the two phones",
@@ -60,7 +60,7 @@ const T={el:{
  rejected:"❌ Not enough space on the other phone",cancelled:"Cancelled",receiving:"Receiving",
  noSpace:"Not enough free space for",gotFile:"Received:",missing:"File not found",
  confDel:"Delete this file from the app?",confDisc:"Disconnect?",memWarn:"Note: this browser keeps files in memory — very large files may not fit.",
- left:"left",give:"Give the app to someone",giveH:"The other person scans this QR with their camera (needs a little internet once), opens the link and taps Share → Add to Home Screen. Then it works offline."
+ left:"left",pMedia:"Photos & Videos",pMediaS:"From the Gallery — many at once",pFiles:"Files",pFilesS:"PDF, Word, Excel, ZIP, anything — even GB",pDir:"Folder",pDirS:"A whole folder with subfolders",iosT:"ℹ️ iPhone tips",iosH:"• <b>Full-quality video:</b> if a video arrives smaller than the original, the iPhone compressed it when picking. Save it to “Files” first and send it from 📄 Files.<br>• <b>Folder:</b> if the iPhone does not allow folder picking, open the folder from 📄 Files → Select → pick all.<br>• <b>Save to Photos:</b> tap 📤 Share → “Save Images/Videos”.",files:"files",shareAll:"📤 Share all",saveAll:"💾 All",zipBtn:"🗜 Save as ZIP",delAll:"🗑 All",zipping:"Building ZIP…",confDelAll:"Delete all these files from the app?",shareFail:"Too big to share all at once — try ZIP or one by one.",total:"Total",showFiles:"Show files",cancelAll:"✕ Cancel all",pending:"queued",give:"Give the app to someone",giveH:"The other person scans this QR with their camera (needs a little internet once), opens the link and taps Share → Add to Home Screen. Then it works offline."
 }};
 let lang=localStorage.getItem("drop_lang")||"el";
 const t=k=>(T[lang]&&T[lang][k])||T.el[k]||k;
@@ -198,11 +198,13 @@ document.addEventListener("visibilitychange",()=>{if(document.visibilityState===
 let writer=null,opfsOK=false;const closedCb={};
 try{writer=new Worker("writer.js");writer.onmessage=e=>{const m=e.data;
  if(m.ok==="probe")opfsOK=true;
- else if(m.ok==="closed"&&closedCb[m.f]){closedCb[m.f]();delete closedCb[m.f];}
+ else if(m.ok==="closed"&&closedCb[m.f]){closedCb[m.f](m.crc);delete closedCb[m.f];}
+ else if(m.ok==="zipprog"){zipState[m.f]=m.done/m.total;tickUI();}
+ else if(m.ok==="zipped"&&zipCb[m.f]){zipCb[m.f]();delete zipCb[m.f];}
  else if(m.err){console.warn("writer",m);if(m.cmd!=="probe"&&rxCur&&rxCur.f===m.f){rxCur.err=m.err;}}};
  writer.postMessage({cmd:"probe"});}catch(_){}
 if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{});
-const mem={};// fallback in-memory files (non-OPFS browsers)
+const mem={},zipState={},zipCb={};// fallback in-memory files (non-OPFS browsers)
 let saved=JSON.parse(localStorage.getItem("drop_rx")||"[]");
 const persist=()=>localStorage.setItem("drop_rx",JSON.stringify(saved));
 async function getFile(it){
@@ -228,7 +230,7 @@ function onMsg(e){
 }
 async function rxMeta(m){
  if(rxCur){abortRx(rxCur);rxCur=null;}
- const it={id:m.id,name:m.name,size:m.size,mime:m.mime,got:0,t0:performance.now(),st:"receiving",f:"rx_"+m.id,date:Date.now()};
+ const it={id:m.id,name:m.name,path:m.path||m.name,batch:m.batch||m.id,folder:m.folder||"",size:m.size,mime:m.mime,got:0,t0:performance.now(),st:"receiving",f:"rx_"+m.id,date:Date.now()};
  // space check
  try{const e=await navigator.storage.estimate();if(e.quota&&e.quota-e.usage<m.size+20e6){send({t:"reject",id:m.id});toast(t("noSpace")+" "+m.name+" ("+fmt(m.size)+")",5000);return;}}catch(_){}
  it.useMem=!opfsOK;
@@ -241,9 +243,9 @@ function rxChunk(buf){const it=rxCur;if(!it||it.st!=="receiving")return;
  if(it.useMem)it.parts.push(buf);else writer.postMessage({cmd:"write",f:it.f,buf},[buf]);
  tickUI();}
 function rxEof(m){const it=rxCur;if(!it||it.id!==m.id)return;rxCur=null;
- const fin=()=>{if(it.err){it.st="err";inDone.unshift(it);renderAll();return;}
+ const fin=crc=>{if(it.err){it.st="err";inDone.unshift(it);renderAll();return;}
   it.st="done";it.t1=performance.now();inDone.unshift(it);
-  saved.unshift({f:it.f,name:it.name,size:it.size,mime:it.mime,date:it.date});persist();
+  saved.unshift({f:it.f,name:it.name,path:it.path,batch:it.batch,folder:it.folder,crc:crc>>>0,size:it.size,mime:it.mime,date:it.date});persist();
   send({t:"ack",id:it.id});toast(t("gotFile")+" "+it.name);renderAll();};
  if(it.useMem){mem[it.f]=new File(it.parts,it.name,{type:it.mime||"application/octet-stream"});it.parts=null;fin();}
  else{closedCb[it.f]=fin;writer.postMessage({cmd:"close",f:it.f});}
@@ -251,7 +253,10 @@ function rxEof(m){const it=rxCur;if(!it||it.id!==m.id)return;rxCur=null;
 function abortRx(it){if(it.useMem){delete mem[it.f];it.parts=null;}else writer&&writer.postMessage({cmd:"abort",f:it.f});}
 function stopRx(){if(!rxCur)return;send({t:"stop",id:rxCur.id});abortRx(rxCur);rxCur.st="cancelled";inDone.unshift(rxCur);rxCur=null;renderAll();}
 
-function addFiles(files){for(const f of files)outQ.push({id:uid(),file:f,name:f.name||"file",size:f.size,sent:0,st:"queued"});renderAll();pumpOut();}
+function addFiles(files){if(!files.length)return;const batch=uid();
+ const rel=files.find(f=>f.webkitRelativePath);const folder=rel?rel.webkitRelativePath.split("/")[0]:"";
+ for(const f of files)outQ.push({id:uid(),file:f,name:f.name||"file",path:f.webkitRelativePath||f.name||"file",batch,folder,size:f.size,sent:0,st:"queued"});
+ renderAll();pumpOut();}
 async function pumpOut(){
  if(outBusy||!connected)return;const it=outQ.find(o=>o.st==="queued");if(!it)return;
  outBusy=true;try{await sendOne(it);}catch(e){it.st="err";it.msg=String(e&&e.message||e);}
@@ -259,10 +264,10 @@ async function pumpOut(){
 }
 async function sendOne(it){
  it.st="wait";renderAll();
- const reply=await new Promise(r=>{waiters[it.id]=r;send({t:"meta",id:it.id,name:it.name,size:it.size,mime:it.file.type||""});});
+ const reply=await new Promise(r=>{waiters[it.id]=r;send({t:"meta",id:it.id,name:it.name,path:it.path,batch:it.batch,folder:it.folder,size:it.size,mime:it.file.type||""});});
  delete waiters[it.id];
  if(reply.t==="reject"){it.st="rejected";return;}
- if(reply.t==="stop"||it.cancel){it.st="cancelled";return;}
+ if(reply.t==="stop"||it.cancel){if(reply.t!=="stop")send({t:"cancel",id:it.id});it.st="cancelled";return;}
  it.st="sending";it.t0=performance.now();renderAll();
  const max=(pc&&pc.sctp&&pc.sctp.maxMessageSize)||65536;
  const CH=Math.max(16384,Math.min(65536,max)),BLOCK=4<<20,HIGH=8<<20;
@@ -294,18 +299,31 @@ function stLabel(s){return{queued:t("queued"),wait:t("waitRx"),acking:t("waitRx"
 function renderAll(){
  // outgoing
  $("#outCard").classList.toggle("hide",!outQ.length);
- $("#outList").innerHTML=outQ.map(o=>{const active=["queued","wait","sending","acking"].includes(o.st);
+ const live=outQ.filter(o=>!["cancelled"].includes(o.st));const tot=live.reduce((s,o)=>s+o.size,0),snt=live.reduce((s,o)=>s+(o.st==="done"?o.size:o.sent),0);
+ const nDone=outQ.filter(o=>o.st==="done").length,nQ=outQ.filter(o=>o.st==="queued").length;
+ const t0=Math.min(...outQ.filter(o=>o.t0).map(o=>o.t0));
+ const head=outQ.length>1?`<div class="item ${nDone===outQ.length?"done":""}"><div class="row"><b class="grow">${t("total")}: ${nDone}/${outQ.length} ${t("files")}</b>${nQ?`<button class="btn d" id="bCancelAll">${t("cancelAll")}</button>`:""}</div>${prog(snt,tot,isFinite(t0)?t0:0,t("sending"))}</div>`:"";
+ const shown=outQ.filter(o=>outQ.length<=6||!["done","queued"].includes(o.st));
+ $("#outList").innerHTML=head+shown.map(o=>{const active=["queued","wait","sending","acking"].includes(o.st);
   const sp=o.st==="done"&&o.t1&&o.t0?" · "+fmt(o.size/((o.t1-o.t0)/1000))+"/s":"";
   return `<div class="item ${o.st==="done"?"done":""}"><div class="row"><span class="nm grow">${esc(o.name)}</span>${active?`<button class="btn d" data-oc="${o.id}">${t("cancel")}</button>`:""}</div>
-  ${o.st==="sending"||o.st==="acking"?prog(o.sent,o.size,o.t0,stLabel(o.st)):o.st==="done"?`<div class="bar"><i style="width:100%"></i></div><div class="muted">${t("done")} · ${fmt(o.size)}${sp}</div>`:`<div class="muted">${stLabel(o.st)} · ${fmt(o.size)}${o.msg?" · "+esc(o.msg):""}</div>`}</div>`;}).join("");
+  ${o.st==="sending"||o.st==="acking"?prog(o.sent,o.size,o.t0,stLabel(o.st)):o.st==="done"?`<div class="bar"><i style="width:100%"></i></div><div class="muted">${t("done")} · ${fmt(o.size)}${sp}</div>`:`<div class="muted">${stLabel(o.st)} · ${fmt(o.size)}${o.msg?" · "+esc(o.msg):""}</div>`}</div>`;}).join("")+(outQ.length>6&&nQ?`<div class="muted">… ${nQ} ${t("pending")}</div>`:"");
  // incoming
  const ins=(rxCur?[rxCur]:[]).concat(inDone.filter(x=>x.st!=="done"));
  $("#inCard").classList.toggle("hide",!ins.length);
  $("#inList").innerHTML=ins.map(i=>`<div class="item"><div class="row"><span class="nm grow">${esc(i.name)}</span>${i===rxCur?`<button class="btn d" id="bStopRx">${t("cancel")}</button>`:""}</div>
   ${i===rxCur?prog(i.got,i.size,i.t0,t("receiving")):`<div class="muted">${stLabel(i.st)}${i.err?" · "+esc(i.err):""}</div>`}</div>`).join("");
- // saved
- const html=saved.map(s=>`<div class="item done"><div class="nm">${esc(s.name)}</div><div class="muted">${fmt(s.size)} · ${new Date(s.date).toLocaleString(lang==="el"?"el-GR":"en-GB",{dateStyle:"short",timeStyle:"short"})}</div>
-  <div class="row" style="margin-top:6px"><button class="btn p" data-sv="${s.f}">${t("save")}</button>${navigator.share?`<button class="btn" data-sh="${s.f}">${t("share")}</button>`:""}<span class="grow"></span><button class="btn d" data-dl="${s.f}">${t("del")}</button></div></div>`).join("");
+ // saved — grouped by batch
+ const groups=[],gi={};for(const s of saved){const k=s.batch||s.f;if(!(k in gi)){gi[k]=groups.length;groups.push({k,items:[]});}groups[gi[k]].items.push(s);}
+ const one=s=>`<div class="item done"><div class="nm">${esc(s.path||s.name)}</div><div class="muted">${fmt(s.size)} · ${new Date(s.date).toLocaleString(lang==="el"?"el-GR":"en-GB",{dateStyle:"short",timeStyle:"short"})}</div>
+  <div class="row" style="margin-top:6px"><button class="btn p" data-sv="${s.f}">${t("save")}</button>${navigator.share?`<button class="btn" data-sh="${s.f}">${t("share")}</button>`:""}<span class="grow"></span><button class="btn d" data-dl="${s.f}">${t("del")}</button></div></div>`;
+ const html=groups.map(g=>{if(g.items.length===1&&!g.items[0].folder)return one(g.items[0]);
+  const f=g.items[0].folder,sz=g.items.reduce((s,x)=>s+x.size,0),zf="zip_"+g.k,zp=zipState[zf];
+  const zipOK=opfsOK&&g.items.every(x=>!mem[x.f]);
+  return `<div class="grp"><div class="nm">${f?"📁 "+esc(f):"🗂 "+g.items.length+" "+t("files")}</div><div class="muted">${g.items.length} ${t("files")} · ${fmt(sz)} · ${new Date(g.items[0].date).toLocaleString(lang==="el"?"el-GR":"en-GB",{dateStyle:"short",timeStyle:"short"})}</div>
+  <div class="row" style="margin-top:6px">${navigator.share?`<button class="btn p" data-gsh="${g.k}">${t("shareAll")}</button>`:""}<button class="btn" data-gsv="${g.k}">${t("saveAll")}</button>${zipOK?`<button class="btn" data-gzip="${g.k}">${t("zipBtn")}</button>`:""}<span class="grow"></span><button class="btn d" data-gdl="${g.k}">${t("delAll")}</button></div>
+  ${zp!=null&&zp<1?`<div class="bar"><i style="width:${(zp*100).toFixed(0)}%"></i></div><div class="muted">${t("zipping")} ${(zp*100).toFixed(0)}%</div>`:""}
+  <details><summary>${t("showFiles")}</summary><div class="sub-l">${g.items.map(one).join("")}</div></details></div>`;}).join("");
  $("#rxList").innerHTML=html;$("#rxHome").innerHTML=html;
  $("#rxCard").classList.toggle("hide",!saved.length);$("#rxHomeCard").classList.toggle("hide",!saved.length);
 }
@@ -313,12 +331,30 @@ document.addEventListener("click",async e=>{
  const b=e.target.closest("button");if(!b)return;
  if(b.dataset.oc){const o=outQ.find(x=>x.id===b.dataset.oc);if(o){o.cancel=true;if(o.st==="queued")o.st="cancelled";const w=waiters[o.id];if(o.st==="wait"&&w){send({t:"cancel",id:o.id});w({t:"stop"});}renderAll();}}
  else if(b.id==="bStopRx")stopRx();
+ else if(b.id==="bCancelAll"){outQ.forEach(o=>{if(o.st==="queued")o.st="cancelled";else if(["wait","sending"].includes(o.st))o.cancel=true;});renderAll();}
+ else if(b.dataset.gsh||b.dataset.gsv){const k=b.dataset.gsh||b.dataset.gsv;const its=saved.filter(s=>(s.batch||s.f)===k).reverse();const fs=[];
+  for(const it of its){try{fs.push(await getFile(it));}catch(_){}}if(!fs.length){toast(t("missing"));return;}
+  if(b.dataset.gsh){try{if(navigator.canShare&&!navigator.canShare({files:fs}))throw new Error("x");await navigator.share({files:fs});}catch(err){if(err&&err.name==="AbortError")return;toast(t("shareFail"),4000);}}
+  else{for(const f of fs){dl(f);await new Promise(r=>setTimeout(r,700));}}}
+ else if(b.dataset.gzip){const k=b.dataset.gzip;const its=saved.filter(s=>(s.batch||s.f)===k).reverse();const zf="zip_"+k;
+  const name=(its[0].folder||("ShipDrop_"+new Date(its[0].date).toISOString().slice(0,10)))+".zip";
+  const send=async()=>{const root=await navigator.storage.getDirectory();const fl=await (await root.getFileHandle(zf)).getFile();const zfile=new File([fl],name,{type:"application/zip"});
+   if(navigator.share&&/iP(hone|ad|od)/.test(navigator.userAgent)){try{await navigator.share({files:[zfile]});return;}catch(err){if(err&&err.name==="AbortError")return;}}dl(zfile);};
+  // reuse existing zip if already built
+  try{const root=await navigator.storage.getDirectory();const ex=await (await root.getFileHandle(zf)).getFile();if(ex.size>0&&zipState[zf]===1){await send();return;}}catch(_){}
+  zipState[zf]=0;renderAll();
+  zipCb[zf]=()=>{zipState[zf]=1;renderAll();send().catch(()=>{});};
+  writer.postMessage({cmd:"zip",f:zf,entries:its.map(s=>({f:s.f,path:s.path||s.name,size:s.size,crc:s.crc||0}))});}
+ else if(b.dataset.gdl){if(!confirm(t("confDelAll")))return;const k=b.dataset.gdl;const its=saved.filter(s=>(s.batch||s.f)===k);
+  saved=saved.filter(s=>(s.batch||s.f)!==k);persist();const root=await navigator.storage.getDirectory().catch(()=>null);
+  for(const it of its){delete mem[it.f];if(root)await root.removeEntry(it.f).catch(()=>{});}
+  if(root)await root.removeEntry("zip_"+k).catch(()=>{});delete zipState["zip_"+k];renderAll();}
  else if(b.dataset.sv||b.dataset.sh){const it=saved.find(s=>s.f===(b.dataset.sv||b.dataset.sh));if(!it)return;
   let f;try{f=await getFile(it);}catch(_){toast(t("missing"));return;}
   if(b.dataset.sh){try{if(navigator.canShare&&!navigator.canShare({files:[f]}))throw 0;await navigator.share({files:[f]});}catch(err){if(err&&err.name==="AbortError")return;dl(f);}}
   else dl(f);}
  else if(b.dataset.dl){if(!confirm(t("confDel")))return;const it=saved.find(s=>s.f===b.dataset.dl);
-  saved=saved.filter(s=>s!==it);persist();delete mem[it.f];
+  saved=saved.filter(s=>s!==it);persist();delete mem[it.f];delete zipState["zip_"+(it.batch||it.f)];try{(await navigator.storage.getDirectory()).removeEntry("zip_"+(it.batch||it.f)).catch(()=>{})}catch(_){}
   try{const root=await navigator.storage.getDirectory();await root.removeEntry(it.f);}catch(_){}renderAll();}
 });
 function dl(f){const u=URL.createObjectURL(f);const a=document.createElement("a");a.href=u;a.download=f.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),60000);}
@@ -331,12 +367,12 @@ $("#homeBtn").onclick=()=>{if(connected&&!confirm(t("confDisc")))return;disconne
 $("#bDisc").onclick=()=>{if(!confirm(t("confDisc")))return;disconnect();};
 $("#bApplyAns").onclick=()=>applyAnswer($("#inAnswer").value);
 $("#bApplyOff").onclick=()=>{if(scanStop)scanStop();handleOffer($("#inOffer").value);};
-$("#bPick").onclick=()=>$("#fileIn").click();
-$("#fileIn").onchange=e=>{addFiles([...e.target.files]);e.target.value="";};
+[["#bMedia","#inMedia"],["#bFiles","#inFiles"],["#bDir","#inDir"]].forEach(([b,i])=>{$(b).onclick=()=>$(i).click();$(i).onchange=e=>{addFiles([...e.target.files]);e.target.value="";};});
 window.addEventListener("beforeunload",e=>{if(connected&&(outBusy||rxCur)){e.preventDefault();e.returnValue="";}});
 // clean OPFS leftovers not in the saved list
 (async()=>{try{const root=await navigator.storage.getDirectory();const keep=new Set(saved.map(s=>s.f));
- for await(const [name] of root.entries()){if(name.startsWith("rx_")&&!keep.has(name)&&!(rxCur&&rxCur.f===name))await root.removeEntry(name).catch(()=>{});}}catch(_){}})();
+ for await(const [name] of root.entries()){if(name.startsWith("zip_")&&!saved.some(s=>"zip_"+(s.batch||s.f)===name)){await root.removeEntry(name).catch(()=>{});continue;}
+ if(name.startsWith("rx_")&&!keep.has(name)&&!(rxCur&&rxCur.f===name))await root.removeEntry(name).catch(()=>{});}}catch(_){}})();
 // drop entries whose file vanished
 (async()=>{if(!saved.length)return;try{const root=await navigator.storage.getDirectory();const ok=[];for(const s of saved){try{await root.getFileHandle(s.f);ok.push(s);}catch(_){}}if(ok.length!==saved.length){saved=ok;persist();renderAll();}}catch(_){}})();
 if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
