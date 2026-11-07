@@ -2,6 +2,12 @@
 import pathlib
 r=pathlib.Path(__file__).resolve().parent.parent
 s=(r/'attendance/Attendance_Forms_2.4.html').read_text(encoding='utf-8')
+# M 021: RISQ app guidance (same text as the RISQ walk-round app) keyed by RISQ ref
+import json
+q=json.loads((r/'risq/data.json').read_text(encoding='utf-8'))['q']
+rg={o['id']:{k:o[k] for k in ('g','c','f','x','h') if o.get(k)} for o in q}
+m='/*RISQG*/';a=s.index(m);b=s.index(m,a+1)
+s=s[:a+len(m)]+json.dumps(rg,ensure_ascii=False,separators=(',',':')).replace('</','<\\/')+s[b:]
 pwa='''<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png">
 <meta name="robots" content="noindex,nofollow"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Attendance"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#123d63">'''
