@@ -32,7 +32,7 @@ const T={el:{
  rejected:"❌ Δεν υπάρχει χώρος στο άλλο κινητό",cancelled:"Ακυρώθηκε",receiving:"Λήψη",
  noSpace:"Δεν υπάρχει αρκετός ελεύθερος χώρος για",gotFile:"Ελήφθη:",missing:"Το αρχείο δεν βρέθηκε",
  confDel:"Διαγραφή του αρχείου από την εφαρμογή;",confDisc:"Αποσύνδεση;",memWarn:"Προσοχή: αυτός ο browser κρατά τα αρχεία στη μνήμη — πολύ μεγάλα αρχεία μπορεί να μην χωρέσουν.",
- left:"απομένουν"
+ left:"απομένουν",give:"Δώσε την εφαρμογή σε άλλον",giveH:"Ο άλλος σκανάρει αυτό το QR με την κάμερά του (θέλει λίγο internet μία φορά), ανοίγει το link και πατάει Share → Add to Home Screen. Μετά δουλεύει offline."
 },en:{
  sub:"Phone-to-phone files — no internet, no mobile data",
  host:"I start (show QR)",hostS:"Tap this on ONE of the two phones",
@@ -60,7 +60,7 @@ const T={el:{
  rejected:"❌ Not enough space on the other phone",cancelled:"Cancelled",receiving:"Receiving",
  noSpace:"Not enough free space for",gotFile:"Received:",missing:"File not found",
  confDel:"Delete this file from the app?",confDisc:"Disconnect?",memWarn:"Note: this browser keeps files in memory — very large files may not fit.",
- left:"left"
+ left:"left",give:"Give the app to someone",giveH:"The other person scans this QR with their camera (needs a little internet once), opens the link and taps Share → Add to Home Screen. Then it works offline."
 }};
 let lang=localStorage.getItem("drop_lang")||"el";
 const t=k=>(T[lang]&&T[lang][k])||T.el[k]||k;
@@ -326,6 +326,7 @@ function dl(f){const u=URL.createObjectURL(f);const a=document.createElement("a"
 // ---------- wiring ----------
 $("#bHost").onclick=()=>startHost().catch(e=>{statusEl=$("#hostSt");setStatus(String(e&&e.message||e),"err");});
 $("#bJoin").onclick=()=>startJoin();
+$("#bGive").onclick=()=>{const c=$("#giveCard");c.classList.toggle("hide");if(!c.classList.contains("hide")){const u=new URL("./",location.href).href;drawQR($("#qrApp"),u);$("#appUrl").textContent=u;c.scrollIntoView({behavior:"smooth"});}};
 $("#homeBtn").onclick=()=>{if(connected&&!confirm(t("confDisc")))return;disconnect();};
 $("#bDisc").onclick=()=>{if(!confirm(t("confDisc")))return;disconnect();};
 $("#bApplyAns").onclick=()=>applyAnswer($("#inAnswer").value);

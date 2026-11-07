@@ -54,6 +54,8 @@ footer{text-align:center;color:var(--muted);font-size:12px;margin-top:16px}
 <section id="sHome">
  <button class="big" id="bHost">📤 <span data-t="host"></span><small data-t="hostS"></small></button>
  <button class="big alt" id="bJoin">📷 <span data-t="join"></span><small data-t="joinS"></small></button>
+ <button class="btn" id="bGive" style="width:100%;margin-bottom:12px;padding:12px">📲 <span data-t="give"></span></button>
+ <div class="card hide" id="giveCard"><h2 data-t="give"></h2><p class="muted" data-t="giveH"></p><div class="qrbox"><canvas id="qrApp"></canvas></div><div class="muted" id="appUrl" style="word-break:break-all;text-align:center"></div></div>
  <div class="card"><h2 data-t="howT"></h2><ol data-t="how" data-html></ol></div>
  <div class="card"><h2 data-t="tipsT"></h2><div class="muted" data-t="tips" data-html></div></div>
  <div class="card hide" id="rxHomeCard"><h2 data-t="saved"></h2><div id="rxHome"></div></div>
@@ -90,7 +92,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;margin-top:16px}
  <div class="card hide" id="rxCard"><h2 data-t="saved"></h2><div id="rxList"></div></div>
 </section>
 
-<footer>ShipDrop v1.0 · Created by George Barbaris</footer>
+<footer>ShipDrop v1.1 · Created by George Barbaris</footer>
 </main>
 <div id="toast"></div>
 <script src="qrcode.js"></script>
