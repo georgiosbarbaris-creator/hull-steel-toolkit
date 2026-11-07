@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Μιλάω!</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Μιλάω!">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#1e5aa8">
+<style>
+:root{--bg:#f4f7fc;--card:#fff;--ink:#14233a;--muted:#5f6d80;--line:#d7dfeb;--blue:#1e5aa8;--blue2:#3b7dd8;--yel:#ffc928;--yel2:#fff3c4;--ok:#1d8a4e;--bad:#c8372d}
+@media (prefers-color-scheme:dark){:root{--bg:#0e1622;--card:#182434;--ink:#e8eef6;--muted:#98a6b8;--line:#2b3a4e;--blue:#7fb2f0;--blue2:#5c97e6;--yel:#ffcf3f;--yel2:#3a3216;--ok:#5cc98a;--bad:#f07a70}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{overscroll-behavior:none}
+body{margin:0;font:17px/1.4 -apple-system,system-ui,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:calc(80px + env(safe-area-inset-bottom));-webkit-user-select:none;user-select:none}
+header{background:linear-gradient(135deg,#1e5aa8,#2f74cf);color:#fff;padding:calc(10px + env(safe-area-inset-top)) 16px 10px;position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:10px}
+header h1{margin:0;font-size:20px;flex:1}header h1 small{display:block;font-size:12px;font-weight:500;opacity:.85}
+#lock{background:rgba(255,255,255,.18);color:#fff;border:0;border-radius:12px;padding:8px 11px;font-size:18px;display:none}
+main{padding:12px;max-width:760px;margin:0 auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:12px}
+h2{font-size:18px;margin:0 0 8px}h3{font-size:16px;margin:12px 0 6px}
+input,select,textarea{width:100%;font:inherit;padding:11px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);-webkit-user-select:text;user-select:text}
+textarea{min-height:80px}
+button{font:inherit;border:0;border-radius:14px;padding:11px 14px;background:var(--blue);color:#fff;font-weight:700;cursor:pointer}
+@media (prefers-color-scheme:dark){button{color:#0e1622}}
+button.ghost{background:transparent;color:var(--blue);border:1.5px solid var(--line)}
+button.yel{background:var(--yel);color:#3a2a00}
+button.ok{background:var(--ok);color:#fff}button.bad{background:var(--bad);color:#fff}
+button:disabled{opacity:.45}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.muted{color:var(--muted);font-size:14px}
+.hide{display:none!important}
+/* mic */
+#micWrap{display:flex;flex-direction:column;align-items:center;padding:14px 0 6px}
+#mic{width:190px;height:190px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffe07a,#ffc928 60%,#f0a800);color:#3a2a00;font-size:76px;box-shadow:0 10px 30px rgba(240,168,0,.35);position:relative;transition:transform .12s}
+#mic:active{transform:scale(.96)}
+#mic.on{background:radial-gradient(circle at 35% 30%,#7fb2f0,#2f74cf 60%,#1e5aa8);color:#fff;box-shadow:0 0 0 calc(var(--lv,0)*34px + 6px) rgba(47,116,207,.25),0 10px 30px rgba(30,90,168,.4)}
+#micTxt{margin-top:12px;font-size:19px;font-weight:700;text-align:center;min-height:27px}
+/* result */
+.res{text-align:center;padding:18px 10px;border-radius:22px;background:var(--yel2);border:2px solid var(--yel)}
+.res .pic{font-size:96px;line-height:1.1}.res img.pic{width:150px;height:150px;object-fit:cover;border-radius:20px}
+.res .lbl{font-size:34px;font-weight:800;margin-top:6px}
+.choices{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+/* tiles */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:10px}
+.tile{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:10px 4px 8px;text-align:center;color:var(--ink);font-weight:700;font-size:15px;min-height:112px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.tile .e{font-size:46px;line-height:1}.tile img{width:64px;height:64px;object-fit:cover;border-radius:12px}
+.tile:active{transform:scale(.95);border-color:var(--yel)}
+.tile .badge{font-size:11px;font-weight:600;color:var(--muted)}
+.cats{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:8px;-webkit-overflow-scrolling:touch}
+.cat{flex:0 0 auto;background:var(--card);border:1.5px solid var(--line);color:var(--ink);padding:8px 12px;border-radius:999px;font-size:15px;font-weight:600}
+.cat.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+#strip{display:flex;gap:6px;overflow-x:auto;min-height:74px;align-items:center;padding:6px;border:2px dashed var(--line);border-radius:16px;background:var(--card)}
+#strip .s{flex:0 0 auto;text-align:center;font-size:13px;font-weight:700;padding:4px 6px;border-radius:12px;background:var(--yel2)}
+#strip .s .e{font-size:30px;display:block}#strip img{width:36px;height:36px;border-radius:8px;object-fit:cover;display:block;margin:0 auto}
+.quick{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.quick .tile{min-height:88px;font-size:13px}.quick .tile .e{font-size:34px}
+/* list */
+.li{display:flex;align-items:center;gap:10px;padding:9px 4px;border-bottom:1px solid var(--line)}
+.li:last-child{border-bottom:0}.li .e{font-size:30px;width:42px;text-align:center}.li img{width:42px;height:42px;border-radius:10px;object-fit:cover}
+.li .t{flex:1}.li .t b{display:block}
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:700;background:var(--bg);border:1px solid var(--line);color:var(--muted)}
+.pill.g{background:#dff3e7;color:#146c3c;border-color:#b6e2c7}.pill.y{background:#fff1c2;color:#7a5800;border-color:#f2d77a}
+.stat{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.stat div{background:var(--bg);border-radius:14px;padding:10px;text-align:center}.stat b{display:block;font-size:26px;color:var(--blue)}
+.bars{display:flex;align-items:flex-end;gap:6px;height:110px;margin-top:8px}
+.bars div{flex:1;background:var(--blue2);border-radius:6px 6px 0 0;position:relative;min-height:2px}
+.bars span{position:absolute;bottom:-20px;left:0;right:0;text-align:center;font-size:11px;color:var(--muted)}
+.bars i{position:absolute;top:-17px;left:0;right:0;text-align:center;font-size:11px;font-style:normal}
+/* nav */
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom);z-index:6}
+nav button{flex:1;background:transparent;color:var(--muted);border-radius:0;padding:8px 2px;font-size:12px;font-weight:600}
+nav button b{display:block;font-size:24px}
+nav button.on{color:var(--blue)}
+/* modal */
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:20;display:none;align-items:flex-end;justify-content:center}
+#modal.on{display:flex}
+#mbox{background:var(--bg);width:100%;max-width:760px;max-height:92vh;overflow:auto;border-radius:22px 22px 0 0;padding:16px 14px calc(18px + env(safe-area-inset-bottom))}
+.ebig{font-size:64px;text-align:center}
+.emojis{display:flex;flex-wrap:wrap;gap:4px;max-height:130px;overflow:auto}
+.emojis span{font-size:28px;padding:3px;border-radius:8px}
+.emojis span.on{background:var(--yel)}
+.guide p{margin:6px 0}.guide li{margin:4px 0}
+#toast{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom));transform:translateX(-50%);background:#14233a;color:#fff;padding:10px 16px;border-radius:14px;font-size:15px;z-index:30;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90%}
+#toast.on{opacity:1}
+.train{text-align:center}.train .ebig{font-size:120px}.train img{width:200px;height:200px;object-fit:cover;border-radius:24px}
+.train .lbl{font-size:38px;font-weight:800}
+@media print{nav,header,button,#toast{display:none!important}body{padding:0;background:#fff;color:#000}.card{border:1px solid #999;break-inside:avoid}}
+</style>
+</head>
+<body>
+<header><h1 id="title">Μιλάω!<small id="subtitle">η φωνή του Θάνου</small></h1><button id="lock" title="Κράτα πατημένο 3″">🔒</button></header>
+<main>
+
+<!-- ============ ΜΙΛΑ ============ -->
+<section id="t-speak">
+ <div id="noSamples" class="card hide" style="background:var(--yel2);border-color:var(--yel)">
+  <b>Πρώτο βήμα:</b> μάθε στην εφαρμογή πώς λέει ο <span class="kid">Θάνος</span> τις λέξεις του. Πήγαινε στο <b>📚 Λεξικό → 🎯 Εκπαίδευση</b> και ηχογράφησε 3–5 φορές κάθε λέξη, όπως τη λέει ο ίδιος.
+ </div>
+ <div id="micWrap"><button id="mic" aria-label="Μίλα">🎤</button><div id="micTxt">Πάτα και μίλα</div></div>
+ <div id="result"></div>
+ <div class="card"><div class="quick" id="quick"></div></div>
+</section>
+
+<!-- ============ ΕΙΚΟΝΕΣ ============ -->
+<section id="t-board" class="hide">
+ <div id="strip"><span class="muted" style="padding:0 8px">Πάτα εικόνες για να φτιάξεις πρόταση…</span></div>
+ <div class="row" style="margin:8px 0 10px">
+  <button class="yel" id="sayStrip" style="flex:2">🔊 Πες το</button>
+  <button class="ghost" id="backStrip">⌫</button>
+  <button class="ghost" id="clrStrip">🗑</button>
+  <button class="ghost parent-only" id="aiStrip" title="Σωστή πρόταση με Claude">✨</button>
+ </div>
+ <div id="aiOut"></div>
+ <div class="cats" id="cats"></div>
+ <div class="grid" id="board"></div>
+</section>
+
+<!-- ============ ΛΕΞΙΚΟ ============ -->
+<section id="t-dict" class="hide">
+ <div class="card">
+  <h2>📚 Το λεξικό του <span class="kid">Θάνου</span></h2>
+  <p class="muted" style="margin:0 0 10px">Κάθε λέξη έχει εικόνα και ηχογραφήσεις με τη <b>δική του</b> φωνή. Όσο περισσότερες (3–5+) τόσο καλύτερα τον καταλαβαίνει η εφαρμογή.</p>
+  <div class="row"><button class="yel" id="trainBtn" style="flex:1">🎯 Εκπαίδευση</button><button id="newWord" style="flex:1">＋ Νέα λέξη</button></div>
+ </div>
+ <input type="search" id="dq" placeholder="🔎 Αναζήτηση λέξης…" style="margin-bottom:10px">
+ <div class="card" id="dlist"></div>
+</section>
+
+<!-- ============ ΠΡΟΟΔΟΣ ============ -->
+<section id="t-prog" class="hide">
+ <div class="card"><h2>📈 Πρόοδος</h2><div class="stat" id="stats"></div>
+  <h3>Τελευταίες 7 μέρες (φορές που επικοινώνησε)</h3><div class="bars" id="bars"></div><div style="height:22px"></div>
+ </div>
+ <div class="card"><h3 style="margin-top:0">⭐ Οι λέξεις που χρησιμοποιεί πιο πολύ (30 μέρες)</h3><div id="top"></div></div>
+ <div class="card"><h3 style="margin-top:0">📝 Ημερολόγιο γονέων</h3>
+  <p class="muted" style="margin:0 0 6px">Π.χ. «Σήμερα είπε πρώτη φορά "νερό" μόνος του».</p>
+  <textarea id="noteIn" placeholder="Γράψε μια σημείωση…"></textarea>
+  <div class="row" style="margin-top:8px"><button id="noteAdd">＋ Προσθήκη</button><button class="ghost" id="printRep">🖨️ Αναφορά για λογοθεραπευτή</button></div>
+  <div id="notes"></div>
+ </div>
+ <div class="card"><h3 style="margin-top:0">🕘 Πρόσφατα</h3><div id="recent"></div></div>
+</section>
+
+<!-- ============ ΡΥΘΜΙΣΕΙΣ ============ -->
+<section id="t-set" class="hide">
+ <div class="card"><h2>⚙️ Ρυθμίσεις</h2>
+  <label class="muted">Όνομα παιδιού</label><input id="sName">
+  <h3>Φωνή που μιλάει</h3><select id="sVoice"></select>
+  <div class="row" style="margin-top:8px"><div style="flex:1"><label class="muted">Ταχύτητα</label><input type="range" id="sRate" min="0.5" max="1.3" step="0.05"></div><div style="flex:1"><label class="muted">Τόνος</label><input type="range" id="sPitch" min="0.6" max="1.6" step="0.05"></div></div>
+  <button class="ghost" id="sTest" style="margin-top:8px">🔊 Δοκιμή φωνής</button>
+  <h3>Αναγνώριση</h3>
+  <label class="muted">Πόσο αυστηρή</label>
+  <select id="sStrict"><option value="0.8">Αυστηρή (ρωτάει πιο συχνά)</option><option value="1">Κανονική</option><option value="1.3">Χαλαρή (μαντεύει πιο εύκολα)</option></select>
+  <label class="row" style="margin-top:10px;gap:10px"><input type="checkbox" id="sAuto" style="width:auto"> Να λέει αμέσως τη λέξη όταν είναι σίγουρη</label>
+  <label class="row" style="margin-top:6px;gap:10px"><input type="checkbox" id="sHands" style="width:auto"> Συνεχές άκουσμα (ακούει ξανά μόνη της μετά από κάθε λέξη)</label>
+  <h3>🔒 Λειτουργία παιδιού</h3>
+  <p class="muted" style="margin:0 0 6px">Κρύβει Λεξικό/Πρόοδο/Ρυθμίσεις ώστε το παιδί να μη σβήσει κάτι. Για ξεκλείδωμα: κράτα πατημένο το 🔒 3 δευτερόλεπτα.</p>
+  <button class="yel" id="sLock">🔒 Ενεργοποίηση λειτουργίας παιδιού</button>
+ </div>
+ <div class="card"><h3 style="margin-top:0">✨ Claude (προαιρετικό)</h3>
+  <p class="muted" style="margin:0 0 6px">Με internet: φτιάχνει σωστή πρόταση από τις εικόνες και βοηθά να βρείτε τι εννοεί όταν η εφαρμογή δεν καταλαβαίνει. Στέλνεται μόνο κείμενο — ποτέ η φωνή του παιδιού. Χωρίς key η εφαρμογή δουλεύει κανονικά, offline.</p>
+  <input type="password" id="sKey" placeholder="sk-ant-... (ίδιο key με τις άλλες εφαρμογές)">
+ </div>
+ <div class="card"><h3 style="margin-top:0">💾 Αντίγραφο ασφαλείας</h3>
+  <p class="muted" style="margin:0 0 8px">Όλα μένουν μόνο σε αυτό το κινητό. Κράτα αντίγραφο — και με αυτό μπορείς να βάλεις το ίδιο λεξικό στο κινητό της γιαγιάς ή στο σχολείο.</p>
+  <div class="row"><button id="bExp">⬇️ Εξαγωγή</button><button class="ghost" id="bImp">⬆️ Εισαγωγή</button><input type="file" id="bFile" accept=".json,application/json" class="hide"></div>
+ </div>
+ <div class="card guide" id="guide"></div>
+ <div class="card"><button class="bad" id="bReset">Διαγραφή όλων</button></div>
+ <p class="muted" style="text-align:center">Μιλάω! v1.0 · Created by George Barbaris · για τον Θάνο και κάθε παιδί που έχει πολλά να πει 💙💛</p>
+</section>
+</main>
+
+<nav id="nav">
+ <button data-t="speak" class="on"><b>🎤</b>Μίλα</button>
+ <button data-t="board"><b>🖼️</b>Εικόνες</button>
+ <button data-t="dict" class="parent"><b>📚</b>Λεξικό</button>
+ <button data-t="prog" class="parent"><b>📈</b>Πρόοδος</button>
+ <button data-t="set" class="parent"><b>⚙️</b>Ρυθμίσεις</button>
+</nav>
+<div id="modal"><div id="mbox"></div></div>
+<div id="toast"></div>
+
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+function toast(m,ms=2200){const t=$("toast");t.textContent=m;t.classList.add("on");clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("on"),ms)}
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+
+// ---------------- SETTINGS ----------------
+const S=Object.assign({name:"Θάνος",voice:"",rate:0.85,pitch:1.05,strict:1,auto:true,hands:false,child:false,cat:"Βασικά",notes:[]},LS.get("th_set",{}));
+const saveS=()=>LS.set("th_set",S);
+function gen(n){// γενική πτώση για τον υπότιτλο: Θάνος→Θάνου, Μαρία→Μαρίας
+ n=(n||"").trim();if(/ος$/.test(n))return n.slice(0,-2)+"ου";if(/ης$/.test(n))return n.slice(0,-1);if(/ας$/.test(n))return n.slice(0,-1);if(/[αη]$/.test(n))return n+"ς";return n}
+function art(n){return /ς$/.test((n||"").trim())||/[οη]ς?$/.test(n)?"του":"της"}
+
+// ---------------- INDEXEDDB ----------------
+const DB={db:null,
+ open(){return new Promise((res,rej)=>{const r=indexedDB.open("milao",1);
+  r.onupgradeneeded=()=>{const d=r.result;d.createObjectStore("words",{keyPath:"id"});d.createObjectStore("samples",{keyPath:"id"});d.createObjectStore("log",{keyPath:"id",autoIncrement:true})};
+  r.onsuccess=()=>{DB.db=r.result;res()};r.onerror=()=>rej(r.error)})},
+ all(s){return new Promise((res,rej)=>{const q=DB.db.transaction(s).objectStore(s).getAll();q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error)})},
+ put(s,v){return new Promise((res,rej)=>{const t=DB.db.transaction(s,"readwrite");const q=t.objectStore(s).put(v);t.oncomplete=()=>res(q.result);t.onerror=()=>rej(t.error)})},
+ del(s,k){return new Promise((res,rej)=>{const t=DB.db.transaction(s,"readwrite");t.objectStore(s).delete(k);t.oncomplete=()=>res();t.onerror=()=>rej(t.error)})},
+ clear(s){return new Promise((res,rej)=>{const t=DB.db.transaction(s,"readwrite");t.objectStore(s).clear();t.oncomplete=()=>res();t.onerror=()=>rej(t.error)})}};
+
+let WORDS={},SAMPLES=[],LOG=[];
+
+// ---------------- ΑΡΧΙΚΟ ΛΕΞΙΛΟΓΙΟ ----------------
+const CATS=["Βασικά","Φαγητό","Άνθρωποι","Νιώθω","Σώμα","Παιχνίδι","Μέρη","Δικά μου"];
+const SEED=[
+ ["Βασικά","✅","Ναι"],["Βασικά","❌","Όχι"],["Βασικά","🙋","Θέλω"],["Βασικά","🙅","Δεν θέλω"],["Βασικά","➕","Κι άλλο"],["Βασικά","🏁","Τέλος"],["Βασικά","🆘","Βοήθεια"],["Βασικά","✋","Περίμενε"],["Βασικά","🙏","Ευχαριστώ"],["Βασικά","👋","Γεια"],["Βασικά","👉","Πάμε"],["Βασικά","🤲","Δώσε μου"],["Βασικά","👀","Κοίτα"],["Βασικά","🙋‍♂️","Εγώ"],["Βασικά","❓","Τι είναι;"],
+ ["Φαγητό","💧","Νερό"],["Φαγητό","🥛","Γάλα"],["Φαγητό","🧃","Χυμό"],["Φαγητό","🍞","Ψωμί"],["Φαγητό","🍎","Μήλο"],["Φαγητό","🍌","Μπανάνα"],["Φαγητό","🍝","Μακαρόνια"],["Φαγητό","🍪","Μπισκότο"],["Φαγητό","🍦","Παγωτό"],["Φαγητό","🍫","Σοκολάτα"],["Φαγητό","🧀","Τυρί"],["Φαγητό","🍽️","Πεινάω"],["Φαγητό","🥤","Διψάω"],
+ ["Άνθρωποι","👩","Μαμά"],["Άνθρωποι","👨","Μπαμπάς"],["Άνθρωποι","👵","Γιαγιά"],["Άνθρωποι","👴","Παππούς"],["Άνθρωποι","🧔","Θείος"],["Άνθρωποι","👩‍🦰","Θεία"],["Άνθρωποι","👦","Αδερφός"],["Άνθρωποι","👧","Αδερφή"],["Άνθρωποι","🧒","Φίλος"],["Άνθρωποι","👩‍🏫","Δασκάλα"],["Άνθρωποι","🐶","Σκυλάκι"],
+ ["Νιώθω","😀","Χαρούμενος"],["Νιώθω","😢","Λυπημένος"],["Νιώθω","😠","Θυμωμένος"],["Νιώθω","😨","Φοβάμαι"],["Νιώθω","😴","Κουράστηκα"],["Νιώθω","🤗","Αγκαλιά"],["Νιώθω","❤️","Σ' αγαπώ"],["Νιώθω","😂","Αστείο"],["Νιώθω","🥶","Κρυώνω"],["Νιώθω","🥵","Ζεσταίνομαι"],
+ ["Σώμα","🚽","Τουαλέτα"],["Σώμα","🤕","Πονάω"],["Σώμα","🙆","Κεφάλι"],["Σώμα","🫄","Κοιλιά"],["Σώμα","👂","Αυτί"],["Σώμα","🦷","Δόντι"],["Σώμα","🦵","Πόδι"],["Σώμα","✋","Χέρι"],["Σώμα","🛏️","Ύπνος"],["Σώμα","🛁","Μπάνιο"],["Σώμα","🤧","Μύτη"],
+ ["Παιχνίδι","🧸","Παιχνίδι"],["Παιχνίδι","⚽","Μπάλα"],["Παιχνίδι","📺","Τηλεόραση"],["Παιχνίδι","📱","Τάμπλετ"],["Παιχνίδι","🎵","Μουσική"],["Παιχνίδι","💃","Χορός"],["Παιχνίδι","🖍️","Ζωγραφική"],["Παιχνίδι","📖","Βιβλίο"],["Παιχνίδι","🧩","Παζλ"],["Παιχνίδι","🚗","Αυτοκίνητο"],["Παιχνίδι","🫧","Σαπουνόφουσκες"],
+ ["Μέρη","🏠","Σπίτι"],["Μέρη","🏫","Σχολείο"],["Μέρη","🛝","Πάρκο"],["Μέρη","🏖️","Θάλασσα"],["Μέρη","🚶","Βόλτα"],["Μέρη","🛒","Μαγαζί"],["Μέρη","🚪","Έξω"],["Μέρη","🏥","Γιατρός"]];
+async function seed(){let i=0;for(const [c,e,l] of SEED){const w={id:"w"+(i++).toString().padStart(3,"0"),cat:c,emoji:e,label:l,say:l,photo:"",hidden:false,ord:i};await DB.put("words",w)}LS.set("th_seeded",1)}
+
+// ---------------- ΦΩΝΗ ΕΞΟΔΟΥ (TTS) ----------------
+let VOICES=[];
+function loadVoices(){try{VOICES=speechSynthesis.getVoices().filter(v=>/^el/i.test(v.lang));fillVoices()}catch(e){}}
+function say(text){if(!text)return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang="el-GR";const v=VOICES.find(v=>v.voiceURI===S.voice)||VOICES[0];if(v)u.voice=v;u.rate=+S.rate;u.pitch=+S.pitch;speechSynthesis.speak(u)}catch(e){}}
+const sayW=w=>say(w.say||w.label);
+
+// ---------------- ΜΙΚΡΟΦΩΝΟ ----------------
+const SR=16000;
+const Mic={ctx:null,stream:null,busy:false,_stop:null,
+ async ensure(){if(!this.ctx)this.ctx=new (window.AudioContext||window.webkitAudioContext)();if(this.ctx.state!=="running")await this.ctx.resume();
+  if(!this.stream||!this.stream.getAudioTracks().some(t=>t.readyState==="live"))this.stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true,channelCount:1}})},
+ release(){try{this.stream&&this.stream.getTracks().forEach(t=>t.stop())}catch(e){}this.stream=null},
+ stop(){this._stop&&this._stop(true)},
+ listen(o={}){o=Object.assign({maxMs:6000,waitMs:5000,silenceMs:850,onLevel:null},o);
+  return new Promise(async(res,rej)=>{
+   try{await this.ensure()}catch(e){rej(e);return}
+   const ctx=this.ctx,sr=ctx.sampleRate,src=ctx.createMediaStreamSource(this.stream),proc=ctx.createScriptProcessor(2048,1,1),mute=ctx.createGain();mute.gain.value=0;
+   const chunks=[],lv=[];let t=0,speech=false,lastLoud=0,done=false,noise=null;this.busy=true;
+   const finish=(manual)=>{if(done)return;done=true;this.busy=false;this._stop=null;try{proc.disconnect();src.disconnect();mute.disconnect()}catch(e){}
+    let n=0;chunks.forEach(c=>n+=c.length);const all=new Float32Array(n);let p=0;chunks.forEach(c=>{all.set(c,p);p+=c.length});
+    if(!speech&&!manual){res(null);return}
+    const pcm=trim(resample(all,sr,SR),noise||0.003);res(pcm)};
+   this._stop=finish;
+   proc.onaudioprocess=e=>{if(done)return;const d=e.inputBuffer.getChannelData(0);chunks.push(new Float32Array(d));t+=d.length/sr*1000;
+    let s=0;for(let i=0;i<d.length;i++)s+=d[i]*d[i];const rms=Math.sqrt(s/d.length);
+    if(t<=320){lv.push(rms);noise=lv.slice().sort((a,b)=>a-b)[Math.floor(lv.length*0.3)]}
+    const th=Math.max((noise||0.003)*3.2,0.010);
+    if(rms>th&&t>200){speech=true;lastLoud=t}
+    o.onLevel&&o.onLevel(Math.min(1,rms/(th*5)),speech);
+    if(speech&&t-lastLoud>o.silenceMs)finish();else if(t>o.maxMs)finish();else if(!speech&&t>o.waitMs)finish()};
+   src.connect(proc);proc.connect(mute);mute.connect(ctx.destination)})}};
+function resample(x,from,to){if(from===to)return x;const r=from/to,n=Math.floor(x.length/r),y=new Float32Array(n);
+ if(r>1){// απλό low-pass (κινητός μέσος) πριν τη μείωση
+  const k=Math.max(1,Math.round(r));let acc=0;const f=new Float32Array(x.length);for(let i=0;i<x.length;i++){acc+=x[i];if(i>=k)acc-=x[i-k];f[i]=acc/Math.min(i+1,k)}x=f}
+ for(let i=0;i<n;i++){const p=i*r,a=Math.floor(p),b=Math.min(a+1,x.length-1),fr=p-a;y[i]=x[a]*(1-fr)+x[b]*fr}return y}
+function trim(x,noise){const F=320,n=Math.floor(x.length/F);if(n<3)return null;const e=new Float32Array(n);let mx=0;
+ for(let i=0;i<n;i++){let s=0;for(let j=0;j<F;j++){const v=x[i*F+j];s+=v*v}e[i]=Math.sqrt(s/F);if(e[i]>mx)mx=e[i]}
+ const th=Math.max(mx*0.12,noise*2.2);let a=0,b=n-1;while(a<n&&e[a]<th)a++;while(b>a&&e[b]<th)b--;
+ a=Math.max(0,a-3);b=Math.min(n-1,b+4);const out=x.slice(a*F,(b+1)*F);if(out.length<SR*0.15)return null;
+ // κανονικοποίηση έντασης
+ let pk=0;for(const v of out)pk=Math.max(pk,Math.abs(v));if(pk>0){const g=0.9/pk;for(let i=0;i<out.length;i++)out[i]*=g}return out}
+
+// ---------------- MFCC + DTW (η «καρδιά») ----------------
+const FR=400,HOP=160,NFFT=512,NMEL=26,NCEP=12,D=NCEP*2;
+const HAM=new Float32Array(FR).map((_,i)=>0.54-0.46*Math.cos(2*Math.PI*i/(FR-1)));
+const MEL=(()=>{const m=f=>2595*Math.log10(1+f/700),im=v=>700*(10**(v/2595)-1);const lo=m(80),hi=m(7600),pts=[];
+ for(let i=0;i<NMEL+2;i++)pts.push(Math.floor((NFFT+1)*im(lo+(hi-lo)*i/(NMEL+1))/SR));
+ const fb=[];for(let k=1;k<=NMEL;k++){const f=new Float32Array(NFFT/2+1);for(let j=pts[k-1];j<pts[k];j++)f[j]=(j-pts[k-1])/Math.max(1,pts[k]-pts[k-1]);for(let j=pts[k];j<pts[k+1];j++)f[j]=(pts[k+1]-j)/Math.max(1,pts[k+1]-pts[k]);fb.push(f)}return fb})();
+const DCT=(()=>{const t=[];for(let c=1;c<=NCEP;c++){const r=new Float32Array(NMEL);for(let n=0;n<NMEL;n++)r[n]=Math.cos(Math.PI*c*(n+0.5)/NMEL);t.push(r)}return t})();
+function fft(re,im){const n=re.length;for(let i=1,j=0;i<n;i++){let b=n>>1;for(;j&b;b>>=1)j^=b;j^=b;if(i<j){let t=re[i];re[i]=re[j];re[j]=t;t=im[i];im[i]=im[j];im[j]=t}}
+ for(let len=2;len<=n;len<<=1){const a=-2*Math.PI/len,wr=Math.cos(a),wi=Math.sin(a),h=len>>1;for(let i=0;i<n;i+=len){let cr=1,ci=0;for(let k=0;k<h;k++){const p=i+k,q=p+h,vr=re[q]*cr-im[q]*ci,vi=re[q]*ci+im[q]*cr;re[q]=re[p]-vr;im[q]=im[p]-vi;re[p]+=vr;im[p]+=vi;const t=cr*wr-ci*wi;ci=cr*wi+ci*wr;cr=t}}}}
+function features(x){// επιστρέφει {f:Float32Array(n*D), n}
+ const y=new Float32Array(x.length);y[0]=x[0];for(let i=1;i<x.length;i++)y[i]=x[i]-0.97*x[i-1];
+ const n=Math.max(0,Math.floor((y.length-FR)/HOP)+1);if(n<5)return null;
+ const C=new Float32Array(n*NCEP),re=new Float32Array(NFFT),im=new Float32Array(NFFT),lm=new Float32Array(NMEL);
+ for(let t=0;t<n;t++){re.fill(0);im.fill(0);for(let i=0;i<FR;i++)re[i]=y[t*HOP+i]*HAM[i];fft(re,im);
+  for(let k=0;k<NMEL;k++){const f=MEL[k];let s=0;for(let j=0;j<=NFFT/2;j++)if(f[j])s+=f[j]*(re[j]*re[j]+im[j]*im[j]);lm[k]=Math.log(s+1e-8)}
+  for(let c=0;c<NCEP;c++){let s=0;const r=DCT[c];for(let k=0;k<NMEL;k++)s+=r[k]*lm[k];C[t*NCEP+c]=s}}
+ for(let c=0;c<NCEP;c++){let m=0;for(let t=0;t<n;t++)m+=C[t*NCEP+c];m/=n;for(let t=0;t<n;t++)C[t*NCEP+c]-=m}// CMN
+ const F=new Float32Array(n*D);for(let t=0;t<n;t++){const a=Math.max(0,t-1),b=Math.min(n-1,t+1);
+  for(let c=0;c<NCEP;c++){F[t*D+c]=C[t*NCEP+c];F[t*D+NCEP+c]=(C[b*NCEP+c]-C[a*NCEP+c])*1.2}}
+ return {f:F,n}}
+function dtw(A,na,B,nb){if(na>2.6*nb||nb>2.6*na)return Infinity;const w=Math.max(6,Math.round(0.22*Math.max(na,nb)));
+ let prev=new Float64Array(nb+1).fill(Infinity),cur=new Float64Array(nb+1);prev[0]=0;
+ for(let i=1;i<=na;i++){cur.fill(Infinity);const c0=Math.round(i*nb/na),lo=Math.max(1,c0-w),hi=Math.min(nb,c0+w),ao=(i-1)*D;
+  for(let j=lo;j<=hi;j++){const bo=(j-1)*D;let s=0;for(let k=0;k<D;k++){const d=A[ao+k]-B[bo+k];s+=d*d}
+   const m=Math.min(prev[j],cur[j-1],prev[j-1]);cur[j]=Math.sqrt(s)+m}
+  const t=prev;prev=cur;cur=t}
+ return prev[nb]/(na+nb)}
+let THR=Infinity;
+function calib(){// κατώφλι από τις αποστάσεις μεταξύ ηχογραφήσεων της ίδιας λέξης
+ const by={};SAMPLES.forEach(s=>(by[s.w]||(by[s.w]=[])).push(s));const d=[];
+ Object.values(by).forEach(a=>{for(let i=0;i<a.length;i++)for(let j=i+1;j<a.length&&j<i+4;j++){const v=dtw(a[i].f,a[i].n,a[j].f,a[j].n);if(isFinite(v))d.push(v)}});
+ if(d.length<3){THR=Infinity;return}d.sort((a,b)=>a-b);THR=d[Math.floor(d.length*0.75)]*1.35}
+function recognize(ft){const by={};
+ for(const s of SAMPLES){if(!WORDS[s.w]||WORDS[s.w].hidden)continue;const v=dtw(ft.f,ft.n,s.f,s.n);(by[s.w]||(by[s.w]=[])).push(v)}
+ return Object.entries(by).map(([w,a])=>{a.sort((x,y)=>x-y);const k=Math.min(2,a.length);let m=0;for(let i=0;i<k;i++)m+=a[i];return {w,d:m/k}}).filter(r=>isFinite(r.d)).sort((a,b)=>a.d-b.d)}
+function verdict(r){if(!r.length)return "none";const t=THR*S.strict;
+ if(r[0].d>t*1.35)return "none";
+ const margin=r.length>1?r[1].d/r[0].d:2;if(r[0].d<=t&&margin>=1.10)return "sure";return "maybe"}
+
+// ---------------- ΑΠΟΘΗΚΕΥΣΗ ΔΕΙΓΜΑΤΩΝ ----------------
+function toI16(x){const y=new Int16Array(x.length);for(let i=0;i<x.length;i++)y[i]=Math.max(-32767,Math.min(32767,x[i]*32767));return y}
+async function addSample(w,pcm,ft){ft=ft||features(pcm);if(!ft)return false;const s={id:uid(),w,f:ft.f,n:ft.n,pcm:toI16(pcm),t:Date.now()};
+ await DB.put("samples",s);SAMPLES.push(s);
+ const mine=SAMPLES.filter(x=>x.w===w).sort((a,b)=>a.t-b.t);if(mine.length>12){const old=mine[0];await DB.del("samples",old.id);SAMPLES=SAMPLES.filter(x=>x.id!==old.id)}
+ calib();return true}
+function wav(i16){const b=new ArrayBuffer(44+i16.length*2),v=new DataView(b);const W=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i))};
+ W(0,"RIFF");v.setUint32(4,36+i16.length*2,true);W(8,"WAVEfmt ");v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,SR,true);v.setUint32(28,SR*2,true);v.setUint16(32,2,true);v.setUint16(34,16,true);W(36,"data");v.setUint32(40,i16.length*2,true);
+ new Int16Array(b,44).set(i16);return new Blob([b],{type:"audio/wav"})}
+let _au=null;function play(i16){try{_au&&_au.pause();_au=new Audio(URL.createObjectURL(wav(i16)));_au.play()}catch(e){}}
+async function logIt(w,how,ok=null){const e={t:Date.now(),w,how,ok};const id=await DB.put("log",e);e.id=id;LOG.push(e);return e}
+
+// ---------------- ΕΜΦΑΝΙΣΗ ΛΕΞΗΣ ----------------
+const pic=(w,cls="e")=>w.photo?`<img class="${cls==="e"?"":cls}" src="${w.photo}" alt="">`:`<span class="${cls}">${esc(w.emoji||"💬")}</span>`;
+const tile=(w,attr)=>`<button class="tile" ${attr}>${pic(w)}<span>${esc(w.label)}</span></button>`;
+const visible=()=>Object.values(WORDS).filter(w=>!w.hidden).sort((a,b)=>(a.ord||0)-(b.ord||0));
+
+// ---------------- ΤΑΒ ----------------
+let TAB="speak";
+function go(t){TAB=t;document.querySelectorAll("main>section").forEach(s=>s.classList.toggle("hide",s.id!=="t-"+t));
+ document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===t));
+ if(t==="speak")drawSpeak();if(t==="board")drawBoard();if(t==="dict")drawDict();if(t==="prog")drawProg();if(t==="set")drawSet();window.scrollTo(0,0)}
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>go(b.dataset.t));
+function applyName(){const n=S.name||"Θάνος";$("subtitle").textContent="η φωνή "+art(n)+" "+gen(n);document.querySelectorAll(".kid").forEach(e=>e.textContent=gen(n))}
+function applyChild(){document.querySelectorAll("nav .parent").forEach(b=>b.classList.toggle("hide",S.child));document.querySelectorAll(".parent-only").forEach(b=>b.classList.toggle("hide",S.child));$("lock").style.display=S.child?"block":"none";
+ if(S.child&&!["speak","board"].includes(TAB))go("speak")}
+(()=>{let h=null;const L=$("lock");const st=e=>{e.preventDefault();L.textContent="⏳";h=setTimeout(()=>{S.child=false;saveS();applyChild();L.textContent="🔒";toast("Ξεκλείδωσε — λειτουργία γονέα")},3000)};
+ const en=()=>{clearTimeout(h);if(S.child)L.textContent="🔒"};L.addEventListener("touchstart",st,{passive:false});L.addEventListener("mousedown",st);["touchend","touchcancel","mouseup","mouseleave"].forEach(ev=>L.addEventListener(ev,en))})();
+
+// ---------------- ΜΙΛΑ ----------------
+let LAST=null;// {pcm,ft,res}
+function drawSpeak(){$("noSamples").classList.toggle("hide",SAMPLES.length>0);
+ const q=["Ναι","Όχι","Βοήθεια","Τουαλέτα","Πονάω"].map(l=>visible().find(w=>w.label===l)).filter(Boolean);
+ $("quick").innerHTML=q.map(w=>tile(w,`data-q="${w.id}"`)).join("");
+ $("quick").querySelectorAll("[data-q]").forEach(b=>b.onclick=()=>{const w=WORDS[b.dataset.q];sayW(w);logIt(w.id,"tap")})}
+function micState(on,txt){$("mic").classList.toggle("on",on);$("mic").textContent=on?"👂":"🎤";if(txt!=null)$("micTxt").textContent=txt;if(!on)$("mic").style.setProperty("--lv",0)}
+$("mic").onclick=async()=>{if(Mic.busy){Mic.stop();return}
+ if(!SAMPLES.length){toast("Πρώτα ηχογράφησε λέξεις στο Λεξικό 📚");}
+ $("result").innerHTML="";micState(true,"Σε ακούω…");
+ let pcm;try{pcm=await Mic.listen({onLevel:(l,sp)=>{$("mic").style.setProperty("--lv",l);if(sp)$("micTxt").textContent="Σε ακούω… 👂"}})}
+ catch(e){micState(false,"Πάτα και μίλα");micErr(e);return}
+ micState(false,"Πάτα και μίλα");
+ if(!pcm){$("micTxt").textContent="Δεν άκουσα — ξαναπάτα 🙂";return}
+ const ft=features(pcm);if(!ft){$("micTxt").textContent="Πολύ σύντομο — ξαναπάτα 🙂";return}
+ $("micTxt").textContent="Σκέφτομαι…";await new Promise(r=>setTimeout(r,20));
+ const res=recognize(ft);LAST={pcm,ft,res};const v=verdict(res);
+ $("micTxt").textContent="Πάτα και μίλα";showResult(v,res)};
+function micErr(e){const m=(e&&e.name==="NotAllowedError")?"Δεν έχει άδεια μικροφώνου. iPhone: Ρυθμίσεις → Safari → Μικρόφωνο → Να επιτρέπεται, και ξαναάνοιξε την εφαρμογή.":(!navigator.mediaDevices?"Αυτός ο browser δεν δίνει μικρόφωνο. Άνοιξέ την από Safari/Chrome (https).":"Πρόβλημα μικροφώνου: "+(e&&e.message||e));
+ $("result").innerHTML=`<div class="card" style="border-color:var(--bad)">⚠️ ${esc(m)}</div>`}
+function showResult(v,res){const R=$("result");
+ if(v==="sure"){const w=WORDS[res[0].w];if(S.auto)sayW(w);
+  R.innerHTML=`<div class="res">${w.photo?`<img class="pic" src="${w.photo}">`:`<div class="pic">${esc(w.emoji)}</div>`}<div class="lbl">${esc(w.label)}</div>
+  <div class="row" style="justify-content:center;margin-top:12px"><button class="yel" id="rSay">🔊 Ξανά</button><button class="ok" id="rOk">👍 Σωστά</button><button class="bad" id="rNo">👎 Όχι</button></div></div>`;
+  const e=logIt(w.id,"voice",null);
+  $("rSay").onclick=()=>sayW(w);
+  $("rOk").onclick=async()=>{const x=await e;x.ok=true;DB.put("log",x);await addSample(w.id,LAST.pcm,LAST.ft);toast("Μπράβο! Το έμαθα ακόμα καλύτερα ⭐");R.innerHTML="";again()};
+  $("rNo").onclick=async()=>{const x=await e;x.ok=false;DB.put("log",x);showChoices(res.slice(1,6),"Τι ήθελε να πει;")};
+  if(!S.auto)sayW(w);
+  setTimeout(()=>{if(S.hands&&TAB==="speak")$("mic").click()},2200);return}
+ showChoices(res.slice(0,v==="none"?3:3),v==="none"?"Δεν κατάλαβα καλά 🤔 Μήπως είναι κάποιο από αυτά;":"Μήπως είπες…;")}
+function showChoices(list,title){const R=$("result");const ws=list.map(r=>WORDS[r.w]).filter(Boolean);
+ R.innerHTML=`<div class="card"><h2>${esc(title)}</h2><div class="choices">${ws.map(w=>tile(w,`data-c="${w.id}"`)).join("")}</div>
+  <div class="row" style="margin-top:10px"><button class="ghost" id="cOther" style="flex:1">🔎 Άλλη λέξη</button>${LAST?`<button class="ghost" id="cPlay">▶️ Τι άκουσα</button>`:""}<button class="ghost parent-only${S.child?" hide":""}" id="cAi">✨ Τι εννοεί;</button></div><div id="cAiOut"></div></div>`;
+ R.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>picked(b.dataset.c));
+ $("cOther").onclick=()=>pickWord(picked);
+ if($("cPlay"))$("cPlay").onclick=()=>play(toI16(LAST.pcm));
+ $("cAi").onclick=()=>aiMeaning()}
+async function picked(id){const w=WORDS[id];sayW(w);await logIt(id,"pick",true);if(LAST){await addSample(id,LAST.pcm,LAST.ft);LAST=null}
+ $("result").innerHTML=`<div class="res">${w.photo?`<img class="pic" src="${w.photo}">`:`<div class="pic">${esc(w.emoji)}</div>`}<div class="lbl">${esc(w.label)}</div><p class="muted">Το κράτησα — την επόμενη φορά θα το καταλάβω καλύτερα ⭐</p><button class="yel" onclick="sayW(WORDS['${id}'])">🔊 Ξανά</button></div>`;again()}
+function again(){if(S.hands&&TAB==="speak")setTimeout(()=>{if(!Mic.busy)$("mic").click()},2200)}
+function pickWord(cb){const all=visible();
+ openModal(`<h2>Διάλεξε λέξη</h2><input type="search" id="pq" placeholder="🔎 Γράψε…"><div class="grid" id="pg" style="margin-top:10px"></div><button class="ghost" style="width:100%;margin-top:12px" onclick="closeModal()">Άκυρο</button>`);
+ const draw=()=>{const q=norm($("pq").value);$("pg").innerHTML=all.filter(w=>!q||norm(w.label).includes(q)).map(w=>tile(w,`data-p="${w.id}"`)).join("");
+  $("pg").querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>{closeModal();cb(b.dataset.p)})};$("pq").oninput=draw;draw()}
+const norm=s=>(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+
+// ---------------- ΕΙΚΟΝΕΣ ----------------
+let STRIP=[];
+function drawBoard(){const cats=CATS.filter(c=>visible().some(w=>w.cat===c));if(!cats.includes(S.cat))S.cat=cats[0]||"Βασικά";
+ $("cats").innerHTML=cats.map(c=>`<button class="cat${c===S.cat?" on":""}" data-cat="${esc(c)}">${esc(c)}</button>`).join("");
+ $("cats").querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>{S.cat=b.dataset.cat;saveS();drawBoard()});
+ $("board").innerHTML=visible().filter(w=>w.cat===S.cat).map(w=>tile(w,`data-b="${w.id}"`)).join("");
+ $("board").querySelectorAll("[data-b]").forEach(b=>b.onclick=()=>{const w=WORDS[b.dataset.b];sayW(w);STRIP.push(w.id);drawStrip();logIt(w.id,"board")});drawStrip()}
+function drawStrip(){const s=$("strip");s.innerHTML=STRIP.length?STRIP.map(id=>{const w=WORDS[id];return w?`<div class="s">${w.photo?`<img src="${w.photo}">`:`<span class="e">${esc(w.emoji)}</span>`}${esc(w.label)}</div>`:""}).join(""):`<span class="muted" style="padding:0 8px">Πάτα εικόνες για να φτιάξεις πρόταση…</span>`;s.scrollLeft=1e5}
+const stripText=()=>STRIP.map((id,i)=>{const w=WORDS[id];if(!w)return"";const t=(w.say||w.label).replace(/[;?]$/,"");return i?t.charAt(0).toLowerCase()+t.slice(1):t}).join(" ");
+$("sayStrip").onclick=()=>say(STRIP.length?stripText():"");
+$("backStrip").onclick=()=>{STRIP.pop();drawStrip();$("aiOut").innerHTML=""};
+$("clrStrip").onclick=()=>{STRIP=[];drawStrip();$("aiOut").innerHTML=""};
+$("aiStrip").onclick=async()=>{if(!STRIP.length){toast("Βάλε πρώτα εικόνες");return}const raw=stripText();const o=$("aiOut");
+ o.innerHTML=`<div class="card muted">✨ Ο Claude φτιάχνει την πρόταση…</div>`;
+ try{const t=await claude(`Ένα παιδί με σύνδρομο Down επικοινωνεί με εικόνες. Διάλεξε με αυτή τη σειρά: «${raw}». Γράψε ΜΙΑ σύντομη, φυσική ελληνική πρόταση σε πρώτο πρόσωπο, με απλές λέξεις, που λέει ακριβώς αυτό — χωρίς να προσθέσεις νόημα που δεν υπάρχει. Μόνο την πρόταση.`,120);
+  const line=t.split("\n")[0].replace(/^["«]|["»]$/g,"").trim();o.innerHTML=`<div class="res" style="padding:12px"><div class="lbl" style="font-size:24px">${esc(line)}</div><button class="yel" id="aiSay" style="margin-top:8px">🔊 Πες το</button></div>`;say(line);$("aiSay").onclick=()=>say(line)}
+ catch(e){o.innerHTML=`<div class="card">⚠️ ${esc(e.message)}</div>`}};
+
+// ---------------- CLAUDE ----------------
+async function claude(prompt,max=300){let key="";try{key=localStorage.getItem("risq_api_key")||""}catch(x){}
+ if(!key)throw new Error("Δεν υπάρχει Claude API key. Βάλ' το στις ⚙️ Ρυθμίσεις (προαιρετικό).");
+ let r;try{r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"content-type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+  body:JSON.stringify({model:"claude-haiku-5-5",max_tokens:max,system:"Βοηθάς οικογένειες παιδιών με σύνδρομο Down να καταλαβαίνουν τι θέλει να πει το παιδί. Απαντάς στα ελληνικά, σύντομα, με ζεστασιά και χωρίς ιατρικές διαγνώσεις.",messages:[{role:"user",content:prompt}]})})}
+ catch(e){throw new Error("Δεν υπάρχει σύνδεση με το internet.")}
+ const j=await r.json().catch(()=>({}));if(!r.ok){const m=(j.error&&j.error.message)||"";
+  throw new Error(r.status===401?"Το API key δεν είναι έγκυρο (401).":/credit balance/i.test(m)?"Ο λογαριασμός API δεν έχει υπόλοιπο (Billing).":r.status===429?"Πολλά αιτήματα — δοκίμασε σε λίγο.":r.status>=500?"Ο server είναι φορτωμένος — δοκίμασε ξανά.":"Σφάλμα "+r.status+": "+m)}
+ return (j.content||[]).filter(c=>c.type==="text").map(c=>c.text).join("").trim()}
+function aiMeaning(){const o=$("cAiOut");const hr=new Date().getHours();
+ o.innerHTML=`<div style="margin-top:10px"><label class="muted">Πώς ακούστηκε; (γράψ' το όπως το άκουσες)</label><input id="aiSnd" placeholder="π.χ. «μαμ-μα νε»">
+ <label class="muted" style="margin-top:6px;display:block">Τι έκανε / πού έδειχνε;</label><input id="aiCtx" placeholder="π.χ. έδειχνε το ψυγείο, ήταν θυμωμένος">
+ <button style="margin-top:8px;width:100%" id="aiGo">✨ Ρώτα τον Claude</button><div id="aiRes"></div></div>`;
+ $("aiGo").onclick=async()=>{const snd=$("aiSnd").value.trim(),ctx=$("aiCtx").value.trim();if(!snd&&!ctx)return;$("aiRes").innerHTML=`<p class="muted">✨ Σκέφτεται…</p>`;
+  const recent=LOG.slice(-8).map(e=>WORDS[e.w]&&WORDS[e.w].label).filter(Boolean).join(", ");
+  const vocab=visible().map(w=>w.label).join(", ");
+  try{const t=await claude(`Το παιδί (${esc(S.name)}) έχει σύνδρομο Down και ακόμα δεν αρθρώνει καθαρά. Είπε κάτι που ακούστηκε: «${snd||"—"}». Συμφραζόμενα: ${ctx||"—"}. Ώρα: ${hr}:00. Πρόσφατες λέξεις του: ${recent||"—"}.
+Λεξιλόγιο που ξέρει: ${vocab}.
+Δώσε έως 3 πιθανές ερμηνείες, την πιο πιθανή πρώτη. Προτίμησε λέξεις από το λεξιλόγιο. Μορφή: κάθε γραμμή «Λέξη ή σύντομη φράση | γιατί (λίγες λέξεις)». Τίποτε άλλο.`,250);
+   const lines=t.split("\n").map(l=>l.replace(/^[\s\-\d.)•*]+/,"").trim()).filter(l=>l.includes("|")).slice(0,3);
+   $("aiRes").innerHTML=lines.length?`<p class="muted" style="margin:8px 0 4px">Πάτα την ερμηνεία για να την πει — ρώτα το παιδί αν αυτό ήθελε:</p>`+lines.map((l,i)=>{const [a,b]=l.split("|");const w=visible().find(x=>norm(x.label)===norm(a.trim()));
+    return `<div class="li"><div class="t"><b>${esc(a.trim())}</b><span class="muted">${esc((b||"").trim())}</span></div><button class="yel" data-as="${esc(a.trim())}">🔊</button>${w?`<button class="ok" data-aw="${w.id}">✔</button>`:""}</div>`}).join("")
+    +`<p class="muted">✔ = ήταν αυτό, κράτα την ηχογράφηση σε αυτή τη λέξη.</p>`:`<p>${esc(t)}</p>`;
+   $("aiRes").querySelectorAll("[data-as]").forEach(b=>b.onclick=()=>say(b.dataset.as));
+   $("aiRes").querySelectorAll("[data-aw]").forEach(b=>b.onclick=()=>picked(b.dataset.aw))}
+  catch(e){$("aiRes").innerHTML=`<p>⚠️ ${esc(e.message)}</p>`}}}
+
+// ---------------- ΛΕΞΙΚΟ ----------------
+const cnt=id=>SAMPLES.filter(s=>s.w===id).length;
+function drawDict(){const q=norm($("dq").value);const ws=Object.values(WORDS).sort((a,b)=>CATS.indexOf(a.cat)-CATS.indexOf(b.cat)||(a.ord||0)-(b.ord||0)).filter(w=>!q||norm(w.label).includes(q));
+ let h="",cur="";ws.forEach(w=>{if(w.cat!==cur){cur=w.cat;h+=`<h3>${esc(cur)}</h3>`}const n=cnt(w.id);
+  h+=`<div class="li" data-ed="${w.id}">${w.photo?`<img src="${w.photo}">`:`<span class="e">${esc(w.emoji)}</span>`}<div class="t"><b>${esc(w.label)}${w.hidden?' <span class="pill">κρυφή</span>':""}</b></div><span class="pill ${n>=3?"g":n?"y":""}">🎙️ ${n}</span></div>`});
+ $("dlist").innerHTML=h||`<p class="muted">Καμία λέξη.</p>`;$("dlist").querySelectorAll("[data-ed]").forEach(d=>d.onclick=()=>editWord(d.dataset.ed))}
+$("dq").oninput=drawDict;
+$("newWord").onclick=()=>editWord(null);
+const EMO="😀😃😄😁😆😂🤣😊😇🙂😉😍🥰😘😋😛🤪🤗🤔😐😴😪🤤😷🤒🤕🤢🤮🥵🥶😎🥳😕😟😢😭😤😠😡😱😨😰👍👎👏🙌🙏✋👋🤲👉👆👀👂👃👄🦷🦵🦶💪🧒👦👧👨👩👴👵🧔👶👨‍🍳👮‍♂️👩‍⚕️👨‍🚒🐶🐱🐭🐰🐻🐼🐨🐯🦁🐮🐷🐸🐵🐔🐧🐦🐟🐬🐳🦋🐞🐢🐴🦄🌞🌙⭐🌈☔❄️🔥💧🌊🌳🌸🍎🍐🍊🍋🍌🍉🍇🍓🍒🍑🥭🍍🥥🥝🍅🥕🌽🥒🥔🍞🥐🧀🥚🍳🥞🍗🍖🍔🍟🍕🌭🥪🌮🍝🍜🍲🍚🍦🍩🍪🎂🍰🧁🍫🍬🍭🍯🥛🧃🥤☕🍼⚽🏀🏐🎾🏊🚴🛝🧸🪁🎈🎁🎨🖍️📖🧩🎮🎵🎶🎸🥁📺📱💻🚗🚌🚓🚑🚒🚲✈️🚢⛵🚂🏠🏫🏥🏪⛪🏖️⛰️🏕️🛏️🛁🚽🪥🧼👕👖👟🧢🧥🧦🎒👓🕶️☂️🔑🚪💡⏰❤️💙💛✅❌➕➖❓❗🆘🏁⏸️🔊";
+const EMOJIS=()=>{try{return [...new Intl.Segmenter("el",{granularity:"grapheme"}).segment(EMO)].map(x=>x.segment)}catch(e){return Array.from(EMO.replace(/\u200d|\ufe0f/g,""))}};
+function editWord(id){const isNew=!id;const w=id?Object.assign({},WORDS[id]):{id:uid(),cat:"Δικά μου",emoji:"💬",label:"",say:"",photo:"",hidden:false,ord:Date.now()};
+ const draw=()=>{const ss=SAMPLES.filter(s=>s.w===w.id).sort((a,b)=>a.t-b.t);
+  openModal(`<h2>${isNew?"Νέα λέξη":"Επεξεργασία"}</h2>
+   <div class="ebig" id="ePic">${w.photo?`<img src="${w.photo}" style="width:110px;height:110px;object-fit:cover;border-radius:18px">`:esc(w.emoji)}</div>
+   <label class="muted">Τι δείχνει η κάρτα</label><input id="eL" value="${esc(w.label)}" placeholder="π.χ. Νερό">
+   <label class="muted" style="margin-top:6px;display:block">Τι λέει η φωνή (αν διαφέρει)</label><input id="eS" value="${esc(w.say&&w.say!==w.label?w.say:"")}" placeholder="π.χ. Θέλω νερό, σε παρακαλώ">
+   <label class="muted" style="margin-top:6px;display:block">Κατηγορία</label><select id="eC">${CATS.map(c=>`<option${c===w.cat?" selected":""}>${esc(c)}</option>`).join("")}</select>
+   <label class="muted" style="margin-top:6px;display:block">Εικόνα</label>
+   <div class="emojis" id="eE">${EMOJIS().map(e=>`<span class="${e===w.emoji&&!w.photo?"on":""}">${e}</span>`).join("")}</div>
+   <div class="row" style="margin-top:8px"><button class="ghost" id="ePh">📷 Φωτογραφία</button>${w.photo?`<button class="ghost" id="ePhX">✖ Χωρίς φωτό</button>`:""}<input type="file" accept="image/*" id="eF" class="hide"></div>
+   <label class="row" style="margin-top:8px;gap:10px"><input type="checkbox" id="eH" style="width:auto"${w.hidden?" checked":""}> Κρυφή (δεν εμφανίζεται)</label>
+   <h3>🎙️ Η φωνή ${esc(art(S.name))} ${esc(gen(S.name))} (${ss.length})</h3>
+   <p class="muted" style="margin:0 0 6px">Πάτα «Ηχογράφηση» και ζήτα του να πει τη λέξη <b>όπως τη λέει εκείνος</b>. Κάνε 3–5, σε διαφορετικές στιγμές.</p>
+   <div>${ss.map((s,i)=>`<div class="li"><span class="e">🔉</span><div class="t">Ηχογράφηση ${i+1}<span class="muted"> · ${new Date(s.t).toLocaleDateString("el-GR")}</span></div><button class="ghost" data-pl="${s.id}">▶️</button><button class="ghost" data-dl="${s.id}">🗑</button></div>`).join("")}</div>
+   <button class="yel" id="eRec" style="width:100%;margin-top:8px">🎙️ Ηχογράφηση</button><div id="eRecS" class="muted" style="text-align:center;margin-top:4px"></div>
+   <div class="row" style="margin-top:14px"><button id="eSave" style="flex:2">💾 Αποθήκευση</button><button class="ghost" onclick="closeModal()" style="flex:1">Κλείσιμο</button></div>
+   ${isNew?"":`<button class="bad" id="eDel" style="width:100%;margin-top:10px">Διαγραφή λέξης</button>`}`);
+  const grab=()=>{w.label=$("eL").value.trim();w.say=$("eS").value.trim()||w.label;w.cat=$("eC").value;w.hidden=$("eH").checked};
+  $("eE").querySelectorAll("span").forEach(s=>s.onclick=()=>{grab();w.emoji=s.textContent;w.photo="";draw()});
+  $("ePh").onclick=()=>$("eF").click();
+  $("eF").onchange=async e=>{const f=e.target.files[0];if(!f)return;grab();w.photo=await shrink(f,256);draw()};
+  if($("ePhX"))$("ePhX").onclick=()=>{grab();w.photo="";draw()};
+  $("mbox").querySelectorAll("[data-pl]").forEach(b=>b.onclick=()=>{const s=SAMPLES.find(x=>x.id===b.dataset.pl);s&&play(s.pcm)});
+  $("mbox").querySelectorAll("[data-dl]").forEach(b=>b.onclick=async()=>{await DB.del("samples",b.dataset.dl);SAMPLES=SAMPLES.filter(x=>x.id!==b.dataset.dl);calib();grab();draw()});
+  $("eRec").onclick=async()=>{grab();if(!w.label){toast("Γράψε πρώτα τη λέξη");return}
+   if(Mic.busy){Mic.stop();return}
+   await saveWord(w);$("eRec").textContent="👂 Ακούω… (πάτα για στοπ)";$("eRecS").textContent="Πες: «"+w.label+"»";
+   try{const pcm=await Mic.listen({waitMs:6000,maxMs:6000});if(!pcm){$("eRec").textContent="🎙️ Ηχογράφηση";$("eRecS").textContent="Δεν άκουσα τίποτα — ξαναδοκίμασε";return}
+    if(await addSample(w.id,pcm)){toast("Κράτησα την ηχογράφηση ✔");draw()}else{$("eRecS").textContent="Πολύ σύντομο — ξαναδοκίμασε"; $("eRec").textContent="🎙️ Ηχογράφηση"}}
+   catch(e){$("eRec").textContent="🎙️ Ηχογράφηση";$("eRecS").textContent="⚠️ Δεν υπάρχει πρόσβαση στο μικρόφωνο"}};
+  $("eSave").onclick=async()=>{grab();if(!w.label){toast("Γράψε τη λέξη");return}await saveWord(w);closeModal();toast("Αποθηκεύτηκε ✔");drawDict()};
+  if($("eDel"))$("eDel").onclick=async()=>{if(!confirm("Διαγραφή «"+w.label+"» και των ηχογραφήσεών της;"))return;await DB.del("words",w.id);delete WORDS[w.id];
+   for(const s of SAMPLES.filter(x=>x.w===w.id))await DB.del("samples",s.id);SAMPLES=SAMPLES.filter(x=>x.w!==w.id);calib();closeModal();drawDict()}};
+ draw()}
+async function saveWord(w){w.say=w.say||w.label;await DB.put("words",w);WORDS[w.id]=Object.assign({},w)}
+function shrink(file,max){return new Promise(res=>{const img=new Image();img.onload=()=>{const s=Math.min(1,max/Math.max(img.width,img.height)),c=document.createElement("canvas");
+ const side=Math.round(Math.min(img.width,img.height));c.width=c.height=max;const x=c.getContext("2d");// τετράγωνο crop στο κέντρο
+ x.drawImage(img,(img.width-side)/2,(img.height-side)/2,side,side,0,0,max,max);res(c.toDataURL("image/jpeg",0.7))};img.onerror=()=>res("");img.src=URL.createObjectURL(file)})}
+
+// ---------------- ΕΚΠΑΙΔΕΥΣΗ (παιχνίδι) ----------------
+$("trainBtn").onclick=()=>{const pool=visible().filter(w=>!["Τι είναι;"].includes(w.label));
+ openModal(`<h2>🎯 Εκπαίδευση</h2><p class="muted">Διάλεξε τις λέξεις που ήδη προσπαθεί να λέει ο ${esc(S.name)} (ξεκίνα με 10–15). Μετά θα δείχνω την εικόνα μία-μία, εκείνος τη λέει και εγώ μαθαίνω.</p>
+  <div class="row" style="margin-bottom:8px"><button class="ghost" id="tLow">Όσες έχουν &lt;3 ηχογραφήσεις</button><button class="ghost" id="tNone">Καμία</button></div>
+  <div class="grid" id="tg"></div><button class="yel" id="tGo" style="width:100%;margin-top:12px">▶️ Ξεκίνα</button><button class="ghost" style="width:100%;margin-top:8px" onclick="closeModal()">Άκυρο</button>`);
+ const sel=new Set(LS.get("th_trainsel",[]).filter(id=>WORDS[id]));
+ const dr=()=>{$("tg").innerHTML=pool.map(w=>`<button class="tile" data-t="${w.id}" style="${sel.has(w.id)?"border-color:var(--yel);background:var(--yel2)":""}">${pic(w)}<span>${esc(w.label)}</span><span class="badge">🎙️ ${cnt(w.id)}</span></button>`).join("");
+  $("tg").querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>{const i=b.dataset.t;sel.has(i)?sel.delete(i):sel.add(i);dr()})};dr();
+ $("tLow").onclick=()=>{pool.filter(w=>cnt(w.id)<3&&(cnt(w.id)>0||sel.has(w.id))).forEach(w=>sel.add(w.id));dr()};
+ $("tNone").onclick=()=>{sel.clear();dr()};
+ $("tGo").onclick=()=>{if(!sel.size){toast("Διάλεξε λέξεις");return}LS.set("th_trainsel",[...sel]);const q=[...sel].sort((a,b)=>cnt(a)-cnt(b));trainRun(q,0,0)}};
+function trainRun(q,i,got){if(i>=q.length){openModal(`<div class="train"><div class="ebig">🏆</div><div class="lbl">Μπράβο ${esc(S.name)}!</div><p>Κράτησα ${got} νέες ηχογραφήσεις.</p><button class="yel" onclick="closeModal();drawDict()" style="width:100%">Τέλος</button></div>`);say("Μπράβο "+S.name+"!");return}
+ const w=WORDS[q[i]];openModal(`<div class="train"><p class="muted">${i+1} / ${q.length} · 🎙️ ${cnt(w.id)}</p>${w.photo?`<img src="${w.photo}">`:`<div class="ebig">${esc(w.emoji)}</div>`}<div class="lbl">${esc(w.label)}</div>
+  <p class="muted">Πάτα 🔊 να ακούσει τη λέξη, μετά 🎙️ και άφησέ τον να την πει με τον δικό του τρόπο.</p>
+  <div class="row" style="justify-content:center"><button class="ghost" id="trS">🔊</button><button class="yel" id="trR" style="font-size:22px;padding:14px 26px">🎙️</button><button class="ghost" id="trN">⏭</button></div>
+  <div id="trM" class="muted" style="margin-top:8px;min-height:22px"></div><button class="ghost" style="width:100%;margin-top:12px" onclick="closeModal();drawDict()">Σταμάτα</button></div>`);
+ $("trS").onclick=()=>sayW(w);$("trN").onclick=()=>trainRun(q,i+1,got);
+ $("trR").onclick=async()=>{if(Mic.busy){Mic.stop();return}$("trR").textContent="👂";$("trM").textContent="Σε ακούω…";
+  try{const pcm=await Mic.listen({waitMs:6000});$("trR").textContent="🎙️";if(!pcm){$("trM").textContent="Δεν άκουσα — ξαναπάτα";return}
+   if(await addSample(w.id,pcm)){say("Μπράβο!");$("trM").innerHTML=`✔ Κράτησα! <button class="ghost" id="trP">▶️</button> <button class="ghost" id="trU">↩︎ Σβήσ' το</button>`;
+    const last=SAMPLES[SAMPLES.length-1];$("trP").onclick=()=>play(last.pcm);$("trU").onclick=async()=>{await DB.del("samples",last.id);SAMPLES=SAMPLES.filter(x=>x.id!==last.id);calib();got--;$("trM").textContent="Σβήστηκε"};
+    got++;setTimeout(()=>{if($("trM")&&$("trU"))trainRun(q,i+1,got)},2600)}else $("trM").textContent="Πολύ σύντομο — ξαναπάτα"}
+  catch(e){$("trR").textContent="🎙️";$("trM").textContent="⚠️ Δεν υπάρχει πρόσβαση στο μικρόφωνο"}}}
+
+// ---------------- ΠΡΟΟΔΟΣ ----------------
+function drawProg(){const now=Date.now(),day=864e5,ws=Object.values(WORDS),withV=ws.filter(w=>cnt(w.id)>0).length;
+ const L7=LOG.filter(e=>now-e.t<7*day),voice=LOG.filter(e=>e.how==="voice"||e.how==="pick"),okN=LOG.filter(e=>e.ok===true&&e.how==="voice").length,badN=LOG.filter(e=>e.ok===false).length;
+ const acc=okN+badN?Math.round(100*okN/(okN+badN))+"%":"—";
+ $("stats").innerHTML=`<div><b>${ws.filter(w=>!w.hidden).length}</b>λέξεις</div><div><b>${withV}</b>λέξεις με τη φωνή του</div><div><b>${SAMPLES.length}</b>ηχογραφήσεις</div><div><b>${L7.length}</b>φορές μίλησε (7 μέρες)</div><div><b>${voice.length}</b>φορές με φωνή (σύνολο)</div><div><b>${acc}</b>σωστή αναγνώριση</div>`;
+ const days=[];for(let i=6;i>=0;i--){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-i);const a=d.getTime();days.push({l:d.toLocaleDateString("el-GR",{weekday:"short"}),n:LOG.filter(e=>e.t>=a&&e.t<a+day).length})}
+ const mx=Math.max(1,...days.map(d=>d.n));$("bars").innerHTML=days.map(d=>`<div style="height:${Math.max(2,100*d.n/mx)}%"><i>${d.n||""}</i><span>${d.l}</span></div>`).join("");
+ const c={};LOG.filter(e=>now-e.t<30*day).forEach(e=>c[e.w]=(c[e.w]||0)+1);const top=Object.entries(c).filter(([w])=>WORDS[w]).sort((a,b)=>b[1]-a[1]).slice(0,10);
+ $("top").innerHTML=top.length?top.map(([w,n])=>`<div class="li">${WORDS[w].photo?`<img src="${WORDS[w].photo}">`:`<span class="e">${esc(WORDS[w].emoji)}</span>`}<div class="t"><b>${esc(WORDS[w].label)}</b></div><span class="pill">${n}×</span></div>`).join(""):`<p class="muted">Δεν υπάρχουν ακόμα δεδομένα.</p>`;
+ const H={voice:"🎤 φωνή",pick:"🎤→👆 διάλεξε",tap:"👆 κουμπί",board:"🖼️ εικόνα"};
+ $("recent").innerHTML=LOG.slice(-15).reverse().map(e=>WORDS[e.w]?`<div class="li"><span class="e">${esc(WORDS[e.w].emoji)}</span><div class="t"><b>${esc(WORDS[e.w].label)}</b><span class="muted">${new Date(e.t).toLocaleString("el-GR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})} · ${H[e.how]||e.how}${e.ok===true?" ✔":e.ok===false?" ✖":""}</span></div></div>`:"").join("")||`<p class="muted">—</p>`;
+ drawNotes()}
+function drawNotes(){$("notes").innerHTML=(S.notes||[]).slice().reverse().map((n,i)=>`<div class="li"><div class="t"><span class="muted">${new Date(n.t).toLocaleDateString("el-GR")}</span><br>${esc(n.x)}</div><button class="ghost" data-nd="${S.notes.length-1-i}">🗑</button></div>`).join("");
+ $("notes").querySelectorAll("[data-nd]").forEach(b=>b.onclick=()=>{S.notes.splice(+b.dataset.nd,1);saveS();drawNotes()})}
+$("noteAdd").onclick=()=>{const x=$("noteIn").value.trim();if(!x)return;(S.notes=S.notes||[]).push({t:Date.now(),x});saveS();$("noteIn").value="";drawNotes()};
+$("printRep").onclick=()=>{document.title="Μιλάω — Αναφορά "+S.name+" "+new Date().toLocaleDateString("el-GR");window.print();setTimeout(()=>document.title="Μιλάω!",1000)};
+
+// ---------------- ΡΥΘΜΙΣΕΙΣ ----------------
+function fillVoices(){const s=$("sVoice");if(!s)return;s.innerHTML=VOICES.length?VOICES.map(v=>`<option value="${esc(v.voiceURI)}"${v.voiceURI===S.voice?" selected":""}>${esc(v.name)}</option>`).join(""):`<option value="">Ελληνική φωνή συστήματος</option>`}
+function drawSet(){$("sName").value=S.name;$("sRate").value=S.rate;$("sPitch").value=S.pitch;$("sStrict").value=String(S.strict);$("sAuto").checked=S.auto;$("sHands").checked=S.hands;
+ try{$("sKey").value=localStorage.getItem("risq_api_key")||""}catch(e){}fillVoices();drawGuide()}
+$("sName").oninput=()=>{S.name=$("sName").value.trim()||"Θάνος";saveS();applyName()};
+$("sVoice").onchange=()=>{S.voice=$("sVoice").value;saveS()};
+$("sRate").oninput=()=>{S.rate=+$("sRate").value;saveS()};$("sPitch").oninput=()=>{S.pitch=+$("sPitch").value;saveS()};
+$("sTest").onclick=()=>say("Γεια σου! Με λένε "+S.name+".");
+$("sStrict").onchange=()=>{S.strict=+$("sStrict").value;saveS()};
+$("sAuto").onchange=()=>{S.auto=$("sAuto").checked;saveS()};$("sHands").onchange=()=>{S.hands=$("sHands").checked;saveS()};
+$("sLock").onclick=()=>{S.child=true;saveS();applyChild();toast("🔒 Για ξεκλείδωμα: κράτα το 🔒 πατημένο 3″",3500)};
+$("sKey").onchange=()=>{try{const v=$("sKey").value.trim();v?localStorage.setItem("risq_api_key",v):localStorage.removeItem("risq_api_key")}catch(e){}toast("Αποθηκεύτηκε")};
+const b64=buf=>{const u=new Uint8Array(buf.buffer||buf,buf.byteOffset||0,buf.byteLength);let s="";for(let i=0;i<u.length;i+=0x8000)s+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000));return btoa(s)};
+const unb64=(s,T)=>{const b=atob(s),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return new T(u.buffer)};
+$("bExp").onclick=async()=>{const data={app:"milao",v:1,date:new Date().toISOString(),settings:Object.assign({},S,{child:false}),words:Object.values(WORDS),
+  samples:SAMPLES.map(s=>({id:s.id,w:s.w,n:s.n,t:s.t,f:b64(s.f),pcm:b64(s.pcm)})),log:LOG};
+ const blob=new Blob([JSON.stringify(data)],{type:"application/json"}),name="Milao_"+(S.name||"")+"_"+new Date().toISOString().slice(0,10)+".json";
+ try{const f=new File([blob],name,{type:"application/json"});if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:name});return}}catch(e){if(e.name==="AbortError")return}
+ const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click()};
+$("bImp").onclick=()=>$("bFile").click();
+$("bFile").onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(d.app!=="milao")throw 0;
+  if(!confirm("Να αντικατασταθεί το λεξικό με αυτό του αρχείου; ("+d.words.length+" λέξεις, "+d.samples.length+" ηχογραφήσεις)"))return;
+  await DB.clear("words");await DB.clear("samples");await DB.clear("log");
+  for(const w of d.words)await DB.put("words",w);for(const s of d.samples)await DB.put("samples",{id:s.id,w:s.w,n:s.n,t:s.t,f:unb64(s.f,Float32Array),pcm:unb64(s.pcm,Int16Array)});
+  for(const l of d.log||[]){const x=Object.assign({},l);delete x.id;await DB.put("log",x)}
+  Object.assign(S,d.settings||{},{child:false});saveS();await loadAll();applyName();toast("Έγινε εισαγωγή ✔");go("dict")}
+ catch(x){toast("Μη έγκυρο αρχείο")}e.target.value=""};
+$("bReset").onclick=async()=>{if(!confirm("Θα σβηστούν ΟΛΑ: λέξεις, ηχογραφήσεις, πρόοδος. Σίγουρα;"))return;await DB.clear("words");await DB.clear("samples");await DB.clear("log");await seed();await loadAll();toast("Έγινε επαναφορά");go("speak")};
+function drawGuide(){const n=esc(S.name);$("guide").innerHTML=`<h2>💙💛 Οδηγός για γονείς</h2>
+<p><b>Πώς δουλεύει.</b> Η εφαρμογή δεν «ξέρει» από πριν τη φωνή του ${n}. Τη <b>μαθαίνει</b> από εσάς: για κάθε λέξη ηχογραφείτε πώς τη λέει εκείνος (π.χ. «νε-νε» = νερό). Μετά, όταν μιλάει, συγκρίνει τον ήχο με τις ηχογραφήσεις του και λέει τη λέξη καθαρά. Όλα γίνονται μέσα στο κινητό, χωρίς internet.</p>
+<p><b>Μαθαίνει συνέχεια.</b> Κάθε 👍 ή κάθε φορά που διαλέγετε τη σωστή εικόνα, κρατάει τον ήχο και την επόμενη φορά καταλαβαίνει καλύτερα.</p>
+<h3>Τα πρώτα βήματα</h3><ol>
+<li>Διαλέξτε 10–15 λέξεις που ήδη προσπαθεί να λέει (νερό, μαμά, φαγητό, τουαλέτα, όχι…).</li>
+<li>📚 Λεξικό → 🎯 Εκπαίδευση: 3–5 ηχογραφήσεις για κάθε λέξη, σε διαφορετικές μέρες και ώρες, σε ήσυχο χώρο.</li>
+<li>Βάλτε δικές σας φωτογραφίες (το ποτήρι του, η γιαγιά) — τα παιδιά αναγνωρίζουν πιο εύκολα τα δικά τους πράγματα.</li>
+<li>Όταν δεν καταλαβαίνει, η εφαρμογή δείχνει 3 εικόνες: αφήστε τον να δείξει ποια ήθελε.</li></ol>
+<h3>Συμβουλές που βοηθούν</h3><ul>
+<li><b>Δείξτε με το παράδειγμα:</b> όταν του μιλάτε, πατάτε κι εσείς τις εικόνες («Πάμε… πάρκο»). Έτσι μαθαίνουν τα παιδιά τέτοια συστήματα.</li>
+<li><b>Δεν «κόβει» την ομιλία.</b> Η έρευνα για την εναλλακτική επικοινωνία (AAC) δείχνει ότι δεν εμποδίζει την ανάπτυξη του λόγου — συχνά τη βοηθά.</li>
+<li><b>Περιμένετε</b> 5–10 δευτερόλεπτα πριν βοηθήσετε. Δώστε του χρόνο.</li>
+<li><b>Επιβραβεύστε την προσπάθεια</b> και επαναλάβετε σωστά τη λέξη με χαρά («Ναι! Νερό!») — χωρίς «δεν το λες σωστά».</li>
+<li>Τα παιδιά με σύνδρομο Down συχνά μαθαίνουν καλύτερα <b>με το μάτι</b>: εικόνες και νοήματα με τα χέρια μαζί με τη λέξη βοηθούν πολύ.</li>
+<li>Ελέγχετε τακτικά την <b>ακοή</b> του — τα προβλήματα ακοής είναι συχνά και επηρεάζουν την ομιλία.</li>
+<li>Δουλέψτε μαζί με τον <b>λογοθεραπευτή</b> του: δείξτε του την 📈 Πρόοδο και την αναφορά.</li></ul>
+<h3>Να ξέρετε</h3><ul>
+<li>Είναι βοήθημα επικοινωνίας, όχι ιατρικό εργαλείο ή αντικατάσταση της λογοθεραπείας.</li>
+<li>Όσο μεγαλώνει και αλλάζει η φωνή του, προσθέτετε νέες ηχογραφήσεις (κρατάει έως 12 ανά λέξη, πετάει τις παλιότερες).</li>
+<li>Σε θόρυβο (TV, πολλά άτομα) κάνει περισσότερα λάθη — τότε χρησιμοποιήστε τις 🖼️ Εικόνες.</li>
+<li>Τα δεδομένα του παιδιού μένουν μόνο στο κινητό. Κρατάτε αντίγραφο με ⬇️ Εξαγωγή.</li></ul>
+<h3>📲 Εγκατάσταση στο iPhone</h3><p>Safari → Κοινοποίηση → «Προσθήκη στην οθόνη Αφετηρίας». Την πρώτη φορά επιτρέψτε το μικρόφωνο.</p>`}
+
+// ---------------- MODAL ----------------
+function openModal(h){$("mbox").innerHTML=h;$("modal").classList.add("on")}
+function closeModal(){if(Mic.busy)Mic.stop();$("modal").classList.remove("on");$("mbox").innerHTML=""}
+$("modal").onclick=e=>{if(e.target.id==="modal")closeModal()};
+
+// ---------------- START ----------------
+async function loadAll(){WORDS={};(await DB.all("words")).forEach(w=>WORDS[w.id]=w);SAMPLES=await DB.all("samples");LOG=(await DB.all("log")).sort((a,b)=>a.t-b.t);calib()}
+document.addEventListener("visibilitychange",()=>{if(document.hidden){if(Mic.busy)Mic.stop();Mic.release()}});
+(async()=>{await DB.open();if(!LS.get("th_seeded",0))await seed();await loadAll();applyName();applyChild();go(S.child?"speak":"speak");
+ loadVoices();try{speechSynthesis.onvoiceschanged=loadVoices}catch(e){}
+ if(!SAMPLES.length&&!LS.get("th_welcomed",0)){LS.set("th_welcomed",1);go("set");setTimeout(()=>$("guide").scrollIntoView({behavior:"smooth"}),300)}})();
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>
