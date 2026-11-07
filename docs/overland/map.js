@@ -45,7 +45,7 @@ const filt=()=>LS.g('mfilt',Object.fromEntries(PC.map(c=>[c.id,!!c.on])));
 const PCOL={camp:'#5f9e7a',caravan:'#4f8a6a',water:'#4a90c8',dump:'#8a6d4a',shower:'#6aa9d0',wc:'#7a8a9a',fuel:'#e8b86d',hut:'#a0785a',view:'#b07ac0',picnic:'#8fae5a',health:'#d9534f',repair:'#9a9a9a',laundry:'#6a9fb5'};
 function mapIcon(e,bg,sz){sz=sz||30;return L.divIcon({className:'',html:`<div style="width:${sz}px;height:${sz}px;border-radius:50%;background:${bg||'#262422'};border:2px solid #f5f0e8;display:flex;align-items:center;justify-content:center;font-size:${sz*.55}px;box-shadow:0 1px 4px #000a">${e}</div>`,iconSize:[sz,sz],iconAnchor:[sz/2,sz/2]})}
 const ACC=[['2wd','🚗','Κάθε αυτοκίνητο','#5f9e7a'],['awd','🚙','SUV / AWD','#6a9fb5'],['4x4','🛻','4×4 με κοντά','#e8b86d'],['hard','⛰️','4×4 + μπλοκέ / δύσκολο','#d9534f']];
-const SPC=[['wild','🌲','Ελεύθερο κάμπινγκ'],['camp','⛺','Κάμπινγκ'],['water','🚰','Νερό / πηγή'],['view','🏞️','Θέα'],['obst','🚧','Δύσκολο πέρασμα'],['fuel','⛽','Καύσιμα'],['food','🍽️','Φαγητό / ταβέρνα'],['other','📌','Άλλο']];
+const SPC=[['wild','🌲','Ελεύθερο κάμπινγκ'],['camp','⛺','Κάμπινγκ'],['water','🚰','Νερό / πηγή'],['view','🏞️','Θέα'],['obst','🚧','Δύσκολο πέρασμα'],['fuel','⛽','Καύσιμα'],['food','🍽️','Φαγητό / ταβέρνα'],['hut','🛖','Καταφύγιο'],['other','📌','Άλλο']];
 function mCss(){if($('#mcss'))return;const st=document.createElement('style');st.id='mcss';st.textContent=`
 .msh{background:#1f1e1df2;border:1px solid var(--line);border-radius:16px;padding:10px;box-shadow:0 4px 16px #000a}
 .msh .mg{display:grid;grid-template-columns:repeat(auto-fit,minmax(70px,1fr));gap:6px;margin-top:8px}
@@ -115,7 +115,7 @@ function mDrawPoi(){if(!MP.map)return;MP.poiL.clearLayers();const f=filt(),b=MP.
    .on('click',ev=>{L.DomEvent.stop(ev);MP.map.setView([la,lo],Math.min(z+2,16))}).addTo(MP.poiL);shown++})}
  if(!MP.add&&!MP.plan&&!MP.card)mToast(z<6&&MP.P.length?L2(`Ζούμαρε πιο κοντά για να δεις τα σημεία (${MP.P.length} κατεβασμένα).`,`Zoom in to see the places (${MP.P.length} downloaded).`):MP.P.length?`${inb} ${L2('σημεία εδώ','places here')}${inb>40&&z<16?' · '+L2('πάτα μια φούσκα για ζουμ','tap a bubble to zoom'):''} · ${MP.S.length} ${L2('δικά μου','mine')}`:'')}
 function mDrawMy(){if(!MP.map)return;MP.myL.clearLayers();
- MP.S.forEach(s=>{const a=ACC.find(x=>x[0]===s.acc)||ACC[0],c=SPC.find(x=>x[0]===s.cat)||SPC[7];L.marker([s.lat,s.lon],{icon:mapIcon(c[1],a[3],36),zIndexOffset:500}).on('click',ev=>{L.DomEvent.stop(ev);mTap('s',s.id,s.lat,s.lon)}).addTo(MP.myL)});
+ MP.S.forEach(s=>{const a=ACC.find(x=>x[0]===s.acc)||ACC[0],c=SPC.find(x=>x[0]===s.cat)||SPC.find(x=>x[0]==='other');L.marker([s.lat,s.lon],{icon:mapIcon(c[1],a[3],36),zIndexOffset:500}).on('click',ev=>{L.DomEvent.stop(ev);mTap('s',s.id,s.lat,s.lon)}).addTo(MP.myL)});
  LS.g('wps',[]).forEach((p,i)=>L.marker([p.lat,p.lon],{icon:mapIcon('⭐','#3a2c1c',28),zIndexOffset:400}).on('click',ev=>{L.DomEvent.stop(ev);mTap('w',i,p.lat,p.lon)}).addTo(MP.myL));
  MP.trkN=trk.length;if(trk.length>1)L.polyline(trk.map(p=>[p.lat,p.lon]),{color:'#e8b86d',weight:4,opacity:.9,interactive:false}).addTo(MP.myL)}
 function mDraw(){mDrawMy();mDrawPoi()}
@@ -123,7 +123,7 @@ function mDraw(){mDrawMy();mDrawPoi()}
 function mTap(k,id,lat,lon){if(MP.plan)return mPlanAdd({lat,lng:lon});if(MP.add){mAddOff()}mCard(k,id)}
 function mHi(lat,lon){MP.hiL.clearLayers();L.marker([lat,lon],{interactive:false,zIndexOffset:-10,icon:L.divIcon({className:'',html:'<div class="mpul"></div>',iconSize:[40,40],iconAnchor:[20,20]})}).addTo(MP.hiL)}
 function mFocus(k,id,lat,lon){LS.s('mfocus',{k,id,lat,lon});go('map')}
-function mItem(k,id){if(k==='s'){const s=MP.S.find(x=>x.id===id);if(!s)return null;const c=SPC.find(x=>x[0]===s.cat)||SPC[7],a=ACC.find(x=>x[0]===s.acc)||ACC[0];return{lat:s.lat,lon:s.lon,e:c[1],n:s.n||c[2],sub:`${c[2]} · ${a[1]} ${a[2]}${s.r?' · '+'★'.repeat(s.r):''}`,note:s.note,ph:s.ph}}
+function mItem(k,id){if(k==='s'){const s=MP.S.find(x=>x.id===id);if(!s)return null;const c=SPC.find(x=>x[0]===s.cat)||SPC.find(x=>x[0]==='other'),a=ACC.find(x=>x[0]===s.acc)||ACC[0];return{lat:s.lat,lon:s.lon,e:c[1],n:s.n||c[2],sub:`${c[2]} · ${a[1]} ${a[2]}${s.r?' · '+'★'.repeat(s.r):''}`,note:s.note,ph:s.ph}}
  if(k==='p'){const p=MP.P.find(x=>x.k===id);if(!p)return null;const c=PCI[p.c];return{lat:p.lat,lon:p.lon,e:c.e,n:p.n||c.n,sub:c.n+(p.t.fee?' · '+L2('χρέωση','fee')+': '+YN(p.t.fee):'')+(p.t.opening_hours?' · '+p.t.opening_hours:'')}}
  if(k==='w'){const w=LS.g('wps',[])[id];if(!w)return null;return{lat:w.lat,lon:w.lon,e:'⭐',n:w.n||L2('Σημείο πυξίδας','Compass point'),sub:L2('σημείο της πυξίδας','compass point')}}return null}
 function mCard(k,id){const it=mItem(k,id),b=$('#mbar');if(!it||!b)return mBarHome();MP.card={k,id};mHi(it.lat,it.lon);const ref=pos||LS.g('lastfix',null),nm=esc(it.n.replace(/'/g,''));
@@ -138,7 +138,7 @@ function mBarHome(){MP.card=null;MP.hiL&&MP.hiL.clearLayers();const b=$('#mbar')
 
 /* ---------- Αναζήτηση στον χάρτη ---------- */
 function mSearch(){const q=norm2($('#mq').value.trim()),o=$('#msr');if(!o)return;if(q.length<2){o.innerHTML='';return}const ref=MP.map.getCenter(),R=[];
- MP.S.forEach(s=>{const c=SPC.find(x=>x[0]===s.cat)||SPC[7];if(norm2((s.n||'')+' '+c[2]).includes(q))R.push(['s',s.id,s,c[1]+' '+(s.n||c[2])+' ⭐'])});
+ MP.S.forEach(s=>{const c=SPC.find(x=>x[0]===s.cat)||SPC.find(x=>x[0]==='other');if(norm2((s.n||'')+' '+c[2]).includes(q))R.push(['s',s.id,s,c[1]+' '+(s.n||c[2])+' ⭐'])});
  LS.g('wps',[]).forEach((w,i)=>{if(norm2(w.n||'').includes(q))R.push(['w',i,w,'⭐ '+w.n])});
  MP.P.forEach(p=>{if(p.n&&norm2(p.n+' '+PCI[p.c].n).includes(q))R.push(['p',p.k,p,PCI[p.c].e+' '+p.n])});
  R.forEach(r=>r.d=dist({lat:ref.lat,lon:ref.lng},r[2]));R.sort((a,b)=>(a[0]==='p')-(b[0]==='p')||a.d-b.d);
@@ -200,7 +200,7 @@ async function mDlGo(kind,r){const f=filt(),cats=PC.filter(c=>f[c.id]);if(!cats.
 async function mList(){T('📋 Σημεία κοντά');const P=await DB.all('poi').catch(()=>[]),S=await DB.all('spots').catch(()=>[]),f=filt(),v=LS.g('mview',{lat:38.6,lon:22.6}),ref=pos||LS.g('lastfix',null)||{lat:v.lat,lon:v.lon};
  const L1=P.filter(p=>f[p.c]).map(p=>({p,d:dist(ref,p),my:0})),L2=S.map(p=>({p,d:dist(ref,p),my:1})),A=L1.concat(L2).sort((a,b)=>a.d-b.d).slice(0,150);
  M.innerHTML=`<div class="muted">${L2('Πάτα ένα σημείο για να το δεις στον χάρτη.','Tap a place to see it on the map.')} Απόσταση σε ευθεία από ${pos?'τη θέση σου':'το κέντρο του χάρτη'}. Φίλτρα κατηγοριών: από τα κουμπιά του χάρτη.</div><input id="mlq" placeholder="🔎 Αναζήτηση ονόματος…" oninput="mListF()">`+
- (A.length?`<div id="mll">${A.map(({p,d,my})=>{const c=my?(SPC.find(x=>x[0]===p.cat)||SPC[7]):[0,PCI[p.c].e,PCI[p.c].n];return`<button class="row" data-q="${esc(norm2((p.n||'')+' '+c[2]))}" onclick="mFocus('${my?'s':'p'}','${esc(my?p.id:p.k)}',${p.lat},${p.lon})"><span class="e">${c[1]}</span><span style="flex:1"><b>${esc(p.n||c[2])}${my?' ⭐':''}</b><small>${c[2]}${!my&&p.t.fee?' · χρέωση: '+esc(YN(p.t.fee)):''}</small></span><b class="mono">${fmD(d)}</b></button>`}).join('')}</div>`:'<div class="note">Κανένα σημείο. Πάτα ⬇️ Κατέβασε στον χάρτη.</div>')}
+ (A.length?`<div id="mll">${A.map(({p,d,my})=>{const c=my?(SPC.find(x=>x[0]===p.cat)||SPC.find(x=>x[0]==='other')):[0,PCI[p.c].e,PCI[p.c].n];return`<button class="row" data-q="${esc(norm2((p.n||'')+' '+c[2]))}" onclick="mFocus('${my?'s':'p'}','${esc(my?p.id:p.k)}',${p.lat},${p.lon})"><span class="e">${c[1]}</span><span style="flex:1"><b>${esc(p.n||c[2])}${my?' ⭐':''}</b><small>${c[2]}${!my&&p.t.fee?' · χρέωση: '+esc(YN(p.t.fee)):''}</small></span><b class="mono">${fmD(d)}</b></button>`}).join('')}</div>`:'<div class="note">Κανένα σημείο. Πάτα ⬇️ Κατέβασε στον χάρτη.</div>')}
 const norm2=s=>s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
 function mListF(){const q=norm2($('#mlq').value.trim());document.querySelectorAll('#mll .row').forEach(r=>r.style.display=!q||r.dataset.q.includes(q)?'':'none')}
 
@@ -213,13 +213,13 @@ async function mPoi(k){k=decodeURIComponent(k);const p=await DB.get('poi',k);if(
  <div class="tools"><button class="btn" onclick="mFocus('p','${esc(k)}',${p.lat},${p.lon})">🗺️ Στον χάρτη</button><button class="btn" onclick="mToSpot('${esc(k)}')">⭐ Κράτα το στα δικά μου</button><a class="btn" href="https://www.openstreetmap.org/${{n:'node',w:'way',r:'relation'}[k[0]]}/${k.slice(1)}" target="_blank">OSM ↗</a></div>
  <div class="muted">Τα στοιχεία είναι από το OpenStreetMap και μπορεί να μην είναι ενημερωμένα. Αν κάτι είναι λάθος, μπορείς να το διορθώσεις στο openstreetmap.org.</div>`}
 function mGoTo(lat,lon,nm){const w=LS.g('wps',[]);let i=w.findIndex(p=>Math.abs(p.lat-lat)<1e-5&&Math.abs(p.lon-lon)<1e-5);if(i<0){w.push({n:nm,lat,lon,t:Date.now()});LS.s('wps',w);i=w.length-1}tgt=i;LS.s('tgt',i);go('t/compass')}
-async function mToSpot(k){const p=await DB.get('poi',k),c=PCI[p.c],cat={camp:'camp',caravan:'camp',water:'water',view:'view',fuel:'fuel'}[p.c]||'other';LS.s('spdraft',{id:'s'+Date.now(),lat:p.lat,lon:p.lon,n:p.n||c.n,cat,acc:'2wd',r:0,note:'',t:Date.now(),new:1});go('map/edit/new')}
+async function mToSpot(k){const p=await DB.get('poi',k),c=PCI[p.c],cat={camp:'camp',caravan:'camp',water:'water',view:'view',fuel:'fuel',hut:'hut'}[p.c]||'other';LS.s('spdraft',{id:'s'+Date.now(),lat:p.lat,lon:p.lon,n:p.n||c.n,cat,acc:'2wd',r:0,note:'',t:Date.now(),new:1});go('map/edit/new')}
 
 /* ---------- Δικά μου σημεία ---------- */
 async function mMy(){T('⭐ Τα δικά μου σημεία');const S=(await DB.all('spots').catch(()=>[])).sort((a,b)=>b.t-a.t),ref=pos||LS.g('lastfix',null);
  M.innerHTML=`<div class="tools"><button class="btn p" onclick="LS.s('maddon',1);go('map')">➕ Νέο σημείο</button><button class="btn" onclick="mExport()">📤 Στείλε / export</button><label class="btn" style="color:var(--tx);font-size:.92em">📥 Import<input type="file" accept=".json,.gpx,application/json,application/gpx+xml" style="display:none" onchange="mImport(this.files[0])"></label></div>
  <div class="muted">Export: αρχείο που ανοίγει κάθε Overland Habit (με φωτογραφίες), έτσι ανταλλάσσετε σημεία στην παρέα. Import δέχεται και GPX (waypoints).</div>`+
- (S.length?S.map(s=>{const c=SPC.find(x=>x[0]===s.cat)||SPC[7],a=ACC.find(x=>x[0]===s.acc)||ACC[0];return`<button class="row" onclick="mFocus('s','${s.id}',${s.lat},${s.lon})"><span class="e">${c[1]}</span><span style="flex:1"><b>${esc(s.n||c[2])}</b><small>${'★'.repeat(s.r||0)}${'☆'.repeat(5-(s.r||0))} · ${a[1]} ${a[2]}${s.ph?' · 📷':''}</small></span>${ref?`<b class="mono">${fmD(dist(ref,s))}</b>`:''}</button>`}).join(''):'<div class="note">Κανένα δικό σου σημείο ακόμα. Κράτα εδώ τα καλά σημεία για ελεύθερο κάμπινγκ, πηγές, δύσκολα περάσματα.</div>')}
+ (S.length?S.map(s=>{const c=SPC.find(x=>x[0]===s.cat)||SPC.find(x=>x[0]==='other'),a=ACC.find(x=>x[0]===s.acc)||ACC[0];return`<button class="row" onclick="mFocus('s','${s.id}',${s.lat},${s.lon})"><span class="e">${c[1]}</span><span style="flex:1"><b>${esc(s.n||c[2])}</b><small>${'★'.repeat(s.r||0)}${'☆'.repeat(5-(s.r||0))} · ${a[1]} ${a[2]}${s.ph?' · 📷':''}</small></span>${ref?`<b class="mono">${fmD(dist(ref,s))}</b>`:''}</button>`}).join(''):'<div class="note">Κανένα δικό σου σημείο ακόμα. Κράτα εδώ τα καλά σημεία για ελεύθερο κάμπινγκ, πηγές, δύσκολα περάσματα.</div>')}
 async function mEdit(id){const dr=LS.g('spdraft',null);let s=(id==='new'||(dr&&dr.id===id))?dr:await DB.get('spots',id).catch(()=>null);if(!s)return go('map/my');T(s.new?'➕ Νέο σημείο':'✏️ '+(s.n||'Σημείο'));let ph='';
  if(s.ph){const u=URL.createObjectURL(s.ph);ph=`<img src="${u}" style="width:100%;border-radius:12px;margin:6px 0">`}
  M.innerHTML=`<div class="mono muted">${s.lat.toFixed(5)}, ${s.lon.toFixed(5)}</div><label>Όνομα</label><input id="spn" value="${esc(s.n)}" placeholder="π.χ. Πλάτωμα κάτω από τα έλατα">
