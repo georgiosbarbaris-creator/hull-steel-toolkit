@@ -12,7 +12,8 @@
 @media (prefers-color-scheme:dark){:root{--bg:#0f1720;--card:#17222e;--ink:#e3e9ef;--muted:#97a5b3;--line:#2a3846;--navy:#8fb4dc;--acc:#ef8a55;--ok:#5fbf86;--f:#f07a6c}}
 *{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 -apple-system,system-ui,Segoe UI,Roboto,sans-serif}
 header{position:sticky;top:0;z-index:5;background:#123d5e;color:#fff;padding:calc(env(safe-area-inset-top) + 10px) 14px 8px}
-header h1{font-size:19px;margin:0}header .sub{font-size:12px;opacity:.8}
+header h1{font-size:19px;margin:0;flex:1}.hrow{display:flex;align-items:center;gap:6px}
+.hb{background:rgba(255,255,255,.15);border:0;color:#fff;border-radius:10px;padding:7px 10px;font:700 13px system-ui;cursor:pointer;white-space:nowrap}header .sub{font-size:12px;opacity:.8}
 .tabs{display:flex;gap:6px;overflow-x:auto;padding:8px 0 2px;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}
 .tabs button{flex:0 0 auto;border:0;background:rgba(255,255,255,.14);color:#fff;border-radius:18px;padding:7px 12px;font:600 13.5px system-ui;cursor:pointer}
 .tabs button.on{background:#fff;color:#123d5e}
@@ -43,12 +44,43 @@ input,select{font:16px system-ui;padding:9px;border:1px solid var(--line);border
 .th img{width:46px;height:46px;object-fit:cover;border-radius:6px;background:var(--line)}
 .th .n{flex:1;min-width:0;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #outs .more{max-height:360px;overflow:auto}
+@font-face{font-family:EdSans;src:url(fonts/DejaVuSans.ttf)}@font-face{font-family:EdBold;src:url(fonts/DejaVuSans-Bold.ttf)}@font-face{font-family:EdSerif;src:url(fonts/DejaVuSerif.ttf)}
+#ed{position:fixed;inset:0;z-index:30;background:#3a4450;display:flex;flex-direction:column}
+.edTop,.edBot{display:flex;align-items:center;gap:6px;background:#123d5e;color:#fff;padding:6px 8px}
+.edTop{padding-top:calc(env(safe-area-inset-top) + 6px)}.edBot{padding-bottom:calc(env(safe-area-inset-bottom) + 6px)}
+.edName{flex:1;min-width:0;font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.eb{background:rgba(255,255,255,.14);border:0;color:#fff;border-radius:9px;min-width:38px;height:38px;font:700 17px system-ui;cursor:pointer;padding:0 9px}
+.eb:disabled{opacity:.35}.eb.sv{background:#c8551c;font-size:14px}
+.edBot .sp{flex:1}#edPg{white-space:nowrap;font-size:14px}
+.edTools{display:flex;gap:4px;overflow-x:auto;background:#1b2b3a;padding:6px;scrollbar-width:none}.edTools::-webkit-scrollbar{display:none}
+.edTools button{flex:0 0 auto;border:0;background:#2a3d50;color:#fff;border-radius:9px;padding:5px 8px;font-size:18px;cursor:pointer;display:flex;flex-direction:column;align-items:center;min-width:54px}
+.edTools button span{font:600 10.5px system-ui;opacity:.85}.edTools button.on{background:#c8551c}
+.edProps{display:flex;gap:6px;align-items:center;flex-wrap:nowrap;overflow-x:auto;white-space:nowrap;background:var(--card);padding:6px 8px;height:46px;border-bottom:1px solid var(--line);scrollbar-width:none}.edProps::-webkit-scrollbar{display:none}.edProps>*{flex:0 0 auto}
+.edProps input[type=color]{width:40px;height:32px;padding:0;border-radius:6px}.edProps .btn.d{color:var(--f)}
+.edHint{font-size:11.5px;line-height:15px;color:#dfe6ee;background:#2b3743;padding:3px 10px;height:36px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+#edScroll{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:10px}
+#edPage{position:relative;margin:0 auto;box-shadow:0 2px 12px rgba(0,0,0,.45);background:#fff}
+#edCv{display:block}
+#edOv{position:absolute;inset:0;overflow:hidden}
+#edOv .obj{position:absolute;touch-action:none;cursor:move;user-select:none;-webkit-user-select:none}
+#edOv .tx{white-space:pre;line-height:1.2;transform-origin:0 0;padding:0;margin:0;min-width:4px;min-height:1em}
+#edOv .tx.editing{outline:2px solid #1e88e5;background:rgba(255,255,255,.6);cursor:text;user-select:text;-webkit-user-select:text}
+#edOv .sel{outline:2px dashed #1e88e5;outline-offset:1px}
+#edOv .ghost{pointer-events:none}
+#edOv .hd{position:absolute;right:-11px;bottom:-11px;width:22px;height:22px;border-radius:50%;background:#1e88e5;border:2px solid #fff;cursor:nwse-resize;touch-action:none}
+#edOv .edSvg{position:absolute;left:0;top:0;pointer-events:none}
+#edOv .edSvg path{pointer-events:stroke;cursor:move}
+#edOv .rubber{position:absolute;border:2px dashed #c8551c;background:rgba(200,85,28,.12);pointer-events:none}
+#edOv .cropmask{position:absolute;box-shadow:0 0 0 9999px rgba(0,0,0,.55);outline:2px solid #ffb347;pointer-events:none}
+.edToast{position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:#123d5e;color:#fff;padding:9px 14px;border-radius:10px;z-index:40;font-size:14px}
 </style>
 </head>
 <body>
 <header>
- <h1>📄 PDF Tools</h1><div class="sub">Συμπίεση · μετατροπές · resize φωτό — offline, τίποτα δεν ανεβαίνει πουθενά</div>
+ <div class="hrow"><h1>📄 PDF Tools</h1><button class="hb" id="newTask" title="Νέα εργασία">🧹 Νέα εργασία</button><button class="hb" id="lang">EN</button></div>
+ <div class="sub">Συμπίεση · μετατροπές · επεξεργασία · resize φωτό — offline, τίποτα δεν ανεβαίνει πουθενά</div>
  <nav class="tabs" id="tabs">
+  <button data-t="edt">✏️ Επεξεργασία PDF</button>
   <button data-t="cmp">🗜 Συμπίεση PDF</button>
   <button data-t="i2p">🖼→📄 Φωτό σε PDF</button>
   <button data-t="p2i">📄→🖼 PDF σε φωτό</button>
@@ -57,6 +89,26 @@ input,select{font:16px system-ui;padding:9px;border:1px solid var(--line);border
  </nav>
 </header>
 <main>
+
+<!-- ============ EDIT ============ -->
+<section id="t-edt" class="tab hide">
+ <div class="card">
+  <div class="drop" id="eDrop"><b>✏️ Άνοιξε PDF ή φωτογραφία για επεξεργασία</b><span class="note">και σκαναρισμένα / PDF από φωτογραφίες</span></div>
+  <input type="file" id="eFile" accept="application/pdf,.pdf,image/*" class="hide">
+ </div>
+ <div class="card note" style="line-height:1.6">
+  <b style="color:var(--ink)">Εργαλεία</b><br>
+  ✋ <b>Επιλογή</b> — μετακίνηση, αλλαγή μεγέθους (λαβή κάτω δεξιά), ξαναπάτημα σε κείμενο = διόρθωση<br>
+  ✎ <b>Διόρθωση κειμένου</b> — πατάς πάνω σε λέξη/γραμμή του PDF: σβήνεται και τη γράφεις από την αρχή<br>
+  🔤 <b>Κείμενο</b> — γράφεις οπουδήποτε (ελληνικά/αγγλικά, Sans/Bold/Serif)<br>
+  ⬜ <b>Σβήστρα</b> — καλύπτει με το ίδιο χρώμα του φόντου (ιδανικό για σκαναρισμένα)<br>
+  ✂ <b>Κόψε & μετακίνησε</b> — κόβεις λέξεις/σφραγίδα/περιοχή και τη βάζεις αλλού<br>
+  🖍 Μαρκαδόρος · ✏ Στυλό/υπογραφή · ▭ Πλαίσιο · 🖼 Εικόνα/σφραγίδα · ⛶ Crop σελίδας<br>
+  📄 Σελίδες: περιστροφή ↻, διαγραφή, μετακίνηση ◀ ▶ · ↶ Undo / ↷ Redo · ⧉ αντίγραφο · 📑 σε όλες τις σελίδες<br>
+  Σε σκαναρισμένα δεν υπάρχει «κείμενο» να διορθωθεί: κάνε ⬜ πάνω στη λέξη και 🔤 γράψε τη νέα.<br>
+  <span style="color:var(--f)">⚠</span> Η Σβήστρα καλύπτει οπτικά — δεν είναι redaction: σε PDF με κείμενο, το παλιό κείμενο μένει από κάτω (αναζήτηση/αντιγραφή). Για εμπιστευτικά, μετά κάνε 🗜 Συμπίεση (γίνεται εικόνα).
+ </div>
+</section>
 
 <!-- ============ COMPRESS ============ -->
 <section id="t-cmp" class="tab">
@@ -168,10 +220,12 @@ input,select{font:16px system-ui;padding:9px;border:1px solid var(--line);border
   <div id="sum" style="margin-bottom:6px"></div>
   <div id="outs"></div>
   <p class="note">Στο iPhone: «📤» → Mail ή «Αποθήκευση στα Αρχεία». Στο PC: «💾» ή «📦 ZIP».</p>
+  <button class="btn" id="newTask2" style="width:100%">🧹 Νέα εργασία</button>
  </section>
 
  <details class="card"><summary style="cursor:pointer;font-weight:700">❓ Οδηγίες</summary>
-  <p style="margin:8px 0 4px"><b>🗜 Συμπίεση PDF</b> — βάζεις PDF (και 200MB), βγαίνει κάτω από 14MB. «Ένα αρχείο»: ρίχνει ποιότητα όσο χρειάζεται. «Κομμάτια»: κρατά καλή ποιότητα και σπάει σε part1, part2…</p>
+  <p style="margin:8px 0 4px"><b>✏️ Επεξεργασία PDF</b> — ανοίγεις PDF ή φωτό, διορθώνεις/σβήνεις/γράφεις/κόβεις/υπογράφεις και αποθηκεύεις.</p>
+  <p style="margin:4px 0"><b>🗜 Συμπίεση PDF</b> — βάζεις PDF (και 200MB), βγαίνει κάτω από 14MB. «Ένα αρχείο»: ρίχνει ποιότητα όσο χρειάζεται. «Κομμάτια»: κρατά καλή ποιότητα και σπάει σε part1, part2…</p>
   <p style="margin:4px 0"><b>🖼→📄 Φωτό σε PDF</b> — διαλέγεις πολλές φωτό, τις βάζεις σε σειρά (↑) και βγαίνει ένα PDF, μία φωτό ανά σελίδα.</p>
   <p style="margin:4px 0"><b>📄→🖼 PDF σε φωτό</b> — κάθε σελίδα γίνεται JPG. Μπορείς να διαλέξεις σελίδες (π.χ. 1-3,7).</p>
   <p style="margin:4px 0"><b>📝 Word/Excel→PDF</b> — .docx και .xlsx/.xls/.csv σε PDF. Κάθε φύλλο Excel στη σειρά του, με το όνομά του.</p>
@@ -181,9 +235,42 @@ input,select{font:16px system-ui;padding:9px;border:1px solid var(--line);border
  <p class="cred">Created by George Barbaris</p>
 </main>
 
+<div id="ed" class="hide">
+ <div class="edTop">
+  <button class="eb" id="edClose" title="Κλείσιμο">✕</button>
+  <div id="edName" class="edName"></div>
+  <button class="eb" id="edUndo" title="Undo">↶</button><button class="eb" id="edRedo" title="Redo">↷</button>
+  <button class="eb sv" id="edSave">💾 Αποθήκευση</button>
+ </div>
+ <div class="edTools" id="edTools">
+  <button data-tool="sel">✋<span>Επιλογή</span></button>
+  <button data-tool="et">✎<span>Διόρθωση</span></button>
+  <button data-tool="tx">🔤<span>Κείμενο</span></button>
+  <button data-tool="wo">⬜<span>Σβήστρα</span></button>
+  <button data-tool="cut">✂<span>Κόψε</span></button>
+  <button data-tool="hl">🖍<span>Μαρκαδ.</span></button>
+  <button data-tool="pn">✏<span>Στυλό</span></button>
+  <button data-tool="rc">▭<span>Πλαίσιο</span></button>
+  <button id="edImgBtn">🖼<span>Εικόνα</span></button>
+  <button data-tool="crop">⛶<span>Crop</span></button>
+ </div>
+ <input type="file" id="edImgFile" accept="image/*" class="hide">
+ <div class="edProps" id="edProps"></div>
+ <div class="edHint" id="edHint"></div>
+ <div id="edScroll"><div id="edPage"><canvas id="edCv"></canvas><div id="edOv"></div></div></div>
+ <div class="edBot">
+  <button class="eb" id="edPrev">‹</button><b id="edPg">1 / 1</b><button class="eb" id="edNext">›</button>
+  <span class="sp"></span>
+  <button class="eb" id="edRot" title="Περιστροφή σελίδας">↻</button><button class="eb" id="edMvL" title="Σελίδα αριστερά">◀</button><button class="eb" id="edMvR" title="Σελίδα δεξιά">▶</button><button class="eb" id="edDelP" title="Διαγραφή σελίδας">🗑</button>
+  <span class="sp"></span>
+  <button class="eb" id="edZout">−</button><span id="edZoom" class="note" style="color:#fff">100%</span><button class="eb" id="edZin">+</button>
+ </div>
+</div>
+
 <script src="pdf-lib.min.js"></script>
 <script type="module">
 import * as pdfjsLib from "./pdf.min.mjs";
+import {applyLang, LANG} from "./i18n.js";
 pdfjsLib.GlobalWorkerOptions.workerSrc = "./pdf.worker.min.mjs";
 const $ = id => document.getElementById(id);
 const MB = 1024*1024;
@@ -347,7 +434,7 @@ async function share(files){
   return false;
 }
 function dl(blob, name){ const u = URL.createObjectURL(blob); URLS.push(u); const a = document.createElement("a"); a.href = u; a.download = name; document.body.appendChild(a); a.click(); a.remove(); }
-function show(outs, summary, limit, zipName){
+function show(outs, summary, limit, zipName, fromEditor){
   $("sum").innerHTML = summary;
   const box = $("outs"); box.innerHTML = "";
   const list = document.createElement("div"); if (outs.length > 6) list.className = "more";
@@ -367,6 +454,15 @@ function show(outs, summary, limit, zipName){
     b1.onclick = async () => { if (!await share(outs)) alert("Η αποστολή όλων μαζί δεν υποστηρίζεται εδώ — πάτα «📦 ZIP»."); };
     const b2 = document.createElement("button"); b2.className = "btn"; b2.style.flex = "1"; b2.textContent = "📦 ZIP";
     b2.onclick = async () => { b2.disabled = true; b2.textContent = "…"; const z = await makeZip(outs); dl(z, zipName || "files.zip"); b2.disabled = false; b2.textContent = `📦 ZIP (${fmt(z.size)})`; };
+    r.append(b1, b2); box.appendChild(r);
+  }
+  if (fromEditor && outs[0]){
+    const r = document.createElement("div"); r.className = "row"; r.style.marginTop = "10px";
+    const f = new File([outs[0].blob], outs[0].name, {type:"application/pdf"});
+    const b1 = document.createElement("button"); b1.className = "btn"; b1.style.flex = "1"; b1.textContent = "✏️ Συνέχεια επεξεργασίας";
+    b1.onclick = () => openEd(f);
+    const b2 = document.createElement("button"); b2.className = "btn"; b2.style.flex = "1"; b2.textContent = "🗜 Συμπίεση αυτού";
+    b2.onclick = () => { C_FILE = f; tab("cmp"); $("cInfo").innerHTML = `<b>${esc(f.name)}</b> — ${fmt(f.size)}`; refreshButtons(); };
     r.append(b1, b2); box.appendChild(r);
   }
   $("res").classList.remove("hide"); $("res").scrollIntoView({behavior:"smooth"});
@@ -660,6 +756,40 @@ $("rGo").onclick = async () => {
   } catch(e){ endProg(e); }
   finally { try{ lock?.release(); }catch(e){} }
 };
+
+// =====================================================================
+// 6) EDITOR
+// =====================================================================
+window.PT = {show, fmt};
+let edMod = null, edReady = false;
+async function openEd(file){
+  try { edMod ||= await import("./editor.js"); if (!edReady){ edMod.setupEditor(); edReady = true; } }
+  catch(e){ edMod = null; alert("Δεν φόρτωσε ο editor — άνοιξε την εφαρμογή μία φορά με internet."); return; }
+  $("res").classList.add("hide");
+  try { await edMod.openEditor(file); } catch(e){ alert("Δεν άνοιξε το αρχείο: " + (e.message || e)); }
+}
+dropzone("eDrop", "eFile", fs => { const f = fs.find(f => isPdf(f) || isImg(f)); if (f) openEd(f); });
+
+// =====================================================================
+// language + new task
+// =====================================================================
+function setLangBtn(){ $("lang").textContent = document.documentElement.lang === "en" ? "ΕΛ" : "EN"; }
+$("lang").onclick = () => { applyLang(document.documentElement.lang === "en" ? "el" : "en"); setLangBtn(); };
+if (LANG === "en") applyLang("en");
+setLangBtn();
+
+function newTask(){
+  if (BUSY) { CANCEL = true; }
+  URLS.forEach(u => URL.revokeObjectURL(u)); URLS = [];
+  for (const [, u] of I_THUMBS) URL.revokeObjectURL(u); I_THUMBS = new Map();
+  C_FILE = P_FILE = null; I_FILES = []; O_FILES = []; R_FILES = [];
+  ["cInfo","pInfo","oInfo","rInfo","iList","outs","sum"].forEach(id => $(id).innerHTML = "");
+  ["cFile","pFile","oFile","rFile","iFile","eFile"].forEach(id => $(id).value = "");
+  $("pRange").value = ""; $("iName").value = "Photos";
+  $("res").classList.add("hide"); $("prog").classList.add("hide");
+  refreshButtons(); window.scrollTo({top:0, behavior:"smooth"});
+}
+$("newTask").onclick = newTask; $("newTask2").onclick = newTask;
 
 refreshButtons();
 if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");
