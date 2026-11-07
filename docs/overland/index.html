@@ -74,6 +74,7 @@ table.t{width:100%;border-collapse:collapse;font-size:.9em}table.t td,table.t th
 .wst{display:flex;gap:4px}.wst button{border:1px solid var(--line);background:#141312;color:var(--mut);border-radius:8px;padding:6px 8px;font-weight:800;font-size:.85em}
 .wst button.k.on{background:var(--grn);color:#fff;border-color:var(--grn)}.wst button.d.on{background:var(--red);color:#fff;border-color:var(--red)}.wst button.n.on{background:#555;color:#fff}
 html.night header,html.night main,html.night nav{filter:grayscale(1) sepia(1) saturate(12) hue-rotate(-50deg) brightness(.55)}html.night,html.night body{background:#000}
+@media print{header,#nv,nav,button,.big,input{display:none!important}body{background:#fff!important;color:#000!important}.box,.tip,.note,.kv{background:#fff!important;color:#000!important;border:1px solid #999!important;break-inside:avoid}.muted{color:#444!important}h1,h2,h3,b{color:#000!important}}
 </style></head><body>
 <header><button class="hb" id="bk" onclick="back()" aria-label="Πίσω">◀</button><h1 id="ttl">Overland Habit</h1>
 <button class="hb" data-nt onclick="setLang(LANG==='en'?'el':'en')" aria-label="Language">🌐 <script>document.write(LANG==='en'?'ΕΛ':'EN')</script></button><button class="hb" onclick="fz(-1)">A−</button><button class="hb" onclick="fz(1)">A+</button></header>
@@ -162,6 +163,7 @@ function home(){T(TITLE);const read=LS.g('read',{});
  <button class="row" onclick="go('trip')"><span class="e">🎒</span><span><b>Ταξίδι & λίστες εξοπλισμού</b><small>${tripProg()}</small></span></button>
  <button class="row" onclick="go('t/walk')"><span class="e">🔎</span><span><b>Walk-round πριν φύγεις</b><small>έλεγχος οχήματος σαν superintendent</small></span></button>
  <button class="row" onclick="go('learn')"><span class="e">🎓</span><span><b>Ακαδημία</b><small>${ALL.filter(l=>done(l.id)).length}/${ALL.length} μαθήματα · quiz · από αρχάριο μέχρι expert</small></span></button>
+ <button class="row" onclick="go('gear')"><span class="e">🧰</span><span><b>${L2('Εξοπλισμός του overlander','The overlander\'s gear')}</b><small>${L2('σκηνές οροφής, ψυγεία, ενέργεια, κουζίνα, συρτάρια, πακέτα weekend · τιμές, υπέρ/κατά','rooftop tents, fridges, power, kitchen, drawers, weekend kits · prices, pros/cons')}</small></span></button>
 ${SOON.length?'<h3>Έρχονται</h3>':''}${SOON.map(s=>`<button class="row soon" onclick="go('${s[0]}')"><span class="e">${s[1]}</span><span><b>${s[2]}</b><small>${s[3]} · ${s[4]}</small></span></button>`).join('')}
  <footer>Overland Habit v0.7 · Created by George Barbaris<br>Τα δεδομένα μένουν μόνο στο κινητό σου.<br>Χάρτες & σημεία © OpenStreetMap contributors · OpenTopoMap · Esri · Leaflet</footer>`}
 function soon(id){const s=SOON.find(x=>x[0]===id);T(s[1]+' '+s[2]);const det={
@@ -454,8 +456,8 @@ function sosPage(){T('🆘 SOS');startGeo();
 /* ===================== ROUTER ===================== */
 function stopAll(){toolStop();calc=()=>{};if(typeof moOn!=='undefined'&&(moOn||moTorch))moStop();const cvOn=(typeof cvMe==='function'&&cvMe())||(typeof RT!=='undefined'&&RT.w!==null);if(!rec&&!cvOn)stopGeo();if(!rec&&!keepOn&&!cvOn)wake(0);
  if(orientOn){window.removeEventListener('deviceorientation',onOr,true);window.removeEventListener('deviceorientationabsolute',onOr,true);orientOn=false;hdg=null}}
-function render(r){document.body.classList.toggle('rl',r==='rally');const[a,b]=r.split('/');document.querySelectorAll('#nv button').forEach(x=>x.classList.toggle('on',x.dataset.r===(a==='t'||a==='veh'?'tools':a==='list'?'trip':a)||(a==='home'&&x.dataset.r==='home')));
- if(a==='veh'){if(b)vehEdit(b);else vehPage();return}if(a==='t')return tool(b);if(a==='tools')return tools();if(a==='trip')return trip();if(a==='list')return list(b);if(a==='learn')return learn(b);if(a==='sos')return sosPage();if(a==='map')return mapPage(b,r.split('/').slice(2).join('/'));if(a==='convoy')return convoy(b,r.split('/').slice(2).join('/'));if(a==='rally')return rally(b);home()}
+function render(r){document.body.classList.toggle('rl',r==='rally');const[a,b]=r.split('/');document.querySelectorAll('#nv button').forEach(x=>x.classList.toggle('on',x.dataset.r===(a==='t'||a==='veh'?'tools':a==='list'?'trip':a==='gear'?'learn':a)||(a==='home'&&x.dataset.r==='home')));
+ if(a==='veh'){if(b)vehEdit(b);else vehPage();return}if(a==='t')return tool(b);if(a==='tools')return tools();if(a==='trip')return trip();if(a==='list')return list(b);if(a==='learn')return learn(b);if(a==='gear')return gear(b);if(a==='sos')return sosPage();if(a==='map')return mapPage(b,r.split('/').slice(2).join('/'));if(a==='convoy')return convoy(b,r.split('/').slice(2).join('/'));if(a==='rally')return rally(b);home()}
 window.addEventListener('hashchange',()=>{stopAll();render(location.hash.slice(1)||'home');window.scrollTo(0,0)});
 </script>
 <script src="lib/leaflet.js"></script>
@@ -467,6 +469,9 @@ window.addEventListener('hashchange',()=>{stopAll();render(location.hash.slice(1
 <script>if(LANG==='en')document.write('<script src="academy-en.js"><\/script>')</script>
 <script src="academy.js"></script>
 <script src="knots.js"></script>
+<script src="equip-data.js"></script>
+<script src="equip.js"></script>
+<script>if(typeof EQD!=="undefined"&&EQD.wiz)EQW=EQD.wiz</script>
 <script>
 render(location.hash.slice(1)||'home');if(keepOn)wake(1);
 if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
