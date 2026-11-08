@@ -108,6 +108,9 @@ input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:
       <div class="lb2">ΤΙ ΝΑ ΓΙΝΕΙ</div><div class="chips" id="qkA"></div>
       <div class="lb2" id="qkOL">ΤΙ</div><div class="chips" id="qkO"></div>
       <div class="lb2">ΠΟΥ</div><div class="chips" id="qkL"></div>
+      <div class="lb2">ΠΡΟΤΕΡΑΙΟΤΗΤΑ</div><div class="chips" id="qkP"></div>
+      <div class="lb2">DUE</div><div class="chips" id="qkD"></div>
+      <div class="lb2">ΥΠΕΥΘΥΝΟΣ</div><div class="chips" id="qkR"></div>
       <button class="btn p" id="qkSave" style="width:100%;margin-top:6px">⚡ Αποθήκευση</button></div>
     <div class="note" style="margin-top:12px">🎙 Φωνητικές σημειώσεις (ακούς μετά και γράφεις)</div><div id="vnL"></div>
     <div class="row" style="margin-top:6px"><button class="btn mic" id="vnRec" style="flex:1">🎙 Ηχογράφηση</button></div>
@@ -541,9 +544,20 @@ function qkRender(noParse){if(!draft)return;if(!noParse)qkParse();const ar=$("#i
   $("#qkOL").textContent="ΤΙ — "+(AN[ar]||"").replace(/^\S+\s/,"");
   qkChips($("#qkA"),[...QA,...QC.a],QC.a,x=>QS.a===x,x=>{QS.a=QS.a===x?"":x;qkWrite();});
   qkChips($("#qkO"),[...(QO[ar]||[]),...QC.o],QC.o,x=>QS.o.includes(x),x=>{QS.o.includes(x)?QS.o.splice(QS.o.indexOf(x),1):QS.o.push(x);qkWrite();});
+  qkMeta();
   qkChips($("#qkL"),[...QL,...QC.l],QC.l,x=>QS.l.includes(x),x=>{QS.l.includes(x)?QS.l.splice(QS.l.indexOf(x),1):QS.l.push(x);qkWrite();});}
 $("#i_area").addEventListener("change",()=>qkRender());$("#i_title").addEventListener("input",()=>qkRender());
 $("#qkClr").onclick=()=>{QS={a:"",o:[],l:[]};$("#i_title").value="";qkRender(true);};
+const QD=[["Σήμερα",0],["+3",3],["+7",7],["+14",14],["+30",30],["+90",90],["Next DD",-1]];
+function qkMeta(){const pr=$("#i_prio").value,rs=$("#i_resp").value,gv=$("#i_given").value||today(),du=$("#i_due").value;
+  $("#qkP").innerHTML=["Normal","High","Critical"].map(x=>`<button data-x="${x}" class="${pr===x?"on":""}">${x==="Critical"?"🔴 ":x==="High"?"🟠 ":""}${x}</button>`).join("");
+  $("#qkD").innerHTML=QD.map(([l,n])=>`<button data-n="${n}" class="${(n<0?$("#i_phase").value==="Next DD"&&!du:du===addDays(gv,n))?"on":""}">${l}</button>`).join("")+(du?`<button data-n="x">✕ ${fd(du)}</button>`:"");
+  $("#qkR").innerHTML=[["Crew","Crew"],["Yard","Yard"],["Maker / Service","Maker"],["Office","Office"]].map(([v,l])=>`<button data-x="${v}" class="${rs===v?"on":""}">${l}</button>`).join("");
+  $$("#qkP button").forEach(b=>b.onclick=()=>{$("#i_prio").value=b.dataset.x;qkMeta();});
+  $$("#qkR button").forEach(b=>b.onclick=()=>{$("#i_resp").value=b.dataset.x;qkMeta();});
+  $$("#qkD button").forEach(b=>b.onclick=()=>{const n=b.dataset.n;if(n==="x")$("#i_due").value="";else if(+n<0){$("#i_phase").value="Next DD";$("#i_due").value="";}else $("#i_due").value=addDays($("#i_given").value||today(),+n);qkMeta();});}
+["#i_prio","#i_resp","#i_due","#i_given","#i_phase"].forEach(id=>$(id).addEventListener("change",()=>{if(draft)qkMeta();}));
+$$(".qd [data-dd]").forEach(b=>b.addEventListener("click",()=>setTimeout(qkMeta,0)));
 $("#qkSave").onclick=()=>$("#i_save").click();
 
 go("home");
