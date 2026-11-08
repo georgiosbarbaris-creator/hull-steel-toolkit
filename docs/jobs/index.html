@@ -60,6 +60,8 @@ input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:
 .mdl{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:40;display:flex;align-items:flex-end;justify-content:center}.mdl .card{width:100%;max-width:560px;margin:0;border-radius:18px 18px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom))}
 .psv{position:fixed;left:12px;right:12px;bottom:calc(88px + env(safe-area-inset-bottom));z-index:35;background:#123b3a;color:#fff;border-radius:14px;padding:10px 12px;display:flex;gap:8px;align-items:center;box-shadow:0 4px 14px rgba(0,0,0,.3)}
 .psv button{border:0;border-radius:10px;padding:10px 12px;font:700 14px system-ui;cursor:pointer}.psv .y{background:#7fe0c9;color:#0d2b2a}.psv .n{background:rgba(255,255,255,.18);color:#fff}
+.vn{display:flex;gap:6px;align-items:center;flex-wrap:wrap;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:6px 8px;margin-top:6px}.vn audio{flex:1;min-width:170px;height:36px}.vn button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:6px 9px;font:700 13px system-ui;cursor:pointer}.vn .note{width:100%}
+.tag.v{background:#efeaff;color:#4b2fd1}
 #toast{position:fixed;left:50%;top:calc(64px + env(safe-area-inset-top));transform:translateX(-50%);background:#123b3a;color:#fff;padding:9px 14px;border-radius:10px;font-size:14px;opacity:0;transition:.2s;pointer-events:none;z-index:30;max-width:90vw;text-align:center}#toast.show{opacity:1}
 </style>
 </head>
@@ -83,7 +85,8 @@ input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:
 <section id="v-ves" class="hide">
   <div class="row" style="margin-top:4px"><button class="btn p" id="wrStart" style="flex:1">🚶 Walk-round</button><button class="btn" id="xPdf">📄 Job Order List</button></div>
   <div class="row" style="margin:8px 0"><button class="btn" id="xIcs" style="flex:1">📅 Υπενθυμίσεις στο κινητό</button><button class="btn" id="xTxt">💬</button><button class="btn" id="xCsv">📊</button></div>
-  <div class="row" style="margin:0 0 8px"><button class="btn" id="xZip" style="flex:1">🗂 Φωτογραφίες σε φάκελο (ZIP)</button></div>
+  <div class="row" style="margin:0 0 8px"><button class="btn" id="xZip" style="flex:1">🗂 Φωτογραφίες + φωνητικά (ZIP)</button></div>
+  <button class="btn big mic" id="vVoice" style="margin-bottom:8px">🎙 Γρήγορο εύρημα — μίλα τώρα, γράψε μετά</button>
   <div class="lists" id="lsts"></div>
   <div class="selbar hide" id="selbar"><b id="selN" style="flex:1">0 επιλεγμένα</b><button id="selMv">➡ Μεταφορά</button><button id="selCp">⧉ Αντιγραφή</button><button id="selX">✕</button></div>
   <div class="row" style="margin:0 0 6px"><button class="btn sm p" id="mvTop" style="flex:1">➡ Μετακίνηση σε άλλη λίστα</button><button class="btn sm" id="cpTop">⧉ Αντιγραφή</button></div>
@@ -99,6 +102,8 @@ input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:
   <div class="card">
     <div class="note">Φωτογραφίες (πριν)</div><div class="ph" id="phB"></div>
     <div class="row" style="margin-top:6px"><label class="cam" style="background:var(--acc);color:#fff;border-color:var(--acc)">📸 Κάμερα<input type="file" accept="image/*" capture="environment" id="cB" style="display:none"></label><label class="cam">🖼 Από άλμπουμ<input type="file" accept="image/*" multiple id="fB" style="display:none"></label><button class="btn sm" id="svB" title="Όλες στο Photos">💾</button></div>
+    <div class="note" style="margin-top:12px">🎙 Φωνητικές σημειώσεις (ακούς μετά και γράφεις)</div><div id="vnL"></div>
+    <div class="row" style="margin-top:6px"><button class="btn mic" id="vnRec" style="flex:1">🎙 Ηχογράφηση</button></div>
     <label style="margin-top:10px">Τι πρέπει να γίνει<input id="i_title" placeholder="π.χ. Renew rescue boat painter"></label>
     <label style="margin-top:8px">Λεπτομέρειες<textarea id="i_desc" rows="3" placeholder="Μίλα ή γράψε ελληνικά"></textarea></label>
     <div class="row" style="margin-top:6px"><button class="btn sm mic" id="i_mic">🎤 Ομιλία</button><button class="btn sm ai" id="i_ai">✨ English</button></div>
@@ -132,6 +137,7 @@ input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:
   <div class="card"><h2>👀 Τι να κοιτάξεις εδώ</h2><ul class="look" id="wrLook" style="padding-left:20px;margin:0"></ul></div>
   <div id="wrOpen"></div>
   <button class="btn p big" id="wrNew">📷 + Νέο εύρημα εδώ</button>
+  <button class="btn big mic" id="wrVoice" style="margin-top:8px">🎙 Γρήγορο εύρημα — μίλα τώρα, γράψε μετά</button>
   <div class="row" style="margin-top:10px"><button class="btn" id="wrPrev" style="flex:1">‹ Πίσω</button><button class="btn p" id="wrNext" style="flex:2">Επόμενος χώρος ›</button></div>
 </section>
 </main>
@@ -192,12 +198,12 @@ const lTitle=()=>cl==="all"?"":" — "+lName(cv,cl);
 function stat(i){if(i.st==="Done")return"dn";const d=daysTo(i.due);if(d!==null&&d<0)return"ov";if(d!==null&&d<=7)return"soon";return"op";}
 function go(v){view=v;["home","ves","item","wr"].forEach(x=>$("#v-"+x).classList.toggle("hide",x!==v));$("#back").classList.toggle("hide",v==="home");
   $("#fab").classList.toggle("hide",v!=="ves");window.scrollTo(0,0);({home:rHome,ves:rVes,item:()=>{},wr:rWr})[v]();}
-$("#back").onclick=()=>{if(view==="item"){if(draft&&draft._new&&draft._tmp)draft._tmp.forEach(k=>IDB.del(k).catch(()=>{}));go(retWr?"wr":"ves");}else if(view==="wr")go("ves");else{cv=null;go("home");}};
+$("#back").onclick=()=>{if(MR){toast("Σταμάτα πρώτα την ηχογράφηση ⏹");return;}if(view==="item"){if(draft&&draft._new&&draft._tmp)draft._tmp.forEach(k=>IDB.del(k).catch(()=>{}));go(retWr?"wr":"ves");}else if(view==="wr")go("ves");else{cv=null;go("home");}};
 
 /* ---------- home ---------- */
 function rHome(){$("#ttl").textContent="Job Orders";$("#sub").textContent="Outstandings ανά πλοίο · offline";
-  $("#vList").innerHTML=S.v.map(v=>{const it=items(v.id),op=it.filter(i=>i.st!=="Done"),ov=op.filter(i=>stat(i)==="ov").length,so=op.filter(i=>stat(i)==="soon").length;
-    return`<div class="card vs" data-v="${v.id}"><div><b style="font-size:17px">${esc(v.name)}</b><div class="kp"><span class="o">${op.length} ανοιχτά</span>${ov?`<span class="x">${ov} overdue</span>`:""}${so?`<span>${so} σε 7 μέρες</span>`:""}<span class="d">${it.length-op.length} done</span></div></div><b style="font-size:22px;color:var(--muted)">›</b></div>`;}).join("")||'<p class="note" style="text-align:center">Πρόσθεσε το πρώτο πλοίο.</p>';
+  $("#vList").innerHTML=S.v.map(v=>{const it=items(v.id),pd=it.filter(i=>i.pend).length,op=it.filter(i=>i.st!=="Done"),ov=op.filter(i=>stat(i)==="ov").length,so=op.filter(i=>stat(i)==="soon").length;
+    return`<div class="card vs" data-v="${v.id}"><div><b style="font-size:17px">${esc(v.name)}</b><div class="kp"><span class="o">${op.length} ανοιχτά</span>${ov?`<span class="x">${ov} overdue</span>`:""}${so?`<span>${so} σε 7 μέρες</span>`:""}${pd?`<span>🎙 ${pd} να γραφτούν</span>`:""}<span class="d">${it.length-op.length} done</span></div></div><b style="font-size:22px;color:var(--muted)">›</b></div>`;}).join("")||'<p class="note" style="text-align:center">Πρόσθεσε το πρώτο πλοίο.</p>';
   $$("#vList .vs").forEach(e=>e.onclick=()=>{cv=e.dataset.v;flt="open";cl="all";sel=null;go("ves");});}
 $("#vAdd").onclick=()=>{if($("#vNew")){$("#vNew input").focus();return;}const d=document.createElement("div");d.className="card";d.id="vNew";
   d.innerHTML=`<label>Όνομα πλοίου<input placeholder="π.χ. AGIA YPOMONI"></label><div class="row" style="margin-top:8px"><button class="btn p">Προσθήκη</button><button class="btn">Άκυρο</button></div>`;
@@ -205,7 +211,7 @@ $("#vAdd").onclick=()=>{if($("#vNew")){$("#vNew input").focus();return;}const d=
   d.querySelectorAll("button")[0].onclick=()=>{const n=inp.value.trim().toUpperCase();if(!n)return;S.v.push({id:uid(),name:n});save();rHome();};d.querySelectorAll("button")[1].onclick=()=>d.remove();};
 
 /* ---------- vessel ---------- */
-const FL=[["open","Ανοιχτά"],["ov","⚠ Overdue"],["soon","Σε 7 μέρες"],...PHASES.map(p=>["ph:"+p,p]),["hi","High/Critical"],["done","✓ Done"],["all","Όλα"]];
+const FL=[["open","Ανοιχτά"],["pend","🎙 Να γραφτούν"],["ov","⚠ Overdue"],["soon","Σε 7 μέρες"],...PHASES.map(p=>["ph:"+p,p]),["hi","High/Critical"],["done","✓ Done"],["all","Όλα"]];
 function rVes(){const v=V();$("#ttl").textContent=v.name+lTitle();const it=vItems(),op=it.filter(i=>i.st!=="Done");
   if(cl!=="all"&&!lists(cv).some(l=>l.id===cl))cl="all";
   $("#lsts").innerHTML=`<button data-l="all" class="${cl==="all"?"on":""}">📂 Όλες ${items(cv).length}</button>`+lists(cv).map(l=>`<button data-l="${l.id}" class="${cl===l.id?"on":""}">${esc(l.name)} ${items(cv).filter(i=>(i.lid||"")===l.id).length}</button>`).join("")+`<button data-l="__new">+ Νέα λίστα</button>`;
@@ -215,11 +221,11 @@ function rVes(){const v=V();$("#ttl").textContent=v.name+lTitle();const it=vItem
   $("#sub").textContent=`${op.length} ανοιχτά · ${op.filter(i=>stat(i)==="ov").length} overdue · ${it.length-op.length} done`;
   $("#flt").innerHTML=FL.map(([k,l])=>{const c=fil(it,k).length;return(c||k==="open"||k===flt)?`<button data-f="${k}" class="${k===flt?"on":""}">${l} ${c}</button>`:"";}).join("");
   $$("#flt button").forEach(b=>b.onclick=()=>{flt=b.dataset.f;rVes();});rList();}
-function fil(it,k){if(k==="all")return it;if(k==="done")return it.filter(i=>i.st==="Done");const op=it.filter(i=>i.st!=="Done");
+function fil(it,k){if(k==="all")return it;if(k==="done")return it.filter(i=>i.st==="Done");if(k==="pend")return it.filter(i=>i.pend);const op=it.filter(i=>i.st!=="Done");
   if(k==="open")return op;if(k==="ov")return op.filter(i=>stat(i)==="ov");if(k==="soon")return op.filter(i=>stat(i)==="soon");if(k==="hi")return op.filter(i=>i.prio!=="Normal");if(k.startsWith("ph:"))return op.filter(i=>i.phase===k.slice(3));return op;}
 const srt=(a,b)=>{const so={ov:0,soon:1,op:2,dn:3},pr={Critical:0,High:1,Normal:2};return so[stat(a)]-so[stat(b)]||(a.due||"9").localeCompare(b.due||"9")||pr[a.prio]-pr[b.prio]||a.no-b.no;};
-function card(i){const s=stat(i),d=daysTo(i.due);return`<div class="it ${s}" data-i="${i.id}"><div class="th"></div><div class="b"><div class="tt">#${i.no} ${esc(i.title||"(χωρίς τίτλο)")}</div>
-  <div class="m">${i.prio!=="Normal"?`<span class="tag ${i.prio==="Critical"?"c":"h"}">${i.prio}</span>`:""}${s==="ov"?`<span class="tag ov">${-d} μέρες overdue</span>`:""}${esc(AN[i.area]||"")} · ${esc(i.phase)} · ${esc(i.resp)}</div>
+function card(i){const s=stat(i),d=daysTo(i.due);return`<div class="it ${s}" data-i="${i.id}"><div class="th"></div><div class="b"><div class="tt">#${i.no} ${i.pend?"🎙 Να γραφτεί — άκου &amp; γράψε":esc(i.title||"(χωρίς τίτλο)")}</div>
+  <div class="m">${(i.voice||[]).length?`<span class="tag v">🎙${i.voice.length}</span>`:""}${i.prio!=="Normal"?`<span class="tag ${i.prio==="Critical"?"c":"h"}">${i.prio}</span>`:""}${s==="ov"?`<span class="tag ov">${-d} μέρες overdue</span>`:""}${esc(AN[i.area]||"")} · ${esc(i.phase)} · ${esc(i.resp)}</div>
   <div class="m">Δόθηκε ${fd(i.given)} · Due <b>${fd(i.due)}</b>${s==="soon"?` (σε ${d} μ.)`:""}${i.st==="In progress"?" · ⏳ σε εξέλιξη":""}${i.st==="Done"?` · ✓ ${fd(i.closed)}`:""}</div></div></div>`;}
 function thumbs(box){$$(box+" .it").forEach(el=>{const i=S.it.find(x=>x.id===el.dataset.i);const k=(i.after&&i.after[0])&&i.st==="Done"?i.after[0]:(i.photos||[])[0];if(k)IDB.get(k).then(d=>{if(d)el.querySelector(".th").innerHTML=`<img src="${d}">`;});
   if(sel&&sel.has(i.id))el.classList.add("sel");
@@ -229,16 +235,16 @@ function rList(){const q=$("#q").value.toLowerCase();const it=fil(vItems(),flt).
 $("#q").oninput=rList;
 $("#fab").onclick=()=>{retWr=false;newItem();};
 let vdA=0;$("#vDel").onclick=async e=>{if(!vdA){vdA=1;e.target.textContent="Σίγουρα; Σβήνει όλες τις δουλειές";setTimeout(()=>{vdA=0;e.target.textContent="Διαγραφή πλοίου";},3500);return;}
-  for(const i of items(cv))for(const k of [...(i.photos||[]),...(i.after||[])])await IDB.del(k).catch(()=>{});S.it=S.it.filter(i=>i.vid!==cv);S.l=S.l.filter(l=>l.vid!==cv);S.v=S.v.filter(x=>x.id!==cv);cv=null;save();go("home");};
+  for(const i of items(cv))for(const k of [...(i.photos||[]),...(i.after||[]),...(i.voice||[])])await IDB.del(k).catch(()=>{});S.it=S.it.filter(i=>i.vid!==cv);S.l=S.l.filter(l=>l.vid!==cv);S.v=S.v.filter(x=>x.id!==cv);cv=null;save();go("home");};
 
 /* ---------- item ---------- */
 $("#i_area").innerHTML=AREAS.map(a=>`<option value="${a[0]}">${a[1]}</option>`).join("");$("#i_phase").innerHTML=PHASES.map(p=>`<option>${p}</option>`).join("");
 function newItem(area){const its=items(cv),last=its[its.length-1];const no=its.reduce((m,i)=>Math.max(m,i.no||0),0)+1;
-  draft={id:uid(),vid:cv,no,title:"",desc:"",en:"",area:area||(last?last.area:"DECK"),phase:last?last.phase:"After yard",prio:"Normal",resp:"Crew",src:"Own inspection",ref:"",given:today(),due:"",st:"Open",closed:"",photos:[],after:[],spares:"",log:[],lid:cl==="all"?"":cl,_new:true,_tmp:[]};
+  draft={id:uid(),vid:cv,no,title:"",desc:"",en:"",area:area||(last?last.area:"DECK"),phase:last?last.phase:"After yard",prio:"Normal",resp:"Crew",src:"Own inspection",ref:"",given:today(),due:"",st:"Open",closed:"",photos:[],after:[],voice:[],spares:"",log:[],lid:cl==="all"?"":cl,_new:true,_tmp:[]};
   fillItem();go("item");$("#ttl").textContent=`${V().name} · νέα δουλειά #${no}`;}
 function openItem(id){draft=JSON.parse(JSON.stringify(S.it.find(i=>i.id===id)));draft._tmp=[];fillItem();go("item");$("#ttl").textContent=`${V().name} · #${draft.no}`;}
 const F={i_title:"title",i_desc:"desc",i_en:"en",i_area:"area",i_phase:"phase",i_prio:"prio",i_resp:"resp",i_src:"src",i_ref:"ref",i_given:"given",i_due:"due",i_spares:"spares",i_closed:"closed"};
-function fillItem(){Object.entries(F).forEach(([id,k])=>$("#"+id).value=draft[k]||"");$("#i_list").textContent="📂 "+lName(draft.vid,draft.lid);$("#i_del").classList.toggle("hide",!!draft._new);stSeg();phs("B");phs("A");logR();$("#enWrap").classList.toggle("hide",!draft.en);}
+function fillItem(){Object.entries(F).forEach(([id,k])=>$("#"+id).value=draft[k]||"");$("#i_list").textContent="📂 "+lName(draft.vid,draft.lid);$("#i_del").classList.toggle("hide",!!draft._new);stSeg();phs("B");phs("A");vnRender();recUI();logR();$("#enWrap").classList.toggle("hide",!draft.en);}
 function readItem(){Object.entries(F).forEach(([id,k])=>draft[k]=$("#"+id).value.trim());}
 function stSeg(){$$("#i_st button").forEach(b=>b.classList.toggle("on",b.dataset.v===draft.st));$("#doneBox").classList.toggle("hide",draft.st!=="Done");}
 $("#i_st").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;readItem();const was=draft.st;draft.st=b.dataset.v;
@@ -262,13 +268,14 @@ async function addPh(e,w){const fs=[...e.target.files];e.target.value="";for(con
 $("#fB").onchange=e=>addPh(e,"B");$("#fA").onchange=e=>addPh(e,"A");
 function logR(){$("#i_log").innerHTML=(draft.log||[]).map(l=>`<div>• ${fd(l.t)} — ${esc(l.x)}</div>`).join("")||"<span class='note'>—</span>";}
 $("#i_logadd").onclick=()=>{const x=$("#i_logtxt").value.trim();if(!x)return;draft.log.push({t:today(),x});$("#i_logtxt").value="";logR();};
-$("#i_save").onclick=async()=>{readItem();if(!draft.title&&!draft.desc){toast("Γράψε τι πρέπει να γίνει");$("#i_title").focus();return;}
-  if(!draft.title)draft.title=draft.desc.split(/\n|\.\s/)[0].slice(0,70);
+$("#i_save").onclick=async()=>{if(MR)await recStop();readItem();
+  if(!draft.title&&!draft.desc){if(!(draft.voice||[]).length&&!draft.photos.length){toast("Γράψε τι πρέπει να γίνει ή ηχογράφησε 🎙");$("#i_title").focus();return;}draft.pend=true;}
+  else{if(!draft.title)draft.title=draft.desc.split(/\n|\.\s/)[0].slice(0,70);if(draft.pend){draft.pend=false;draft.log.push({t:today(),x:"Γράφτηκε από φωνητική σημείωση"});}}
   for(const k of draft._rm||[])await IDB.del(k).catch(()=>{});const isNew=draft._new;delete draft._new;delete draft._tmp;delete draft._rm;
   if(isNew){draft.log.push({t:today(),x:"Δημιουργήθηκε"});S.it.push(draft);}else{const i=S.it.findIndex(x=>x.id===draft.id);S.it[i]=draft;}save();
   toast(isNew?`Αποθηκεύτηκε #${draft.no}`:"Ενημερώθηκε");draft=null;go(retWr?"wr":"ves");};
 let idA=0;$("#i_del").onclick=async e=>{if(!idA){idA=1;e.target.textContent="Σίγουρα;";setTimeout(()=>{idA=0;e.target.textContent="🗑";},3000);return;}
-  for(const k of [...draft.photos,...draft.after])await IDB.del(k).catch(()=>{});S.it=S.it.filter(i=>i.id!==draft.id);save();idA=0;e.target.textContent="🗑";draft=null;go(retWr?"wr":"ves");};
+  for(const k of [...draft.photos,...draft.after,...(draft.voice||[])])await IDB.del(k).catch(()=>{});S.it=S.it.filter(i=>i.id!==draft.id);save();idA=0;e.target.textContent="🗑";draft=null;go(retWr?"wr":"ves");};
 $("#i_rem").onclick=()=>{readItem();if(!draft.due){toast("Βάλε πρώτα due date");return;}icsShare([draft],`${V().name}_#${draft.no}.ics`);};
 
 /* ---------- walk-round ---------- */
@@ -335,8 +342,8 @@ $("#bkExp").onclick=()=>shareFile(new Blob([JSON.stringify({app:"jobs-backup",da
 /* ---------- exports ---------- */
 $("#xTxt").onclick=()=>{const v=V(),op=vItems().filter(i=>i.st!=="Done").sort(srt);let t=`JOB ORDER LIST — ${v.name}${lTitle()} — ${fd(today())}\nOpen: ${op.length}\n`;
   PHASES.forEach(p=>{const a=op.filter(i=>i.phase===p);if(!a.length)return;t+=`\n${p.toUpperCase()}\n`;a.forEach(i=>t+=`#${i.no} ${i.title}${i.prio!=="Normal"?" ["+i.prio+"]":""}\n   ${AN[i.area]} · ${i.resp} · due ${fd(i.due)}${stat(i)==="ov"?" ⚠ OVERDUE":""}${i.en?"\n   "+i.en:""}\n`);});shareText(t,"Job Orders "+v.name);};
-$("#xCsv").onclick=()=>{const v=V(),rows=[["No","Title","Description (EN)","Description","Area","Phase","Priority","Responsible","Source","Ref","Given","Due","Status","Closed","Spares/PO","Photos before","Photos after"]];
-  vItems().sort((a,b)=>a.no-b.no).forEach(i=>rows.push([i.no,i.title,i.en,i.desc,AN[i.area],i.phase,i.prio,i.resp,i.src,i.ref,i.given,i.due,i.st,i.closed,i.spares,i.photos.length,i.after.length]));
+$("#xCsv").onclick=()=>{const v=V(),rows=[["No","Title","Description (EN)","Description","Area","Phase","Priority","Responsible","Source","Ref","Given","Due","Status","Closed","Spares/PO","Photos before","Photos after","Voice notes"]];
+  vItems().sort((a,b)=>a.no-b.no).forEach(i=>rows.push([i.no,i.title,i.en,i.desc,AN[i.area],i.phase,i.prio,i.resp,i.src,i.ref,i.given,i.due,i.st,i.closed,i.spares,i.photos.length,i.after.length,(i.voice||[]).length]));
   const csv="\ufeff"+rows.map(r=>r.map(x=>{x=String(x??"");return/[",\n]/.test(x)?'"'+x.replace(/"/g,'""')+'"':x;}).join(",")).join("\r\n");shareFile(new Blob([csv],{type:"text/csv"}),`${v.name}${lTitle()}_Job_Orders.csv`);};
 function makePdf(pages){const enc=new TextEncoder(),ch=[],off=[];let len=0;const w=x=>{const b=typeof x==="string"?enc.encode(x):x;ch.push(b);len+=b.length;};
   const obj=(i,f)=>{off[i]=len;w(`${i} 0 obj\n`);f();w("\nendobj\n");};const N=pages.length;w("%PDF-1.4\n");obj(1,()=>w("<< /Type /Catalog /Pages 2 0 R >>"));
@@ -357,7 +364,7 @@ $("#xPdf").onclick=async e=>{const b=e.currentTarget,tx=b.textContent;b.disabled
     np();for(const [ttl,list] of [...PHASES.map(p=>[p,op.filter(i=>i.phase===p)]),["DONE",dn]]){if(!list.length)continue;if(y>H-160){ep();np();}
       g.fillStyle="#123b3a";g.font=`bold 22px ${Fn}`;g.fillText(`${ttl} (${list.length})`,M,y+6);y+=40;head();
       list.forEach((i,k)=>{if(y>H-80){ep();np();head();}if(k%2){g.fillStyle="#f5f8f7";g.fillRect(M,y-24,W-2*M,34);}const s=stat(i);g.font=`16px ${Fn}`;g.fillStyle="#14231f";let x=M+6;
-        [i.no,(i.prio!=="Normal"?`[${i.prio}] `:"")+(i.en||i.title),AN[i.area].replace(/^\S+\s/,""),i.resp,fd(i.given),fd(i.due)+(s==="ov"?" ⚠":""),i.st==="In progress"?"In prog.":i.st].forEach((t,ci)=>{
+        [i.no,(i.prio!=="Normal"?`[${i.prio}] `:"")+(i.en||i.title||"[voice note — to be written]"),AN[i.area].replace(/^\S+\s/,""),i.resp,fd(i.given),fd(i.due)+(s==="ov"?" ⚠":""),i.st==="In progress"?"In prog.":i.st].forEach((t,ci)=>{
           g.fillStyle=ci===5&&s==="ov"?"#c0392b":ci===6&&i.st==="Done"?"#1d7a46":"#14231f";g.fillText(fit(t,cols[ci][1]-10),x,y);x+=cols[ci][1];});y+=34;});y+=20;}
     ep();
     // detail pages with photos (open items first, then done) – 2 per page
@@ -418,11 +425,12 @@ async function photosZip(vids,lid){const files=[],root=`JobOrders_Photos_${today
     for(const i of items(vid).filter(i=>lid==null||lid==="all"||(i.lid||"")===lid).sort((a,b)=>a.no-b.no)){
       const dir=`${root}/${fsName(v.name)}/${fsName(lName(vid,i.lid||""))}/${String(i.no).padStart(3,"0")}_${fsName(i.title)}`;
       for(const [w,arr] of [["before",i.photos||[]],["after",i.after||[]]])for(const [k,key] of arr.entries()){const du=await IDB.get(key).catch(()=>null);if(!du)continue;
-        files.push({name:`${dir}/${w}_${k+1}.jpg`,data:new Uint8Array(await (await fetch(du)).arrayBuffer())});n++;}}}
+        files.push({name:`${dir}/${w}_${k+1}.jpg`,data:new Uint8Array(await (await fetch(du)).arrayBuffer())});n++;}
+      for(const [k,key] of (i.voice||[]).entries()){const o=await IDB.get(key).catch(()=>null);if(!o||!o.b)continue;files.push({name:`${dir}/voice_${k+1}.${aExt(o.t)}`,data:new Uint8Array(o.b)});n++;}}}
   return {files,n,root};}
 async function exportZip(btn,vids,lid,label){const t=btn.textContent;btn.disabled=true;btn.textContent="⏳ Ετοιμάζω…";
-  try{const {files,n,root}=await photosZip(vids,lid);if(!n){toast("Δεν υπάρχουν φωτογραφίες");return;}
-    await shareFile(makeZip(files),`${root}_${fsName(label)}.zip`);toast(`🗂 ${n} φωτό → «Αποθήκευση στα Αρχεία»`,3000);}
+  try{const {files,n,root}=await photosZip(vids,lid);if(!n){toast("Δεν υπάρχουν φωτογραφίες ή φωνητικά");return;}
+    await shareFile(makeZip(files),`${root}_${fsName(label)}.zip`);toast(`🗂 ${n} αρχεία → «Αποθήκευση στα Αρχεία»`,3000);}
   catch(x){toast("Σφάλμα: "+(x.message||x));}finally{btn.disabled=false;btn.textContent=t;}}
 $("#xZip").onclick=e=>exportZip(e.currentTarget,[cv],cl,(V()||{}).name+(cl==="all"?"":"_"+lName(cv,cl)));
 $("#zipAll").onclick=e=>exportZip(e.currentTarget,S.v.map(v=>v.id),null,"ALL");
@@ -440,8 +448,8 @@ $("#mGo").onclick=async()=>{const vid=$("#mV").value;let lid=$("#mL").value;
   if(lid==="__new"){const n=$("#mNew").value.trim();if(!n){toast("Γράψε όνομα λίστας");$("#mNew").focus();return;}const l={id:uid(),vid,name:n};S.l.push(l);lid=l.id;}
   let no=items(vid).reduce((m,i)=>Math.max(m,i.no||0),0),n=0;const vn=S.v.find(v=>v.id===vid).name,ln=lName(vid,lid);
   for(const id of MV.ids){const i=S.it.find(x=>x.id===id);if(!i)continue;
-    if(MV.copy){const c=JSON.parse(JSON.stringify(i));c.id=uid();c.vid=vid;c.lid=lid;c.no=++no;c.photos=[];c.after=[];
-      for(const [arr,dst] of [[i.photos,c.photos],[i.after,c.after]])for(const k of arr||[]){const d=await IDB.get(k);if(d){const nk="p_"+uid();await IDB.put(nk,d);dst.push(nk);}}
+    if(MV.copy){const c=JSON.parse(JSON.stringify(i));c.id=uid();c.vid=vid;c.lid=lid;c.no=++no;c.photos=[];c.after=[];c.voice=[];
+      for(const [arr,dst,pf] of [[i.photos,c.photos,"p_"],[i.after,c.after,"p_"],[i.voice||[],c.voice,"a_"]])for(const k of arr||[]){const d=await IDB.get(k);if(d){const nk=pf+uid();await IDB.put(nk,d);dst.push(nk);}}
       c.log=[...(c.log||[]),{t:today(),x:`Αντιγραφή από ${V().name} #${i.no}`}];S.it.push(c);}
     else{if(i.vid!==vid){i.log.push({t:today(),x:`Μεταφορά από ${V().name} #${i.no}`});i.vid=vid;i.no=++no;}i.lid=lid;i.log.push({t:today(),x:"→ λίστα "+ln});}
     n++;}
@@ -458,6 +466,40 @@ $("#selCp").onclick=()=>{if(!sel||!sel.size){toast("Διάλεξε δουλει�
 $("#lRen").onclick=()=>{const l=S.l.find(x=>x.id===cl);if(!l)return;const n=prompt("Νέο όνομα λίστας",l.name);if(n&&n.trim()){l.name=n.trim();save();rVes();}};
 let ldA=0;$("#lDel").onclick=e=>{const l=S.l.find(x=>x.id===cl);if(!l)return;if(!ldA){ldA=1;e.target.textContent="Σίγουρα; οι δουλειές πάνε στην Κύρια";setTimeout(()=>{ldA=0;e.target.textContent="Διαγραφή λίστας";},3500);return;}
   S.it.forEach(i=>{if(i.lid===l.id)i.lid="";});S.l=S.l.filter(x=>x.id!==l.id);cl="all";ldA=0;e.target.textContent="Διαγραφή λίστας";save();rVes();toast("Η λίστα διαγράφηκε, οι δουλειές πήγαν στην Κύρια");};
+
+/* ---------- voice notes: real audio recording, listen later & write ---------- */
+let MR=null,MRt=0,MRi=null;
+const fmtT=s=>Math.floor(s/60)+":"+String(Math.floor(s%60)).padStart(2,"0");
+const aExt=t=>/mp4|m4a|aac/.test(t||"")?"m4a":/webm/.test(t||"")?"webm":/ogg/.test(t||"")?"ogg":"m4a";
+function recUI(){const b=$("#vnRec");if(!b)return;b.classList.toggle("rec",!!MR);b.textContent=MR?`⏹ Stop  ${fmtT((Date.now()-MRt)/1000)}`:((draft&&(draft.voice||[]).length)?"🎙 + Νέα ηχογράφηση":"🎙 Ηχογράφηση");}
+async function vnRender(){const box=$("#vnL");box.innerHTML="";const d0=draft,arr=(d0&&d0.voice)||[];if(!arr.length){box.innerHTML='<div class="note">—</div>';return;}
+  for(const [n,k] of arr.entries()){const o=await IDB.get(k).catch(()=>null);if(draft!==d0)return;if(!o||!o.b)continue;
+    const el=document.createElement("div");el.className="vn";
+    el.innerHTML=`<b>${n+1}</b><audio controls preload="metadata"></audio><button class="sp">1×</button><button class="sv">💾</button><button class="x">✕</button><div class="note">${fmtT(o.d||0)}${o.at?" · "+fd(o.at.slice(0,10))+" "+new Date(o.at).toTimeString().slice(0,5):""}</div>`;
+    const au=el.querySelector("audio");au.src=URL.createObjectURL(new Blob([o.b],{type:o.t}));
+    el.querySelector(".sp").onclick=e=>{const r=au.playbackRate>=2?1:au.playbackRate+.5;au.playbackRate=r;e.target.textContent=r+"×";};
+    el.querySelector(".sv").onclick=()=>shareFile(new Blob([o.b],{type:o.t}),`${(V()||{name:"ship"}).name}_#${d0.no}_voice_${n+1}.${aExt(o.t)}`.replace(/\s+/g,"_"));
+    el.querySelector(".x").onclick=()=>{if(!confirm("Διαγραφή ηχογράφησης "+(n+1)+";"))return;const i=d0.voice.indexOf(k);if(i>=0)d0.voice.splice(i,1);(d0._rm=d0._rm||[]).push(k);vnRender();recUI();};
+    box.appendChild(el);}}
+async function recStart(){if(MR)return;
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||!window.MediaRecorder){toast("Αυτό το κινητό δεν υποστηρίζει ηχογράφηση εδώ — χρησιμοποίησε το 🎤 Ομιλία",3500);return;}
+  let st;try{st=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}});}catch(e){toast("Δώσε άδεια μικροφώνου (Ρυθμίσεις → Safari → Μικρόφωνο)",4000);return;}
+  const mt=["audio/mp4","audio/webm;codecs=opus","audio/webm","audio/ogg"].find(t=>MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t));
+  let mr;try{mr=new MediaRecorder(st,mt?{mimeType:mt,audioBitsPerSecond:48000}:undefined);}catch(e){mr=new MediaRecorder(st);}
+  const ch=[],d0=draft;let done;mr._done=new Promise(r=>done=r);
+  mr.ondataavailable=e=>{if(e.data&&e.data.size)ch.push(e.data);};
+  mr.onstop=async()=>{st.getTracks().forEach(t=>t.stop());clearInterval(MRi);const dur=(Date.now()-MRt)/1000,type=(mr.mimeType||mt||"audio/mp4").split(";")[0];MR=null;recUI();
+    try{if(!ch.length||dur<0.8){toast("Πολύ σύντομη — δεν κρατήθηκε");return;}
+      const b=await new Blob(ch,{type}).arrayBuffer(),k="a_"+uid();await IDB.put(k,{t:type,b,d:dur,at:new Date().toISOString()});
+      (d0.voice=d0.voice||[]).push(k);(d0._tmp=d0._tmp||[]).push(k);if(draft===d0){vnRender();recUI();}toast(`🎙 Κρατήθηκε (${fmtT(dur)}) — πάτα Αποθήκευση`,2500);}
+    catch(x){toast("Σφάλμα ηχογράφησης");}finally{done();}};
+  mr.onerror=()=>{try{mr.stop();}catch(e){}};
+  st.getTracks().forEach(t=>t.onended=()=>{if(mr.state!=="inactive")mr.stop();});
+  MR=mr;MRt=Date.now();mr.start(1000);MRi=setInterval(recUI,500);recUI();if(navigator.vibrate)navigator.vibrate(40);}
+async function recStop(){if(!MR)return;const mr=MR;if(mr.state!=="inactive")mr.stop();await mr._done;}
+$("#vnRec").onclick=()=>MR?recStop():recStart();
+function quickVoice(area){retWr=view==="wr";newItem(area);recStart();toast("🎙 Μίλα… ⏹ Stop όταν τελειώσεις. Φωτό μετά το Stop.",3500);}
+$("#wrVoice").onclick=()=>quickVoice(AREAS[wrI][0]);$("#vVoice").onclick=()=>quickVoice();
 
 go("home");
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
