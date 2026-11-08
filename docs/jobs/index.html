@@ -63,6 +63,13 @@ input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:
 .vn{display:flex;gap:6px;align-items:center;flex-wrap:wrap;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:6px 8px;margin-top:6px}.vn audio{flex:1;min-width:170px;height:36px}.vn button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:6px 9px;font:700 13px system-ui;cursor:pointer}.vn .note{width:100%}
 .qk{margin-top:10px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:8px}.qk .lb2{font-size:11.5px;color:var(--muted);font-weight:700;margin:4px 2px 2px}
 .qk .chips{padding:2px 0 4px}.qk .chips button{padding:6px 10px;font-size:13px}.qk .chips button.on{background:var(--acc);border-color:var(--acc);color:#fff}.qk .chips button.add{border-style:dashed;color:var(--muted)}
+.tq{flex:1;justify-content:center;font-size:16px!important;padding:12px!important;background:#ffd84d!important;border-color:#e0b800!important;color:#3a2f00!important;font-weight:800!important}
+.tc{position:fixed;inset:0;background:#000;z-index:60;display:flex;flex-direction:column}.tc video{flex:1;width:100%;min-height:0;object-fit:cover}
+.tc .bar{display:flex;gap:10px;align-items:center;justify-content:space-around;padding:14px 12px calc(18px + env(safe-area-inset-bottom))}
+.tc button{border:0;border-radius:14px;padding:14px 16px;font:800 16px system-ui;background:rgba(255,255,255,.18);color:#fff;cursor:pointer}
+.tc .shut{width:76px;height:76px;border-radius:50%;background:#fff;color:#000;font-size:28px;padding:0;box-shadow:0 0 0 5px rgba(255,255,255,.35)}
+.tc #tcL.on{background:#ffd84d;color:#3a2f00}.tc .tn{position:absolute;top:calc(12px + env(safe-area-inset-top));left:12px;right:12px;background:rgba(0,0,0,.6);color:#fff;border-radius:10px;padding:8px 10px;font-size:14px;text-align:center}
+.tc .cnt{position:absolute;bottom:calc(120px + env(safe-area-inset-bottom));right:14px;background:var(--acc);color:#fff;border-radius:12px;padding:4px 10px;font-weight:800}
 .tag.v{background:#efeaff;color:#4b2fd1}
 #toast{position:fixed;left:50%;top:calc(64px + env(safe-area-inset-top));transform:translateX(-50%);background:#123b3a;color:#fff;padding:9px 14px;border-radius:10px;font-size:14px;opacity:0;transition:.2s;pointer-events:none;z-index:30;max-width:90vw;text-align:center}#toast.show{opacity:1}
 </style>
@@ -103,7 +110,7 @@ input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:
 <section id="v-item" class="hide">
   <div class="card">
     <div class="note">Φωτογραφίες (πριν)</div><div class="ph" id="phB"></div>
-    <div class="row" style="margin-top:6px"><label class="cam" style="background:var(--acc);color:#fff;border-color:var(--acc)">📸 Κάμερα<input type="file" accept="image/*" capture="environment" id="cB" style="display:none"></label><label class="cam">🖼 Από άλμπουμ<input type="file" accept="image/*" multiple id="fB" style="display:none"></label><button class="btn sm" id="svB" title="Όλες στο Photos">💾</button></div>
+    <div class="row" style="margin-top:6px;flex-wrap:nowrap"><label class="cam" style="background:var(--acc);color:#fff;border-color:var(--acc)">📸 Κάμερα<input type="file" accept="image/*" capture="environment" id="cB" style="display:none"></label><label class="cam" title="Από άλμπουμ">🖼<input type="file" accept="image/*" multiple id="fB" style="display:none"></label><button class="btn sm" id="svB" title="Όλες στο Photos">💾</button><button class="cam tq" data-tq="B">🔦 Φακός</button></div>
     <div class="qk"><div class="row" style="justify-content:space-between"><b style="font-size:13.5px">⚡ Γρήγορη ετικέτα</b><button class="btn sm" id="qkClr">⌫ Καθαρισμός</button></div>
       <div class="lb2">ΤΙ ΝΑ ΓΙΝΕΙ</div><div class="chips" id="qkA"></div>
       <div class="lb2" id="qkOL">ΤΙ</div><div class="chips" id="qkO"></div>
@@ -132,7 +139,7 @@ input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:
     <div class="seg st" id="i_st"><button data-v="Open">Ανοιχτό</button><button data-v="In progress">Σε εξέλιξη</button><button data-v="Done">✓ Done</button></div>
     <div id="doneBox" class="hide" style="margin-top:10px"><div class="g2"><label>Έκλεισε<input type="date" id="i_closed"></label><div></div></div>
       <div class="note" style="margin-top:8px">Φωτογραφίες (μετά) — απόδειξη close-out</div><div class="ph" id="phA"></div>
-      <div class="row" style="margin-top:6px"><label class="cam" style="background:var(--acc);color:#fff;border-color:var(--acc)">📸 After<input type="file" accept="image/*" capture="environment" id="cA" style="display:none"></label><label class="cam">🖼 Άλμπουμ<input type="file" accept="image/*" multiple id="fA" style="display:none"></label><button class="btn sm" id="svA">💾</button></div></div>
+      <div class="row" style="margin-top:6px;flex-wrap:nowrap"><label class="cam" style="background:var(--acc);color:#fff;border-color:var(--acc)">📸 After<input type="file" accept="image/*" capture="environment" id="cA" style="display:none"></label><label class="cam" title="Από άλμπουμ">🖼<input type="file" accept="image/*" multiple id="fA" style="display:none"></label><button class="btn sm" id="svA">💾</button><button class="cam tq" data-tq="A">🔦 Φακός</button></div></div>
     <div class="note" style="margin-top:12px">Ιστορικό</div><div id="i_log" class="note" style="color:var(--ink)"></div>
     <div class="row" style="margin-top:6px"><input id="i_logtxt" placeholder="Ενημέρωση, π.χ. spares παραγγέλθηκαν" style="flex:1"><button class="btn sm" id="i_logadd">+</button></div>
   </div>
@@ -158,6 +165,8 @@ input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:
   <label style="margin-top:8px" id="mNewW">Όνομα νέας λίστας<input id="mNew" placeholder="π.χ. Pre-inspection Vancouver"></label>
   <div class="row" style="margin-top:12px"><button class="btn p" id="mGo" style="flex:1">OK</button><button class="btn" id="mX">Άκυρο</button></div></div></div>
 <div id="toast"></div>
+<div class="tc hide" id="tc"><video id="tcV" playsinline muted autoplay></video><div class="tn hide" id="tcN"></div><div class="cnt hide" id="tcC"></div>
+  <div class="bar"><button id="tcX">✕ Κλείσιμο</button><button class="shut" id="tcS">📸</button><button id="tcL">🔦</button></div></div>
 <div class="lb hide" id="lb"><div class="bar"><b id="lbT" style="flex:1"></b><button id="lbX">✕</button></div><div class="im" id="lbIm"><img id="lbImg"></div>
   <div class="bot"><button id="lbP">‹</button><button id="lbZ">🔍 Zoom</button><button id="lbS">💾 Photos</button><button id="lbN">›</button></div></div>
 <script>
@@ -208,7 +217,7 @@ const lTitle=()=>cl==="all"?"":" — "+lName(cv,cl);
 function stat(i){if(i.st==="Done")return"dn";const d=daysTo(i.due);if(d!==null&&d<0)return"ov";if(d!==null&&d<=7)return"soon";return"op";}
 function go(v){view=v;["home","ves","item","wr"].forEach(x=>$("#v-"+x).classList.toggle("hide",x!==v));$("#back").classList.toggle("hide",v==="home");
   $("#fab").classList.toggle("hide",v!=="ves");window.scrollTo(0,0);({home:rHome,ves:rVes,item:()=>{},wr:rWr})[v]();}
-$("#back").onclick=()=>{if(MR){toast("Σταμάτα πρώτα την ηχογράφηση ⏹");return;}if(view==="item"){if(draft&&draft._new&&draft._tmp)draft._tmp.forEach(k=>IDB.del(k).catch(()=>{}));go(retWr?"wr":"ves");}else if(view==="wr")go("ves");else{cv=null;go("home");}};
+$("#back").onclick=()=>{if(TC)torchClose();if(MR){toast("Σταμάτα πρώτα την ηχογράφηση ⏹");return;}if(view==="item"){if(draft&&draft._new&&draft._tmp)draft._tmp.forEach(k=>IDB.del(k).catch(()=>{}));go(retWr?"wr":"ves");}else if(view==="wr")go("ves");else{cv=null;go("home");}};
 
 /* ---------- home ---------- */
 function rHome(){$("#ttl").textContent="Job Orders";$("#sub").textContent="Outstandings ανά πλοίο · offline";
@@ -559,6 +568,28 @@ function qkMeta(){const pr=$("#i_prio").value,rs=$("#i_resp").value,gv=$("#i_giv
 ["#i_prio","#i_resp","#i_due","#i_given","#i_phase"].forEach(id=>$(id).addEventListener("change",()=>{if(draft)qkMeta();}));
 $$(".qd [data-dd]").forEach(b=>b.addEventListener("click",()=>setTimeout(qkMeta,0)));
 $("#qkSave").onclick=()=>$("#i_save").click();
+
+/* ---------- torch: live view with flashlight, see in the dark + take photo ---------- */
+let TC=null;
+async function torchSet(on){if(!TC)return false;const tr=TC.tr;try{await tr.applyConstraints({advanced:[{torch:on}]});const st=tr.getSettings?tr.getSettings():{};
+  const ok=st.torch===undefined?true:!!st.torch===on;TC.on=on&&ok;}catch(e){TC.on=false;}
+  $("#tcL").classList.toggle("on",TC.on);$("#tcL").textContent=TC.on?"🔦 ON":"🔦 OFF";return TC.on;}
+async function torchOpen(w){if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){toast("Δεν υποστηρίζεται — άνοιξε φακό από το Control Center",3500);return;}
+  let st;try{st=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"},width:{ideal:1920},height:{ideal:1080}},audio:false});}
+  catch(e){toast("Δώσε άδεια κάμερας (Ρυθμίσεις → Safari → Κάμερα)",4000);return;}
+  const tr=st.getVideoTracks()[0];TC={st,tr,w,n:0,on:false};$("#tcV").srcObject=st;$("#tc").classList.remove("hide");$("#tcC").classList.add("hide");
+  try{await $("#tcV").play();}catch(e){}
+  await new Promise(r=>setTimeout(r,350));const ok=await torchSet(true);
+  const n=$("#tcN");n.classList.toggle("hide",ok);n.textContent="Ο φακός δεν ανάβει από εδώ σε αυτό το κινητό — άνοιξέ τον από το Control Center (σύρε από πάνω δεξιά ↓ → 🔦) και συνέχισε.";}
+function torchClose(){if(!TC)return;try{TC.tr.applyConstraints({advanced:[{torch:false}]}).catch(()=>{});}catch(e){}TC.st.getTracks().forEach(t=>t.stop());$("#tcV").srcObject=null;
+  const {w,n}=TC;TC=null;$("#tc").classList.add("hide");if(n){phs(w);toast(`📸 ${n} φωτό ${w==="A"?"after":"πριν"} μπήκαν`);}}
+$("#tcX").onclick=torchClose;$("#tcL").onclick=()=>torchSet(!(TC&&TC.on)).then(ok=>{if(TC&&!TC.on&&!ok)$("#tcN").classList.remove("hide");});
+$("#tcS").onclick=async()=>{if(!TC||!draft)return;const v=$("#tcV"),W=v.videoWidth,H=v.videoHeight;if(!W){toast("Περίμενε την εικόνα");return;}
+  const k=Math.min(1,1280/Math.max(W,H)),c=document.createElement("canvas");c.width=Math.round(W*k);c.height=Math.round(H*k);c.getContext("2d").drawImage(v,0,0,c.width,c.height);
+  const key="p_"+uid();await IDB.put(key,c.toDataURL("image/jpeg",.72));(TC.w==="A"?draft.after:draft.photos).push(key);draft._tmp.push(key);TC.n++;
+  const cc=$("#tcC");cc.textContent="📸 "+TC.n;cc.classList.remove("hide");v.style.opacity=.3;setTimeout(()=>v.style.opacity=1,120);if(navigator.vibrate)navigator.vibrate(30);};
+$$("[data-tq]").forEach(b=>b.onclick=()=>torchOpen(b.dataset.tq));
+document.addEventListener("visibilitychange",()=>{if(document.hidden&&TC)torchClose();});
 
 go("home");
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
