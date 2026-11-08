@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Timeless Capsule</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Capsule">
+<meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#f3ecdf">
+<style>
+:root{--bg:#f3ecdf;--card:#fbf7ee;--ink:#231d18;--muted:#776b5d;--line:#ddd0b8;--acc:#8a3324;--gold:#a8823f;--soft:#efe5d2}
+@media (prefers-color-scheme:dark){:root{--bg:#16120e;--card:#211b15;--ink:#efe6d6;--muted:#a99c88;--line:#3b3127;--acc:#d9785f;--gold:#d8b26a;--soft:#2a221a}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font:16px/1.55 -apple-system,system-ui,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:calc(78px + env(safe-area-inset-bottom))}
+.serif,h1,h2,h3,.mt{font-family:Georgia,"Times New Roman",serif}
+header{background:var(--bg);padding:calc(10px + env(safe-area-inset-top)) 14px 8px;position:sticky;top:0;z-index:5;border-bottom:3px double var(--line)}
+.hb{display:flex;align-items:center;gap:8px;max-width:720px;margin:0 auto}
+.back{background:transparent;color:var(--acc);font-size:30px;padding:0 10px 4px;line-height:1;border:0}
+header h1{margin:0;font-size:21px;text-transform:uppercase;letter-spacing:.6px;line-height:1.15}
+header p{margin:1px 0 0;font-size:13px;color:var(--muted);font-style:italic;font-family:Georgia,serif}
+header .cr{font-size:10.5px;opacity:.7;font-style:normal;font-family:inherit}
+main{padding:14px;max-width:720px;margin:0 auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+button{font:inherit;border:0;border-radius:11px;padding:11px 14px;background:var(--acc);color:#fff;font-weight:600;cursor:pointer}
+button.ghost{background:transparent;color:var(--acc);border:1px solid var(--line)}
+button.soft{background:var(--soft);color:var(--ink);border:1px solid var(--line)}
+button.wide{width:100%;margin-top:8px}
+button:disabled{opacity:.4}
+input,textarea,select{width:100%;font:inherit;padding:11px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
+textarea{resize:vertical}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.muted{color:var(--muted);font-size:13.5px}
+h2{font-size:19px;margin:4px 0 8px;text-transform:uppercase;letter-spacing:.4px}
+h3{font-size:17px;margin:2px 0 10px}
+.people{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.pc{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 10px;text-align:center;cursor:pointer}
+.av{width:78px;height:78px;border-radius:50%;object-fit:cover;background:var(--soft);display:flex;align-items:center;justify-content:center;margin:0 auto 6px;font:700 30px Georgia,serif;color:var(--acc);border:3px solid var(--card);box-shadow:0 0 0 1.5px var(--gold)}
+.av.big{width:132px;height:132px;font-size:50px}
+.pc b{display:block;font-family:Georgia,serif;font-size:17px}
+.pc small{color:var(--muted)}
+.bar{height:6px;background:var(--soft);border-radius:4px;overflow:hidden;margin-top:8px}.bar i{display:block;height:100%;background:var(--gold)}
+.ms{display:flex;gap:12px;align-items:center;padding:12px;background:var(--card);border:1px solid var(--line);border-radius:14px;margin-bottom:8px;cursor:pointer}
+.ms .no{font:700 22px Georgia,serif;color:var(--acc);min-width:30px;text-align:center}
+.ms .ic{font-size:24px}
+.ms .mt{font-weight:700;text-transform:uppercase;font-size:14.5px;letter-spacing:.3px;line-height:1.25}
+.ms .mc{font-size:12.5px;color:var(--muted)}
+.ms .ok{margin-left:auto;color:var(--gold);font-size:20px}
+.hero{text-align:center;padding:6px 0 12px}
+.hero .nm{font:700 26px Georgia,serif;margin:6px 0 0}
+.mhead{text-align:center;padding:4px 6px 10px}
+.mhead .big{font-size:40px}
+.mhead h2{font-size:22px;margin:4px 0}
+.mhead p{font:italic 15.5px/1.5 Georgia,serif;color:var(--muted);margin:4px 0}
+.q{font:italic 17px/1.5 Georgia,serif;background:var(--soft);border-left:3px solid var(--acc);padding:10px 12px;border-radius:8px;margin:6px 0}
+.acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.acts button{padding:14px 8px}
+.tip{font-size:13px;color:var(--muted);background:var(--card);border:1px dashed var(--line);border-radius:10px;padding:8px 10px;margin:8px 0}
+.item{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px;position:relative}
+.item .meta{font-size:12.5px;color:var(--muted);padding-right:34px}
+.item .iq{font:italic 15px Georgia,serif;margin:4px 0}
+.item audio,.item video{width:100%;margin-top:6px;border-radius:10px}
+.item video{max-height:420px;background:#000}
+.item .txt{white-space:pre-wrap;font:16px/1.6 Georgia,serif;margin:6px 0 0}
+.dots{position:absolute;top:6px;right:6px;background:transparent;color:var(--muted);font-size:22px;padding:2px 10px}
+.thumbs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px}
+.thumbs img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px;cursor:pointer;background:var(--soft)}
+.thumbs.one{grid-template-columns:1fr}.thumbs.one img{aspect-ratio:auto;max-height:420px;object-fit:contain}
+.sealed{text-align:center;padding:16px 6px;background:repeating-linear-gradient(45deg,var(--soft),var(--soft) 10px,var(--card) 10px,var(--card) 20px);border-radius:10px;margin-top:6px}
+.sealed b{font:700 18px Georgia,serif}
+.lock{background:var(--soft);border-radius:10px;padding:14px;text-align:center;margin-top:6px}
+.banner{background:#fff3cd;color:#5c4400;border:1px solid #e9d38c;border-radius:12px;padding:10px 12px;margin-bottom:12px;font-size:14px}
+@media (prefers-color-scheme:dark){.banner{background:#3a2f12;color:#f3dd9c;border-color:#5a4a1c}}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom);z-index:6}
+nav button{flex:1;background:transparent;color:var(--muted);border-radius:0;padding:9px 2px;font-size:11.5px;font-weight:600}
+nav button b{display:block;font-size:21px;font-weight:400}nav button.on{color:var(--acc)}
+.modal{display:none;position:fixed;inset:0;background:rgba(20,15,10,.55);z-index:20;align-items:flex-end;justify-content:center}
+.modal.on{display:flex}
+.sheet{background:var(--card);width:100%;max-width:720px;max-height:94vh;overflow:auto;border-radius:18px 18px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom))}
+.modal.full .sheet{background:#0d0b09;color:#eee;max-height:100vh;height:100%;border-radius:0;padding-top:calc(12px + env(safe-area-inset-top))}
+.modal.full .muted{color:#bbb}
+.fl{display:block;margin-bottom:10px}.fl>span{display:block;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:3px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
+.chip{background:var(--soft);color:var(--ink);border:1px solid var(--line);padding:7px 11px;font-weight:500;font-size:14px}
+.chip.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.cam{position:relative;background:#000;border-radius:14px;overflow:hidden}
+.cam video{width:100%;height:62vh;object-fit:cover;display:block}
+.mir{transform:scaleX(-1)}
+.ov{position:absolute;inset:9% 7%;border:3px dashed rgba(255,255,255,.75);border-radius:44% 44% 16% 16%;display:flex;align-items:flex-end;justify-content:center;pointer-events:none}
+.ov span{background:rgba(0,0,0,.5);color:#fff;font-size:13px;padding:3px 9px;border-radius:8px;margin-bottom:10px}
+.ov.paper{border-radius:6px;inset:12% 10%}
+.cd{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font:700 96px Georgia,serif;color:#fff;text-shadow:0 2px 14px #000;pointer-events:none}
+.cd small{font-size:26px}
+.flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;transition:opacity .12s}
+.shutter{font-size:18px;padding:16px 22px;flex:1}
+.bgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:10px 0}
+.bgrid img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px;border:4px solid transparent}
+.bgrid img.sel{border-color:var(--gold)}
+.rec{display:flex;flex-direction:column;align-items:center;gap:10px;padding:14px 0}
+.rt{font:700 44px Georgia,serif;font-variant-numeric:tabular-nums}
+.lvl{width:80%;height:10px;background:var(--soft);border-radius:6px;overflow:hidden}.lvl i{display:block;height:100%;width:0;background:var(--acc);transition:width .08s}
+.recbtn{font-size:19px;padding:16px 26px}
+.recbtn.on{background:#b3261e;animation:pulse 1.4s infinite}
+@keyframes pulse{50%{opacity:.7}}
+.sp{width:100%;height:260px;border:1px solid var(--line);border-radius:12px;touch-action:none;background:#fbf7ee;display:block}
+#sil{display:none;position:fixed;inset:0;background:#120f0c;color:#efe6d6;z-index:30;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px}
+#sil.on{display:flex}
+#sil .orb{width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,#d8b26a55,#d8b26a11 70%);border:1px solid #d8b26a66;animation:br 5s ease-in-out infinite alternate;display:flex;align-items:center;justify-content:center;font-size:40px}
+@keyframes br{from{transform:scale(.9)}to{transform:scale(1.15)}}
+#sil .tm{font:700 52px Georgia,serif;margin:26px 0 6px;font-variant-numeric:tabular-nums}
+#sil p{font:italic 17px Georgia,serif;opacity:.8;max-width:320px}
+#viewer{display:none;position:fixed;inset:0;background:#000;z-index:40;align-items:center;justify-content:center}
+#viewer.on{display:flex}#viewer img{max-width:100%;max-height:100%}
+#viewer button{position:absolute;top:calc(10px + env(safe-area-inset-top));right:10px;background:rgba(255,255,255,.2)}
+#toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;z-index:50;opacity:0;transition:opacity .25s;pointer-events:none;max-width:90%;text-align:center}
+#toast.on{opacity:1}
+.yr{font:700 16px Georgia,serif;color:var(--acc);margin:14px 0 6px;border-bottom:1px solid var(--line)}
+.tl{display:flex;gap:10px;padding:8px 2px;border-bottom:1px dotted var(--line);cursor:pointer;font-size:14.5px}
+.tl .d{color:var(--muted);min-width:78px;font-size:12.5px}
+.empty{text-align:center;color:var(--muted);padding:20px 10px;font-style:italic;font-family:Georgia,serif}
+.cnt{display:inline-block;font-size:11.5px;font-weight:700;background:var(--gold);color:#fff;border-radius:8px;padding:1px 7px}
+.sum{font:italic 15px Georgia,serif;text-align:center;color:var(--muted);margin:6px 0 2px}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:8px 0;font-size:15px}.chk input{width:22px;height:22px;flex:none;margin-top:2px}
+</style>
+</head>
+<body>
+<header id="hdr"></header>
+<main id="app"></main>
+<nav id="nav">
+  <button data-a="nav" data-v="home"><b>⏳</b>Άνθρωποι</button>
+  <button data-a="nav" data-v="sealed"><b>✉️</b>Σφραγισμένα</button>
+  <button data-a="nav" data-v="inbox"><b>📥</b>Παραλαβή</button>
+  <button data-a="nav" data-v="settings"><b>⚙️</b>Ρυθμίσεις</button>
+</nav>
+<div id="modal" class="modal"></div>
+<div id="sil"><div class="orb">🤍</div><div class="tm" id="silT">0:00</div><p id="silW"></p><p>Αφήστε τα τηλέφωνα στην άκρη.<br>Καρδιά με καρδιά.</p><button id="silEnd" style="margin-top:22px">Τέλος σιωπής</button></div>
+<div id="viewer"><img id="vImg" alt=""><button id="vX">✕</button></div>
+<div id="toast"></div>
+<script>
+"use strict";
+const $=s=>document.querySelector(s);
+const h=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+const today=()=>{const d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10);};
+const fd=d=>d?d.slice(8,10)+"/"+d.slice(5,7)+"/"+d.slice(0,4):"";
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const mmss=s=>{s=Math.round(s||0);const hh=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return hh?`${hh}:${String(m).padStart(2,"0")}:${String(x).padStart(2,"0")}`:`${m}:${String(x).padStart(2,"0")}`;};
+const dur=s=>{s=Math.round(s||0);const hh=Math.floor(s/3600),m=Math.floor(s%3600/60);return hh?`${hh} ώρ. ${m}′`:`${m}′`;};
+const daysTo=d=>Math.ceil((new Date(d)-new Date(today()))/864e5);
+const mb=b=>(b/1048576).toFixed(b<1048576*10?1:0)+" MB";
+function toast(t,ms=2200){const e=$("#toast");e.textContent=t;e.classList.add("on");clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove("on"),ms);}
+
+/* ---------- storage: IndexedDB ---------- */
+const DB={db:null,
+  open(){return this.db?Promise.resolve(this.db):new Promise((res,rej)=>{const r=indexedDB.open("tcapsule",1);r.onupgradeneeded=()=>{r.result.createObjectStore("meta");r.result.createObjectStore("media");};r.onsuccess=()=>{this.db=r.result;res(this.db);};r.onerror=()=>rej(r.error);});},
+  tx(st,mode,fn){return this.open().then(db=>new Promise((res,rej)=>{const t=db.transaction(st,mode),q=fn(t.objectStore(st));t.oncomplete=()=>res(q?q.result:undefined);t.onerror=()=>rej(t.error);t.onabort=()=>rej(t.error);}));},
+  get(st,k){return this.tx(st,"readonly",s=>s.get(k));},
+  has(st,k){return this.tx(st,"readonly",s=>s.count(k)).then(n=>n>0);},
+  put(st,k,v){return this.tx(st,"readwrite",s=>{s.put(v,k);});},
+  del(st,k){return this.tx(st,"readwrite",s=>{s.delete(k);});}};
+const S0={v:1,owner:"",people:[],items:[],lastBackup:null,pinH:null};
+let S=JSON.parse(JSON.stringify(S0));
+let svT;function save(){clearTimeout(svT);svT=setTimeout(()=>DB.put("meta","S",S),120);}
+async function saveNow(){clearTimeout(svT);await DB.put("meta","S",S);}
+const UC={};
+async function putMedia(blob){const id=uid();await DB.put("media",id,{t:blob.type||"application/octet-stream",b:await blob.arrayBuffer()});return id;}
+async function getBlob(id){const r=await DB.get("media",id);return r?new Blob([r.b],{type:r.t}):null;}
+async function mediaURL(id){if(UC[id])return UC[id];const b=await getBlob(id);if(!b)return "";return UC[id]=URL.createObjectURL(b);}
+async function delMedia(ids){for(const id of ids||[]){await DB.del("media",id);if(UC[id]){URL.revokeObjectURL(UC[id]);delete UC[id];}}}
+
+/* ---------- the 10 missions (+ extras) ---------- */
+const Q={
+voice:["Πες μου την πιο αστεία ιστορία από τα παιδικά σου χρόνια.","Πώς ήταν το σπίτι που μεγάλωσες; Περιέγραψέ το δωμάτιο-δωμάτιο.","Πώς γνωρίστηκες με τον άνθρωπο της ζωής σου;","Πες μου για τους δικούς σου γονείς. Τι σου έμαθαν;","Ποιο τραγούδι σου θυμίζει τα νιάτα σου; Τραγούδησέ το λίγο.","Ποια ήταν η πρώτη σου δουλειά και πόσα έπαιρνες;","Πες μου ένα παραμύθι ή μια ιστορία που σου έλεγαν μικρό.","Ποια συμβουλή θα έδινες στον εαυτό σου στα 20;","Τι θέλεις να ξέρουν για σένα τα εγγόνια σου;","Πες απλώς το όνομά μου και ό,τι θέλεις να ακούω όταν μου λείπεις.","Θύμωσε λίγο, όπως όταν κάναμε αταξίες — να υπάρχει κι αυτή η φωνή.","Πες μου τη συνταγή της ζωής σου σε τρεις κουβέντες."],
+dreams:["Τι ήθελες να γίνεις όταν ήσουν παιδί;","Υπήρξε ένα όνειρο που άφησες για να μεγαλώσεις εμάς;","Πού ονειρευόσουν να ταξιδέψεις;","Αν είχες άλλη μια ζωή, τι θα έκανες διαφορετικά;","Ποιο όνειρό σου έγινε πραγματικότητα;","Τι σε έκανε ευτυχισμένο/η στα 20 σου;","Τι ονειρεύεσαι ακόμα και σήμερα;"],
+battles:["Ποια ήταν η πιο δύσκολη χρονιά της ζωής σου;","Τι σε κράτησε όρθιο/α στα δύσκολα;","Υπάρχει κάτι που δεν μας είπες ποτέ, για να μη στενοχωρηθούμε;","Πώς τα βγάζατε πέρα όταν ήμασταν μικροί;","Ποιον έχασες και σου λείπει ακόμα;","Τι σου έμαθαν η φτώχεια, η ξενιτιά ή ο φόβος;","Πότε ένιωσες πιο μόνος/η και πώς το πέρασες;"],
+regrets:["Υπάρχει κάτι που θα έκανες αλλιώς;","Υπάρχει κάποιος που θα ήθελες να του ζητήσεις συγγνώμη;","Τι λυπάσαι που δεν τόλμησες;","Τι θα ήθελες να μη σου μοιάσουμε;","Ποιο λάθος σου σε έμαθε τα περισσότερα;","Τι θα έλεγες σε κάποιον που δεν πρόλαβες να το πεις;"],
+film:["Ποια ταινία ή ποιο τραγούδι σε σημάδεψε και γιατί;","Πού το είδες ή το άκουσες πρώτη φορά, και με ποιον;","Ποια σκηνή θυμάσαι πιο έντονα;","Τι σου θυμίζει από εκείνη την εποχή;"],
+meal:["Από ποιον έμαθες αυτό το φαγητό;","Ποιο είναι το μυστικό που δεν γράφεται πουθενά;","Πότε το μαγείρευες και για ποιους;"],
+old:["Ποιοι είναι σε αυτή τη φωτογραφία και πού;","Τι συνέβαινε εκείνη τη μέρα;","Τι έγινε μετά από αυτή τη στιγμή;"],
+will:["Θα ήθελες να σε θυμόμαστε με τη φωνή και την εικόνα σου, όπως εδώ;","Αν κάποτε γίνεται να «ξαναμιλάει» μια ψηφιακή εκδοχή σου, θα το ήθελες; Σε ποιους;","Τι θα ήθελες να μη γίνει ποτέ με τις αναμνήσεις σου;","Πώς θέλεις να σε θυμούνται;"]};
+const M=[
+{n:1,k:"voice",ic:"🎙",t:"Η φωνή τους",s:"Σήμερα είναι μια απλή ιστορία. Κάποτε θα είναι η φωνή που θα θέλεις να ξανακούσεις.",acts:["rec","text"],tip:"Ηχογράφησε πολύ και σε όλες τις διαθέσεις: ιστορίες, τραγούδι, γέλιο, μάλωμα, τρυφερότητα. Ήσυχο δωμάτιο, κινητό 30 εκ. από το στόμα. Η πολλή και καθαρή φωνή είναι το πιο πολύτιμο υλικό για το μέλλον."},
+{n:2,k:"laugh",ic:"😊",t:"Το γέλιο τους",s:"Όχι πόζες. Το αληθινό γέλιο κρατάει ζωντανό το πνεύμα του σπιτιού.",acts:["smile","video","rec","gallery"],tip:"Μην τους ζητήσεις να ποζάρουν. Πες ένα παλιό αστείο, φέρε τα εγγόνια — και τράβα. Η «Φωτογραφία Χαμόγελου» βγάζει 10 φωτογραφίες στη σειρά· κρατάς τις καλύτερες."},
+{n:3,k:"hands",ic:"✋",t:"Τα χέρια τους",s:"Αυτά τα χέρια έχτισαν τον κόσμο σου. Κράτα το σχήμα τους.",acts:["hands","gallery"],tip:"Φως από παράθυρο, όχι flash. Δοκίμασε και τα δικά σου χέρια κάτω από τα δικά τους."},
+{n:4,k:"hand",ic:"✍️",t:"Ο γραφικός τους χαρακτήρας",s:"Είναι το πιο προσωπικό τους κομμάτι — και το πρώτο που χάνεται.",acts:["note","sign"],tip:"Ζήτα ένα απλό σημείωμα σε χαρτί («Σ' αγαπώ, μην ξεχνάς να…»). Φωτογράφισέ το — και φύλαξε και το χαρτί."},
+{n:5,k:"dreams",ic:"✨",t:"Τα όνειρά τους",s:"Είχαν μια ολόκληρη ζωή πριν από σένα. Γνώρισε τον άνθρωπο που ήταν.",acts:["rec","text"]},
+{n:6,k:"battles",ic:"⚓",t:"Οι μάχες τους",s:"Σήκωσαν βάρη σιωπηλά, για να σου φαίνονται όλα εύκολα.",acts:["rec","text"],tip:"Μπορείς να κλειδώσεις με PIN ό,τι είναι πολύ προσωπικό (⋯ → Κλείδωμα)."},
+{n:7,k:"regrets",ic:"🕯",t:"Όσα μετανιώνουν",s:"Όχι για να κρίνεις. Για να δεις τον άνθρωπο πίσω από τον ήρωα.",acts:["rec","text"],lockDef:true,tip:"Ό,τι μπαίνει εδώ κλειδώνει αυτόματα με PIN."},
+{n:8,k:"meal",ic:"🍲",t:"Ένα γεύμα μαζί",s:"Η μαγεία δεν είναι στο πιάτο. Είναι στον πάγκο της κουζίνας, μαζί.",acts:["recipe","rec","gallery"],tip:"Μην σερβίρεις απλώς — μαγειρέψτε μαζί. Ηχογράφησε τη φωνή τους όσο εξηγούν."},
+{n:9,k:"film",ic:"🎞",t:"Η αγαπημένη τους ταινία",s:"Άσε τους να σου πουν τι γινόταν πίσω από τις σκηνές. Η νοσταλγία είναι μηχανή του χρόνου.",acts:["film","rec"]},
+{n:10,k:"silence",ic:"🤍",t:"Σιωπή μαζί",s:"Κανένα τηλέφωνο. Μόνο εσείς, καρδιά με καρδιά.",acts:["silence"],tip:"Πάτα «Ξεκινάμε», γύρισε το κινητό ανάποδα και άφησέ το. Η εφαρμογή μετράει τον χρόνο που περάσατε μαζί."}];
+const EX=[
+{n:11,k:"letter",ic:"✉️",t:"Γράμμα στο μέλλον",s:"Για κάποιον που θα το διαβάσει χρόνια μετά. Σφράγισέ το μέχρι τη μέρα που πρέπει.",acts:["letter","rec"],tip:"Ό,τι σφραγίσεις δεν ανοίγει πριν από την ημερομηνία — ούτε για σένα. Σφραγίζεται και ηχογράφηση: ⋯ → Σφράγισμα."},
+{n:12,k:"old",ic:"🖼",t:"Παλιές φωτογραφίες",s:"Φωτογραφίες, γράμματα, έγγραφα — και η ιστορία πίσω από το καθένα.",acts:["gallery","rec","text"]},
+{n:13,k:"will",ic:"📜",t:"Η θέλησή τους",s:"Πώς θέλουν να τους θυμόμαστε — και τι θα ήθελαν να γίνει με τη φωνή και την εικόνα τους στο μέλλον.",acts:["will","rec"],tip:"Ρώτα όσο είναι εδώ. Η δική τους απάντηση, με τη δική τους φωνή, είναι αυτή που μετράει."}];
+const ALL=[...M,...EX];
+const MS=n=>ALL.find(x=>x.n===+n);
+const REL=["Μητέρα","Πατέρας","Γιαγιά","Παππούς","Σύζυγος","Αδερφός/ή","Παιδί","Φίλος/η","Εγώ"];
+const P=id=>S.people.find(p=>p.id===id);
+const itemsOf=(pid,n)=>S.items.filter(i=>i.pid===pid&&(n==null||i.m===+n));
+const isSealed=i=>i.seal&&i.seal>today();
+let unlocked=false;
+
+/* ---------- nav & render ---------- */
+let V={v:"home"};
+function go(v,p={}){V={v,...p};render();scrollTo(0,0);}
+function render(){
+  const f={home:vHome,person:vPerson,mission:vMission,timeline:vTimeline,sealed:vSealed,inbox:vInbox,settings:vSettings}[V.v]||vHome;
+  $("#app").innerHTML=f();hdr();
+  document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.v===V.v||(b.dataset.v==="home"&&["person","mission","timeline"].includes(V.v))));
+  hydrate();}
+function hdr(){let t="Timeless Capsule",s="Το διηνεκές του χρόνου",back=false;
+  if(V.v==="person"){const p=P(V.p);t=p?p.name:"";s=p?(p.rel||"")+(p.from?` · από ${p.from}`:""):"";back=true;}
+  if(V.v==="mission"){const p=P(V.p),m=MS(V.n);t=m.n<=10?`${m.n}. ${m.t}`:m.t;s=p?p.name:"";back=true;}
+  if(V.v==="timeline"){t="Χρονολόγιο";s=P(V.p)?.name||"";back=true;}
+  if(V.v==="sealed"){t="Σφραγισμένα";s="Ανοίγουν στην ώρα τους";}
+  if(V.v==="inbox"){t="Παραλαβή";s="Κάψουλες από άλλα κινητά";}
+  if(V.v==="settings"){t="Ρυθμίσεις";s="Backup · PIN · Χώρος";}
+  $("#hdr").innerHTML=`<div class="hb">${back?`<button class="back" data-a="back">‹</button>`:""}<div><h1>${h(t)}</h1><p>${h(s)}${V.v==="home"?` <span class="cr">· Created by George Barbaris</span>`:""}</p></div></div>`;}
+async function hydrate(){for(const el of document.querySelectorAll("[data-m]")){const u=await mediaURL(el.dataset.m);if(!u)continue;el.src=el.tagName==="VIDEO"?u+"#t=0.1":u;}}
+const av=(p,big)=>p.photo?`<img class="av${big?" big":""}" data-m="${p.photo}" alt="">`:`<div class="av${big?" big":""}">${h((p.name||"?").trim()[0]||"?")}</div>`;
+const doneCount=pid=>M.filter(m=>itemsOf(pid,m.n).length).length;
+
+function vHome(){let o="";
+  const nb=S.items.length&&(!S.lastBackup||daysTo(S.lastBackup)<-30);
+  if(nb)o+=`<div class="banner">💾 <b>Κάνε backup.</b> Οι αναμνήσεις ζουν μόνο σε αυτό το κινητό. Τελευταίο: ${S.lastBackup?fd(S.lastBackup):"ποτέ"}.<button class="wide" data-a="backup">💾 Backup τώρα</button></div>`;
+  const op=S.items.filter(i=>i.seal&&i.seal<=today()&&!i.seen);
+  if(op.length)o+=`<div class="banner" data-a="nav" data-v="sealed">🎉 <b>${op.length} σφραγισμένο${op.length>1?"α":""} άνοιξε!</b> Πάτα να ${op.length>1?"τα":"το"} δεις.</div>`;
+  if(!S.people.length)o+=`<div class="card"><h3>Μια κάψουλα για όσους αγαπάμε</h3><p class="serif" style="margin:0 0 8px">Για κάθε αγαπημένο άνθρωπο, 10 μικρές αποστολές: η φωνή του, το γέλιο του, τα χέρια του, ο γραφικός του χαρακτήρας, τα όνειρα, οι μάχες, ένα γεύμα μαζί, η αγαπημένη του ταινία, μια σιωπή μαζί.</p><p class="muted" style="margin:0">Ό,τι μπαίνει εδώ μένει στο κινητό σου. Μπορείς να στείλεις μια κάψουλα σε όποιον έχει την εφαρμογή, να κλειδώσεις με PIN και να σφραγίσεις γράμματα για το μέλλον.</p></div>`;
+  o+=`<div class="people">${S.people.map(p=>{const d=doneCount(p.id);return`<div class="pc" data-a="openP" data-p="${p.id}">${av(p)}<b>${h(p.name)}</b><small>${h(p.rel||"")}${p.from?` · από ${h(p.from)}`:""}</small><div class="bar"><i style="width:${d*10}%"></i></div><small>${d}/10</small></div>`;}).join("")}</div>`;
+  o+=`<button class="wide" data-a="addPerson" style="padding:15px">+ Νέος αγαπημένος άνθρωπος</button>`;
+  if(!S.people.some(p=>p.rel==="Εγώ"))o+=`<button class="wide ghost" data-a="addMe">+ Η δική μου κάψουλα (για όσους έρθουν μετά)</button>`;
+  return o;}
+
+function vPerson(){const p=P(V.p);if(!p){V={v:"home"};return vHome();}
+  const all=itemsOf(p.id),d=doneCount(p.id);
+  let o=`<div class="hero"><div data-a="photoP" style="display:inline-block;cursor:pointer">${av(p,true)}</div>${p.photo?"":`<div class="muted">πάτα τον κύκλο για φωτογραφία</div>`}<div class="nm">${h(p.name)}</div><div class="muted">${h(p.rel||"")}${p.born?` · ${h(p.born)}`:""}</div><div class="sum">${d} από 10 αποστολές · ${all.length} αναμνήσεις</div></div>
+  <div class="acts"><button class="soft" data-a="bookP">📖 Βιβλίο PDF</button><button class="soft" data-a="sendP">📤 Στείλε</button><button class="soft" data-a="timeline">🕰 Χρονολόγιο</button><button class="soft" data-a="editP">✏️ Στοιχεία</button></div>
+  <h2>Οι 10 αποστολές</h2>`;
+  const row=m=>{const c=itemsOf(p.id,m.n),n=c.length;let sub=n?`${n} ${n===1?"ανάμνηση":"αναμνήσεις"}`:m.s.split(".")[0]+".";if(m.k==="silence"){const t=c.reduce((a,i)=>a+(i.dur||0),0);sub=t?`${dur(t)} μαζί σε σιωπή`:sub;}const sl=c.filter(isSealed).length;
+    return`<div class="ms" data-a="openM" data-n="${m.n}"><div class="no">${m.n<=10?m.n:m.ic}</div><div><div class="mt">${m.n<=10?m.ic+" ":""}${h(m.t)}</div><div class="mc">${h(sub)}${sl?` · ✉️ ${sl}`:""}</div></div><div class="ok">${n?"✓":""}</div></div>`;};
+  o+=M.map(row).join("")+`<h2 style="margin-top:16px">Ακόμα</h2>`+EX.map(row).join("");
+  return o;}
+
+function vMission(){const p=P(V.p),m=MS(V.n);if(!p){V={v:"home"};return vHome();}
+  let o=`<div class="mhead"><div class="big">${m.ic}</div><h2>${h(m.t)}</h2><p>${h(m.s)}</p></div>`;
+  const qs=Q[m.k];if(qs&&m.k!=="meal"){if(V.qi==null)V.qi=Math.floor(Math.random()*qs.length);o+=`<div class="q">«${h(qs[V.qi%qs.length])}»</div><div class="row" style="justify-content:flex-end"><button class="ghost" data-a="nextQ" style="padding:6px 12px">🎲 Άλλη ερώτηση</button></div>`;}
+  if(m.k==="silence"){const t=itemsOf(p.id,10).reduce((a,i)=>a+(i.dur||0),0);o+=`<div class="card" style="text-align:center"><div class="muted">Μαζί σε σιωπή, συνολικά</div><div class="serif" style="font-size:38px;font-weight:700">${t?dur(t):"0′"}</div><button class="wide" data-a="silStart" style="padding:16px">🤍 Ξεκινάμε</button></div>`;}
+  else{const L={rec:"🎙 Ηχογράφηση",text:"✍️ Γράψε",video:"🎥 Βίντεο γέλιου",smile:"😊 Φωτογραφία Χαμόγελου",hands:"✋ Φωτογράφισε τα χέρια",gallery:"🖼 Από τη συλλογή",note:"📄 Φωτογράφισε σημείωμα",sign:"✍️ Γράψε με το δάχτυλο",recipe:"🍲 Νέα συνταγή",film:"🎞 Πρόσθεσε ταινία",letter:"✉️ Γράψε γράμμα",will:"📜 Καταγραφή θέλησης"};
+    o+=`<div class="acts">${m.acts.map((a,i)=>`<button data-a="act" data-k="${a}" class="${i?"soft":""}"${m.acts.length%2&&i===0?' style="grid-column:1/-1;padding:16px"':""}>${L[a]}</button>`).join("")}</div>`;}
+  if(m.tip)o+=`<div class="tip">💡 ${h(m.tip)}</div>`;
+  const its=itemsOf(p.id,m.n).sort((a,b)=>b.created-a.created);
+  o+=its.length?its.map(itemHTML).join(""):`<div class="empty">Η κάψουλα περιμένει την πρώτη ανάμνηση.</div>`;
+  return o;}
+
+function itemHTML(i){let c="";
+  const meta=`<div class="meta">${fd(i.date)}${i.by&&i.by!==S.owner?` · από ${h(i.by)}`:""}${i.lock?" · 🔒":""}${i.seal?` · ✉️ ${fd(i.seal)}`:""}</div>`;
+  if(isSealed(i)){const d=daysTo(i.seal);return`<div class="item">${meta}<button class="dots" data-a="itemMenu" data-id="${i.id}">⋯</button><div class="sealed"><div style="font-size:34px">✉️</div><b>Σφραγισμένο</b><div class="muted">Ανοίγει ${fd(i.seal)} · σε ${d.toLocaleString("el-GR")} ${d===1?"μέρα":"μέρες"}</div>${i.to?`<div class="muted">Για: ${h(i.to)}</div>`:""}</div></div>`;}
+  if(i.lock&&!unlocked)return`<div class="item">${meta}<button class="dots" data-a="itemMenu" data-id="${i.id}">⋯</button><div class="lock">🔒 Κλειδωμένο<br><button class="ghost" data-a="unlock" style="margin-top:8px">Ξεκλείδωμα με PIN</button></div></div>`;
+  if(i.q)c+=`<div class="iq">«${h(i.q)}»</div>`;
+  if(i.to)c+=`<div class="iq">Προς: ${h(i.to)}</div>`;
+  if(i.title)c+=`<div class="serif" style="font-weight:700;font-size:18px;margin-top:4px">${h(i.title)}${i.year?` <span class="muted">(${h(i.year)})</span>`:""}</div>`;
+  if(i.ty==="audio")c+=`<audio controls preload="metadata" data-m="${i.media[0]}"></audio><div class="muted">🎙 ${mmss(i.dur)}</div>`;
+  if(i.ty==="video")c+=`<video controls playsinline preload="metadata" data-m="${i.media[0]}"></video>`;
+  if(["photo","sign"].includes(i.ty)&&i.media.length)c+=`<div class="thumbs${i.media.length===1?" one":""}">${i.media.map(id=>`<img data-m="${id}" data-a="viewImg" data-id="${id}" alt="">`).join("")}</div>`;
+  if(i.ty==="recipe"){if(i.ingr)c+=`<div class="muted" style="margin-top:6px"><b>Υλικά</b></div><div class="txt">${h(i.ingr)}</div>`;if(i.steps)c+=`<div class="muted" style="margin-top:6px"><b>Εκτέλεση</b></div><div class="txt">${h(i.steps)}</div>`;if(i.media.length)c+=`<div class="thumbs">${i.media.map(id=>`<img data-m="${id}" data-a="viewImg" data-id="${id}" alt="">`).join("")}</div>`;}
+  if(i.ty==="will"&&i.choice)c+=`<div style="margin-top:6px"><span class="cnt" style="font-size:13px;padding:3px 9px">${h(i.choice)}</span></div>`;
+  if(i.ty==="silence")c+=`<div class="serif" style="font-size:20px;margin-top:4px">🤍 ${dur(i.dur)} μαζί σε σιωπή</div>`;
+  if(i.text)c+=`<div class="txt">${h(i.text)}</div>`;
+  return`<div class="item">${meta}<button class="dots" data-a="itemMenu" data-id="${i.id}">⋯</button>${c}</div>`;}
+
+function vTimeline(){const p=P(V.p);const its=itemsOf(p.id).sort((a,b)=>b.date.localeCompare(a.date)||b.created-a.created);
+  if(!its.length)return`<div class="empty">Ακόμα τίποτα.</div>`;let o="",yr="";
+  its.forEach(i=>{const y=i.date.slice(0,4);if(y!==yr){yr=y;o+=`<div class="yr">${y}</div>`;}const m=MS(i.m);
+    const lab=isSealed(i)?"✉️ Σφραγισμένο":i.lock&&!unlocked?"🔒 Κλειδωμένο":(i.title||i.q||i.to||(i.text||"").slice(0,60)||({audio:"Ηχογράφηση",video:"Βίντεο",photo:"Φωτογραφίες",sign:"Γραφή",silence:dur(i.dur)+" σιωπή"}[i.ty]||""));
+    o+=`<div class="tl" data-a="openM" data-n="${i.m}"><div class="d">${fd(i.date)}</div><div>${m.ic} <b>${h(m.t)}</b><br><span class="muted">${h(lab)}</span></div></div>`;});
+  return o;}
+
+function vSealed(){const its=S.items.filter(i=>i.seal).sort((a,b)=>a.seal.localeCompare(b.seal));
+  if(!its.length)return`<div class="card"><h3>✉️ Τίποτα σφραγισμένο ακόμα</h3><p class="muted" style="margin:0">Γράψε ένα «Γράμμα στο μέλλον» μέσα στην κάψουλα ενός ανθρώπου, ή σφράγισε οποιαδήποτε ανάμνηση (⋯ → Σφράγισμα). Δεν θα ανοίξει πριν από τη μέρα που θα ορίσεις — ούτε για σένα.</p></div>`;
+  const cl=its.filter(isSealed),op=its.filter(i=>!isSealed(i));let o="";
+  if(op.length){o+=`<h2>🎉 Άνοιξαν</h2>`+op.map(i=>`<div class="sum" style="text-align:left">${MS(i.m).ic} ${h(P(i.pid)?.name||"")} · άνοιξε ${fd(i.seal)}</div>`+itemHTML(i)).join("");op.forEach(i=>i.seen=1);save();}
+  if(cl.length)o+=`<h2 style="margin-top:14px">⏳ Περιμένουν</h2>`+cl.map(i=>`<div class="ms" data-a="openPM" data-p="${i.pid}" data-n="${i.m}"><div class="ic">✉️</div><div><div class="mt">${h(P(i.pid)?.name||"")} · ${h(MS(i.m).t)}</div><div class="mc">Ανοίγει ${fd(i.seal)} · σε ${daysTo(i.seal).toLocaleString("el-GR")} μέρες${i.to?` · για ${h(i.to)}`:""}</div></div></div>`).join("");
+  return o;}
+
+function vInbox(){const rec=S.people.filter(p=>p.from);
+  return`<div class="card"><h3>📥 Άνοιξε μια κάψουλα που σου έστειλαν</h3><p class="muted" style="margin:0 0 8px">1. Ο άλλος πατάει <b>📤 Στείλε</b> στην κάψουλα και σου τη στέλνει (AirDrop, WhatsApp, Viber, email).<br>2. Εσύ αποθηκεύεις το αρχείο <b>.tcap</b> στα <b>Αρχεία</b> (Save to Files).<br>3. Εδώ πατάς το κουμπί και το διαλέγεις.</p><button class="wide" data-a="importF" style="padding:15px">📂 Διάλεξε αρχείο .tcap</button></div>
+  ${rec.length?`<h2>Ήρθαν από άλλους</h2><div class="people">${rec.map(p=>`<div class="pc" data-a="openP" data-p="${p.id}">${av(p)}<b>${h(p.name)}</b><small>από ${h(p.from)}</small></div>`).join("")}</div>`:""}
+  <div class="tip">💡 Αν η κάψουλα υπάρχει ήδη στο κινητό σου, μπαίνουν μόνο οι καινούργιες αναμνήσεις — τίποτα δεν διπλασιάζεται και τίποτα δικό σου δεν σβήνεται. Τα σφραγισμένα μένουν σφραγισμένα.</div>`;}
+
+function vSettings(){return`<div class="card"><h3>👤 Το όνομά σου</h3><p class="muted" style="margin:0 0 8px">Φαίνεται ως «από…» όταν στέλνεις κάψουλα.</p><div class="row"><input id="own" value="${h(S.owner)}" placeholder="π.χ. Γιώργος" style="flex:1"><button data-a="setName">OK</button></div></div>
+  <div class="card"><h3>💾 Backup</h3><p class="muted" style="margin:0 0 8px">Όλες οι κάψουλες σε ένα αρχείο. Στείλ' το στα Αρχεία/iCloud. Αν χαθεί το κινητό, με αυτό τα παίρνεις όλα πίσω. Τελευταίο: <b>${S.lastBackup?fd(S.lastBackup):"ποτέ"}</b></p><button class="wide" data-a="backup">💾 Πλήρες backup</button><button class="wide ghost" data-a="importF">♻️ Επαναφορά από backup / .tcap</button></div>
+  <div class="card"><h3>🔒 PIN</h3><p class="muted" style="margin:0 0 8px">Για τα κλειδωμένα (π.χ. «Όσα μετανιώνουν»). ${S.pinH?"Έχει οριστεί.":"Δεν έχει οριστεί."}</p><button class="wide soft" data-a="setPin">${S.pinH?"Αλλαγή PIN":"Όρισε PIN"}</button></div>
+  <div class="card"><h3>📦 Χώρος</h3><p class="muted" id="stor" style="margin:0">…</p></div>
+  <div class="card"><h3>📲 Εγκατάσταση στο iPhone</h3><p class="muted" style="margin:0">Safari → Κοινοποίηση → «Προσθήκη στην οθόνη Αφετηρίας». Δουλεύει και χωρίς internet. Μετά από ενημέρωση: άνοιξέ την μία φορά με internet, κλείσ' την και ξανάνοιξέ την.</p></div>
+  <p class="sum">Timeless Capsule · Το διηνεκές του χρόνου<br>Created by George Barbaris</p>`;}
+
+/* ---------- generic UI helpers ---------- */
+function modal(html,cls=""){const m=$("#modal");m.className="modal on "+cls;m.innerHTML=`<div class="sheet">${html}</div>`;return m;}
+function closeModal(){const m=$("#modal");m.className="modal";m.innerHTML="";}
+function form(title,fields,ok="💾 Αποθήκευση",intro=""){return new Promise(res=>{
+  const m=modal(`<h3>${title}</h3>${intro}${fields.map(f=>`<label class="fl"><span>${f.l}</span>${
+    f.t==="area"?`<textarea data-k="${f.k}" rows="${f.rows||5}" placeholder="${h(f.ph||"")}">${h(f.v||"")}</textarea>`:
+    f.t==="chips"?`<div class="chips" data-k="${f.k}">${f.opts.map(o=>`<button type="button" class="chip${o===f.v?" on":""}">${h(o)}</button>`).join("")}</div>${f.free===false?"":`<input data-k="${f.k}__o" placeholder="ή γράψε…" value="${f.v&&!f.opts.includes(f.v)?h(f.v):""}">`}`:
+    `<input data-k="${f.k}" type="${f.t||"text"}" placeholder="${h(f.ph||"")}" value="${h(f.v||"")}"${f.min?` min="${f.min}"`:""}>`}${f.hint?`<small class="muted">${f.hint}</small>`:""}</label>`).join("")}<div class="row"><button data-x="ok" style="flex:1">${ok}</button><button data-x="no" class="ghost">Άκυρο</button></div>`);
+  m.querySelectorAll(".chips").forEach(c=>c.onclick=e=>{const b=e.target.closest(".chip");if(!b)return;const was=b.classList.contains("on");c.querySelectorAll(".chip").forEach(x=>x.classList.remove("on"));if(!was)b.classList.add("on");});
+  m.querySelector("[data-x=no]").onclick=()=>{closeModal();res(null);};
+  m.querySelector("[data-x=ok]").onclick=()=>{const o={};fields.forEach(f=>{if(f.t==="chips"){const fr=m.querySelector(`[data-k="${f.k}__o"]`);o[f.k]=(fr&&fr.value.trim())||m.querySelector(`.chips[data-k="${f.k}"] .chip.on`)?.textContent||"";}else o[f.k]=m.querySelector(`[data-k="${f.k}"]`).value.trim();});
+    for(const f of fields)if(f.req&&!o[f.k]){toast(`Συμπλήρωσε: ${f.l}`);return;}closeModal();res(o);};
+  const first=m.querySelector("input,textarea");if(first&&!first.value&&fields[0].t!=="chips")setTimeout(()=>first.focus(),250);});}
+function sheet(title,opts){return new Promise(res=>{const m=modal(`<h3>${title}</h3>${opts.map((o,i)=>`<button class="wide ${o.danger?"ghost":"soft"}" data-i="${i}" style="text-align:left${o.danger?";color:#b3261e":""}">${o.l}</button>`).join("")}<button class="wide ghost" data-i="-1">Άκυρο</button>`);
+  m.onclick=e=>{const b=e.target.closest("[data-i]");if(!b)return;closeModal();res(+b.dataset.i);};});}
+function pick(accept,multiple,capture){return new Promise(res=>{const i=document.createElement("input");i.type="file";if(accept)i.accept=accept;i.multiple=!!multiple;if(capture)i.setAttribute("capture",capture);i.style.display="none";document.body.appendChild(i);
+  let done=false;const fin=v=>{if(done)return;done=true;i.remove();res(v);};i.onchange=()=>fin([...i.files]);i.addEventListener("cancel",()=>fin([]));i.click();});}
+async function shrink(file,max=2000,q=.85){try{const u=URL.createObjectURL(file),img=new Image();img.src=u;await img.decode();const k=Math.min(1,max/Math.max(img.naturalWidth,img.naturalHeight));const c=document.createElement("canvas");c.width=Math.round(img.naturalWidth*k);c.height=Math.round(img.naturalHeight*k);c.getContext("2d").drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(u);return await new Promise(r=>c.toBlob(r,"image/jpeg",q));}catch(e){return file;}}
+async function shareFile(blob,name){const file=new File([blob],name,{type:blob.type||"application/octet-stream"});
+  try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:name});return true;}}catch(e){return e&&e.name==="AbortError"?false:dl();}
+  return dl();function dl(){const a=document.createElement("a");a.href=URL.createObjectURL(file);a.download=name;document.body.appendChild(a);a.click();a.remove();return true;}}
+async function sha(s){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode("tcapsule:"+s));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("");}
+function askPin(t){return new Promise(res=>{const m=modal(`<h3>${t}</h3><input id="pinI" type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="off" maxlength="8" style="font-size:26px;text-align:center;letter-spacing:8px"><div class="row" style="margin-top:10px"><button data-x="ok" style="flex:1">OK</button><button data-x="no" class="ghost">Άκυρο</button></div>`);
+  const i=m.querySelector("#pinI");setTimeout(()=>i.focus(),200);const ok=()=>{const v=i.value;closeModal();res(v||null);};m.querySelector("[data-x=ok]").onclick=ok;i.onkeydown=e=>{if(e.key==="Enter")ok();};m.querySelector("[data-x=no]").onclick=()=>{closeModal();res(null);};});}
+async function newPin(){const a=await askPin("Νέο PIN (τουλάχιστον 4 ψηφία)");if(!a)return false;if(a.length<4){toast("Τουλάχιστον 4 ψηφία");return false;}const b=await askPin("Ξανά το ίδιο PIN");if(a!==b){toast("Δεν ταιριάζουν");return false;}S.pinH=await sha(a);unlocked=true;await saveNow();toast("✔ PIN ορίστηκε — μην το ξεχάσεις!",3000);return true;}
+async function ensurePin(){return S.pinH?true:newPin();}
+async function unlock(){if(unlocked||!S.pinH)return true;const p=await askPin("🔒 Γράψε το PIN");if(!p)return false;if(await sha(p)===S.pinH){unlocked=true;return true;}toast("Λάθος PIN");return false;}
+
+/* ---------- audio recorder ---------- */
+function recorder(q){return new Promise(res=>{
+  let stream=null,mr=null,chunks=[],t0=0,tick=null,raf=0,ac=null,blob=null,secs=0;
+  const m=modal(`<h3>🎙 Ηχογράφηση</h3>${q?`<div class="q">«${h(q)}»</div>`:""}<div class="rec"><div class="rt" id="rt">0:00</div><div class="lvl"><i id="lv"></i></div><div id="rp" style="width:100%"></div></div><div class="row" id="rb" style="justify-content:center"></div>`);
+  const rb=m.querySelector("#rb"),rt=m.querySelector("#rt"),lv=m.querySelector("#lv"),rp=m.querySelector("#rp");
+  const clean=()=>{clearInterval(tick);cancelAnimationFrame(raf);if(stream)stream.getTracks().forEach(t=>t.stop());stream=null;if(ac){ac.close().catch(()=>{});ac=null;}};
+  const cancel=()=>{if(mr&&mr.state!=="inactive"){mr.onstop=null;mr.stop();}clean();closeModal();res(null);};
+  const idle=()=>{rb.innerHTML=`<button class="recbtn" data-x="go">● Έναρξη</button><button class="ghost" data-x="no">Άκυρο</button>`;rb.querySelector("[data-x=go]").onclick=start;rb.querySelector("[data-x=no]").onclick=cancel;};
+  async function start(){rp.innerHTML="";chunks=[];
+    try{stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}});}catch(e){toast("Δεν δόθηκε άδεια μικροφώνου",3000);return;}
+    const mime=["audio/mp4","audio/webm;codecs=opus","audio/webm"].find(t=>window.MediaRecorder&&MediaRecorder.isTypeSupported(t))||"";
+    try{mr=new MediaRecorder(stream,mime?{mimeType:mime}:{});}catch(e){toast("Η ηχογράφηση δεν υποστηρίζεται εδώ");clean();return;}
+    mr.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data);};
+    mr.onstop=()=>{secs=(Date.now()-t0)/1000;clean();blob=new Blob(chunks,{type:mr.mimeType||mime||"audio/mp4"});const u=URL.createObjectURL(blob);rp.innerHTML=`<audio controls src="${u}" style="width:100%"></audio>`;lv.style.width="0";
+      rb.innerHTML=`<button data-x="keep" style="flex:1">💾 Κράτα το</button><button class="soft" data-x="again">↺ Ξανά</button><button class="ghost" data-x="no">Άκυρο</button>`;
+      rb.querySelector("[data-x=keep]").onclick=()=>{closeModal();res({blob,dur:secs});};rb.querySelector("[data-x=again]").onclick=()=>{URL.revokeObjectURL(u);idle();rt.textContent="0:00";};rb.querySelector("[data-x=no]").onclick=cancel;};
+    mr.start(1000);t0=Date.now();tick=setInterval(()=>{rt.textContent=mmss((Date.now()-t0)/1000);if(Date.now()-t0>3600e3)mr.stop();},250);
+    try{ac=new(window.AudioContext||window.webkitAudioContext)();const an=ac.createAnalyser();an.fftSize=512;ac.createMediaStreamSource(stream).connect(an);const d=new Uint8Array(an.fftSize);
+      const loop=()=>{an.getByteTimeDomainData(d);let pk=0;for(const x of d)pk=Math.max(pk,Math.abs(x-128));lv.style.width=Math.min(100,pk/1.1)+"%";raf=requestAnimationFrame(loop);};loop();}catch(e){}
+    rb.innerHTML=`<button class="recbtn on" data-x="stop">■ Τέλος</button>`;rb.querySelector("[data-x=stop]").onclick=()=>mr.state!=="inactive"&&mr.stop();}
+  idle();});}
+
+/* ---------- camera: single shot & 10-shot smile burst ---------- */
+function camera(opt){return new Promise(res=>{
+  let face=opt.face||"user",stream=null;
+  const ovl=opt.overlay==="hands"?`<div class="ov"><span>Τα χέρια μέσα στο πλαίσιο</span></div>`:opt.overlay==="paper"?`<div class="ov paper"><span>Το σημείωμα μέσα στο πλαίσιο</span></div>`:"";
+  const m=modal(`<div class="cam"><video id="cv" playsinline autoplay muted></video>${ovl}<div class="cd" id="cd"></div><div class="flash" id="fl"></div></div><p class="muted" style="text-align:center;margin:8px 0">${opt.hint||""}</p><div class="row" id="cb"><button class="ghost" data-x="sw" style="color:#eee">🔄</button><button class="shutter" data-x="sh">${opt.burst?"😊 Τράβα 10":"📸 Λήψη"}</button><button class="ghost" data-x="no" style="color:#eee">✕</button></div>`,"full");
+  const v=m.querySelector("#cv"),cd=m.querySelector("#cd"),fl=m.querySelector("#fl"),cb=m.querySelector("#cb");
+  const stop=()=>{if(stream)stream.getTracks().forEach(t=>t.stop());stream=null;};
+  const fallback=async()=>{stop();closeModal();const f=await pick("image/*",!!opt.burst);const out=[];for(const x of f)out.push(await shrink(x));res(out.length?out:null);};
+  async function start(){stop();try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:face,width:{ideal:1920},height:{ideal:1440}},audio:false});v.srcObject=stream;v.classList.toggle("mir",face==="user");await v.play().catch(()=>{});}catch(e){toast("Δεν άνοιξε η κάμερα — διάλεξε από τη συλλογή",3000);fallback();}}
+  const grab=()=>{const w=v.videoWidth||1280,hh=v.videoHeight||960,k=Math.min(1,1600/Math.max(w,hh)),c=document.createElement("canvas");c.width=Math.round(w*k);c.height=Math.round(hh*k);c.getContext("2d").drawImage(v,0,0,c.width,c.height);return new Promise(r=>c.toBlob(r,"image/jpeg",.85));};
+  const flash=()=>{fl.style.opacity=".85";setTimeout(()=>fl.style.opacity="0",110);};
+  m.querySelector("[data-x=sw]").onclick=()=>{face=face==="user"?"environment":"user";start();};
+  m.querySelector("[data-x=no]").onclick=()=>{stop();closeModal();res(null);};
+  m.querySelector("[data-x=sh]").onclick=async()=>{cb.style.visibility="hidden";
+    if(opt.burst){for(const n of[3,2,1]){cd.innerHTML=`${n}<small>${n===1?"Πείτε… τυρί! 😄":"ετοιμαστείτε…"}</small>`;await sleep(800);}cd.innerHTML="";const shots=[];for(let k=0;k<10;k++){shots.push(await grab());flash();await sleep(230);}stop();choose(shots);}
+    else{const b=await grab();flash();stop();const u=URL.createObjectURL(b);m.querySelector(".sheet").innerHTML=`<img src="${u}" style="width:100%;max-height:70vh;object-fit:contain;border-radius:12px"><div class="row" style="margin-top:10px"><button data-x="k" style="flex:1">💾 Κράτα την</button><button class="soft" data-x="a">↺ Ξανά</button><button class="ghost" data-x="n" style="color:#eee">✕</button></div>`;
+      const sh=m.querySelector(".sheet");sh.querySelector("[data-x=k]").onclick=()=>{closeModal();res([b]);};sh.querySelector("[data-x=a]").onclick=()=>{closeModal();camera({...opt,face}).then(res);};sh.querySelector("[data-x=n]").onclick=()=>{closeModal();res(null);};}};
+  function choose(shots){const us=shots.map(b=>URL.createObjectURL(b)),sel=new Set();const sh=m.querySelector(".sheet");
+    sh.innerHTML=`<h3 style="color:#eee">Διάλεξε τα καλύτερα χαμόγελα</h3><div class="bgrid">${us.map((u,i)=>`<img src="${u}" data-i="${i}">`).join("")}</div><div class="row"><button data-x="k" style="flex:1" disabled>💾 Κράτα (0)</button><button class="soft" data-x="a">↺ Ξανά</button><button class="ghost" data-x="n" style="color:#eee">✕</button></div>`;
+    const kb=sh.querySelector("[data-x=k]");sh.querySelector(".bgrid").onclick=e=>{const i=e.target.dataset.i;if(i==null)return;sel.has(+i)?sel.delete(+i):sel.add(+i);e.target.classList.toggle("sel");kb.textContent=`💾 Κράτα (${sel.size})`;kb.disabled=!sel.size;};
+    kb.onclick=()=>{closeModal();res([...sel].sort((a,b)=>a-b).map(i=>shots[i]));};sh.querySelector("[data-x=a]").onclick=()=>{closeModal();camera({...opt,face}).then(res);};sh.querySelector("[data-x=n]").onclick=()=>{closeModal();res(null);};}
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){fallback();return;}start();});}
+
+/* ---------- signature / handwriting pad ---------- */
+function signPad(){return new Promise(res=>{const m=modal(`<h3>✍️ Γράψε με το δάχτυλο</h3><p class="muted" style="margin:0 0 8px">Ένα όνομα, ένα «σ' αγαπώ», μια υπογραφή — με το δικό τους χέρι.</p><canvas class="sp" id="sp"></canvas><div class="row" style="margin-top:10px"><button data-x="ok" style="flex:1">💾 Κράτα</button><button class="soft" data-x="cl">Καθάρισμα</button><button class="ghost" data-x="no">Άκυρο</button></div>`);
+  const c=m.querySelector("#sp"),dpr=Math.min(3,devicePixelRatio||1),r=c.getBoundingClientRect();c.width=r.width*dpr;c.height=r.height*dpr;const g=c.getContext("2d");
+  const bg=()=>{g.fillStyle="#fbf7ee";g.fillRect(0,0,c.width,c.height);};bg();g.strokeStyle="#1d1712";g.lineWidth=3.2*dpr;g.lineCap=g.lineJoin="round";let dn=false,lx,ly,ink=false;
+  const pt=e=>{const b=c.getBoundingClientRect();return[(e.clientX-b.left)*dpr,(e.clientY-b.top)*dpr];};
+  c.onpointerdown=e=>{dn=true;c.setPointerCapture(e.pointerId);[lx,ly]=pt(e);};
+  c.onpointermove=e=>{if(!dn)return;const[x,y]=pt(e);g.beginPath();g.moveTo(lx,ly);g.lineTo(x,y);g.stroke();lx=x;ly=y;ink=true;};
+  c.onpointerup=c.onpointercancel=()=>dn=false;
+  m.querySelector("[data-x=cl]").onclick=()=>{bg();ink=false;};
+  m.querySelector("[data-x=no]").onclick=()=>{closeModal();res(null);};
+  m.querySelector("[data-x=ok]").onclick=()=>{if(!ink){toast("Γράψε κάτι πρώτα");return;}c.toBlob(b=>{closeModal();res(b);},"image/png");};});}
+
+/* ---------- adding memories ---------- */
+async function addItem(base){const m=MS(V.n);const it={id:uid(),pid:V.p,m:+V.n,date:today(),created:Date.now(),by:S.owner,media:[],...base};
+  if(m.lockDef){if(await ensurePin())it.lock=true;else toast("Μπήκε χωρίς κλείδωμα (δεν ορίστηκε PIN)",3000);}
+  S.items.push(it);await saveNow();render();toast(it.seal?"✉️ Σφραγίστηκε μέχρι "+fd(it.seal):"✔ Μπήκε στην κάψουλα");}
+const curQ=()=>{const m=MS(V.n),qs=Q[m.k];return qs&&m.k!=="meal"?qs[(V.qi||0)%qs.length]:"";};
+async function photosToMedia(blobs){const ids=[];for(const b of blobs)ids.push(await putMedia(b));return ids;}
+const ACT={
+  async rec(){const r=await recorder(curQ());if(!r)return;await addItem({ty:"audio",q:curQ(),media:[await putMedia(r.blob)],dur:r.dur});},
+  async text(){const q=curQ();const r=await form("✍️ Γράψε",[{k:"text",l:q?`«${q}»`:"Κείμενο",t:"area",rows:8,ph:"Γράψε τα λόγια τους όπως τα είπαν…",req:true}]);if(r)await addItem({ty:"text",q,text:r.text});},
+  async video(){const f=(await pick("video/*"))[0];if(!f)return;if(f.size>300*1048576&&!confirm(`Το βίντεο είναι ${mb(f.size)} — πολύ μεγάλο για το κινητό. Να μπει παρ' όλα αυτά;`))return;
+    toast("⏳ Αποθήκευση βίντεο…",4000);let d=0;try{d=await new Promise(r=>{const v=document.createElement("video");v.preload="metadata";v.onloadedmetadata=()=>r(v.duration||0);v.onerror=()=>r(0);v.src=URL.createObjectURL(f);});}catch(e){}
+    await addItem({ty:"video",title:"Το γέλιο τους",media:[await putMedia(f)],dur:d});},
+  async smile(){const b=await camera({burst:true,face:"user",hint:"Γύρνα την κάμερα σε εκείνους (🔄). Μετά τη μέτρηση βγαίνουν 10 φωτογραφίες."});if(b&&b.length)await addItem({ty:"photo",title:"😊 Χαμόγελα",media:await photosToMedia(b)});},
+  async hands(){const b=await camera({face:"environment",overlay:"hands",hint:"Φως από παράθυρο, όχι flash."});if(b)await addItem({ty:"photo",title:"✋ Τα χέρια τους",media:await photosToMedia(b)});},
+  async note(){const b=await camera({face:"environment",overlay:"paper",hint:"Ίσια από πάνω, με καλό φως."});if(b)await addItem({ty:"photo",title:"📄 Σημείωμα",media:await photosToMedia(b)});},
+  async sign(){const b=await signPad();if(b)await addItem({ty:"sign",title:"✍️ Με το δικό τους χέρι",media:[await putMedia(b)]});},
+  async gallery(){const f=await pick("image/*",true);if(!f.length)return;toast("⏳ Φωτογραφίες…");const bl=[];for(const x of f)bl.push(await shrink(x));const m=MS(V.n);let text="";
+    if(m.k==="old"){const r=await form("Η ιστορία πίσω από τη φωτογραφία",[{k:"text",l:"(προαιρετικό)",t:"area",ph:"Ποιοι, πού, πότε, τι έγινε…"}],"💾 Κράτα");text=r?r.text:"";}
+    await addItem({ty:"photo",media:await photosToMedia(bl),text});},
+  async recipe(){const r=await form("🍲 Συνταγή",[{k:"title",l:"Φαγητό",ph:"π.χ. Γεμιστά της μαμάς",req:true},{k:"ingr",l:"Υλικά",t:"area",rows:5},{k:"steps",l:"Εκτέλεση",t:"area",rows:6},{k:"text",l:"Το μυστικό / η ιστορία του",t:"area",rows:3}]);if(!r)return;
+    await addItem({ty:"recipe",...r});toast("✔ Μπήκε · πρόσθεσε φωτογραφίες με «🖼 Από τη συλλογή»",3500);},
+  async film(){const r=await form("🎞 Αγαπημένη ταινία ή τραγούδι",[{k:"title",l:"Τίτλος",req:true},{k:"year",l:"Χρονιά",ph:"π.χ. 1964",t:"text"},{k:"text",l:"Γιατί τη/το αγαπούν — η ιστορία πίσω από αυτή",t:"area",rows:6}]);if(r)await addItem({ty:"film",...r});},
+  async letter(){const t=new Date();t.setFullYear(t.getFullYear()+10);
+    const r=await form("✉️ Γράμμα στο μέλλον",[{k:"to",l:"Για ποιον",ph:"π.χ. στον εγγονό μου, όταν κλείσει τα 18"},{k:"text",l:"Το γράμμα",t:"area",rows:10,req:true},{k:"seal",l:"Σφράγισε μέχρι",t:"date",v:t.toISOString().slice(0,10),min:today(),hint:"Άφησέ το κενό αν δεν θέλεις σφράγισμα. Δεν ανοίγει πριν — ούτε για σένα."}],"✉️ Σφράγισε");
+    if(!r)return;if(r.seal&&r.seal<=today())r.seal="";await addItem({ty:"letter",to:r.to,text:r.text,seal:r.seal||null});},
+  async will(){const r=await form("📜 Η θέλησή τους",[{k:"choice",l:"Θα ήθελαν ποτέ μια ψηφιακή εκδοχή τους (φωνή/εικόνα);",t:"chips",opts:["Ναι","Μόνο για την οικογένεια","Όχι","Δεν ξέρω ακόμα"],free:false,req:true},{k:"text",l:"Με τα δικά τους λόγια",t:"area",rows:6,ph:"Πώς θέλουν να τους θυμόμαστε, τι ναι και τι όχι…"}]);
+    if(!r)return;await addItem({ty:"will",q:"Θέληση για το μέλλον",choice:r.choice,text:r.text});if(confirm("Θέλεις να το πουν και με τη φωνή τους; (συνιστάται)"))ACT.rec();}};
+
+/* ---------- silence together ---------- */
+let silT=null;
+function silShow(){const s=JSON.parse(localStorage.getItem("tc_sil")||"null");if(!s)return;const p=P(s.pid);$("#silW").textContent=p?`Με ${p.name}`:"";$("#sil").classList.add("on");
+  const up=()=>$("#silT").textContent=mmss((Date.now()-s.start)/1000);up();clearInterval(silT);silT=setInterval(up,1000);
+  try{navigator.wakeLock&&navigator.wakeLock.request("screen").catch(()=>{});}catch(e){}}
+$("#silEnd").onclick=async()=>{const s=JSON.parse(localStorage.getItem("tc_sil")||"null");clearInterval(silT);$("#sil").classList.remove("on");localStorage.removeItem("tc_sil");if(!s)return;
+  const secs=(Date.now()-s.start)/1000;if(secs<20){toast("Πολύ σύντομο — δεν μετρήθηκε");return;}
+  const r=await form(`🤍 ${dur(secs)} μαζί`,[{k:"text",l:"Μια σκέψη από αυτή τη στιγμή (προαιρετικά)",t:"area",rows:4}],"💾 Κράτα");
+  S.items.push({id:uid(),pid:s.pid,m:10,ty:"silence",dur:secs,text:r?r.text:"",date:today(),created:Date.now(),by:S.owner,media:[]});await saveNow();V={v:"mission",p:s.pid,n:10};render();};
+
+/* ---------- capsule file (.tcap): send / receive / backup ---------- */
+async function buildPack(kind,people,items){const ids=new Set();people.forEach(p=>p.photo&&ids.add(p.photo));items.forEach(i=>(i.media||[]).forEach(x=>ids.add(x)));
+  const parts=[],media=[];for(const id of ids){const r=await DB.get("media",id);if(!r)continue;media.push({id,t:r.t,s:r.b.byteLength});parts.push(r.b);}
+  const enc=new TextEncoder(),hb=enc.encode(JSON.stringify({app:"timeless-capsule",v:1,kind,from:S.owner,date:today(),people,items,media}));
+  return new Blob([enc.encode("TCAP1"+String(hb.length).padStart(12,"0")),hb,...parts],{type:"application/octet-stream"});}
+async function readPack(file){const dec=new TextDecoder(),pre=dec.decode(await file.slice(0,17).arrayBuffer());if(!pre.startsWith("TCAP1"))throw new Error("not a capsule");
+  const n=parseInt(pre.slice(5),10),head=JSON.parse(dec.decode(await file.slice(17,17+n).arrayBuffer()));let o=17+n;head.media.forEach(x=>{x.o=o;o+=x.s;});return head;}
+async function mergePack(head,file){let np=0,ni=0;
+  for(const x of head.media){if(await DB.has("media",x.id))continue;await DB.put("media",x.id,{t:x.t,b:await file.slice(x.o,x.o+x.s).arrayBuffer()});}
+  head.people.forEach(p=>{const e=P(p.id);if(!e){S.people.push(head.kind==="person"?{...p,from:p.from||head.from||"?"}:p);np++;}else if(!e.photo&&p.photo)e.photo=p.photo;});
+  head.items.forEach(i=>{if(!S.items.some(x=>x.id===i.id)){S.items.push(i);ni++;}});
+  if(head.kind==="backup"){if(!S.owner&&head.from)S.owner=head.from;if(!S.pinH&&head.pinH)S.pinH=head.pinH;}
+  await saveNow();return{np,ni};}
+async function importFile(){const f=(await pick(""))[0];if(!f)return;let head;try{head=await readPack(f);}catch(e){toast("⚠ Δεν είναι αρχείο κάψουλας (.tcap)",3500);return;}
+  const names=head.people.map(p=>p.name).join(", ");
+  if(!confirm(head.kind==="backup"?`♻️ Backup της ${fd(head.date)}\n${head.people.length} άνθρωποι · ${head.items.length} αναμνήσεις\n\nΝα γίνει επαναφορά; (Τίποτα δικό σου δεν σβήνεται.)`:`📥 Κάψουλα από ${head.from||"?"}\n${names} · ${head.items.length} αναμνήσεις · ${mb(f.size)}\n\nΝα μπει στο κινητό σου;`))return;
+  toast("⏳ Άνοιγμα κάψουλας…",5000);const r=await mergePack(head,f);toast(`✔ ${r.ni} νέες αναμνήσεις${r.np?` · ${r.np} νέοι άνθρωποι`:""}`,3500);
+  if(head.kind==="person"&&head.people[0])go("person",{p:head.people[0].id});else render();}
+async function sendPerson(){const p=P(V.p),its=itemsOf(p.id),lk=its.filter(i=>i.lock).length,sl=its.filter(isSealed).length;
+  const m=modal(`<h3>📤 Στείλε την κάψουλα «${h(p.name)}»</h3><p class="muted" style="margin:0 0 8px">Φτιάχνεται ένα αρχείο <b>.tcap</b>. Στείλ' το με AirDrop, WhatsApp, Viber ή email. Ο άλλος το ανοίγει από την <b>📥 Παραλαβή</b> στη δική του εφαρμογή. Από εκεί και πέρα ο καθένας συνεχίζει τη δική του κάψουλα.</p>
+    ${lk?`<label class="chk"><input type="checkbox" id="inL"> <span>Να μπουν και τα ${lk} κλειδωμένα 🔒 (θα θέλουν το δικό τους PIN στο άλλο κινητό)</span></label>`:""}
+    ${sl?`<div class="tip">✉️ ${sl} σφραγισμένα πάνε σφραγισμένα και ανοίγουν την ίδια μέρα.</div>`:""}
+    <div class="row"><button data-x="ok" style="flex:1">📤 Δημιουργία & αποστολή</button><button data-x="no" class="ghost">Άκυρο</button></div>`);
+  m.querySelector("[data-x=no]").onclick=closeModal;
+  m.querySelector("[data-x=ok]").onclick=async()=>{const inL=m.querySelector("#inL")?.checked;if(inL&&!(await unlock()))return;closeModal();toast("⏳ Πακετάρισμα…",4000);
+    const b=await buildPack("person",[p],its.filter(i=>inL||!i.lock));await shareFile(b,`Timeless_Capsule_${p.name.replace(/[^\p{L}\p{N}]+/gu,"_")}_${today()}.tcap`);};}
+async function backup(){if(!S.items.length&&!S.people.length){toast("Δεν υπάρχει τίποτα ακόμα");return;}toast("⏳ Backup…",4000);
+  const b=await buildPack("backup",S.people,S.items);const ok=await shareFile(b,`Timeless_Capsule_backup_${today()}.tcap`);if(ok!==false){S.lastBackup=today();await saveNow();render();toast(`✔ Backup ${mb(b.size)}`);}}
+
+/* ---------- memory book PDF ---------- */
+function makePdf(pages){const enc=new TextEncoder(),ch=[],off=[];let len=0;const w=x=>{const b=typeof x==="string"?enc.encode(x):x;ch.push(b);len+=b.length;};
+  const obj=(i,f)=>{off[i]=len;w(`${i} 0 obj\n`);f();w("\nendobj\n");};const N=pages.length;w("%PDF-1.4\n");obj(1,()=>w("<< /Type /Catalog /Pages 2 0 R >>"));
+  obj(2,()=>w(`<< /Type /Pages /Count ${N} /Kids [${pages.map((p,i)=>`${3+i*3} 0 R`).join(" ")}] >>`));
+  pages.forEach((p,i)=>{const pg=3+i*3,cs="q 595 0 0 842 0 0 cm /Im0 Do Q";obj(pg,()=>w(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /XObject << /Im0 ${pg+2} 0 R >> >> /Contents ${pg+1} 0 R >>`));
+    obj(pg+1,()=>w(`<< /Length ${cs.length} >>\nstream\n${cs}\nendstream`));obj(pg+2,()=>{w(`<< /Type /XObject /Subtype /Image /Width 1240 /Height 1754 /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${p.length} >>\nstream\n`);w(p);w("\nendstream");});});
+  const x=len,t=3+N*3;w(`xref\n0 ${t}\n0000000000 65535 f \n`);for(let i=1;i<t;i++)w(String(off[i]).padStart(10,"0")+" 00000 n \n");w(`trailer\n<< /Size ${t} /Root 1 0 R >>\nstartxref\n${x}\n%%EOF`);
+  const o=new Uint8Array(len);let q=0;ch.forEach(c=>{o.set(c,q);q+=c.length;});return o;}
+async function book(){const p=P(V.p);if(itemsOf(p.id).some(i=>i.lock)&&S.pinH&&!unlocked&&confirm("Να μπουν και τα κλειδωμένα στο βιβλίο;"))await unlock();
+  toast("⏳ Φτιάχνω το βιβλίο…",6000);
+  const W=1240,H=1754,MG=125,BG="#f6f0e4",INK="#231d18",ACC="#8a3324",MUT="#7a6e60",SF='Georgia,"Times New Roman",serif';
+  const pages=[];let c,g,y=0,pn=0;
+  async function flush(){if(!c)return;if(pn>1){g.fillStyle=MUT;g.font=`22px ${SF}`;g.textAlign="center";g.fillText(`Timeless Capsule · ${p.name} · ${pn}`,W/2,H-75);g.textAlign="left";}
+    const b=await new Promise(r=>c.toBlob(r,"image/jpeg",.62));pages.push(new Uint8Array(await b.arrayBuffer()));c=null;}
+  async function np(){await flush();c=document.createElement("canvas");c.width=W;c.height=H;g=c.getContext("2d");g.fillStyle=BG;g.fillRect(0,0,W,H);g.strokeStyle="#cdbfa6";g.lineWidth=2;g.strokeRect(50,50,W-100,H-100);g.strokeRect(60,60,W-120,H-120);y=MG;pn++;}
+  const need=async hh=>{if(y+hh>H-MG-20)await np();};
+  const wrap=(t,font,mw)=>{g.font=font;const out=[];String(t).split("\n").forEach(par=>{let ln="";par.split(/\s+/).forEach(wd=>{const tt=ln?ln+" "+wd:wd;if(g.measureText(tt).width>mw&&ln){out.push(ln);ln=wd;}else ln=tt;});out.push(ln);});return out;};
+  async function text(t,o={}){const sz=o.size||30,font=`${o.italic?"italic ":""}${o.bold?"700 ":""}${sz}px ${SF}`;for(const l of wrap(t,font,W-2*MG)){await need(sz*1.5);g.font=font;g.fillStyle=o.color||INK;g.textAlign=o.center?"center":"left";g.fillText(l,o.center?W/2:MG,y+sz);g.textAlign="left";y+=sz*1.5;}y+=o.gap??8;}
+  async function img(id){const u=await mediaURL(id);if(!u)return null;const im=new Image();im.src=u;try{await im.decode();return im;}catch(e){return null;}}
+  async function photos(ids){const gw=W-2*MG,cols=ids.length===1?1:2,cw=cols===1?Math.min(gw,820):(gw-30)/2;
+    for(let i=0;i<ids.length;i+=cols){const row=[];for(let j=0;j<cols&&i+j<ids.length;j++){const im=await img(ids[i+j]);if(im)row.push(im);}if(!row.length)continue;
+      const rh=Math.min(Math.max(...row.map(im=>cw*im.naturalHeight/im.naturalWidth)),cols===1?820:560);await need(rh+24);
+      row.forEach((im,j)=>{const k=Math.min(cw/im.naturalWidth,rh/im.naturalHeight),w=im.naturalWidth*k,hh=im.naturalHeight*k,x=MG+(cols===1?(gw-cw)/2:j*(cw+30))+(cw-w)/2;g.drawImage(im,x,y,w,hh);g.strokeStyle="#bfae90";g.lineWidth=2;g.strokeRect(x,y,w,hh);});y+=rh+24;}}
+  // cover
+  await np();y=230;g.fillStyle=ACC;g.font=`700 30px ${SF}`;g.textAlign="center";g.fillText("T I M E L E S S   C A P S U L E",W/2,y);g.textAlign="left";y+=90;
+  if(p.photo){const im=await img(p.photo);if(im){const R=230,cx=W/2,cy=y+R;g.save();g.beginPath();g.arc(cx,cy,R,0,7);g.clip();const k=Math.max(2*R/im.naturalWidth,2*R/im.naturalHeight);g.drawImage(im,cx-im.naturalWidth*k/2,cy-im.naturalHeight*k/2,im.naturalWidth*k,im.naturalHeight*k);g.restore();g.strokeStyle="#a8823f";g.lineWidth=6;g.beginPath();g.arc(cx,cy,R+8,0,7);g.stroke();y+=2*R+70;}}else y+=200;
+  await text(p.name,{size:82,bold:true,center:true,gap:4});await text([p.rel,p.born].filter(Boolean).join(" · "),{size:34,italic:true,color:MUT,center:true,gap:40});
+  await text("Το διηνεκές του χρόνου",{size:38,italic:true,color:ACC,center:true,gap:12});
+  y=H-260;await text(`${S.owner?"Από "+S.owner+" · ":""}${fd(today())}`,{size:26,color:MUT,center:true});
+  // sections
+  for(const m of ALL){const its=itemsOf(p.id,m.n).filter(i=>!(i.lock&&!unlocked)).sort((a,b)=>a.created-b.created);if(!its.length)continue;
+    await np();await text(`${m.n<=10?m.n+". ":""}${m.t}`.normalize("NFD").replace(/\u0301/g,"").normalize("NFC").toUpperCase(),{size:50,bold:true,gap:2});await text(m.s,{size:28,italic:true,color:MUT,gap:22});
+    g.strokeStyle=ACC;g.lineWidth=2;g.beginPath();g.moveTo(MG,y);g.lineTo(MG+200,y);g.stroke();y+=34;
+    if(m.k==="silence"){await text(`🤍 Συνολικά ${dur(its.reduce((a,i)=>a+(i.dur||0),0))} μαζί σε σιωπή.`,{size:34,bold:true,gap:18});}
+    for(const i of its){await need(120);await text(fd(i.date),{size:22,color:MUT,gap:0});
+      if(isSealed(i)){await text(`✉️ Σφραγισμένο${i.to?" για "+i.to:""} — ανοίγει ${fd(i.seal)}`,{size:30,italic:true,color:ACC,gap:26});continue;}
+      if(i.q)await text(`«${i.q}»`,{size:30,italic:true,gap:4});if(i.to)await text(`Προς: ${i.to}`,{size:30,italic:true,gap:4});
+      if(i.title)await text(i.title+(i.year?` (${i.year})`:""),{size:34,bold:true,gap:4});
+      if(i.ty==="audio")await text(`🎙 Ηχογράφηση ${mmss(i.dur)} — ακούγεται στην εφαρμογή`,{size:26,color:MUT});
+      if(i.ty==="video")await text(`🎥 Βίντεο${i.dur?" "+mmss(i.dur):""} — βλέπεται στην εφαρμογή`,{size:26,color:MUT});
+      if(i.ty==="silence")await text(`🤍 ${dur(i.dur)} μαζί`,{size:28});
+      if(i.ty==="will"&&i.choice)await text(`Απάντηση: ${i.choice}`,{size:30,bold:true,color:ACC});
+      if(i.ingr){await text("Υλικά",{size:26,bold:true,color:MUT,gap:0});await text(i.ingr,{size:28});}
+      if(i.steps){await text("Εκτέλεση",{size:26,bold:true,color:MUT,gap:0});await text(i.steps,{size:28});}
+      if(["photo","sign","recipe"].includes(i.ty)&&i.media.length)await photos(i.media);
+      if(i.text)await text(i.text,{size:30});y+=26;}}
+  await np();y=H/2-120;await text("«Όσο τους θυμόμαστε, είναι εδώ.»",{size:40,italic:true,center:true,color:ACC,gap:30});await text("Timeless Capsule · Το διηνεκές του χρόνου",{size:24,color:MUT,center:true});
+  await flush();await shareFile(new Blob([makePdf(pages)],{type:"application/pdf"}),`Βιβλίο_Μνήμης_${p.name.replace(/[^\p{L}\p{N}]+/gu,"_")}.pdf`);}
+
+/* ---------- item menu ---------- */
+async function itemMenu(id){const i=S.items.find(x=>x.id===id);if(!i)return;const sealed=isSealed(i);const o=[];
+  if(!sealed&&(!i.lock||unlocked)){if(["text","letter","film","recipe","photo","will","silence","audio","video","sign"].includes(i.ty))o.push({l:"✏️ Επεξεργασία κειμένου",f:"edit"});o.push({l:"✉️ Σφράγισμα μέχρι μια ημερομηνία",f:"seal"});
+    o.push({l:i.lock?"🔓 Ξεκλείδωμα (χωρίς PIN)":"🔒 Κλείδωμα με PIN",f:"lock"});if(i.media.length||i.text)o.push({l:"📤 Στείλε μόνο αυτό",f:"share"});}
+  o.push({l:"🗑 Διαγραφή",f:"del",danger:true});
+  const k=await sheet(sealed?"✉️ Σφραγισμένο":"Ανάμνηση",o);if(k<0)return;const f=o[k].f;
+  if(f==="edit"){const r=await form("✏️ Επεξεργασία",[{k:"text",l:"Κείμενο",t:"area",rows:8,v:i.text||""}]);if(r){i.text=r.text;save();render();}}
+  if(f==="seal"){const t=new Date();t.setFullYear(t.getFullYear()+5);const r=await form("✉️ Σφράγισμα",[{k:"to",l:"Για ποιον (προαιρετικά)",v:i.to||""},{k:"seal",l:"Ανοίγει στις",t:"date",v:t.toISOString().slice(0,10),min:today(),req:true}],"✉️ Σφράγισε",`<p class="muted">Μέχρι τότε δεν θα μπορεί να το δει κανείς — ούτε εσύ. Μπορεί μόνο να διαγραφεί.</p>`);
+    if(r&&r.seal>today()){i.seal=r.seal;if(r.to)i.to=r.to;i.seen=0;save();render();toast("✉️ Σφραγίστηκε μέχρι "+fd(r.seal));}}
+  if(f==="lock"){if(i.lock){i.lock=false;}else{if(!(await ensurePin()))return;i.lock=true;}save();render();}
+  if(f==="share"){if(i.media.length){const b=await getBlob(i.media[0]);const ext=(b.type.split("/")[1]||"bin").split(";")[0].replace("mpeg","mp3").replace("quicktime","mov");await shareFile(b,`${P(i.pid)?.name||"capsule"}_${MS(i.m).t}.${ext}`.replace(/\s+/g,"_"));}
+    else{try{await navigator.share({text:i.text});}catch(e){}}}
+  if(f==="del"&&confirm("Οριστική διαγραφή αυτής της ανάμνησης;")){await delMedia(i.media);S.items=S.items.filter(x=>x!==i);await saveNow();render();}}
+
+/* ---------- person ---------- */
+async function personForm(p){const r=await form(p?"✏️ Στοιχεία":"Νέος αγαπημένος άνθρωπος",[{k:"name",l:"Όνομα",v:p?.name,req:true,ph:"π.χ. Μαρία"},{k:"rel",l:"Ποιος είναι για σένα",t:"chips",opts:REL,v:p?.rel},{k:"born",l:"Γέννηση (προαιρετικά)",v:p?.born,ph:"π.χ. 1948, Κεφαλονιά"}]);return r;}
+const A={
+  nav:d=>go(d.v),back:()=>{if(V.v==="mission")go("person",{p:V.p});else if(V.v==="timeline")go("person",{p:V.p});else go("home");},
+  openP:d=>go("person",{p:d.p}),openM:d=>go("mission",{p:V.p,n:+d.n}),openPM:d=>go("mission",{p:d.p,n:+d.n}),
+  async addPerson(){const r=await personForm();if(!r)return;const p={id:uid(),created:Date.now(),...r};S.people.push(p);await saveNow();go("person",{p:p.id});},
+  async addMe(){const p={id:uid(),created:Date.now(),name:S.owner||"Εγώ",rel:"Εγώ"};S.people.push(p);await saveNow();go("person",{p:p.id});toast("Η δική σου κάψουλα — για όσους έρθουν μετά",3000);},
+  async editP(){const p=P(V.p),r=await personForm(p);if(!r)return;Object.assign(p,r);save();render();
+    },
+  async photoP(){const p=P(V.p),f=(await pick("image/*"))[0];if(!f)return;const old=p.photo;p.photo=await putMedia(await shrink(f,900,.85));if(old)await delMedia([old]);await saveNow();render();},
+  sendP:()=>sendPerson(),bookP:()=>book().catch(e=>toast("Σφάλμα PDF: "+e.message,4000)),timeline:()=>go("timeline",{p:V.p}),
+  nextQ:()=>{V.qi=(V.qi||0)+1;render();},
+  act:d=>ACT[d.k]().catch(e=>{console.error(e);toast("Σφάλμα: "+e.message,4000);}),
+  silStart:()=>{localStorage.setItem("tc_sil",JSON.stringify({pid:V.p,start:Date.now()}));silShow();},
+  itemMenu:d=>itemMenu(d.id),async unlock(){if(await unlock())render();},
+  async viewImg(d){$("#vImg").src=await mediaURL(d.id);$("#viewer").classList.add("on");},
+  backup:()=>backup(),importF:()=>importFile(),
+  setName(){S.owner=$("#own").value.trim();save();toast("✔");},
+  async setPin(){if(S.pinH){const p=await askPin("Το τωρινό PIN");if(!p)return;if(await sha(p)!==S.pinH){toast("Λάθος PIN");return;}}await newPin();render();}};
+document.addEventListener("click",e=>{const b=e.target.closest("[data-a]");if(!b||b.closest("#modal"))return;const f=A[b.dataset.a];if(f)f(b.dataset,b,e);});
+$("#vX").onclick=$("#viewer").onclick=()=>$("#viewer").classList.remove("on");
+
+/* ---------- delete person (long press on hero name via Στοιχεία) ---------- */
+const _edit=A.editP;A.editP=async()=>{const k=await sheet(P(V.p).name,[{l:"✏️ Αλλαγή στοιχείων"},{l:"🖼 Αλλαγή φωτογραφίας"},{l:"🗑 Διαγραφή όλης της κάψουλας",danger:true}]);
+  if(k===0)return _edit();if(k===1)return A.photoP();
+  if(k===2){const p=P(V.p);if(!confirm(`Διαγραφή ΟΛΗΣ της κάψουλας «${p.name}» με όλες τις αναμνήσεις;`))return;if(prompt(`Γράψε ΔΙΑΓΡΑΦΗ για επιβεβαίωση`)!=="ΔΙΑΓΡΑΦΗ")return;
+    for(const i of itemsOf(p.id))await delMedia(i.media);if(p.photo)await delMedia([p.photo]);S.items=S.items.filter(i=>i.pid!==p.id);S.people=S.people.filter(x=>x!==p);await saveNow();go("home");toast("Διαγράφηκε");}};
+
+/* ---------- start ---------- */
+(async()=>{try{const r=await DB.get("meta","S");if(r)S=Object.assign(JSON.parse(JSON.stringify(S0)),r);}catch(e){toast("⚠ Πρόβλημα αποθήκευσης",4000);}
+  try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist();}catch(e){}
+  render();silShow();
+  if(!S.owner){const r=await form("⏳ Καλώς ήρθες στην Timeless Capsule",[{k:"owner",l:"Πώς σε λένε;",ph:"π.χ. Γιώργος",req:true,hint:"Φαίνεται ως «από…» όταν στέλνεις μια κάψουλα σε άλλο κινητό."}],"Ξεκινάμε",`<p class="serif" style="margin:0 0 10px;font-style:italic">Μια κάψουλα για τους ανθρώπους που αγαπάμε — η φωνή τους, το γέλιο τους, τα χέρια τους, οι ιστορίες τους. Για να είναι εδώ, πάντα.</p>`);if(r){S.owner=r.owner;await saveNow();}}
+  if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});})();
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&V.v==="settings"&&navigator.storage?.estimate)stor();});
+async function stor(){const e=$("#stor");if(!e)return;try{const s=await navigator.storage.estimate();e.textContent=`Χρησιμοποιούνται ${mb(s.usage||0)} από περίπου ${mb(s.quota||0)} διαθέσιμα. ${S.people.length} άνθρωποι · ${S.items.length} αναμνήσεις.`;}catch(x){e.textContent=`${S.items.length} αναμνήσεις.`;}}
+const _r=render;render=function(){_r();if(V.v==="settings")stor();};
+</script>
+</body>
+</html>
