@@ -61,6 +61,8 @@ input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:
 .psv{position:fixed;left:12px;right:12px;bottom:calc(88px + env(safe-area-inset-bottom));z-index:35;background:#123b3a;color:#fff;border-radius:14px;padding:10px 12px;display:flex;gap:8px;align-items:center;box-shadow:0 4px 14px rgba(0,0,0,.3)}
 .psv button{border:0;border-radius:10px;padding:10px 12px;font:700 14px system-ui;cursor:pointer}.psv .y{background:#7fe0c9;color:#0d2b2a}.psv .n{background:rgba(255,255,255,.18);color:#fff}
 .vn{display:flex;gap:6px;align-items:center;flex-wrap:wrap;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:6px 8px;margin-top:6px}.vn audio{flex:1;min-width:170px;height:36px}.vn button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:6px 9px;font:700 13px system-ui;cursor:pointer}.vn .note{width:100%}
+.qk{margin-top:10px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:8px}.qk .lb2{font-size:11.5px;color:var(--muted);font-weight:700;margin:4px 2px 2px}
+.qk .chips{padding:2px 0 4px}.qk .chips button{padding:6px 10px;font-size:13px}.qk .chips button.on{background:var(--acc);border-color:var(--acc);color:#fff}.qk .chips button.add{border-style:dashed;color:var(--muted)}
 .tag.v{background:#efeaff;color:#4b2fd1}
 #toast{position:fixed;left:50%;top:calc(64px + env(safe-area-inset-top));transform:translateX(-50%);background:#123b3a;color:#fff;padding:9px 14px;border-radius:10px;font-size:14px;opacity:0;transition:.2s;pointer-events:none;z-index:30;max-width:90vw;text-align:center}#toast.show{opacity:1}
 </style>
@@ -102,6 +104,11 @@ input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:
   <div class="card">
     <div class="note">Φωτογραφίες (πριν)</div><div class="ph" id="phB"></div>
     <div class="row" style="margin-top:6px"><label class="cam" style="background:var(--acc);color:#fff;border-color:var(--acc)">📸 Κάμερα<input type="file" accept="image/*" capture="environment" id="cB" style="display:none"></label><label class="cam">🖼 Από άλμπουμ<input type="file" accept="image/*" multiple id="fB" style="display:none"></label><button class="btn sm" id="svB" title="Όλες στο Photos">💾</button></div>
+    <div class="qk"><div class="row" style="justify-content:space-between"><b style="font-size:13.5px">⚡ Γρήγορη ετικέτα</b><button class="btn sm" id="qkClr">⌫ Καθαρισμός</button></div>
+      <div class="lb2">ΤΙ ΝΑ ΓΙΝΕΙ</div><div class="chips" id="qkA"></div>
+      <div class="lb2" id="qkOL">ΤΙ</div><div class="chips" id="qkO"></div>
+      <div class="lb2">ΠΟΥ</div><div class="chips" id="qkL"></div>
+      <button class="btn p" id="qkSave" style="width:100%;margin-top:6px">⚡ Αποθήκευση</button></div>
     <div class="note" style="margin-top:12px">🎙 Φωνητικές σημειώσεις (ακούς μετά και γράφεις)</div><div id="vnL"></div>
     <div class="row" style="margin-top:6px"><button class="btn mic" id="vnRec" style="flex:1">🎙 Ηχογράφηση</button></div>
     <label style="margin-top:10px">Τι πρέπει να γίνει<input id="i_title" placeholder="π.χ. Renew rescue boat painter"></label>
@@ -244,7 +251,7 @@ function newItem(area){const its=items(cv),last=its[its.length-1];const no=its.r
   fillItem();go("item");$("#ttl").textContent=`${V().name} · νέα δουλειά #${no}`;}
 function openItem(id){draft=JSON.parse(JSON.stringify(S.it.find(i=>i.id===id)));draft._tmp=[];fillItem();go("item");$("#ttl").textContent=`${V().name} · #${draft.no}`;}
 const F={i_title:"title",i_desc:"desc",i_en:"en",i_area:"area",i_phase:"phase",i_prio:"prio",i_resp:"resp",i_src:"src",i_ref:"ref",i_given:"given",i_due:"due",i_spares:"spares",i_closed:"closed"};
-function fillItem(){Object.entries(F).forEach(([id,k])=>$("#"+id).value=draft[k]||"");$("#i_list").textContent="📂 "+lName(draft.vid,draft.lid);$("#i_del").classList.toggle("hide",!!draft._new);stSeg();phs("B");phs("A");vnRender();recUI();logR();$("#enWrap").classList.toggle("hide",!draft.en);}
+function fillItem(){Object.entries(F).forEach(([id,k])=>$("#"+id).value=draft[k]||"");setTimeout(qkRender,0);$("#i_list").textContent="📂 "+lName(draft.vid,draft.lid);$("#i_del").classList.toggle("hide",!!draft._new);stSeg();phs("B");phs("A");vnRender();recUI();logR();$("#enWrap").classList.toggle("hide",!draft.en);}
 function readItem(){Object.entries(F).forEach(([id,k])=>draft[k]=$("#"+id).value.trim());}
 function stSeg(){$$("#i_st button").forEach(b=>b.classList.toggle("on",b.dataset.v===draft.st));$("#doneBox").classList.toggle("hide",draft.st!=="Done");}
 $("#i_st").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;readItem();const was=draft.st;draft.st=b.dataset.v;
@@ -500,6 +507,44 @@ async function recStop(){if(!MR)return;const mr=MR;if(mr.state!=="inactive")mr.s
 $("#vnRec").onclick=()=>MR?recStop():recStart();
 function quickVoice(area){retWr=view==="wr";newItem(area);recStart();toast("🎙 Μίλα… ⏹ Stop όταν τελειώσεις. Φωτό μετά το Stop.",3500);}
 $("#wrVoice").onclick=()=>quickVoice(AREAS[wrI][0]);$("#vVoice").onclick=()=>quickVoice();
+
+/* ---------- quick label chips (action + object + location) ---------- */
+const QA=["Check","Clean","Paint","Touch-up paint","Chip & paint","Fix","Repair","Renew","Replace","Maintenance","Overhaul","Service","Test","Grease","Lubricate","Tighten","Adjust","Calibrate","Free up","De-rust","Weld","Secure","Mark / stencil","Label","Order spares","Remove","Install","Inspect"];
+const QO={BRG:["Radar","ECDIS","GMDSS","BNWAS","VDR","Gyro","Magnetic compass","Echo sounder","AIS","Nav lights","Signal lamp","Whistle","Charts / pubs","Wheel"],
+ ACC:["Fire door","Self-closer","Galley hood","Hood filter","Deep fryer","Fire blanket","Emergency light","Escape route","Hospital","Provision room","Laundry","Cabin","Ventilation"],
+ LSA:["Lifeboat","Rescue boat","Davit","Falls / wire","Hook / release gear","Winch brake","Liferaft","HRU","Embarkation ladder","Lifebuoy","Lifebuoy light","Lifejacket","Immersion suit","EEBD","BA set","Fire hose","Nozzle","Hydrant","Extinguisher","Fire damper","Fireman outfit","Signage / IMO symbols"],
+ FWD:["Windlass","Brake lining","Chain stopper","Anchor","Anchor marks","Mooring winch","Mooring rope","Fairlead","Roller","Bollard","Bosun store","Paint locker","Sounding pipe","Air vent"],
+ DECK:["Air vent","Vent flap","Sounding pipe cap","Handrail","Walkway","Pilot ladder","Fire line","Deck light","SOPEP locker","Scupper plug","Deck plating","Accommodation ladder","Gangway"],
+ HOLD:["Hatch cover","Rubber packing","Compression bar","Cleat","Hatch drain","Hold ladder","Bilge well","Frames","Coating","Hydraulic line","Hatch cylinder","Ventilator"],
+ CRN:["Crane","Wire","Sheave","Limit switch","Brake","Hydraulic leak","Crane cabin","Emergency stop","SWL marking","Grab"],
+ AFT:["Mooring winch","Mooring rope","Emergency towing","Provision crane","Garbage store","Garbage bins","Rescue boat area","Liferaft"],
+ ER:["Main engine","Generator","Boiler","Purifier","OWS","Incinerator","Bilge","Save-all","Fuel leak","Oil leak","Insulation","Hot surface","Quick-closing valve","ER fire pump","Workshop","Pipe","Valve","Gauge"],
+ STG:["Steering gear","Steering oil","Emergency instructions","Emergency generator","Emergency gen tank","Emergency fire pump","CO2 room","Foam","Battery"],
+ HULL:["Hull","Draught marks","Load line","Rudder","Propeller","Ballast tank","BWTS","Manhole","Tank vent","Coating","Anodes"],
+ DOC:["Certificate","Class memo","PSC deficiency","Crew certificate","Drill record","PMS","Logbook","Checklist","Procedure"],OTH:[]};
+const QL=["Port","Stbd","Fwd","Aft","Midship","No.1","No.2","No.3","No.4","No.5","No.6","No.7","Upper","Lower","Inside","Outside"];
+const QKK="jobs_qk_custom";let QC;try{QC=JSON.parse(localStorage.getItem(QKK))||{};}catch(e){QC={};}["a","o","l"].forEach(k=>QC[k]=QC[k]||[]);
+const qkSaveC=()=>{try{localStorage.setItem(QKK,JSON.stringify(QC));}catch(e){}};
+let QS={a:"",o:[],l:[]};
+function qkParse(){const t=$("#i_title").value.trim();QS={a:"",o:[],l:[]};const acts=[...QA,...QC.a].sort((x,y)=>y.length-x.length);
+  let rest=t;const a=acts.find(x=>rest.toLowerCase().startsWith(x.toLowerCase()));if(a){QS.a=a;rest=rest.slice(a.length);}
+  const objs=[...(QO[$("#i_area").value]||[]),...QC.o],locs=[...QL,...QC.l];
+  const [op,lp=""]=rest.split(" – ");op.split(",").map(x=>x.trim()).filter(Boolean).forEach(x=>{if(objs.includes(x))QS.o.push(x);else if(locs.includes(x))QS.l.push(x);});
+  let lr=lp.trim();while(lr){const m=[...locs].sort((x,y)=>y.length-x.length).find(x=>lr.startsWith(x));if(!m)break;QS.l.push(m);lr=lr.slice(m.length).trim();}}
+function qkWrite(extra){const t=[QS.a,QS.o.join(", ")].filter(Boolean).join(" ")+(QS.l.length?" – "+QS.l.join(" "):"");$("#i_title").value=t;qkRender(true);}
+function qkChips(box,arr,cust,isOn,on){box.innerHTML=arr.map(x=>`<button data-x="${esc(x)}" class="${isOn(x)?"on":""}">${esc(x)}</button>`).join("")+`<button class="add" data-add="1">+ δικό μου</button>`;
+  box.querySelectorAll("button").forEach(b=>{if(b.dataset.add){b.onclick=()=>{const n=(prompt("Νέο κουμπί (αγγλικά, όπως το λέτε στο πλοίο):")||"").trim();if(!n)return;if(!cust.includes(n)){cust.push(n);qkSaveC();}on(n);};return;}
+    b.onclick=()=>on(b.dataset.x);
+    let tm;b.addEventListener("touchstart",()=>{if(!cust.includes(b.dataset.x))return;tm=setTimeout(()=>{if(confirm(`Να σβηστεί το κουμπί «${b.dataset.x}»;`)){cust.splice(cust.indexOf(b.dataset.x),1);qkSaveC();qkRender();}},700);},{passive:true});
+    b.addEventListener("touchend",()=>clearTimeout(tm),{passive:true});});}
+function qkRender(noParse){if(!draft)return;if(!noParse)qkParse();const ar=$("#i_area").value;
+  $("#qkOL").textContent="ΤΙ — "+(AN[ar]||"").replace(/^\S+\s/,"");
+  qkChips($("#qkA"),[...QA,...QC.a],QC.a,x=>QS.a===x,x=>{QS.a=QS.a===x?"":x;qkWrite();});
+  qkChips($("#qkO"),[...(QO[ar]||[]),...QC.o],QC.o,x=>QS.o.includes(x),x=>{QS.o.includes(x)?QS.o.splice(QS.o.indexOf(x),1):QS.o.push(x);qkWrite();});
+  qkChips($("#qkL"),[...QL,...QC.l],QC.l,x=>QS.l.includes(x),x=>{QS.l.includes(x)?QS.l.splice(QS.l.indexOf(x),1):QS.l.push(x);qkWrite();});}
+$("#i_area").addEventListener("change",()=>qkRender());$("#i_title").addEventListener("input",()=>qkRender());
+$("#qkClr").onclick=()=>{QS={a:"",o:[],l:[]};$("#i_title").value="";qkRender(true);};
+$("#qkSave").onclick=()=>$("#i_save").click();
 
 go("home");
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
