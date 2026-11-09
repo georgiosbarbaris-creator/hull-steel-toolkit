@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="el"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Imagine</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Imagine">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#000000">
+<style>
+:root{--y:#ffd60a;--tx:#fff;--mut:#9aa0a6}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+html,body{margin:0;height:100%;background:#000;color:var(--tx);font-family:-apple-system,system-ui,"Segoe UI",Roboto,Arial,sans-serif;overflow:hidden;touch-action:manipulation}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+.scr{position:fixed;inset:0;display:none;flex-direction:column}.scr.on{display:flex}
+/* camera */
+#top{display:flex;justify-content:space-between;align-items:center;padding:calc(env(safe-area-inset-top) + 6px) 12px 6px;z-index:3}
+.ib{width:44px;height:44px;border-radius:22px;background:rgba(255,255,255,.12);font-size:20px;display:flex;align-items:center;justify-content:center}
+.ib.on{background:var(--y);color:#000}
+#stage{position:relative;flex:1;overflow:hidden}
+#vid{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;transition:filter .3s}
+#vid.mir{transform:scaleX(-1)}
+#frame{position:absolute;pointer-events:none}
+#grid{position:absolute;inset:0;display:none;background:
+ linear-gradient(to right,transparent calc(33.33% - .5px),rgba(255,255,255,.35) calc(33.33% - .5px),rgba(255,255,255,.35) calc(33.33% + .5px),transparent calc(33.33% + .5px),transparent calc(66.66% - .5px),rgba(255,255,255,.35) calc(66.66% - .5px),rgba(255,255,255,.35) calc(66.66% + .5px),transparent calc(66.66% + .5px)),
+ linear-gradient(to bottom,transparent calc(33.33% - .5px),rgba(255,255,255,.35) calc(33.33% - .5px),rgba(255,255,255,.35) calc(33.33% + .5px),transparent calc(33.33% + .5px),transparent calc(66.66% - .5px),rgba(255,255,255,.35) calc(66.66% - .5px),rgba(255,255,255,.35) calc(66.66% + .5px),transparent calc(66.66% + .5px))}
+#level{position:absolute;left:50%;top:50%;width:120px;height:2px;margin-left:-60px;background:#fff;opacity:.85;display:none;border-radius:2px;box-shadow:0 0 3px #000}
+#level.ok{background:var(--y)}
+#meterbox{position:absolute;width:74px;height:74px;border:1.5px solid var(--y);margin:-37px 0 0 -37px;display:none;pointer-events:none}
+#hint{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.6);padding:7px 14px;border-radius:16px;font-size:15px;white-space:nowrap;display:none;z-index:2}
+#count{position:absolute;inset:0;display:none;align-items:center;justify-content:center;font-size:110px;font-weight:200;text-shadow:0 0 12px #000}
+#flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;transition:opacity .25s}
+#busy{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);background:rgba(0,0,0,.7);padding:9px 16px;border-radius:18px;font-size:15px;display:none;white-space:nowrap}
+#noCam{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:30px;color:var(--mut)}
+#bottom{padding:6px 0 calc(env(safe-area-inset-bottom) + 12px);z-index:3;background:#000}
+.chips{display:flex;justify-content:center;gap:6px;margin:4px 0 8px;flex-wrap:nowrap}
+.chip{padding:7px 10px;border-radius:16px;font-size:13.5px;white-space:nowrap;font-weight:600;color:#ddd;letter-spacing:.3px}
+.chip.on{color:#000;background:var(--y)}
+#zooms .chip{background:rgba(255,255,255,.12);min-width:44px}#zooms .chip.on{background:var(--y)}
+#ctrl{display:flex;align-items:center;justify-content:space-around;padding:4px 18px}
+#shut{width:76px;height:76px;border-radius:50%;border:4px solid #fff;padding:4px}
+#shut i{display:block;width:100%;height:100%;border-radius:50%;background:#fff;transition:transform .1s}
+#shut:active i{transform:scale(.88)}
+#shut.busy i{background:var(--y)}
+.side{width:54px;height:54px;border-radius:12px;background:rgba(255,255,255,.12);font-size:24px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.side img{width:100%;height:100%;object-fit:cover}
+/* sheet */
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:flex-end;z-index:20}.sheet.on{display:flex}
+.sheet>div{width:100%;background:#1c1c1e;border-radius:16px 16px 0 0;padding:14px 14px calc(env(safe-area-inset-bottom) + 14px)}
+.sbtn{display:block;width:100%;padding:15px;margin:6px 0;border-radius:12px;background:#2c2c2e;font-size:17px;text-align:left}
+.sbtn small{display:block;color:var(--mut);font-size:13px;margin-top:3px}
+/* result */
+#rtop{display:flex;justify-content:space-between;align-items:center;padding:calc(env(safe-area-inset-top) + 6px) 12px 6px}
+#rstage{flex:1;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+#rc{max-width:100%;max-height:100%;touch-action:none}
+#rtag{position:absolute;top:8px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.6);padding:5px 12px;border-radius:14px;font-size:13px;color:#ddd;white-space:nowrap}
+#rbot{padding:6px 16px calc(env(safe-area-inset-bottom) + 12px)}
+.sl{display:flex;align-items:center;gap:10px;margin:4px 0 10px;font-size:14px;color:#ccc}
+.sl input{flex:1;accent-color:var(--y)}
+.row{display:flex;gap:10px}
+.big{flex:1;padding:15px;border-radius:14px;font-size:17px;font-weight:700;background:#2c2c2e}
+.big.y{background:var(--y);color:#000}
+/* gallery */
+#gtop{display:flex;align-items:center;gap:10px;padding:calc(env(safe-area-inset-top) + 6px) 12px 8px}
+#gtop h2{flex:1;margin:0;font-size:20px}
+#glist{flex:1;overflow:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:2px;align-content:start;-webkit-overflow-scrolling:touch}
+#glist img{width:100%;aspect-ratio:1;object-fit:cover;display:block}
+#gempty{color:var(--mut);text-align:center;padding:40px 20px;grid-column:1/-1}
+.credit{color:#666;text-align:center;font-size:12px;padding:10px 0 calc(env(safe-area-inset-bottom) + 10px)}
+#viewer{position:fixed;inset:0;background:#000;z-index:15;display:none;flex-direction:column}#viewer.on{display:flex}
+#viewer img{flex:1;min-height:0;object-fit:contain;width:100%}
+.help{color:#ddd;font-size:15px;line-height:1.45;max-height:70vh;overflow:auto}
+.help b{color:var(--y)}
+</style></head><body>
+
+<!-- CAMERA -->
+<section id="cam" class="scr on">
+ <div id="top">
+  <button class="ib" id="bTorch" title="Φακός" style="visibility:hidden">⚡</button>
+  <button class="ib" id="bGrid" title="Πλέγμα & αλφάδι">#</button>
+  <button class="ib" id="bTimer" title="Χρονοδιακόπτης">⏱</button>
+  <button class="ib" id="bHelp" title="Βοήθεια">?</button>
+ </div>
+ <div id="stage">
+  <video id="vid" playsinline muted autoplay></video>
+  <div id="frame"><div id="grid"></div><div id="level"></div></div>
+  <div id="meterbox"></div>
+  <div id="hint"></div>
+  <div id="count"></div>
+  <div id="flash"></div>
+  <div id="busy"></div>
+  <div id="noCam"><div style="font-size:46px">📷</div><div id="noCamTxt">Η κάμερα δεν άνοιξε.</div>
+   <button class="big y" id="bRetry" style="flex:none;padding:12px 22px">Άνοιγμα κάμερας</button>
+   <div style="font-size:14px">ή πάτα 📥 κάτω αριστερά για φωτογραφία από την κάμερα του iPhone</div></div>
+ </div>
+ <div id="bottom">
+  <div class="chips" id="zooms" style="display:none"></div>
+  <div class="chips" id="modes"></div>
+  <div id="ctrl">
+   <button class="side" id="bImport" title="Εισαγωγή">📥</button>
+   <button id="shut" aria-label="Λήψη"><i></i></button>
+   <button class="side" id="bGal" title="Φωτογραφίες">🖼</button>
+  </div>
+  <div style="display:flex;justify-content:center;margin-top:6px"><button class="chip" id="bFlip" style="background:rgba(255,255,255,.12)">🔄 Μπρος / Πίσω</button></div>
+ </div>
+ <input type="file" id="fCam" accept="image/*" capture="environment" hidden>
+ <input type="file" id="fLib" accept="image/*" hidden>
+</section>
+
+<!-- RESULT -->
+<section id="res" class="scr">
+ <div id="rtop"><button class="ib" id="rBack">✕</button><div style="font-size:14px;color:#aaa">Κράτα πατημένο για σύγκριση</div><button class="ib" id="rReset" title="Επαναφορά">↺</button></div>
+ <div id="rstage"><canvas id="rc"></canvas><div id="rtag"></div></div>
+ <div id="rbot">
+  <div class="chips" id="rmodes"></div>
+  <div class="sl"><span>Ένταση</span><input type="range" id="rk" min="0" max="150" value="100"><span id="rkv" style="width:42px;text-align:right">100%</span></div>
+  <div class="row"><button class="big" id="rRetake">📷 Ξανά</button><button class="big y" id="rSave">💾 Αποθήκευση</button></div>
+ </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gal" class="scr">
+ <div id="gtop"><button class="ib" id="gBack">‹</button><h2>Οι φωτογραφίες μου</h2></div>
+ <div id="glist"></div>
+ <div class="credit">Imagine · Created by George Barbaris</div>
+</section>
+<div id="viewer"><div id="rtop" style="display:flex;justify-content:space-between;padding:calc(env(safe-area-inset-top) + 6px) 12px 6px"><button class="ib" id="vBack">‹</button><button class="ib" id="vDel">🗑</button></div>
+ <img id="vImg" alt=""><div style="padding:10px 16px calc(env(safe-area-inset-bottom) + 12px)"><button class="big y" id="vShare" style="width:100%">📤 Κοινοποίηση / Αποθήκευση στις Φωτογραφίες</button></div></div>
+
+<!-- SHEETS -->
+<div class="sheet" id="shImp"><div>
+ <button class="sbtn" id="iCam">📸 Κάμερα iPhone<small>Μέγιστη ανάλυση του κινητού — μετά το Imagine τη «φτιάχνει»</small></button>
+ <button class="sbtn" id="iLib">🖼 Από τις Φωτογραφίες<small>Βελτίωσε μια παλιά φωτογραφία</small></button>
+ <button class="sbtn" style="text-align:center" data-close>Άκυρο</button></div></div>
+<div class="sheet" id="shHelp"><div><div class="help">
+ <p><b>Imagine</b> — φωτογραφίζει σαν επαγγελματίας με ένα κουμπί.</p>
+ <p><b>Πώς δουλεύει:</b> με το πάτημα τραβάει πολλά καρέ στη σειρά, τα ευθυγραμμίζει και τα «ενώνει» (λιγότερος θόρυβος), και μετά ρυθμίζει μόνο του λευκή ισορροπία, έκθεση, σκιές/φωτεινά (HDR), καθαρότητα, χρώματα και ευκρίνεια.</p>
+ <p><b>4 επιλογές:</b> ✨ Αυτόματο (για όλα — αν είναι σκοτάδι γυρίζει μόνο του σε νυχτερινό), 🌄 Τοπίο (ζωντανά χρώματα, ουρανός, λεπτομέρεια), 🙂 Πορτρέτο (απαλό, φυσικό δέρμα, ζεστό), 🌙 Νύχτα (12 καρέ — κράτα σταθερά 2″).</p>
+ <p><b>Άγγιξε την οθόνη</b> στο θέμα σου → εκεί «μετράει» το φως (π.χ. πρόσωπο σε κόντρα φως).</p>
+ <p><b>#</b> πλέγμα τρίτων + αλφάδι (κίτρινο = ίσιο). <b>⏱</b> 3″ για να μη κουνηθεί. Η λήψη περιμένει μόνη της να σταθεροποιηθεί το χέρι.</p>
+ <p><b>📥 Κάμερα iPhone:</b> για τη μέγιστη ανάλυση (12–48MP) τράβα με την κάμερα του iPhone και το Imagine κάνει την επεξεργασία.</p>
+ <p><b>Αποτέλεσμα:</b> κράτα πατημένο για το πριν/μετά, άλλαξε στυλ ή ένταση, άγγιξε για φωτομέτρηση. 💾 → «Αποθήκευση εικόνας» στο μενού κοινοποίησης.</p>
+ <p style="color:#888">Όλα γίνονται μέσα στο κινητό, χωρίς internet. Created by George Barbaris.</p>
+</div><button class="sbtn" style="text-align:center" data-close>OK</button></div></div>
+
+<script src="engine.js"></script>
+<script>
+const E=window.ImagineEngine,M=E.MODES,$=id=>document.getElementById(id);
+const S={mode:localStorage.getItem('im_mode')||'auto',facing:'environment',stream:null,track:null,grid:localStorage.getItem('im_grid')==='1',timer:0,
+ meter:null,torch:false,roll:null,shake:0,lastHint:'',busy:false,perm:false};
+if(!M[S.mode])S.mode='auto';
+
+/* ---------- modes ---------- */
+function buildChips(el,cur,fn){el.innerHTML='';for(const k in M){const b=document.createElement('button');b.className='chip'+(k===cur?' on':'');b.textContent=M[k].i+' '+M[k].n;b.onclick=()=>fn(k);el.appendChild(b);}}
+function setMode(k){S.mode=k;localStorage.setItem('im_mode',k);buildChips($('modes'),k,setMode);$('vid').style.filter=M[k].css;}
+setMode(S.mode);
+
+/* ---------- camera ---------- */
+async function startCam(){
+ stopCam();$('noCam').style.display='none';
+ try{
+  const s=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:S.facing,width:{ideal:4032},height:{ideal:3024}}});
+  S.stream=s;S.track=s.getVideoTracks()[0];const v=$('vid');v.srcObject=s;v.classList.toggle('mir',S.facing==='user');await v.play().catch(()=>{});
+  setupCaps();
+ }catch(e){$('noCam').style.display='flex';$('noCamTxt').textContent=location.protocol!=='https:'&&location.hostname!=='localhost'?'Χρειάζεται https για την κάμερα.':'Η κάμερα δεν άνοιξε. Δώσε άδεια στις Ρυθμίσεις → Safari → Κάμερα.';}
+}
+function stopCam(){if(S.stream){S.stream.getTracks().forEach(t=>t.stop());S.stream=null;S.track=null;}}
+function setupCaps(){
+ const c=S.track&&S.track.getCapabilities?S.track.getCapabilities():{};
+ $('bTorch').style.visibility=c.torch?'visible':'hidden';S.torch=false;$('bTorch').classList.remove('on');
+ const z=$('zooms');z.innerHTML='';
+ if(c.zoom&&c.zoom.max>1){const opts=[1,2,3,5].filter(v=>v>=c.zoom.min&&v<=c.zoom.max);
+  if(c.zoom.min<1)opts.unshift(Math.max(c.zoom.min,.5));
+  if(opts.length>1){z.style.display='flex';opts.forEach((v,i)=>{const b=document.createElement('button');b.className='chip'+(v===1?' on':'');b.textContent=(v<1?'.5':v)+'×';
+   b.onclick=()=>{S.track.applyConstraints({advanced:[{zoom:v}]}).catch(()=>{});[...z.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');};z.appendChild(b);});}
+  else z.style.display='none';}else z.style.display='none';
+}
+function videoRect(){const v=$('vid'),st=$('stage').getBoundingClientRect(),vw=v.videoWidth||4,vh=v.videoHeight||3;
+ const sc=Math.min(st.width/vw,st.height/vh),w=vw*sc,h=vh*sc;return {x:(st.width-w)/2,y:(st.height-h)/2,w,h};}
+function layout(){const r=videoRect(),f=$('frame');Object.assign(f.style,{left:r.x+'px',top:r.y+'px',width:r.w+'px',height:r.h+'px'});
+ $('grid').style.display=S.grid?'block':'none';}
+$('vid').addEventListener('loadedmetadata',layout);addEventListener('resize',()=>setTimeout(layout,100));
+$('bRetry').onclick=startCam;
+$('bFlip').onclick=()=>{S.facing=S.facing==='user'?'environment':'user';S.meter=null;$('meterbox').style.display='none';startCam();};
+$('bTorch').onclick=()=>{S.torch=!S.torch;$('bTorch').classList.toggle('on',S.torch);S.track&&S.track.applyConstraints({advanced:[{torch:S.torch}]}).catch(()=>{});};
+$('bGrid').classList.toggle('on',S.grid);
+$('bGrid').onclick=()=>{S.grid=!S.grid;localStorage.setItem('im_grid',S.grid?'1':'0');$('bGrid').classList.toggle('on',S.grid);layout();askSensors();};
+$('bTimer').onclick=()=>{S.timer=S.timer?0:3;$('bTimer').classList.toggle('on',!!S.timer);$('bTimer').textContent=S.timer?'3″':'⏱';};
+
+/* tap to meter */
+$('stage').addEventListener('click',e=>{if(e.target.closest('button'))return;const st=$('stage').getBoundingClientRect(),r=videoRect();
+ const px=e.clientX-st.left,py=e.clientY-st.top;let nx=(px-r.x)/r.w,ny=(py-r.y)/r.h;if(nx<0||nx>1||ny<0||ny>1)return;
+ if(S.meter&&Math.hypot(S.meter.sx-px,S.meter.sy-py)<30){S.meter=null;$('meterbox').style.display='none';return;}
+ S.meter={x:nx,y:ny,sx:px,sy:py};const m=$('meterbox');m.style.left=px+'px';m.style.top=py+'px';m.style.display='block';});
+
+/* ---------- sensors: level & steadiness ---------- */
+async function askSensors(){if(S.perm)return;S.perm=true;
+ try{if(window.DeviceOrientationEvent&&DeviceOrientationEvent.requestPermission)await DeviceOrientationEvent.requestPermission();}catch(e){}
+ try{if(window.DeviceMotionEvent&&DeviceMotionEvent.requestPermission)await DeviceMotionEvent.requestPermission();}catch(e){}
+ addEventListener('deviceorientation',e=>{if(e.beta==null)return;
+  const ang=(screen.orientation&&screen.orientation.angle)||window.orientation||0;let roll;
+  if(ang===0||ang===180){if(Math.abs(e.beta)<40){S.roll=null;return;}roll=ang===0?e.gamma:-e.gamma;}
+  else{if(Math.abs(e.gamma)<40&&Math.abs(e.beta)>40){S.roll=null;return;}roll=(ang===90?-1:1)*e.beta;}
+  S.roll=roll;updLevel();});
+ addEventListener('devicemotion',e=>{const r=e.rotationRate;if(!r)return;const m=Math.hypot(r.alpha||0,r.beta||0,r.gamma||0);S.shake=S.shake*.8+m*.2;});
+}
+function updLevel(){const l=$('level');if(!S.grid||S.roll==null){l.style.display='none';return;}
+ l.style.display='block';l.style.transform='rotate('+(-S.roll).toFixed(1)+'deg)';l.classList.toggle('ok',Math.abs(S.roll)<1.2);}
+
+/* ---------- live light hints ---------- */
+const hc=E.canvas(64,48),hx=E.ctx2(hc);
+function hints(){
+ const v=$('vid');if(!S.stream||S.busy||!v.videoWidth||document.hidden){return;}
+ hx.drawImage(v,0,0,64,48);const d=hx.getImageData(0,0,64,48).data;let sum=0,hi=0,ce=0,cn=0,ed=0,en=0;
+ for(let y=0;y<48;y++)for(let x=0;x<64;x++){const p=(y*64+x)*4,Y=(.2126*d[p]+.7152*d[p+1]+.0722*d[p+2])/255;sum+=Y;if(Y>.96)hi++;
+  if(x>16&&x<48&&y>12&&y<36){ce+=Y;cn++;}else{ed+=Y;en++;}}
+ const mean=sum/3072,c=ce/cn,e=ed/en;let t='';
+ if(mean<.1)t=S.mode==='night'||S.mode==='auto'?'🌙 Λίγο φως — κράτα σταθερά 2″':'🌙 Λίγο φως — διάλεξε Νύχτα';
+ else if(hi/3072>.07&&c<e*.6&&!S.meter)t='☀️ Κόντρα φως — άγγιξε το θέμα σου';
+ else if(hi/3072>.2&&!S.meter)t='Πολύ φως — άγγιξε το φωτεινό σημείο';
+ else if(S.grid&&S.roll!=null&&Math.abs(S.roll)>3)t='📐 Ίσιωσε τον ορίζοντα';
+ else if(S.shake>25)t='✋ Κράτα πιο σταθερά';
+ const h=$('hint');if(t){h.textContent=t;h.style.display='block';}else h.style.display='none';
+}
+setInterval(hints,700);
+
+/* ---------- capture ---------- */
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function busy(t){const b=$('busy');if(t){b.textContent=t;b.style.display='block';}else b.style.display='none';}
+$('shut').onclick=async()=>{
+ if(S.busy)return;const v=$('vid');
+ if(!S.stream||!v.videoWidth){$('shImp').classList.add('on');return;}
+ askSensors();S.busy=true;$('shut').classList.add('busy');
+ try{
+  if(S.timer){const c=$('count');c.style.display='flex';for(let i=S.timer;i>0;i--){c.textContent=i;await sleep(1000);}c.style.display='none';}
+  // wait for a steady hand (max 1.2 s)
+  const t0=Date.now();while(S.shake>12&&Date.now()-t0<1200)await sleep(50);
+  let n=M[S.mode].frames;
+  if(S.mode==='auto'){hx.drawImage(v,0,0,64,48);const d=hx.getImageData(0,0,64,48).data;let s=0;for(let p=0;p<d.length;p+=4)s+=d[p+1];if(s/3072/255<.17)n=10;}
+  const f=$('flash');f.style.opacity=.6;setTimeout(()=>f.style.opacity=0,120);
+  busy(n>4?'✋ Κράτα σταθερά… ':'Λήψη…');
+  const src=await E.stack(v,n,S.facing==='user',(i,N)=>{if(N>4)busy('✋ Κράτα σταθερά… '+i+'/'+N);});
+  busy('');
+  openResult(src,S.mode,S.meter?{x:S.meter.x,y:S.meter.y}:null);
+ }catch(e){busy('');alert('Σφάλμα λήψης: '+e.message);}
+ S.busy=false;$('shut').classList.remove('busy');
+};
+
+/* ---------- import ---------- */
+$('bImport').onclick=()=>$('shImp').classList.add('on');
+$('iCam').onclick=()=>{$('shImp').classList.remove('on');$('fCam').click();};
+$('iLib').onclick=()=>{$('shImp').classList.remove('on');$('fLib').click();};
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>b.closest('.sheet').classList.remove('on'));
+document.querySelectorAll('.sheet').forEach(s=>s.addEventListener('click',e=>{if(e.target===s)s.classList.remove('on');}));
+$('bHelp').onclick=()=>$('shHelp').classList.add('on');
+for(const id of ['fCam','fLib'])$(id).onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
+ busy('Άνοιγμα…');try{const src=await loadFile(f,4032);busy('');openResult(src,S.mode,null);}catch(err){busy('');alert('Δεν άνοιξε η εικόνα: '+err.message);}};
+async function loadFile(f,maxE){
+ let bmp;try{bmp=await createImageBitmap(f);}catch(e){bmp=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=()=>no(new Error('format'));i.src=URL.createObjectURL(f);});}
+ const w=bmp.width,h=bmp.height,s=Math.min(1,maxE/Math.max(w,h)),c=E.canvas(Math.round(w*s),Math.round(h*s)),x=c.getContext('2d');x.imageSmoothingQuality='high';x.drawImage(bmp,0,0,c.width,c.height);return c;
+}
+
+/* ---------- result ---------- */
+const R={src:null,mode:'auto',k:1,meter:null,A:null,prep:null,base:null,out:null,tm:0};
+function show(id){document.querySelectorAll('.scr').forEach(s=>s.classList.toggle('on',s.id===id));if(id==='cam'){if(!S.stream)startCam();}else if(id!=='cam'){}}
+function openResult(src,mode,meter){
+ R.src=src;R.mode=mode;R.k=1;R.meter=meter;R.A=null;$('rk').value=100;$('rkv').textContent='100%';
+ const pv=E.scaled(src,Math.min(1800,Math.max(src.width,src.height)));
+ const c=$('rc');c.width=pv.width;c.height=pv.height;R.base=E.ctx2(pv).getImageData(0,0,pv.width,pv.height);
+ buildChips($('rmodes'),mode,rmodeFn);
+ show('res');stopCam();rerender();
+}
+function rmodeFn(k){R.mode=k;buildChips($('rmodes'),k,rmodeFn);rerender();}
+function rerender(){
+ R.A=E.analyze(R.src,M[R.mode],R.meter);R.prep=E.prepare(R.src,R.mode,R.k,R.meter,R.A);
+ const img=new ImageData(new Uint8ClampedArray(R.base.data),R.base.width,R.base.height);
+ E.render(img,R.prep);R.out=img;$('rc').getContext('2d').putImageData(img,0,0);
+ const tags=[M[R.mode].i+' '+M[R.mode].n];if(R.mode==='auto'&&R.A.dark)tags.push('χαμηλό φως');if(R.meter)tags.push('φωτομέτρηση σημείου');
+ tags.push(R.src.width+'×'+R.src.height);$('rtag').textContent=tags.join(' · ');
+}
+$('rk').oninput=()=>{R.k=$('rk').value/100;$('rkv').textContent=$('rk').value+'%';clearTimeout(R.tm);R.tm=setTimeout(rerender,60);};
+$('rReset').onclick=()=>{R.k=1;$('rk').value=100;$('rkv').textContent='100%';R.meter=null;rmodeFn(S.mode);};
+$('rBack').onclick=$('rRetake').onclick=()=>{R.src=null;show('cam');startCam();};
+// hold to compare, tap to meter
+(function(){const c=$('rc');let t=null,held=false,sx=0,sy=0;
+ const down=e=>{e.preventDefault();held=false;sx=e.clientX;sy=e.clientY;t=setTimeout(()=>{held=true;c.getContext('2d').putImageData(R.base,0,0);$('rtag').dataset.o=$('rtag').textContent;$('rtag').textContent='ΠΡΙΝ (πρωτότυπο)';},220);};
+ const up=e=>{clearTimeout(t);if(held){c.getContext('2d').putImageData(R.out,0,0);$('rtag').textContent=$('rtag').dataset.o;held=false;return;}
+  if(Math.hypot(e.clientX-sx,e.clientY-sy)>12)return;const r=c.getBoundingClientRect();R.meter={x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height};rerender();};
+ c.addEventListener('pointerdown',down);c.addEventListener('pointerup',up);c.addEventListener('pointercancel',()=>{clearTimeout(t);if(held){c.getContext('2d').putImageData(R.out,0,0);held=false;}});
+ c.addEventListener('contextmenu',e=>e.preventDefault());})();
+
+$('rSave').onclick=async()=>{
+ const b=$('rSave');b.disabled=true;b.textContent='⏳ Επεξεργασία…';await sleep(30);
+ try{
+  let blob;
+  try{blob=await fullRes(R.src);}catch(e){blob=await fullRes(E.scaled(R.src,3000));}
+  const name='Imagine_'+new Date().toISOString().slice(0,19).replace(/[-:T]/g,'')+'.jpg';
+  await dbPut(blob);refreshThumb();
+  b.textContent='💾 Αποθήκευση';b.disabled=false;
+  await shareBlob(blob,name);
+ }catch(e){alert('Σφάλμα: '+e.message);b.textContent='💾 Αποθήκευση';b.disabled=false;}
+};
+async function fullRes(src){
+ const c=E.canvas(src.width,src.height),x=E.ctx2(c);x.drawImage(src,0,0);
+ const img=x.getImageData(0,0,c.width,c.height);E.render(img,R.prep);x.putImageData(img,0,0);
+ return await new Promise((ok,no)=>c.toBlob(b=>b?ok(b):no(new Error('jpeg')),'image/jpeg',.93));
+}
+async function shareBlob(blob,name){
+ const file=new File([blob],name,{type:'image/jpeg'});
+ if(navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file]});return;}catch(e){if(e.name==='AbortError')return;}}
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},2000);
+}
+
+/* ---------- gallery (IndexedDB) ---------- */
+let dbp=null;
+function db(){return dbp||(dbp=new Promise((ok,no)=>{const r=indexedDB.open('imagine',1);r.onupgradeneeded=()=>r.result.createObjectStore('shots',{keyPath:'id'});r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error);}));}
+async function tx(mode,fn){const d=await db();return new Promise((ok,no)=>{const t=d.transaction('shots',mode),s=t.objectStore('shots');const r=fn(s);t.oncomplete=()=>ok(r&&r.result);t.onerror=()=>no(t.error);});}
+async function dbPut(blob){
+ const bmp=await createImageBitmap(blob),s=240/Math.min(bmp.width,bmp.height),c=E.canvas(Math.round(bmp.width*s),Math.round(bmp.height*s));c.getContext('2d').drawImage(bmp,0,0,c.width,c.height);
+ const thumb=c.toDataURL('image/jpeg',.7);await tx('readwrite',s=>s.put({id:Date.now(),blob,thumb}));
+ const all=await tx('readonly',s=>s.getAllKeys());if(all.length>60){await tx('readwrite',s=>{all.slice(0,all.length-60).forEach(k=>s.delete(k));});}
+}
+async function refreshThumb(){try{const keys=await tx('readonly',s=>s.getAllKeys());const g=$('bGal');if(!keys.length){g.innerHTML='🖼';return;}
+ const it=await tx('readonly',s=>s.get(keys[keys.length-1]));g.innerHTML='<img src="'+it.thumb+'" alt="">';}catch(e){}}
+async function openGal(){show('gal');stopCam();const l=$('glist');l.innerHTML='';const all=(await tx('readonly',s=>s.getAll())).reverse();
+ if(!all.length){l.innerHTML='<div id="gempty">Δεν υπάρχουν ακόμη φωτογραφίες.<br>Ό,τι αποθηκεύεις εμφανίζεται εδώ.</div>';return;}
+ all.forEach(it=>{const i=document.createElement('img');i.src=it.thumb;i.onclick=()=>openViewer(it);l.appendChild(i);});}
+let VI=null;
+function openViewer(it){VI=it;const u=URL.createObjectURL(it.blob);$('vImg').src=u;$('viewer').classList.add('on');}
+$('vBack').onclick=()=>{$('viewer').classList.remove('on');URL.revokeObjectURL($('vImg').src);};
+$('vDel').onclick=async()=>{if(!confirm('Διαγραφή από το Imagine;'))return;await tx('readwrite',s=>s.delete(VI.id));$('vBack').onclick();openGal();refreshThumb();};
+$('vShare').onclick=()=>shareBlob(VI.blob,'Imagine_'+VI.id+'.jpg');
+$('bGal').onclick=openGal;$('gBack').onclick=()=>{show('cam');startCam();};
+
+document.addEventListener('visibilitychange',()=>{if(document.hidden)stopCam();else if($('cam').classList.contains('on'))startCam();});
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+refreshThumb();startCam();
+</script>
+</body></html>
