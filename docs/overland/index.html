@@ -178,20 +178,20 @@ function soon(id){const s=SOON.find(x=>x[0]===id);T(s[1]+' '+s[2]);const det={
 
 /* ===================== ΕΡΓΑΛΕΙΑ ===================== */
 const TOOLS=[
- ['Στο πεδίο',[['incl','📐','Κλισιόμετρο','πλευρική κλίση & ανηφόρα με όρια του οχήματος'],['compass','🧭','Πυξίδα, GPS & σημεία','θέση, σημεία, διαδρομή, βέλος επιστροφής, GPX'],['pass','🚧','Θα περάσω;','σκαλί, ράμπα, νερό, κλίση, σε σχέση με το όχημα'],['wade','🌊','Πέρασμα νερού','βάθος, ρεύμα, πάτος, περνάω ή όχι;']]],
+ ['Στο πεδίο',[['incl','📐','Κλισιόμετρο','πλευρική κλίση & ανηφόρα με όρια του οχήματος'],['roof','🏗️',L2('Βάρος στην οροφή & πλευρική κλίση','Roof load & side slope'),L2('πόσες μοίρες χάνει το όχημα με φορτίο ψηλά','how many degrees the vehicle loses with weight up high')],['compass','🧭','Πυξίδα, GPS & σημεία','θέση, σημεία, διαδρομή, βέλος επιστροφής, GPX'],['pass','🚧','Θα περάσω;','σκαλί, ράμπα, νερό, κλίση, σε σχέση με το όχημα'],['wade','🌊','Πέρασμα νερού','βάθος, ρεύμα, πάτος, περνάω ή όχι;']]],
  ['Ελαστικά & ανάκτηση',[['tyre','🛞','Πίεση ελαστικών ανά έδαφος','πόσο ξεφουσκώνω και πόσο γρήγορα πάω'],['tsize','📏','Σύγκριση μεγέθους ελαστικών','κοντέρ, ύψος, σχέσεις'],['winch','🪝','Ανάκτηση & εργάτης','πόση δύναμη, τροχαλία, shackle, ιμάντας']]],
  ['Σχεδιασμός',[['payload','⚖️','Βάρος & φορτίο (GVM)','πόσο φορτωμένος είσαι, σχάρα'],['fuel','⛽','Καύσιμο & αυτονομία','πόσα km βγάζεις, πόσο θες'],['water','💧','Νερό για την εκδρομή','λίτρα ανά άτομο και μέρα'],['power','🔋','Μπαταρία, ψυγείο & solar','πόσες μέρες χωρίς να βάλεις μπρος'],['walk','🔎','Walk-round πριν φύγεις','έλεγχος οχήματος με OK / Defect']]],
  ['Ουρανός & επικοινωνία',[['sun','🌇','Ήλιος, ώρα για στρατόπεδο','πόσο φως μένει, ανατολή, δύση'],['wx','🌡️','Υψόμετρο & βαρόμετρο','υψόμετρο GPS, τάση πίεσης, πρόγνωση'],['radio','📻','Ασύρματοι & κομβόι','PMR446, κανόνες ασυρμάτου'],['morse','📡','Morse με φως & ήχο','SOS και λέξεις'],['ggrs','🗺️','WGS84 ↔ ΕΓΣΑ 87','μετατροπή συντεταγμένων για ελληνικούς χάρτες'],['knots','🪢','Κόμποι','13 κόμποι με σχέδια βήμα-βήμα'],['night','🌙','Κόκκινη οθόνη νύχτας',''],['awake','💡','Οθόνη πάντα ανοιχτή','']]]];
 function tools(){T('🧰 Εργαλεία');M.innerHTML=TOOLS.map(([g,L])=>`<h3>${g}</h3>`+L.map(t=>`<button class="row" onclick="go('t/${t[0]}')"><span class="e">${t[1]}</span><span><b>${t[2]}</b><small>${t[0]==='night'?(night?'🔴 ΑΝΟΙΧΤΗ':'κρατάει την όραση νύχτας'):t[0]==='awake'?(keepOn?'💡 ΑΝΟΙΧΤΗ':'να μη σβήνει η οθόνη'):t[3]}</small></span></button>`).join('')).join('')}
 let TS=[];function toolStop(){TS.forEach(f=>{try{f()}catch(e){}});TS=[]}
-function tool(id){const f={incl:tIncl,compass:tCompass,pass:tPass,wade:tWade,tyre:tTyre,tsize:tTsize,winch:tWinch,payload:tPayload,fuel:tFuel,water:tWater,power:tPower,walk:tWalk,sun,wx,radio:tRadio,morse,ggrs:tGgrs,knots:tKnots,night:tNight,awake:tAwake}[id];f?f():tools()}
+function tool(id){const f={incl:tIncl,roof:tRoof,compass:tCompass,pass:tPass,wade:tWade,tyre:tTyre,tsize:tTsize,winch:tWinch,payload:tPayload,fuel:tFuel,water:tWater,power:tPower,walk:tWalk,sun,wx,radio:tRadio,morse,ggrs:tGgrs,knots:tKnots,night:tNight,awake:tAwake}[id];f?f():tools()}
 function inp(id,lbl,val,extra){return `<label>${lbl}</label><input id="${id}" type="number" inputmode="decimal" step="any" value="${esc(val)}" oninput="${extra||'calc()'}">`}
 function seg(name,opts,cur,fn){return `<div class="seg">${opts.map(([v,l])=>`<button class="${v==cur?'on':''}" onclick="${fn}('${v}')">${l}</button>`).join('')}</div>`}
 let calc=()=>{};
 
 /* ---------- Κλισιόμετρο ---------- */
 const IN={on:false,p:0,r:0,mp:0,mr:0,last:0,raw:null,beep:0};
-function inLimits(){const v=veh();return{side:sideLim(v),pitch:LS.g('plim',35)}}
+function inLimits(){const v=veh();return{side:sideLimL(v),pitch:LS.g('plim',35)}}
 function carRear(){return `<svg viewBox="-80 -70 160 120"><line x1="-78" y1="40" x2="78" y2="40" stroke="#3d3935" stroke-width="2"/><g id="crr"><rect x="-46" y="-40" width="92" height="56" rx="10" fill="#3a2a20" stroke="#d97757" stroke-width="3"/><rect x="-36" y="-32" width="72" height="22" rx="4" fill="#141312"/><rect x="-60" y="10" width="20" height="30" rx="5" fill="#f5f0e8"/><rect x="40" y="10" width="20" height="30" rx="5" fill="#f5f0e8"/><rect x="-30" y="-52" width="60" height="10" rx="3" fill="#a8a29e"/></g></svg>`}
 function carSide(){return `<svg viewBox="-90 -70 180 120"><line x1="-88" y1="40" x2="88" y2="40" stroke="#3d3935" stroke-width="2"/><g id="crs"><path d="M-70 18 L-70 -8 L-40 -10 L-25 -38 L40 -38 L52 -10 L72 -6 L72 18 Z" fill="#3a2a20" stroke="#d97757" stroke-width="3"/><rect x="-18" y="-33" width="52" height="20" rx="3" fill="#141312"/><circle cx="-45" cy="24" r="16" fill="#f5f0e8"/><circle cx="48" cy="24" r="16" fill="#f5f0e8"/><text x="62" y="-14" font-size="14" fill="#a8a29e">▶</text></g></svg>`}
 function tIncl(){T('📐 Κλισιόμετρο');const L=inLimits(),v=veh();
@@ -299,14 +299,14 @@ function wdC(){const st=LS.g('wd',{c:'0',b:'g',sn:0});st.d=n($('#wdd').value);LS
 /* ---------- Θα περάσω; ---------- */
 function tPass(){T('🚧 Θα περάσω;');const v=veh();if(!v){M.innerHTML=vehBar();return}
  const st=LS.g('ps',{step:25,ra:25,cr:15,w:40,sd:20});
- M.innerHTML=vehBar()+`<div class="kv box"><span>Από το έδαφος</span><b>${v.clr||'—'} mm</b><span>Προσέγγιση / απομάκρυνση</span><b>${v.app||'—'}° / ${v.dep||'—'}°</b><span>Ράμπα (breakover)</span><b>${v.brk||'—'}°</b><span>Νερό</span><b>${v.wade||'—'} mm</b><span>Πλευρική</span><b>${sideLim(v)}°</b></div>
+ M.innerHTML=vehBar()+`<div class="kv box"><span>Από το έδαφος</span><b>${v.clr||'—'} mm</b><span>Προσέγγιση / απομάκρυνση</span><b>${v.app||'—'}° / ${v.dep||'—'}°</b><span>Ράμπα (breakover)</span><b>${v.brk||'—'}°</b><span>Νερό</span><b>${v.wade||'—'} mm</b><span>Πλευρική</span><b>${sideLimL(v)}°</b></div>
  ${inp('pss','Ύψος σκαλιού / πέτρας που θα πατήσει ο τροχός (cm)',st.step,'psC()')}${inp('psr','Γωνία ράμπας στην είσοδο/έξοδο (°)',st.ra,'psC()')}${inp('psc','Γωνία «κορυφής» που θα περάσει κάτω από το σασί (°)',st.cr,'psC()')}${inp('psw','Βάθος νερού (cm)',st.w,'psC()')}${inp('psd','Πλευρική κλίση (°)',st.sd,'psC()')}
  <div id="pso"></div><div class="tip">Γωνίες μετράς με το <a href="#t/incl" style="color:var(--yel)">κλισιόμετρο</a> ακουμπώντας το κινητό στο έδαφος. Για «έχει η μηχανή δύναμη να ανέβει;» δες την <a href="../grade/" style="color:var(--yel)">Off-Road Gradeability</a>.</div>`;psC()}
 function psC(){const v=veh(),st={step:n($('#pss').value),ra:n($('#psr').value),cr:n($('#psc').value),w:n($('#psw').value),sd:n($('#psd').value)};LS.s('ps',st);
  const r=(lbl,val,lim,u)=>{if(!lim)return`<tr><td>${lbl}</td><td colspan="2" class="muted">δεν υπάρχει στοιχείο</td></tr>`;const p=val/lim;return`<tr><td>${lbl}</td><td>${val}${u} / ${lim}${u}</td><td class="${p<=.8?'ok':p<=1?'mid':'bad'}">${p<=.8?'✅':p<=1?'🟡 οριακά':'❌'}</td></tr>`};
  const stepLim=v.clr?Math.round(v.clr/10*0.9):0;
  $('#pso').innerHTML=`<div class="box"><table class="t"><tr><th>Έλεγχος</th><th>Εμπόδιο / όριο</th><th></th></tr>
- ${r('Σκαλί (έναντι ~90% απόστ. εδάφους)',st.step,stepLim,' cm')}${r('Ράμπα, μπροστά',st.ra,v.app,'°')}${r('Ράμπα, πίσω',st.ra,v.dep,'°')}${r('Κορυφή κάτω από σασί',st.cr,v.brk,'°')}${r('Νερό',st.w,v.wade?v.wade/10:0,' cm')}${r('Πλευρική κλίση',st.sd,sideLim(v),'°')}</table>
+ ${r('Σκαλί (έναντι ~90% απόστ. εδάφους)',st.step,stepLim,' cm')}${r('Ράμπα, μπροστά',st.ra,v.app,'°')}${r('Ράμπα, πίσω',st.ra,v.dep,'°')}${r('Κορυφή κάτω από σασί',st.cr,v.brk,'°')}${r('Νερό',st.w,v.wade?v.wade/10:0,' cm')}${r('Πλευρική κλίση',st.sd,sideLimL(v),'°')}</table>
  <div class="muted">Τα όρια είναι στατικά, με άδειο αυτοκίνητο. Με φορτίο το αυτοκίνητο κάθεται χαμηλότερα. Όταν βλέπεις 🟡: spotter έξω από το αυτοκίνητο.</div></div>`}
 
 /* ---------- Βάρος & φορτίο ---------- */
@@ -479,6 +479,8 @@ window.addEventListener('hashchange',()=>{stopAll();render(location.hash.slice(1
 <script src="academy-data.js"></script>
 <script>if(LANG==='en')document.write('<script src="academy-en.js"><\/script>')</script>
 <script src="acad-img.js"></script>
+<script src="roof.js"></script>
+<script src="tool-img.js"></script>
 <script src="academy.js"></script>
 <script src="knots.js"></script>
 <script src="equip-data.js"></script>

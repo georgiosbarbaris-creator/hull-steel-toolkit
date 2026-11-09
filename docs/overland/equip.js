@@ -37,6 +37,7 @@ function eqCardHTML(k,print){const t=eqT(k);
  return `${print?`<h2 style="margin:18px 0 4px">${k.e||''} ${esc(t.n)}</h2>`:''}<div class="muted">${esc(t.s||'')}</div>
  <div class="kv box">${k.price?`<span>💶 ${L2('Τιμή','Price')}</span><b>${esc(eqPrice(k))}</b>`:''}${k.weight?`<span>⚖️ ${L2('Βάρος','Weight')}</span><b>${esc(eqF(k,'weight'))}</b>`:''}${k.brands?`<span>🏷️ ${L2('Παραδείγματα','Examples')}</span><b style="font-weight:500">${esc(eqF(k,'brands'))}</b>`:''}</div>
  <div class="box"><b>📖 ${L2('Τι είναι, πώς δουλεύει','What it is, how it works')}</b><div style="margin-top:6px">${t.what||''}</div></div>
+ ${typeof eqImg==='function'?eqImg(k.id):''}
  <div class="box" style="border-color:var(--grn)"><b>👍 ${L2('Υπέρ','Pros')}</b>${eqList(t.pros)}</div>
  <div class="box" style="border-color:var(--red)"><b>👎 ${L2('Κατά','Cons')}</b>${eqList(t.cons)}</div>
  ${t.who?`<div class="box"><b>🙋 ${L2('Για ποιον είναι','Who it suits')}</b><div style="margin-top:6px">${t.who}</div></div>`:''}
