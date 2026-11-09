@@ -59,7 +59,7 @@
 "10.4":{"eg":"Lines LDBF ≥100% of MBL, tails ≥125%, HMPE with tails, in good condition.",
 "ex":["Lines and tails as per industry guidelines and in good condition.",["Line (or spare) with LDBF below 100% of MBL","Tail with TDBF below 125%","HMPE without tails"],["Checks certificates and condition"],["MEG4"]],
 "fg":"Lines LDBF ≥100% ng MBL, tails ≥125%, HMPE na may tails, maayos.",
-"fc":["Ikumpara ang LDBF ng bawat line (kasama spares) sa ship design MBL – ≥100%","Tails TDBF ≥125% ng MBL","Ang HMPE lines ay DAPAT may tails","Walang gasgas/sirang lines"],
+"fc":["Ikumpara ang LDBF ng bawat line (kasama spares) sa ship design MBL – ≥100%","Tails TDBF ≥125% ng MBL","Ang HMPE lines ay DAPAT may tails","Walang gasgas/sirang lines","📋 Inspector: Mooring line certificates with SDMBL and LDBF, 2 spare lines"],
 "fx":["Lines at tails ayon sa industry guidelines at maayos.",["Line (o spare) na LDBF ay mas mababa sa 100% ng MBL","Tail na TDBF ay mas mababa sa 125%","HMPE na walang tails"],["Chine-check ang certificates at kondisyon"],["MEG4"]],
 "ff":["Line LDBF <100% ng ship design MBL, tail TDBF <125%","May gasgas / sira ang lines, HMPE na walang tails","Magkaibang uri ng line sa parehong lead"]},
 "10.5":{"eg":"Winch brake rendering test (annual) and records.",

@@ -1,5 +1,5 @@
 {
- "u": "2026-11-06",
+ "u": "2026-11-09",
  "fm": {
   "t": "PSC Detention Prevention — Operational Field Manual",
   "v": "v1.0 · 05 Nov 2026 · Paris MoU · Tokyo MoU · AMSA · USCG",
@@ -3556,5 +3556,2531 @@
    "N/A items justified and documented"
   ],
   "note": "Chapter / Section is a topic-based cross-reference to RISQ 3.2, not a statement that each listed item is an independent formal certificate requirement. Verify applicability against vessel equipment, cargo and operations."
+ },
+ "il": {
+  "t": "RightShip inspector's list (as used on board)",
+  "v": "RISQ 3.2 · Dry bulk · inspector's own document & check list, in his order",
+  "r": [
+   "📄 Documents (all papers – this list from top)",
+   "🧭 Bridge",
+   "⚓ Deck & accommodation – outside",
+   "🏠 Accommodation – inside",
+   "⚙️ Engine room",
+   "🤝 Back up top for the closing meeting"
+  ],
+  "i": [
+   [
+    "H",
+    "Documents & certificates (Boarding time / Disembarking time)"
+   ],
+   [
+    "1",
+    "",
+    "Vessel Particulars / Ship's Name",
+    [],
+    "+"
+   ],
+   [
+    "2",
+    "",
+    "Last 10 ports of call and cargo loaded",
+    [],
+    "+"
+   ],
+   [
+    "3",
+    "2.4",
+    "IMO Crew List",
+    [
+     "2.4"
+    ],
+    ""
+   ],
+   [
+    "4",
+    "2.1",
+    "Latest Class Status Report (not more than 7 days before the inspection)",
+    [
+     "2.1"
+    ],
+    ""
+   ],
+   [
+    "5",
+    "2.4",
+    "Minimum Safety Manning Certificate",
+    [
+     "2.4"
+    ],
+    ""
+   ],
+   [
+    "6",
+    "4.39",
+    "Strength confirmation letter (helicopter landing)",
+    [
+     "4.39"
+    ],
+    ""
+   ],
+   [
+    "7",
+    "",
+    "Class Certificate / IOPP / DOC / SMC (if applicable)",
+    [
+     "2.1"
+    ],
+    ""
+   ],
+   [
+    "8",
+    "5.1",
+    "Ballast Water Management Cert (2020/10/28 MEPC.300(72)) / Annual report",
+    [
+     "5.10"
+    ],
+    "≠"
+   ],
+   [
+    "9",
+    "8.2",
+    "Document of Compliance for the Carriage of Dangerous Goods / IMSBC Code / Grain",
+    [
+     "8A.2",
+     "8B.4",
+     "2.7"
+    ],
+    "≠"
+   ],
+   [
+    "10",
+    "1.2",
+    "Continuous Synopsis Record | New Manager taken over / Unscheduled repair",
+    [],
+    "+"
+   ],
+   [
+    "11",
+    "6.3",
+    "Latest Enhanced Survey / Condition Evaluation Report",
+    [
+     "6.3"
+    ],
+    ""
+   ],
+   [
+    "12",
+    "1.11",
+    "PSC inspection report in last 12 months",
+    [],
+    "+"
+   ],
+   [
+    "13",
+    "1.29",
+    "Is the vessel manager a subscriber to Dry Bulk Centre of Excellence (DBCE)?",
+    [],
+    "+"
+   ],
+   [
+    "14",
+    "1.29",
+    "Has a DryBMS (Dry Bulk Management Standard) Self-Assessment been completed?",
+    [],
+    "+"
+   ],
+   [
+    "15",
+    "2.2",
+    "P&I Certificate of Entry | Certificate of Financial Security",
+    [
+     "2.2"
+    ],
+    ""
+   ],
+   [
+    "16",
+    "10.23",
+    "Cert. of 120 t SWL bollard on aft deck (if vessel DWT over 120,000)",
+    [],
+    "+"
+   ],
+   [
+    "17",
+    "5.23",
+    "Type approval Cert. of EGCS – Open or Closed loop (5 year verify)",
+    [
+     "5.23"
+    ],
+    ""
+   ],
+   [
+    "18",
+    "13.11",
+    "Computer-based PMS approval certificate (annual testing)",
+    [
+     "13.11"
+    ],
+    ""
+   ],
+   [
+    "19",
+    "5.21",
+    "Ship Energy Efficiency Management Plan (SEEMP) Part I/II/III and CoC",
+    [
+     "5.21"
+    ],
+    ""
+   ],
+   [
+    "20",
+    "5.21",
+    "Fuel consumption report / Carbon Intensity Indicator CII data / rating",
+    [
+     "5.21"
+    ],
+    ""
+   ],
+   [
+    "21",
+    "1.17",
+    "IEEC – EEDI-R / A",
+    [],
+    "+"
+   ],
+   [
+    "22",
+    "13.1",
+    "EEDI/EEXI Technical File – EEXI-R / A | EPL / OMM / release time taken record",
+    [
+     "13.1"
+    ],
+    ""
+   ],
+   [
+    "23",
+    "5.2",
+    "Shipboard Oil Pollution Emergency Plan (SOPEP) | Emergency Towing Booklet (10.22)",
+    [
+     "5.2",
+     "10.22"
+    ],
+    ""
+   ],
+   [
+    "24",
+    "13.9",
+    "Bio-fouling Management Plan and record book",
+    [],
+    "≠+"
+   ],
+   [
+    "25",
+    "8.5",
+    "Stability booklet & Loading Manual | Cargo Securing Manual",
+    [
+     "8A.7",
+     "8A.4"
+    ],
+    "≠"
+   ],
+   [
+    "26",
+    "4.27",
+    "Oxygen / Acetylene / Arc welding system",
+    [
+     "4.17"
+    ],
+    "≠"
+   ],
+   [
+    "28",
+    "14.17",
+    "Elevator annual service inspection (if fitted) | Maintenance risk assessment / PTW",
+    [
+     "14.17"
+    ],
+    ""
+   ],
+   [
+    "29",
+    "5.15",
+    "15 ppm alarm sensor calibration",
+    [
+     "5.15"
+    ],
+    ""
+   ],
+   [
+    "30",
+    "4.16",
+    "Gas detectors last calibration – calibration / bump test record",
+    [
+     "4.16"
+    ],
+    ""
+   ],
+   [
+    "31",
+    "4.5",
+    "Specific gas detector for specific cargo (CO2) / cargo assessment",
+    [
+     "4.16",
+     "8A.17"
+    ],
+    "≠"
+   ],
+   [
+    "32",
+    "4.23/4.27",
+    "High expansion foam system annual analysis | Fixed CO2 – 2 y (hydrostatic test 10 y)",
+    [
+     "4.23",
+     "4.27"
+    ],
+    ""
+   ],
+   [
+    "33",
+    "4.29-4.32",
+    "EEBD 5 y / portable extinguishers / foam applicator (Non-PFOS CoC from 01.01.2026)",
+    [
+     "4.32",
+     "4.29",
+     "4.24"
+    ],
+    ""
+   ],
+   [
+    "34",
+    "4.31",
+    "SCBA 5 y | BA air recharger – annual air quality analysis",
+    [
+     "4.30",
+     "4.31"
+    ],
+    ""
+   ],
+   [
+    "35",
+    "14.18",
+    "Medical oxygen cylinder (annual check, 5 year hydrostatic test)",
+    [
+     "14.18"
+    ],
+    ""
+   ],
+   [
+    "36",
+    "4.21",
+    "Lifejackets (quick-closure lifejacket 01.07.2010) | Immersion suit shore service",
+    [
+     "4.20",
+     "4.21"
+    ],
+    ""
+   ],
+   [
+    "37",
+    "3.15",
+    "Annual service VDR / CoC | AIS | EPIRB",
+    [
+     "3.15",
+     "11.8",
+     "11.3"
+    ],
+    ""
+   ],
+   [
+    "38",
+    "11",
+    "GMDSS / SSAS | Shore-based maintenance (expiry)",
+    [
+     "11.2",
+     "12.3",
+     "11.9"
+    ],
+    ""
+   ],
+   [
+    "39",
+    "3.13",
+    "Gyro compass annual service",
+    [
+     "3.13"
+    ],
+    ""
+   ],
+   [
+    "40",
+    "4.18",
+    "Lifeboat / rescue boat appliance annual service / 5 year report | Free-fall lifeboat seat width (keel laid ≥ 01.07.2010)",
+    [
+     "4.18"
+    ],
+    ""
+   ],
+   [
+    "41",
+    "4.19",
+    "Liferaft shore service",
+    [
+     "4.19"
+    ],
+    ""
+   ],
+   [
+    "42",
+    "9.17",
+    "Lifting appliance exam. – yearly loose gear / 5 year load test",
+    [
+     "9A.17",
+     "9A.22"
+    ],
+    ""
+   ],
+   [
+    "43",
+    "4.35",
+    "Accommodation ladder load test report",
+    [
+     "4.36",
+     "4.35"
+    ],
+    "≠"
+   ],
+   [
+    "44",
+    "4.37",
+    "Pilot ladder manufacturer certificate",
+    [
+     "4.37"
+    ],
+    ""
+   ],
+   [
+    "45",
+    "2.9",
+    "Evidence of last non-announced drug test | Drug & alcohol procedure / policy",
+    [
+     "2.9"
+    ],
+    ""
+   ],
+   [
+    "46",
+    "2.9",
+    "Alcohol meter last calibration | Non-announced alcohol test on board",
+    [
+     "2.9"
+    ],
+    ""
+   ],
+   [
+    "47",
+    "15.5",
+    "Fresh water analysis",
+    [
+     "15.5"
+    ],
+    ""
+   ],
+   [
+    "48",
+    "4.3",
+    "External audit report / Internal audit report / NC CAP",
+    [
+     "4.3"
+    ],
+    ""
+   ],
+   [
+    "49",
+    "4.4",
+    "Last two Master's Reviews (not just ticks)",
+    [
+     "4.4"
+    ],
+    ""
+   ],
+   [
+    "50",
+    "4.2",
+    "Last two safety meetings",
+    [
+     "4.2"
+    ],
+    ""
+   ],
+   [
+    "51",
+    "1.21",
+    "Manager visit report – 1st MSI/TSI, 2nd MSI/TSI (6 months / full report)",
+    [
+     "4.3"
+    ],
+    "≠+"
+   ],
+   [
+    "52",
+    "15.2",
+    "Weekly accommodation inspection record",
+    [
+     "15.2"
+    ],
+    ""
+   ],
+   [
+    "53",
+    "2.5",
+    "Rest / working hours record",
+    [
+     "2.5"
+    ],
+    ""
+   ],
+   [
+    "54",
+    "3.1",
+    "Accident and near-miss reports",
+    [
+     "4.10"
+    ],
+    "≠"
+   ],
+   [
+    "55",
+    "10.2",
+    "Safety mooring operation campaigns / lessons learned",
+    [
+     "10.1"
+    ],
+    "≠+"
+   ],
+   [
+    "H",
+    "Crew competence"
+   ],
+   [
+    "57",
+    "2.6",
+    "Master in rank and ship-handling training",
+    [
+     "2.6"
+    ],
+    ""
+   ],
+   [
+    "58",
+    "2.15",
+    "Evidence of value-added training beyond STCW – onboard CBT",
+    [],
+    "+"
+   ],
+   [
+    "59",
+    "2.7/2.8",
+    "Safe handling of solid bulk / packaged dangerous cargo course (IMO Model Course 1.45 / 1.10) – M / officers / ratings",
+    [
+     "2.7",
+     "2.8"
+    ],
+    ""
+   ],
+   [
+    "60",
+    "9.2",
+    "Hatch cover maintenance & inspection course (specific) – M / CO",
+    [
+     "9A.2"
+    ],
+    ""
+   ],
+   [
+    "61",
+    "15.2",
+    "Mental health training – M / CO / CE / 2E",
+    [
+     "15.12"
+    ],
+    "≠"
+   ],
+   [
+    "62",
+    "4.5",
+    "Enclosed space entry training – persons involved",
+    [
+     "4.5",
+     "4.6"
+    ],
+    ""
+   ],
+   [
+    "63",
+    "2.14",
+    "Type-specific ECDIS training – M / CO / 2O / 3O",
+    [
+     "2.14"
+    ],
+    ""
+   ],
+   [
+    "64",
+    "5.1",
+    "BWMS / EGCS on-board training – persons involved",
+    [
+     "5.10",
+     "5.23"
+    ],
+    "≠"
+   ],
+   [
+    "65",
+    "4.2",
+    "Safety Officer (STCW 2010 A-II/2, A-III/2, IMO Model Course 3.11) – specific checklist",
+    [
+     "4.2"
+    ],
+    ""
+   ],
+   [
+    "66",
+    "",
+    "Ship Security Officer | Cyber security officer",
+    [
+     "12.2",
+     "12.7"
+    ],
+    ""
+   ],
+   [
+    "H",
+    "SMS procedures (version / latest update)"
+   ],
+   [
+    "68",
+    "",
+    "Drug and alcohol policy / procedure",
+    [
+     "2.9"
+    ],
+    ""
+   ],
+   [
+    "69",
+    "",
+    "Procedure for navigation safety / publications",
+    [
+     "3.1",
+     "3.16"
+    ],
+    ""
+   ],
+   [
+    "70",
+    "",
+    "Guidelines for sole look-out / cold work",
+    [
+     "3.9",
+     "4.8"
+    ],
+    ""
+   ],
+   [
+    "71",
+    "",
+    "Permit-to-work procedure (incl. LOTO) – TILE: Task, Individual, Load, Environment",
+    [
+     "4.8"
+    ],
+    ""
+   ],
+   [
+    "72",
+    "",
+    "Enclosed space entry procedure – limits: flammable gas 1% LEL, CO 20 ppm, H2S 5 ppm, CO2 5000 ppm",
+    [
+     "4.5"
+    ],
+    ""
+   ],
+   [
+    "73",
+    "",
+    "Procedure for test of E/R emergency bilge suction valve",
+    [
+     "5.13"
+    ],
+    ""
+   ],
+   [
+    "74",
+    "",
+    "Procedure for reporting NC, accidents & near misses",
+    [
+     "4.10"
+    ],
+    ""
+   ],
+   [
+    "75",
+    "",
+    "Procedure for hot work / working aloft / overside – risk assessment",
+    [
+     "4.7",
+     "4.8"
+    ],
+    ""
+   ],
+   [
+    "76",
+    "",
+    "Procedures for bunkering and fuel oil transfer – risk assessment",
+    [
+     "7A.7"
+    ],
+    ""
+   ],
+   [
+    "77",
+    "",
+    "Procedure for cargo hold cleaning",
+    [
+     "8A.9"
+    ],
+    ""
+   ],
+   [
+    "78",
+    "",
+    "Procedure for cargoes that may liquefy",
+    [
+     "8A.12"
+    ],
+    ""
+   ],
+   [
+    "79",
+    "",
+    "Procedure & contingencies for fumigation of cargo holds – risk assessment",
+    [
+     "8B.15"
+    ],
+    ""
+   ],
+   [
+    "80",
+    "",
+    "Procedure for fumigation of cargo holds – risk assessment",
+    [
+     "8B.15",
+     "8B.23"
+    ],
+    ""
+   ],
+   [
+    "81",
+    "",
+    "Procedure for hose & ultrasonic test (hatch covers)",
+    [
+     "9A.3"
+    ],
+    ""
+   ],
+   [
+    "82",
+    "",
+    "Procedures for control of stevedore activities on board",
+    [
+     "4.44"
+    ],
+    ""
+   ],
+   [
+    "83",
+    "",
+    "Policy on mental health & mental disorder – violence, harassment, bullying, sexual assault",
+    [
+     "15.9",
+     "15.10"
+    ],
+    ""
+   ],
+   [
+    "84",
+    "",
+    "Stop Work Authority (SWA) policy",
+    [
+     "4.8"
+    ],
+    ""
+   ],
+   [
+    "85",
+    "",
+    "Procedures for ECDIS safety settings, UKC policy",
+    [
+     "3.18",
+     "3.7"
+    ],
+    ""
+   ],
+   [
+    "86",
+    "",
+    "PMS for BWMS and EGCS",
+    [
+     "13.11"
+    ],
+    ""
+   ],
+   [
+    "H",
+    "MLC"
+   ],
+   [
+    "88",
+    "15.1",
+    "SEA | CBA | pay slip | ITF agreement (blue / green card)",
+    [
+     "15.1"
+    ],
+    ""
+   ],
+   [
+    "89",
+    "15.1",
+    "Duration of SEA – Master / senior / junior / ratings",
+    [
+     "15.1"
+    ],
+    ""
+   ],
+   [
+    "90",
+    "15.4/15.5",
+    "Daily food budget per person (US$) | monthly welfare budget (US$)",
+    [
+     "15.5",
+     "15.3"
+    ],
+    "≠"
+   ],
+   [
+    "91",
+    "15.3",
+    "Free WiFi / internet (GB)",
+    [
+     "15.3"
+    ],
+    ""
+   ],
+   [
+    "92",
+    "",
+    "Last group social activities",
+    [
+     "15.3"
+    ],
+    ""
+   ],
+   [
+    "93",
+    "15.7",
+    "Crew medical report | medicine log book | medical chest certificate",
+    [
+     "15.6",
+     "14.18"
+    ],
+    "≠"
+   ],
+   [
+    "94",
+    "15.6",
+    "Health / mental health promotion programme / policy / poster",
+    [
+     "15.6"
+    ],
+    ""
+   ],
+   [
+    "H",
+    "Drill records / yearly drill plan"
+   ],
+   [
+    "96",
+    "",
+    "Fire drill (1 M) – within 24 h if >25% crew change",
+    [
+     "4.9"
+    ],
+    ""
+   ],
+   [
+    "97",
+    "",
+    "Abandon ship drill (1 M)",
+    [
+     "4.9"
+    ],
+    ""
+   ],
+   [
+    "98",
+    "",
+    "Davit-launched lifeboat launch & on-water manoeuvring (3 M)",
+    [
+     "4.18",
+     "4.9"
+    ],
+    ""
+   ],
+   [
+    "99",
+    "",
+    "Free-fall lifeboat launching or simulated launch (6 M)",
+    [
+     "4.18",
+     "4.9"
+    ],
+    ""
+   ],
+   [
+    "100",
+    "",
+    "Rescue boat waterborne (1 M / minimum 3 M) – if applicable",
+    [
+     "4.18",
+     "4.9"
+    ],
+    ""
+   ],
+   [
+    "101",
+    "",
+    "Liferaft davit launching training (4 M) – if applicable",
+    [
+     "4.18",
+     "4.9"
+    ],
+    ""
+   ],
+   [
+    "102",
+    "",
+    "Emergency steering drill (3 M)",
+    [
+     "13.40"
+    ],
+    ""
+   ],
+   [
+    "103",
+    "",
+    "Enclosed space entry and rescue drill (2 M)",
+    [
+     "4.6"
+    ],
+    ""
+   ],
+   [
+    "104",
+    "",
+    "Ship security (ISPS) drill (3 M) | anti-piracy (6 M / 48 h before entering HRA) – 25% crew change",
+    [
+     "12.2",
+     "12.5"
+    ],
+    ""
+   ],
+   [
+    "105",
+    "",
+    "Oil spill / SOPEP drill (3 M)",
+    [
+     "5.2",
+     "4.9"
+    ],
+    ""
+   ],
+   [
+    "106",
+    "",
+    "Helicopter operation (1 Y)",
+    [
+     "4.41"
+    ],
+    ""
+   ],
+   [
+    "107",
+    "",
+    "Emergency operation of hatch covers (1 Y)",
+    [
+     "9A.16"
+    ],
+    ""
+   ],
+   [
+    "108",
+    "",
+    "ECDIS failure drill (3 M)",
+    [
+     "3.18",
+     "4.9"
+    ],
+    ""
+   ],
+   [
+    "109",
+    "",
+    "Training / familiarisation: BWMS, EGCS, ECDIS, EPL (3 M)",
+    [
+     "2.14",
+     "5.10",
+     "5.23"
+    ],
+    ""
+   ],
+   [
+    "H",
+    "Chief Engineer"
+   ],
+   [
+    "112",
+    "7A.7",
+    "Bunkering records fuel / L.O. (BDN) / MSDS / ORB / bunkering plan – checklist",
+    [
+     "7A.7"
+    ],
+    ""
+   ],
+   [
+    "113",
+    "7A.8",
+    "Fuel oil changeover procedure / record (ECA)",
+    [
+     "7A.9"
+    ],
+    "≠"
+   ],
+   [
+    "114",
+    "7A.5",
+    "Last analysis report of fuel oil / L.O. / hydraulic oil – risk assessment",
+    [
+     "7A.5"
+    ],
+    ""
+   ],
+   [
+    "115",
+    "13.13-13.14",
+    "M/E and A/E running hours and maintenance records (PMS) / emergency generator",
+    [
+     "13.13",
+     "13.14"
+    ],
+    ""
+   ],
+   [
+    "116",
+    "13.12",
+    "Inventory of critical spares",
+    [
+     "13.28"
+    ],
+    "≠+"
+   ],
+   [
+    "117",
+    "7A.2",
+    "Bunker line pressure test (100% and 150% of MAWP)",
+    [
+     "7A.2"
+    ],
+    ""
+   ],
+   [
+    "118",
+    "13.35",
+    "Main engine local control drill",
+    [
+     "13.35"
+    ],
+    ""
+   ],
+   [
+    "119",
+    "13.36",
+    "Latest blackout test and record",
+    [
+     "13.36",
+     "13.17"
+    ],
+    ""
+   ],
+   [
+    "120",
+    "15.14",
+    "Last air-condition maintenance",
+    [
+     "15.14"
+    ],
+    ""
+   ],
+   [
+    "121",
+    "13.18",
+    "Last test of emergency stop of E/R ventilation fans",
+    [
+     "13.18"
+    ],
+    ""
+   ],
+   [
+    "122",
+    "4.8",
+    "Work permits / risk assessments – enclosed space, hot work, LOTO",
+    [
+     "4.8",
+     "4.5",
+     "4.7"
+    ],
+    ""
+   ],
+   [
+    "H",
+    "Chief Officer"
+   ],
+   [
+    "125",
+    "5.19",
+    "Garbage Management Plan / Garbage Record Book",
+    [
+     "5.19"
+    ],
+    ""
+   ],
+   [
+    "126",
+    "5.11",
+    "Ballast Water Management Plan / Ballast Water Record Book",
+    [
+     "5.10"
+    ],
+    "≠"
+   ],
+   [
+    "127",
+    "5.12",
+    "Procedure to check water surface before discharge / oil film check",
+    [
+     "5.12"
+    ],
+    ""
+   ],
+   [
+    "128",
+    "10.5",
+    "Last winch brake test (60% MBL)",
+    [
+     "10.5"
+    ],
+    ""
+   ],
+   [
+    "129",
+    "10.1",
+    "Line Management Plan (LMP) – date",
+    [
+     "10.1"
+    ],
+    ""
+   ],
+   [
+    "130",
+    "10.4",
+    "Mooring rope / tail certificates / 2 spare – SDMBL, LDBF",
+    [
+     "10.3",
+     "10.4"
+    ],
+    ""
+   ],
+   [
+    "131",
+    "6.2",
+    "Last inspection of cargo holds – photos",
+    [
+     "6.2"
+    ],
+    ""
+   ],
+   [
+    "132",
+    "6.2",
+    "Last inspection of ballast water tanks – photos",
+    [
+     "6.2"
+    ],
+    ""
+   ],
+   [
+    "133",
+    "6.6",
+    "Inspection of duct keel / void spaces",
+    [
+     "6.6"
+    ],
+    ""
+   ],
+   [
+    "134",
+    "4.14",
+    "Last test of water ingress detector system",
+    [
+     "4.14"
+    ],
+    ""
+   ],
+   [
+    "135",
+    "8A.6",
+    "Last loading computer accuracy test",
+    [
+     "8A.6"
+    ],
+    ""
+   ],
+   [
+    "136",
+    "9A.3",
+    "Last hose test of hatch covers",
+    [
+     "9A.3"
+    ],
+    ""
+   ],
+   [
+    "137",
+    "9A.2",
+    "Hatch cover maintenance record – clearance measurement (6-monthly) | UT test pre-loading steel / grain",
+    [
+     "9A.2",
+     "9A.4",
+     "8B.13"
+    ],
+    ""
+   ],
+   [
+    "138",
+    "4.17",
+    "Last shipper declaration & MSDS / HME",
+    [
+     "5.18",
+     "8A.2",
+     "4.34"
+    ],
+    "≠"
+   ],
+   [
+    "139",
+    "4.11",
+    "PPE matrix and fall arrestor annual inspection report | PPE maintenance record",
+    [
+     "4.11"
+    ],
+    ""
+   ],
+   [
+    "140",
+    "4.13",
+    "Ship/shore safety checklist",
+    [
+     "4.13"
+    ],
+    ""
+   ],
+   [
+    "141",
+    "4.44",
+    "Stevedore safe entry to cargo hold – procedure and checklist (each gang / shift)",
+    [
+     "4.44"
+    ],
+    ""
+   ],
+   [
+    "142",
+    "8.9",
+    "Inventory of cargo hold cleaning equipment",
+    [
+     "8A.9"
+    ],
+    ""
+   ],
+   [
+    "143",
+    "8.14",
+    "Loading / discharging plan",
+    [
+     "8A.14"
+    ],
+    ""
+   ],
+   [
+    "144",
+    "5.7",
+    "Daily sounding record – deck",
+    [
+     "5.7"
+    ],
+    ""
+   ],
+   [
+    "145",
+    "8.15",
+    "Cargo care log (sounding, temperature, gas measurement / coal pH) / ventilation",
+    [
+     "8A.15",
+     "8A.16",
+     "8A.18"
+    ],
+    ""
+   ],
+   [
+    "146",
+    "8.14-8.27",
+    "Fumigation file / VSP",
+    [
+     "8B.21",
+     "8B.26"
+    ],
+    "≠"
+   ],
+   [
+    "147",
+    "9A.19",
+    "Rocking test of deck cranes – procedure / interval",
+    [
+     "9A.19"
+    ],
+    ""
+   ],
+   [
+    "148",
+    "9A.18",
+    "Deck / provision crane maintenance record (wire / safety devices)",
+    [
+     "9A.18"
+    ],
+    ""
+   ],
+   [
+    "149",
+    "4.8",
+    "PTW / RA – enclosed space, hot work, working aloft (if applicable)",
+    [
+     "4.8",
+     "4.5",
+     "4.7"
+    ],
+    ""
+   ],
+   [
+    "150",
+    "4.36",
+    "Accommodation ladder turntable / safety pin (PMS)",
+    [
+     "4.36"
+    ],
+    ""
+   ],
+   [
+    "151",
+    "5.6",
+    "Cargo hold bilge suction non-return valves (PMS)",
+    [
+     "5.6"
+    ],
+    ""
+   ],
+   [
+    "H",
+    "Bridge"
+   ],
+   [
+    "155",
+    "",
+    "General photos",
+    [],
+    "+"
+   ],
+   [
+    "156",
+    "",
+    "UHF radios – number of sets",
+    [
+     "11.5"
+    ],
+    ""
+   ],
+   [
+    "157",
+    "",
+    "Mobile phone use policy",
+    [
+     "3.28"
+    ],
+    ""
+   ],
+   [
+    "158",
+    "",
+    "Master's standing orders / Master's order book / bridge manning matrix",
+    [
+     "3.2",
+     "3.9"
+    ],
+    ""
+   ],
+   [
+    "159",
+    "",
+    "Deck log book – safety patrol / steering gear changeover / UMS report",
+    [
+     "3.8",
+     "3.14",
+     "13.4"
+    ],
+    ""
+   ],
+   [
+    "160",
+    "",
+    "GMDSS log / GMDSS testing / NAVAREA | SSAS test",
+    [
+     "11.2",
+     "12.3",
+     "3.20"
+    ],
+    ""
+   ],
+   [
+    "161",
+    "",
+    "Radar book – PM test record",
+    [
+     "3.5"
+    ],
+    ""
+   ],
+   [
+    "162",
+    "",
+    "Compass deviation record",
+    [
+     "3.13"
+    ],
+    ""
+   ],
+   [
+    "163",
+    "",
+    "Daily bridge equipment checklist",
+    [
+     "3.4"
+    ],
+    ""
+   ],
+   [
+    "164",
+    "",
+    "Pre-arrival / departure checklists",
+    [
+     "3.4"
+    ],
+    ""
+   ],
+   [
+    "165",
+    "",
+    "Pilot card / Master-pilot exchange – EPL information",
+    [
+     "3.6"
+    ],
+    ""
+   ],
+   [
+    "166",
+    "",
+    "Passage plan | UKC / air draft calculation verified",
+    [
+     "3.23",
+     "3.7"
+    ],
+    ""
+   ],
+   [
+    "167",
+    "",
+    "VDR – CoC | AIS",
+    [
+     "3.15",
+     "11.8"
+    ],
+    ""
+   ],
+   [
+    "168",
+    "",
+    "BNWAS | JRC transmission attenuation −6.9~+2.0 dB, receiver attenuation −2.9~+3.5 dB",
+    [
+     "3.12"
+    ],
+    ""
+   ],
+   [
+    "169",
+    "",
+    "Radar X-band / S-band – PM test | spare magnetron",
+    [
+     "3.10",
+     "3.5"
+    ],
+    ""
+   ],
+   [
+    "170",
+    "",
+    "ECDIS failure procedure / checklist",
+    [
+     "3.18"
+    ],
+    ""
+   ],
+   [
+    "171",
+    "",
+    "ECDIS settings – XTD, safety depth/contour, PI, look-ahead, AIO T&P, position plot, ECA, Chart 1, audio alarm, SCAMIN",
+    [
+     "3.18"
+    ],
+    ""
+   ],
+   [
+    "172",
+    "",
+    "ECDIS type approval and ENC subscription certificate from supplier",
+    [
+     "3.18",
+     "3.16"
+    ],
+    ""
+   ],
+   [
+    "173",
+    "",
+    "ENC / ENP / ADP",
+    [
+     "3.16"
+    ],
+    ""
+   ],
+   [
+    "174",
+    "",
+    "GPS – HDOP (dilution of precision)",
+    [
+     "3.26"
+    ],
+    ""
+   ],
+   [
+    "175",
+    "",
+    "Echo sounder",
+    [
+     "3.22"
+    ],
+    ""
+   ],
+   [
+    "176",
+    "",
+    "Navigation lights testing procedure (LED?)",
+    [
+     "3.11"
+    ],
+    ""
+   ],
+   [
+    "177",
+    "",
+    "Spare compass",
+    [
+     "3.13"
+    ],
+    ""
+   ],
+   [
+    "178",
+    "",
+    "Weather routeing service",
+    [
+     "3.27"
+    ],
+    ""
+   ],
+   [
+    "179",
+    "",
+    "Speed log",
+    [
+     "3.10"
+    ],
+    ""
+   ],
+   [
+    "180",
+    "",
+    "EPIRB | SART (AIS / radar)",
+    [
+     "11.3",
+     "11.6"
+    ],
+    ""
+   ],
+   [
+    "181",
+    "",
+    "NAVTEX – ECDIS double check / NAVAREA XI | LSA VHF",
+    [
+     "3.20",
+     "11.7"
+    ],
+    ""
+   ],
+   [
+    "182",
+    "",
+    "RPM & rudder indicators | rate of turn indicator (ROTI)",
+    [
+     "3.10"
+    ],
+    ""
+   ],
+   [
+    "183",
+    "",
+    "Weathertight door closed indicator / alarm",
+    [
+     "14.5"
+    ],
+    ""
+   ],
+   [
+    "184",
+    "",
+    "MOB lifebuoy",
+    [
+     "4.42"
+    ],
+    ""
+   ],
+   [
+    "185",
+    "",
+    "Line-throwing appliance | parachute signals | hand flares",
+    [
+     "4.42"
+    ],
+    ""
+   ],
+   [
+    "186",
+    "",
+    "Lifejackets | immersion suits (pillow / non-pillow)",
+    [
+     "4.20",
+     "4.21"
+    ],
+    ""
+   ],
+   [
+    "187",
+    "",
+    "Battery room",
+    [
+     "14.12"
+    ],
+    ""
+   ],
+   [
+    "188",
+    "",
+    "Fire detection system",
+    [
+     "4.26"
+    ],
+    ""
+   ],
+   [
+    "189",
+    "",
+    "Water ingress alarm",
+    [
+     "4.14"
+    ],
+    ""
+   ],
+   [
+    "190",
+    "",
+    "Steering gear alarm",
+    [
+     "13.41"
+    ],
+    ""
+   ],
+   [
+    "191",
+    "",
+    "Cyber security controls",
+    [
+     "12.7",
+     "12.8"
+    ],
+    ""
+   ],
+   [
+    "192",
+    "",
+    "Publications – Code of Signals 2005, IAMSAR III 2025, IMDG/MFAG (fumigation), IMSBC Code",
+    [
+     "3.16"
+    ],
+    ""
+   ],
+   [
+    "193",
+    "",
+    "NP133C / NP231 / NP5022 / Aus AHP20 – latest editions",
+    [
+     "3.16"
+    ],
+    ""
+   ],
+   [
+    "194",
+    "",
+    "Security charts Q6099, Q6110–Q6114 – latest editions",
+    [
+     "12.5"
+    ],
+    ""
+   ],
+   [
+    "195",
+    "",
+    "ECDIS back-up procedure",
+    [
+     "3.18"
+    ],
+    ""
+   ],
+   [
+    "196",
+    "",
+    "ECDIS spare parts",
+    [
+     "3.18"
+    ],
+    ""
+   ],
+   [
+    "H",
+    "Engine room"
+   ],
+   [
+    "199",
+    "",
+    "General view 4 directions | escape ladder steel shields (01.01.2016)",
+    [
+     "13.15"
+    ],
+    ""
+   ],
+   [
+    "200",
+    "",
+    "PMS – overdue items, spare parts, maintenance",
+    [
+     "13.11",
+     "13.28"
+    ],
+    ""
+   ],
+   [
+    "201",
+    "",
+    "Boiler / safety valves (feed water and cooling system) | economizer",
+    [
+     "13.33"
+    ],
+    ""
+   ],
+   [
+    "202a",
+    "",
+    "ECR / MSB / insulation readings",
+    [
+     "13.22",
+     "13.39"
+    ],
+    ""
+   ],
+   [
+    "202b",
+    "",
+    "ECR / automation control system version",
+    [
+     "13.4"
+    ],
+    ""
+   ],
+   [
+    "203",
+    "",
+    "LOTO / TILE",
+    [
+     "4.8"
+    ],
+    ""
+   ],
+   [
+    "204",
+    "",
+    "Incinerator",
+    [
+     "13.33"
+    ],
+    ""
+   ],
+   [
+    "205",
+    "",
+    "Marine sewage plant",
+    [
+     "5.27"
+    ],
+    ""
+   ],
+   [
+    "206",
+    "",
+    "Purifiers",
+    [
+     "7A.12"
+    ],
+    ""
+   ],
+   [
+    "207",
+    "",
+    "Air compressors",
+    [
+     "13.33"
+    ],
+    ""
+   ],
+   [
+    "208",
+    "",
+    "Air condition",
+    [
+     "15.14"
+    ],
+    ""
+   ],
+   [
+    "209",
+    "",
+    "Provision machinery / temperature record",
+    [
+     "14.16"
+    ],
+    ""
+   ],
+   [
+    "210",
+    "",
+    "Pumps",
+    [
+     "13.32"
+    ],
+    ""
+   ],
+   [
+    "211",
+    "",
+    "A/E both sides",
+    [
+     "13.14"
+    ],
+    ""
+   ],
+   [
+    "212",
+    "",
+    "FW generator",
+    [
+     "13.33"
+    ],
+    ""
+   ],
+   [
+    "213",
+    "",
+    "OWS – 15 ppm calibration date, discharge seals / lock (MEPC.107(49) dates 30.04.1994 / 01.01.2005)",
+    [
+     "5.15",
+     "5.14"
+    ],
+    ""
+   ],
+   [
+    "214",
+    "",
+    "Sounding pipes",
+    [
+     "13.24"
+    ],
+    ""
+   ],
+   [
+    "215",
+    "",
+    "Quick-closing (shut-off) valves",
+    [
+     "7A.10"
+    ],
+    ""
+   ],
+   [
+    "216",
+    "",
+    "Bilge wells",
+    [
+     "13.31",
+     "5.14"
+    ],
+    ""
+   ],
+   [
+    "217",
+    "",
+    "Piping lagging / insulation",
+    [
+     "13.20"
+    ],
+    ""
+   ],
+   [
+    "218",
+    "",
+    "Workshop / gas bottles",
+    [
+     "13.26",
+     "4.17"
+    ],
+    ""
+   ],
+   [
+    "219",
+    "",
+    "Emergency generator – 18 hours / insulation readings / shut-off valve",
+    [
+     "7A.13",
+     "13.36"
+    ],
+    ""
+   ],
+   [
+    "220",
+    "",
+    "Bow thruster – insulation [440 V / 5 / 0.5 | 220 V / 2 / 0.2 MΩ]",
+    [
+     "13.33"
+    ],
+    ""
+   ],
+   [
+    "221",
+    "",
+    "Engine power limitation (EPL)",
+    [
+     "13.1"
+    ],
+    ""
+   ],
+   [
+    "H",
+    "Accommodation"
+   ],
+   [
+    "223",
+    "",
+    "Crew cabins / galley / provision store / hospital / laundry / gym",
+    [
+     "15.2",
+     "14.18"
+    ],
+    ""
+   ],
+   [
+    "224",
+    "",
+    "Fire station / CO2 room / foam tank / air condition / paint store",
+    [
+     "4.27",
+     "14.12"
+    ],
+    ""
+   ],
+   [
+    "225",
+    "",
+    "Change room / smoking room / mess room / ship's office",
+    [
+     "4.15",
+     "15.2"
+    ],
+    ""
+   ],
+   [
+    "226",
+    "",
+    "Training manual / posters – mental health, health promotion",
+    [
+     "4.38",
+     "15.6"
+    ],
+    ""
+   ],
+   [
+    "H",
+    "Loading coal"
+   ],
+   [
+    "228",
+    "",
+    "Gas detection / temperature / pH instruments",
+    [
+     "8A.18"
+    ],
+    ""
+   ],
+   [
+    "229",
+    "",
+    "Cargo log: bilge sounding / gas & temperature / pH / ventilation",
+    [
+     "8A.16"
+    ],
+    ""
+   ],
+   [
+    "230",
+    "",
+    "Special emergency equipment required by IMSBC Code (MSDS)",
+    [
+     "8A.19"
+    ],
+    ""
+   ],
+   [
+    "H",
+    "8B – Loading grain & fumigation"
+   ],
+   [
+    "234",
+    "8B.1",
+    "Publications (ship SMS requirement)",
+    [],
+    "+"
+   ],
+   [
+    "235",
+    "8B.2",
+    "Cargo information from shipper – moisture content",
+    [
+     "8B.2"
+    ],
+    ""
+   ],
+   [
+    "236",
+    "8B.3",
+    "Cargo examined and sampled during inspection – photos / sampling",
+    [],
+    "+"
+   ],
+   [
+    "237",
+    "8B.4",
+    "Grain stability booklet / grain loading manual / loading computer",
+    [
+     "8B.4"
+    ],
+    ""
+   ],
+   [
+    "238",
+    "8B.5",
+    "If the grain stability booklet is not provided on board",
+    [
+     "8B.5"
+    ],
+    ""
+   ],
+   [
+    "239",
+    "8B.6",
+    "Loading computer accuracy testing (grain)",
+    [
+     "8B.6"
+    ],
+    ""
+   ],
+   [
+    "240",
+    "8B.7",
+    "Loading / unloading plan – BM & SF / stability calculation",
+    [
+     "8B.7"
+    ],
+    ""
+   ],
+   [
+    "241",
+    "8B.8",
+    "Ballast cargo hold procedure",
+    [
+     "8B.8"
+    ],
+    ""
+   ],
+   [
+    "242",
+    "8B.9",
+    "Cargo hold cleaning procedure and checklist",
+    [
+     "8B.9"
+    ],
+    ""
+   ],
+   [
+    "243",
+    "8B.10",
+    "Cargo hold inspection certificate – grain clean / hospital clean certificate",
+    [
+     "8B.10"
+    ],
+    ""
+   ],
+   [
+    "244",
+    "8B.11",
+    "Limitations / restrictions in loading manual",
+    [
+     "8B.11"
+    ],
+    ""
+   ],
+   [
+    "245",
+    "8B.12",
+    "Hazards / risks of loading grain – fuel oil heating transmission",
+    [
+     "8B.12"
+    ],
+    ""
+   ],
+   [
+    "246",
+    "8B.13",
+    "UT test before grain loading",
+    [
+     "8B.13"
+    ],
+    ""
+   ],
+   [
+    "247",
+    "8B.14",
+    "Fumigation information to the Master before arrival",
+    [
+     "8B.14"
+    ],
+    ""
+   ],
+   [
+    "248",
+    "8B.15",
+    "Fumigation procedure and checklist",
+    [
+     "8B.15"
+    ],
+    ""
+   ],
+   [
+    "249",
+    "8B.16",
+    "Crew familiar with major fumigation hazards – fire / explosion / toxic",
+    [
+     "8B.16"
+    ],
+    ""
+   ],
+   [
+    "250",
+    "8B.17",
+    "Gas detection equipment / 4 sets of respiratory PPE / Medical First Aid Guide",
+    [
+     "8B.17"
+    ],
+    ""
+   ],
+   [
+    "251",
+    "8B.18",
+    "Officer and crew training for fumigation operations",
+    [
+     "8B.18"
+    ],
+    ""
+   ],
+   [
+    "252",
+    "8B.19",
+    "Pre-fumigation and post-fumigation statement / certificate",
+    [
+     "8B.19"
+    ],
+    ""
+   ],
+   [
+    "253",
+    "8B.20",
+    "Warning notices to control access to fumigated spaces",
+    [
+     "8B.20"
+    ],
+    ""
+   ],
+   [
+    "254",
+    "8B.21",
+    "Voyage Safety Plan (VSP) | cargo hold cleaning certificate",
+    [
+     "8B.21"
+    ],
+    ""
+   ],
+   [
+    "255",
+    "8B.22",
+    "Air intakes of air condition / E/R protection – photos",
+    [
+     "8B.22"
+    ],
+    ""
+   ],
+   [
+    "256",
+    "8B.23",
+    "Procedure for entry into fumigated space – RA and checklist",
+    [
+     "8B.23"
+    ],
+    ""
+   ],
+   [
+    "257",
+    "8B.24",
+    "Fumigation information to terminal before arrival",
+    [
+     "8B.24"
+    ],
+    ""
+   ],
+   [
+    "258",
+    "8B.25",
+    "Gas-free certificate",
+    [
+     "8B.25"
+    ],
+    ""
+   ],
+   [
+    "259",
+    "8B.26",
+    "Records during fumigation – gas detection record / ventilation on voyage",
+    [
+     "8B.26"
+    ],
+    ""
+   ],
+   [
+    "H",
+    "9B – Vessel fitted with gantry crane (if applicable)"
+   ],
+   [
+    "9B.1",
+    "",
+    "Procedure",
+    [],
+    "+"
+   ],
+   [
+    "9B.2",
+    "",
+    "Lifting hatch cover",
+    [],
+    "+"
+   ],
+   [
+    "9B.3",
+    "",
+    "Trained companion person",
+    [],
+    "+"
+   ],
+   [
+    "9B.4",
+    "",
+    "Isolation procedure",
+    [],
+    "+"
+   ],
+   [
+    "9B.5",
+    "",
+    "Visual and audible alarm",
+    [],
+    "+"
+   ],
+   [
+    "9B.6",
+    "",
+    "Safety devices (PMS)",
+    [],
+    "+"
+   ],
+   [
+    "9B.7",
+    "",
+    "Safety operation poster",
+    [],
+    "+"
+   ],
+   [
+    "9B.8",
+    "",
+    "Storm locking arrangement",
+    [],
+    "+"
+   ],
+   [
+    "9B.9",
+    "",
+    "Electrically bonded and earthed",
+    [],
+    "+"
+   ],
+   [
+    "9B.10",
+    "",
+    "Mechanical brake for movement",
+    [],
+    "+"
+   ],
+   [
+    "9B.11",
+    "",
+    "Foot guards for collision",
+    [],
+    "+"
+   ],
+   [
+    "9B.12",
+    "",
+    "Emergency escape",
+    [],
+    "+"
+   ],
+   [
+    "9B.13",
+    "",
+    "Portable extinguisher",
+    [],
+    "+"
+   ],
+   [
+    "9B.14",
+    "",
+    "Driver cabin (PMS)",
+    [],
+    "+"
+   ],
+   [
+    "9B.15",
+    "",
+    "Retractable roof",
+    [],
+    "+"
+   ],
+   [
+    "9B.16",
+    "",
+    "Telephone or radio system",
+    [],
+    "+"
+   ],
+   [
+    "9B.17",
+    "",
+    "Helicopter winching operation on roof (if applicable)",
+    [],
+    "+"
+   ],
+   [
+    "9B.18",
+    "",
+    "Pilot transportation",
+    [],
+    "+"
+   ],
+   [
+    "9B.19",
+    "",
+    "Monitoring system and logger",
+    [],
+    "+"
+   ],
+   [
+    "9B.20",
+    "",
+    "Emergency pump operation training",
+    [],
+    "+"
+   ],
+   [
+    "9B.21",
+    "",
+    "Structure (girder / trolley, ladder)",
+    [],
+    "+"
+   ],
+   [
+    "9B.22",
+    "",
+    "Travelling parts condition",
+    [],
+    "+"
+   ],
+   [
+    "9B.23",
+    "",
+    "AC motor, electrical brake maintenance",
+    [],
+    "+"
+   ],
+   [
+    "9B.24",
+    "",
+    "Hydraulic oil analysis",
+    [],
+    "+"
+   ],
+   [
+    "H",
+    "Section 17 – STS operations (if applicable)"
+   ],
+   [
+    "17.a",
+    "",
+    "STS plan and crew familiar with the plan",
+    [],
+    "+"
+   ],
+   [
+    "17.b",
+    "",
+    "Local assessment record",
+    [],
+    "+"
+   ],
+   [
+    "17.c",
+    "",
+    "STS superintendent – Master / experience / training record",
+    [],
+    "+"
+   ],
+   [
+    "17.d",
+    "",
+    "Compatibility assessment procedure and record",
+    [],
+    "+"
+   ],
+   [
+    "17.e",
+    "",
+    "Joint plan of operation / RA, STS equipment, crane, tugboat, contingency plan",
+    [],
+    "+"
+   ],
+   [
+    "17.f",
+    "",
+    "STS contingency plan",
+    [],
+    "+"
+   ],
+   [
+    "17.g",
+    "",
+    "Crew training record of STS",
+    [],
+    "+"
+   ],
+   [
+    "17.h",
+    "",
+    "Feedback and assessment by Master post-STS operation",
+    [],
+    "+"
+   ],
+   [
+    "17.i",
+    "",
+    "STS safety operation checklist",
+    [],
+    "+"
+   ],
+   [
+    "17.j",
+    "",
+    "STS equipment – fenders, mooring equipment, personal transmitters",
+    [],
+    "+"
+   ]
+  ],
+  "note": "Inspector's own numbering is kept in grey (Insp x.x). The → links open the matching RISQ 3.2 question in this app. ≠ = his number differs from the RISQ 3.2 question; + = not among the app's 290 scored questions (e.g. chapter 1) – prepare it from this list."
  }
 }

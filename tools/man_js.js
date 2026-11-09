@@ -7,7 +7,7 @@ function mPFN(k,st,en){const v=st&&st[k]||"";return `<span class="pfn" data-mk="
 function mYN(k,st,en){const v=st&&st[k]||"";return `<span class="pfn" data-mk="${k}">${[["y","YES"],["f","NO"],["u","?"]].map(([x,l])=>`<button class="${v===x?"on "+(x==="y"?"p":x):""}" data-v="${x}" ${en?"":"disabled"}>${l}</button>`).join("")}</span>`;}
 const mDet=(sum,body)=>`<details class="card mdet"><summary>${sum}</summary><div style="margin-top:8px">${body}</div></details>`;
 const mQ=(qs,ins)=>ins&&qs&&qs.length?`<div class="row" style="margin-top:6px">${qs.filter(q=>QM[q]).map(q=>`<button class="pgo" data-goq="${q}">→ ${q}</button>`).join("")}</div>`:"";
-function MANR(pg,ins){if(pg==="trn")return TRR(ins);const P=manPack();let h="";
+function MANR(pg,ins){if(pg==="trn")return TRR(ins);if(pg==="il")return ILR(ins);const P=manPack();let h="";
  if(pg==="man"){
   h=`<div class="card"><h2 style="margin-top:0">📘 ${esc(MAN.fm.t)}</h2><p class="note">${esc(MAN.fm.v)}</p><p>${ML.fmX}</p><button class="btn p" data-open="fm">${ML.open}</button></div>
    <div class="card"><h2 style="margin-top:0">🇨🇦 ${esc(MAN.ca.t)}</h2><p class="note">${esc(MAN.ca.v)}</p><p>${ML.caX}</p><button class="btn p" data-open="ca">${ML.open}</button></div>
@@ -51,7 +51,7 @@ function MANR(pg,ins){if(pg==="trn")return TRR(ins);const P=manPack();let h="";
    mDet("⭐ "+ML.golden,`<ol>${C.golden.map(g=>`<li>${esc(LG(g))}</li>`).join("")}</ol>`)+
    mDet("📚 "+ML.src,`<div class="psrc">${C.src.map(s=>`<p><a href="${s[1]}" target="_blank" rel="noopener">${esc(s[0])}</a></p>`).join("")}</div>`);}
  return h;}
-function MANB(pg,ins,box){if(pg==="trn"){TRB(ins,box);return;}
+function MANB(pg,ins,box){if(pg==="trn"){TRB(ins,box);return;}if(pg==="il"){ILB(ins,box);return;}
  box.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{if(b.dataset.reg){if(ins){ins.pr=b.dataset.reg;save();}try{localStorage.setItem(PSCK,b.dataset.reg);}catch(e){}}openPage(b.dataset.open,pageFrom);window.scrollTo(0,0);});
  box.querySelectorAll(".pfn button").forEach(b=>b.onclick=e=>{e.preventDefault();if(!ins)return;const k=b.parentNode.dataset.mk,st=ins.mf=ins.mf||{};st[k]=st[k]===b.dataset.v?"":b.dataset.v;save();
   const op=[...box.querySelectorAll("details")].map(d=>d.open),y=window.scrollY;rPage();[...$("#pg").querySelectorAll("details")].forEach((d,i)=>d.open=!!op[i]);window.scrollTo(0,y);});
@@ -104,3 +104,35 @@ function TRB(ins,box){
  box.querySelectorAll("[data-goq]").forEach(b=>b.onclick=e=>{e.preventDefault();const q=QM[b.dataset.goq];area=q.a;aflt="all";go("area");setTimeout(()=>{const x=$(`#qs [data-id="${q.id}"]`);if(x)x.scrollIntoView({block:"center"});},60);});
  const m=$("#trShM");if(m)m.onclick=()=>shareText("RightShip training – missing/open",trTxt(ins,true));
  const a=$("#trShA");if(a)a.onclick=()=>shareText("RightShip training checklist",trTxt(ins,false));}
+
+/* ---------- 📋 Inspector's own list (MAN.il) ---------- */
+let ilF="all";
+function ilCnt(ins){const st=ins&&ins.il||{},L=MAN.il.i.filter(x=>x[0]!=="H");let p=0,f=0,n=0;L.forEach(x=>{const v=st[x[0]];if(v==="p")p++;else if(v==="f")f++;else if(v==="n")n++;});return {p,f,n,o:L.length-p-f-n,t:L.length};}
+function ilPFN(k,st,en){const v=st&&st[k]||"";return `<span class="pfn ipfn" data-ik="${k}">${[["p","✓"],["f","✗"],["n","N/A"]].map(([x,l])=>`<button class="${v===x?"on "+x:""}" data-v="${x}" ${en?"":"disabled"}>${l}</button>`).join("")}</span>`;}
+function ILR(ins){const T=MAN.il,st=ins?(ins.il=ins.il||{}):null,rm=ins?(ins.ilm=ins.ilm||{}):null,c=ilCnt(ins);
+ const show=x=>{const v=st&&st[x[0]]||"";return ilF==="all"||(ilF==="open"&&!v)||(ilF==="f"&&v==="f")||(ilF==="d"&&x[4]);};
+ const fl=f=>f.includes("≠")&&f.includes("+")?`<span class="note" style="color:#b9770e">≠ + ${ML.ilNo}</span>`:f.includes("≠")?`<span class="note" style="color:#b9770e">≠ ${ML.ilDiff}</span>`:f.includes("+")?`<span class="note" style="color:#b9770e">+ ${ML.ilNo}</span>`:"";
+ const item=x=>`<div class="mi"><span class="mg" style="background:var(--navy,#1d3a5c);min-width:34px">${esc(x[0])}</span><div style="flex:1;min-width:0">${esc(x[2])}
+   <div class="row" style="margin-top:4px;gap:4px;align-items:center">${x[1]?`<span class="note">Insp ${esc(x[1])}</span>`:""}${x[3].map(r=>ins&&QM[r]?`<button class="pgo" style="margin-left:0" data-goq="${r}">→ ${r}</button>`:`<span class="note"><b>${r}</b></span>`).join("")}${fl(x[4])}</div>
+   ${ins?`<input data-ilm="${esc(x[0])}" value="${esc(rm[x[0]]||"")}" placeholder="${ML.trRem}" style="margin-top:6px;width:100%">`:""}</div>${ilPFN(x[0],st,!!ins)}</div>`;
+ let h="",cur=null,buf=[];const flush=()=>{if(cur!==null){const v=buf.filter(show);if(v.length)h+=`<div class="card"><h2 style="margin-top:0">${esc(cur)}</h2>${v.map(item).join("")}</div>`;}buf=[];};
+ T.i.forEach(x=>{if(x[0]==="H"){flush();cur=x[1];}else buf.push(x);});flush();
+ return `<div class="card" style="margin-top:0"><h2 style="margin-top:0">📋 ${esc(T.t)}</h2><p class="note">${esc(T.v)}</p><p>${ML.ilX}</p>
+  <h2 style="font-size:15px">🧭 ${ML.ilRoute}</h2><ol style="margin:4px 0 0 18px;padding:0">${T.r.map(r=>`<li>${esc(r)}</li>`).join("")}</ol>
+  ${ins?`<p class="note" style="margin:8px 0 0">Vessel: <b>${esc(ins.vessel||"")}</b> · IMO: ${esc(ins.imo||"-")} · ${esc(ins.date||"")}</p>
+  <div class="tiles" style="grid-template-columns:repeat(4,1fr);margin-top:8px"><div class="tile"><b style="color:#5b8f6f" id="ilP">${c.p}</b><span class="note">✓ OK</span></div><div class="tile"><b style="color:#c0392b" id="ilFn">${c.f}</b><span class="note">✗ ${ML.trMiss}</span></div><div class="tile"><b id="ilN">${c.n}</b><span class="note">N/A</span></div><div class="tile"><b id="ilO">${c.o}</b><span class="note">${ML.open2}</span></div></div>`:`<p class="note">${ML.openIns}</p>`}</div>
+ <div class="pscr">${[["all",ML.trAll],["open",ML.open2],["f","✗ "+ML.trMiss],["d","≠ / +"]].map(([k,l])=>`<button class="pchip${ilF===k?" on":""}" data-ilf="${k}">${l}</button>`).join("")}</div>
+ <div class="row" style="margin-bottom:6px"><button class="btn p" id="ilShM">📤 ${ML.trShM}</button><button class="btn" id="ilShA">📤 ${ML.trShA}</button></div>
+ ${h}<div class="card note">${esc(T.note)}</div>`;}
+function ilTxt(ins,onlyOpen){const T=MAN.il,st=ins&&ins.il||{},rm=ins&&ins.ilm||{},L2={p:"OK",f:"MISSING",n:"N/A"},o=[];let cur="",buf=[];
+ const flush=()=>{const v=buf.filter(x=>!onlyOpen||(st[x[0]]!=="p"&&st[x[0]]!=="n"));if(v.length)o.push(cur.toUpperCase()+"\n"+v.map(x=>`${st[x[0]]==="p"?"☑":st[x[0]]==="f"?"✗":st[x[0]]==="n"?"–":"☐"} ${x[0]}. ${x[2]}${x[3].length?" — RISQ "+x[3].join(" / "):""}${st[x[0]]?" ["+L2[st[x[0]]]+"]":""}${rm[x[0]]?"\n   Remarks: "+rm[x[0]]:""}`).join("\n"));buf=[];};
+ T.i.forEach(x=>{if(x[0]==="H"){flush();cur=x[1];}else buf.push(x);});flush();const c=ilCnt(ins);
+ return `RIGHTSHIP INSPECTOR'S LIST – ${onlyOpen?"MISSING / OPEN ITEMS":"FULL LIST"}\nVessel: ${ins&&ins.vessel||"________"}  IMO: ${ins&&ins.imo||"______"}  Date: ${ins&&ins.date||"______"}\nOK ${c.p} · Missing ${c.f} · N/A ${c.n} · Open ${c.o} / ${c.t}\n\n`+(o.join("\n\n")||"All items OK ✔");}
+function ILB(ins,box){
+ box.querySelectorAll("[data-ilf]").forEach(b=>b.onclick=()=>{ilF=b.dataset.ilf;rPage();});
+ box.querySelectorAll(".ipfn button").forEach(b=>b.onclick=e=>{e.preventDefault();if(!ins)return;const sp=b.parentNode,k=sp.dataset.ik,st=ins.il=ins.il||{};st[k]=st[k]===b.dataset.v?"":b.dataset.v;save();
+  sp.querySelectorAll("button").forEach(x=>x.className=st[k]===x.dataset.v?"on "+x.dataset.v:"");const c=ilCnt(ins);[["ilP","p"],["ilFn","f"],["ilN","n"],["ilO","o"]].forEach(([i,f])=>{const e2=document.getElementById(i);if(e2)e2.textContent=c[f];});});
+ box.querySelectorAll("[data-ilm]").forEach(i=>i.onchange=()=>{ins.ilm[i.dataset.ilm]=i.value.trim();save();});
+ box.querySelectorAll("[data-goq]").forEach(b=>b.onclick=e=>{e.preventDefault();const q=QM[b.dataset.goq];area=q.a;aflt="all";go("area");setTimeout(()=>{const x=$(`#qs [data-id="${q.id}"]`);if(x)x.scrollIntoView({block:"center"});},60);});
+ const m=$("#ilShM");if(m)m.onclick=()=>shareText("RightShip inspector's list – missing/open",ilTxt(ins,true));
+ const a=$("#ilShA");if(a)a.onclick=()=>shareText("RightShip inspector's list",ilTxt(ins,false));}

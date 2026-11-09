@@ -74,7 +74,7 @@
 "14.18":{"eg":"Hospital equipped, clean, for medical use only.",
 "ex":["Hospital equipped, clean, for medical use only.",["Used as a store"],["Visual check"]],
 "fg":"Kumpleto ang gamit, malinis, at para lang sa medical ang hospital.",
-"fc":["Hindi ginagamit na bodega; hindi expired ang medicine chest inventory"],
+"fc":["Hindi ginagamit na bodega; hindi expired ang medicine chest inventory","📋 Inspector: Medical oxygen cylinder: annual check, 5-yearly hydrostatic test"],
 "fx":["Kumpleto ang gamit, malinis, at para lang sa medical ang hospital.",["Ginagamit na bodega"],["Visual na check"]]},
 "14.19":{"eg":"Guard rails, walkways, ladders, steps in good condition – no hanging chains.",
 "ex":["Railings, walkways, ladders in good condition.",["Slack chains between stanchions"],["Visual check"]],

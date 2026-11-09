@@ -63,7 +63,7 @@
 "13.33":{"eg":"Em'cy generator, boilers (auto, water tests), compressors, purifiers etc. in good condition.",
 "ex":["Emergency generator, boilers, compressors etc. in good condition.",["Poor management of feed/cooling water","Not-permitted arrangement (by-pass)"],["Checks the procedure for the economiser water level"]],
 "fg":"Maayos ang em'cy generator, boilers (auto, water tests), compressors, purifiers atbp.",
-"fc":["Boiler feed/cooling water test records at treatment","Procedure sa pagbabantay ng water level ng economiser","Safety valves at alarms ng boilers; air receivers","Walang hindi tamang by-pass arrangement"],
+"fc":["Boiler feed/cooling water test records at treatment","Procedure sa pagbabantay ng water level ng economiser","Safety valves at alarms ng boilers; air receivers","Walang hindi tamang by-pass arrangement","📋 Inspector: Bow thruster motor insulation readings (inspector: 440 V / 5 / 0.5 MΩ, 220 V / 2 / 0.2 MΩ)"],
 "fx":["Maayos ang emergency generator, boilers, compressors atbp.",["Mahinang pag-manage ng feed/cooling water","Hindi pinapayagang arrangement (by-pass)"],["Chine-check ang procedure para sa water level ng economiser"]],
 "ff":["Boiler water tests hindi ayon sa maker","Overdue ang safety valve tests ng air receiver / compressor","Malangis ang purifier room, may fuel leaks"]},
 "13.34":{"eg":"ER piping without temporary repairs or leaks.",

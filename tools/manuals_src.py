@@ -573,7 +573,23 @@ TR = {"t": "RightShip Training & Familiarization Master Checklist", "v": "RISQ 3
  "c": ["Certificates and training records available and current","Crew training and familiarization records verified","Outstanding items and target completion dates identified","N/A items justified and documented"],
  "note": "Chapter / Section is a topic-based cross-reference to RISQ 3.2, not a statement that each listed item is an independent formal certificate requirement. Verify applicability against vessel equipment, cargo and operations."}
 
-out = {"u": "2026-11-06", "fm": FM, "ca": CA, "tr": TR}
+# 📋 RightShip inspector's own list (China, Nov 2026) – see tools/insp_list_src.py
+import sys as _s, os as _o; _s.path.insert(0, _o.path.dirname(_o.path.abspath(__file__)))
+from insp_list_src import IL as _IL, MAP as _MAP, ROUTE as _ROUTE
+def _il():
+    out = []
+    for it in _IL:
+        if it[0] == "H": out.append(["H", it[1]]); continue
+        no, ref, txt = it
+        if no in _MAP: rs, fl = _MAP[no]
+        elif ref.startswith("8B."): rs, fl = [ref], ""
+        else: rs, fl = [], "+"
+        out.append([no, ref, txt, rs, fl])
+    return out
+IL = {"t": "RightShip inspector's list (as used on board)", "v": "RISQ 3.2 · Dry bulk · inspector's own document & check list, in his order", "r": _ROUTE, "i": _il(),
+ "note": "Inspector's own numbering is kept in grey (Insp x.x). The → links open the matching RISQ 3.2 question in this app. ≠ = his number differs from the RISQ 3.2 question; + = not among the app's 290 scored questions (e.g. chapter 1) – prepare it from this list."}
+
+out = {"u": "2026-11-09", "fm": FM, "ca": CA, "tr": TR, "il": IL}
 p = pathlib.Path(__file__).resolve().parent.parent / "risq/manuals.json"
 p.write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
 print("risq/manuals.json", sum(len(c["i"]) for c in FM["ch"]), "FM items,", sum(len(s["i"]) for s in CA["sec"]), "CA items")

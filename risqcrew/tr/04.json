@@ -133,7 +133,7 @@
 "7A.13":{"eg":"Emergency generator tank full for ≥18 hours.",
 "ex":["Emergency generator tank full for at least 18 hours.",["Low level"],["Checks the level"],["SOLAS II-1/43"]],
 "fg":"Puno ang tank ng emergency generator para sa ≥18 oras.",
-"fc":["Level ng em'cy gen fuel tank kumpara sa 18h na konsumo; self-closing ang gauge glass","Angkop na fuel (MGO), walang tubig"],
+"fc":["Level ng em'cy gen fuel tank kumpara sa 18h na konsumo; self-closing ang gauge glass","Angkop na fuel (MGO), walang tubig","📋 Inspector: Emergency generator: fuel for 18 hours, insulation readings, quick-closing valve on the tank"],
 "fx":["Puno ang tank ng emergency generator para sa hindi bababa sa 18 oras.",["Mababa ang level"],["Chine-check ang level"],["SOLAS II-1/43"]]},
 "8A.2":{"eg":"Cargo information (IMSBC) from the shipper before loading.",
 "ex":["The shipper has given cargo information before loading.",["Not given"],["Checks it"],["IMSBC 4.2"]],
