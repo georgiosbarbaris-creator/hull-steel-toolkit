@@ -486,6 +486,6 @@ window.addEventListener('hashchange',()=>{stopAll();render(location.hash.slice(1
 <script>if(typeof EQD!=="undefined"&&EQD.wiz)EQW=EQD.wiz</script>
 <script>
 render(location.hash.slice(1)||'home');if(keepOn)wake(1);
-if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+if('serviceWorker'in navigator){const hadSW=!!navigator.serviceWorker.controller;navigator.serviceWorker.register('sw.js').then(r=>r.update()).catch(()=>{});let rl=0;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(hadSW&&!rl){rl=1;location.reload()}})}
 </script>
 </body></html>
