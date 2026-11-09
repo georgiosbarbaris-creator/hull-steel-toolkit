@@ -150,3 +150,24 @@ function ilQ(q,ins){const c=_ilc(q)||[],f=_ilf(q)||[];
 function ilJump(q){const y=window.scrollY;area=q.a;aflt="all";go("area");setTimeout(()=>{const x=$(`#qs [data-id="${q.id}"]`);if(x)x.scrollIntoView({block:"center"});},60);
  let b=document.getElementById("ilBackBtn");if(!b){b=document.createElement("button");b.id="ilBackBtn";b.className="btn p";b.style.cssText="position:fixed;left:12px;bottom:78px;z-index:60;box-shadow:0 4px 14px rgba(0,0,0,.25)";document.body.appendChild(b);}
  b.textContent="📋 ← "+ML.ilBack;b.onclick=()=>{b.remove();openPage("il");setTimeout(()=>window.scrollTo(0,y),80);};}
+
+/* ---------- 🔄 App update (clear this app's old cache + reload latest) ---------- */
+const UPP=((location.pathname.match(/\/([^\/]+)\/(?:index\.html)?$/)||[])[1]||"app")+"-v";
+const upNum=s=>+((s||"").match(/-v(\d+)$/)||[0,0])[1];
+async function updInfo(){let inst="",latest="";
+ try{const k=(await caches.keys()).filter(x=>x.startsWith(UPP));inst=k.sort((a,b)=>upNum(a)-upNum(b)).pop()||"";}catch(e){}
+ try{const t=await (await fetch("sw.js?u="+Date.now(),{cache:"no-store"})).text();latest=(t.match(/C="([^"]+)"/)||[])[1]||"";}catch(e){}
+ return {inst,latest};}
+async function updNow(){const scope=location.origin+location.pathname.replace(/[^\/]*$/,"");
+ try{for(const r of await navigator.serviceWorker.getRegistrations())if(r.scope===scope)await r.unregister();}catch(e){}
+ try{for(const k of await caches.keys())if(k.startsWith(UPP))await caches.delete(k);}catch(e){}
+ location.replace(location.pathname+"?v="+Date.now());}
+async function updCard(){const box=document.getElementById("v-list");if(!box||document.getElementById("upCard"))return;
+ const c=document.createElement("div");c.className="card";c.id="upCard";c.innerHTML=`<h2 style="margin-top:0">🔄 ${ML.upT}</h2><p class="note" id="upSt" style="margin:0 0 8px">…</p><button class="btn p" id="upBtn">🔄 ${ML.upT}</button>`;
+ box.appendChild(c);document.getElementById("upBtn").onclick=()=>{if(!navigator.onLine){document.getElementById("upSt").textContent=ML.upOff;return;}document.getElementById("upSt").textContent="…";updNow();};
+ const {inst,latest}=await updInfo(),st=document.getElementById("upSt"),cur=inst||latest;
+ st.textContent=`${ML.upVer}: v${upNum(cur)||"?"}`+(latest&&upNum(latest)>upNum(inst)&&inst?` → v${upNum(latest)} · ${ML.upNew}`:latest?` · ${ML.upOk}`:` · ${ML.upOff}`);
+ if(latest&&inst&&upNum(latest)>upNum(inst)&&!document.getElementById("upBan")){const b=document.createElement("button");b.id="upBan";b.className="btn p";
+  b.style.cssText="position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top) + 8px);z-index:70;box-shadow:0 4px 14px rgba(0,0,0,.3)";
+  b.textContent=`🔄 ${ML.upNew} (v${upNum(latest)})`;b.onclick=()=>updNow();document.body.appendChild(b);}}
+setTimeout(()=>{if(location.search.includes("v="))history.replaceState(null,"",location.pathname);updCard();},600);
