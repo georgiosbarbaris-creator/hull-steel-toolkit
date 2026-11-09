@@ -119,7 +119,7 @@ function veh(){const L=vehs(),id=LS.g('vact',null);return L.find(v=>v.id===id)||
 const VF=[['name','Όνομα (π.χ. «Το Cruiser»)','text'],['model','Μοντέλο','text'],['curb','Απόβαρο (kg)','number'],['gvw','Μέγιστο μικτό GVM (kg)','number'],['roof','Όριο σχάρας εν κινήσει (kg)','number'],
  ['clr','Απόσταση από το έδαφος (mm)','number'],['app','Γωνία προσέγγισης (°)','number'],['dep','Γωνία απομάκρυνσης (°)','number'],['brk','Γωνία ράμπας / breakover (°)','number'],['wade','Βάθος νερού κατασκευαστή (mm)','number'],
  ['side','Όριο πλευρικής κλίσης κατασκευαστή (°)','number'],['track','Μετατρόχιο (m)','number'],['h','Ύψος οχήματος (m)','number'],['wb','Μεταξόνιο (mm)','number'],
- ['tyre','Ελαστικά (π.χ. 265/70R16)','text'],['pf','Πίεση δρόμου εμπρός (bar)','number'],['pr','Πίεση δρόμου πίσω (bar)','number'],
+ ['tyre','Ελαστικά (π.χ. 265/70R16)','text'],['pf','Πίεση δρόμου εμπρός (psi)','number'],['pr','Πίεση δρόμου πίσω (psi)','number'],
  ['tank','Ρεζερβουάρ (L)','number'],['fuel','Καύσιμο (diesel / βενζίνη)','text'],['cr','Κατανάλωση δρόμου (L/100km)','number'],['co','Κατανάλωση εκτός δρόμου (L/100km)','number'],
  ['lock','Μπλοκέ / LSD (π.χ. κεντρικό + πίσω)','text'],['winch','Εργάτης, ονομαστική έλξη (kg)','number'],['snork','Snorkel (ναι/όχι)','text']];
 function sideLim(v){if(!v)return 30;if(v.side)return +v.side;if(v.track&&v.h){const cg=v.h*0.42;return Math.round(Math.atan(v.track/(2*cg))/SR-15)}return 30}
@@ -133,10 +133,10 @@ function vehAdd(dbid,stay){const d=VDB.find(x=>x.id===dbid),g=d?d.geo:{},id='v'+
  const v={id,name:d?'':'Το αυτοκίνητό μου',model:d?d.name:'',curb:d&&d.curb||'',gvw:d&&d.gvw||'',roof:'',clr:g.clr||'',app:g.app||'',dep:g.dep||'',brk:g.brk||'',wade:g.wade||'',side:g.side||'',track:g.track||'',h:g.h||'',wb:g.wb||'',tyre:'',pf:'',pr:'',tank:'',fuel:'diesel',cr:'',co:'',lock:'',winch:'',snork:'όχι',src:g.s||''};
  const L=vehs();L.push(v);LS.s('vehs',L);LS.s('vact',id);if(!stay)go('veh/'+id)}
 function vehEdit(id){const v=vehs().find(x=>x.id===id);if(!v)return vehPage();T('✏️ '+(v.name||v.model||'Όχημα'));
- M.innerHTML=(v.src?`<div class="muted">Πηγή γεωμετρίας: ${esc(v.src)}</div>`:'')+VF.map(([k,l,t])=>`<label>${l}</label><input id="vf_${k}" type="${t}" ${t==='number'?'inputmode="decimal" step="any"':''} value="${esc(v[k])}">`).join('')+
+ M.innerHTML=(v.src?`<div class="muted">Πηγή γεωμετρίας: ${esc(v.src)}</div>`:'')+VF.map(([k,l,t])=>`<label>${l}</label><input id="vf_${k}" type="${t}" ${t==='number'?'inputmode="decimal" step="any"':''} value="${esc((k==='pf'||k==='pr')&&v[k]!==''&&v[k]!=null?Math.round(v[k]*PSI):v[k])}">`).join('')+
  `<div class="note">Όριο πλευρικής κλίσης: αν δεν το ξέρεις, άφησέ το κενό. Η εφαρμογή το υπολογίζει από μετατρόχιο & ύψος με περιθώριο ασφαλείας 15° (τώρα: <b>${sideLim(v)}°</b>).</div>
  <button class="big org" onclick="vehSave('${id}')">💾 Αποθήκευση</button><button class="btn r" onclick="vehDel('${id}')">🗑 Διαγραφή οχήματος</button>`}
-function vehSave(id){const L=vehs(),v=L.find(x=>x.id===id);VF.forEach(([k,,t])=>{const e=$('#vf_'+k);if(e)v[k]=t==='number'?(e.value===''?'':n(e.value)):e.value.trim()});LS.s('vehs',L);const ret=LS.g('vret','');if(ret){LS.s('vret','');go(ret)}else go('veh')}
+function vehSave(id){const L=vehs(),v=L.find(x=>x.id===id);VF.forEach(([k,,t])=>{const e=$('#vf_'+k);if(e)v[k]=t==='number'?(e.value===''?'':(k==='pf'||k==='pr')?Math.round(n(e.value)/PSI*100)/100:n(e.value)):e.value.trim()});LS.s('vehs',L);const ret=LS.g('vret','');if(ret){LS.s('vret','');go(ret)}else go('veh')}
 function vehDel(id){if(!confirm('Διαγραφή του οχήματος;'))return;LS.s('vehs',vehs().filter(x=>x.id!==id));if(LS.g('vact',null)===id)LS.s('vact',null);go('veh')}
 /* Επιλογή οχήματος μέσα σε κάθε εργαλείο, διαλέγεις εδώ, χωρίς να φύγεις */
 function vehBar(){const L=vehs(),a=veh();
@@ -233,19 +233,20 @@ function inZero(){if(!IN.on||!IN.raw){alert('Πάτα πρώτα «Ξεκίνα�
  LS.s('inz',{m,p:pp,r:rr});IN.p=IN.r=0;IN.mp=IN.mr=0;alert('Μηδενίστηκε ('+({flat:'ξαπλωμένο',port:'όρθιο',land:'οριζόντιο σε βάση'}[m])+').')}
 
 /* ---------- Πίεση ελαστικών ---------- */
+const PSI=14.5038;/* τα λάστιχα σε psi (απόφαση Καπετάνιου 9 Nov)· εσωτερικά αποθηκεύονται σε bar */
 function tTyre(){T('🛞 Πίεση ελαστικών');const v=veh()||{},st=LS.g('tyre',{pf:v.pf||2.2,pr:v.pr||2.4,t:'sand',load:0});
- M.innerHTML=vehBar()+`<div class="grid"><div>${inp('tpf','Πίεση δρόμου εμπρός (bar)',st.pf,'tyC()')}</div><div>${inp('tpr','Πίεση δρόμου πίσω (bar)',st.pr,'tyC()')}</div></div>
+ M.innerHTML=vehBar()+`<div class="grid"><div>${inp('tpf',L2('Πίεση δρόμου εμπρός (psi)','Road pressure front (psi)'),Math.round(st.pf*PSI),'tyC()')}</div><div>${inp('tpr',L2('Πίεση δρόμου πίσω (psi)','Road pressure rear (psi)'),Math.round(st.pr*PSI),'tyC()')}</div></div>
  <div class="muted" style="margin-top:-6px">Από το αυτοκόλλητο στην πόρτα του οδηγού (κρύα ελαστικά).</div>
  <label>Φορτίο</label>${seg('load',[[0,'Κανονικό'],[1,'Φορτωμένο (overland)']],st.load,'tyL')}
  <label>Έδαφος</label><div class="grid">${TERR.map(t=>`<button class="tile" style="min-height:76px;${t.id===st.t?'border-color:var(--org);background:#3a2a20':''}" onclick="tyT('${t.id}')"><span class="e" style="font-size:1.5em">${t.e}</span>${t.n}</button>`).join('')}</div>
  <div id="tyo"></div>
- <div class="box"><b>Κανόνες</b><div class="li">Μέτρα με μανόμετρο, με κρύα ελαστικά όπου γίνεται. Ζεστά ελαστικά δείχνουν ~0,2–0,3 bar παραπάνω.</div><div class="li">Χαμηλή πίεση = χαμηλή ταχύτητα, ομαλό τιμόνι, χωρίς απότομα φρένα.</div><div class="li">Κάτω από 1,0 bar υπάρχει κίνδυνος να βγει το λάστιχο από τη ζάντα (εκτός beadlock).</div><div class="li"><b>Ποτέ</b> άσφαλτος με ξεφουσκωμένα, φούσκωσε πριν βγεις.</div><div class="li">Ελαστικά LT / C (πιο σκληρά πλαϊνά) θέλουν λίγο μεγαλύτερο ποσοστό από τα P (επιβατικά).</div></div>`;tyC()}
+ <div class="box"><b>Κανόνες</b><div class="li">Μέτρα με μανόμετρο, με κρύα ελαστικά όπου γίνεται. ${L2('Ζεστά ελαστικά δείχνουν ~3–4 psi παραπάνω.','Hot tyres read ~3–4 psi higher.')}</div><div class="li">Χαμηλή πίεση = χαμηλή ταχύτητα, ομαλό τιμόνι, χωρίς απότομα φρένα.</div><div class="li">${L2('Κάτω από 15 psi υπάρχει κίνδυνος να βγει το λάστιχο από τη ζάντα (εκτός beadlock).','Below 15 psi the tyre may come off the rim (unless beadlock).')}</div><div class="li"><b>Ποτέ</b> άσφαλτος με ξεφουσκωμένα, φούσκωσε πριν βγεις.</div><div class="li">Ελαστικά LT / C (πιο σκληρά πλαϊνά) θέλουν λίγο μεγαλύτερο ποσοστό από τα P (επιβατικά).</div></div>`;tyC()}
 function tyL(l){const st=LS.g('tyre',{});st.load=+l;LS.s('tyre',st);tTyre()}
 function tyT(t){const st=LS.g('tyre',{});st.t=t;LS.s('tyre',st);tTyre()}
-function tyC(){const st=LS.g('tyre',{t:'sand',load:0});st.pf=n($('#tpf').value);st.pr=n($('#tpr').value);LS.s('tyre',st);const t=TERR.find(x=>x.id===st.t)||TERR[0];
- const adj=st.load&&t.id!=='road'?5:0,lo=Math.min(100,t.pct[0]+adj),hi=Math.min(100,t.pct[1]+adj),fl=t.id==='recov'?0.8:1.0;
- const rng=p=>{const a=Math.max(fl,p*lo/100),b=Math.max(fl,p*hi/100);return a===b?f1(a):`${a.toFixed(1)}–${b.toFixed(1)}`},psi=p=>Math.round(p*14.5038);
- $('#tyo').innerHTML=`<div class="res"><div class="muted">${t.e} ${t.n}${adj?' · φορτωμένο +5%':''}</div><div class="grid" style="margin-top:6px"><div><div class="muted">Εμπρός</div><div class="v">${rng(st.pf)}</div><div class="muted">bar · ≈${psi(st.pf*lo/100)}–${psi(st.pf*hi/100)} psi</div></div><div><div class="muted">Πίσω</div><div class="v">${rng(st.pr)}</div><div class="muted">bar · ≈${psi(st.pr*lo/100)}–${psi(st.pr*hi/100)} psi</div></div></div>
+function tyC(){const st=LS.g('tyre',{t:'sand',load:0});st.pf=n($('#tpf').value)/PSI;st.pr=n($('#tpr').value)/PSI;LS.s('tyre',st);const t=TERR.find(x=>x.id===st.t)||TERR[0];
+ const adj=st.load&&t.id!=='road'?5:0,lo=Math.min(100,t.pct[0]+adj),hi=Math.min(100,t.pct[1]+adj),fl=(t.id==='recov'?12:15)/PSI;
+ const ps=p=>Math.round(p*PSI),rng=p=>{const a=ps(Math.max(fl,p*lo/100)),b=ps(Math.max(fl,p*hi/100));return a===b?a:`${a}–${b}`},br=p=>{const a=Math.max(fl,p*lo/100),b=Math.max(fl,p*hi/100);return a.toFixed(1)===b.toFixed(1)?a.toFixed(1):`${a.toFixed(1)}–${b.toFixed(1)}`};
+ $('#tyo').innerHTML=`<div class="res"><div class="muted">${t.e} ${t.n}${adj?' · φορτωμένο +5%':''}</div><div class="grid" style="margin-top:6px"><div><div class="muted">Εμπρός</div><div class="v">${rng(st.pf)}</div><div class="muted">psi · ≈${br(st.pf)} bar</div></div><div><div class="muted">Πίσω</div><div class="v">${rng(st.pr)}</div><div class="muted">psi · ≈${br(st.pr)} bar</div></div></div>
  <div style="margin-top:8px">Μέγιστη ταχύτητα: <b>${t.v}</b> · ${lo===100?'πίεση δρόμου':`${100-hi}–${100-lo}% κάτω από τον δρόμο`}</div></div><div class="tip">${t.t}</div>`}
 
 /* ---------- Μέγεθος ελαστικών ---------- */
