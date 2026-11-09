@@ -109,11 +109,11 @@ function TRB(ins,box){
 let ilF="all";
 function ilCnt(ins){const st=ins&&ins.il||{},L=MAN.il.i.filter(x=>x[0]!=="H");let p=0,f=0,n=0;L.forEach(x=>{const v=st[x[0]];if(v==="p")p++;else if(v==="f")f++;else if(v==="n")n++;});return {p,f,n,o:L.length-p-f-n,t:L.length};}
 function ilPFN(k,st,en){const v=st&&st[k]||"";return `<span class="pfn ipfn" data-ik="${k}">${[["p","✓"],["f","✗"],["n","N/A"]].map(([x,l])=>`<button class="${v===x?"on "+x:""}" data-v="${x}" ${en?"":"disabled"}>${l}</button>`).join("")}</span>`;}
-function ILR(ins){const T=MAN.il,st=ins?(ins.il=ins.il||{}):null,rm=ins?(ins.ilm=ins.ilm||{}):null,c=ilCnt(ins);
+function ILR(ins){const ob=document.getElementById("ilBackBtn");if(ob)ob.remove();const T=MAN.il,st=ins?(ins.il=ins.il||{}):null,rm=ins?(ins.ilm=ins.ilm||{}):null,c=ilCnt(ins);
  const show=x=>{const v=st&&st[x[0]]||"";return ilF==="all"||(ilF==="open"&&!v)||(ilF==="f"&&v==="f")||(ilF==="d"&&x[4]);};
  const fl=f=>f.includes("≠")&&f.includes("+")?`<span class="note" style="color:#b9770e">≠ + ${ML.ilNo}</span>`:f.includes("≠")?`<span class="note" style="color:#b9770e">≠ ${ML.ilDiff}</span>`:f.includes("+")?`<span class="note" style="color:#b9770e">+ ${ML.ilNo}</span>`:"";
  const item=x=>`<div class="mi"><span class="mg" style="background:var(--navy,#1d3a5c);min-width:34px">${esc(x[0])}</span><div style="flex:1;min-width:0">${esc(x[2])}
-   <div class="row" style="margin-top:4px;gap:4px;align-items:center">${x[1]?`<span class="note">Insp ${esc(x[1])}</span>`:""}${x[3].map(r=>ins&&QM[r]?`<button class="pgo" style="margin-left:0" data-goq="${r}">→ ${r}</button>`:`<span class="note"><b>${r}</b></span>`).join("")}${fl(x[4])}</div>
+   <div class="row" style="margin-top:4px;gap:4px;align-items:center">${x[1]?`<span class="note">Insp ${esc(x[1])}</span>`:""}${x[3].map(r=>QM[r]?`<button class="pgo ilq" style="margin-left:0" data-ilq="${esc(x[0])}" data-r="${r}">📖 ${r} · ${esc(AN[QM[r].a]||"")}</button>`:`<span class="note"><b>${r}</b></span>`).join("")}${fl(x[4])}</div><div class="ilpan" id="ilp-${esc(x[0])}"></div>
    ${ins?`<input data-ilm="${esc(x[0])}" value="${esc(rm[x[0]]||"")}" placeholder="${ML.trRem}" style="margin-top:6px;width:100%">`:""}</div>${ilPFN(x[0],st,!!ins)}</div>`;
  let h="",cur=null,buf=[];const flush=()=>{if(cur!==null){const v=buf.filter(show);if(v.length)h+=`<div class="card"><h2 style="margin-top:0">${esc(cur)}</h2>${v.map(item).join("")}</div>`;}buf=[];};
  T.i.forEach(x=>{if(x[0]==="H"){flush();cur=x[1];}else buf.push(x);});flush();
@@ -133,6 +133,20 @@ function ILB(ins,box){
  box.querySelectorAll(".ipfn button").forEach(b=>b.onclick=e=>{e.preventDefault();if(!ins)return;const sp=b.parentNode,k=sp.dataset.ik,st=ins.il=ins.il||{};st[k]=st[k]===b.dataset.v?"":b.dataset.v;save();
   sp.querySelectorAll("button").forEach(x=>x.className=st[k]===x.dataset.v?"on "+x.dataset.v:"");const c=ilCnt(ins);[["ilP","p"],["ilFn","f"],["ilN","n"],["ilO","o"]].forEach(([i,f])=>{const e2=document.getElementById(i);if(e2)e2.textContent=c[f];});});
  box.querySelectorAll("[data-ilm]").forEach(i=>i.onchange=()=>{ins.ilm[i.dataset.ilm]=i.value.trim();save();});
- box.querySelectorAll("[data-goq]").forEach(b=>b.onclick=e=>{e.preventDefault();const q=QM[b.dataset.goq];area=q.a;aflt="all";go("area");setTimeout(()=>{const x=$(`#qs [data-id="${q.id}"]`);if(x)x.scrollIntoView({block:"center"});},60);});
+ box.querySelectorAll("[data-ilq]").forEach(b=>b.onclick=e=>{e.preventDefault();const pan=document.getElementById("ilp-"+b.dataset.ilq),r=b.dataset.r;
+  if(pan.dataset.r===r){pan.innerHTML="";pan.dataset.r="";b.classList.remove("on");return;}
+  box.querySelectorAll(`[data-ilq="${b.dataset.ilq}"]`).forEach(z=>z.classList.remove("on"));b.classList.add("on");pan.dataset.r=r;pan.innerHTML=ilQ(QM[r],ins);
+  const g=pan.querySelector("[data-ilgo]");if(g)g.onclick=ev=>{ev.preventDefault();ilJump(QM[r]);};});
  const m=$("#ilShM");if(m)m.onclick=()=>shareText("RightShip inspector's list – missing/open",ilTxt(ins,true));
  const a=$("#ilShA");if(a)a.onclick=()=>shareText("RightShip inspector's list",ilTxt(ins,false));}
+
+const _ilg=q=>typeof qg==="function"?qg(q):q.g, _ilc=q=>typeof qc==="function"?qc(q):q.c, _ilf=q=>typeof qf==="function"?qf(q):q.f;
+function ilQ(q,ins){const c=_ilc(q)||[],f=_ilf(q)||[];
+ return `<div style="margin:8px 0 2px;padding:10px;border-left:4px solid var(--navy,#1d3a5c);background:rgba(29,58,92,.06);border-radius:8px">
+  <div><b>RISQ ${q.id}${q.h?" ★":""}</b> · ${esc(AN[q.a]||"")}<br>${esc(_ilg(q)||"")}</div><div class="note" style="margin-top:4px"><i>${esc(q.o||"")}</i></div>
+  ${c.length?`<ul style="margin:6px 0 0 16px;padding:0">${c.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:""}
+  ${f.length?`<div style="margin-top:6px"><b>🔥</b><ul style="margin:2px 0 0 16px;padding:0">${f.map(x=>`<li class="note">${esc(x)}</li>`).join("")}</ul></div>`:""}
+  ${ins?`<button class="btn p" data-ilgo="1" style="margin-top:8px">➡ ${ML.ilOpen}</button>`:`<p class="note" style="margin:6px 0 0">${ML.openIns}</p>`}</div>`;}
+function ilJump(q){const y=window.scrollY;area=q.a;aflt="all";go("area");setTimeout(()=>{const x=$(`#qs [data-id="${q.id}"]`);if(x)x.scrollIntoView({block:"center"});},60);
+ let b=document.getElementById("ilBackBtn");if(!b){b=document.createElement("button");b.id="ilBackBtn";b.className="btn p";b.style.cssText="position:fixed;left:12px;bottom:78px;z-index:60;box-shadow:0 4px 14px rgba(0,0,0,.25)";document.body.appendChild(b);}
+ b.textContent="📋 ← "+ML.ilBack;b.onclick=()=>{b.remove();openPage("il");setTimeout(()=>window.scrollTo(0,y),80);};}
