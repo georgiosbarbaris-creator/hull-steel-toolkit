@@ -10,6 +10,7 @@ PSC-by-region content lives in `tools/psc_src.py` → `risq/psc.json`; manuals (
 
 - 2026-11-05: Added the two manuals without duplicating existing content: 📘 Manuals page (Field Manual P/F/N/A audit of 14 chapters, stop conditions, 15 No-Go, decision tree, case files, itinerary; Zero Deficiency Canada walk-round A–L, rounds, pre-arrival, drills, golden rules), 🇨🇦 Canada regime in PSC (rules + real 2025 Canadian detentions), new regime facts from the manual merged into Paris/Tokyo/AMSA/USCG, 9 new interview questions added to the existing 🎤 drill, private ship-pack import. → RISQ ✓ / RISQ Crew ✓
 - 2026-11-06: New "🎓 Training & Familiarization" checklist (George's RightShip Training Master Checklist, 44 items A+B, C final verification): ✓/✗/N/A + remarks per item saved in the inspection, links to RISQ sections/questions (PDF "Q9.2" mapped to 9A.2), share missing items / full list in English. Data in `tools/manuals_src.py` → `risq/manuals.json` ("tr"), UI in `tools/man_js.js`. → RISQ ✓ / RISQ Crew ✓
+- 2026-11-09: Inspector asked to sign his OWN emergency familiarization (AGIA DOXA) → added "Visitor / inspector safety familiarization form" to 📁 72h docs (4. ISM / LSA-FFE, with ℹ️ in Crew), crew cards (C/O: brief inspector before walk-round; Bosun/ABs: gangway watch), 🎓 Training item 45. → RISQ ✓ / RISQ Crew ✓
 
 ## Pending (not yet in force / needs George)
 - Whale measures: NARW Gulf of St. Lawrence season ends 15 Nov 2026, ECHO Haro Strait 30 Nov 2026 → update Canada regime/manual for the 2027 season.

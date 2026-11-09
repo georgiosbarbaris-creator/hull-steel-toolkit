@@ -568,7 +568,8 @@ TR = {"t": "RightShip Training & Familiarization Master Checklist", "v": "RISQ 3
   [41,"Bunkering and oil spill response","Deck / engine crew","Drill / familiarization",["5","7A"]],
   [42,"Shipboard crane operation and safety","Operators / deck crew","Competence record",["9A"]],
   [43,"Engine room critical equipment and emergencies","Engine officers & crew","Drill / familiarization",["13"]],
-  [44,"Onboarding / ship-specific safety familiarization","All joining crew","Induction record",["4"]]],
+  [44,"Onboarding / ship-specific safety familiarization","All joining crew","Induction record",["4"]],
+  [45,"Visitor / inspector safety familiarization (emergency briefing, signed)","Visitors & inspectors (briefed by OOW / Safety Officer)","Visitor familiarization form",["4"]]],
  "c": ["Certificates and training records available and current","Crew training and familiarization records verified","Outstanding items and target completion dates identified","N/A items justified and documented"],
  "note": "Chapter / Section is a topic-based cross-reference to RISQ 3.2, not a statement that each listed item is an independent formal certificate requirement. Verify applicability against vessel equipment, cargo and operations."}
 
