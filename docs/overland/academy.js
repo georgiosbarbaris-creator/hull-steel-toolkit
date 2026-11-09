@@ -24,7 +24,7 @@ function acList(){const f=LS.g('acf',{lv:'all',s:'all'}),q=norm2(($('#acq')||{va
   h+=`<button class="row" onclick="go('learn/${l.id}')"><span class="e">${l.e||'📘'}</span><span style="flex:1"><b>${esc(l.n)}</b><small>${lv[1]} ${lv[2]} · ${l.p.length} ενότητες${l.q&&l.q.length?' · quiz '+l.q.length:''}</small></span>${done(l.id)?'✅':LS.g('read',{})[l.id]?'📖':''}</button>`});
  e.innerHTML=h||'<div class="muted">Τίποτα δεν ταιριάζει.</div>'}
 function lesson(id){const x=ABYID[id];if(!x)return learn();const lv=LEVELS.find(l=>l[0]===x.lv)||LEVELS[0];T((x.e||'📘')+' '+x.n);const rd=LS.g('read',{}),i=ALL.indexOf(x),nx=ALL[i+1];
- M.innerHTML=`<div class="muted">${lv[1]} ${lv[2]} · ${esc(x.src||'')}</div>`+x.p.map((p,k)=>`<div class="box"><b>${k+1}. ${p[0]}</b><div style="margin-top:6px">${p[1]}</div></div>`).join('')+
+ M.innerHTML=`<div class="muted">${lv[1]} ${lv[2]} · ${esc(x.src||'')}</div>`+(typeof acImg==='function'?acImg(id,-1):'')+x.p.map((p,k)=>`<div class="box"><b>${k+1}. ${p[0]}</b><div style="margin-top:6px">${p[1]}</div></div>`+(typeof acImg==='function'?acImg(id,k):'')).join('')+
  (x.q&&x.q.length?`<h3>📝 Quiz</h3><div id="acqz"></div>`:'')+
  (rd[id]?'':`<button class="big grn" onclick="lsRead('${id}')">📖 Το διάβασα</button>`)+
  (done(id)?'<div class="tip" style="text-align:center">✅ Ολοκληρώθηκε</div>':'')+((rd[id]||LS.g('quiz',{})[id])?`<button class="btn" style="width:100%;margin:6px 0" onclick="acReset('${id}')">🧹 ${L2('Καθαρισμός μαθήματος (ξανά από την αρχή)','Reset this lesson (start over)')}</button>`:'')+
