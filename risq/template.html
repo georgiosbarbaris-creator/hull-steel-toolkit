@@ -114,8 +114,8 @@ button{font:inherit;cursor:pointer}
     <div class="card"><h2>🛡 Anti-RightShip</h2>
       <div class="tools">
         <button data-pg="h24" class="h24b">⏰ 24 hours before<small>Τι κοιτάμε μία μέρα πριν έρθει ο inspector · ✔ ανά χώρο</small></button>
-        <button data-pg="traps">🎯 Οι 10 παγίδες<small>Τι μας γράφουν ξανά και ξανά</small></button>
-        <button data-pg="mind">🧠 Το μυαλό του inspector<small>12 κανόνες που ακολουθεί</small></button>
+        <button data-pg="traps">🎯 Οι 11 παγίδες<small>Τι μας γράφουν ξανά και ξανά</small></button>
+        <button data-pg="mind">🧠 Το μυαλό του inspector<small>13 κανόνες που ακολουθεί</small></button>
         <button data-pg="crew">👷 Briefing πληρώματος<small>Κάρτα ανά βαθμό (English)</small></button>
         <button data-pg="drill">🎤 Drill συνέντευξης<small>Τι ρωτάει & σωστή απάντηση</small></button>
         <button data-pg="docs">📁 Έγγραφα hybrid 72h<small>Λίστα για upload</small></button>
@@ -420,7 +420,7 @@ function rValid(ins,fl){const c={L:0,M:0,H:0},sec={};fl.forEach(q=>{const v=sevO
    <p class="note" style="margin:6px 0 0">Η σοβαρότητα κάθε finding αλλάζει μέσα στο finding (Low/Med/High). Default: High στις ερωτήσεις του RightShip high-risk list (4.5, 4.18, 9A.13, 13.33, 4.37, 10.4, 4.11). Πρόβλεψη με βάση το δημοσιευμένο validity matrix· η RightShip κάνει και peer review.</p>`;}
 
 /* ---------- pages ---------- */
-const PGT={h24:"⏰ 24 hours before",traps:"🎯 Οι 10 παγίδες",mind:"🧠 Το μυαλό του inspector",crew:"👷 Briefing πληρώματος",drill:"🎤 Drill συνέντευξης",docs:"📁 Έγγραφα hybrid 72h",psc:"🛂 PSC ανά περιοχή",man:"📘 Manuals",fm:"📘 PSC Field Manual",ca:"🇨🇦 Zero Deficiency Canada",trn:"🎓 Training & Familiarization",fleet:"⚓ Ιστορικό στόλου"};
+const PGT={h24:"⏰ 24 hours before",traps:"🎯 Οι 11 παγίδες",mind:"🧠 Το μυαλό του inspector",crew:"👷 Briefing πληρώματος",drill:"🎤 Drill συνέντευξης",docs:"📁 Έγγραφα hybrid 72h",psc:"🛂 PSC ανά περιοχή",man:"📘 Manuals",fm:"📘 PSC Field Manual",ca:"🇨🇦 Zero Deficiency Canada",trn:"🎓 Training & Familiarization",fleet:"⚓ Ιστορικό στόλου"};
 function openPage(k,from){page=k;pageFrom=from||(view==="list"?"list":"home");go("page");}
 $$("[data-pg]").forEach(b=>b.onclick=()=>{cur=null;openPage(b.dataset.pg,"list");});
 $("#h24Ins").onclick=()=>openPage("h24","home");$("#docsIns").onclick=()=>openPage("docs","home");$("#trapsIns").onclick=()=>openPage("traps","home");$("#pscIns").onclick=()=>openPage("psc","home");$("#manIns").onclick=()=>openPage("man","home");$("#trnIns").onclick=()=>openPage("trn","home");
