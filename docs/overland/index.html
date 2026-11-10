@@ -298,7 +298,7 @@ function psC(){const v=veh(),st={step:n($('#pss').value),ra:n($('#psr').value),c
 
 /* ---------- Βάρος & φορτίο ---------- */
 function tPayload(){T('⚖️ Βάρος & φορτίο');const v=veh()||{},st=LS.g('pl',{curb:v.curb||2100,gvw:v.gvw||2850,roofL:v.roof||100,ppl:2,pkg:80,items:[['Recovery kit',25],['Ψυγείο γεμάτο',35],['Κουζίνα & γκαζάκι',20],['Σκηνή οροφής',60],['Νερό (L = kg)',40],['Ρούχα & ύπνος',30],['Εργαλεία & ανταλλακτικά',25]],roof:[['Σκηνή οροφής',60]],fuelL:v.tank||80,fd:(v.fuel||'').startsWith('β')?0.74:0.84,jer:0});LS.s('pl',st);
- M.innerHTML=vehBar()+`<div class="grid"><div>${inp('plc','Απόβαρο (kg)',st.curb,'plC()')}</div><div>${inp('plg','GVM (kg)',st.gvw,'plC()')}</div><div>${inp('plp','Άτομα',st.ppl,'plC()')}</div><div>${inp('plk','kg ανά άτομο',st.pkg,'plC()')}</div><div>${inp('plf','Καύσιμο στο ρεζερβουάρ (L)',st.fuelL,'plC()')}</div><div>${inp('plj','Επιπλέον μπιτόνια (L)',st.jer,'plC()')}</div></div>
+ M.innerHTML=vehBar()+`<button class="btn p" style="width:100%;margin-bottom:8px" onclick="go('garage')">🧰 ${L2('Πάρε τα βάρη από «Το γκαράζ μου»','Take weights from «My garage»')}</button><div class="grid"><div>${inp('plc','Απόβαρο (kg)',st.curb,'plC()')}</div><div>${inp('plg','GVM (kg)',st.gvw,'plC()')}</div><div>${inp('plp','Άτομα',st.ppl,'plC()')}</div><div>${inp('plk','kg ανά άτομο',st.pkg,'plC()')}</div><div>${inp('plf','Καύσιμο στο ρεζερβουάρ (L)',st.fuelL,'plC()')}</div><div>${inp('plj','Επιπλέον μπιτόνια (L)',st.jer,'plC()')}</div></div>
  <div class="muted" style="margin-top:-6px">Το απόβαρο συνήθως περιλαμβάνει γεμάτο ρεζερβουάρ, αν ναι, βάλε 0 στο καύσιμο.</div>
  <h3>Εξοπλισμός (μέσα & πίσω)</h3><div id="pli"></div><button class="btn" onclick="plAdd('items')">➕ Γραμμή</button>
  <h3>Στη σχάρα</h3>${inp('plrl','Όριο σχάρας εν κινήσει (kg)',st.roofL,'plC()')}<div id="plr"></div><button class="btn" onclick="plAdd('roof')">➕ Γραμμή</button><div id="plo"></div>`;plRows();plC()}
@@ -454,7 +454,7 @@ function sosPage(){T('🆘 SOS');startGeo();
 function stopAll(){toolStop();calc=()=>{};if(typeof moOn!=='undefined'&&(moOn||moTorch))moStop();const cvOn=(typeof cvMe==='function'&&cvMe())||(typeof RT!=='undefined'&&RT.w!==null);if(!rec&&!cvOn&&!(typeof airOn==='function'&&airOn()))stopGeo();if(!rec&&!keepOn&&!cvOn)wake(0);
  if(orientOn){window.removeEventListener('deviceorientation',onOr,true);window.removeEventListener('deviceorientationabsolute',onOr,true);orientOn=false;hdg=null}}
 function render(r){document.body.classList.toggle('rl',r==='rally'||r==='drive');if(typeof airBanner==='function'){airBanner();if(airOn())startGeo()}const[a,b]=r.split('/');document.querySelectorAll('#nv button').forEach(x=>x.classList.toggle('on',x.dataset.r===(a==='t'||a==='veh'?'tools':a==='list'?'trip':a==='gear'?'learn':a)||(a==='home'&&x.dataset.r==='home')));
- if(a==='veh'){if(b)vehEdit(b);else vehPage();return}if(a==='t')return tool(b);if(a==='tools')return tools();if(a==='trip')return trip();if(a==='list')return list(b);if(a==='learn')return learn(b);if(a==='gear')return gear(b);if(a==='sos')return sosPage();if(a==='map')return mapPage(b,r.split('/').slice(2).join('/'));if(a==='convoy')return convoy(b,r.split('/').slice(2).join('/'));if(a==='rally')return rally(b);if(a==='plan')return planPage();if(a==='drive')return drive();if(a==='after')return afterPage();if(a==='backup')return backupPage();home()}
+ if(a==='veh'){if(b)vehEdit(b);else vehPage();return}if(a==='t')return tool(b);if(a==='tools')return tools();if(a==='trip')return trip();if(a==='list')return list(b);if(a==='learn')return learn(b);if(a==='gear')return gear(b);if(a==='sos')return sosPage();if(a==='map')return mapPage(b,r.split('/').slice(2).join('/'));if(a==='convoy')return convoy(b,r.split('/').slice(2).join('/'));if(a==='rally')return rally(b);if(a==='plan')return planPage();if(a==='drive')return drive();if(a==='after')return afterPage();if(a==='garage')return garPage();if(a==='maint')return maintPage();if(a==='log')return logPage(b);if(a==='backup')return backupPage();home()}
 window.addEventListener('hashchange',()=>{stopAll();render(location.hash.slice(1)||'home');window.scrollTo(0,0)});
 </script>
 <script src="lib/leaflet.js"></script>
@@ -464,6 +464,7 @@ window.addEventListener('hashchange',()=>{stopAll();render(location.hash.slice(1
 <script src="plan.js"></script>
 <script src="pnr.js"></script>
 <script src="phase.js"></script>
+<script src="garage.js"></script>
 <script src="convoy.js"></script>
 <script src="rally.js"></script>
 <script src="academy-data.js"></script>

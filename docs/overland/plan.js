@@ -103,7 +103,8 @@ function fpIcs(){const p=fpG();if(!p.ret)return alert(L2('Βάλε πρώτα ώ
 const BK_STORES=['spots','routes','huts'];
 async function bkCollect(){const ls={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('ov_'))ls[k]=localStorage.getItem(k)}
  const idb={};if(typeof DB!=='undefined')for(const s of BK_STORES){try{idb[s]=await DB.all(s)||[]}catch(e){idb[s]=[]}}
- return{app:'overlands-habit-backup',v:1,date:new Date().toISOString(),ls,idb}}
+ let ph=[];try{if(typeof LDB!=='undefined')ph=await LDB.all()||[]}catch(e){}
+ return{app:'overlands-habit-backup',v:1,date:new Date().toISOString(),ls,idb,ph}}
 function bkAgo(){const t=LS.g('bk_last',0);if(!t)return L2('ποτέ','never');const d=Math.floor((Date.now()-t)/864e5);return d<1?L2('σήμερα','today'):d===1?L2('χθες','yesterday'):d+' '+L2('μέρες πριν','days ago')}
 function bkNeed(){const t=LS.g('bk_last',0);return (vehs().length||Object.keys(LS.g('read',{})||{}).length>3)&&(!t||Date.now()-t>30*864e5)}
 function bkHomeRow(){return`<button class="row" onclick="go('backup')" ${bkNeed()?'style="border-color:var(--yel)"':''}><span class="e">💾</span><span><b>${L2('Backup & επαναφορά','Backup & restore')}</b><small>${bkNeed()?'⚠️ ':''}${L2('τελευταίο backup:','last backup:')} ${bkAgo()} · ${L2('όχημα, στίγματα, GPX, λίστες, πρόοδος','vehicle, pins, GPX, lists, progress')}</small></span></button>`}
@@ -116,7 +117,7 @@ async function backupPage(){T('💾 '+L2('Backup & επαναφορά','Backup &
  <div class="note" style="font-weight:400"><b>${L2('Τι ΔΕΝ μπαίνει στο backup:','What is NOT in the backup:')}</b><div class="li">${L2('Οι offline χάρτες (είναι μεγάλοι). Κράτα τους με 📤 ως αρχεία .ohmap από τον Χάρτη.','Offline maps (they are large). Keep them as .ohmap files with 📤 in the Map.')}</div><div class="li">${L2('Τα δεδομένα της εφαρμογής Off-Road Gradeability.','Data of the Off-Road Gradeability app.')}</div></div>
  <div class="tip" style="font-weight:400">${L2('Συμβουλή: κάνε backup πριν από κάθε μεγάλη εκδρομή και μετά, όταν έχεις νέα στίγματα και GPX.','Tip: back up before and after every big trip, when you have new pins and GPX tracks.')}</div>`;
  const b=await bkCollect(),kb=Math.round(JSON.stringify(b).length/1024),c=s=>(b.idb[s]||[]).length;const e=$('#bkinfo');if(!e)return;
- e.innerHTML=`<div class="kv"><span>🚙 ${L2('Οχήματα','Vehicles')}</span><b>${vehs().length}</b><span>⭐ ${L2('Στίγματα','Pins')}</span><b>${c('spots')}</b><span>🛣️ GPX</span><b>${c('routes')}</b><span>🛖 ${L2('Καταφύγια (λίστα)','Huts (list)')}</span><b>${c('huts')}</b><span>⚙️ ${L2('Ρυθμίσεις, λίστες, πρόοδος','Settings, lists, progress')}</span><b>${Object.keys(b.ls).length}</b><span>📦 ${L2('Μέγεθος αρχείου','File size')}</span><b>${kb>1024?(kb/1024).toFixed(1)+' MB':kb+' KB'}</b></div>`}
+ e.innerHTML=`<div class="kv"><span>🚙 ${L2('Οχήματα','Vehicles')}</span><b>${vehs().length}</b><span>⭐ ${L2('Στίγματα','Pins')}</span><b>${c('spots')}</b><span>🛣️ GPX</span><b>${c('routes')}</b><span>🛖 ${L2('Καταφύγια (λίστα)','Huts (list)')}</span><b>${c('huts')}</b><span>⚙️ ${L2('Ρυθμίσεις, λίστες, πρόοδος','Settings, lists, progress')}</span><b>${Object.keys(b.ls).length}</b><span>📷 ${L2('Φωτογραφίες ημερολογίου','Log photos')}</span><b>${(b.ph||[]).length}</b><span>📦 ${L2('Μέγεθος αρχείου','File size')}</span><b>${kb>1024?(kb/1024).toFixed(1)+' MB':kb+' KB'}</b></div>`}
 async function bkMake(){const b=await bkCollect(),d=new Date(),z=x=>String(x).padStart(2,'0');
  const name=`overlands-habit-backup-${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}.json`,blob=new Blob([JSON.stringify(b)],{type:'application/json'});
  let ok=false;try{const f=new File([blob],name,{type:'application/json'});if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:name});ok=true}}catch(e){if(e&&e.name==='AbortError')return}
@@ -129,4 +130,5 @@ function bkLoad(f){if(!f)return;const r=new FileReader();r.onload=async()=>{let 
  try{Object.entries(b.ls).forEach(([k,v])=>{if(k.startsWith('ov_'))localStorage.setItem(k,v)})}catch(e){alert(L2('Δεν χώρεσαν όλα τα δεδομένα.','Not all data fitted.'))}
  if(lang)localStorage.setItem('ov_lang',lang);
  if(typeof DB!=='undefined')for(const s of BK_STORES){const arr=(b.idb&&b.idb[s])||[];try{await DB.tx(s,'readwrite',st=>st.clear());if(arr.length)await DB.putMany(s,arr)}catch(e){}}
+ if(b.ph&&b.ph.length&&typeof LDB!=='undefined'){try{await LDB.tx('readwrite',st=>st.clear());for(const p of b.ph)await LDB.put(p)}catch(e){}}
  alert(L2('✅ Η επαναφορά έγινε. Η εφαρμογή ξαναφορτώνει.','✅ Restore complete. The app will reload.'));location.hash='home';location.reload()};r.readAsText(f)}

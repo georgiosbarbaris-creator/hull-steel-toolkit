@@ -1,4 +1,4 @@
-/* Overland’s Habit v0.39
+/* Overland’s Habit v0.40
    1) Αρχική σε 4 φάσεις: 🧳 Πριν · 🚙 Στη διαδρομή · ⛺ Στο camp · 🏠 Μετά. Η φάση διαλέγεται μόνη της
       (σχέδιο εκδρομής ή ξεφουσκωμένα → διαδρομή, μετά τη δύση → camp), αλλιώς ό,τι πάτησε ο χρήστης (6 ώρες). LS: ov_ph {p,t}.
    2) 🚗 Λειτουργία οδήγησης #drive: μεγάλα νούμερα (ταχύτητα, υψόμετρο, πορεία, φως), μεγάλα κουμπιά για γάντια,
@@ -15,6 +15,8 @@ const hT=L=>`<div class="g3">${L.map(t=>`<button class="tile" onclick="go('${t[0
 function phBody(p){
  if(p==='pre')return hT([['t/walk','🔎','Walk-round'],['t/payload','⚖️',L2('Βάρος GVM','Weight GVM')],['t/roof','🏗️',L2('Οροφή','Roof load')],['t/fuel','⛽',L2('Καύσιμο','Fuel')],['t/water','💧',L2('Νερό','Water')],['t/power','🔋',L2('Ρεύμα','Power')]])+
   fpHomeRow()+
+  hR('garage','🧰',L2('Το γκαράζ μου','My garage'),L2('ο εξοπλισμός σου με βάρη · 📦 τι παίρνεις → GVM & οροφή','your gear with weights · 📦 what you take → GVM & roof'))+
+  mtRow()+
   hR('trip','🎒','Ταξίδι & λίστες εξοπλισμού',tripProg())+
   hR('t/wx','🌡️',L2('Καιρός, υψόμετρο & βαρόμετρο','Weather, altitude & barometer'),L2('πρόγνωση, τάση πίεσης','forecast, pressure trend'))+
   hR('map','🗺️',L2('Offline χάρτες για την περιοχή','Offline maps for the area'),L2('κατέβασέ τους όσο έχεις internet','download them while you have internet'))+
@@ -22,18 +24,21 @@ function phBody(p){
  if(p==='road')return`<button class="big org" onclick="go('drive')">🚗 ${L2('Λειτουργία οδήγησης','Driving mode')}<small>${L2('μεγάλα κουμπιά, οθόνη ανοιχτή, για τη βάση του ταμπλό','big buttons, screen on, for the dash mount')}</small></button>`+
   hT([['t/incl','📐','Κλισιόμετρο'],['t/tyre','🛞','Πίεση'],['t/pass','🚧',L2('Θα περάσω;','Will I pass?')],['t/wade','🌊','Νερό, περνάω;'],['t/winch','🪝','Ανάκτηση'],['t/compass','🧭','Πυξίδα & GPS']])+
   fpHomeRow()+
+  logRow()+
   hR('t/pnr','🔙','Point of No Return',L2('πόσο ακόμα μπορείς να πας και να γυρίσεις','how much further you can go and still get back'))+
   hR('map','🗺️',L2('Χάρτης «Πού είμαι»','Map «Where am I»'),L2('θέση, υψόμετρο, στίγματα · Organic Maps / OsmAnd / Google','position, altitude, pins · Organic Maps / OsmAnd / Google'))+
   hR('convoy','🚐','Κομβόι, ζωντανά',(typeof cvMe==='function'&&cvMe())?'🟢 ενεργό · κωδικός '+cvMe().code:'όλα τα αυτοκίνητα στον χάρτη, συναγερμός αν χαθεί κάποιος, SOS')+
   hR('rally','🏁','Ράλι, Tripmaster & Roadbook',(typeof RL==='function'&&RL().run?'🟢 μετράει · ':'')+'Total/Partial, regularity, CAP, roadbook με κουτιά')+
   hR('t/radio','📻','Ασύρματοι & κομβόι','PMR446, κανόνες ασυρμάτου');
  if(p==='camp')return hT([['t/sun','🌇',L2('Ήλιος','Sun')],['t/night','🌙',L2('Οθόνη νύχτας','Night screen')],['t/knots','🪢','Κόμποι'],['t/power','🔋',L2('Ρεύμα','Power')],['t/wx','🌡️',L2('Βαρόμετρο','Barometer')],['t/morse','📡','Morse']])+
+  logRow()+
   hR('map/huts','🛖',L2('Καταφύγια & camper stops Ελλάδας','Huts & camper stops of Greece'),L2('καταφύγια, στέγαστρα, camper, κάμπινγκ, πηγές · offline','huts, shelters, camper, campsites, springs · offline'))+
   hR('learn/c1011_campsite','🏕️',L2('Πού στήνω: επιλογή θέσης','Where to pitch: choosing a site'),L2('μάθημα Ακαδημίας','Academy lesson'))+
   hR('learn/c1011_fire','🔥',L2('Φωτιά με ασφάλεια','Fire, safely'),L2('μάθημα Ακαδημίας','Academy lesson'))+
   hR('gear/a_tents','⛺',L2('Η μεγάλη μάχη των σκηνών','The great tent battle'),L2('άρθρο','article'));
  return(typeof fpActive==='function'&&fpActive()?`<button class="big grn" onclick="go('plan')">✅ ${L2('Γύρισα καλά','I\'m back safe')}<small>${L2('κλείσε το σχέδιο εκδρομής','close the trip plan')}</small></button>`:'')+
   (typeof airOn==='function'&&airOn()?`<button class="big org" onclick="airUp()">🛞 ${L2('Φούσκωσα','Aired up')}</button>`:'')+
+  logRow()+mtRow()+
   hR('after','🧽',L2('Μετά την εκδρομή: έλεγχος','After the trip: checks'),afProg())+
   bkHomeRow()+
   hR('trip','🎒',L2('Λίστες: τι έλειψε, τι περίσσεψε','Lists: what was missing, what was extra'),L2('πρόσθεσε δικά σου πράγματα για την επόμενη φορά','add your own items for next time'))}
@@ -45,7 +50,7 @@ function home(){T(TITLE);const p=phAuto();
  ${hR('learn','🎓','Ακαδημία',`${ALL.filter(l=>done(l.id)).length}/${ALL.length} μαθήματα · quiz · από αρχάριο μέχρι expert`)}
  ${hR('gear','🧰',L2('Εξοπλισμός του overlander','The overlander\'s gear'),L2('σκηνές, ψυγεία, ενέργεια, κουζίνα, άρθρα · τιμές, υπέρ/κατά','tents, fridges, power, kitchen, articles · prices, pros/cons'))}
  ${p!=='pre'&&bkNeed()?bkHomeRow():''}
- <footer>Overland’s Habit v0.39 · Created by George Barbaris<br><i>Adventure Is a Habit.</i><br>Τα δεδομένα μένουν μόνο στο κινητό σου.<br>Χάρτες & σημεία © OpenStreetMap contributors · OpenTopoMap · Leaflet</footer>`}
+ <footer>Overland’s Habit v0.40 · Created by George Barbaris<br><i>Adventure Is a Habit.</i><br>Τα δεδομένα μένουν μόνο στο κινητό σου.<br>Χάρτες & σημεία © OpenStreetMap contributors · OpenTopoMap · Leaflet</footer>`}
 
 /* ===================== ΛΕΙΤΟΥΡΓΙΑ ΟΔΗΓΗΣΗΣ ===================== */
 let DRV={last:null};
@@ -76,7 +81,7 @@ function drvUpd(){const g=id=>document.getElementById(id);if(!g('dsp'))return;
  if(ai)st.push(`<span>🛞 ${L2('Ξεφουσκωμένα','Aired down')} · ${L2('όριο','limit')} ${airLim()} km/h</span>`);
  if(fp)st.push(`<span onclick="go('plan')">🧭 ${L2('Επιστροφή','Return')} ${fpLeft(fp.ret)}</span>`);
  const e=g('dst');if(e)e.innerHTML=st.length?`<div class="dstl">${st.join('')}</div>`:''}
-function drvPin(){if(!pos)return alert(L2('Περίμενε το GPS.','Wait for GPS.'));const w=LS.g('wps',[]);const n=L2('Στίγμα ','Pin ')+new Date().toLocaleTimeString(LOC,{hour:'2-digit',minute:'2-digit',hour12:false});w.push({n,lat:pos.lat,lon:pos.lon,t:Date.now()});LS.s('wps',w);vib(150);
+function drvPin(){if(!pos)return alert(L2('Περίμενε το GPS.','Wait for GPS.'));const w=LS.g('wps',[]);const n=L2('Στίγμα ','Pin ')+new Date().toLocaleTimeString(LOC,{hour:'2-digit',minute:'2-digit',hour12:false});w.push({n,lat:pos.lat,lon:pos.lon,t:Date.now()});LS.s('wps',w);vib(150);if(typeof logAct==='function'&&logAct()){const Lg=logs(),a=Lg.find(z=>z.act);a.e.push(Object.assign({id:'e'+Date.now(),t:Date.now(),k:'pin',tx:''},logPos()));logSv(Lg)}
  const b=document.createElement('div');b.className='dtoast';b.textContent='📍 '+n+L2(' σώθηκε (Πυξίδα → σημεία)',' saved (Compass → points)');document.body.appendChild(b);setTimeout(()=>b.remove(),2500)}
 function drvNight(){night=!night;LS.s('night',night);document.documentElement.classList.toggle('night',night)}
 
@@ -107,7 +112,7 @@ function afProg(){const c=LS.g('ck_after',{})||{},n=AFTER.reduce((s,g)=>s+g[1].l
 function afterPage(){T('🧽 '+L2('Μετά την εκδρομή','After the trip'));const c=LS.g('ck_after',{})||{};let i=0;
  M.innerHTML=`<div class="muted">${L2('Όπως το after-voyage στο πλοίο: ό,τι δεν ελέγξεις σήμερα, θα το βρεις μπροστά σου στην επόμενη εκδρομή.','Like an after-voyage check on a ship: what you don\'t check today, you will meet on the next trip.')}</div>`+
  AFTER.map(([g,L])=>`<h3>${g}</h3>`+L.map(x=>{const k='a'+(i++);return`<div class="chk ${c[k]?'on':''}" onclick="afT('${k}',this)"><div class="bx">${c[k]?'✓':''}</div><span>${esc(x)}</span></div>`}).join('')).join('')+
- `<div class="tools" style="margin-top:12px"><button class="btn" onclick="go('plan')">🧭 ${L2('Σχέδιο εκδρομής','Trip plan')}</button><button class="btn" onclick="go('backup')">💾 Backup</button><button class="btn r" onclick="afNew()">🆕 ${L2('Καθάρισμα ✓','Clear ✓')}</button></div>`}
+ `<div class="tools" style="margin-top:12px"><button class="btn" onclick="go('plan')">🧭 ${L2('Σχέδιο εκδρομής','Trip plan')}</button><button class="btn" onclick="go('maint')">🔧 ${L2('Συντήρηση','Maintenance')}</button><button class="btn" onclick="go('backup')">💾 Backup</button><button class="btn r" onclick="afNew()">🆕 ${L2('Καθάρισμα ✓','Clear ✓')}</button></div>`}
 function afT(k,el){const c=LS.g('ck_after',{})||{};c[k]=!c[k];if(!c[k])delete c[k];LS.s('ck_after',c);el.classList.toggle('on',!!c[k]);el.querySelector('.bx').textContent=c[k]?'✓':''}
 function afNew(){if(!confirm(L2('Να καθαρίσουν όλα τα ✓;','Clear all ✓?')))return;LS.s('ck_after',{});afterPage()}
 
