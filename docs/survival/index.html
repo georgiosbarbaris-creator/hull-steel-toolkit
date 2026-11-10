@@ -2126,7 +2126,7 @@ function home(){T('Επιβίωση 72+');
  <button class="tile" onclick="go('search')" style="grid-column:1/-1;min-height:70px"><span class="e" style="font-size:1.4em">🔎</span>Αναζήτηση</button>
  </div>
  <div class="tip">Δουλεύει χωρίς internet. Τα δεδομένα σου μένουν μόνο σε αυτό το κινητό. <b>A+</b> πάνω δεξιά για μεγαλύτερα γράμματα.</div>
- <footer>Επιβίωση 72+ · Created by George Barbaris<br>Οι οδηγίες δεν αντικαθιστούν το 112, τις επίσημες αρχές ή την εκπαίδευση σε πρώτες βοήθειες.</footer>`}
+ <footer>${SPONSOR()}<div class="notr" style="margin-top:10px"><a href="#about" style="color:inherit">🎁 ${L2('Σχετικά','About')}</a> · <a href="#legal" style="color:inherit">⚖️ ${L2('Όροι & αποποίηση ευθύνης','Terms & disclaimer')}</a></div><div style="margin-top:6px">Οι οδηγίες δεν αντικαθιστούν το 112, τις επίσημες αρχές ή την εκπαίδευση σε πρώτες βοήθειες.</div></footer>`}
 function cat(c){const k=CATS[c];if(!k)return home();T(k[1]);
  const L=D.filter(a=>a.cat===c);
  let h='';
@@ -3396,6 +3396,72 @@ TOOLS.splice(1,0,['fake','📞','Ψεύτικη κλήση','πρόφαση γι
 ['step','Πήγαινε σε νοσοκομείο, ακόμα κι αν δεν πονάς. Σε σεξουαλική επίθεση, αν μπορείς μην πλυθείς και μην αλλάξεις ρούχα πριν την εξέταση – κράτα τα ρούχα σε χάρτινη σακούλα.'],
 ['step','Κράτα τα πάντα: ηχογράφηση (📓 Ημερολόγιο), μηνύματα, φωτογραφίες τραυμάτων με ημερομηνία, ονόματα μαρτύρων.'],
 ['tip','Δεν φταις εσύ. Ό,τι κι αν έκανες για να επιβιώσεις, ήταν το σωστό.']].map(([t,x])=>({t,x}))};D.push(a);byId[a.id]=a})();
+/* ===================== v18: 🎁 Χορηγία · Όροι χρήσης & αποποίηση ευθύνης ===================== */
+const TERMS_V='2026-11-10';
+const LEGAL_EL=[
+['1. Τι είναι η εφαρμογή','Το «Επιβίωση 72+» δίνει <b>γενικές πληροφορίες και εργαλεία ετοιμότητας</b>, για ενημέρωση και εκπαίδευση. <b>Δεν</b> είναι ιατρική, νομική ή άλλη επαγγελματική συμβουλή και <b>δεν</b> αντικαθιστά το 112, το ΕΚΑΒ (166), την Πυροσβεστική (199), την Αστυνομία (100), τις οδηγίες των αρχών ή την εκπαίδευση σε πρώτες βοήθειες.'],
+['2. Σε έκτακτη ανάγκη','Κάλεσε <b>πρώτα 112</b>. Οι οδηγίες της Πολιτικής Προστασίας, των αρχών και των διασωστών υπερισχύουν πάντα από ό,τι γράφει η εφαρμογή.'],
+['3. Χωρίς εγγύηση','Η εφαρμογή παρέχεται <b>«ως έχει»</b>, δωρεάν, χωρίς καμία εγγύηση ότι οι πληροφορίες είναι πλήρεις, ακριβείς, επίκαιρες ή κατάλληλες για τη δική σου περίπτωση, ούτε ότι θα λειτουργεί πάντα, χωρίς διακοπές ή σφάλματα.'],
+['4. Όρια των εργαλείων','GPS, πυξίδα, βαρόμετρο, φακός, ήχοι και ειδοποιήσεις εξαρτώνται από τη συσκευή, την μπαταρία, το σήμα και τις ρυθμίσεις της. Το <b>Κουμπί πανικού</b> και τα μηνύματα SMS <b>δεν στέλνονται αυτόματα</b> (θέλουν «Αποστολή» και σήμα κινητής) και <b>δεν ειδοποιούν τις αρχές</b>. Η επικοινωνία χωρίς δίκτυο (QR, ήχος, hotspot, φως) δεν είναι εγγυημένη. <b>Μη στηρίζεσαι μόνο στην εφαρμογή</b> – έχε πάντα σχέδιο Β.'],
+['5. Περιορισμός ευθύνης','Στον μέγιστο βαθμό που επιτρέπει ο νόμος, ο δημιουργός <b>δεν ευθύνεται</b> για οποιαδήποτε ζημία, τραυματισμό, απώλεια ή έξοδο που μπορεί να προκύψει από τη χρήση ή τη μη δυνατότητα χρήσης της εφαρμογής ή από την εφαρμογή των πληροφοριών της. Τίποτα σε αυτούς τους όρους δεν αποκλείει ευθύνη που κατά τον νόμο δεν μπορεί να αποκλειστεί.'],
+['6. Η δική σου ευθύνη','Κάθε απόφαση και ενέργεια είναι δική σου, με δική σου κρίση και κίνδυνο. Τήρησε τους νόμους (π.χ. απαγόρευση φωτιάς στην ύπαιθρο, ραδιοσυχνότητες, προστατευόμενες περιοχές). <b>Μην τρως ποτέ</b> μανιτάρια ή άγρια φυτά με βάση μια εφαρμογή. Τα <b>παιδιά</b> χρησιμοποιούν την εφαρμογή με την επίβλεψη γονέα ή κηδεμόνα.'],
+['7. Ηχογράφηση','Η ηχογράφηση φωνής άλλου προσώπου χωρίς τη συναίνεσή του μπορεί να απαγορεύεται από τον νόμο. Χρησιμοποίησέ τη μόνο για την προστασία σου και ρώτα την Αστυνομία ή δικηγόρο πριν τη χρησιμοποιήσεις οπουδήποτε.'],
+['8. Τρίτοι','Εφαρμογές, συσκευές και υπηρεσίες τρίτων (π.χ. Meshtastic, bitchat, Briar, χάρτες) αναφέρονται μόνο ενημερωτικά. Δεν υπάρχει καμία σχέση, χορηγία ή ευθύνη για αυτές. Οι τιμές είναι ενδεικτικές.'],
+['9. Προσωπικά δεδομένα','Η εφαρμογή <b>δεν συλλέγει τίποτα</b>: δεν έχει λογαριασμούς, διαφημίσεις ή παρακολούθηση. Ό,τι γράφεις (κάρτα, επαφές, έγγραφα, ημερολόγιο) μένει <b>μόνο στη συσκευή σου</b> και σβήνεται αν καθαρίσεις τα δεδομένα του browser. SMS και κλήσεις γίνονται από τις εφαρμογές του κινητού σου.'],
+['10. Πνευματικά δικαιώματα','© George Barbaris. Η χρήση είναι ελεύθερη και δωρεάν και μπορείς να μοιράζεσαι τον σύνδεσμο. Δεν επιτρέπεται η πώληση ή η αναδημοσίευση του περιεχομένου ως δικού σου.'],
+['11. Αλλαγές','Η εφαρμογή και οι όροι ενημερώνονται αυτόματα. Η συνέχιση της χρήσης σημαίνει αποδοχή της τρέχουσας έκδοσης.'],
+['12. Εφαρμοστέο δίκαιο','Ισχύει το ελληνικό δίκαιο. Αρμόδια τα δικαστήρια της Αθήνας, εκτός αν ο νόμος ορίζει διαφορετικά για τον καταναλωτή.']];
+const LEGAL_EN=[
+['1. What this app is','“Survival 72+” provides <b>general information and preparedness tools</b> for awareness and education. It is <b>not</b> medical, legal or other professional advice and does <b>not</b> replace 112, emergency medical services, fire brigade, police, official instructions or first-aid training.'],
+['2. In an emergency','Call <b>112 first</b>. Instructions from civil protection, authorities and rescuers always take priority over anything in this app.'],
+['3. No warranty','The app is provided <b>“as is”</b>, free of charge, with no warranty that the information is complete, accurate, up to date or suitable for your situation, or that it will always work without interruption or error.'],
+['4. Limits of the tools','GPS, compass, barometer, light, sounds and alerts depend on your device, battery, signal and settings. The <b>Panic button</b> and SMS messages are <b>not sent automatically</b> (you must tap “Send” and need mobile signal) and <b>do not alert the authorities</b>. Offline communication (QR, sound, hotspot, light) is not guaranteed. <b>Do not rely on the app alone</b> – always have a plan B.'],
+['5. Limitation of liability','To the maximum extent permitted by law, the creator is <b>not liable</b> for any damage, injury, loss or expense arising from the use of, or inability to use, the app or from acting on its information. Nothing in these terms excludes liability that cannot be excluded by law.'],
+['6. Your responsibility','Every decision and action is yours, at your own judgement and risk. Obey the law (e.g. outdoor fire bans, radio frequencies, protected areas). <b>Never eat</b> mushrooms or wild plants based on an app. <b>Children</b> should use the app under the supervision of a parent or guardian.'],
+['7. Recording','Recording another person’s voice without consent may be prohibited by law. Use it only for your own protection and ask the police or a lawyer before using it anywhere.'],
+['8. Third parties','Third-party apps, devices and services (e.g. Meshtastic, bitchat, Briar, maps) are mentioned for information only. There is no affiliation, sponsorship or responsibility for them. Prices are indicative.'],
+['9. Personal data','The app <b>collects nothing</b>: no accounts, no ads, no tracking. Whatever you enter (card, contacts, documents, diary) stays <b>only on your device</b> and is deleted if you clear the browser data. SMS and calls are made through your phone’s own apps.'],
+['10. Copyright','© George Barbaris. Use is free of charge and you may share the link. Selling or republishing the content as your own is not permitted.'],
+['11. Changes','The app and these terms update automatically. Continued use means you accept the current version.'],
+['12. Governing law','Greek law applies. The courts of Athens have jurisdiction, unless consumer law provides otherwise.']];
+const SPONSOR=()=>`<div class="notr" style="text-align:center">🎁 ${L2('Ευγενική χορηγία του','Kindly sponsored by')} <b>George Barbaris</b><br><i>${L2('γιατί τα πράγματα που σώζουν ζωές είναι ανεκτίμητα','because the things that save lives are priceless')}</i><br><span style="opacity:.8">Powered by <b>Overland’s Habit Creator</b></span></div>`;
+function legalHtml(){const L=L2(LEGAL_EL,LEGAL_EN);return `<div class="notr">${L.map(([h,t])=>`<h3>${h}</h3><div class="li" style="margin:0">${t}</div>`).join('')}<div class="muted" style="margin-top:14px">${L2('Έκδοση όρων','Terms version')}: ${TERMS_V}</div></div>`}
+function legalPage(){T(L2('⚖️ Όροι & αποποίηση','⚖️ Terms & disclaimer'));const ok=LS.g('terms_ok',null);
+ M.innerHTML=`<div class="warn notr">${L2('Σε έκτακτη ανάγκη κάλεσε <b>112</b>. Η εφαρμογή είναι βοήθημα – όχι αντικατάσταση των αρχών, γιατρού ή εκπαίδευσης.','In an emergency call <b>112</b>. The app is an aid – not a replacement for authorities, a doctor or training.')}</div>${legalHtml()}
+ <div class="box notr" style="text-align:center;margin-top:14px">${ok?`✅ ${L2('Τους αποδέχτηκες στις','You accepted them on')} ${tdt(ok.t)}`:`<button class="big grn" onclick="termsAccept();legalPage()">✅ ${L2('Διάβασα και αποδέχομαι','I have read and accept')}</button>`}</div>
+ <footer>${SPONSOR()}</footer>`}
+function aboutPage(){T(L2('🎁 Σχετικά','🎁 About'));
+ M.innerHTML=`<div class="box notr" style="text-align:center;border:2px solid var(--grn);padding:22px 14px">
+ <div style="font-size:2.6em">🎁</div><div style="font-size:1.2em;font-weight:900;margin-top:4px">${L2('Ευγενική χορηγία του','Kindly sponsored by')}<br>George Barbaris</div>
+ <div style="font-size:1.15em;margin:12px 0;font-style:italic">${L2('«Γιατί τα πράγματα που σώζουν ζωές είναι ανεκτίμητα.»','“Because the things that save lives are priceless.”')}</div>
+ <div class="muted">${L2('Γι\' αυτό η εφαρμογή είναι και θα μείνει <b>δωρεάν για όλους</b> – χωρίς διαφημίσεις, χωρίς λογαριασμούς, χωρίς να μαζεύει δεδομένα.','That is why this app is and will stay <b>free for everyone</b> – no ads, no accounts, no data collection.')}</div></div>
+ <div class="box notr"><div class="li" style="margin:0">📱 ${L2('Δουλεύει χωρίς internet. Οι ενημερώσεις έρχονται μόνες τους όταν υπάρχει σύνδεση.','Works without internet. Updates arrive by themselves when you are online.')}</div>
+ <div class="li" style="margin:0">🔒 ${L2('Τα δεδομένα σου μένουν μόνο σε αυτό το κινητό.','Your data stays only on this phone.')}</div>
+ <div class="li" style="margin:0">❤️ ${L2('Μοιράσου την με οικογένεια και φίλους – μπορεί να σώσει μια ζωή.','Share it with family and friends – it may save a life.')}</div></div>
+ <button class="big blu notr" onclick="aboutShare()">📤 ${L2('Μοιράσου την εφαρμογή','Share the app')}</button>
+ <div class="box notr" style="text-align:center"><div class="muted">Powered by</div><div style="font-size:1.25em;font-weight:900">Overland’s Habit Creator</div><a class="btn" style="display:inline-block;margin-top:8px;text-decoration:none" href="../overland/">🚙 Overland’s Habit</a></div>
+ <button class="btn notr" onclick="go('legal')">⚖️ ${L2('Όροι χρήσης & αποποίηση ευθύνης','Terms of use & disclaimer')}</button>
+ <footer class="notr">© George Barbaris · ${L2('Επιβίωση 72+','Survival 72+')}</footer>`}
+function aboutShare(){const u=location.origin+location.pathname,t=L2('«Επιβίωση 72+» – δωρεάν εφαρμογή επιβίωσης, δουλεύει χωρίς internet. Ευγενική χορηγία του George Barbaris.','“Survival 72+” – free survival app, works offline. Kindly sponsored by George Barbaris.');
+ if(navigator.share)navigator.share({title:L2('Επιβίωση 72+','Survival 72+'),text:t,url:u}).catch(()=>{});else(navigator.clipboard?navigator.clipboard.writeText(t+' '+u):Promise.reject()).then(()=>alert(L2('Ο σύνδεσμος αντιγράφηκε.','Link copied.')),()=>prompt('',u))}
+function termsAccept(){LS.s('terms_ok',{v:TERMS_V,t:Date.now()});const g=$('#tgate');if(g)g.remove()}
+function termsGate(){const ok=LS.g('terms_ok',null);if(ok&&ok.v===TERMS_V)return;const h=location.hash.slice(1);if(/^(panic|msg|sos|cpr|phones|now)/.test(h))return;if($('#tgate'))return;
+ const d=document.createElement('div');d.id='tgate';d.className='notr';d.style.cssText='position:fixed;inset:0;z-index:90;background:#000c;display:flex;align-items:flex-end;justify-content:center';
+ d.innerHTML=`<div style="background:var(--bg,#0d1b2a);border:1px solid var(--line);border-radius:20px 20px 0 0;max-width:640px;width:100%;max-height:88vh;overflow:auto;padding:18px 16px calc(env(safe-area-inset-bottom) + 16px)">
+ <div style="text-align:center;font-size:1.25em;font-weight:900">${L2('Καλώς ήρθες στο Επιβίωση 72+','Welcome to Survival 72+')}</div>
+ <div style="margin:10px 0">${SPONSOR()}</div>
+ <div class="warn" style="font-weight:400">${L2('Η εφαρμογή δίνει <b>γενικές πληροφορίες</b> και δεν αντικαθιστά το <b>112</b>, γιατρό, τις αρχές ή την εκπαίδευση. Παρέχεται <b>«ως έχει»</b>, δωρεάν, χωρίς εγγύηση. Ο δημιουργός δεν ευθύνεται για ζημία από τη χρήση της, στον βαθμό που επιτρέπει ο νόμος. Το κουμπί πανικού και τα SMS <b>δεν</b> στέλνονται αυτόματα και <b>δεν</b> ειδοποιούν τις αρχές. Τα δεδομένα σου μένουν μόνο στο κινητό σου.','The app gives <b>general information</b> and does not replace <b>112</b>, a doctor, the authorities or training. It is provided <b>“as is”</b>, free, without warranty. To the extent permitted by law, the creator is not liable for damage from its use. The panic button and SMS are <b>not</b> sent automatically and do <b>not</b> alert the authorities. Your data stays only on your phone.')}</div>
+ <details style="margin:8px 0"><summary style="cursor:pointer;font-weight:700">📄 ${L2('Διάβασε όλους τους όρους','Read the full terms')}</summary>${legalHtml()}</details>
+ <button class="big grn" onclick="termsAccept()">✅ ${L2('Κατάλαβα και αποδέχομαι','I understand and accept')}</button></div>`;
+ document.body.appendChild(d)}
+{const _r=render;render=function(r){const a=r.split('/')[0];if(a==='legal')return legalPage();if(a==='about')return aboutPage();return _r(r)}}
+/* μικρή υπενθύμιση εκεί που μετράει: πρώτες βοήθειες & κουμπί πανικού */
+const DISC=()=>`<div class="muted notr" style="text-align:center;font-size:.78em;margin-top:14px">ℹ️ ${L2('Βοήθημα – δεν αντικαθιστά το 112 ή γιατρό.','An aid – does not replace 112 or a doctor.')} <a href="#legal" style="color:inherit">⚖️ ${L2('Όροι','Terms')}</a></div>`;
+{const _c=cat;cat=function(c){_c(c);if(c==='aid'||c==='now')M.insertAdjacentHTML('beforeend',DISC())}}
+{const _p=panic;panic=function(s){_p(s);if(!s&&location.hash==='#panic')M.insertAdjacentHTML('beforeend',DISC())}}
+{const _a=art;art=function(id){_a(id);const x=byId[id];if(x&&(x.cat==='aid'||x.cat==='now'||x.cat==='comm'))M.insertAdjacentHTML('beforeend',DISC())}}
+setTimeout(termsGate,400);
+
 if(rec)startGeo();
 setTimeout(grdBar,300);
 $('#lgb').textContent=LANG==='en'?'ΕΛ':'EN';if(LANG==='en'){document.title='Survival 72+';window.__trAll()}render(location.hash.slice(1)||'home');
