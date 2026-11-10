@@ -8,6 +8,7 @@ function eqF(c,k){return EQL()==='en'?(c[k+'_en']||c[k]):c[k]}
 function gear(b){
  if(!b)return eqHome();
  if(b==='print')return eqPrint();
+ if(b.startsWith('a_'))return artPage(b.slice(2));
  if(b.startsWith('c_'))return eqCat(b.slice(2));
  if(b.startsWith('q_'))return eqQuiz(b.slice(2));
  if(b.startsWith('x_'))return eqCmp(b.slice(2));
@@ -18,6 +19,7 @@ function eqHome(){T('🧰 '+L2('Εξοπλισμός','Gear'));const C=EQC();
  M.innerHTML=`<div class="muted">${L2(`Όλος ο εξοπλισμός του overlander: ${n} κάρτες σε ${C.length} κατηγορίες. Τι είναι, πώς δουλεύει, υπέρ και κατά, τιμές, τι κοιτάς όταν αγοράζεις.`,`All the overlander's gear: ${n} cards in ${C.length} categories. What it is, how it works, pros and cons, prices, what to check when buying.`)}</div>
  <input id="eqs" type="search" placeholder="🔎 ${L2('Αναζήτηση (π.χ. hard shell, ψυγείο, LiFePO4)','Search (e.g. hard shell, fridge, LiFePO4)')}" oninput="eqSearch()" style="margin:10px 0">
  <div id="eqr"></div>
+ <h3>📰 ${L2('Άρθρα','Articles')}</h3>${typeof artList==='function'?artList():''}
  <h3>🧭 ${L2('Βοηθοί επιλογής','Choosing helpers')}</h3>
  ${EQW.map(w=>`<button class="row" onclick="go('gear/w_${w.id}')"><span class="e">${w.e}</span><span><b>${L2(w.el,w.en)}</b><small>${L2('λίγες ερωτήσεις, πρόταση με αιτιολόγηση','a few questions, a reasoned suggestion')}</small></span></button>`).join('')}
  <h3>📚 ${L2('Κατηγορίες','Categories')}</h3>
@@ -29,7 +31,7 @@ function eqSearch(){const q=norm2($('#eqs').value.trim()),e=$('#eqr');if(!q){e.i
  e.innerHTML=R.slice(0,40).map(eqRow).join('')||`<div class="muted">${L2('Τίποτα δεν ταιριάζει.','Nothing matches.')}</div>`}
 function eqRow(k){const t=eqT(k);return `<button class="row" onclick="go('gear/${k.id}')"><span class="e">${k.e||'🧰'}</span><span style="flex:1"><b>${esc(t.n)}</b><small>${esc(t.s||'')}${k.price?' · '+esc(eqPrice(k)):''}</small></span></button>`}
 function eqCat(cat){const c=EQC().find(x=>x.cat===cat);if(!c)return eqHome();const t=eqT(c);T(c.e+' '+t.n);
- M.innerHTML=`<div class="tip" style="font-weight:400">${t.intro||''}</div>`+c.order.map(id=>EQK(id)).filter(Boolean).map(eqRow).join('')+
+ M.innerHTML=`<div class="tip" style="font-weight:400">${t.intro||''}</div>`+((cat==='tents'||cat==='rtt')&&typeof artList==='function'?artList():'')+c.order.map(id=>EQK(id)).filter(Boolean).map(eqRow).join('')+
  (c.compare&&c.compare.length?`<h3>⚖️ ${L2('Συγκρίσεις','Comparisons')}</h3>`+c.compare.map((x,i)=>`<button class="row" onclick="go('gear/x_${cat}~${i}')"><span class="e">📊</span><span><b>${esc(eqT(x).t)}</b></span></button>`).join(''):'')+
  (c.quiz&&c.quiz.length?`<button class="big grn" onclick="go('gear/q_${cat}')">📝 Quiz (${c.quiz.length})</button>`:'')}
 function eqList(a){return '<ul style="margin:6px 0 0 0;padding-left:18px">'+(a||[]).map(x=>`<li style="margin:3px 0">${x}</li>`).join('')+'</ul>'}
