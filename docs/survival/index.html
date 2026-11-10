@@ -3526,6 +3526,40 @@ const DISC=()=>`<div class="muted notr" style="text-align:center;font-size:.78em
 {const _a=art;art=function(id){_a(id);const x=byId[id];if(x&&(x.cat==='aid'||x.cat==='now'||x.cat==='comm'))M.insertAdjacentHTML('beforeend',DISC())}}
 setTimeout(termsGate,400);
 
+/* ===== v22: Γιατί – εξηγήσεις στα Χρονόμετρα ζωής ===== */
+const TMWHY={
+ tq:['Ο ίσχαιμος σταματάει το αίμα, αλλά κόβει και το οξυγόνο στο χέρι ή στο πόδι. Μετά από περίπου 2 ώρες αρχίζει ζημιά. Ο γιατρός πρέπει να ξέρει ΠΟΤΕ μπήκε για να τον βγάλει με ασφάλεια – γι\' αυτό μετράς.','A tourniquet stops the bleeding but also cuts oxygen to the arm or leg. After about 2 hours damage begins. The doctor must know WHEN it went on to remove it safely – that is why you count.'],
+ burn:['Το δέρμα συνεχίζει να «ψήνεται» από μέσα και μετά τη φωτιά. 20 λεπτά δροσερό νερό βγάζουν τη ζέστη, μειώνουν τον πόνο και το βάθος του εγκαύματος (βοηθάει ακόμα και 3 ώρες μετά). Λιγότερο δεν φτάνει. Πάγος χαλάει το δέρμα.','Skin keeps “cooking” from inside after the fire. 20 minutes of cool water take the heat out, reduce pain and how deep the burn goes (it helps even 3 hours later). Less is not enough. Ice damages skin.'],
+ boil:['Το βράσιμο σκοτώνει μικρόβια, ιούς και παράσιτα που σε αρρωσταίνουν με διάρροια. 1 λεπτό σε δυνατό κόχλασμα αρκεί.','Boiling kills germs, viruses and parasites that make you sick with diarrhoea. 1 minute at a rolling boil is enough.'],
+ boil3:['Ψηλά στο βουνό το νερό βράζει σε χαμηλότερη θερμοκρασία, οπότε θέλει περισσότερο χρόνο (3 λεπτά) για να σκοτώσει τα μικρόβια.','High in the mountains water boils at a lower temperature, so it needs longer (3 minutes) to kill the germs.'],
+ chl:['Η χλωρίνη θέλει χρόνο για να σκοτώσει τα μικρόβια – αν πιεις νωρίτερα, δεν έχει δράσει. Μετά από 30′ πρέπει να μυρίζει ελαφρά χλωρίνη. Αν δεν μυρίζει, ξαναβάλε και περίμενε άλλα 15′. Μόνο απλή χλωρίνη, χωρίς άρωμα.','Bleach needs time to kill germs – drink earlier and it has not worked yet. After 30 min it should smell slightly of bleach. If not, add again and wait 15 more min. Only plain, unscented bleach.'],
+ chl60:['Στο κρύο η χλωρίνη δουλεύει πιο αργά και η λάσπη «κρύβει» τα μικρόβια. Γι\' αυτό διπλή δόση και διπλός χρόνος. Φίλτραρε πρώτα από πανί.','In the cold bleach works slower and mud “hides” the germs. That is why double dose and double time. Filter through cloth first.'],
+ tab:['Κάθε ταμπλέτα θέλει τον χρόνο της για να δράσει. Κάποια παράσιτα (π.χ. Cryptosporidium) θέλουν έως 4 ώρες. Πιες μόνο όταν περάσει ο χρόνος του κουτιού.','Each tablet needs its time to work. Some parasites (e.g. Cryptosporidium) need up to 4 hours. Drink only after the time on the box.'],
+ sodis:['Οι ακτίνες UV του ήλιου και η ζέστη σκοτώνουν τα μικρόβια μέσα στο μπουκάλι – χωρίς φωτιά, χωρίς χημικά. Θέλει 6 ώρες δυνατό ήλιο (2 μέρες με συννεφιά). Το νερό πρέπει να είναι ΔΙΑΥΓΕΣ (αν δεν διαβάζεις γράμματα μέσα από το μπουκάλι, φίλτραρέ το πρώτα). Μόνο διάφανο πλαστικό PET έως 2 L – όχι γυαλί ή χρωματιστό. Πάνω σε λαμαρίνα ή κεραμίδια ζεσταίνεται περισσότερο.','The sun’s UV rays and heat kill the germs inside the bottle – no fire, no chemicals. It needs 6 hours of strong sun (2 days if cloudy). The water must be CLEAR (if you cannot read letters through the bottle, filter it first). Only clear PET plastic up to 2 L – not glass or coloured. On a metal sheet or roof tiles it gets hotter.'],
+ hay:['Το φαγητό συνεχίζει να μαγειρεύεται με τη ζέστη που κρατάει η κατσαρόλα – χωρίς καύσιμο. Γλιτώνεις γκάζι ή ξύλα. Μετά από 1 ώρα είναι έτοιμο (όσπρια: 2–3 ώρες).','Food keeps cooking with the heat the pot holds – no fuel. You save gas or wood. After 1 hour it is ready (beans/lentils: 2–3 hours).'],
+ eng:['Η μηχανή ζεσταίνει το αυτοκίνητο, αλλά αν η εξάτμιση κλείσει από χιόνι, το μονοξείδιο του άνθρακα (δεν μυρίζει) μπαίνει μέσα και σκοτώνει στον ύπνο. Γι\' αυτό: λίγα λεπτά μόνο, εξάτμιση καθαρή, παράθυρο λίγο ανοιχτό. Το χρονόμετρο σε θυμίζει να ελέγξεις.','The engine heats the car, but if snow blocks the exhaust, carbon monoxide (no smell) gets inside and kills in your sleep. So: only a few minutes, exhaust clear, window slightly open. The timer reminds you to check.'],
+ phone:['Το κινητό καίει μπαταρία ψάχνοντας σήμα. Σε λειτουργία πτήσης κρατάει μέρες. Άνοιγε κάθε 2 ώρες για λίγα λεπτά να πάρεις και να στείλεις μηνύματα – συμφώνησε τις ίδιες ώρες με τους δικούς σου.','The phone burns battery searching for signal. In airplane mode it lasts for days. Turn it on every 2 hours for a few minutes to send and receive messages – agree the same times with your family.']};
+const tmWhy=k=>TMWHY[k]?L2(TMWHY[k][0],TMWHY[k][1]):'';
+{const _t=tTimers;tTimers=function(){_t();
+ M.querySelectorAll('.box').forEach((bx,i)=>{const t=tmrs()[i];if(!t||!TMWHY[t.k])return;bx.insertAdjacentHTML('beforeend',`<div class="notr muted" style="margin-top:6px;font-size:.9em">❓ <b>${L2('Γιατί','Why')}:</b> ${esc(tmWhy(t.k))}</div>`)});
+ const g=M.querySelector('.grid');if(g)g.insertAdjacentHTML('afterend',`<h3 class="notr">❓ ${L2('Γιατί το κάνεις;','Why do you do it?')}</h3><div class="notr">${TMP.filter(p=>TMWHY[p[0]]).map(p=>`<details class="box" style="padding:10px 12px"><summary style="cursor:pointer;font-weight:700">${p[1]} ${esc(trS(p[2]))}</summary><div style="margin-top:6px">${esc(tmWhy(p[0]))}</div></details>`).join('')}</div>`)}}
+
+/* ===== v22: Αλφάδι, Σεισμογράφος, Ηχόμετρο – το κουμπί σταματάει κιόλας ===== */
+let lvOn=false;
+function lvStop(){window.removeEventListener('deviceorientation',lvOr,true);lvOn=false;const b=$('#lvgo');if(b){b.textContent=trS('▶ Ενεργοποίηση');b.classList.add('p');b.classList.remove('r')}
+ const el=$('#lvb');if(el){el.style.transform='';el.style.background='#2a9d8f'}const t=$('#lvt');if(t)t.textContent='—';const p=$('#lvp');if(p)p.textContent='';const x=$('#lvx');if(x)x.textContent=trS('Πάτα «Ενεργοποίηση»');const w=$('#lvw');if(w)w.style.display='none';if(!keepOn&&!rec&&!grd.on)wake(0)}
+lvGo=async function(){if(lvOn){lvStop();return}if(!(await orientPerm())){alert('Δεν δόθηκε άδεια.');return}window.addEventListener('deviceorientation',lvOr,true);lvOn=true;TS.push(()=>{window.removeEventListener('deviceorientation',lvOr,true);lvOn=false});wake(1);
+ const b=$('#lvgo');if(b){b.textContent=L2('⏹ Σταμάτα','⏹ Stop');b.classList.remove('p');b.classList.add('r')}};
+function lvMsg(m){const e=$('#lvm');if(!e)return;e.textContent=m;clearTimeout(e._t);e._t=setTimeout(()=>e.textContent='',2500)}
+{const _l=tLevel;tLevel=function(){lvOn=false;_l();const bs=M.querySelectorAll('.tools .btn');if(bs[0]){bs[0].id='lvgo'}
+ if(bs[1])bs[1].setAttribute('onclick',"if(!lvOn){lvMsg(L2('Πάτα πρώτα «Ενεργοποίηση»','Press “Turn on” first'));return}lvZ=lvLast.slice();LS.s('lvz',lvZ);lvMsg(L2('⊙ Μηδενίστηκε εδώ – αυτή η θέση είναι πια το 0°','⊙ Zeroed here – this position is now 0°'))");
+ if(bs[2])bs[2].setAttribute('onclick',"lvZ=[0,0];LS.s('lvz',lvZ);lvMsg(L2('↺ Εργοστασιακό – το 0° είναι πάλι το επίπεδο του κινητού','↺ Factory – 0° is the phone’s own level again'))");
+ M.querySelector('.tools').insertAdjacentHTML('afterend',`<div id="lvm" class="notr" style="text-align:center;color:var(--yel);font-weight:700;min-height:1.3em"></div>`)}}
+/* σεισμογράφος & ηχόμετρο: το κουμπί μένει και γίνεται «Σταμάτα» */
+function togWrap(startName,btnId,lblStart){const _g=window[startName];window[startName]=async function(){const b=$('#'+btnId);if(b&&b.dataset.on){toolStop();b.dataset.on='';b.textContent=trS(lblStart);b.className=b.dataset.cls||b.className;if(!keepOn&&!rec&&!grd.on)wake(0);return}
+ const n=TS.length;await _g();const b2=$('#'+btnId);if(b2&&TS.length>n){b2.style.display='';b2.dataset.on='1';b2.dataset.cls=b2.className;b2.className='big red';b2.textContent=L2('⏹ Σταμάτα','⏹ Stop')}}}
+togWrap('sgGo','sgb','▶ Ξεκίνα την καταγραφή');togWrap('snGo','snb','🎤 Ξεκίνα να ακούς');
+
 if(rec)startGeo();
 setTimeout(grdBar,300);
 $('#lgb').textContent=LANG==='en'?'ΕΛ':'EN';if(LANG==='en'){document.title='Survival 72+';window.__trAll()}render(location.hash.slice(1)||'home');
