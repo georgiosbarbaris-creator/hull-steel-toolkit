@@ -1,4 +1,4 @@
-/* Overland’s Habit v0.40
+/* Overland’s Habit v0.41
    1) Αρχική σε 4 φάσεις: 🧳 Πριν · 🚙 Στη διαδρομή · ⛺ Στο camp · 🏠 Μετά. Η φάση διαλέγεται μόνη της
       (σχέδιο εκδρομής ή ξεφουσκωμένα → διαδρομή, μετά τη δύση → camp), αλλιώς ό,τι πάτησε ο χρήστης (6 ώρες). LS: ov_ph {p,t}.
    2) 🚗 Λειτουργία οδήγησης #drive: μεγάλα νούμερα (ταχύτητα, υψόμετρο, πορεία, φως), μεγάλα κουμπιά για γάντια,
@@ -50,7 +50,7 @@ function home(){T(TITLE);const p=phAuto();
  ${hR('learn','🎓','Ακαδημία',`${ALL.filter(l=>done(l.id)).length}/${ALL.length} μαθήματα · quiz · από αρχάριο μέχρι expert`)}
  ${hR('gear','🧰',L2('Εξοπλισμός του overlander','The overlander\'s gear'),L2('σκηνές, ψυγεία, ενέργεια, κουζίνα, άρθρα · τιμές, υπέρ/κατά','tents, fridges, power, kitchen, articles · prices, pros/cons'))}
  ${p!=='pre'&&bkNeed()?bkHomeRow():''}
- <footer>Overland’s Habit v0.40 · Created by George Barbaris<br><i>Adventure Is a Habit.</i><br>Τα δεδομένα μένουν μόνο στο κινητό σου.<br>Χάρτες & σημεία © OpenStreetMap contributors · OpenTopoMap · Leaflet</footer>`}
+ <footer>Overland’s Habit v0.41 · Created by George Barbaris<br><i>Adventure Is a Habit.</i><br>Τα δεδομένα μένουν μόνο στο κινητό σου.<br>Χάρτες & σημεία © OpenStreetMap contributors · OpenTopoMap · Leaflet</footer>`}
 
 /* ===================== ΛΕΙΤΟΥΡΓΙΑ ΟΔΗΓΗΣΗΣ ===================== */
 let DRV={last:null};
