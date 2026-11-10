@@ -64,6 +64,7 @@ canvas{width:100%;background:#0a1522;border-radius:12px;border:1px solid var(--l
 #al .big{max-width:420px}
 #gbar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:#1d3557;color:#fff;text-align:center;font-weight:700;padding:10px 10px calc(env(safe-area-inset-bottom) + 10px);border-top:2px solid var(--blu)}
 html.night header,html.night main{filter:grayscale(1) sepia(1) saturate(12) hue-rotate(-50deg) brightness(.55)}html.night,html.night body{background:#000}
+.fig{margin:10px 0 12px;background:#16283d;border:1px solid var(--line);border-radius:14px;padding:6px 6px 10px}.fig svg{width:100%;display:block;border-radius:10px}.fig figcaption{color:var(--mut);font-size:.86em;padding:6px 6px 0;line-height:1.35}
 </style></head><body>
 <header><button class="hb" id="bk" onclick="back()" aria-label="Πίσω">◀</button><h1 id="ttl">Επιβίωση 72+</h1>
 <button class="hb notr" onclick="setLang(LANG==='en'?'el':'en')" aria-label="Language" id="lgb">EN</button><button class="hb" onclick="fz(-1)">A−</button><button class="hb" onclick="fz(1)">A+</button><button class="hb" onclick="go('home')" aria-label="Αρχική">🏠</button></header>
@@ -73,6 +74,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
 <div id="ov" onclick="ovOff()"><span id="ovt">Πάτα για κλείσιμο</span></div>
 <script>
 const D=/*DATA*/;
+/*IMG*/
 /* ---- i18n EL/EN ---- */
 const LANG=(()=>{try{const v=localStorage.getItem('sv_lang');if(v)return JSON.parse(v)}catch(e){}return (navigator.language||'el').toLowerCase().startsWith('el')?'el':'en'})();
 const TRM=LANG==='en'?/*UI_EN*/:{};const TRK=Object.keys(TRM).filter(k=>TRM[k]&&k.length>=5).sort((a,b)=>b.length-a.length).map(k=>[k,new RegExp('(?<![Α-Ωα-ωάέήίόύώΆΈΉΊΌΎΏϊϋΐΰ])'+k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(?![Α-Ωα-ωάέήίόύώΆΈΉΊΌΎΏϊϋΐΰ])','g')]);
@@ -159,10 +161,10 @@ function art(id){const a=byId[id];if(!a)return home();T(a.title);
  h+=`</div>`;
  if(id==='home72'||id==='nuclearkit')h+=calcBox();
  if(a.cat==='list'){h+=`<div id="prog"></div>`}
- let n=0;const st=LS.g('c_'+id,{});
+ let n=0,hi=-1;const st=LS.g('c_'+id,{}),FG=(typeof SIMG!=='undefined'&&SIMG[id])||[],fg=k=>FG.filter(x=>x.at===k).map(figH).join('');h+=fg(-1);
  for(const b of a.blocks){
   if(b.t!=='step')n=0;
-  if(b.t==='h')h+=`<h3>${esc(b.x)}</h3>`;
+  if(b.t==='h'){hi++;h+=`<h3>${esc(b.x)}</h3>`+fg(hi)}
   else if(b.t==='step'){n++;h+=`<div class="step"><span class="n">${n}</span><span>${esc(b.x)}</span></div>`}
   else if(b.t==='li')h+=`<div class="li">${esc(b.x)}</div>`;
   else if(b.t==='warn')h+=`<div class="warn">⚠️ ${esc(b.x)}</div>`;
@@ -172,6 +174,7 @@ function art(id){const a=byId[id];if(!a)return home();T(a.title);
  const same=D.filter(x=>x.cat===a.cat),i=same.indexOf(a);
  h+=`<div class="tools" style="margin-top:20px">${i>0?`<button class="btn" onclick="go('a/${same[i-1].id}')">◀ ${esc(same[i-1].title)}</button>`:''}${i<same.length-1?`<button class="btn" onclick="go('a/${same[i+1].id}')">${esc(same[i+1].title)} ▶</button>`:''}</div>`;
  M.innerHTML=h;if(a.cat==='list')prog(id);if($('#cp'))calc()}
+function figH(x){let s='';try{s=x.f()}catch(e){return ''}return `<figure class="fig notr"><svg viewBox="0 0 320 180" role="img">${s}</svg><figcaption>${esc(x.c[LANG==='en'?1:0])}</figcaption></figure>`}
 function tg(el,id){const st=LS.g('c_'+id,{}),k=el.dataset.k;st[k]=!st[k];if(!st[k])delete st[k];LS.s('c_'+id,st);el.classList.toggle('on',!!st[k]);el.querySelector('.bx').textContent=st[k]?'✓':'';prog(id)}
 function prog(id){const a=byId[id],t=a.blocks.filter(x=>x.t==='chk').length,on=Object.keys(LS.g('c_'+id,{})).length,p=Math.round(100*on/t);
  $('#prog').innerHTML=`<div class="bar"><i style="width:${p}%"></i></div><div class="muted">${on} από ${t} έτοιμα (${p}%)</div>`}

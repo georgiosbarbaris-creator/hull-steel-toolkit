@@ -45,6 +45,8 @@ t=(r/'survival/template.html').read_text(encoding='utf-8')
 pwa='''<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Επιβίωση 72+">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#0a1522">'''
+imgd=r/'survival/img';img=(imgd/'_lib.js').read_text(encoding='utf-8')+'\n'+'\n'.join(f.read_text(encoding='utf-8') for f in sorted(imgd.glob('*.js')) if f.name!='_lib.js')
+t=t.replace('/*IMG*/',img,1)
 o=t.replace('/*DATA*/',json.dumps(arts,ensure_ascii=False,separators=(',',':')),1).replace('/*UI_EN*/',json.dumps(ui,ensure_ascii=False,separators=(',',':')),1).replace('<!--PWA-->',pwa,1).replace('/*SW*/','if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});',1)
 assert '/*DATA*/' not in o and '/*UI_EN*/' not in o and 'serviceWorker' in o
 d=r/'docs/survival';d.mkdir(exist_ok=True);(d/'index.html').write_text(o,encoding='utf-8')
