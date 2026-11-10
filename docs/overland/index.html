@@ -164,6 +164,7 @@ function home(){T(TITLE);const read=LS.g('read',{});
  <button class="row" onclick="go('rally')"><span class="e">🏁</span><span><b>Ράλι, Tripmaster & Roadbook</b><small>${RL().run?'🟢 μετράει · ':''}Total/Partial, regularity, CAP, roadbook με κουτιά</small></span></button>
  <h3>Το ταξίδι</h3>
  ${fpHomeRow()}
+ <button class="row" onclick="go('t/pnr')"><span class="e">🔙</span><span><b>Point of No Return</b><small>${L2('πόσο ακόμα μπορείς να πας και να γυρίσεις: καύσιμο, νερό, φως','how much further you can go and still get back: fuel, water, light')}</small></span></button>
  <button class="row" onclick="go('trip')"><span class="e">🎒</span><span><b>Ταξίδι & λίστες εξοπλισμού</b><small>${tripProg()}</small></span></button>
  <button class="row" onclick="go('t/walk')"><span class="e">🔎</span><span><b>Walk-round πριν φύγεις</b><small>έλεγχος οχήματος σαν superintendent</small></span></button>
  <button class="row" onclick="go('learn')"><span class="e">🎓</span><span><b>Ακαδημία</b><small>${ALL.filter(l=>done(l.id)).length}/${ALL.length} μαθήματα · quiz · από αρχάριο μέχρι expert</small></span></button>
@@ -171,7 +172,7 @@ function home(){T(TITLE);const read=LS.g('read',{});
  <button class="row" onclick="go('gear')"><span class="e">🧰</span><span><b>${L2('Εξοπλισμός του overlander','The overlander\'s gear')}</b><small>${L2('σκηνές οροφής, ψυγεία, ενέργεια, κουζίνα, συρτάρια, πακέτα weekend · τιμές, υπέρ/κατά','rooftop tents, fridges, power, kitchen, drawers, weekend kits · prices, pros/cons')}</small></span></button>
  ${bkHomeRow()}
 ${SOON.length?'<h3>Έρχονται</h3>':''}${SOON.map(s=>`<button class="row soon" onclick="go('${s[0]}')"><span class="e">${s[1]}</span><span><b>${s[2]}</b><small>${s[3]} · ${s[4]}</small></span></button>`).join('')}
- <footer>Overland’s Habit v0.37 · Created by George Barbaris<br><i>Adventure Is a Habit.</i><br>Τα δεδομένα μένουν μόνο στο κινητό σου.<br>Χάρτες & σημεία © OpenStreetMap contributors · OpenTopoMap · Esri · Leaflet</footer>`}
+ <footer>Overland’s Habit v0.38 · Created by George Barbaris<br><i>Adventure Is a Habit.</i><br>Τα δεδομένα μένουν μόνο στο κινητό σου.<br>Χάρτες & σημεία © OpenStreetMap contributors · OpenTopoMap · Esri · Leaflet</footer>`}
 function soon(id){const s=SOON.find(x=>x[0]===id);T(s[1]+' '+s[2]);const det={
  map:['Χάρτης με όλα τα σημεία από το OpenStreetMap: κάμπινγκ, χώροι για camper, πόσιμο νερό & πηγές, dump station, ντους, WC, καύσιμα/LPG, θέες, καταφύγια.','«Κατέβασε περιοχή» όταν έχεις σήμα → μετά τα βρίσκεις offline, με απόσταση από σένα.','Τα δικά σου σημεία με φωτογραφία, σημείωση, βαθμολογία και πρόσβαση (2WD / 4×4), τα στέλνεις στους φίλους σου.','Διαδρομή online που μένει μέσα offline, με camper stops κατά μήκος της, και export GPX.'],
  convoy:['Ο αρχηγός φτιάχνει ομάδα και δίνει κωδικό / QR.','Όλα τα αυτοκίνητα στον χάρτη: απόσταση από τον αρχηγό, ταχύτητα, τελευταία ενημέρωση.','Συναγερμός όταν κάποιος μείνει πίσω ή χαθεί το σήμα του. SOS από κάθε μέλος, «ΣΤΟΠ όλοι» από τον αρχηγό.','Θέλει σήμα κινητής. Χωρίς σήμα: τελευταία γνωστή θέση + ασύρματος (δες «Ασύρματοι & κομβόι»).'],
@@ -183,11 +184,11 @@ function soon(id){const s=SOON.find(x=>x[0]===id);T(s[1]+' '+s[2]);const det={
 const TOOLS=[
  ['Στο πεδίο',[['incl','📐','Κλισιόμετρο','πλευρική κλίση & ανηφόρα με όρια του οχήματος'],['roof','🏗️',L2('Βάρος στην οροφή & πλευρική κλίση','Roof load & side slope'),L2('πόσες μοίρες χάνει το όχημα με φορτίο ψηλά','how many degrees the vehicle loses with weight up high')],['compass','🧭','Πυξίδα, GPS & σημεία','θέση, σημεία, διαδρομή, βέλος επιστροφής, GPX'],['pass','🚧','Θα περάσω;','σκαλί, ράμπα, νερό, κλίση, σε σχέση με το όχημα'],['wade','🌊','Πέρασμα νερού','βάθος, ρεύμα, πάτος, περνάω ή όχι;']]],
  ['Ελαστικά & ανάκτηση',[['tyre','🛞','Πίεση ελαστικών ανά έδαφος','πόσο ξεφουσκώνω και πόσο γρήγορα πάω'],['tsize','📏','Σύγκριση μεγέθους ελαστικών','κοντέρ, ύψος, σχέσεις'],['winch','🪝','Ανάκτηση & εργάτης','πόση δύναμη, τροχαλία, shackle, ιμάντας']]],
- ['Σχεδιασμός',[['payload','⚖️','Βάρος & φορτίο (GVM)','πόσο φορτωμένος είσαι, σχάρα'],['fuel','⛽','Καύσιμο & αυτονομία','πόσα km βγάζεις, πόσο θες'],['water','💧','Νερό για την εκδρομή','λίτρα ανά άτομο και μέρα'],['power','🔋','Μπαταρία, ψυγείο & solar','πόσες μέρες χωρίς να βάλεις μπρος'],['walk','🔎','Walk-round πριν φύγεις','έλεγχος οχήματος με OK / Defect']]],
+ ['Σχεδιασμός',[['payload','⚖️','Βάρος & φορτίο (GVM)','πόσο φορτωμένος είσαι, σχάρα'],['fuel','⛽','Καύσιμο & αυτονομία','πόσα km βγάζεις, πόσο θες'],['water','💧','Νερό για την εκδρομή','λίτρα ανά άτομο και μέρα'],['power','🔋','Μπαταρία, ψυγείο & solar','πόσες μέρες χωρίς να βάλεις μπρος'],['walk','🔎','Walk-round πριν φύγεις','έλεγχος οχήματος με OK / Defect'],['pnr','🔙','Point of No Return',L2('πόσο ακόμα πας και γυρνάς: καύσιμο, νερό, φως','how much further and back: fuel, water, light')]]],
  ['Ουρανός & επικοινωνία',[['sun','🌇','Ήλιος, ώρα για στρατόπεδο','πόσο φως μένει, ανατολή, δύση'],['wx','🌡️','Υψόμετρο & βαρόμετρο','υψόμετρο GPS, τάση πίεσης, πρόγνωση'],['radio','📻','Ασύρματοι & κομβόι','PMR446, κανόνες ασυρμάτου'],['morse','📡','Morse με φως & ήχο','SOS και λέξεις'],['ggrs','🗺️','WGS84 ↔ ΕΓΣΑ 87','μετατροπή συντεταγμένων για ελληνικούς χάρτες'],['knots','🪢','Κόμποι','13 κόμποι με σχέδια βήμα-βήμα'],['night','🌙','Κόκκινη οθόνη νύχτας',''],['awake','💡','Οθόνη πάντα ανοιχτή','']]]];
 function tools(){T('🧰 Εργαλεία');M.innerHTML=TOOLS.map(([g,L])=>`<h3>${g}</h3>`+L.map(t=>`<button class="row" onclick="go('t/${t[0]}')"><span class="e">${t[1]}</span><span><b>${t[2]}</b><small>${t[0]==='night'?(night?'🔴 ΑΝΟΙΧΤΗ':'κρατάει την όραση νύχτας'):t[0]==='awake'?(keepOn?'💡 ΑΝΟΙΧΤΗ':'να μη σβήνει η οθόνη'):t[3]}</small></span></button>`).join('')).join('')}
 let TS=[];function toolStop(){TS.forEach(f=>{try{f()}catch(e){}});TS=[]}
-function tool(id){const f={incl:tIncl,roof:tRoof,compass:tCompass,pass:tPass,wade:tWade,tyre:tTyre,tsize:tTsize,winch:tWinch,payload:tPayload,fuel:tFuel,water:tWater,power:tPower,walk:tWalk,sun,wx,radio:tRadio,morse,ggrs:tGgrs,knots:tKnots,night:tNight,awake:tAwake}[id];f?f():tools()}
+function tool(id){const f={incl:tIncl,roof:tRoof,compass:tCompass,pass:tPass,wade:tWade,tyre:tTyre,tsize:tTsize,winch:tWinch,payload:tPayload,fuel:tFuel,water:tWater,power:tPower,walk:tWalk,pnr:tPnr,sun,wx,radio:tRadio,morse,ggrs:tGgrs,knots:tKnots,night:tNight,awake:tAwake}[id];f?f():tools()}
 function inp(id,lbl,val,extra){return `<label>${lbl}</label><input id="${id}" type="number" inputmode="decimal" step="any" value="${esc(val)}" oninput="${extra||'calc()'}">`}
 function seg(name,opts,cur,fn){return `<div class="seg">${opts.map(([v,l])=>`<button class="${v==cur?'on':''}" onclick="${fn}('${v}')">${l}</button>`).join('')}</div>`}
 let calc=()=>{};
@@ -250,7 +251,7 @@ function tyC(){const st=LS.g('tyre',{t:'sand',load:0});st.pf=n($('#tpf').value)/
  const adj=st.load&&t.id!=='road'?5:0,lo=Math.min(100,t.pct[0]+adj),hi=Math.min(100,t.pct[1]+adj),fl=(t.id==='recov'?12:15)/PSI;
  const ps=p=>Math.round(p*PSI),rng=p=>{const a=ps(Math.max(fl,p*lo/100)),b=ps(Math.max(fl,p*hi/100));return a===b?a:`${a}–${b}`},br=p=>{const a=Math.max(fl,p*lo/100),b=Math.max(fl,p*hi/100);return a.toFixed(1)===b.toFixed(1)?a.toFixed(1):`${a.toFixed(1)}–${b.toFixed(1)}`};
  $('#tyo').innerHTML=`<div class="res"><div class="muted">${t.e} ${t.n}${adj?' · φορτωμένο +5%':''}</div><div class="grid" style="margin-top:6px"><div><div class="muted">Εμπρός</div><div class="v">${rng(st.pf)}</div><div class="muted">psi · ≈${br(st.pf)} bar</div></div><div><div class="muted">Πίσω</div><div class="v">${rng(st.pr)}</div><div class="muted">psi · ≈${br(st.pr)} bar</div></div></div>
- <div style="margin-top:8px">Μέγιστη ταχύτητα: <b>${t.v}</b> · ${lo===100?'πίεση δρόμου':`${100-hi}–${100-lo}% κάτω από τον δρόμο`}</div></div><div class="tip">${t.t}</div>`}
+ <div style="margin-top:8px">Μέγιστη ταχύτητα: <b>${t.v}</b> · ${lo===100?'πίεση δρόμου':`${100-hi}–${100-lo}% κάτω από τον δρόμο`}</div></div>${typeof airBox==='function'?airBox(t,rng(st.pf),rng(st.pr)):''}<div class="tip">${t.t}</div>`}
 
 /* ---------- Μέγεθος ελαστικών ---------- */
 function tyreD(s){s=String(s).toUpperCase().replace(/\s/g,'');let m=s.match(/^(\d{3})\/(\d{2,3})Z?R?(\d{2}(?:\.\d)?)/);if(m)return(+m[3]*25.4)+2*(+m[1])*(+m[2])/100;
@@ -467,9 +468,9 @@ function sosPage(){T('🆘 SOS');startGeo();
 /* upd() of the compass writes #gps when it exists */
 
 /* ===================== ROUTER ===================== */
-function stopAll(){toolStop();calc=()=>{};if(typeof moOn!=='undefined'&&(moOn||moTorch))moStop();const cvOn=(typeof cvMe==='function'&&cvMe())||(typeof RT!=='undefined'&&RT.w!==null);if(!rec&&!cvOn)stopGeo();if(!rec&&!keepOn&&!cvOn)wake(0);
+function stopAll(){toolStop();calc=()=>{};if(typeof moOn!=='undefined'&&(moOn||moTorch))moStop();const cvOn=(typeof cvMe==='function'&&cvMe())||(typeof RT!=='undefined'&&RT.w!==null);if(!rec&&!cvOn&&!(typeof airOn==='function'&&airOn()))stopGeo();if(!rec&&!keepOn&&!cvOn)wake(0);
  if(orientOn){window.removeEventListener('deviceorientation',onOr,true);window.removeEventListener('deviceorientationabsolute',onOr,true);orientOn=false;hdg=null}}
-function render(r){document.body.classList.toggle('rl',r==='rally');const[a,b]=r.split('/');document.querySelectorAll('#nv button').forEach(x=>x.classList.toggle('on',x.dataset.r===(a==='t'||a==='veh'?'tools':a==='list'?'trip':a==='gear'?'learn':a)||(a==='home'&&x.dataset.r==='home')));
+function render(r){document.body.classList.toggle('rl',r==='rally');if(typeof airBanner==='function'){airBanner();if(airOn())startGeo()}const[a,b]=r.split('/');document.querySelectorAll('#nv button').forEach(x=>x.classList.toggle('on',x.dataset.r===(a==='t'||a==='veh'?'tools':a==='list'?'trip':a==='gear'?'learn':a)||(a==='home'&&x.dataset.r==='home')));
  if(a==='veh'){if(b)vehEdit(b);else vehPage();return}if(a==='t')return tool(b);if(a==='tools')return tools();if(a==='trip')return trip();if(a==='list')return list(b);if(a==='learn')return learn(b);if(a==='gear')return gear(b);if(a==='sos')return sosPage();if(a==='map')return mapPage(b,r.split('/').slice(2).join('/'));if(a==='convoy')return convoy(b,r.split('/').slice(2).join('/'));if(a==='rally')return rally(b);if(a==='plan')return planPage();if(a==='backup')return backupPage();home()}
 window.addEventListener('hashchange',()=>{stopAll();render(location.hash.slice(1)||'home');window.scrollTo(0,0)});
 </script>
@@ -478,6 +479,7 @@ window.addEventListener('hashchange',()=>{stopAll();render(location.hash.slice(1
 <script src="map.js"></script>
 <script src="huts.js"></script>
 <script src="plan.js"></script>
+<script src="pnr.js"></script>
 <script src="convoy.js"></script>
 <script src="rally.js"></script>
 <script src="academy-data.js"></script>
