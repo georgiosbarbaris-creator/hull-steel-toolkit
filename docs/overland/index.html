@@ -155,24 +155,7 @@ function vehBox(){const v=veh();return v?`<div class="vcard" onclick="go('veh')"
 
 /* ===================== ΑΡΧΙΚΗ ===================== */
 const SOON=[];
-function home(){T(TITLE);const read=LS.g('read',{});
- M.innerHTML=`<div class="hero">${SUN_SVG}<h2>Overland’s Habit</h2><div>ο ελληνικός οδηγός για το overlanding, από αρχάριο μέχρι expert</div></div>${vehBox()}
- <div class="g3">${[['incl','📐','Κλισιόμετρο'],['tyre','🛞','Πίεση'],['compass','🧭','Πυξίδα & GPS'],['winch','🪝','Ανάκτηση'],['wade','🌊','Νερό, περνάω;'],['sun','🌇','Ώρα για στρατόπεδο']].map(t=>`<button class="tile" onclick="go('t/${t[0]}')"><span class="e">${t[1]}</span>${t[2]}</button>`).join('')}</div>
- <button class="row" onclick="go('map')" style="border-color:var(--org)"><span class="e">🗺️</span><span><b>${L2('Χάρτης «Πού είμαι»','Map «Where am I»')}</b><small>${L2('θέση, υψόμετρο, στίγματα · άνοιγμα σε Organic Maps / OsmAnd / Google','position, altitude, pins · open in Organic Maps / OsmAnd / Google')}</small></span></button>
- <button class="row" onclick="go('map/huts')"><span class="e">🛖</span><span><b>${L2('Καταφύγια & camper stops Ελλάδας','Huts & camper stops of Greece')}</b><small>${L2('καταφύγια, στέγαστρα, camper, dump station, κάμπινγκ, πηγές · offline · export GPX/KML','huts, shelters, camper, dump station, campsites, springs · offline · export GPX/KML')}</small></span></button>
- <button class="row" onclick="go('convoy')"><span class="e">🚐</span><span><b>Κομβόι, ζωντανά</b><small>${cvMe()?'🟢 ενεργό · κωδικός '+cvMe().code:'όλα τα αυτοκίνητα στον χάρτη, συναγερμός αν χαθεί κάποιος, SOS'}</small></span></button>
- <button class="row" onclick="go('rally')"><span class="e">🏁</span><span><b>Ράλι, Tripmaster & Roadbook</b><small>${RL().run?'🟢 μετράει · ':''}Total/Partial, regularity, CAP, roadbook με κουτιά</small></span></button>
- <h3>Το ταξίδι</h3>
- ${fpHomeRow()}
- <button class="row" onclick="go('t/pnr')"><span class="e">🔙</span><span><b>Point of No Return</b><small>${L2('πόσο ακόμα μπορείς να πας και να γυρίσεις: καύσιμο, νερό, φως','how much further you can go and still get back: fuel, water, light')}</small></span></button>
- <button class="row" onclick="go('trip')"><span class="e">🎒</span><span><b>Ταξίδι & λίστες εξοπλισμού</b><small>${tripProg()}</small></span></button>
- <button class="row" onclick="go('t/walk')"><span class="e">🔎</span><span><b>Walk-round πριν φύγεις</b><small>έλεγχος οχήματος σαν superintendent</small></span></button>
- <button class="row" onclick="go('learn')"><span class="e">🎓</span><span><b>Ακαδημία</b><small>${ALL.filter(l=>done(l.id)).length}/${ALL.length} μαθήματα · quiz · από αρχάριο μέχρι expert</small></span></button>
- <button class="row" onclick="go('gear/a_tents')"><span class="e">⛺</span><span><b>${L2('Η μεγάλη μάχη των σκηνών','The great tent battle')}</b><small>${L2('άρθρο · εδάφους, οροφής, swag, φουσκωτές, bivy: ποια σου ταιριάζει','article · ground, rooftop, swag, inflatable, bivy: which suits you')}</small></span></button>
- <button class="row" onclick="go('gear')"><span class="e">🧰</span><span><b>${L2('Εξοπλισμός του overlander','The overlander\'s gear')}</b><small>${L2('σκηνές οροφής, ψυγεία, ενέργεια, κουζίνα, συρτάρια, πακέτα weekend · τιμές, υπέρ/κατά','rooftop tents, fridges, power, kitchen, drawers, weekend kits · prices, pros/cons')}</small></span></button>
- ${bkHomeRow()}
-${SOON.length?'<h3>Έρχονται</h3>':''}${SOON.map(s=>`<button class="row soon" onclick="go('${s[0]}')"><span class="e">${s[1]}</span><span><b>${s[2]}</b><small>${s[3]} · ${s[4]}</small></span></button>`).join('')}
- <footer>Overland’s Habit v0.38 · Created by George Barbaris<br><i>Adventure Is a Habit.</i><br>Τα δεδομένα μένουν μόνο στο κινητό σου.<br>Χάρτες & σημεία © OpenStreetMap contributors · OpenTopoMap · Esri · Leaflet</footer>`}
+/* home() βρίσκεται στο phase.js (v0.39, Αρχική σε 4 φάσεις) */
 function soon(id){const s=SOON.find(x=>x[0]===id);T(s[1]+' '+s[2]);const det={
  map:['Χάρτης με όλα τα σημεία από το OpenStreetMap: κάμπινγκ, χώροι για camper, πόσιμο νερό & πηγές, dump station, ντους, WC, καύσιμα/LPG, θέες, καταφύγια.','«Κατέβασε περιοχή» όταν έχεις σήμα → μετά τα βρίσκεις offline, με απόσταση από σένα.','Τα δικά σου σημεία με φωτογραφία, σημείωση, βαθμολογία και πρόσβαση (2WD / 4×4), τα στέλνεις στους φίλους σου.','Διαδρομή online που μένει μέσα offline, με camper stops κατά μήκος της, και export GPX.'],
  convoy:['Ο αρχηγός φτιάχνει ομάδα και δίνει κωδικό / QR.','Όλα τα αυτοκίνητα στον χάρτη: απόσταση από τον αρχηγό, ταχύτητα, τελευταία ενημέρωση.','Συναγερμός όταν κάποιος μείνει πίσω ή χαθεί το σήμα του. SOS από κάθε μέλος, «ΣΤΟΠ όλοι» από τον αρχηγό.','Θέλει σήμα κινητής. Χωρίς σήμα: τελευταία γνωστή θέση + ασύρματος (δες «Ασύρματοι & κομβόι»).'],
@@ -470,8 +453,8 @@ function sosPage(){T('🆘 SOS');startGeo();
 /* ===================== ROUTER ===================== */
 function stopAll(){toolStop();calc=()=>{};if(typeof moOn!=='undefined'&&(moOn||moTorch))moStop();const cvOn=(typeof cvMe==='function'&&cvMe())||(typeof RT!=='undefined'&&RT.w!==null);if(!rec&&!cvOn&&!(typeof airOn==='function'&&airOn()))stopGeo();if(!rec&&!keepOn&&!cvOn)wake(0);
  if(orientOn){window.removeEventListener('deviceorientation',onOr,true);window.removeEventListener('deviceorientationabsolute',onOr,true);orientOn=false;hdg=null}}
-function render(r){document.body.classList.toggle('rl',r==='rally');if(typeof airBanner==='function'){airBanner();if(airOn())startGeo()}const[a,b]=r.split('/');document.querySelectorAll('#nv button').forEach(x=>x.classList.toggle('on',x.dataset.r===(a==='t'||a==='veh'?'tools':a==='list'?'trip':a==='gear'?'learn':a)||(a==='home'&&x.dataset.r==='home')));
- if(a==='veh'){if(b)vehEdit(b);else vehPage();return}if(a==='t')return tool(b);if(a==='tools')return tools();if(a==='trip')return trip();if(a==='list')return list(b);if(a==='learn')return learn(b);if(a==='gear')return gear(b);if(a==='sos')return sosPage();if(a==='map')return mapPage(b,r.split('/').slice(2).join('/'));if(a==='convoy')return convoy(b,r.split('/').slice(2).join('/'));if(a==='rally')return rally(b);if(a==='plan')return planPage();if(a==='backup')return backupPage();home()}
+function render(r){document.body.classList.toggle('rl',r==='rally'||r==='drive');if(typeof airBanner==='function'){airBanner();if(airOn())startGeo()}const[a,b]=r.split('/');document.querySelectorAll('#nv button').forEach(x=>x.classList.toggle('on',x.dataset.r===(a==='t'||a==='veh'?'tools':a==='list'?'trip':a==='gear'?'learn':a)||(a==='home'&&x.dataset.r==='home')));
+ if(a==='veh'){if(b)vehEdit(b);else vehPage();return}if(a==='t')return tool(b);if(a==='tools')return tools();if(a==='trip')return trip();if(a==='list')return list(b);if(a==='learn')return learn(b);if(a==='gear')return gear(b);if(a==='sos')return sosPage();if(a==='map')return mapPage(b,r.split('/').slice(2).join('/'));if(a==='convoy')return convoy(b,r.split('/').slice(2).join('/'));if(a==='rally')return rally(b);if(a==='plan')return planPage();if(a==='drive')return drive();if(a==='after')return afterPage();if(a==='backup')return backupPage();home()}
 window.addEventListener('hashchange',()=>{stopAll();render(location.hash.slice(1)||'home');window.scrollTo(0,0)});
 </script>
 <script src="lib/leaflet.js"></script>
@@ -480,6 +463,7 @@ window.addEventListener('hashchange',()=>{stopAll();render(location.hash.slice(1
 <script src="huts.js"></script>
 <script src="plan.js"></script>
 <script src="pnr.js"></script>
+<script src="phase.js"></script>
 <script src="convoy.js"></script>
 <script src="rally.js"></script>
 <script src="academy-data.js"></script>
