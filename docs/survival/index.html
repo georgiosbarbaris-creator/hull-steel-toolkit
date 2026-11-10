@@ -2537,6 +2537,67 @@ function tSunc(){T('🧭 Ηλιακή πυξίδα');const [nm,la,lo]=sunPlace()
  `<div class="box"><b>Πότε τη χρειάζεσαι</b><div class="li">Η μαγνητική πυξίδα κάνει λάθη δίπλα σε αυτοκίνητο, σίδερα, καλώδια ή μέσα σε θήκη με μαγνήτη. Ο ήλιος δεν κάνει ποτέ.</div><div class="li"><b>Έλεγχος πυξίδας:</b> σύγκρινε τη γωνία του ήλιου εδώ με αυτό που δείχνει η πυξίδα της εφαρμογής προς τον ήλιο. Διαφορά >10° = η πυξίδα επηρεάζεται.</div><div class="li"><b>Με αναλογικό ρολόι:</b> στρέψε τον ωροδείκτη στον ήλιο. Η διχοτόμος ανάμεσα στον ωροδείκτη και το 12 (το 1 με θερινή ώρα) δείχνει Νότο.</div><div class="li"><b>Ραβδί και σκιά:</b> σημάδεψε την άκρη της σκιάς, περίμενε 15′, σημάδεψε ξανά. Η γραμμή από το 1ο στο 2ο σημάδι δείχνει Ανατολή.</div><button class="btn" onclick="go('compass')">🧭 Πυξίδα & GPS</button><button class="btn" onclick="go('a/w_navi')">📖 Προσανατολισμός χωρίς πυξίδα</button></div>`;
  const iv=setInterval(()=>{if(location.hash==='#t/suncomp')tSunc()},60000);TS.push(()=>clearInterval(iv))}
 
+
+if(LANG==='en')Object.assign(TRM,{"Η οθόνη δεν θα σβήνει όσο η εφαρμογή είναι ανοιχτή. Μένει έτσι και όταν βγεις και ξαναμπείς, μέχρι να το σταματήσεις.":"The screen will not turn off while the app is open. It stays this way when you leave and come back, until you stop it.","💡 ΑΝΟΙΧΤΗ – δεν σβήνει":"💡 ON – stays awake"});
+/* ===== v21: σχέδια για την Ηλιακή πυξίδα – Created by George Barbaris ===== */
+const sc_sun=(x,y,r)=>{r=r||11;let h='';for(let i=0;i<8;i++){const a=i*Math.PI/4;h+=iL(x+Math.cos(a)*(r+3),y+Math.sin(a)*(r+3),x+Math.cos(a)*(r+8),y+Math.sin(a)*(r+8),IC.yl,2.5)}return h+`<circle cx="${x}" cy="${y}" r="${r}" fill="${IC.yl}"/>`};
+/* άνθρωπος από πάνω, κοιτάει προς τα πάνω */
+const sc_top=(x,y)=>`<ellipse cx="${x}" cy="${y}" rx="20" ry="9" fill="${IC.bl}"/><circle cx="${x}" cy="${y-2}" r="8.5" fill="${IC.sk2}"/><polygon points="${x-3},${y-9} ${x+3},${y-9} ${x},${y-14}" fill="${IC.sk2}"/>`;
+const sc_pt=(cx,cy,r,deg)=>[cx+r*Math.sin(deg*SR),cy-r*Math.cos(deg*SR)];
+/* 1. ζωντανό: πρόσωπο στον ήλιο → Βορράς Χ° αριστερά/δεξιά */
+function scFigNow(ang,left){const cx=160,cy=96,d=left?-ang:ang,[nx,ny]=sc_pt(cx,cy,64,d),[ax,ay]=sc_pt(cx,cy,34,d),[tx,ty]=sc_pt(cx,cy,50,d/2);
+ let h=`<rect width="320" height="180" fill="${IC.bg}"/>`+sc_sun(cx,22,11)+iL(cx,84,cx,38,IC.yl,2.5,1)+iT(cx+20,48,L2('ο ήλιος μπροστά σου','sun in front of you'),{a:'start',s:11,c:IC.yl});
+ h+=`<path d="M${cx},${cy-34} A34,34 0 0 ${left?0:1} ${ax.toFixed(1)},${ay.toFixed(1)}" fill="none" stroke="${IC.ln}" stroke-width="2"/>`;
+ h+=iA(cx,cy,nx,ny,IC.rd,4)+iT(nx+(left?-8:8),ny+(ny<cy?-2:12),L2('ΒΟΡΡΑΣ','NORTH'),{b:1,s:13,c:IC.rd,a:left?'end':'start'});
+ h+=iT(tx+(left?-6:6),ty+4,ang+'°',{b:1,s:14,a:left?'end':'start'})+sc_top(cx,cy)+iT(left?cx+26:cx-26,cy+4,L2('εσύ','you'),{s:11,c:IC.gr,a:left?'start':'end'})+iT(left?cx+26:cx-26,cy+17,L2('(από πάνω)','(from above)'),{s:9,c:IC.gr,a:left?'start':'end'});
+ return {f:()=>h,c:[`Γύρνα να κοιτάς τον ήλιο. Ο Βορράς είναι ${ang}° ${left?'αριστερά':'δεξιά'} σου (κόκκινο βέλος). 90° = ακριβώς στο χέρι σου.`,`Face the sun. North is ${ang}° to your ${left?'left':'right'} (red arrow). 90° = straight out at your hand.`]}}
+/* 2. τροχιά του ήλιου: ανατολή – μεσημέρι στον Νότο – δύση· σκιά μεσημεριού → Βορράς */
+const scFigPath={f:()=>{let h=`<rect width="320" height="180" fill="${IC.bg}"/>`+iGround(132)+iL(0,132,320,132,IC.gr,2);
+ h+=`<path d="M30,132 Q160,-40 290,132" fill="none" stroke="${IC.yl}" stroke-width="2" stroke-dasharray="5 5"/>`;
+ h+=sc_sun(48,108,9)+sc_sun(160,46,12)+sc_sun(272,108,9);
+ h+=iT(48,150,L2('ΑΝΑΤΟΛΗ','EAST'),{b:1,s:11})+iT(48,164,L2('πρωί','morning'),{s:10,c:IC.gr})+iT(272,150,L2('ΔΥΣΗ','WEST'),{b:1,s:11})+iT(272,164,L2('βράδυ','evening'),{s:10,c:IC.gr});
+ h+=iT(160,24,L2('μεσημέρι ~13:00 (θερινή ~14:00)','noon ~13:00 (summer ~14:00)'),{s:10,c:IC.yl})+iT(160,74,L2('ΝΟΤΟΣ','SOUTH'),{b:1,s:13,c:IC.yl});
+ h+=`<polygon points="150,140 170,140 200,176 120,176" fill="#00000088"/>`+iMan(160,140,.8,IC.ln)+iA(160,150,160,176,IC.rd,3)+iT(110,172,L2('σκιά → ΒΟΡΡΑΣ','shadow → NORTH'),{b:1,s:11,c:'#ff6b6b',a:'end'});
+ return h},c:['Ο ήλιος βγαίνει στην Ανατολή, μεσημέρι είναι στον Νότο, δύει στη Δύση. Το μεσημέρι η σκιά σου δείχνει Βορρά. (Καλοκαίρι: βγαίνει πιο ΒΑ, δύει πιο ΒΔ. Χειμώνα: ΝΑ / ΝΔ.)','The sun rises in the East, is in the South at noon and sets in the West. At noon your shadow points North. (Summer: rises more NE, sets NW. Winter: SE / SW.)']};
+/* 3. αναλογικό ρολόι */
+const scFigWatch={f:()=>{const cx=80,cy=96,r=56;let h=`<rect width="320" height="180" fill="${IC.bg}"/>`;
+ h+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="${IC.sn}" stroke="${IC.gr}" stroke-width="4"/>`;
+ for(let i=0;i<12;i++){const [a,b]=sc_pt(cx,cy,r-4,i*30),[c,d]=sc_pt(cx,cy,r-(i%3?9:14),i*30);h+=iL(a,b,c,d,IC.dk,i%3?2:3.5)}
+ const [t12x,t12y]=sc_pt(cx,cy,r-24,0);h+=iT(t12x,t12y+5,'12',{b:1,s:14,c:IC.dk});
+ const [sx,sy]=sc_pt(cx,cy,r+17,120);h+=sc_sun(sx,sy,9);
+ const [hx,hy]=sc_pt(cx,cy,r-18,120);h+=iL(cx,cy,hx,hy,IC.dk,5)+iL(hx,hy,sx-6,sy-5,IC.yl,2,1);
+ const [s1x,s1y]=sc_pt(cx,cy,r+14,60),[n1x,n1y]=sc_pt(cx,cy,r-6,240);h+=iL(n1x,n1y,cx,cy,IC.gr,2,1)+iA(cx,cy,s1x,s1y,IC.or,3.5);
+ h+=`<path d="M${sc_pt(cx,cy,26,0).join(',')} A26,26 0 0 1 ${sc_pt(cx,cy,26,120).join(',')}" fill="none" stroke="${IC.or}" stroke-width="2"/>`+`<circle cx="${cx}" cy="${cy}" r="4" fill="${IC.dk}"/>`;
+ h+=iT(s1x+4,s1y-4,L2('ΝΟΤΟΣ','SOUTH'),{b:1,s:12,c:IC.or,a:'start'});
+ const X=200;h+=iNum(X,30,'1')+iT(X+16,34,L2('Ο μικρός δείκτης','Point the hour'),{a:'start',s:11})+iT(X+16,47,L2('δείχνει τον ήλιο','hand at the sun'),{a:'start',s:11});
+ h+=iNum(X,74,'2')+iT(X+16,78,L2('Βρες τη μέση','Find the middle'),{a:'start',s:11})+iT(X+16,91,L2('δείκτη ↔ 12','hour hand ↔ 12'),{a:'start',s:11});
+ h+=iNum(X,118,'3')+iT(X+16,122,L2('Εκεί είναι','That way is'),{a:'start',s:11})+iT(X+16,135,L2('ο ΝΟΤΟΣ','SOUTH'),{a:'start',s:11,b:1,c:IC.or});
+ h+=iT(X-12,160,L2('Θερινή ώρα:','Summer time:'),{a:'start',s:10,c:IC.yl})+iT(X-12,173,L2('το 1 αντί για το 12','use 1 instead of 12'),{a:'start',s:10,c:IC.yl});return h},
+ c:['Ρολόι με δείκτες: κράτα το οριζόντιο, ο μικρός δείκτης στον ήλιο. Η μέση ανάμεσα σε αυτόν και το 12 (θερινή ώρα: το 1) δείχνει Νότο. Απέναντι είναι ο Βορράς.','Analog watch: hold it flat, hour hand at the sun. Halfway between it and 12 (summer time: 1) is South. The opposite way is North.']};
+/* 4. ραβδί και σκιά σε 3 καρέ (από πάνω, Βορράς προς τα πάνω) */
+const scFigStick={f:()=>{let h=`<rect width="320" height="180" fill="${IC.bg}"/>`+iPanels(3);
+ const pan=(ox,n,t1,t2)=>iNum(ox+14,22,n)+iT(ox+28,20,t1,{a:'start',s:10.5,b:1})+iT(ox+28,33,t2,{a:'start',s:10.5,b:1});
+ const stick=(x,y)=>`<circle cx="${x}" cy="${y}" r="5" fill="${IC.wd}" stroke="${IC.ln}" stroke-width="1.5"/>`;
+ const stone=(x,y,n)=>`<circle cx="${x}" cy="${y}" r="8" fill="${IC.gr}" stroke="${IC.dk}" stroke-width="1.5"/>`+iT(x,y+4,n,{b:1,s:10,c:IC.dk});
+ const shadow=(x1,y1,x2,y2)=>iL(x1,y1,x2,y2,'#05090f',6);
+ /* καρέ 1 */ h+=pan(0,'1',L2('Σημάδεψε','Mark the'),L2('άκρη σκιάς','shadow tip'));h+=shadow(53,140,34,76)+stick(53,140)+stone(34,72,'1')+sc_sun(53,166,6);
+ /* καρέ 2 */ h+=pan(107,'2',L2('Περίμενε 15′','Wait 15 min'),L2('ξανά σημάδι','mark again'));h+=iL(160,140,141,76,'#05090f',3,1)+stone(141,72,'1')+shadow(160,140,180,76)+stick(160,140)+stone(180,72,'2')+iA(150,60,172,60,IC.gr,2);
+ /* καρέ 3 */ h+=pan(214,'3',L2('Γραμμή','Line')+' ①→②','= '+L2('ΑΝΑΤΟΛΗ','EAST'));
+ h+=stone(236,110,'1')+stone(298,110,'2')+iA(244,110,289,110,IC.yl,3)+iT(236,132,L2('Δύση','West'),{s:10})+iT(298,132,L2('Ανατολή','East'),{s:10});
+ h+=iA(267,110,267,64,IC.rd,4)+iT(267,58,L2('ΒΟΡΡΑΣ','NORTH'),{b:1,s:12,c:IC.rd})+iL(267,112,267,156,IC.gr,2,1)+iT(267,170,L2('Νότος','South'),{s:10,c:IC.gr});
+ return h},c:['Ραβδί στο έδαφος. ① Βάλε πέτρα στην άκρη της σκιάς. ② Μετά από 15 λεπτά βάλε δεύτερη πέτρα στη νέα άκρη. ③ Η γραμμή ①→② δείχνει Ανατολή. Στάσου με το αριστερό πόδι στο ① και το δεξί στο ②: κοιτάς Βορρά.','Stick in the ground. ① Put a stone at the shadow tip. ② After 15 minutes put a second stone at the new tip. ③ The line ①→② points East. Stand with left foot on ① and right foot on ②: you face North.']};
+/* 5. έλεγχος μαγνητικής πυξίδας */
+const scFigCheck={f:()=>{let h=`<rect width="320" height="180" fill="${IC.bg}"/>`;
+ const comp=(cx,cy,rot,col)=>`<circle cx="${cx}" cy="${cy}" r="36" fill="${IC.dk}" stroke="${IC.gr}" stroke-width="3"/><g transform="rotate(${rot} ${cx} ${cy})"><polygon points="${cx},${cy-30} ${cx+7},${cy} ${cx-7},${cy}" fill="${col}"/><polygon points="${cx},${cy+30} ${cx+7},${cy} ${cx-7},${cy}" fill="${IC.gr}"/></g><circle cx="${cx}" cy="${cy}" r="4" fill="#fff"/>`;
+ h+=comp(80,96,0,IC.rd)+iT(80,150,L2('ήλιος: Β = 40° αριστερά','sun: N = 40° left'),{s:10.5})+iT(80,164,L2('πυξίδα: Β = 40° αριστερά','compass: N = 40° left'),{s:10.5})+iOK(118,62,11);
+ h+=comp(240,96,38,IC.rd)+iT(240,150,L2('ήλιος: Β = 40° αριστερά','sun: N = 40° left'),{s:10.5})+iT(240,164,L2('πυξίδα: Β = 2° (λάθος!)','compass: N = 2° (wrong!)'),{s:10.5,c:IC.rd})+iNO(278,62,11);
+ h+=`<rect x="196" y="20" width="26" height="40" rx="4" fill="${IC.gr}"/>`+iT(209,15,L2('σίδερο / μαγνήτης','iron / magnet'),{s:10,c:IC.gr})+iT(80,30,L2('ίδια γωνία = σωστή','same angle = good'),{s:11,b:1,c:IC.gn});
+ return h},c:['Έλεγχος πυξίδας: σύγκρινε πού λέει ο ήλιος ότι είναι ο Βορράς με αυτό που δείχνει η πυξίδα. Διαφορά πάνω από 10° = κάτι την επηρεάζει (αυτοκίνητο, σίδερα, μαγνήτης θήκης). Απομακρύνσου 5–10 m και ξαναδοκίμασε.','Compass check: compare where the sun says North is with what the compass shows. A difference over 10° = something is disturbing it (car, iron, magnetic case). Move 5–10 m away and try again.']};
+{const _f=tSunc;tSunc=function(){_f();const [nm,la,lo]=sunPlace(),s=bodyPos(Date.now(),la,lo,0),bx=M.querySelectorAll('.box');
+ if(s.alt>0&&bx.length>1){const az=s.az,left=az<=180,ang=left?Math.round(az):Math.round(360-az),tip=bx[0].querySelector('.tip');if(tip)tip.insertAdjacentHTML('afterend',figH(scFigNow(ang,left)))}
+ const w=bx[bx.length-1];if(!w)return;const li=w.querySelectorAll('.li'),b=w.querySelector('b');
+ if(b)b.insertAdjacentHTML('afterend',figH(scFigPath));if(li[1])li[1].insertAdjacentHTML('afterend',figH(scFigCheck));if(li[2])li[2].insertAdjacentHTML('afterend',figH(scFigWatch));if(li[3])li[3].insertAdjacentHTML('afterend',figH(scFigStick))}}
+
 /* 10. Battery */
 async function tBatt(){T('🔋 Μπαταρία');let bh='<div class="muted">Το iPhone δεν δείχνει μπαταρία σε web εφαρμογές – δες την πάνω δεξιά στην οθόνη.</div>';
  try{if(navigator.getBattery){const b=await navigator.getBattery();const t=b.charging?(b.chargingTime&&isFinite(b.chargingTime)?'γεμίζει σε '+dur(b.chargingTime*1000):'φορτίζει'):(b.dischargingTime&&isFinite(b.dischargingTime)?'φτάνει για ~'+dur(b.dischargingTime*1000):'');bh=`<div class="hd">${Math.round(b.level*100)}%</div><div class="bar"><i style="width:${b.level*100}%;background:${b.level<.2?'#d62828':b.level<.5?'#fcbf49':'#2a9d8f'}"></i></div><div style="text-align:center">${b.charging?'⚡ ':''}${t}</div>`}}catch(e){}
@@ -2765,9 +2826,12 @@ let night=LS.g('night',false),keepOn=LS.g('keepon',false);
 document.documentElement.classList.toggle('night',night);
 function nightLbl(){const t=TOOLS.find(x=>x[0]==='night');if(t)t[3]=night?'🔴 ΑΝΟΙΧΤΗ – πάτα για κανονική':'δεν σε τυφλώνει, κρατάει μπαταρία'}nightLbl();
 function tNight(){night=!night;LS.s('night',night);document.documentElement.classList.toggle('night',night);nightLbl();history.replaceState(null,'','#tools');tools()}
-function tAwake(){keepOn=!keepOn;LS.s('keepon',keepOn);wake(keepOn?1:0);T('💡 Οθόνη πάντα ανοιχτή');
- M.innerHTML=`<div class="box" style="text-align:center"><div class="hd">${keepOn?'💡 ΑΝΟΙΧΤΗ':'⏾ Κανονική'}</div><div>${keepOn?'Η οθόνη δεν θα σβήνει όσο η εφαρμογή είναι ανοιχτή.':'Η οθόνη σβήνει κανονικά.'}</div></div>
- <button class="big ${keepOn?'org':'grn'}" onclick="tAwake()">${keepOn?'Σταμάτα – άφησέ τη να σβήνει':'💡 Κράτα την οθόνη ανοιχτή'}</button>
+function awakeLbl(){const t=TOOLS.find(x=>x[0]==='awake');if(t)t[3]=keepOn?'💡 ΑΝΟΙΧΤΗ – δεν σβήνει':'να μη σβήνει η οθόνη'}awakeLbl();
+function awakeTog(){keepOn=!keepOn;LS.s('keepon',keepOn);wake(keepOn?1:0);awakeLbl();tAwake()}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&keepOn){WL=null;wake(1)}});
+function tAwake(){T('💡 Οθόνη πάντα ανοιχτή');if(keepOn)wake(1);
+ M.innerHTML=`<div class="box" style="text-align:center"><div class="hd">${keepOn?'💡 ΑΝΟΙΧΤΗ':'⏾ Κανονική'}</div><div>${keepOn?'Η οθόνη δεν θα σβήνει όσο η εφαρμογή είναι ανοιχτή. Μένει έτσι και όταν βγεις και ξαναμπείς, μέχρι να το σταματήσεις.':'Η οθόνη σβήνει κανονικά.'}</div></div>
+ <button class="big ${keepOn?'org':'grn'}" onclick="awakeTog()">${keepOn?'Σταμάτα – άφησέ τη να σβήνει':'💡 Κράτα την οθόνη ανοιχτή'}</button>
  <div class="tip">Χρήσιμο σε πλοήγηση, χρονόμετρα, ΚΑΡΠΑ, SOS. Η αναμμένη οθόνη τρώει μπαταρία – χαμήλωσε τη φωτεινότητα ή βάλε την 🌙 κόκκινη οθόνη.</div>`}
 {const _s=stopAll;stopAll=function(){_s();if(keepOn)wake(1)}}
 if(keepOn)wake(1);
