@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Θερμόμετρο Κινητού</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Θερμόμετρο">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#14263a">
+<style>
+:root{--bg:#eef1f4;--card:#fff;--ink:#14212e;--muted:#5a6876;--line:#d3dae1;--navy:#14263a;--l0:#8a97a5;--l1:#2f8f55;--l2:#d4a017;--l3:#e67e22;--l4:#d0312d}
+@media (prefers-color-scheme:dark){:root{--bg:#0e151d;--card:#17212c;--ink:#e3e9ef;--muted:#97a5b3;--line:#2a3846}}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 -apple-system,system-ui,Segoe UI,Roboto,sans-serif}
+header{position:sticky;top:0;z-index:5;background:var(--navy);color:#fff;padding:calc(env(safe-area-inset-top) + 10px) 14px 10px}
+header h1{font-size:19px;margin:0}header .sub{font-size:12px;opacity:.85}
+main{max-width:620px;margin:0 auto;padding:12px 12px calc(env(safe-area-inset-bottom) + 30px)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+h2{font-size:16px;margin:0 0 8px}
+.badge{display:inline-block;font-size:12px;font-weight:700;border-radius:20px;padding:3px 10px;background:rgba(255,255,255,.16);margin-top:4px}
+.gauge{display:block;margin:0 auto;width:100%;max-width:340px}
+.val{text-align:center;margin-top:-58px;position:relative}
+.val b{font-size:44px;font-weight:800;letter-spacing:-1px}.val .u{font-size:15px;color:var(--muted)}
+.verdict{text-align:center;font-size:20px;font-weight:800;margin:6px 0 2px}
+.vsub{text-align:center;color:var(--muted);font-size:13px;min-height:18px}
+.big{display:block;width:100%;border:0;border-radius:14px;padding:16px;font:800 18px system-ui;color:#fff;background:var(--navy);cursor:pointer;margin-top:12px}
+@media (prefers-color-scheme:dark){.big{background:#2d5c8a}}
+.big:disabled{opacity:.6}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.btn{flex:1;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:10px 12px;font:700 14px system-ui;cursor:pointer;min-width:140px}
+.btn.on{background:var(--l3);border-color:var(--l3);color:#fff}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:20px;padding:8px 12px;font:600 14px system-ui;cursor:pointer}
+.chip.on{background:#14263a;color:#fff;border-color:#14263a}
+@media (prefers-color-scheme:dark){.chip.on{background:#8fb4dc;color:#0e151d;border-color:#8fb4dc}}
+.chip.hot.on{background:var(--l4);border-color:var(--l4);color:#fff}
+.todo{margin:6px 0 0;padding-left:20px}.todo li{margin:5px 0}
+.muted{color:var(--muted);font-size:13px}
+.hide{display:none!important}
+table{width:100%;border-collapse:collapse;font-size:14px}td,th{padding:6px 4px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.dot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+details{margin-top:4px}summary{font-weight:700;cursor:pointer;padding:6px 0}
+canvas#chart{width:100%;height:150px;display:block;margin-top:8px}
+.kv{display:grid;grid-template-columns:1fr auto;gap:3px 10px;font-size:14px}.kv span:nth-child(even){font-weight:700;text-align:right}
+.warn{border-left:4px solid var(--l3);padding:8px 10px;background:rgba(230,126,34,.1);border-radius:8px;font-size:13px;margin-top:8px}
+.credit{text-align:center;color:var(--muted);font-size:12px;margin-top:16px}
+</style>
+</head>
+<body>
+<header>
+  <h1>🌡️ Θερμόμετρο Κινητού</h1>
+  <div class="sub">Πόσο ζεστό είναι το κινητό και αν πρέπει να το αφήσεις να κρυώσει</div>
+  <span class="badge" id="mode">…</span>
+</header>
+<main>
+
+<section class="card">
+  <svg class="gauge" viewBox="0 0 200 120" aria-hidden="true">
+    <path d="M20 105 A80 80 0 0 1 180 105" fill="none" stroke="var(--line)" stroke-width="16" stroke-linecap="round"/>
+    <path id="arc" d="M20 105 A80 80 0 0 1 180 105" fill="none" stroke="var(--l0)" stroke-width="16" stroke-linecap="round" pathLength="100" stroke-dasharray="0 100"/>
+    <text x="16" y="119" font-size="8" fill="var(--muted)">25°</text>
+    <text x="172" y="119" font-size="8" fill="var(--muted)">55°</text>
+  </svg>
+  <div class="val"><b id="tval">—</b> <span class="u" id="tunit">°C</span></div>
+  <div class="verdict" id="verdict">Πάτα «Μέτρησε»</div>
+  <div class="vsub" id="vsub"></div>
+  <button class="big" id="measure">🌡️ Μέτρησε τώρα</button>
+  <div class="row">
+    <button class="btn" id="monitor">❄️ Παρακολούθηση ψύξης</button>
+    <button class="btn" id="calib">🎯 Βαθμονόμηση (κρύο κινητό)</button>
+  </div>
+  <div id="monbox" class="hide">
+    <div class="muted" id="monstat"></div>
+    <canvas id="chart"></canvas>
+  </div>
+</section>
+
+<section class="card" id="todoCard">
+  <h2>Τι να κάνεις</h2>
+  <ul class="todo" id="todo"><li class="muted">Κάνε μια μέτρηση και σημείωσε παρακάτω ό,τι ισχύει.</li></ul>
+</section>
+
+<section class="card">
+  <h2>Τι ισχύει τώρα; <span class="muted">(πάτα όσα ισχύουν)</span></h2>
+  <div class="chips" id="chips"></div>
+  <div class="muted" style="margin-top:8px">Τα σημάδια μετράνε μαζί με τη μέτρηση. Το «Μήνυμα θερμοκρασίας» στην οθόνη είναι πάντα ΣΤΟΠ.</div>
+</section>
+
+<section class="card hide" id="detCard">
+  <h2>Αισθητήρες (Android)</h2>
+  <div class="kv" id="det"></div>
+</section>
+
+<section class="card">
+  <h2>Ιστορικό</h2>
+  <table><thead><tr><th>Ώρα</th><th>°C</th><th>Κατάσταση</th></tr></thead><tbody id="hist"></tbody></table>
+  <div class="row"><button class="btn" id="clearHist">🧹 Καθαρισμός</button></div>
+</section>
+
+<section class="card">
+  <h2>Οδηγός</h2>
+  <details><summary>Τα 4 επίπεδα</summary>
+    <table>
+      <tr><td><span class="dot" style="background:var(--l1)"></span><b>Κανονικό</b></td><td>&lt; 35 °C</td><td>Χρήση κανονικά.</td></tr>
+      <tr><td><span class="dot" style="background:var(--l2)"></span><b>Ζεστό</b></td><td>35–40 °C</td><td>Ελάφρυνε: όχι παιχνίδια/βίντεο, όχι ήλιο.</td></tr>
+      <tr><td><span class="dot" style="background:var(--l3)"></span><b>Πολύ ζεστό</b></td><td>40–45 °C</td><td>Άφησέ το να κρυώσει 10–15'. Βγάλε θήκη, σταμάτα φόρτιση.</td></tr>
+      <tr><td><span class="dot" style="background:var(--l4)"></span><b>Υπερθέρμανση</b></td><td>&gt; 45 °C</td><td>Σβήσ' το, σε σκιά, 20–30'. Μη φορτίζεις.</td></tr>
+    </table>
+    <div class="muted">Οι τιμές είναι για τη <b>μπαταρία</b>. Οι κατασκευαστές δίνουν λειτουργία σε περιβάλλον 0–35 °C· πάνω από ~45 °C η μπαταρία φθείρεται γρήγορα και το κινητό κόβει φόρτιση/οθόνη.</div>
+  </details>
+  <details><summary>Πώς να κρυώσει σωστά</summary>
+    <ul class="todo">
+      <li>Βγάλε τη θήκη και άφησέ το σε σκιά, πάνω σε σκληρή επιφάνεια (όχι σε κρεβάτι/μαξιλάρι).</li>
+      <li>Αποσύνδεσε τον φορτιστή. Κλείσε GPS, hotspot, κάμερα, παιχνίδια.</li>
+      <li>Λειτουργία πτήσης για 10' βοηθάει πολύ.</li>
+      <li>Ένας ανεμιστήρας ή ρεύμα αέρα είναι το καλύτερο.</li>
+      <li><b>ΟΧΙ</b> ψυγείο/καταψύκτη/νερό/πάγο: κάνει υγρασία (συμπύκνωση) μέσα και χαλάει.</li>
+      <li><b>ΟΧΙ</b> ταμπλό αυτοκινήτου, παράθυρο γέφυρας στον ήλιο, μηχανοστάσιο, δίπλα σε καλοριφέρ.</li>
+    </ul>
+  </details>
+  <details><summary>Πώς μετράει (ειλικρινά)</summary>
+    <p class="muted"><b>Android (εφαρμογή APK):</b> διαβάζει τον πραγματικό αισθητήρα θερμοκρασίας της μπαταρίας και την «θερμική κατάσταση» του συστήματος. Αυτό είναι πραγματική μέτρηση.</p>
+    <p class="muted"><b>iPhone / browser:</b> η Apple δεν επιτρέπει σε καμία εφαρμογή να διαβάσει βαθμούς. Γι' αυτό η εφαρμογή κάνει ένα σύντομο τεστ ταχύτητας ~1 δευτερολέπτου: όταν το κινητό ζεσταίνεται, «φρενάρει» τον επεξεργαστή για να προστατευτεί. Συγκρίνει την ταχύτητα με την ταχύτητα που είχε όταν ήταν κρύο (βαθμονόμηση) και βγάζει <b>εκτίμηση</b> βαθμών. Μαζί με τα σημάδια που πατάς, η απόφαση «άφησέ το να κρυώσει» είναι αξιόπιστη· οι βαθμοί είναι κατά προσέγγιση.</p>
+    <p class="muted">Κάνε <b>βαθμονόμηση</b> μια φορά όταν το κινητό είναι κρύο (π.χ. το πρωί, εκτός φόρτισης, μετά από ώρα χωρίς χρήση). Με ενεργή «Εξοικονόμηση ενέργειας» (Low Power Mode) το τεστ βγαίνει πιο αργό — πάτα το αντίστοιχο σημάδι.</p>
+    <p class="muted" id="apkline"></p>
+  </details>
+</section>
+
+<div class="credit">Created by George Barbaris</div>
+</main>
+
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+const B=window.ThermoBridge||null; // Android APK bridge
+const LV=[
+ {n:"—",c:"var(--l0)",band:""},
+ {n:"Κανονικό",c:"var(--l1)",band:"< 35 °C",sub:"Όλα καλά. Χρήση κανονικά."},
+ {n:"Ζεστό",c:"var(--l2)",band:"≈ 35–40 °C",sub:"Πρόσεχε — ελάφρυνε τη χρήση."},
+ {n:"Πολύ ζεστό",c:"var(--l3)",band:"≈ 40–45 °C",sub:"Άφησέ το να κρυώσει 10–15 λεπτά."},
+ {n:"Υπερθέρμανση",c:"var(--l4)",band:"> 45 °C",sub:"ΣΤΑΜΑΤΑ — σβήσ' το και άφησέ το 20–30 λεπτά."}
+];
+const CHIPS=[
+ {k:"msg",t:"⚠️ Μήνυμα θερμοκρασίας στην οθόνη",lv:4,hot:1},
+ {k:"burn",t:"🔥 Καίει στο χέρι",lv:3,hot:1},
+ {k:"dim",t:"🔅 Η οθόνη χαμήλωσε μόνη της",lv:3,hot:1},
+ {k:"hold",t:"⏸️ Η φόρτιση σταμάτησε / «σε αναμονή»",lv:3,hot:1},
+ {k:"warm",t:"🌤️ Είναι χλιαρό/ζεστό στην αφή",lv:2},
+ {k:"chg",t:"🔌 Φορτίζει τώρα",f:1},
+ {k:"sun",t:"☀️ Στον ήλιο / ταμπλό / ζεστό χώρο",f:1},
+ {k:"heavy",t:"🎮 Βαρύ app (GPS, βίντεο, παιχνίδι, hotspot, κάμερα)",f:1},
+ {k:"case",t:"📱 Έχει χοντρή θήκη",f:1},
+ {k:"lpm",t:"🔋 Εξοικονόμηση ενέργειας ενεργή",lpm:1}
+];
+const ADV={
+ chg:"Αποσύνδεσε τον φορτιστή μέχρι να κρυώσει (η φόρτιση βγάζει θερμότητα).",
+ sun:"Βάλ' το αμέσως σε σκιά, μακριά από ταμπλό/τζάμι.",
+ heavy:"Κλείσε το βαρύ app (GPS/βίντεο/παιχνίδι/hotspot/κάμερα).",
+ case:"Βγάλε τη θήκη για να βγει η ζέστη."
+};
+const st=JSON.parse(localStorage.getItem("thermo_state")||"{}");
+st.chips=st.chips||{};st.hist=st.hist||[];
+const save=()=>{try{localStorage.setItem("thermo_state",JSON.stringify(st))}catch(e){}};
+let last=null; // {lv,temp,est,src}
+
+// ---------- mode ----------
+$("mode").textContent=B?"📡 Android — πραγματικοί °C από αισθητήρα":"🧮 Εκτίμηση (iPhone / browser)";
+$("calib").classList.toggle("hide",!!B);
+const APK="https://github.com/georgiosbarbaris-creator/hull-steel-toolkit/releases/download/thermo-latest/Thermometro.apk";
+if(!B&&/Android/i.test(navigator.userAgent)){
+  $("apkline").innerHTML='Είσαι σε Android: <a href="'+APK+'">κατέβασε το APK</a> για πραγματικούς βαθμούς από τον αισθητήρα.';
+}
+
+// ---------- chips ----------
+function drawChips(){
+  $("chips").innerHTML="";
+  CHIPS.forEach(c=>{const b=document.createElement("button");
+    b.className="chip"+(c.hot?" hot":"")+(st.chips[c.k]?" on":"");b.textContent=c.t;
+    b.onclick=()=>{st.chips[c.k]=!st.chips[c.k];save();drawChips();if(last)show(last);else showSymptomsOnly();};
+    $("chips").appendChild(b);});
+}
+function symptomLevel(){
+  let lv=0,f=0;
+  CHIPS.forEach(c=>{if(!st.chips[c.k])return;if(c.lv)lv=Math.max(lv,c.lv);if(c.f)f++;});
+  if(f>=2)lv=Math.max(lv,2);
+  return lv;
+}
+function showSymptomsOnly(){const s=symptomLevel();if(s)show({lv:0,temp:null,est:true,src:"sym"});}
+
+// ---------- benchmark (worker) ----------
+const WSRC=`onmessage=e=>{const ms=e.data;let x=.5;
+function run(t){let n=0;const end=performance.now()+t;while(performance.now()<end){for(let i=0;i<3000;i++){x=(Math.sin(x)*Math.sqrt(i+1.7)+(i^n))%1000;}n++;}return n/t;}
+run(150);const r=[];for(let k=0;k<3;k++)r.push(run(ms));r.sort((a,b)=>a-b);postMessage({s:r[1],x});}`;
+let wurl=null;
+function bench(ms){return new Promise((res,rej)=>{
+  try{wurl=wurl||URL.createObjectURL(new Blob([WSRC],{type:"text/javascript"}));
+    const w=new Worker(wurl);const to=setTimeout(()=>{w.terminate();rej("timeout")},15000);
+    w.onmessage=e=>{clearTimeout(to);w.terminate();res(e.data.s)};w.onerror=e=>{clearTimeout(to);w.terminate();rej(e)};w.postMessage(ms);
+  }catch(e){rej(e)}});}
+// ratio (current/cold speed) -> estimated °C
+const PTS=[[1.0,31],[0.9,35],[0.78,40],[0.62,45],[0.45,50],[0.3,54]];
+function ratioToTemp(r){
+  if(r>=PTS[0][0])return PTS[0][1];
+  for(let i=1;i<PTS.length;i++){const[a,ta]=PTS[i-1],[b,tb]=PTS[i];if(r>=b)return ta+(a-r)/(a-b)*(tb-ta);}
+  return PTS[PTS.length-1][1];
+}
+function tempToLevel(t){return t<35?1:t<40?2:t<45?3:4;}
+
+// ---------- Android read ----------
+const TS=["Κανονική","Ελαφριά","Μέτρια","Σοβαρή","Κρίσιμη","Έκτακτη","Τερματισμός"];
+function readAndroid(){
+  const d=JSON.parse(B.read());
+  if(typeof d.battTemp!=="number")throw (d.error||"δεν βρέθηκε αισθητήρας μπαταρίας");
+  let lv=tempToLevel(d.battTemp);
+  if(d.thermal>=0){const m=[1,2,3,4,4,4,4][d.thermal]||1;lv=Math.max(lv,m);}
+  if(d.charging)st.chips.chg=true;
+  const rows=[["Μπαταρία",d.battTemp.toFixed(1)+" °C"]];
+  if(d.thermal>=0)rows.push(["Θερμική κατάσταση συστήματος",TS[d.thermal]||d.thermal]);
+  if(d.headroom!=null&&isFinite(d.headroom))rows.push(["Περιθώριο έως φρενάρισμα",Math.max(0,Math.round((1-d.headroom)*100))+" %"]);
+  (d.zones||[]).forEach(z=>rows.push([z.type,z.temp.toFixed(1)+" °C"]));
+  rows.push(["Φόρτιση",d.level+" % "+(d.charging?"🔌 φορτίζει":"")]);
+  if(d.voltage)rows.push(["Τάση",(d.voltage/1000).toFixed(2)+" V"]);
+  $("det").innerHTML=rows.map(r=>`<span>${r[0]}</span><span>${r[1]}</span>`).join("");
+  $("detCard").classList.remove("hide");
+  return {lv,temp:d.battTemp,est:false,src:"android"};
+}
+
+// ---------- measure ----------
+let busy=false;
+async function measure(quiet){
+  if(busy)return last;busy=true;
+  const btn=$("measure");btn.disabled=true;if(!quiet)btn.textContent="⏳ Μετράω… (μην το αγγίζεις)";
+  try{
+    if(navigator.getBattery){try{const b=await navigator.getBattery();if(b.charging&&!st.chips.chg){st.chips.chg=true;drawChips();}}catch(e){}}
+    let r;
+    if(B){r=readAndroid();}
+    else{
+      const s=await bench(300);
+      if(!st.base){st.base=s;st.baseAuto=true;}
+      else if(s>st.base&&!st.chips.lpm){st.base=s;} // fastest seen = coolest
+      const ratio=s/st.base;
+      const t=ratioToTemp(ratio);
+      r={lv:st.chips.lpm?0:tempToLevel(t),temp:st.chips.lpm?null:t,est:true,src:"bench",ratio};
+    }
+    last=r;
+    st.hist.unshift({t:Date.now(),temp:r.temp,est:r.est,lv:finalLevel(r)});st.hist=st.hist.slice(0,30);save();
+    show(r);drawHist();drawChips();
+    return r;
+  }catch(e){$("vsub").textContent="Σφάλμα μέτρησης: "+e;return null;}
+  finally{busy=false;btn.disabled=false;btn.textContent="🌡️ Μέτρησε ξανά";}
+}
+function finalLevel(r){return Math.max(r.lv||0,symptomLevel());}
+
+function show(r){
+  const lv=finalLevel(r),L=LV[lv];
+  const t=r.temp;
+  $("tval").textContent=t==null?"—":(r.est?"≈"+Math.round(t):t.toFixed(1));
+  $("tunit").textContent=t==null?"":(r.est?"°C εκτίμηση":"°C");
+  const pct=t==null?(lv?lv*25:0):Math.max(2,Math.min(100,(t-25)/30*100));
+  const arc=$("arc");arc.setAttribute("stroke-dasharray",pct+" 100");arc.setAttribute("stroke",L.c);
+  $("verdict").textContent=lv?L.n:"—";$("verdict").style.color=L.c;
+  let sub=L.sub||"";
+  if(r.est&&r.src==="bench"&&st.baseAuto)sub+=" · Κάνε βαθμονόμηση όταν είναι κρύο για σωστότερους βαθμούς.";
+  if(st.chips.lpm&&!B)sub="Με Εξοικονόμηση ενέργειας το τεστ δεν είναι αξιόπιστο — κρίνεται από τα σημάδια. "+(L.sub||"");
+  $("vsub").textContent=sub;
+  drawTodo(lv);
+}
+function drawTodo(lv){
+  const a=[];
+  if(lv>=4){a.push("<b>Σταμάτα τη χρήση.</b> Αν δεν χρειάζεσαι το κινητό, κλείσ' το εντελώς.","Άφησέ το σε σκιά, χωρίς θήκη, σε σκληρή επιφάνεια, 20–30 λεπτά.","Μη φορτίζεις μέχρι να πέσει κάτω από ~35 °C.");}
+  else if(lv===3){a.push("<b>Άφησέ το να κρυώσει 10–15 λεπτά.</b>","Λειτουργία πτήσης και οθόνη κλειστή βοηθάνε.");}
+  else if(lv===2){a.push("Ελάφρυνε τη χρήση· όχι παιχνίδια, βίντεο, πλοήγηση για λίγο.","Μέτρησε ξανά σε 5 λεπτά.");}
+  else if(lv===1){a.push("Όλα καλά — μπορείς να το χρησιμοποιείς κανονικά.");}
+  Object.keys(ADV).forEach(k=>{if(st.chips[k]&&lv>=2)a.push(ADV[k]);});
+  if(lv>=3)a.push("<b>Όχι</b> ψυγείο, καταψύκτη ή νερό — η υγρασία το χαλάει.","Πάτα «❄️ Παρακολούθηση ψύξης» και θα σε ειδοποιήσω όταν κρυώσει.");
+  $("todo").innerHTML=a.length?a.map(x=>"<li>"+x+"</li>").join(""):'<li class="muted">Κάνε μια μέτρηση.</li>';
+}
+function drawHist(){
+  const f=d=>{const x=new Date(d);return x.toLocaleDateString("el-GR",{day:"2-digit",month:"2-digit"})+" "+x.toLocaleTimeString("el-GR",{hour:"2-digit",minute:"2-digit"});};
+  $("hist").innerHTML=st.hist.length?st.hist.map(h=>`<tr><td>${f(h.t)}</td><td>${h.temp==null?"—":(h.est?"≈"+Math.round(h.temp):h.temp.toFixed(1))}</td><td><span class="dot" style="background:${LV[h.lv].c}"></span>${LV[h.lv].n}</td></tr>`).join(""):'<tr><td colspan="3" class="muted">Καμία μέτρηση ακόμα.</td></tr>';
+}
+$("clearHist").onclick=()=>{if(confirm("Να σβηστεί το ιστορικό;")){st.hist=[];save();drawHist();}};
+
+// ---------- calibration ----------
+$("calib").onclick=async()=>{
+  if(!confirm("Βαθμονόμηση: κάν' τη μόνο όταν το κινητό είναι ΚΡΥΟ (εκτός φόρτισης, χωρίς Εξοικονόμηση ενέργειας, μετά από ώρα χωρίς χρήση). Συνέχεια;"))return;
+  const b=$("calib");b.disabled=true;b.textContent="⏳ Βαθμονόμηση…";
+  try{const s=await bench(500);st.base=s;st.baseAuto=false;save();b.textContent="✅ Έγινε βαθμονόμηση";
+    setTimeout(()=>{b.textContent="🎯 Βαθμονόμηση (κρύο κινητό)";},2500);await measure();}
+  catch(e){b.textContent="🎯 Βαθμονόμηση (κρύο κινητό)";alert("Σφάλμα: "+e);}
+  finally{b.disabled=false;}
+};
+
+// ---------- cooling monitor ----------
+let mon=null,series=[],wake=null,monStart=0,peak=0,okCount=0;
+async function keepOn(on){
+  try{if(B&&B.keepScreenOn)B.keepScreenOn(on);
+    else if(on&&navigator.wakeLock){wake=await navigator.wakeLock.request("screen");}
+    else if(!on&&wake){wake.release();wake=null;}}catch(e){}
+}
+function beep(){
+  try{if(B&&B.vibrate)B.vibrate(800);else if(navigator.vibrate)navigator.vibrate([400,200,400]);}catch(e){}
+  try{const A=new (window.AudioContext||window.webkitAudioContext)();[0,.35,.7].forEach(d=>{const o=A.createOscillator(),g=A.createGain();o.frequency.value=880;o.connect(g);g.connect(A.destination);g.gain.value=.25;o.start(A.currentTime+d);o.stop(A.currentTime+d+.22);});}catch(e){}
+}
+async function tick(){
+  const r=await measure(true);if(!r)return;
+  const lv=finalLevel(r);series.push({t:(Date.now()-monStart)/60000,v:r.temp,lv});peak=Math.max(peak,lv);
+  drawChart();
+  const mins=Math.round((Date.now()-monStart)/60000);
+  if(lv<=1&&r.lv<=1){okCount++;}else okCount=0;
+  $("monstat").textContent=`Παρακολούθηση: ${mins}′ · μέτρηση κάθε ${B?5:30}″ · κράτα την εφαρμογή ανοιχτή με χαμηλή φωτεινότητα`+(okCount?" · σχεδόν έτοιμο…":"");
+  if(okCount>=2){
+    stopMon();beep();
+    $("monstat").textContent=`✅ Κρύωσε σε ~${mins}′. Μπορείς να το χρησιμοποιήσεις.`;
+    $("monbox").classList.remove("hide");
+  }
+}
+function startMon(){
+  series=[];peak=0;okCount=0;monStart=Date.now();
+  $("monbox").classList.remove("hide");$("monitor").classList.add("on");$("monitor").textContent="⏹️ Σταμάτα παρακολούθηση";
+  keepOn(true);tick();mon=setInterval(tick,B?5000:30000);
+}
+function stopMon(){clearInterval(mon);mon=null;keepOn(false);$("monitor").classList.remove("on");$("monitor").textContent="❄️ Παρακολούθηση ψύξης";}
+$("monitor").onclick=()=>{
+  if(mon){stopMon();return;}
+  if(symptomLevel()>=2&&confirm("Έχεις σημειώσει σημάδια ζέστης (π.χ. φόρτιση, ήλιος). Αν τα διόρθωσες, να τα ξετσεκάρω;")){
+    ["chg","sun","heavy","case","burn","dim","hold","warm","msg"].forEach(k=>st.chips[k]=false);save();drawChips();
+  }
+  startMon();
+};
+function drawChart(){
+  const c=$("chart"),dpr=window.devicePixelRatio||1,w=c.clientWidth,h=c.clientHeight;
+  c.width=w*dpr;c.height=h*dpr;const g=c.getContext("2d");g.scale(dpr,dpr);g.clearRect(0,0,w,h);
+  const lo=25,hi=55,pad=26,X=t=>pad+(w-pad-6)*(series.length>1?t/Math.max(series[series.length-1].t,.01):.5),Y=v=>h-16-(h-24)*(Math.min(hi,Math.max(lo,v))-lo)/(hi-lo);
+  const cs=getComputedStyle(document.documentElement);
+  [[35,"--l2"],[40,"--l3"],[45,"--l4"]].forEach(([v,k])=>{g.strokeStyle=cs.getPropertyValue(k);g.globalAlpha=.5;g.setLineDash([4,4]);g.beginPath();g.moveTo(pad,Y(v));g.lineTo(w-6,Y(v));g.stroke();g.fillStyle=cs.getPropertyValue("--muted");g.globalAlpha=1;g.font="10px system-ui";g.fillText(v+"°",2,Y(v)+3);});
+  g.setLineDash([]);const pts=series.filter(p=>p.v!=null);if(!pts.length)return;
+  g.strokeStyle=cs.getPropertyValue("--ink");g.lineWidth=2;g.beginPath();pts.forEach((p,i)=>i?g.lineTo(X(p.t),Y(p.v)):g.moveTo(X(p.t),Y(p.v)));g.stroke();
+  pts.forEach(p=>{g.fillStyle=cs.getPropertyValue(["--l0","--l1","--l2","--l3","--l4"][p.lv]);g.beginPath();g.arc(X(p.t),Y(p.v),3.5,0,7);g.fill();});
+  g.fillStyle=cs.getPropertyValue("--muted");g.font="10px system-ui";g.fillText(Math.round(series[series.length-1].t)+"′",w-22,h-3);
+}
+
+// ---------- init ----------
+$("measure").onclick=()=>measure();
+drawChips();drawHist();
+if(st.hist.length){const h=st.hist[0];$("vsub").textContent="Τελευταία μέτρηση: "+new Date(h.t).toLocaleTimeString("el-GR",{hour:"2-digit",minute:"2-digit"});}
+if("serviceWorker" in navigator&&location.protocol==="https:"&&!B&&location.hostname!=="appassets.androidplatform.net"){navigator.serviceWorker.register("sw.js").catch(()=>{});}
+</script>
+</body>
+</html>

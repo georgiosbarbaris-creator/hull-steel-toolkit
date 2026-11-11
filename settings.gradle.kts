@@ -5,3 +5,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "HullSteelToolkit"
 include(":app")
+include(":thermo")

@@ -1,5 +1,7 @@
 name: Build APK
 on: [push, workflow_dispatch]
+permissions:
+  contents: write
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -12,3 +14,15 @@ jobs:
         with:
           name: HullSteel-apk
           path: app/build/outputs/apk/debug/app-debug.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Thermometro-apk
+          path: thermo/build/outputs/apk/debug/thermo-debug.apk
+      - name: Publish Θερμόμετρο APK (stable download link)
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp thermo/build/outputs/apk/debug/thermo-debug.apk Thermometro.apk
+          gh release view thermo-latest >/dev/null 2>&1 || gh release create thermo-latest --title "Θερμόμετρο Κινητού (Android)" --notes "Τελευταίο APK του Θερμόμετρου. Κατέβασε το Thermometro.apk στο Android και εγκατέστησέ το."
+          gh release upload thermo-latest Thermometro.apk --clobber
