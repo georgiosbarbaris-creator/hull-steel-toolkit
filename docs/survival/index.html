@@ -2764,9 +2764,10 @@ function compass(){T('Πυξίδα & GPS');const wps=LS.g('wps',[]);
  <div class="comp"><svg viewBox="-150 -150 300 300"><circle r="146" fill="#0a1522" stroke="#2a4060" stroke-width="3"/>
  <g id="rose">${Array.from({length:72},(_,i)=>{const a=i*5,l=a%30===0?18:a%10===0?11:6;return `<line x1="0" y1="-140" x2="0" y2="${-140+l}" stroke="#a9b8c8" stroke-width="${a%30===0?3:1.5}" transform="rotate(${a})"/>`}).join('')}
  ${[['Β',0,'#ff4d4d'],['Α',90,'#fff'],['Ν',180,'#fff'],['Δ',270,'#fff']].map(c=>`<text transform="rotate(${c[1]}) translate(0,-100)" text-anchor="middle" dominant-baseline="middle" font-size="30" font-weight="900" fill="${c[2]}">${c[0]}</text>`).join('')}
- ${[30,60,120,150,210,240,300,330].map(a=>`<text transform="rotate(${a}) translate(0,-112)" text-anchor="middle" dominant-baseline="middle" font-size="13" fill="#a9b8c8">${a}</text>`).join('')}</g>
+ ${[30,60,120,150,210,240,300,330].map(a=>`<text transform="rotate(${a}) translate(0,-112)" text-anchor="middle" dominant-baseline="middle" font-size="13" fill="#a9b8c8">${a}</text>`).join('')}
+ <path d="M0,-80 L12,0 L0,-12 L-12,0 Z" fill="#d62828"/><path d="M0,80 L12,0 L0,12 L-12,0 Z" fill="#a9b8c8"/></g><!-- v27: η βελόνα γυρίζει μαζί με τον δίσκο → η κόκκινη μύτη δείχνει ΠΑΝΤΑ Βορρά (πριν έδειχνε προς τα πού κοιτάς) -->
  <g id="tarr" style="display:none"><path d="M0,-135 L14,-108 L-14,-108 Z" fill="#fcbf49"/></g>
- <path d="M0,-80 L12,0 L0,-12 L-12,0 Z" fill="#d62828"/><path d="M0,80 L12,0 L0,12 L-12,0 Z" fill="#a9b8c8"/><circle r="6" fill="#fff"/>
+ <circle r="6" fill="#fff"/>
  <line x1="0" y1="-150" x2="0" y2="-128" stroke="#fff" stroke-width="5"/></svg></div>
  <div class="hd" id="hd">—</div><div class="muted" style="text-align:center" id="hdn">Πάτα «Ενεργοποίηση πυξίδας» και κράτα το κινητό οριζόντια</div>
  <div class="box" id="nav" style="display:none"></div>
@@ -2793,9 +2794,12 @@ function startGeo(){if(geoW!==null)return;if(!navigator.geolocation){$('#gps').t
   if(rec&&c.accuracy<60){const l=trk[trk.length-1];if(!l||dist(l,pos)>15){trk.push({lat:+pos.lat.toFixed(6),lon:+pos.lon.toFixed(6)});if(trk.length>3000)trk.shift();LS.s('trk',trk)}}
   upd();draw();wxAlt()},e=>{const g=$('#gps');if(g)g.innerHTML=e.code===1?'❌ Δεν δόθηκε άδεια τοποθεσίας.<br><small class="muted">iPhone: Ρυθμίσεις → Απόρρητο → Υπηρεσίες τοποθεσίας → Safari → «Κατά τη χρήση».</small>':'Δεν βρέθηκε ακόμα θέση. Βγες σε ανοιχτό χώρο με θέα στον ουρανό.'},{enableHighAccuracy:true,maximumAge:2000,timeout:60000})}
 function stopGeo(){if(geoW!==null){navigator.geolocation.clearWatch(geoW);geoW=null}}
-function startOrient(){const go2=()=>{orientOn=true;const b=$('#cbtns');if(b)b.style.display='none';wake(1)};
- if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){DeviceOrientationEvent.requestPermission().then(r=>{if(r==='granted'){window.addEventListener('deviceorientation',onOr,true);go2()}else alert('Δεν δόθηκε άδεια για την πυξίδα.')}).catch(()=>alert('Η πυξίδα δεν ενεργοποιήθηκε.'))}
- else{if('ondeviceorientationabsolute' in window)window.addEventListener('deviceorientationabsolute',onOr,true);else window.addEventListener('deviceorientation',onOr,true);go2();setTimeout(()=>{if(hdg===null){const n=$('#hdn');if(n)n.textContent='Η συσκευή δεν δίνει πυξίδα (π.χ. υπολογιστής). Το GPS δουλεύει κανονικά.'}},2500)}}
+/* v27: και το Chrome (Android, έκδ. 156+) έχει πλέον requestPermission – πριν η εφαρμογή το περνούσε για iPhone, άκουγε το
+   σχετικό 'deviceorientation' (χωρίς Βορρά) και η πυξίδα δεν έδειχνε ποτέ. Τώρα: άδεια αν χρειάζεται, μετά ΠΑΝΤΑ το απόλυτο σήμα αν υπάρχει. */
+function startOrient(){if(orientOn)return;const go2=()=>{orientOn=true;const b=$('#cbtns');if(b)b.style.display='none';wake(1)};
+ const listen=()=>{if(orientOn)return;if('ondeviceorientationabsolute' in window)window.addEventListener('deviceorientationabsolute',onOr,true);else window.addEventListener('deviceorientation',onOr,true);go2();setTimeout(()=>{if(hdg===null&&orientOn){const n=$('#hdn');if(n)n.textContent='Η συσκευή δεν δίνει πυξίδα (π.χ. υπολογιστής). Το GPS δουλεύει κανονικά.'}},2500)};
+ if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){DeviceOrientationEvent.requestPermission().then(r=>{if(r==='granted')listen();else alert('Δεν δόθηκε άδεια για την πυξίδα.')}).catch(()=>listen())}
+ else listen()}
 function onOr(e){let h=null;if(typeof e.webkitCompassHeading==='number')h=e.webkitCompassHeading;else if(e.absolute!==false&&e.alpha!=null)h=(360-e.alpha)%360;if(h==null)return;
  const so=(screen.orientation&&screen.orientation.angle)||window.orientation||0;h=(h+so+DEC()+360)%360;hdg=hdg==null?h:hdg+((((h-hdg)%360)+540)%360-180)*.25;hdg=(hdg+360)%360;upd(1)}
 let lastU=0;
