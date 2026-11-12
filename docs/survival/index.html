@@ -2083,6 +2083,7 @@ function setLang(l){try{localStorage.setItem('sv_lang',JSON.stringify(l))}catch(
 const encURI=s=>encodeURIComponent(trS(String(s)));
 const $=s=>document.querySelector(s),M=$('#m');
 const esc=s=>UX(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const APP_V='28',APP_D='12/11/2026';
 const LS={g(k,d){try{const v=localStorage.getItem('sv_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},s(k,v){try{localStorage.setItem('sv_'+k,JSON.stringify(v))}catch(e){}}};
 let fs=LS.g('fs',19);document.documentElement.style.setProperty('--fs',fs+'px');
 function fz(d){fs=Math.max(15,Math.min(28,fs+d*2));LS.s('fs',fs);document.documentElement.style.setProperty('--fs',fs+'px')}
@@ -2132,7 +2133,7 @@ function home(){T('Επιβίωση 72+');
  <button class="tile" onclick="go('search')" style="grid-column:1/-1;min-height:70px"><span class="e" style="font-size:1.4em">🔎</span>Αναζήτηση</button>
  </div>
  <div class="tip">Δουλεύει χωρίς internet. Τα δεδομένα σου μένουν μόνο σε αυτό το κινητό. <b>A+</b> πάνω δεξιά για μεγαλύτερα γράμματα.</div>
- <footer>${SPONSOR()}<div class="notr" style="margin-top:10px"><a href="#about" style="color:inherit">🎁 ${L2('Σχετικά','About')}</a> · <a href="#legal" style="color:inherit">⚖️ ${L2('Όροι & αποποίηση ευθύνης','Terms & disclaimer')}</a></div><div style="margin-top:6px">Οι οδηγίες δεν αντικαθιστούν το 112, τις επίσημες αρχές ή την εκπαίδευση σε πρώτες βοήθειες.</div></footer>`}
+ <footer>${SPONSOR()}<div class="notr" style="margin-top:10px"><a href="#about" style="color:inherit">🎁 ${L2('Σχετικά','About')}</a> · <a href="#legal" style="color:inherit">⚖️ ${L2('Όροι & αποποίηση ευθύνης','Terms & disclaimer')}</a></div><div class="notr" style="margin-top:6px;opacity:.75">${L2('Έκδοση','Version')} <b>v${APP_V}</b> · ${APP_D}</div><div style="margin-top:6px">Οι οδηγίες δεν αντικαθιστούν το 112, τις επίσημες αρχές ή την εκπαίδευση σε πρώτες βοήθειες.</div></footer>`}
 function cat(c){const k=CATS[c];if(!k)return home();T(k[1]);
  const L=D.filter(a=>a.cat===c);
  let h='';
@@ -3535,7 +3536,7 @@ function aboutPage(){T(L2('🎁 Σχετικά','🎁 About'));
  <button class="big blu notr" onclick="aboutShare()">📤 ${L2('Μοιράσου την εφαρμογή','Share the app')}</button>
  <div class="box notr" style="text-align:center"><div class="muted">Powered by</div><div style="font-size:1.25em;font-weight:900">Overland’s Habit Creator</div></div>
  <button class="btn notr" onclick="go('legal')">⚖️ ${L2('Όροι χρήσης & αποποίηση ευθύνης','Terms of use & disclaimer')}</button>
- <footer class="notr">© George Barbaris · ${L2('Επιβίωση 72+','Survival 72+')}</footer>`}
+ <footer class="notr">© George Barbaris · ${L2('Επιβίωση 72+','Survival 72+')} · ${L2('Έκδοση','Version')} v${APP_V} (${APP_D})</footer>`}
 function aboutShare(){const u=location.origin+location.pathname,t=L2('«Επιβίωση 72+» – δωρεάν εφαρμογή επιβίωσης, δουλεύει χωρίς internet. Ευγενική χορηγία του George Barbaris.','“Survival 72+” – free survival app, works offline. Kindly sponsored by George Barbaris.');
  if(navigator.share)navigator.share({title:L2('Επιβίωση 72+','Survival 72+'),text:t,url:u}).catch(()=>{});else(navigator.clipboard?navigator.clipboard.writeText(t+' '+u):Promise.reject()).then(()=>alert(L2('Ο σύνδεσμος αντιγράφηκε.','Link copied.')),()=>prompt('',u))}
 function termsAccept(){LS.s('terms_ok',{v:TERMS_V,t:Date.now()});const g=$('#tgate');if(g)g.remove()}
