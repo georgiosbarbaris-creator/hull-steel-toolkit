@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="el"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Αντίγραφο όλων – Backup</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Backup">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#0a1522">
+<style>
+:root{--bg:#0d1b2a;--card:#16283d;--line:#2a4060;--tx:#f4f6f8;--mut:#a9b8c8;--red:#d62828;--org:#f77f00;--grn:#2a9d8f;--yel:#fcbf49;--blu:#3a86ff}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--tx);font:17px/1.45 -apple-system,system-ui,"Segoe UI",Roboto,Arial,sans-serif}
+header{position:sticky;top:0;z-index:5;background:#0a1522;display:flex;align-items:center;gap:8px;padding:calc(env(safe-area-inset-top) + 8px) 12px 8px;border-bottom:1px solid var(--line)}
+header h1{flex:1;font-size:1.05em;margin:0}
+.hb{background:var(--card);color:var(--tx);border:1px solid var(--line);border-radius:12px;min-width:44px;height:42px;font-weight:700}
+main{padding:12px 16px calc(env(safe-area-inset-bottom) + 40px);max-width:720px;margin:0 auto}
+.box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin:12px 0}
+.big{display:block;width:100%;border:0;border-radius:18px;padding:18px 12px;margin:10px 0 0;font-size:1.25em;font-weight:800;color:#fff;text-align:center}
+.big small{display:block;font-size:.62em;font-weight:500;opacity:.9;margin-top:4px}
+.big:disabled{opacity:.5}
+.grn{background:var(--grn)}.blu{background:var(--blu)}.org{background:var(--org)}
+.btn{background:#0d1b2a;border:1px solid var(--line);color:var(--tx);border-radius:12px;padding:10px 14px;font-size:.95em;font-weight:700}
+.muted{color:var(--mut);font-size:.88em}
+.tip{background:#123a36;border-left:6px solid var(--grn);padding:10px 12px;border-radius:10px;margin:10px 0;font-size:.92em}
+.warn{background:#4a1014;border-left:6px solid var(--red);padding:10px 12px;border-radius:10px;margin:10px 0;font-size:.92em}
+h2{font-size:1.1em;margin:0 0 6px;color:var(--yel)}
+.row{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid var(--line);font-size:.93em}.row:last-child{border:0}
+.row b{font-weight:700;flex:1 1 48%;min-width:0}.row span:last-child{flex:1 1 52%;min-width:0;color:var(--mut);text-align:right;overflow-wrap:anywhere}
+label.ck{display:flex;gap:10px;align-items:flex-start;margin:10px 0;font-size:.93em}label.ck input{width:22px;height:22px;flex:none;margin:1px 0 0}
+#st{min-height:1.4em;text-align:center;font-weight:700;margin-top:10px}
+.bar{height:10px;background:#0d1b2a;border-radius:6px;overflow:hidden;margin-top:8px;display:none}.bar i{display:block;height:100%;width:0;background:var(--grn);transition:width .2s}
+ol{padding-left:1.3em;margin:6px 0}li{margin:4px 0}
+footer{text-align:center;color:var(--mut);font-size:.8em;margin-top:24px}
+</style></head><body>
+<header><h1 id="ttl">💾 Αντίγραφο όλων</h1><button class="hb" id="lg" onclick="setLang()">EN</button></header>
+<main id="m"></main>
+<script>
+/* ===== 💾 Αντίγραφο όλων – ένα αρχείο με τα δεδομένα ΟΛΩΝ των εφαρμογών σε αυτό το κινητό → Cloud (Drive / iCloud) → επαναφορά.
+   Όλες οι εφαρμογές ζουν στην ίδια διεύθυνση (origin), άρα αυτή η σελίδα βλέπει τα localStorage και IndexedDB όλων.
+   Τίποτα δεν φεύγει από το κινητό μόνο του: το αρχείο το στέλνεις εσύ όπου θέλεις. Created by George Barbaris ===== */
+const EN=(()=>{try{const v=localStorage.getItem('allbk_lang');if(v)return v==='en'}catch(e){}return !(navigator.language||'el').toLowerCase().startsWith('el')})();
+const L=(el,en)=>EN?en:el,$=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function setLang(){try{localStorage.setItem('allbk_lang',EN?'el':'en')}catch(e){}location.reload()}
+const FMT='barbaris-apps-backup',SECRET=/api[_-]?key|apikey|token|secret|passw/i;
+/* ποια εφαρμογή είναι κάθε κλειδί (για να το δείχνει με όνομα) */
+const APPN={sv:L('🆘 Επιβίωση 72+','🆘 Survival 72+'),ov:'🚙 Overland’s Habit',ddr:'🛠️ DD Daily Report',ddb:'💶 DD Budget',hst:'⚓ Hull Steel',bk:'⛽ Bunker Calc',m021:'📋 Attendance Forms',attf:'📋 Attendance Forms',
+ im:'🎨 Imagine',jobs:'🧾 Job Orders',tc:'⏳ Timeless Capsule',sw:L('🔤 Λέξεις-Διακόπτες','🔤 Switch words'),pdfzip:'📄 PDF Tools',risq:'🛡️ RISQ',risqc:'🛡️ RISQ Crew',risqcrew:'🛡️ RISQ Crew',tameio:L('💰 Ταμείο','💰 Cash box'),thermo:L('🌡️ Θερμόμετρο','🌡️ Thermometer'),vardies:L('🕐 Πρόγραμμα Βαρδιών','🕐 Watch schedule')};
+const DBN={hst:'⚓ Hull Steel','m021b-photos':L('📋 Attendance – φωτογραφίες','📋 Attendance – photos'),'ddr-app':'🛠️ DD Daily Report',imagine:'🎨 Imagine',jobs:'🧾 Job Orders',tcapsule:'⏳ Timeless Capsule',risq:'🛡️ RISQ',risqc:'🛡️ RISQ Crew',sv_db:L('🆘 Επιβίωση 72+','🆘 Survival 72+'),tameio:L('💰 Ταμείο','💰 Cash box'),milao:L('🗣️ Μιλάω!','🗣️ Milao!')};
+const KNOWNDB=Object.keys(DBN);
+const grp=k=>{const m=String(k).match(/^([a-zA-Z0-9]+)[_:.\-]/);return m?m[1]:String(k).slice(0,14)};
+const kb=n=>n<1024?n+' B':n<1048576?(n/1024).toFixed(n<10240?1:0)+' KB':(n/1048576).toFixed(1)+' MB';
+const pad=n=>String(n).padStart(2,'0'),stamp=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}`;
+const when=t=>new Date(t).toLocaleString(EN?'en-GB':'el-GR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+function st(t,c){const e=$('#st');if(e){e.textContent=t;e.style.color=c||''}}
+function prog(f){const b=$('#bar');if(!b)return;b.style.display=f==null?'none':'block';b.firstChild.style.width=Math.round((f||0)*100)+'%'}
+/* ---------- IndexedDB ---------- */
+const rq=r=>new Promise((ok,no)=>{r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)});
+function idbOpen(name){return new Promise((ok,no)=>{let r;try{r=indexedDB.open(name)}catch(e){return no(e)}
+ r.onupgradeneeded=e=>{if(e.oldVersion===0){try{r.transaction.abort()}catch(_){}}};r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error||new Error('open'));r.onblocked=()=>no(new Error('blocked'))})}
+async function idbList(){let names=[];if(indexedDB.databases){try{names=(await indexedDB.databases()).map(d=>d.name).filter(Boolean)}catch(e){}}
+ if(!names.length)names=KNOWNDB.slice();return [...new Set(names)]}
+async function idbInfo(name){let db;try{db=await idbOpen(name)}catch(e){return null}const out={name,version:db.version,stores:[],n:0};
+ for(const sn of Array.from(db.objectStoreNames)){try{const c=await rq(db.transaction(sn,'readonly').objectStore(sn).count());out.stores.push({name:sn,count:c});out.n+=c}catch(e){}}db.close();return out}
+/* τιμές IndexedDB → JSON (φωτογραφίες/ήχοι γίνονται base64, ημερομηνίες κρατιούνται) */
+function enc(v,B){if(v===undefined)return {$u:1};if(v===null||typeof v!=='object'){if(typeof v==='number'&&!isFinite(v))return {$n:String(v)};if(typeof v==='bigint')return {$bi:String(v)};return v}
+ if(typeof Blob!=='undefined'&&v instanceof Blob){const o={$blob:null,type:v.type};if(typeof File!=='undefined'&&v instanceof File){o.name=v.name;o.lm=v.lastModified}B.push([o,v]);return o}
+ if(v instanceof Date)return {$date:v.getTime()};if(v instanceof ArrayBuffer)return {$ab:ab64(v)};
+ if(ArrayBuffer.isView(v))return {$ta:v.constructor.name,d:ab64(v.buffer.slice(v.byteOffset,v.byteOffset+v.byteLength))};
+ if(v instanceof Map)return {$map:[...v].map(([k,x])=>[enc(k,B),enc(x,B)])};if(v instanceof Set)return {$set:[...v].map(x=>enc(x,B))};
+ if(v instanceof RegExp)return {$re:[v.source,v.flags]};if(Array.isArray(v))return v.map(x=>enc(x,B));
+ const o={};for(const k of Object.keys(v))o[k]=enc(v[k],B);return Object.keys(o).some(k=>k[0]==='$')?{$obj:o}:o}
+function dec(v){if(v===null||typeof v!=='object')return v;if(Array.isArray(v))return v.map(dec);
+ if('$u' in v)return undefined;if('$n' in v)return Number(v.$n);if('$bi' in v)return BigInt(v.$bi);if('$date' in v)return new Date(v.$date);
+ if('$blob' in v){const b=new Blob([b64ab(v.$blob)],{type:v.type||''});return v.name!=null&&typeof File!=='undefined'?new File([b],v.name,{type:v.type||'',lastModified:v.lm||Date.now()}):b}
+ if('$ab' in v)return b64ab(v.$ab);if('$ta' in v){const C=self[v.$ta]||Uint8Array;return new C(b64ab(v.d))}
+ if('$map' in v)return new Map(v.$map.map(([k,x])=>[dec(k),dec(x)]));if('$set' in v)return new Set(v.$set.map(dec));if('$re' in v)return new RegExp(v.$re[0],v.$re[1]);
+ if('$obj' in v){const o={};for(const k of Object.keys(v.$obj))o[k]=dec(v.$obj[k]);return o}
+ const o={};for(const k of Object.keys(v))o[k]=dec(v[k]);return o}
+function ab64(buf){const u=new Uint8Array(buf);let s='';for(let i=0;i<u.length;i+=32768)s+=String.fromCharCode.apply(null,u.subarray(i,i+32768));return btoa(s)}
+function b64ab(b){const s=atob(b),u=new Uint8Array(s.length);for(let i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u.buffer}
+const blob64=b=>new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(String(r.result).split(',')[1]||'');r.onerror=()=>no(r.error);r.readAsDataURL(b)});
+async function idbDump(name,B){const db=await idbOpen(name);const out={name,version:db.version,stores:[]};
+ for(const sn of Array.from(db.objectStoreNames)){const s=db.transaction(sn,'readonly').objectStore(sn);
+  const info={name:sn,keyPath:s.keyPath,autoIncrement:s.autoIncrement,indexes:Array.from(s.indexNames).map(i=>{const x=s.index(i);return {name:i,keyPath:x.keyPath,unique:x.unique,multiEntry:x.multiEntry}})};
+  const [keys,vals]=await Promise.all([rq(s.getAllKeys()),rq(s.getAll())]);info.rows=keys.map((k,i)=>[enc(k,B),enc(vals[i],B)]);out.stores.push(info)}
+ db.close();return out}
+function idbDel(name){return new Promise((ok,no)=>{const r=indexedDB.deleteDatabase(name);let tm=setTimeout(()=>no(new Error('blocked')),10000);
+ r.onsuccess=()=>{clearTimeout(tm);ok()};r.onerror=()=>{clearTimeout(tm);no(r.error)};r.onblocked=()=>st(L('⏳ Κλείσε τις άλλες εφαρμογές/καρτέλες που είναι ανοιχτές…','⏳ Close the other apps/tabs that are open…'),'#fcbf49')})}
+function idbMake(d){return new Promise((ok,no)=>{const r=indexedDB.open(d.name,Math.max(1,d.version||1));
+ r.onupgradeneeded=()=>{const db=r.result;for(const s of d.stores){if(db.objectStoreNames.contains(s.name))continue;const o=db.createObjectStore(s.name,s.keyPath!=null?{keyPath:s.keyPath,autoIncrement:!!s.autoIncrement}:{autoIncrement:!!s.autoIncrement});
+  for(const i of s.indexes||[])o.createIndex(i.name,i.keyPath,{unique:!!i.unique,multiEntry:!!i.multiEntry})}};
+ r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error);r.onblocked=()=>no(new Error('blocked'))})}
+async function idbFill(db,d){for(const s of d.stores){if(!s.rows||!s.rows.length)continue;await new Promise((ok,no)=>{const tx=db.transaction(s.name,'readwrite'),o=tx.objectStore(s.name);
+ for(const [k,v] of s.rows){const val=dec(v);if(s.keyPath!=null)o.put(val);else o.put(val,dec(k))}tx.oncomplete=ok;tx.onerror=()=>no(tx.error);tx.onabort=()=>no(tx.error||new Error('abort'))})}}
+/* ---------- τι υπάρχει σε αυτό το κινητό ---------- */
+function lsAll(){const a=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(/^allbk_/.test(k))continue;a.push([k,localStorage.getItem(k)])}return a}
+async function scan(){const box=$('#scan');if(!box)return;box.innerHTML=`<div class="muted">${L('Ψάχνω…','Scanning…')}</div>`;
+ const G={},sec=[];for(const [k,v] of lsAll()){if(SECRET.test(k)){sec.push(k);continue}const g=grp(k);(G[g]=G[g]||{n:0,b:0}).n++;G[g].b+=(k.length+String(v).length)*2}
+ const dbs=[];for(const n of await idbList()){const i=await idbInfo(n);if(i&&i.n>=0)dbs.push(i)}
+ const byApp={};const add=(name,txt,b)=>{(byApp[name]=byApp[name]||[]).push([txt,b])};
+ Object.entries(G).forEach(([g,x])=>add(APPN[g]||'📦 '+g,`${x.n} ${x.n===1?L('ρύθμιση/εγγραφή','setting/entry'):L('ρυθμίσεις/εγγραφές','settings/entries')}`,x.b));
+ dbs.forEach(d=>add(DBN[d.name]||'🗄️ '+d.name,`${d.n} ${L('εγγραφές στη βάση','database records')}`,0));
+ const names=Object.keys(byApp).sort((a,b)=>a.replace(/^\P{L}+/u,'').localeCompare(b.replace(/^\P{L}+/u,''),'el'));
+ box.innerHTML=names.length?names.map(n=>`<div class="row"><b>${esc(n)}</b><span>${byApp[n].map(([t,b])=>esc(t)+(b?` · ${kb(b)}`:'')).join('<br>')}</span></div>`).join('')
+  +(sec.length?`<div class="muted" style="margin-top:8px">🔑 ${L('Κλειδιά API','API keys')}: ${sec.length} – ${L('δεν μπαίνουν στο αρχείο αν δεν το επιλέξεις παρακάτω.','not included unless you tick it below.')}</div>`:'')
+  :`<div class="muted">${L('Δεν βρέθηκαν δεδομένα εφαρμογών σε αυτό το κινητό (σε αυτόν τον browser).','No app data found on this phone (in this browser).')}</div>`;
+ const c=$('#cnt');if(c)c.textContent=names.length}
+/* ---------- αντίγραφο ---------- */
+async function build(){const withDb=$('#cdb').checked,withSec=$('#csec').checked,d=new Date();
+ const out={format:FMT,v:1,created:d.toISOString(),origin:location.origin,ls:{},idb:[],skipped:[]};
+ for(const [k,v] of lsAll()){if(SECRET.test(k)&&!withSec){out.skipped.push(k);continue}out.ls[k]=v}
+ const B=[];if(withDb){const names=await idbList();for(let i=0;i<names.length;i++){st(`📦 ${DBN[names[i]]||names[i]}…`);prog(i/names.length*.5);try{out.idb.push(await idbDump(names[i],B))}catch(e){}}}
+ for(let i=0;i<B.length;i++){B[i][0].$blob=await blob64(B[i][1]);if(i%5===0){prog(.5+i/B.length*.45);st(`🖼️ ${L('Φωτογραφίες/ήχοι','Photos/audio')} ${i+1}/${B.length}`)}}
+ out.n={keys:Object.keys(out.ls).length,dbs:out.idb.length,records:out.idb.reduce((s,x)=>s+x.stores.reduce((a,y)=>a+y.rows.length,0),0),files:B.length};
+ const txt=JSON.stringify(out);return {txt,name:`backup_apps_${stamp(d)}`,n:out.n}}
+async function doBackup(mode){const b1=$('#bcl'),b2=$('#bdl');b1.disabled=b2.disabled=true;prog(0);st('⏳ '+L('Φτιάχνω το αρχείο…','Building the file…'));
+ try{const {txt,name,n}=await build();prog(1);const size=kb(new Blob([txt]).size);let how='';
+  if(mode==='cloud')how=await shareFile(txt,name);if(how!=='shared'&&how!=='cancel'){download(txt,name+'.json');how='downloaded'}
+  if(how==='cancel'){st(L('Ακυρώθηκε.','Cancelled.'),'#fcbf49')}else{try{localStorage.setItem('allbk_last',JSON.stringify({t:Date.now(),size,n,how}))}catch(e){}
+   st(how==='shared'?`✅ ${L('Στάλθηκε','Sent')} (${size}) – ${L('διάλεξε Drive / iCloud / email','choose Drive / iCloud / email')}`:`✅ ${L('Αποθηκεύτηκε στις Λήψεις','Saved to Downloads')}: ${name}.json (${size})`,'#2ecc71');showLast()}}
+ catch(e){st('❌ '+(e&&e.message||e),'#ff6b6b')}finally{b1.disabled=b2.disabled=false;setTimeout(()=>prog(null),800)}}
+async function shareFile(txt,name){if(!navigator.share||!navigator.canShare)return 'no';
+ for(const [ext,type] of [['.json','application/json'],['.txt','text/plain']]){let f;try{f=new File([txt],name+ext,{type})}catch(e){return 'no'}
+  if(navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:name+ext});return 'shared'}catch(e){return e&&e.name==='AbortError'?'cancel':'no'}}}return 'no'}
+function download(txt,fn){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type:'application/json'}));a.download=fn;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},3000)}
+function showLast(){const e=$('#last');if(!e)return;let l=null;try{l=JSON.parse(localStorage.getItem('allbk_last')||'null')}catch(_){}
+ if(!l){e.innerHTML=`⚠️ ${L('Δεν έχεις κάνει ακόμα αντίγραφο από εδώ.','You have not made a backup from here yet.')}`;e.style.color='#fcbf49';return}
+ const days=Math.floor((Date.now()-l.t)/864e5);e.innerHTML=`${L('Τελευταίο αντίγραφο','Last backup')}: <b>${when(l.t)}</b> · ${esc(l.size)}${days>=7?` · ⚠️ ${L(`πριν ${days} μέρες – κάνε καινούργιο`,`${days} days ago – make a new one`)}`:''}`;e.style.color=days>=7?'#fcbf49':''}
+/* ---------- επαναφορά ---------- */
+let RD=null;
+async function pick(f){if(!f)return;st('⏳ '+L('Διαβάζω το αρχείο…','Reading the file…'));let d;try{d=JSON.parse(await f.text())}catch(e){st('❌ '+L('Δεν είναι αρχείο αντιγράφου (JSON).','This is not a backup file (JSON).'),'#ff6b6b');return}
+ if(!d||d.format!==FMT){st('❌ '+L('Αυτό το αρχείο δεν είναι «Αντίγραφο όλων».','This file is not an “All apps backup”.'),'#ff6b6b');return}
+ RD=d;const n=d.n||{keys:Object.keys(d.ls||{}).length,dbs:(d.idb||[]).length,records:0,files:0};
+ $('#rinfo').innerHTML=`<div class="row"><b>${L('Ημερομηνία','Date')}</b><span>${when(d.created)}</span></div><div class="row"><b>${L('Ρυθμίσεις/εγγραφές','Settings/entries')}</b><span>${n.keys}</span></div><div class="row"><b>${L('Βάσεις δεδομένων','Databases')}</b><span>${n.dbs} · ${n.records} ${L('εγγραφές','records')}</span></div><div class="row"><b>${L('Φωτογραφίες/ήχοι','Photos/audio')}</b><span>${n.files}</span></div>
+ ${d.origin&&d.origin!==location.origin?`<div class="warn">${L('Το αρχείο φτιάχτηκε σε άλλη διεύθυνση','The file was made at another address')} (${esc(d.origin)}).</div>`:''}
+ <label class="ck"><input type="checkbox" id="rcl"> <span>${L('Καθαρή επαναφορά: σβήσε πρώτα όλα τα τωρινά δεδομένα των εφαρμογών σε αυτό το κινητό.','Clean restore: first erase all current app data on this phone.')}</span></label>
+ <button class="big org" onclick="doRestore()">📥 ${L('ΕΠΑΝΑΦΟΡΑ ΤΩΡΑ','RESTORE NOW')}<small>${L('τα δεδομένα από το αρχείο γράφονται πάνω στα τωρινά','data from the file overwrite the current ones')}</small></button>`;st('')}
+async function doRestore(){const d=RD;if(!d)return;if(!confirm(L('Να γίνει επαναφορά; Τα δεδομένα των εφαρμογών που υπάρχουν στο αρχείο θα αντικαταστήσουν τα τωρινά.\n\nΚλείσε πρώτα τις άλλες εφαρμογές.','Restore now? The app data in the file will replace the current data.\n\nClose the other apps first.')))return;
+ prog(0);try{if($('#rcl').checked){const keep={};['allbk_lang','allbk_last'].forEach(k=>{const v=localStorage.getItem(k);if(v!=null)keep[k]=v});localStorage.clear();Object.entries(keep).forEach(([k,v])=>localStorage.setItem(k,v));
+   for(const n of await idbList()){try{await idbDel(n)}catch(e){}}}
+  let i=0;const ks=Object.entries(d.ls||{});for(const [k,v] of ks){try{localStorage.setItem(k,v)}catch(e){throw new Error(L('Γέμισε ο χώρος του browser','Browser storage is full'))}}
+  const D=d.idb||[];for(const x of D){st(`📥 ${DBN[x.name]||x.name}…`);prog(i++/Math.max(1,D.length));await idbDel(x.name);const db=await idbMake(x);await idbFill(db,x);db.close()}
+  prog(1);st(`✅ ${L('Έγινε επαναφορά','Restored')}: ${ks.length} ${L('ρυθμίσεις','settings')} · ${D.length} ${L('βάσεις','databases')}. ${L('Άνοιξε τώρα τις εφαρμογές σου.','Now open your apps.')}`,'#2ecc71');scan()}
+ catch(e){st('❌ '+(e&&e.message==='blocked'?L('Κάποια εφαρμογή είναι ανοιχτή. Κλείσ’ την (και τις καρτέλες της) και ξαναπάτα «Επαναφορά».','An app is still open. Close it (and its tabs) and press “Restore” again.'):(e&&e.message||e)),'#ff6b6b')}finally{setTimeout(()=>prog(null),800)}}
+/* ---------- σελίδα ---------- */
+function page(){document.title=L('Αντίγραφο όλων – Backup','All apps backup');document.documentElement.lang=EN?'en':'el';$('#ttl').textContent='💾 '+L('Αντίγραφο όλων','All apps backup');$('#lg').textContent=EN?'ΕΛ':'EN';
+ $('#m').innerHTML=`<div class="muted" style="margin-top:4px">${L('Ένα αρχείο με τα δεδομένα <b>όλων</b> των εφαρμογών σου σε αυτό το κινητό (Επιβίωση 72+, Overland, RISQ, DD, Attendance, Ταμείο, Βάρδιες…). Το στέλνεις στο Cloud και, αν χαθεί ή αλλάξεις κινητό, το φορτώνεις ξανά εδώ.','One file with the data of <b>all</b> your apps on this phone (Survival 72+, Overland, RISQ, DD, Attendance, Cash box, Watches…). Send it to the cloud and, if the phone is lost or replaced, load it back here.')}</div>
+ <div class="box"><h2>🔍 ${L('Τι υπάρχει σε αυτό το κινητό','What is on this phone')}</h2><div id="scan"></div><button class="btn" style="margin-top:8px" onclick="scan()">↻ ${L('Ξανά','Again')}</button></div>
+ <div class="box"><h2>☁️ ${L('Αντίγραφο στο Cloud','Backup to the cloud')}</h2><div id="last" class="muted"></div>
+ <label class="ck"><input type="checkbox" id="cdb" checked> <span>${L('Μαζί με βάσεις δεδομένων, φωτογραφίες και ηχογραφήσεις (μεγαλύτερο αρχείο).','Include databases, photos and recordings (bigger file).')}</span></label>
+ <label class="ck"><input type="checkbox" id="csec"> <span>🔑 ${L('Μαζί με τα κλειδιά API (π.χ. Claude). Μόνο αν το αρχείο πάει σε δικό σου, κλειδωμένο Cloud.','Include API keys (e.g. Claude). Only if the file goes to your own, locked cloud.')}</span></label>
+ <button class="big grn" id="bcl" onclick="doBackup('cloud')">☁️ ${L('ΑΠΟΘΗΚΕΥΣΗ ΣΤΟ CLOUD','SAVE TO THE CLOUD')}<small>${L('Google Drive · iCloud · email · Viber','Google Drive · iCloud · email · Viber')}</small></button>
+ <button class="big blu" id="bdl" onclick="doBackup('file')" style="padding:12px">⬇️ ${L('Κατέβασμα αρχείου στο κινητό','Download the file to the phone')}</button>
+ <div class="bar" id="bar"><i></i></div><div id="st"></div></div>
+ <div class="box"><h2>📥 ${L('Επαναφορά από αρχείο','Restore from a file')}</h2><div class="muted">${L('Νέο κινητό ή σβήστηκαν τα δεδομένα; Κατέβασε το αρχείο από το Drive/iCloud και διάλεξέ το εδώ.','New phone or data lost? Download the file from Drive/iCloud and pick it here.')}</div>
+ <input type="file" id="rf" accept=".json,.txt,application/json,text/plain" style="margin-top:10px;width:100%;color:var(--mut)" onchange="pick(this.files[0])"><div id="rinfo"></div></div>
+ <div class="box"><h2>📖 ${L('Πώς πάει στο Cloud','How it goes to the cloud')}</h2>
+ <ol><li>${L('Πάτα <b>☁️ ΑΠΟΘΗΚΕΥΣΗ ΣΤΟ CLOUD</b>.','Press <b>☁️ SAVE TO THE CLOUD</b>.')}</li>
+ <li><b>Android:</b> ${L('στο μενού κοινοποίησης διάλεξε <b>Drive</b> → φάκελο (π.χ. «Backup κινητού») → <b>Αποθήκευση</b>.','in the share menu choose <b>Drive</b> → a folder (e.g. “Phone backup”) → <b>Save</b>.')}</li>
+ <li><b>iPhone:</b> ${L('διάλεξε <b>Αποθήκευση στα Αρχεία</b> → <b>iCloud Drive</b>.','choose <b>Save to Files</b> → <b>iCloud Drive</b>.')}</li>
+ <li>${L('Αν δεν ανοίξει μενού: το αρχείο πάει στις <b>Λήψεις</b> – ανέβασέ το από εκεί στο Drive/iCloud ή στείλ’ το στο email σου.','If no menu opens: the file goes to <b>Downloads</b> – upload it from there to Drive/iCloud or email it to yourself.')}</li></ol>
+ <div class="tip">${L('Κάνε αντίγραφο <b>μία φορά την εβδομάδα</b> και πάντα πριν από ταξίδι, μπάρκο ή αλλαγή κινητού. Κράτα τα 2–3 τελευταία αρχεία.','Make a backup <b>once a week</b> and always before a trip, joining a ship or changing phone. Keep the last 2–3 files.')}</div>
+ <div class="warn">${L('Το αρχείο έχει προσωπικά στοιχεία (κάρτα υγείας, επαφές, σημειώσεις, φωτογραφίες). Βάλ’ το μόνο σε δικό σου λογαριασμό με κωδικό – όχι σε κοινόχρηστους φακέλους.','The file contains personal data (health card, contacts, notes, photos). Keep it only in your own password-protected account – not in shared folders.')}</div>
+ <div class="muted">${L('Δεν μπαίνουν: οι χάρτες offline (ξανακατεβαίνουν), και οι εφαρμογές Android (APK) Hull Steel / Θερμόμετρο, που έχουν δικό τους αντίγραφο (⚙). Στο iPhone, όσες εφαρμογές έχεις βάλει στην αρχική οθόνη μπορεί να κρατάνε δικά τους, χωριστά δεδομένα από το Safari.','Not included: offline maps (they download again), and the Android apps (APK) Hull Steel / Thermometer, which have their own backup (⚙). On iPhone, apps added to the home screen may keep their own data, separate from Safari.')}</div></div>
+ <footer>© George Barbaris · ${L('Τα δεδομένα σου μένουν στο κινητό σου – φεύγουν μόνο όταν στείλεις εσύ το αρχείο.','Your data stays on your phone – it leaves only when you send the file.')}</footer>`;
+ showLast();scan()}
+page();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script></body></html>
