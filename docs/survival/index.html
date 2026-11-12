@@ -2083,7 +2083,7 @@ function setLang(l){try{localStorage.setItem('sv_lang',JSON.stringify(l))}catch(
 const encURI=s=>encodeURIComponent(trS(String(s)));
 const $=s=>document.querySelector(s),M=$('#m');
 const esc=s=>UX(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const APP_V='28',APP_D='12/11/2026';
+const APP_V='29',APP_D='12/11/2026';
 const LS={g(k,d){try{const v=localStorage.getItem('sv_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},s(k,v){try{localStorage.setItem('sv_'+k,JSON.stringify(v))}catch(e){}}};
 let fs=LS.g('fs',19);document.documentElement.style.setProperty('--fs',fs+'px');
 function fz(d){fs=Math.max(15,Math.min(28,fs+d*2));LS.s('fs',fs);document.documentElement.style.setProperty('--fs',fs+'px')}
@@ -2792,7 +2792,7 @@ function sendPos(){if(!pos){alert('Περίμενε να βρεθεί η θέσ�
 function copyPos(){if(!pos)return alert('Περίμενε το GPS.');const t=posTxt();(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>alert('Αντιγράφηκε.'),()=>prompt('Αντέγραψε:',t))}
 function startGeo(){if(geoW!==null)return;if(!navigator.geolocation){$('#gps').textContent='Το κινητό δεν έχει GPS διαθέσιμο.';return}
  geoW=navigator.geolocation.watchPosition(p=>{const c=p.coords;pos={lat:c.latitude,lon:c.longitude,acc:c.accuracy,alt:c.altitude,altAcc:c.altitudeAccuracy,spd:c.speed,hd:c.heading,t:p.timestamp};
-  if(rec&&c.accuracy<60){const l=trk[trk.length-1];if(!l||dist(l,pos)>15){trk.push({lat:+pos.lat.toFixed(6),lon:+pos.lon.toFixed(6)});if(trk.length>3000)trk.shift();LS.s('trk',trk)}}
+  if(rec)trkAdd(pos);
   upd();draw();wxAlt()},e=>{const g=$('#gps');if(g)g.innerHTML=e.code===1?'❌ Δεν δόθηκε άδεια τοποθεσίας.<br><small class="muted">iPhone: Ρυθμίσεις → Απόρρητο → Υπηρεσίες τοποθεσίας → Safari → «Κατά τη χρήση».</small>':'Δεν βρέθηκε ακόμα θέση. Βγες σε ανοιχτό χώρο με θέα στον ουρανό.'},{enableHighAccuracy:true,maximumAge:2000,timeout:60000})}
 function stopGeo(){if(geoW!==null){navigator.geolocation.clearWatch(geoW);geoW=null}}
 /* v27: και το Chrome (Android, έκδ. 156+) έχει πλέον requestPermission – πριν η εφαρμογή το περνούσε για iPhone, άκουγε το
@@ -3718,6 +3718,137 @@ if(LANG==='en'){a.title=a.te;a.sub=a.se;a.blocks.forEach(b=>{b.k=b.x;b.x=b.e})}D
 /* ===== v26: μεταφράσεις για τα νέα/αλλαγμένα κείμενα + μόνιμη αποθήκευση (να μη σβήνονται έγγραφα/ημερολόγιο) ===== */
 if(LANG==='en')Object.assign(TRM,{"Επαφές έκτακτης ανάγκης":"Emergency contacts","📡 Βρίσκω τη θέση σου… (έως 4″)":"📡 Finding your location… (up to 4″)","αν δεν πατήσω «Έφτασα» → συναγερμός + SMS με θέση":"if I don't tap «I arrived» → alarm + SMS with location","🚶‍♀️ «Συνόδευσέ με σπίτι» πριν ξεκινήσεις. Αν δεν πατήσεις «Έφτασα», χτυπάει συναγερμός και ανοίγει έτοιμο SMS με τη θέση σου – πατάς «Αποστολή» εσύ ή όποιος σε βρει. Κράτα την εφαρμογή ανοιχτή.":"🚶‍♀️ «Walk me home» before you set off. If you don't tap «I arrived», an alarm rings and a ready SMS with your location opens – you (or whoever finds you) tap «Send». Keep the app open."});
 try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{})}catch(e){}
+
+/* ===================== v29: 📡 PLOTTER – σαν ραντάρ/Garmin: N-UP / H-UP / C-UP, RM / TM, κλίμακες, χάρτης OpenTopoMap offline ===================== */
+const PLR=[50,100,200,500,1000,2000,5000,10000,20000,50000];
+let PL=Object.assign({o:'N',m:'RM',r:'A',map:0,c:null},LS.g('plot',{}));const plS=()=>LS.s('plot',PL);
+let plLast=0,plAvg=null;
+/* Web Mercator (ίδια προβολή με τα πλακίδια) → τοπικά μέτρα γύρω από το κέντρο */
+const MR=6378137,mX=lon=>MR*lon*Math.PI/180,mY=lat=>MR*Math.log(Math.tan(Math.PI/4+lat*Math.PI/360));
+function plCog(){if(pos&&pos.hd!=null&&!isNaN(pos.hd)&&(pos.spd||0)>0.6)return pos.hd;const n=trk.length;if(n>=2){for(let i=n-2;i>=0&&i>n-15;i--){if(dist(trk[i],trk[n-1])>30)return brg(trk[i],trk[n-1])}}return null}
+function plSog(){if(pos&&pos.spd!=null&&!isNaN(pos.spd))return pos.spd;const n=trk.length;if(n>=2&&trk[n-1].t&&trk[n-2].t){const dt=(trk[n-1].t-trk[n-2].t)/1000;if(dt>0&&dt<120)return dist(trk[n-2],trk[n-1])/dt}return null}
+/* ακριβής καταγραφή: μέσος όρος σταθμισμένος με την ακρίβεια, απόρριψη άλματων, καθόλου «θόρυβος» όταν στέκεσαι */
+function trkAdd(p){if(p.acc>60||(p.acc>35&&trk.length))return;const t=p.t||Date.now();
+ /* φίλτρο Kalman (σαν τα GPS χειρός): ζυγίζει κάθε μέτρηση με την ακρίβειά της, σβήνει το «τρέμουλο» */
+ if(!plAvg||t-plAvg.t>120000){plAvg={lat:p.lat,lon:p.lon,P:p.acc*p.acc,t,v:0,n:1};if(trk.length)return}else{const dt=Math.max(.2,(t-plAvg.t)/1000),j=dist(plAvg,p);
+  if(j>50&&j/dt>70)return;const sp=p.spd!=null&&!isNaN(p.spd)?p.spd:plAvg.v;plAvg.P+=(1.5+sp*sp)*dt;const K=plAvg.P/(plAvg.P+p.acc*p.acc);
+  const ol={lat:plAvg.lat,lon:plAvg.lon};plAvg.lat+=K*(p.lat-plAvg.lat);plAvg.lon+=K*(p.lon-plAvg.lon);plAvg.P*=(1-K);plAvg.v=plAvg.v*.7+.3*dist(ol,plAvg)/dt;plAvg.t=t;plAvg.n++}
+ const l=trk[trk.length-1],sp=Math.max(6,Math.min(20,p.acc*1.1));if(!l&&plAvg.n<3)return;if(l&&dist(l,plAvg)<sp)return;
+ trk.push({lat:+plAvg.lat.toFixed(6),lon:+plAvg.lon.toFixed(6),t,a:Math.round(Math.sqrt(plAvg.P))});if(trk.length>20000)trk.shift();LS.s('trk',trk)}
+/* πλακίδια χάρτη: cache «e72tiles» (+ ό,τι έχει κατεβάσει το Overland’s Habit στο ίδιο κινητό) */
+const TILEC='e72tiles',plTI=new Map();
+const tUrl=(z,x,y)=>`https://${'abc'[Math.abs(x+y)%3]}.tile.opentopomap.org/${z}/${x}/${y}.png`;
+function plTile(z,x,y){const k=z+'/'+x+'/'+y;let t=plTI.get(k);if(t)return t.ok?t.img:null;t={ok:0,img:new Image()};plTI.set(k,t);if(plTI.size>400){const f=plTI.keys().next().value;plTI.delete(f)}
+ const u=tUrl(z,x,y),done=b=>{t.img.onload=()=>{t.ok=1;plDirty()};t.img.src=URL.createObjectURL(b)};
+ (window.caches?caches.match(u,{ignoreSearch:true}):Promise.resolve(null)).then(r=>{if(r)return r.blob().then(done);if(!navigator.onLine)return;return fetch(u,{mode:'cors'}).then(r=>{if(!r.ok)throw 0;const c=r.clone();caches.open(TILEC).then(cc=>cc.put(u,c)).catch(()=>{});return r.blob()}).then(done)}).catch(()=>{plTI.delete(k)});return null}
+let plDT=null;function plDirty(){if(plDT)return;plDT=setTimeout(()=>{plDT=null;draw()},120)}
+async function plDownload(km){if(!pos){alert(L2('Περίμενε να βρεθεί η θέση σου (GPS).','Wait for your GPS position.'));return}if(!navigator.onLine){alert(L2('Θέλει internet για να κατέβει ο χάρτης.','Internet is needed to download the map.'));return}
+ const dLa=km/111.32,dLo=km/(111.32*Math.cos(rad(pos.lat))),b={n:pos.lat+dLa,s:pos.lat-dLa,w:pos.lon-dLo,e:pos.lon+dLo},t2x=(lon,z)=>Math.floor((lon+180)/360*2**z),t2y=(lat,z)=>{const r=rad(lat);return Math.floor((1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*2**z)};
+ const U=[];for(let z=11;z<=16;z++)for(let x=t2x(b.w,z);x<=t2x(b.e,z);x++)for(let y=t2y(b.n,z);y<=t2y(b.s,z);y++)U.push(tUrl(z,x,y));
+ if(!confirm(L2(`Θα κατέβουν ${U.length} κομμάτια χάρτη (~${Math.round(U.length*22/1024)} MB) για ${km} km γύρω σου. Θέλει Wi-Fi. Συνέχεια;`,`${U.length} map tiles (~${Math.round(U.length*22/1024)} MB) for ${km} km around you will be downloaded. Use Wi-Fi. Continue?`)))return;
+ const c=await caches.open(TILEC),st=$('#pldl');let n=0,bad=0,i=0;wake(1);
+ const work=async()=>{while(i<U.length){const u=U[i++];try{if(!(await caches.match(u))){const r=await fetch(u,{mode:'cors'});if(r.ok)await c.put(u,r);else bad++}}catch(e){bad++}n++;if(st)st.textContent=`📥 ${n}/${U.length}${bad?' · ⚠️'+bad:''}`}};
+ await Promise.all([work(),work(),work(),work()]);if(st)st.textContent=L2(`✅ Έτοιμο: ${n-bad} κομμάτια – ο χάρτης δουλεύει πια χωρίς internet εδώ γύρω.`,`✅ Done: ${n-bad} tiles – the map now works offline around here.`);PL.map=1;plS();draw()}
+/* ---- το σχέδιο ---- */
+function draw(){const cv=$('#cv');if(!cv)return;const x=cv.getContext('2d'),W=cv.width,H=cv.height,CX=W/2,CY=H/2,RAD=W/2-40;plLast=Date.now();
+ const w=LS.g('wps',[]),T=tgt!=null?w[tgt]:null,me=pos||trk[trk.length-1]||w[0];
+ x.fillStyle='#07111c';x.fillRect(0,0,W,H);
+ if(!me){x.fillStyle='#a9b8c8';x.font='28px sans-serif';x.textAlign='center';x.fillText(L2('Περιμένω GPS…','Waiting for GPS…'),CX,CY);return}
+ /* κέντρο: RM = εσύ στο κέντρο, TM = σταθερό κέντρο (ξανακεντράρει στο 70%) */
+ let c=me;if(PL.m==='TM'){if(!PL.c)PL.c={lat:me.lat,lon:me.lon};c=PL.c}
+ /* κλίμακα */
+ let rng;if(PL.r==='A'){let mx=80;[...trk.slice(-400),...(T?[T]:[]),...(trk[0]?[trk[0]]:[])].forEach(p=>mx=Math.max(mx,dist(c,p)));rng=PLR.find(r=>r>=mx*1.12)||PLR[PLR.length-1]}else rng=PLR[PL.r];
+ if(PL.m==='TM'&&pos&&dist(c,pos)>rng*.7){PL.c={lat:pos.lat,lon:pos.lon};c=PL.c;plS()}
+ const ppm=RAD/rng,cs=Math.cos(rad(c.lat)),cx0=mX(c.lon),cy0=mY(c.lat);
+ const cog=plCog(),up=PL.o==='H'?(hdg!=null?hdg:cog||0):PL.o==='C'?(cog!=null?cog:(hdg||0)):0,ro=-rad(up);
+ const L0=p=>[(mX(p.lon)-cx0)*cs*ppm,-(mY(p.lat)-cy0)*cs*ppm],P=p=>{const [a,b]=L0(p);return[CX+a*Math.cos(ro)-b*Math.sin(ro),CY+a*Math.sin(ro)+b*Math.cos(ro)]};
+ x.save();x.beginPath();x.arc(CX,CY,RAD,0,7);x.clip();
+ /* χάρτης */
+ if(PL.map){const res=1/ppm/cs,z=Math.max(3,Math.min(17,Math.round(Math.log2(2*Math.PI*MR/256/res)))),tr=2*Math.PI*MR/256/2**z,tpx=256*tr*cs*ppm,N=2**z,
+   wx=cx0+Math.PI*MR,wy=Math.PI*MR-cy0,tx0=Math.floor(wx/(256*tr)),ty0=Math.floor(wy/(256*tr)),k=Math.ceil(RAD*1.42/tpx)+1;
+  x.save();x.translate(CX,CY);x.rotate(ro);x.globalAlpha=.85;
+  for(let i=-k;i<=k;i++)for(let j=-k;j<=k;j++){const tx=tx0+i,ty=ty0+j;if(ty<0||ty>=N)continue;const img=plTile(z,((tx%N)+N)%N,ty);if(!img)continue;
+   const ox=((tx*256*tr)-wx)*cs*ppm,oy=((ty*256*tr)-wy)*cs*ppm;x.drawImage(img,ox,oy,tpx+.6,tpx+.6)}
+  x.restore();x.fillStyle='rgba(7,17,28,.25)';x.fillRect(0,0,W,H)}
+ /* κύκλοι απόστασης */
+ x.strokeStyle='#2a6a8a';x.lineWidth=1.5;x.setLineDash([6,8]);for(let i=1;i<=3;i++){x.beginPath();x.arc(CX,CY,RAD*i/4,0,7);x.stroke()}x.setLineDash([]);
+ x.strokeStyle='#2a6a8a';x.beginPath();x.moveTo(CX-RAD,CY);x.lineTo(CX+RAD,CY);x.moveTo(CX,CY-RAD);x.lineTo(CX,CY+RAD);x.globalAlpha=.35;x.stroke();x.globalAlpha=1;
+ /* ίχνος */
+ if(trk.length>1){x.strokeStyle='#fcbf49';x.lineWidth=5;x.lineJoin='round';x.beginPath();trk.forEach((p,i)=>{const [a,b]=P(p);i?x.lineTo(a,b):x.moveTo(a,b)});x.stroke();
+  const s=trk[0],[a,b]=P(s);x.font='34px sans-serif';x.textAlign='center';x.fillText('🏁',a+8,b+2)}
+ /* γραμμή προς στόχο */
+ if(T&&pos){const [a,b]=P(pos),[c2,d2]=P(T);x.strokeStyle='#fcbf49';x.lineWidth=2.5;x.setLineDash([10,8]);x.beginPath();x.moveTo(a,b);x.lineTo(c2,d2);x.stroke();x.setLineDash([])}
+ /* σημεία */
+ w.forEach((p,i)=>{const [a,b]=P(p);x.textAlign='center';x.font='32px sans-serif';x.fillText(tgt===i?'🎯':'⭐',a,b+11);x.font='bold 26px sans-serif';x.lineWidth=6;x.strokeStyle='#07111c';x.strokeText(p.n,a,b-22);x.fillStyle=tgt===i?'#fcbf49':'#fff';x.fillText(p.n,a,b-22)});
+ /* εσύ: ακρίβεια, διάνυσμα πορείας (COG, 2′), γραμμή κεφαλής */
+ if(pos){const [a,b]=P(pos);x.fillStyle='rgba(58,134,255,.2)';x.beginPath();x.arc(a,b,Math.max(8,pos.acc*ppm),0,7);x.fill();
+  const sog=plSog();if(cog!=null&&sog>0.4){const L2m=sog*120,ang=rad(cog-up);x.strokeStyle='#2ecc71';x.lineWidth=4;x.beginPath();x.moveTo(a,b);x.lineTo(a+Math.sin(ang)*L2m*ppm,b-Math.cos(ang)*L2m*ppm);x.stroke()}
+  const hh=hdg!=null?hdg:cog;if(hh!=null){const ang=rad(hh-up);x.strokeStyle='#ffffff';x.lineWidth=2;x.beginPath();x.moveTo(a,b);x.lineTo(a+Math.sin(ang)*RAD*2,b-Math.cos(ang)*RAD*2);x.globalAlpha=.6;x.stroke();x.globalAlpha=1;
+   x.save();x.translate(a,b);x.rotate(ang);x.fillStyle='#3a86ff';x.strokeStyle='#fff';x.lineWidth=3;x.beginPath();x.moveTo(0,-20);x.lineTo(13,14);x.lineTo(0,7);x.lineTo(-13,14);x.closePath();x.fill();x.stroke();x.restore()}
+  else{x.fillStyle='#3a86ff';x.strokeStyle='#fff';x.lineWidth=4;x.beginPath();x.arc(a,b,12,0,7);x.fill();x.stroke()}}
+ x.restore();
+ /* κλίμακα μοιρών γύρω-γύρω (σαν ραντάρ) */
+ x.strokeStyle='#5c7d9a';x.lineWidth=2;x.beginPath();x.arc(CX,CY,RAD,0,7);x.stroke();x.fillStyle='#a9b8c8';x.textAlign='center';x.textBaseline='middle';
+ for(let d=0;d<360;d+=5){const a=rad(d-up),r1=RAD,r2=RAD+(d%30?7:14);x.strokeStyle=d%30?'#3d5873':'#a9b8c8';x.lineWidth=d%30?1.5:2.5;x.beginPath();x.moveTo(CX+Math.sin(a)*r1,CY-Math.cos(a)*r1);x.lineTo(CX+Math.sin(a)*r2,CY-Math.cos(a)*r2);x.stroke();
+  if(d%30===0){x.font=d===0?'bold 30px sans-serif':'21px sans-serif';x.fillStyle=d===0?'#ff4d4d':'#a9b8c8';x.fillText(d===0?L2('Β','N'):String(d).padStart(3,'0'),CX+Math.sin(a)*(RAD+27),CY-Math.cos(a)*(RAD+27))}}
+ x.textBaseline='alphabetic';
+ /* ετικέτες γωνιών */
+ x.font='bold 30px sans-serif';x.textAlign='left';x.fillStyle='#e8f1ff';x.fillText(PL.o==='N'?'N-UP':PL.o==='H'?'H-UP':'C-UP',8,32);x.fillText(PL.m,8,66);
+ x.textAlign='right';x.fillText(fmD(rng)+(PL.r==='A'?' A':''),W-8,32);x.font='22px sans-serif';x.fillStyle='#a9b8c8';x.fillText(L2('κύκλοι ','rings ')+fmD(rng/4),W-8,62);
+ if(PL.o!=='N'){x.textAlign='left';x.fillStyle='#fcbf49';x.font='bold 28px sans-serif';x.fillText((PL.o==='H'?'HDG ':'COG ')+String(Math.round(up)).padStart(3,'0')+'°',8,H-12)}
+ plInfo(cog)}
+function plInfo(cog){const e=$('#plinfo');if(!e)return;const w=LS.g('wps',[]),T=tgt!=null?w[tgt]:null,sog=plSog();let tl=0;for(let i=1;i<trk.length;i++)tl+=dist(trk[i-1],trk[i]);
+ const F=(l,v,c)=>`<div style="background:#0d1b2a;border:1px solid var(--line);border-radius:10px;padding:6px 4px;text-align:center"><div class="muted" style="font-size:.7em">${l}</div><div class="mono" style="font-weight:800;font-size:1.05em;${c?'color:'+c:''}">${v}</div></div>`;
+ const t0=trk[0]&&trk[0].t,el=t0?Math.round((Date.now()-t0)/60000):null;
+ let h=F('COG',cog!=null?String(Math.round(cog)).padStart(3,'0')+'°':'—')+F('SOG',sog!=null?(sog*3.6).toFixed(1)+' km/h':'—')+F('HDG',hdg!=null?String(Math.round(hdg)).padStart(3,'0')+'°':'—')+F(L2('Ακρίβεια','Accuracy'),pos?'±'+Math.round(pos.acc)+' m':'—',pos&&pos.acc>20?'#f77f00':'#2ecc71');
+ if(T&&pos){const d=dist(pos,T),b=brg(pos,T);h+=F('BRG → '+esc(T.n).slice(0,10),String(Math.round(b)).padStart(3,'0')+'°','#fcbf49')+F('RNG',fmD(d),'#fcbf49')+F('ETA',sog>0.4?Math.round(d/sog/60)+'′':'—')+F(L2('Στρίψε','Turn'),hdg!=null||cog!=null?(()=>{const dd=((b-(hdg!=null?hdg:cog))%360+540)%360-180;return Math.abs(dd)<10?'⬆':(dd>0?'➡ ':'⬅ ')+Math.abs(Math.round(dd))+'°'})():'—')}
+ h+=F(L2('Διαδρομή','Track'),fmD(tl))+F(L2('Σημεία','Points'),trk.length)+F(L2('Χρόνος','Time'),el!=null?(el>=60?Math.floor(el/60)+'h'+String(el%60).padStart(2,'0'):el+'′'):'—')+F('REC',rec?'⏺ ON':'OFF',rec?'#ff4d4d':'');
+ e.innerHTML=`<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px">${h}</div>`}
+function plSet(k,v){if(k==='o')PL.o=v;if(k==='m'){PL.m=v;PL.c=pos?{lat:pos.lat,lon:pos.lon}:null}if(k==='r')PL.r=v;if(k==='z'){const i=PL.r==='A'?3:PL.r;PL.r=Math.max(0,Math.min(PLR.length-1,i+v))}if(k==='map')PL.map=PL.map?0:1;
+ plS();if(PL.o==='H'&&!orientOn)startOrient();plBar();draw()}
+function plBar(){const e=$('#plbar');if(!e)return;const B=(on,t,f)=>`<button class="btn ${on?'p':''}" style="padding:7px 9px" onclick="${f}">${t}</button>`;
+ e.innerHTML=`<div class="tools" style="margin:4px 0;gap:5px">${B(PL.o==='N','N-UP',"plSet('o','N')")}${B(PL.o==='H','H-UP',"plSet('o','H')")}${B(PL.o==='C','C-UP',"plSet('o','C')")}<span style="width:6px"></span>${B(PL.m==='RM','RM',"plSet('m','RM')")}${B(PL.m==='TM','TM',"plSet('m','TM')")}</div>
+ <div class="tools" style="margin:4px 0;gap:5px">${B(0,'➖',"plSet('z',1)")}${B(PL.r==='A','AUTO',"plSet('r','A')")}${B(0,'➕',"plSet('z',-1)")}<span style="width:6px"></span>${B(PL.map,'🗺️ '+L2('Χάρτης','Map'),"plSet('map')")}${B(0,'📥 '+L2('Χάρτης offline','Offline map'),'plDlAsk()')}</div>
+ <div class="tools" style="margin:4px 0;gap:5px">${B(0,'🚩 MARK','plMark()')}${B(0,'🏁 '+L2('Πίσω στην αφετηρία','Back to start'),'plHome()')}${B(0,'↩️ '+L2('Ίδιο δρόμο πίσω','Same way back'),"go('t/back')")}${B(0,'📖 '+L2('Οδηγίες','Guide'),"go('a/plotter')")}</div><div id="pldl" class="muted" style="text-align:center"></div>`}
+function plDlAsk(){const k=prompt(L2('Πόσα km γύρω σου; (1–5)','How many km around you? (1–5)'),'2');const n=Math.max(.5,Math.min(5,+String(k).replace(',','.')||0));if(k&&n)plDownload(n)}
+function plMark(){if(!pos){alert(L2('Περίμενε το GPS.','Wait for GPS.'));return}const w=LS.g('wps',[]),n='🚩 '+tnow(Date.now());w.push({n,lat:pos.lat,lon:pos.lon,t:Date.now()});LS.s('wps',w);vib([80,40,80]);refWps();draw()}
+function plHome(){if(!trk.length){alert(L2('Δεν υπάρχει καταγραφή. Πάτα «Κατέγραφε» στην αρχή της διαδρομής.','No track yet. Press “Record” at the start of your route.'));return}const s=trk[0],w=LS.g('wps',[]);let i=w.findIndex(p=>p.n.startsWith('🏁')&&Math.abs(p.lat-s.lat)<1e-6&&Math.abs(p.lon-s.lon)<1e-6);if(i<0){w.push({n:'🏁 '+L2('Αφετηρία','Start'),lat:s.lat,lon:s.lon,t:s.t||Date.now()});i=w.length-1;LS.s('wps',w)}setTgt(i);if(!orientOn)startOrient()}
+/* ξαναγράφει το κουτί του χάρτη στη σελίδα Πυξίδα */
+{const _c=compass;compass=function(){_c();const cv=$('#cv');if(!cv)return;const bx=cv.closest('.box');const b=bx.querySelector('b');if(b)b.textContent='📡 Plotter – '+L2('πορεία & επιστροφή','track & return');
+ cv.insertAdjacentHTML('beforebegin','<div id="plbar"></div>');cv.insertAdjacentHTML('afterend','<div id="plinfo" style="margin-top:6px"></div>');const m=$('#plinfo').nextElementSibling;if(m&&m.classList.contains('muted'))m.innerHTML=L2('🔵 εσύ (βέλος = πού κοιτάς) · πράσινο = πού πας (2′) · κίτρινο = η διαδρομή σου · 🏁 αφετηρία · ⭐ σημεία · 🎯 στόχος.','🔵 you (arrow = facing) · green = where you go (2 min) · yellow = your track · 🏁 start · ⭐ points · 🎯 target.');
+ cv.style.touchAction='manipulation';plBar();draw()}}
+/* γρήγορη ανανέωση όταν γυρίζει η πυξίδα σε H-UP */
+{const _o=onOr;onOr=function(e){_o(e);if(PL.o==='H'&&Date.now()-plLast>120)draw()}}
+/* οδηγός */
+(function(){const B=[
+['tip','Το plotter δουλεύει σαν το ραντάρ του βαποριού ή σαν ένα Garmin: εσύ, η διαδρομή σου, τα σημεία και ο στόχος σε κύκλους απόστασης. Δουλεύει χωρίς internet (ο χάρτης από κάτω μόνο αν τον κατεβάσεις πριν).','The plotter works like a ship’s radar or a Garmin: you, your track, your points and the target inside range rings. It works without internet (the background map only if you download it first).'],
+['h','Πριν φύγεις – 1 λεπτό','Before you leave – 1 minute'],
+['step','Βγες σε ανοιχτό χώρο. Περίμενε μέχρι η «Ακρίβεια» να γράψει ±10 m ή καλύτερα (πράσινο).','Go to an open spot. Wait until “Accuracy” shows ±10 m or better (green).'],
+['step','Πάτα «⏺ Κατέγραφε τη διαδρομή μου». Το πρώτο σημείο γίνεται 🏁 Αφετηρία.','Press “⏺ Record my route”. The first point becomes 🏁 Start.'],
+['step','Πάτα «💡 Οθόνη πάντα ανοιχτή» και κράτα την εφαρμογή ανοιχτή – με κλειδωμένο κινητό το GPS σταματάει.','Turn on “💡 Screen always on” and keep the app open – with the phone locked GPS stops.'],
+['step','Αν θες χάρτη από κάτω: «📥 Χάρτης offline» (θέλει Wi-Fi, 2–3 km γύρω σου).','If you want a map underneath: “📥 Offline map” (needs Wi-Fi, 2–3 km around you).'],
+['h','Τα κουμπιά – σαν ραντάρ','The buttons – like a radar'],
+['li','N-UP (North up): ο Βορράς πάντα πάνω, σαν χάρτης. Το καλύτερο για να καταλάβεις πού είσαι.','N-UP (North up): North always up, like a map. Best to understand where you are.'],
+['li','H-UP (Head up): πάνω είναι προς τα πού κοιτάς (πυξίδα κινητού). Στρίβεις εσύ, γυρίζει η εικόνα. Το πιο εύκολο όταν στέκεσαι και ψάχνεις κατεύθυνση.','H-UP (Head up): up is where you face (phone compass). You turn, the picture turns. Easiest when standing and looking for a direction.'],
+['li','C-UP (Course up): πάνω είναι προς τα πού ΠΡΑΓΜΑΤΙΚΑ προχωράς (από το GPS). Δεν το επηρεάζουν μέταλλα και μαγνήτες – το καλύτερο όταν περπατάς ή οδηγείς.','C-UP (Course up): up is where you REALLY move (from GPS). Metal and magnets do not affect it – best when walking or driving.'],
+['li','RM (Relative Motion): εσύ μένεις πάντα στο κέντρο, «κινείται» ο κόσμος γύρω σου.','RM (Relative Motion): you always stay in the centre, the world “moves” around you.'],
+['li','TM (True Motion): η εικόνα μένει ακίνητη και κινείσαι εσύ πάνω της. Όταν φτάσεις κοντά στην άκρη, ξανακεντράρει μόνο του.','TM (True Motion): the picture stays still and you move across it. Near the edge it recentres by itself.'],
+['li','➖ ➕ AUTO: κλίμακα 50 m – 50 km. Το AUTO χωράει μόνο του τη διαδρομή και τον στόχο. Οι διακεκομμένοι κύκλοι = ¼ της κλίμακας.','➖ ➕ AUTO: range 50 m – 50 km. AUTO fits your track and target by itself. Dashed rings = ¼ of the range.'],
+['li','Πράσινη γραμμή = πού θα είσαι σε 2 λεπτά (COG/SOG). Λευκή γραμμή = προς τα πού κοιτάς. Κίτρινη διακεκομμένη = ευθεία προς τον στόχο.','Green line = where you will be in 2 minutes (COG/SOG). White line = where you face. Yellow dashed = straight line to the target.'],
+['li','🚩 MARK: σημάδι εδώ με ένα πάτημα (διασταύρωση, πηγή, αυτοκίνητο). Βάζε σε κάθε στροφή.','🚩 MARK: one-tap mark here (junction, spring, car). Put one at every turn.'],
+['h','Γύρισμα πίσω (π.χ. από 1 km)','Getting back (e.g. from 1 km)'],
+['step','🏁 «Πίσω στην αφετηρία»: στόχος γίνεται η αφετηρία. Ακολούθα το κίτρινο βέλος – τα BRG/RNG δείχνουν πορεία και απόσταση.','🏁 “Back to start”: the start becomes the target. Follow the yellow arrow – BRG/RNG show bearing and distance.'],
+['step','Σε βουνό, δάσος, καπνό, σκοτάδι: «↩️ Ίδιο δρόμο πίσω» – σε πηγαίνει σημείο-σημείο από τη διαδρομή που ήρθες (ασφαλέστερο από την ευθεία, που μπορεί να έχει γκρεμό ή ρέμα).','Mountain, forest, smoke, dark: “↩️ Same way back” – leads you point by point along the way you came (safer than the straight line, which may cross a cliff or stream).'],
+['step','Τα τελευταία 10–20 m κοίτα γύρω σου: το GPS του κινητού έχει λάθος ±5–10 m (ένα Garmin ±3–5 m).','For the last 10–20 m look around: phone GPS has ±5–10 m error (a Garmin ±3–5 m).'],
+['h','Πόσο ακριβές είναι','How accurate it is'],
+['li','Η εφαρμογή κρατάει μέσο όρο από πολλές μετρήσεις, πετάει τα «άλματα» και δεν γράφει τίποτα όταν στέκεσαι – έτσι η γραμμή δεν «τρέμει».','The app averages many readings, throws away “jumps” and records nothing while you stand still – so the line does not “shake”.'],
+['li','Χειρότερο GPS: ανάμεσα σε ψηλά κτίρια, σε φαράγγι, μέσα σε πυκνό δάσος, μέσα σε αυτοκίνητο. Κράτα το κινητό ψηλά, στο πάνω μέρος του σακιδίου ή στο χέρι.','Worst GPS: between tall buildings, in a gorge, in dense forest, inside a car. Keep the phone high, on top of the backpack or in your hand.'],
+['li','Η πυξίδα (H-UP) θέλει «οκτάρια» για ρύθμιση και μακριά από μέταλλα. Αν διαφωνεί με το C-UP όταν περπατάς ευθεία, εμπιστέψου το C-UP (GPS).','The compass (H-UP) needs “figure-8” calibration and distance from metal. If it disagrees with C-UP while walking straight, trust C-UP (GPS).'],
+['li','Μπαταρία: GPS + οθόνη ≈ 10–15% την ώρα. Πάρε powerbank. Χαμηλή φωτεινότητα.','Battery: GPS + screen ≈ 10–15% per hour. Take a power bank. Low brightness.'],
+['warn','Το κινητό είναι βοήθημα. Στο βουνό να έχεις και χάρτη χαρτί, πυξίδα και να λες σε κάποιον πού πας και πότε γυρνάς.','The phone is an aid. In the mountains also carry a paper map and compass, and tell someone where you go and when you return.']];
+const a={cat:'wild',id:'plotter',emoji:'📡',title:'Plotter – πώς γυρίζεις πίσω με ακρίβεια',sub:'N-UP / H-UP / C-UP, RM / TM, σημάδια, επιστροφή',te:'Plotter – how to get back precisely',se:'N-UP / H-UP / C-UP, RM / TM, marks, return',blocks:B.map(([t,x,e])=>({t,x,e}))};
+if(LANG==='en'){a.title=a.te;a.sub=a.se;a.blocks.forEach(b=>{b.k=b.x;b.x=b.e})}D.push(a);byId[a.id]=a})();
+{const _a=art;art=function(id){_a(id);if(id==='plotter'){const h=M.querySelector('.tools');if(h)h.insertAdjacentHTML('afterend',`<button class="big blu notr" onclick="go('compass')">📡 ${L2('Άνοιξε το Plotter','Open the Plotter')}</button>`)}}}
 
 if(rec)startGeo();
 setTimeout(grdBar,300);
