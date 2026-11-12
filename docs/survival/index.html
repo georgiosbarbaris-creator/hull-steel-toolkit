@@ -3632,6 +3632,14 @@ TOOLS.splice(1,0,['kit','🎒','Το σακίδιό μου','τι έχει μέ�
 {const _a=art;art=function(id){_a(id);if(KIT_TPL.some(x=>x[0]===id)){const h=M.querySelector('h2');if(h)h.insertAdjacentHTML('afterend',`<button class="big blu notr" onclick="$('#kt')||0;go('kit');setTimeout(()=>{const s=$('#kt');if(s){s.value='${id}';$('#kn').focus()}},150)">🎒 ${L2('Φτιάξε το δικό σου – με ημερομηνίες λήξης','Build your own – with expiry dates')}<small>${L2('σημάδεψε τι έβαλες, γράψε πότε λήγει, πάρε υπενθύμιση','tick what you packed, enter expiry, get reminders')}</small></button>`)}}}
 if(LANG==='en')Object.assign(TRM,{"Το σακίδιό μου":"My kit"});
 
+/* ===== v24: 🗺️ Επίσημος χάρτης σημείων συγκέντρωσης – mysafetyplan.gov.gr ===== */
+const SAFEMAP='https://mysafetyplan.gov.gr/';
+const shelBox=()=>`<div class="box notr" style="border:2px solid var(--grn)"><div style="display:flex;gap:10px;align-items:center"><span style="font-size:2em">🗺️</span><div><b>${L2('Πού πάω; Επίσημος χάρτης ασφαλών σημείων','Where do I go? Official map of safe points')}</b><div class="muted">${L2('Σημεία συγκέντρωσης (γήπεδα, πλατείες, ανοιχτοί χώροι) του Δήμου σου – mysafetyplan.gov.gr (κράτος). Θέλει internet.','Your municipality’s assembly points (stadiums, squares, open spaces) – mysafetyplan.gov.gr (Greek state). Needs internet.')}</div></div></div>
+ <a class="big grn" href="${SAFEMAP}" target="_blank" rel="noopener" style="text-decoration:none;margin-top:8px">🗺️ ${L2('Βρες το κοντινότερο σημείο','Find the nearest point')}<small>mysafetyplan.gov.gr</small></a>
+ <div class="muted" style="font-size:.85em">💡 ${L2('Βρες το ΣΗΜΕΡΑ, για το σπίτι, τη δουλειά και το σχολείο. Πήγαινε εκεί μία φορά με τα πόδια και αποθήκευσέ το στην 🧭 Πυξίδα («Αποθήκευσε σημείο») – έτσι σε οδηγεί και χωρίς internet. Για καταφύγια πολέμου/άμαχου πληθυσμού ρώτα την Πολιτική Προστασία του Δήμου σου.','Find it TODAY for home, work and school. Walk there once and save it in the 🧭 Compass (“Save point”) – then it guides you even without internet. For war / civil-defence shelters ask your municipality’s civil protection office.')}</div></div>`;
+{const _p=phones;phones=function(){_p();M.insertAdjacentHTML('afterbegin',shelBox())}}
+{const _a=art;art=function(id){_a(id);if(['quake','quake_night','evac10','tsunami','wildfire','flood','war','nuclear','chem'].includes(id)){M.insertAdjacentHTML('beforeend',shelBox())}}}
+
 if(rec)startGeo();
 setTimeout(grdBar,300);
 $('#lgb').textContent=LANG==='en'?'ΕΛ':'EN';if(LANG==='en'){document.title='Survival 72+';window.__trAll()}render(location.hash.slice(1)||'home');
