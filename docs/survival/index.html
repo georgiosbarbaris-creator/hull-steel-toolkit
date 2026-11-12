@@ -2083,7 +2083,7 @@ function setLang(l){try{localStorage.setItem('sv_lang',JSON.stringify(l))}catch(
 const encURI=s=>encodeURIComponent(trS(String(s)));
 const $=s=>document.querySelector(s),M=$('#m');
 const esc=s=>UX(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const APP_V='29',APP_D='12/11/2026';
+const APP_V='30',APP_D='12/11/2026';
 const LS={g(k,d){try{const v=localStorage.getItem('sv_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},s(k,v){try{localStorage.setItem('sv_'+k,JSON.stringify(v))}catch(e){}}};
 let fs=LS.g('fs',19);document.documentElement.style.setProperty('--fs',fs+'px');
 function fz(d){fs=Math.max(15,Math.min(28,fs+d*2));LS.s('fs',fs);document.documentElement.style.setProperty('--fs',fs+'px')}
@@ -2792,7 +2792,7 @@ function sendPos(){if(!pos){alert('Περίμενε να βρεθεί η θέσ�
 function copyPos(){if(!pos)return alert('Περίμενε το GPS.');const t=posTxt();(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>alert('Αντιγράφηκε.'),()=>prompt('Αντέγραψε:',t))}
 function startGeo(){if(geoW!==null)return;if(!navigator.geolocation){$('#gps').textContent='Το κινητό δεν έχει GPS διαθέσιμο.';return}
  geoW=navigator.geolocation.watchPosition(p=>{const c=p.coords;pos={lat:c.latitude,lon:c.longitude,acc:c.accuracy,alt:c.altitude,altAcc:c.altitudeAccuracy,spd:c.speed,hd:c.heading,t:p.timestamp};
-  if(rec)trkAdd(pos);
+  altUpd(pos);if(rec)trkAdd(pos);
   upd();draw();wxAlt()},e=>{const g=$('#gps');if(g)g.innerHTML=e.code===1?'❌ Δεν δόθηκε άδεια τοποθεσίας.<br><small class="muted">iPhone: Ρυθμίσεις → Απόρρητο → Υπηρεσίες τοποθεσίας → Safari → «Κατά τη χρήση».</small>':'Δεν βρέθηκε ακόμα θέση. Βγες σε ανοιχτό χώρο με θέα στον ουρανό.'},{enableHighAccuracy:true,maximumAge:2000,timeout:60000})}
 function stopGeo(){if(geoW!==null){navigator.geolocation.clearWatch(geoW);geoW=null}}
 /* v27: και το Chrome (Android, έκδ. 156+) έχει πλέον requestPermission – πριν η εφαρμογή το περνούσε για iPhone, άκουγε το
@@ -3734,7 +3734,7 @@ function trkAdd(p){if(p.acc>60||(p.acc>35&&trk.length))return;const t=p.t||Date.
   if(j>50&&j/dt>70)return;const sp=p.spd!=null&&!isNaN(p.spd)?p.spd:plAvg.v;plAvg.P+=(1.5+sp*sp)*dt;const K=plAvg.P/(plAvg.P+p.acc*p.acc);
   const ol={lat:plAvg.lat,lon:plAvg.lon};plAvg.lat+=K*(p.lat-plAvg.lat);plAvg.lon+=K*(p.lon-plAvg.lon);plAvg.P*=(1-K);plAvg.v=plAvg.v*.7+.3*dist(ol,plAvg)/dt;plAvg.t=t;plAvg.n++}
  const l=trk[trk.length-1],sp=Math.max(6,Math.min(20,p.acc*1.1));if(!l&&plAvg.n<3)return;if(l&&dist(l,plAvg)<sp)return;
- trk.push({lat:+plAvg.lat.toFixed(6),lon:+plAvg.lon.toFixed(6),t,a:Math.round(Math.sqrt(plAvg.P))});if(trk.length>20000)trk.shift();LS.s('trk',trk)}
+ trk.push({lat:+plAvg.lat.toFixed(6),lon:+plAvg.lon.toFixed(6),t,a:Math.round(Math.sqrt(plAvg.P)),e:altNow(t)});if(trk.length>20000)trk.shift();LS.s('trk',trk)}
 /* πλακίδια χάρτη: cache «e72tiles» (+ ό,τι έχει κατεβάσει το Overland’s Habit στο ίδιο κινητό) */
 const TILEC='e72tiles',plTI=new Map();
 const tUrl=(z,x,y)=>`https://${'abc'[Math.abs(x+y)%3]}.tile.opentopomap.org/${z}/${x}/${y}.png`;
@@ -3849,6 +3849,76 @@ function plHome(){if(!trk.length){alert(L2('Δεν υπάρχει καταγρα
 const a={cat:'wild',id:'plotter',emoji:'📡',title:'Plotter – πώς γυρίζεις πίσω με ακρίβεια',sub:'N-UP / H-UP / C-UP, RM / TM, σημάδια, επιστροφή',te:'Plotter – how to get back precisely',se:'N-UP / H-UP / C-UP, RM / TM, marks, return',blocks:B.map(([t,x,e])=>({t,x,e}))};
 if(LANG==='en'){a.title=a.te;a.sub=a.se;a.blocks.forEach(b=>{b.k=b.x;b.x=b.e})}D.push(a);byId[a.id]=a})();
 {const _a=art;art=function(id){_a(id);if(id==='plotter'){const h=M.querySelector('.tools');if(h)h.insertAdjacentHTML('afterend',`<button class="big blu notr" onclick="go('compass')">📡 ${L2('Άνοιξε το Plotter','Open the Plotter')}</button>`)}}}
+
+/* ===================== v30: ⛰️ ΥΨΟΜΕΤΡΙΚΗ – ανάβαση / κατάβαση / κλίση / προφίλ (σαν το Garmin) =====================
+   Υψόμετρο GPS → φίλτρο Kalman (σβήνει το «τρέμουλο» ±10–20 m) → σε κάθε σημείο της διαδρομής (e).
+   Ανάβαση/κατάβαση με κατώφλι 4 m (ο θόρυβος δεν «φουσκώνει» τα μέτρα), υψομετρικό προφίλ, πόσο ανεβαίνεις/κατεβαίνεις
+   για να γυρίσεις από τον ίδιο δρόμο, διόρθωση υψομέτρου σε γνωστό σημείο. Created by George Barbaris */
+const ALT={v:null,P:0,t:0},ETH=4;
+function altUpd(p){if(!p||p.alt==null||isNaN(p.alt))return;const ac=p.altAcc!=null&&!isNaN(p.altAcc)&&p.altAcc>0?p.altAcc:Math.max(8,(p.acc||10)*1.5);if(ac>40)return;
+ const t=p.t||Date.now();if(ALT.v==null||t-ALT.t>180000){ALT.v=p.alt;ALT.P=ac*ac;ALT.t=t;return}
+ const dt=Math.max(.2,(t-ALT.t)/1000);ALT.P+=.6*dt;const K=ALT.P/(ALT.P+ac*ac);ALT.v+=K*(p.alt-ALT.v);ALT.P*=1-K;ALT.t=t}
+const altNow=t=>ALT.v==null||Math.abs((t||Date.now())-ALT.t)>180000?undefined:Math.round(ALT.v*10)/10;
+const altOff=()=>+LS.g('altOff',0)||0;
+/* ανάβαση/κατάβαση με υστέρηση: μετράει μόνο όταν η αλλαγή ξεπεράσει τα 4 m */
+function eleUD(arr,ref){let up=0,dn=0;for(const e of arr){if(e==null)continue;if(ref==null){ref=e;continue}const d=e-ref;if(d>=ETH){up+=d;ref=e}else if(d<=-ETH){dn-=d;ref=e}}return {up,dn}}
+function eleSt(){const E=[];let d=0,mn=Infinity,mx=-Infinity;for(let i=0;i<trk.length;i++){if(i)d+=dist(trk[i-1],trk[i]);const e=trk[i].e;if(e!=null){E.push([d,e]);mn=Math.min(mn,e);mx=Math.max(mx,e)}}
+ const u=eleUD(E.map(q=>q[1]));return {E,g:u.up,l:u.dn,mn,mx,d}}
+function eleGrade(E){const n=trk.length;if(E.length<2||!n||!trk[n-1].t||Date.now()-trk[n-1].t>120000)return null;const [d1,e1]=E[E.length-1];
+ for(let i=E.length-2;i>=0;i--){const [d0,e0]=E[i];if(d1-d0>=40)return d1-d0<400?(e1-e0)/(d1-d0)*100:null}return null}
+const eleM=v=>v==null||!isFinite(v)?'—':Math.round(v)+' m';
+function niceStep(v){const p=10**Math.floor(Math.log10(v||1)),n=v/p;return (n<=1?1:n<=2?2:n<=5?5:10)*p}
+/* ---- το κουτί κάτω από το Plotter ---- */
+let eleLast=0;
+function eleUpd(force){const box=$('#plele');if(!box)return;const now=Date.now();if(!force&&now-eleLast<1200)return;eleLast=now;
+ const S=eleSt(),o=altOff(),cur=ALT.v!=null?ALT.v:(pos&&pos.alt!=null?pos.alt:null),gr=eleGrade(S.E),t0=S.E.length?S.E[0][1]:null,ok=S.E.length>1;
+ const F=(l,v,c)=>`<div style="background:#0d1b2a;border:1px solid var(--line);border-radius:10px;padding:6px 4px;text-align:center"><div class="muted" style="font-size:.7em">${l}</div><div class="mono" style="font-weight:800;font-size:1.05em;${c?'color:'+c:''}">${v}</div></div>`;
+ $('#eleg').innerHTML=F('⛰️ '+L2('Υψόμετρο','Altitude'),cur!=null?eleM(cur+o):'—')+F('↗ '+L2('Ανάβαση','Ascent'),ok?'+'+Math.round(S.g)+' m':'—','#2ecc71')+F('↘ '+L2('Κατάβαση','Descent'),ok?'−'+Math.round(S.l)+' m':'—','#ff8a65')+F(L2('Κλίση','Grade'),gr!=null?(gr>0?'+':'')+Math.round(gr)+'%':'—',gr!=null&&Math.abs(gr)>=20?'#f77f00':'');
+ let h='';
+ if(cur==null)h=L2('⛰️ Περιμένω υψόμετρο από το GPS… (1–2 λεπτά σε ανοιχτό ουρανό)','⛰️ Waiting for GPS altitude… (1–2 minutes under open sky)');
+ else if(t0!=null){const df=cur-t0;h=`🏁 ${L2('Αφετηρία','Start')} <b>${eleM(t0+o)}</b> · ${Math.abs(df)<ETH?L2('είσαι στο ίδιο ύψος','you are at the same height'):L2(`είσαι <b>${Math.round(Math.abs(df))} m πιο ${df>0?'ψηλά':'χαμηλά'}</b>`,`you are <b>${Math.round(Math.abs(df))} m ${df>0?'higher':'lower'}</b>`)}`;
+  if(ok)h+=`<br>↩️ ${L2('Για να γυρίσεις από τον ίδιο δρόμο','To go back the same way')}: ↗ <b>+${Math.round(S.l)} m</b> · ↘ <b>−${Math.round(S.g)} m</b><br>${L2('Ψηλότερο','Highest')} ${eleM(S.mx+o)} · ${L2('Χαμηλότερο','Lowest')} ${eleM(S.mn+o)}${o?` · <span style="color:#fcbf49">${L2('διόρθωση','correction')} ${o>0?'+':''}${Math.round(o)} m</span>`:''}`}
+ else h=L2('Πάτα «⏺ Κατέγραφε τη διαδρομή μου» για ανάβαση, κατάβαση και προφίλ.','Press “⏺ Record my route” for ascent, descent and profile.');
+ $('#elei').innerHTML=h;eleProf($('#plprof'),S,o)}
+/* ---- υψομετρικό προφίλ ---- */
+function eleProf(cv,S,o){if(!cv)return;const r=cv.getBoundingClientRect();if(!r.width)return;const u=Math.min(3,window.devicePixelRatio||1),W=Math.round(r.width*u),H=Math.round(140*u);
+ if(cv.width!==W||cv.height!==H){cv.width=W;cv.height=H}const x=cv.getContext('2d'),E=S.E;x.setTransform(1,0,0,1,0,0);x.fillStyle='#07111c';x.fillRect(0,0,W,H);
+ if(E.length<2){x.fillStyle='#a9b8c8';x.font=`${Math.round(13*u)}px sans-serif`;x.textAlign='center';x.textBaseline='middle';x.fillText(rec?L2('⛰️ Το προφίλ φτιάχνεται καθώς προχωράς…','⛰️ The profile builds as you move…'):L2('⛰️ Υψομετρικό προφίλ: πάτα «⏺ Κατέγραφε»','⛰️ Elevation profile: press “⏺ Record”'),W/2,H/2);return}
+ const L=40*u,R=10*u,T=12*u,B=18*u,D=Math.max(E[E.length-1][0],1);let lo=S.mn,hi=S.mx;if(hi-lo<20){const m=(hi+lo)/2;lo=m-10;hi=m+10}const pd=(hi-lo)*.12;lo-=pd;hi+=pd;
+ const X=d=>L+(W-L-R)*d/D,Y=e=>T+(H-T-B)*(1-(e-lo)/(hi-lo));
+ x.strokeStyle='#1f3550';x.lineWidth=u;x.fillStyle='#8fb3d9';x.font=`${Math.round(10*u)}px sans-serif`;x.textAlign='right';x.textBaseline='middle';
+ const st=niceStep((hi-lo)/3);for(let v=Math.ceil(lo/st)*st;v<=hi;v+=st){const y=Y(v);x.beginPath();x.moveTo(L,y);x.lineTo(W-R,y);x.stroke();x.fillText(Math.round(v+o)+' m',L-4*u,y)}
+ const e0=E[0][1];x.setLineDash([4*u,4*u]);x.strokeStyle='#2ecc71';x.beginPath();x.moveTo(L,Y(e0));x.lineTo(W-R,Y(e0));x.stroke();x.setLineDash([]);
+ const gd=x.createLinearGradient(0,T,0,H-B);gd.addColorStop(0,'rgba(252,191,73,.55)');gd.addColorStop(1,'rgba(252,191,73,.04)');
+ x.beginPath();x.moveTo(X(0),H-B);E.forEach(([d,e])=>x.lineTo(X(d),Y(e)));x.lineTo(X(E[E.length-1][0]),H-B);x.closePath();x.fillStyle=gd;x.fill();
+ x.beginPath();E.forEach(([d,e],i)=>i?x.lineTo(X(d),Y(e)):x.moveTo(X(d),Y(e)));x.strokeStyle='#fcbf49';x.lineWidth=2*u;x.lineJoin='round';x.stroke();
+ /* ψηλότερο σημείο */
+ let mi=0;E.forEach((q,i)=>{if(q[1]>E[mi][1])mi=i});if(S.mx-S.mn>=ETH){const [dm,em]=E[mi];x.fillStyle='#fff';x.font=`bold ${Math.round(10*u)}px sans-serif`;x.textAlign=X(dm)>W*.75?'right':'left';x.textBaseline='bottom';x.fillText('▲ '+Math.round(em+o)+' m',X(dm),Y(em)-3*u)}
+ x.font=`${Math.round(14*u)}px sans-serif`;x.textAlign='left';x.textBaseline='bottom';x.fillStyle='#fff';x.fillText('🏁',X(0)+2*u,Y(e0)-2*u);
+ const [dl,el]=E[E.length-1];x.fillStyle='#3a86ff';x.strokeStyle='#fff';x.lineWidth=2*u;x.beginPath();x.arc(X(dl),Y(el),5*u,0,7);x.fill();x.stroke();
+ x.fillStyle='#8fb3d9';x.font=`${Math.round(10*u)}px sans-serif`;x.textBaseline='bottom';x.textAlign='left';x.fillText('0',L,H-2*u);x.textAlign='right';x.fillText(fmD(D),W-R,H-2*u);x.textAlign='center';x.fillText(L2('απόσταση →','distance →'),(L+W-R)/2,H-2*u)}
+function eleCal(){const cur=ALT.v!=null?ALT.v:(pos&&pos.alt!=null?pos.alt:null);if(cur==null){alert(L2('Περίμενε να δώσει υψόμετρο το GPS (1–2 λεπτά σε ανοιχτό ουρανό).','Wait for the GPS altitude (1–2 minutes under open sky).'));return}
+ const v=prompt(L2('Γράψε το σωστό υψόμετρο εκεί που είσαι τώρα, σε μέτρα (από πινακίδα, χάρτη, κορυφή ή 0 δίπλα στη θάλασσα). Άδειο = χωρίς διόρθωση.','Type the correct altitude where you are now, in metres (from a sign, a map, a summit or 0 at the seashore). Empty = no correction.'),Math.round(cur+altOff()));
+ if(v===null)return;const n=parseFloat(String(v).replace(',','.'));LS.s('altOff',String(v).trim()===''||isNaN(n)?0:Math.round((n-cur)*10)/10);eleUpd(1)}
+/* ---- σύνδεση με τον Plotter (σελίδα Πυξίδα & GPS) ---- */
+{const _p=plInfo;plInfo=function(c){_p(c);eleUpd()}}
+{const _c=compass;compass=function(){_c();const pi=$('#plinfo');if(!pi)return;
+ pi.insertAdjacentHTML('afterend',`<div id="plele" style="margin-top:8px"><b>⛰️ ${L2('Υψομετρική','Elevation')}</b><div id="eleg" style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:5px"></div><div id="elei" class="muted" style="margin:6px 2px"></div>
+ <canvas id="plprof" style="height:140px;touch-action:manipulation"></canvas><div class="tools" style="margin:4px 0;gap:5px"><button class="btn" style="padding:7px 9px" onclick="eleCal()">📏 ${L2('Διόρθωση υψομέτρου','Calibrate altitude')}</button></div></div>`);eleUpd(1)}}
+/* ---- «Γύρνα πίσω»: πόσο ανεβαίνεις / κατεβαίνεις ως την αρχή ---- */
+{const _b=tBack;tBack=function(){_b();const S=eleSt();if(S.E.length<2)return;const bx=M.querySelector('.box');if(bx)bx.insertAdjacentHTML('beforeend',`<div class="muted" style="margin-top:4px">⛰️ ${L2('Ως την αρχή','To the start')}: ↗ <b>+${Math.round(S.l)} m</b> ${L2('ανάβαση','climb')} · ↘ <b>−${Math.round(S.g)} m</b> ${L2('κατάβαση','descent')}</div>`)}}
+{const _u=bkUpd;bkUpd=function(){_u();if(!bk.on||!pos)return;const m=$('#bkm');if(!m||!m.textContent||m.textContent.includes('⛰️'))return;
+ const u=eleUD(bk.pts.slice(bk.i).map(p=>p.e),ALT.v);if(u.up>=ETH||u.dn>=ETH)m.textContent+=` · ⛰️ ↗ +${Math.round(u.up)} m ↘ −${Math.round(u.dn)} m`}}
+/* ---- οδηγός Plotter: ενότητα υψομετρικής ---- */
+(function(){const a=byId['plotter'];if(!a)return;const add=[
+['h','⛰️ Υψομετρική – πόσα μέτρα ανεβαίνεις και κατεβαίνεις','⛰️ Elevation – how many metres you climb and descend'],
+['li','↗ Ανάβαση / ↘ Κατάβαση: όλα τα μέτρα που ανέβηκες και κατέβηκες από την αφετηρία (σαν το «Total ascent / descent» του Garmin). Αυξομειώσεις κάτω από 4 m δεν μετράνε, για να μη «φουσκώνει» από τον θόρυβο του GPS.','↗ Ascent / ↘ Descent: all the metres you climbed and descended since the start (like Garmin “Total ascent / descent”). Ups and downs under 4 m are ignored so GPS noise does not inflate them.'],
+['li','Κλίση %: πόσο ανηφορικό (+) ή κατηφορικό (−) είναι το κομμάτι που περπατάς τώρα. Πάνω από 20% είναι απότομο.','Grade %: how steep uphill (+) or downhill (−) the stretch you are on is. Over 20% is steep.'],
+['li','Προφίλ: το ανάγλυφο της διαδρομής – αριστερά η αφετηρία 🏁, δεξιά εσύ 🔵, ▲ το ψηλότερο σημείο. Η πράσινη διακεκομμένη γραμμή = το ύψος της αφετηρίας.','Profile: the shape of your route – start 🏁 on the left, you 🔵 on the right, ▲ the highest point. The green dashed line = the height of the start.'],
+['li','«Για να γυρίσεις από τον ίδιο δρόμο»: πόσο θα ανέβεις και θα κατέβεις στην επιστροφή. Αν κατέβηκες 300 m σε φαράγγι, θα τα ξανανέβεις – υπολόγισε χρόνο, νερό και δυνάμεις (≈ 1 ώρα για κάθε 300–400 m ανάβασης με σακίδιο).','“To go back the same way”: how much you will climb and descend on the way back. If you went 300 m down into a gorge you will climb it again – plan time, water and strength (≈ 1 hour per 300–400 m of climb with a backpack).'],
+['li','Το υψόμετρο του GPS έχει λάθος ±10–20 m· η ανάβαση/κατάβαση βγαίνει πιο σωστή γιατί μετράει διαφορές. Σε μερικά Android στην Ελλάδα δείχνει ~35–40 m πιο ψηλά. Πάτα «📏 Διόρθωση υψομέτρου» σε γνωστό σημείο (πινακίδα, κορυφή, 0 m στη θάλασσα).','GPS altitude has a ±10–20 m error; ascent/descent is more reliable because it measures differences. On some Android phones in Greece it reads ~35–40 m too high. Use “📏 Calibrate altitude” at a known point (a sign, a summit, 0 m at the sea).']];
+ const bl=add.map(([t,x,e])=>LANG==='en'?{t,x:e,k:x,e}:{t,x,e}),wi=a.blocks.findIndex(b=>b.t==='warn');a.blocks.splice(wi<0?a.blocks.length:wi,0,...bl);
+ if(LANG==='en'){a.title='Plotter – how to get back precisely (and elevation)'}else a.title='Plotter – πώς γυρίζεις πίσω με ακρίβεια (και υψομετρική)'})();
 
 if(rec)startGeo();
 setTimeout(grdBar,300);
