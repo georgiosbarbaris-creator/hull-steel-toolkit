@@ -3634,11 +3634,55 @@ if(LANG==='en')Object.assign(TRM,{"Το σακίδιό μου":"My kit"});
 
 /* ===== v24: 🗺️ Επίσημος χάρτης σημείων συγκέντρωσης – mysafetyplan.gov.gr ===== */
 const SAFEMAP='https://mysafetyplan.gov.gr/';
-const shelBox=()=>`<div class="box notr" style="border:2px solid var(--grn)"><div style="display:flex;gap:10px;align-items:center"><span style="font-size:2em">🗺️</span><div><b>${L2('Πού πάω; Επίσημος χάρτης ασφαλών σημείων','Where do I go? Official map of safe points')}</b><div class="muted">${L2('Σημεία συγκέντρωσης (γήπεδα, πλατείες, ανοιχτοί χώροι) του Δήμου σου – mysafetyplan.gov.gr (κράτος). Θέλει internet.','Your municipality’s assembly points (stadiums, squares, open spaces) – mysafetyplan.gov.gr (Greek state). Needs internet.')}</div></div></div>
+let shelBox=()=>`<div class="box notr" style="border:2px solid var(--grn)"><div style="display:flex;gap:10px;align-items:center"><span style="font-size:2em">🗺️</span><div><b>${L2('Πού πάω; Επίσημος χάρτης ασφαλών σημείων','Where do I go? Official map of safe points')}</b><div class="muted">${L2('Σημεία συγκέντρωσης (γήπεδα, πλατείες, ανοιχτοί χώροι) του Δήμου σου – mysafetyplan.gov.gr (κράτος). Θέλει internet.','Your municipality’s assembly points (stadiums, squares, open spaces) – mysafetyplan.gov.gr (Greek state). Needs internet.')}</div></div></div>
  <a class="big grn" href="${SAFEMAP}" target="_blank" rel="noopener" style="text-decoration:none;margin-top:8px">🗺️ ${L2('Βρες το κοντινότερο σημείο','Find the nearest point')}<small>mysafetyplan.gov.gr</small></a>
  <div class="muted" style="font-size:.85em">💡 ${L2('Βρες το ΣΗΜΕΡΑ, για το σπίτι, τη δουλειά και το σχολείο. Πήγαινε εκεί μία φορά με τα πόδια και αποθήκευσέ το στην 🧭 Πυξίδα («Αποθήκευσε σημείο») – έτσι σε οδηγεί και χωρίς internet. Για καταφύγια πολέμου/άμαχου πληθυσμού ρώτα την Πολιτική Προστασία του Δήμου σου.','Find it TODAY for home, work and school. Walk there once and save it in the 🧭 Compass (“Save point”) – then it guides you even without internet. For war / civil-defence shelters ask your municipality’s civil protection office.')}</div></div>`;
 {const _p=phones;phones=function(){_p();M.insertAdjacentHTML('afterbegin',shelBox())}}
 {const _a=art;art=function(id){_a(id);if(['quake','quake_night','evac10','tsunami','wildfire','flood','war','nuclear','chem'].includes(id)){M.insertAdjacentHTML('beforeend',shelBox())}}}
+
+/* ===== v25: Σημεία συγκέντρωσης – οδηγίες + διευθύνσεις για αντιγραφή ===== */
+const SAFELINKS=[['mysafetyplan.gov.gr','https://mysafetyplan.gov.gr/','Χάρτης σημείων συγκέντρωσης (κράτος)','Map of assembly points (Greek state)'],
+ ['gov.gr – mySafetyPlan','https://www.gov.gr/ipiresies/polites-kai-kathemerinoteta/phusikes-katastrophes/my-safety-plan','Η ίδια υπηρεσία από το gov.gr','The same service via gov.gr'],
+ ['civilprotection.gov.gr','https://civilprotection.gov.gr/','Πολιτική Προστασία – ανακοινώσεις, οδηγίες','Civil Protection – announcements, guidance'],
+ ['oasp.gr','https://www.oasp.gr/','ΟΑΣΠ – οδηγίες για σεισμό','OASP – earthquake guidance']];
+function cpTxt(t,el){(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{if(el){const o=el.textContent;el.textContent='✅';setTimeout(()=>el.textContent=o,1500)}},()=>prompt(L2('Αντέγραψε:','Copy:'),t))}
+shelBox=()=>`<div class="box notr" style="border:2px solid var(--grn)"><div style="display:flex;gap:10px;align-items:center"><span style="font-size:2em">🗺️</span><div><b>${L2('Πού πάω; Επίσημα σημεία συγκέντρωσης','Where do I go? Official assembly points')}</b><div class="muted">${L2('Ορισμένα από την Πολιτική Προστασία και τον Δήμο σου. Ο χάρτης θέλει internet.','Set by Civil Protection and your municipality. The map needs internet.')}</div></div></div>
+ <a class="big grn" href="${SAFEMAP}" target="_blank" rel="noopener" style="text-decoration:none;margin-top:8px">🗺️ ${L2('Βρες το κοντινότερο σημείο','Find the nearest point')}<small>mysafetyplan.gov.gr</small></a>
+ <button class="big blu" onclick="go('a/assembly')">📖 ${L2('Τι κάνω – πότε και πώς πάω','What to do – when and how to go')}</button>
+ <details style="margin-top:6px"><summary style="cursor:pointer;font-weight:700">📋 ${L2('Διευθύνσεις για αντιγραφή (αν δεν ανοίγει)','Addresses to copy (if it does not open)')}</summary>
+ ${SAFELINKS.map(([n,u,el,en])=>`<div class="wp" style="gap:8px"><span style="min-width:0"><b>${n}</b><br><small class="muted">${L2(el,en)}</small><br><span class="mono" style="font-size:.78em;word-break:break-all;user-select:all;-webkit-user-select:all">${u}</span></span><button class="btn" style="flex:none" onclick="cpTxt('${u}',this)">📋</button></div>`).join('')}
+ <div class="muted" style="font-size:.85em;margin-top:6px">${L2('Αν ο χάρτης βγάζει σφάλμα (π.χ. «API key», «δεν φορτώνει ο χάρτης»): είναι πρόβλημα της σελίδας του κράτους ή της χώρας που βρίσκεσαι – όχι του κινητού σου. Δοκίμασε: 1) άλλο browser (Chrome / Safari), 2) τη διεύθυνση του gov.gr από πάνω, 3) ξανά από την Ελλάδα. Εκτός Ελλάδας (π.χ. Κίνα) οι χάρτες Google συχνά δεν φορτώνουν.','If the map shows an error (e.g. “API key”, “map cannot load”): it is a problem of the government page or of the country you are in – not your phone. Try: 1) another browser (Chrome / Safari), 2) the gov.gr address above, 3) again from Greece. Outside Greece (e.g. China) Google maps often do not load.')}</div></details>
+ <div class="muted" style="font-size:.85em;margin-top:6px">💡 ${L2('Βρες το ΣΗΜΕΡΑ (σπίτι, δουλειά, σχολείο), πήγαινε μία φορά με τα πόδια και αποθήκευσέ το στην 🧭 Πυξίδα – έτσι σε οδηγεί και χωρίς internet.','Find it TODAY (home, work, school), walk there once and save it in the 🧭 Compass – then it guides you even without internet.')}</div></div>`;
+(function(){const B=[
+['tip','Σημείο συγκέντρωσης = ανοιχτός ασφαλής χώρος που όρισε ο Δήμος / η Πολιτική Προστασία: πλατεία, γήπεδο, πάρκο, αυλή σχολείου. Μακριά από κτίρια, κολόνες ρεύματος και καλώδια.','Assembly point = an open, safe space set by your municipality / Civil Protection: square, sports ground, park, schoolyard. Away from buildings, power poles and cables.'],
+['h','Πριν – σήμερα','Before – today'],
+['step','Βρες στο mysafetyplan.gov.gr το κοντινότερο σημείο στο σπίτι, στη δουλειά και στο σχολείο των παιδιών.','On mysafetyplan.gov.gr find the nearest point to your home, work and the children’s school.'],
+['step','Περπάτησε τη διαδρομή μία φορά. Πόση ώρα κάνεις; Υπάρχουν στενά, ψηλά κτίρια, καλώδια; Βρες και 2η διαδρομή.','Walk the route once. How long does it take? Are there narrow streets, tall buildings, cables? Find a 2nd route too.'],
+['step','Αποθήκευσε το σημείο στην 🧭 Πυξίδα της εφαρμογής – σε οδηγεί και χωρίς internet.','Save the point in the app’s 🧭 Compass – it guides you even without internet.'],
+['step','Συμφώνησε με την οικογένεια: «Αν χαθούμε, βρισκόμαστε ΕΚΕΙ». Και ένα 2ο σημείο εκτός περιοχής (π.χ. σπίτι συγγενή).','Agree with your family: “If we get separated, we meet THERE”. And a 2nd point outside the area (e.g. a relative’s house).'],
+['step','Γράψ\' τα στην 🪪 «Η κάρτα μου» και σε χαρτάκι στο πορτοφόλι.','Write them in 🪪 “My card” and on a note in your wallet.'],
+['h','Πότε πηγαίνω','When to go'],
+['li','ΟΧΙ την ώρα που κουνάει: Πέσε – Καλύψου – Κρατήσου. Βγαίνεις όταν σταματήσει.','NOT while it is shaking: Drop – Cover – Hold on. Go out when it stops.'],
+['li','Μετά από δυνατό σεισμό, αν το κτίριο έπαθε ζημιά (ρωγμές, σπασμένα τζάμια, μυρωδιά γκαζιού) ή αν δεν αισθάνεσαι ασφαλής.','After a strong earthquake, if the building is damaged (cracks, broken glass, gas smell) or you do not feel safe.'],
+['li','Όταν το πει μήνυμα 112, η Πολιτική Προστασία, ο Δήμος ή η Αστυνομία.','When a 112 message, Civil Protection, the municipality or the police say so.'],
+['warn','Τσουνάμι: ΟΧΙ σε σημείο δίπλα στη θάλασσα – πήγαινε ΨΗΛΑ και μακριά από την ακτή. Φωτιά / πλημμύρα: ακολούθησε τη διαδρομή εκκένωσης του 112 – μπορεί να είναι άλλο σημείο.','Tsunami: NOT to a point by the sea – go HIGH and away from the coast. Fire / flood: follow the 112 evacuation route – it may be a different point.'],
+['h','Πώς πηγαίνω','How to go'],
+['step','Πάρε το 🎒 σακίδιο, κλειδιά, κινητό, φάρμακα, παπούτσια. Κλείσε γκάζι και ρεύμα αν μπορείς.','Take the 🎒 bag, keys, phone, medicines, shoes. Turn off gas and power if you can.'],
+['step','Σκάλες – ΟΧΙ ασανσέρ.','Stairs – NOT the lift.'],
+['step','ΜΕ ΤΑ ΠΟΔΙΑ. Το αυτοκίνητο κλείνει τους δρόμους για ασθενοφόρα και πυροσβεστική.','ON FOOT. Cars block the roads for ambulances and fire engines.'],
+['step','Περπάτα στη μέση του δρόμου, μακριά από προσόψεις, μπαλκόνια, τζάμια, κολόνες και καλώδια. Πρόσεχε μετασεισμούς.','Walk in the middle of the street, away from façades, balconies, glass, poles and cables. Watch for aftershocks.'],
+['step','Βοήθησε ηλικιωμένους, ΑμεΑ και παιδιά της γειτονιάς. Πάρε τα κατοικίδια με λουρί / κλουβί.','Help elderly, disabled people and children in the neighbourhood. Take pets on a lead / in a carrier.'],
+['h','Εκεί','There'],
+['step','Πες στους υπεύθυνους (Πολιτική Προστασία, Δήμος, εθελοντές) ποιος είσαι και ποιος λείπει από την οικογένεια.','Tell the people in charge (Civil Protection, municipality, volunteers) who you are and who is missing from your family.'],
+['step','Εκεί δίνουν πληροφορίες, νερό, πρώτες βοήθειες και οδηγίες για το πού θα μείνεις.','There they give information, water, first aid and instructions on where you will stay.'],
+['step','Στείλε ✅ «Είμαι καλά» με SMS – περνάει όταν οι κλήσεις δεν περνούν.','Send ✅ “I am OK” by SMS – it gets through when calls do not.'],
+['step','Μείνε εκεί μέχρι να σου πουν. ΜΗΝ γυρίσεις σπίτι αν το κτίριο έχει ζημιά, πριν το δει μηχανικός (αυτοψία).','Stay until you are told. DO NOT go home if the building is damaged, before an engineer checks it.'],
+['h','Παιδιά στο σχολείο','Children at school'],
+['li','Τα σχολεία έχουν δικό τους σχέδιο: οι δάσκαλοι πάνε τα παιδιά στην αυλή ή στο σημείο του σχολείου. Μάθε από πριν ποιο είναι.','Schools have their own plan: teachers take children to the yard or the school’s point. Find out beforehand which it is.'],
+['li','Μην τρέξεις με αυτοκίνητο στο σχολείο – πήγαινε με τα πόδια όταν είναι ασφαλές, και παρέλαβε το παιδί από τον δάσκαλο.','Do not rush to the school by car – go on foot when it is safe, and collect your child from the teacher.']];
+const a={cat:'now',id:'assembly',emoji:'🚩',title:'Σημεία συγκέντρωσης – τι κάνω',sub:'Πότε και πώς πηγαίνεις, τι γίνεται εκεί',te:'Assembly points – what to do',se:'When and how to go, what happens there',blocks:B.map(([t,x,e])=>({t,x,e}))};
+if(LANG==='en'){a.title=a.te;a.sub=a.se;a.blocks.forEach(b=>{b.k=b.x;b.x=b.e})}D.push(a);byId[a.id]=a})();
+{const _a=art;art=function(id){_a(id);if(id==='assembly'){const h=M.querySelector('.tools');if(h)h.insertAdjacentHTML('afterend',`<a class="big grn notr" href="${SAFEMAP}" target="_blank" rel="noopener" style="text-decoration:none">🗺️ ${L2('Βρες το κοντινότερο σημείο','Find the nearest point')}<small>mysafetyplan.gov.gr</small></a>`)}}}
 
 if(rec)startGeo();
 setTimeout(grdBar,300);
