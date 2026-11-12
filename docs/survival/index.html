@@ -67,23 +67,6 @@ canvas{width:100%;background:#0a1522;border-radius:12px;border:1px solid var(--l
 #gbar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:#1d3557;color:#fff;text-align:center;font-weight:700;padding:10px 10px calc(env(safe-area-inset-bottom) + 10px);border-top:2px solid var(--blu)}
 html.night header,html.night main{filter:grayscale(1) sepia(1) saturate(12) hue-rotate(-50deg) brightness(.55)}html.night,html.night body{background:#000}
 .fig{margin:10px 0 12px;background:#16283d;border:1px solid var(--line);border-radius:14px;padding:6px 6px 10px}.fig svg{width:100%;display:block;border-radius:10px}.fig figcaption{color:var(--mut);font-size:.86em;padding:6px 6px 0;line-height:1.35}
-#plw{position:fixed;inset:0;z-index:30;background:#06121f;display:flex;flex-direction:column;color:#f4f6f8;padding:env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left)}
-html.night #plw{filter:grayscale(1) sepia(1) saturate(12) hue-rotate(-50deg) brightness(.55)}
-.plinf{padding:6px 10px;font-size:.74em;line-height:1.4;background:#0a1522;border-bottom:1px solid #2a4060;min-height:3.2em}
-.plinf b{color:#fff}.plinf .nv{font-size:1.15em;font-weight:700;color:#fcbf49}.plinf .nv b{color:inherit}.plinf .rc{color:#ff4d6d;font-weight:800}
-.plmid{position:relative;flex:1;min-height:0;overflow:hidden}
-#plc{display:block;width:100%;height:100%;border:0;border-radius:0;background:#06121f;touch-action:none}
-.plside{position:absolute;left:6px;right:6px;bottom:6px;display:flex;gap:5px;justify-content:center;pointer-events:none}
-.plb{pointer-events:auto;flex:1;max-width:72px;height:50px;border-radius:12px;border:1px solid #35557a;background:rgba(22,40,61,.9);color:#fff;font-weight:800;font-size:.85em;padding:0 2px;line-height:1.05}
-.plb small{display:block;font-size:.62em;font-weight:500;opacity:.85}
-@media (orientation:landscape){.plside{left:auto;top:6px;flex-direction:column;justify-content:center}.plb{flex:none;width:64px;height:42px}}
-.plbar{display:flex;gap:5px;padding:6px 6px calc(env(safe-area-inset-bottom) + 6px);background:#0a1522;border-top:1px solid #2a4060}
-.plbig{flex:1;border:0;border-radius:14px;background:#16283d;color:#fff;font-size:1.3em;font-weight:800;padding:6px 2px;min-height:58px;line-height:1.05}
-.plbig small{display:block;font-size:.46em;font-weight:800;margin-top:3px;letter-spacing:.3px}
-.plbig.go{background:#2a9d8f}.plbig.stop{background:#d62828}.plbig.bk{background:#c96a00}
-.plstart{display:none;position:absolute;left:8px;right:8px;top:52px;background:rgba(10,21,34,.94);border:1px solid #2a9d8f;border-radius:14px;padding:10px 12px;font-size:.82em}
-.pltoast{display:none;position:absolute;left:50%;top:50px;transform:translateX(-50%);background:#2a9d8f;color:#fff;font-weight:800;padding:8px 14px;border-radius:12px;z-index:4;white-space:nowrap}
-.plsh{display:none;position:absolute;left:0;right:0;bottom:0;z-index:5;max-height:88%;overflow:auto;background:#16283d;border-top:2px solid #35557a;border-radius:18px 18px 0 0;padding:14px 12px 12px;font-size:.92em}
 </style></head><body>
 <header><button class="hb" id="bk" onclick="back()" aria-label="Πίσω">◀</button><h1 id="ttl">Επιβίωση 72+</h1>
 <button class="hb notr" onclick="setLang(LANG==='en'?'el':'en')" aria-label="Language" id="lgb">EN</button><button class="hb" onclick="fz(-1)">A−</button><button class="hb" onclick="fz(1)">A+</button><button class="hb" onclick="go('home')" aria-label="Αρχική">🏠</button></header>
@@ -2791,9 +2774,8 @@ function compass(){T('Πυξίδα & GPS');const wps=LS.g('wps',[]);
  <div class="box"><b>📍 Η θέση μου (GPS – δουλεύει χωρίς internet)</b><div id="gps" class="coord" style="margin-top:8px">Αναζήτηση δορυφόρων…</div>
  <div class="tools" style="justify-content:center"><button class="btn g" onclick="saveWp()">➕ Αποθήκευσε αυτό το σημείο</button><button class="btn r" onclick="sendPos()">✉️ Στείλε τη θέση μου (SMS)</button><button class="btn" onclick="copyPos()">📋 Αντιγραφή</button></div></div>
  <div class="box"><b>⭐ Τα σημεία μου</b> <span class="muted">(σπίτι, αυτοκίνητο, σημείο συνάντησης)</span><div id="wps">${wpsHtml(wps)}</div><button class="btn" style="margin-top:8px" onclick="addWpMan()">⌨️ Πρόσθεσε με συντεταγμένες</button></div>
- <div class="box"><b>🗺️ ${L2('Χάρτης διαδρομής (Plotter)','Track map (Plotter)')}</b><button class="big blu" style="margin:8px 0" onclick="go('t/plot')">🛰️ PLOTTER – ${L2('μεγάλη οθόνη','full screen')}<small>${L2('▶️ ΕΝΑΡΞΗ · 📍 στίγματα · πορείες · κλίμακες NM/km · ↩️ γύρνα πίσω','▶️ START · 📍 fixes · courses · NM/km ranges · ↩️ go back')}</small></button>
- <canvas id="cv" width="700" height="700" onclick="go('t/plot')" style="cursor:pointer"></canvas><div class="muted">${L2('🔵 εσύ · 🏁 αρχή · 📍 στίγματα · ⭐ σημεία · κίτρινη γραμμή = η διαδρομή σου.','🔵 you · 🏁 start · 📍 fixes · ⭐ waypoints · yellow line = your track.')}</div>
- <div class="tools" style="margin-top:6px"><button class="btn ${rec?'r':''}" id="recb" onclick="togRec()">${rec?'⏹ Σταμάτα καταγραφή':'⏺ Κατέγραφε τη διαδρομή μου'}</button><button class="btn" onclick="clrTrk()">🧹 Σβήσε διαδρομή</button></div></div>
+ <div class="box"><b>🗺️ Χάρτης σημείων και διαδρομής</b><div class="tools" style="margin-top:6px"><button class="btn ${rec?'r':''}" id="recb" onclick="togRec()">${rec?'⏹ Σταμάτα καταγραφή':'⏺ Κατέγραφε τη διαδρομή μου'}</button><button class="btn" onclick="clrTrk()">🧹 Σβήσε διαδρομή</button></div>
+ <canvas id="cv" width="700" height="700"></canvas><div class="muted">Ο Βορράς είναι πάνω. 🔵 εσύ · ⭐ σημεία · κίτρινη γραμμή η διαδρομή σου (για να γυρίσεις από τον ίδιο δρόμο).</div></div>
  <div class="box"><label>Απόκλιση πυξίδας (declination, ° Ανατολικά +)</label><input type="number" step="0.5" value="${DEC()}" onchange="LS.s('dec',+this.value)"><div class="muted">Για κανονική χρήση άφησέ το 0. Στην Ελλάδα η μαγνητική απόκλιση είναι περίπου +5° E. Αν η πυξίδα κάνει λάθος, κάνε «οκτάρια» με το κινητό στον αέρα και κράτα το μακριά από μέταλλα, ηχεία, μαγνήτες.</div></div>
  <button class="btn" onclick="go('a/w_navi')">📖 Προσανατολισμός χωρίς πυξίδα (ήλιος, αστέρια)</button>`;
  startGeo();if(orientOn)$('#cbtns').style.display='none';draw();upd()}
@@ -2809,7 +2791,7 @@ function sendPos(){if(!pos){alert('Περίμενε να βρεθεί η θέσ�
 function copyPos(){if(!pos)return alert('Περίμενε το GPS.');const t=posTxt();(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>alert('Αντιγράφηκε.'),()=>prompt('Αντέγραψε:',t))}
 function startGeo(){if(geoW!==null)return;if(!navigator.geolocation){$('#gps').textContent='Το κινητό δεν έχει GPS διαθέσιμο.';return}
  geoW=navigator.geolocation.watchPosition(p=>{const c=p.coords;pos={lat:c.latitude,lon:c.longitude,acc:c.accuracy,alt:c.altitude,altAcc:c.altitudeAccuracy,spd:c.speed,hd:c.heading,t:p.timestamp};
-  if(rec&&c.accuracy<60){const l=trk[trk.length-1];if(!l||dist(l,pos)>Math.max(15,(c.speed||0)*3)){trk.push({lat:+pos.lat.toFixed(6),lon:+pos.lon.toFixed(6),t:Math.round(p.timestamp/1000)});if(trk.length>6000)trkThin();LS.s('trk',trk)}}/* v28: ώρα σε κάθε σημείο, αραίωση αντί να χάνεται η αρχή */
+  if(rec&&c.accuracy<60){const l=trk[trk.length-1];if(!l||dist(l,pos)>15){trk.push({lat:+pos.lat.toFixed(6),lon:+pos.lon.toFixed(6)});if(trk.length>3000)trk.shift();LS.s('trk',trk)}}
   upd();draw();wxAlt()},e=>{const g=$('#gps');if(g)g.innerHTML=e.code===1?'❌ Δεν δόθηκε άδεια τοποθεσίας.<br><small class="muted">iPhone: Ρυθμίσεις → Απόρρητο → Υπηρεσίες τοποθεσίας → Safari → «Κατά τη χρήση».</small>':'Δεν βρέθηκε ακόμα θέση. Βγες σε ανοιχτό χώρο με θέα στον ουρανό.'},{enableHighAccuracy:true,maximumAge:2000,timeout:60000})}
 function stopGeo(){if(geoW!==null){navigator.geolocation.clearWatch(geoW);geoW=null}}
 /* v27: και το Chrome (Android, έκδ. 156+) έχει πλέον requestPermission – πριν η εφαρμογή το περνούσε για iPhone, άκουγε το
@@ -2819,7 +2801,7 @@ function startOrient(){if(orientOn)return;const go2=()=>{orientOn=true;const b=$
  if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){DeviceOrientationEvent.requestPermission().then(r=>{if(r==='granted')listen();else alert('Δεν δόθηκε άδεια για την πυξίδα.')}).catch(()=>listen())}
  else listen()}
 function onOr(e){let h=null;if(typeof e.webkitCompassHeading==='number')h=e.webkitCompassHeading;else if(e.absolute!==false&&e.alpha!=null)h=(360-e.alpha)%360;if(h==null)return;
- const so=(screen.orientation&&screen.orientation.angle)||window.orientation||0;h=(h+so+DEC()+360)%360;hdg=hdg==null?h:hdg+((((h-hdg)%360)+540)%360-180)*.25;hdg=(hdg+360)%360;upd(1);if(PL.hup||PL.back)plReq()}
+ const so=(screen.orientation&&screen.orientation.angle)||window.orientation||0;h=(h+so+DEC()+360)%360;hdg=hdg==null?h:hdg+((((h-hdg)%360)+540)%360-180)*.25;hdg=(hdg+360)%360;upd(1)}
 let lastU=0;
 function upd(fast){const r=$('#rose');if(!r)return;const now=Date.now();
  if(hdg!=null){r.setAttribute('transform',`rotate(${-hdg})`);$('#hd').textContent=`${Math.round(hdg).toString().padStart(3,'0')}° ${card(hdg)}`;const n=$('#hdn');if(n)n.textContent='Η κόκκινη μύτη δείχνει πάντα Βορρά. Η λευκή γραμμή πάνω = προς τα πού κοιτάς.'}
@@ -2830,9 +2812,21 @@ function upd(fast){const r=$('#rose');if(!r)return;const now=Date.now();
  if(fast&&now-lastU<500)return;lastU=now;
  const g=$('#gps');if(g&&pos)g.innerHTML=`<div class="mono">${ddm(pos.lat,'N','S')}<br>${ddm(pos.lon,'E','W')}</div><div class="mono muted" style="font-size:.85em">${pos.lat.toFixed(5)}, ${pos.lon.toFixed(5)} · ${dms(pos.lat,'N','S')} ${dms(pos.lon,'E','W')}</div><div class="muted">Ακρίβεια ±${Math.round(pos.acc)} m${pos.alt!=null?` · Υψόμετρο ${Math.round(pos.alt)} m`:''}${pos.spd!=null&&pos.spd>0.3?` · Ταχύτητα ${(pos.spd*3.6).toFixed(1)} km/h`:''}</div>`}
 function turnTxt(d){d=((d%360)+540)%360-180;const a=Math.abs(Math.round(d));return a<10?'✅ Ευθεία μπροστά':(d>0?`↪️ Στρίψε ΔΕΞΙΑ ${a}°`:`↩️ Στρίψε ΑΡΙΣΤΕΡΑ ${a}°`)}
-function togRec(){rec=!rec;LS.s('rec',rec);if(rec&&trk.length<2)LS.s('trkT0',Date.now());const b=$('#recb');b.className='btn '+(rec?'r':'');b.textContent=rec?'⏹ Σταμάτα καταγραφή':'⏺ Κατέγραφε τη διαδρομή μου';if(rec)wake(1)}
-function clrTrk(){if(!confirm('Σβήσιμο της καταγεγραμμένης διαδρομής;'))return;trk=[];LS.s('trk',trk);LS.s('fix',[]);LS.s('trkT0',null);plBackStop0();draw()}
-function draw(){plReq()}/* v28: ο χάρτης σχεδιάζεται από τον Plotter */
+function togRec(){rec=!rec;LS.s('rec',rec);const b=$('#recb');b.className='btn '+(rec?'r':'');b.textContent=rec?'⏹ Σταμάτα καταγραφή':'⏺ Κατέγραφε τη διαδρομή μου';if(rec)wake(1)}
+function clrTrk(){if(!confirm('Σβήσιμο της καταγεγραμμένης διαδρομής;'))return;trk=[];LS.s('trk',trk);draw()}
+function draw(){const cv=$('#cv');if(!cv)return;const x=cv.getContext('2d'),W=cv.width,H=cv.height;x.clearRect(0,0,W,H);
+ const w=LS.g('wps',[]),pts=[...trk,...w];if(pos)pts.push(pos);
+ if(!pts.length){x.fillStyle='#a9b8c8';x.font='28px sans-serif';x.textAlign='center';x.fillText('Δεν υπάρχουν ακόμα σημεία',W/2,H/2);return}
+ const c=pos||pts[pts.length-1],k=Math.cos(rad(c.lat));let mx=50;pts.forEach(p=>{mx=Math.max(mx,Math.abs((p.lon-c.lon)*k*111320),Math.abs((p.lat-c.lat)*110540))});
+ const sc=(W/2-50)/mx,P=p=>[W/2+(p.lon-c.lon)*k*111320*sc,H/2-(p.lat-c.lat)*110540*sc];
+ // grid rings
+ x.strokeStyle='#2a4060';x.lineWidth=2;x.fillStyle='#a9b8c8';x.font='22px sans-serif';x.textAlign='left';
+ const ring=[10,25,50,100,250,500,1000,2500,5000,10000,25000,50000,100000,250000,500000,1e6,2.5e6,5e6].find(r=>r*sc>W/6)||mx;
+ for(let i=1;i<=3;i++){x.beginPath();x.arc(W/2,H/2,ring*i*sc,0,7);x.stroke();x.fillText(fmD(ring*i),W/2+ring*i*sc*.71+4,H/2-ring*i*sc*.71)}
+ x.fillStyle='#ff4d4d';x.font='bold 30px sans-serif';x.textAlign='center';x.fillText('Β ▲',W/2,34);
+ if(trk.length>1){x.strokeStyle='#fcbf49';x.lineWidth=4;x.beginPath();trk.forEach((p,i)=>{const [a,b]=P(p);i?x.lineTo(a,b):x.moveTo(a,b)});x.stroke()}
+ w.forEach((p,i)=>{const [a,b]=P(p);x.font='34px sans-serif';x.fillText('⭐',a,b+12);x.fillStyle=tgt===i?'#fcbf49':'#fff';x.font='bold 22px sans-serif';x.fillText(p.n,a,b-22);x.fillStyle='#ff4d4d'});
+ if(pos){const [a,b]=P(pos);x.fillStyle='rgba(58,134,255,.25)';x.beginPath();x.arc(a,b,Math.max(10,pos.acc*sc),0,7);x.fill();x.fillStyle='#3a86ff';x.strokeStyle='#fff';x.lineWidth=4;x.beginPath();x.arc(a,b,13,0,7);x.fill();x.stroke()}}
 
 function stopAll(){if(moOn||moTorch)moStop();if(cprT){clearInterval(cprT);cprT=null}if(whT){clearTimeout(whT);whT=null}if(window.speechSynthesis)speechSynthesis.cancel();speaking=false;
  toolStop();if(!rec)stopGeo();if(!rec&&!grd.on)wake(0);if(orientOn){window.removeEventListener('deviceorientation',onOr,true);window.removeEventListener('deviceorientationabsolute',onOr,true);orientOn=false;hdg=null}}
@@ -2931,10 +2925,10 @@ function tBack(){T('↩️ Γύρνα πίσω');startGeo();
  <div id="bkv" style="display:none;text-align:center"><svg viewBox="-100 -100 200 200" style="width:min(60vw,240px);height:min(60vw,240px)"><circle r="96" fill="#0a1522" stroke="#2a4060" stroke-width="3"/><g id="bka"><path d="M0,-80 L28,20 L0,5 L-28,20 Z" fill="#2a9d8f"/></g></svg>
  <div class="hd" id="bkd" style="font-size:2em">—</div><div id="bkt" style="font-size:1.25em;font-weight:800">—</div><div class="muted" id="bkm"></div></div>
  <button class="big grn" id="bkb" onclick="bkStart()">↩️ ΞΕΚΙΝΑ – γύρνα με πίσω</button>
- <div class="tools" style="justify-content:center"><button class="btn" onclick="if(!orientOn)startOrient()">🧭 Πυξίδα</button><button class="btn ${rec?'r':''}" onclick="togRec2()">${rec?'⏹ Σταμάτα καταγραφή':'⏺ Συνέχισε καταγραφή'}</button><button class="btn" onclick="go('t/plot')">🛰️ ${L2('Δες τη στον Plotter','See it on the Plotter')}</button></div>
+ <div class="tools" style="justify-content:center"><button class="btn" onclick="if(!orientOn)startOrient()">🧭 Πυξίδα</button><button class="btn ${rec?'r':''}" onclick="togRec2()">${rec?'⏹ Σταμάτα καταγραφή':'⏺ Συνέχισε καταγραφή'}</button><button class="btn" onclick="go('compass')">🗺️ Δες τη διαδρομή</button></div>
  <div class="tip">Κράτα το κινητό ίσια μπροστά σου. Το πράσινο βέλος δείχνει πού να πας. Όταν φτάσεις κοντά σε κάθε σημείο, περνάει μόνο του στο επόμενο, μέχρι την αρχή της διαδρομής.</div>`;
  TS.push(()=>{if(bk.iv)clearInterval(bk.iv);bk.on=false})}
-function togRec2(){rec=!rec;LS.s('rec',rec);if(rec&&trk.length<2)LS.s('trkT0',Date.now());if(rec){startGeo();wake(1)}tBack()}
+function togRec2(){rec=!rec;LS.s('rec',rec);if(rec){startGeo();wake(1)}tBack()}
 function bkStart(){bk.pts=bkThin();bk.on=true;$('#bkv').style.display='';$('#bkb').style.display='none';wake(1);if(!orientOn)startOrient();
  if(pos){let bi=0,bd=1e12;bk.pts.forEach((p,j)=>{const d=dist(pos,p);if(d<bd){bd=d;bi=j}});bk.i=bi}else bk.i=0;
  if(bk.iv)clearInterval(bk.iv);bk.iv=setInterval(bkUpd,400);bkUpd()}
@@ -3722,237 +3716,6 @@ if(LANG==='en'){a.title=a.te;a.sub=a.se;a.blocks.forEach(b=>{b.k=b.x;b.x=b.e})}D
 
 /* ===== v26: μεταφράσεις για τα νέα/αλλαγμένα κείμενα + μόνιμη αποθήκευση (να μη σβήνονται έγγραφα/ημερολόγιο) ===== */
 if(LANG==='en')Object.assign(TRM,{"Επαφές έκτακτης ανάγκης":"Emergency contacts","📡 Βρίσκω τη θέση σου… (έως 4″)":"📡 Finding your location… (up to 4″)","αν δεν πατήσω «Έφτασα» → συναγερμός + SMS με θέση":"if I don't tap «I arrived» → alarm + SMS with location","🚶‍♀️ «Συνόδευσέ με σπίτι» πριν ξεκινήσεις. Αν δεν πατήσεις «Έφτασα», χτυπάει συναγερμός και ανοίγει έτοιμο SMS με τη θέση σου – πατάς «Αποστολή» εσύ ή όποιος σε βρει. Κράτα την εφαρμογή ανοιχτή.":"🚶‍♀️ «Walk me home» before you set off. If you don't tap «I arrived», an alarm rings and a ready SMS with your location opens – you (or whoever finds you) tap «Send». Keep the app open."});
-/* ===================== v28: 🛰️ PLOTTER – χάρτης διαδρομής σαν GPS / ραντάρ =====================
-   Κλίμακες σαν ραντάρ (0.125 … 4·6·8·10·12·16 … 96 NM ή km) με κύκλους απόστασης και κλίμακα μοιρών, N UP / H UP,
-   ▶️ ΕΝΑΡΞΗ → ζωντανή γραμμή διαδρομής, 📍 στίγματα με πορεία & απόσταση ανάμεσά τους (σαν plotting σε χάρτη),
-   πάτημα στον χάρτη = διόπτευση/απόσταση (EBL/VRM) → ⭐ σημείο ή «Πήγαινε εκεί», ↩️ επιστροφή από τον ίδιο δρόμο
-   ή ευθεία στην αρχή, 📋 ημερολόγιο στιγμάτων, 💾 GPX (Garmin, Google Earth, OpenCPN). Created by George Barbaris */
-const PLR=[0.125,0.25,0.5,1,2,4,6,8,10,12,16,24,48,96],PLRR={0.125:.025,0.25:.05,0.5:.1,1:.25,2:.5,4:1,6:1,8:2,10:2,12:2,16:4,24:4,48:8,96:16};
-const PL={u:LS.g('plU','nm'),r:LS.g('plR',0),hup:LS.g('plH',false),back:LS.g('plB',null),bp:LS.g('plBP',[]),bi:null,fin:false,off:null,cur:null,raf:0,li:0,c:null,sc:0,rot:0,cx:0,cy:0,rng:4,hide:false};
-const PC={bg:'#06121f',ring:'#2f4d70',lbl:'#8fb3d9',sc:'#a9b8c8',n:'#ff4d4d',trk:'#fcbf49',leg:'#4cc9f0',wp:'#ffd166',me:'#3a86ff',hdg:'#ffffff',cog:'#f77f00',back:'#2ecc71',cur:'#ff4d6d'};
-const NMQ=s=>LANG==='en'?UQ(s):String(s);
-const UM=()=>PL.u==='nm'?1852:1000,UNL=()=>PL.u==='nm'?'NM':'km';
-const b3=b=>String(Math.round(((b%360)+360)%360)%360).padStart(3,'0')+'°';
-function fmUs(m){if(m==null||isNaN(m))return '—';if(PL.u==='nm')return (m/1852).toFixed(m<18520?2:1)+' NM';return m<1000?Math.round(m)+' m':(m/1000).toFixed(m<10000?2:1)+' km'}
-function fmU(m){return fmUs(m)+(PL.u==='nm'&&m<1852?' ('+Math.round(m)+' m)':'')}
-const fmV=v=>v==null||isNaN(v)?'—':PL.u==='nm'?(v*1.943844).toFixed(1)+' kn':(v*3.6).toFixed(1)+' km/h';
-const fmN=v=>String(+v.toFixed(3));
-const fixes=()=>LS.g('fix',[]);
-function trkLen(){let s=0;for(let i=1;i<trk.length;i++)s+=dist(trk[i-1],trk[i]);return s}
-function trkThin(){const n=trk.length,k=Math.floor(n*2/3);trk=[trk[0],...trk.slice(1,k).filter((_,i)=>i%2),...trk.slice(k)]}
-function plT0(){return LS.g('trkT0',null)||(trk[0]&&trk[0].t?trk[0].t*1000:null)}
-function plDur(ms){if(ms==null||ms<0)return '—';const s=Math.floor(ms/1000);return Math.floor(s/3600)+':'+String(Math.floor(s/60)%60).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
-function plSeg(){const n=trk.length,b=trk[n-1];if(n<2||!b.t||Date.now()/1000-b.t>60)return null;let d=0;for(let j=n-2;j>=0;j--){const a=trk[j];if(!a.t)return null;d+=dist(a,trk[j+1]);const dt=b.t-a.t;if(dt>90)return null;if(dt>=5&&dist(a,b)>=12)return {a,b,d,dt}}return null}
-function plCog(){if(pos&&pos.hd!=null&&!isNaN(pos.hd)&&pos.spd>0.4)return pos.hd;const g=plSeg();return g?brg(g.a,g.b):null}
-function plSog(){if(pos&&pos.spd!=null&&!isNaN(pos.spd))return pos.spd;const g=plSeg();return g?g.d/g.dt:(trk.length>1&&rec?0:null)}
-function plDir(){return hdg!=null?hdg:plCog()}
-function plCenter(useOff){let c=pos||trk[trk.length-1]||fixes()[0]||null;if(!c){const w=LS.g('wps',[]);c=(tgt!=null&&w[tgt])||w[0]||null}if(!c)return null;
- c={lat:c.lat,lon:c.lon};if(useOff&&PL.off){c.lat+=PL.off.n/110540;c.lon+=PL.off.e/(Math.cos(rad(c.lat))*111320)}return c}
-function plAuto(c){let mx=0;const k=Math.cos(rad(c.lat)),f=p=>{if(p)mx=Math.max(mx,Math.hypot((p.lon-c.lon)*k*111320,(p.lat-c.lat)*110540))};
- trk.forEach(f);fixes().forEach(f);f(pos);const w=LS.g('wps',[]);if(tgt!=null)f(w[tgt]);if(PL.back&&PL.bp.length)f(PL.bp[PL.bp.length-1]);
- const need=mx*1.15/UM();return PLR.find(r=>r>=need)||PLR[PLR.length-1]}
-function plProj(c,sc,rot,cx,cy){const k=Math.cos(rad(c.lat)),cs=Math.cos(rad(rot)),sn=Math.sin(rad(rot));
- return p=>{const dx=(p.lon-c.lon)*k*111320,dy=(p.lat-c.lat)*110540;return [cx+(dx*cs-dy*sn)*sc,cy-(dx*sn+dy*cs)*sc]}}
-function plUnproj(sx,sy){const {c,sc,rot,cx,cy}=PL,k=Math.cos(rad(c.lat)),cs=Math.cos(rad(rot)),sn=Math.sin(rad(rot)),X=(sx-cx)/sc,Y=(cy-sy)/sc;
- return {lat:c.lat+(-X*sn+Y*cs)/110540,lon:c.lon+(X*cs+Y*sn)/(k*111320)}}
-function plTag(x,t,px,py,col,u,al){x.font=`bold ${Math.round(12*u)}px sans-serif`;const w=x.measureText(t).width+8*u,h=17*u;let X=al==='c'?px-w/2:px,Y=py-h/2;
- x.fillStyle='rgba(6,18,31,.82)';x.fillRect(X,Y,w,h);x.fillStyle=col;x.textAlign='left';x.textBaseline='middle';x.fillText(t,X+4*u,py+.5*u)}
-function plEdge(x,s,cx,cy,W,H,u,col,t){const m=20*u,dx=s[0]-cx,dy=s[1]-cy;if(Math.abs(dx)<W/2-m&&Math.abs(dy)<H/2-m)return;
- const f=Math.min((W/2-m)/Math.abs(dx||1e-9),(H/2-m)/Math.abs(dy||1e-9)),ex=cx+dx*f,ey=cy+dy*f,a=Math.atan2(dy,dx);
- x.save();x.translate(ex,ey);x.rotate(a);x.fillStyle=col;x.beginPath();x.moveTo(12*u,0);x.lineTo(-6*u,-8*u);x.lineTo(-6*u,8*u);x.closePath();x.fill();x.restore();
- x.font=`bold ${Math.round(12*u)}px sans-serif`;const tw=x.measureText(t).width+8*u;plTag(x,t,Math.max(4*u,Math.min(W-tw-4*u,ex-(dx>0?tw+14*u:-14*u))),Math.max(12*u,Math.min(H-12*u,ey+(dy>0?-18*u:18*u))),col,u)}
-function plDraw(cv,big){if(!cv||!cv.isConnected)return;const r=cv.getBoundingClientRect();if(!r.width)return;
- const u=Math.min(3,window.devicePixelRatio||1),W0=Math.round(r.width*u),H0=Math.round((big?r.height:r.width)*u);
- if(cv.width!==W0||cv.height!==H0){cv.width=W0;cv.height=H0}
- const x=cv.getContext('2d'),W=cv.width,H=cv.height,cx=W/2,cy=H/2;x.setTransform(1,0,0,1,0,0);x.fillStyle=PC.bg;x.fillRect(0,0,W,H);
- const c=plCenter(big);if(!c){x.fillStyle=PC.sc;x.font=`${Math.round(15*u)}px sans-serif`;x.textAlign='center';x.textBaseline='middle';x.fillText(L2('📡 Περιμένω GPS… βγες σε ανοιχτό ουρανό','📡 Waiting for GPS… go out under open sky'),cx,cy);return}
- const Rp=Math.min(W,H)/2-26*u,rng=PL.r||plAuto(c),sc=Rp/(rng*UM()),dir=plDir(),rot=PL.hup&&dir!=null?dir:0,P=plProj(c,sc,rot,cx,cy),ri=PLRR[rng]||rng/4;
- if(big)Object.assign(PL,{c,sc,rot,cx,cy,rng});
- const me=pos?P(pos):null,rc=me||[cx,cy],F=fixes(),w=LS.g('wps',[]),sog=plSog(),cog=plCog();
- x.save();x.beginPath();x.rect(0,0,W,H);x.clip();
- /* κύκλοι απόστασης (range rings) γύρω από εμένα */
- x.strokeStyle=PC.ring;x.lineWidth=u;x.setLineDash([4*u,6*u]);const rp=ri*UM()*sc,far=Math.hypot(W,H)+Math.hypot(rc[0]-cx,rc[1]-cy);
- for(let i=1;i*rp<far&&i<60;i++){x.beginPath();x.arc(rc[0],rc[1],i*rp,0,7);x.stroke()}x.setLineDash([]);
- x.fillStyle=PC.lbl;x.font=`${Math.round(11*u)}px sans-serif`;x.textAlign='left';x.textBaseline='bottom';
- for(let i=1;i*rp<far&&i<60;i++){const lx=rc[0]+i*rp*.7071+3*u,ly=rc[1]-i*rp*.7071-2*u;if(lx>0&&lx<W-30*u&&ly>14*u&&ly<H)x.fillText(fmN(i*ri)+(i===1?' '+UNL():''),lx,ly)}
- /* κλίμακα μοιρών (σαν ραντάρ) */
- x.strokeStyle=PC.ring;x.lineWidth=1.5*u;x.beginPath();x.arc(cx,cy,Rp,0,7);x.stroke();x.textAlign='center';x.textBaseline='middle';x.font=`${Math.round(11*u)}px sans-serif`;
- for(let a=0;a<360;a+=5){const s=rad(a-rot),sx=Math.sin(s),sy=-Math.cos(s),l=a%30===0?10*u:a%10===0?6*u:3*u;x.strokeStyle=a===0?PC.n:PC.sc;x.lineWidth=(a%30?1:2)*u;
-  x.beginPath();x.moveTo(cx+sx*Rp,cy+sy*Rp);x.lineTo(cx+sx*(Rp-l),cy+sy*(Rp-l));x.stroke();
-  if(a%30===0){x.fillStyle=a===0?PC.n:PC.sc;x.font=`${a===0?'bold ':''}${Math.round((a===0?14:11)*u)}px sans-serif`;x.fillText(a===0?L2('Β','N'):String(a).padStart(3,'0'),cx+sx*(Rp+13*u),cy+sy*(Rp+13*u))}}
- /* η διαδρομή (track) – κίτρινη γραμμή με βελάκια φοράς · κενά σήματος διακεκομμένα */
- if(trk.length>1){x.lineJoin='round';x.lineCap='round';x.strokeStyle=PC.trk;x.lineWidth=3.5*u;let pv=null,ps=null,acc=0;x.beginPath();const ch=[];
-  for(const p of trk){const s=P(p);if(!pv)x.moveTo(s[0],s[1]);else if(pv.t&&p.t&&p.t-pv.t>120&&dist(pv,p)>100){x.stroke();x.setLineDash([3*u,7*u]);x.beginPath();x.moveTo(ps[0],ps[1]);x.lineTo(s[0],s[1]);x.stroke();x.setLineDash([]);x.beginPath();x.moveTo(s[0],s[1])}
-   else{x.lineTo(s[0],s[1]);acc+=Math.hypot(s[0]-ps[0],s[1]-ps[1]);if(acc>90*u){acc=0;ch.push([s[0],s[1],Math.atan2(s[1]-ps[1],s[0]-ps[0])])}}pv=p;ps=s}x.stroke();
-  x.fillStyle=PC.trk;ch.forEach(([a,b,g])=>{x.save();x.translate(a,b);x.rotate(g);x.beginPath();x.moveTo(6*u,0);x.lineTo(-5*u,-5*u);x.lineTo(-5*u,5*u);x.closePath();x.fill();x.restore()})}
- if(rec&&me&&trk.length){const l=P(trk[trk.length-1]);x.strokeStyle=PC.trk;x.lineWidth=2*u;x.setLineDash([2*u,4*u]);x.beginPath();x.moveTo(l[0],l[1]);x.lineTo(me[0],me[1]);x.stroke();x.setLineDash([])}
- /* πορείες ανάμεσα στα στίγματα (αρχή → 1 → 2 → … → τώρα) με πορεία ° και απόσταση */
- const LG=[];if(trk.length)LG.push(trk[0]);F.forEach(f=>LG.push(f));if(me&&LG.length)LG.push(pos);
- for(let i=1;i<LG.length;i++){const a=P(LG[i-1]),b=P(LG[i]),now=i===LG.length-1&&me;x.strokeStyle=PC.leg;x.lineWidth=1.6*u;x.setLineDash(now?[3*u,5*u]:[9*u,5*u]);
-  x.beginPath();x.moveTo(a[0],a[1]);x.lineTo(b[0],b[1]);x.stroke();x.setLineDash([]);const lt=`${b3(brg(LG[i-1],LG[i]))} · ${fmUs(dist(LG[i-1],LG[i]))}`;x.font=`bold ${Math.round(12*u)}px sans-serif`;
-  if(Math.hypot(b[0]-a[0],b[1]-a[1])>x.measureText(lt).width+44*u)plTag(x,lt,(a[0]+b[0])/2,(a[1]+b[1])/2,PC.leg,u,'c')}
- /* επιστροφή (πράσινη) */
- const BK=plBackUpd();if(BK&&me){const B=PL.bp;x.strokeStyle=PC.back;x.lineWidth=5*u;x.globalAlpha=.9;x.setLineDash([12*u,8*u]);x.beginPath();x.moveTo(me[0],me[1]);for(let j=PL.bi;j<B.length;j++){const s=P(B[j]);x.lineTo(s[0],s[1])}x.stroke();x.setLineDash([]);x.globalAlpha=1;
-  const n=P(B[PL.bi]);x.lineWidth=3*u;x.beginPath();x.arc(n[0],n[1],11*u,0,7);x.stroke()}
- /* προορισμός «Πήγαινε» */
- const tg=tgt!=null?w[tgt]:null;if(tg&&me){const s=P(tg);x.strokeStyle=PC.wp;x.lineWidth=2*u;x.setLineDash([8*u,6*u]);x.beginPath();x.moveTo(me[0],me[1]);x.lineTo(s[0],s[1]);x.stroke();x.setLineDash([])}
- /* σημεία ⭐ */
- x.textAlign='center';x.textBaseline='middle';w.forEach((p,i)=>{const s=P(p);if(s[0]<-50||s[0]>W+50||s[1]<-50||s[1]>H+50)return;x.font=`${Math.round(22*u)}px sans-serif`;x.fillStyle='#fff';x.fillText('⭐',s[0],s[1]);
-  if(tgt===i){x.strokeStyle=PC.wp;x.lineWidth=2.5*u;x.beginPath();x.arc(s[0],s[1],17*u,0,7);x.stroke()}plTag(x,NMQ(p.n),s[0],s[1]-22*u,tgt===i?PC.wp:'#fff',u,'c')});
- /* στίγματα 📍 (κύκλος με τελεία, σαν fix στον χάρτη) */
- F.forEach((f,i)=>{const s=P(f);x.strokeStyle=PC.leg;x.fillStyle=PC.leg;x.lineWidth=2.5*u;x.beginPath();x.arc(s[0],s[1],8*u,0,7);x.stroke();x.beginPath();x.arc(s[0],s[1],2.5*u,0,7);x.fill();
-  plTag(x,`${i+1} · ${hm(f.t)}`,s[0]+11*u,s[1]+12*u,PC.leg,u)});
- /* αρχή 🏁 */
- if(trk.length){const s=P(trk[0]);x.font=`${Math.round(22*u)}px sans-serif`;x.textAlign='center';x.textBaseline='middle';x.fillText('🏁',s[0]+6*u,s[1]-9*u);plTag(x,L2('ΑΡΧΗ','START')+(plT0()?' '+hm(plT0()):''),s[0]+16*u,s[1]+10*u,PC.back,u)}
- /* κέρσορας: διόπτευση & απόσταση από εμένα (EBL / VRM) */
- if(big&&PL.cur){const s=P(PL.cur);x.strokeStyle=PC.cur;x.lineWidth=1.5*u;if(me){x.setLineDash([5*u,5*u]);x.beginPath();x.moveTo(me[0],me[1]);x.lineTo(s[0],s[1]);x.stroke();x.beginPath();x.arc(me[0],me[1],Math.hypot(s[0]-me[0],s[1]-me[1]),0,7);x.stroke();x.setLineDash([])}
-  x.lineWidth=2*u;x.beginPath();x.moveTo(s[0]-14*u,s[1]);x.lineTo(s[0]+14*u,s[1]);x.moveTo(s[0],s[1]-14*u);x.lineTo(s[0],s[1]+14*u);x.stroke();
-  if(pos)plTag(x,`${b3(brg(pos,PL.cur))} · ${fmUs(dist(pos,PL.cur))}`,s[0]+12*u,s[1]-16*u,PC.cur,u)}
- /* εγώ: κύκλος ακρίβειας, γραμμή πλώρης (πυξίδα) & γραμμή πορείας (GPS) */
- if(me){if(hdg!=null){const a=rad(hdg-rot);x.strokeStyle=PC.hdg;x.lineWidth=1.5*u;x.beginPath();x.moveTo(me[0],me[1]);x.lineTo(me[0]+Math.sin(a)*2*Rp,me[1]-Math.cos(a)*2*Rp);x.stroke()}
-  if(cog!=null&&sog!=null&&sog>0.4){const a=rad(cog-rot);x.strokeStyle=PC.cog;x.lineWidth=2.5*u;x.setLineDash([10*u,6*u]);x.beginPath();x.moveTo(me[0],me[1]);x.lineTo(me[0]+Math.sin(a)*2*Rp,me[1]-Math.cos(a)*2*Rp);x.stroke();x.setLineDash([])}
-  const ar=pos.acc*sc;if(ar>9*u){x.fillStyle='rgba(58,134,255,.18)';x.beginPath();x.arc(me[0],me[1],ar,0,7);x.fill()}
-  x.save();x.translate(me[0],me[1]);x.fillStyle=PC.me;x.strokeStyle='#fff';x.lineWidth=2.5*u;
-  if(dir!=null){x.rotate(rad(dir-rot));x.beginPath();x.moveTo(0,-15*u);x.lineTo(10*u,11*u);x.lineTo(0,5*u);x.lineTo(-10*u,11*u);x.closePath();x.fill();x.stroke()}
-  else{x.beginPath();x.arc(0,0,10*u,0,7);x.fill();x.stroke()}x.restore()}
- x.restore();
- /* δείκτες στην άκρη για ό,τι είναι έξω από την οθόνη */
- if(me){if(trk.length)plEdge(x,P(trk[0]),cx,cy,W,H,u,PC.back,'🏁 '+fmUs(dist(pos,trk[0])));if(tg)plEdge(x,P(tg),cx,cy,W,H,u,PC.wp,NMQ(tg.n)+' '+fmUs(dist(pos,tg)))}
- if(big&&PL.off&&me)plEdge(x,me,cx,cy,W,H,u,PC.me,L2('εγώ','me'));
- /* γωνίες: κλίμακα & προσανατολισμός */
- x.textBaseline='top';x.textAlign='left';x.fillStyle='#fff';x.font=`bold ${Math.round(16*u)}px sans-serif`;x.fillText(fmN(rng)+' '+UNL()+(PL.r?'':' AUTO'),8*u,6*u);
- x.font=`${Math.round(11*u)}px sans-serif`;x.fillStyle=PC.lbl;x.fillText(L2('κύκλοι ανά ','rings ')+fmN(ri)+' '+UNL(),8*u,26*u);
- x.textAlign='right';x.fillStyle='#fff';x.font=`bold ${Math.round(14*u)}px sans-serif`;x.fillText(PL.hup?(dir!=null?'H UP':'H UP (—)'):'N UP',W-8*u,6*u);
- if(!big){x.font=`${Math.round(11*u)}px sans-serif`;x.fillStyle=PC.lbl;x.fillText(L2('πάτα για μεγάλη οθόνη','tap for full screen'),W-8*u,26*u)}}
-function plReq(){if(PL.raf)return;PL.raf=requestAnimationFrame(()=>{PL.raf=0;plDraw($('#plc'),true);plDraw($('#cv'),false);plInfo()})}
-/* ---- επιστροφή ---- */
-function plBackUpd(){if(!PL.back||!pos||!PL.bp.length)return null;const B=PL.bp,th=Math.max(15,pos.acc*.6);
- if(PL.bi==null||PL.bi>=B.length){let bd=1e12;PL.bi=0;B.forEach((p,j)=>{const d=dist(pos,p);if(d<bd){bd=d;PL.bi=j}})}
- for(let j=Math.min(B.length-1,PL.bi+15);j>PL.bi;j--)if(dist(pos,B[j])<th){PL.bi=j;break}
- while(PL.bi<B.length-1&&dist(pos,B[PL.bi])<th)PL.bi++;
- const t=B[PL.bi],d=dist(pos,t),b=brg(pos,t);let rem=d;for(let j=PL.bi;j<B.length-1;j++)rem+=dist(B[j],B[j+1]);
- const done=PL.bi===B.length-1&&d<th;if(done&&!PL.fin){PL.fin=true;try{beep(1046,200)}catch(e){}vib([200,100,200])}return {t,d,b,rem,done}}
-function plBackStart(mode){const s=trk[0];if(!s||(mode==='trk'&&trk.length<2)){alert(L2('Δεν υπάρχει καταγεγραμμένη διαδρομή. Πάτα ▶️ ΕΝΑΡΞΗ πριν ξεκινήσεις.','No recorded track yet. Press ▶️ START before you set off.'));return}
- PL.bp=mode==='line'?[{lat:s.lat,lon:s.lon}]:bkThin().map(p=>({lat:p.lat,lon:p.lon}));PL.back=mode;PL.bi=null;PL.fin=false;PL.off=null;LS.s('plB',mode);LS.s('plBP',PL.bp);
- if(tgt!=null){tgt=null;LS.s('tgt',null)}startGeo();wake(1);plOrient();plSheetClose();plUI();plReq();plInfo(1)}
-function plBackStop0(){PL.back=null;PL.bp=[];PL.bi=null;LS.s('plB',null);LS.s('plBP',[])}
-function plBackSheet(){if(PL.back){plBackStop0();plUI();plReq();plInfo(1);return}
- plSheet(`<b>↩️ ${L2('Πώς θες να γυρίσεις;','How do you want to go back?')}</b>
- <button class="big grn" onclick="plBackStart('trk')">↩️ ${L2('Από τον ΙΔΙΟ δρόμο','By the SAME way')}<small>${L2('ακολουθεί την κίτρινη γραμμή ανάποδα – το πιο ασφαλές','follows the yellow line backwards – the safest')}</small></button>
- <button class="big blu" onclick="plBackStart('line')">🏁 ${L2('Ευθεία προς την αρχή','Straight to the start')}<small>${L2('μόνο σε ανοιχτό, γνωστό ή θαλάσσιο χώρο','only in open, known terrain or at sea')}</small></button>
- <div class="warn" style="font-size:.85em">${L2('Στο βουνό, στο δάσος, στο σκοτάδι ή στον καπνό γύρνα ΠΑΝΤΑ από τον ίδιο δρόμο. Η ευθεία μπορεί να περνάει από γκρεμό, ρέμα ή φράχτη.','On a mountain, in a forest, in the dark or in smoke ALWAYS go back the same way. A straight line may cross a cliff, a stream or a fence.')}</div>`)}
-/* ---- έναρξη / τέλος / στίγμα ---- */
-function plGo(){if(rec){if(!confirm(L2('Σταματάς την καταγραφή της διαδρομής;','Stop recording the track?')))return;rec=false;LS.s('rec',false);plUI();plInfo(1);plReq();return}
- if(trk.length>1)plSheet(`<b>${L2('Υπάρχει ήδη διαδρομή','There is already a track')}: ${fmU(trkLen())}</b>
-  <button class="big grn" onclick="plResume()">▶️ ${L2('Συνέχισε την ίδια διαδρομή','Continue the same track')}</button>
-  <button class="big org" onclick="plNew()">🆕 ${L2('ΝΕΑ διαδρομή','NEW track')}<small>${L2('η παλιά σβήνεται','the old one is erased')}</small></button>
-  <button class="btn" style="width:100%" onclick="plGPX()">💾 ${L2('Κράτα πρώτα την παλιά (αρχείο GPX)','Keep the old one first (GPX file)')}</button>`);
- else plNew()}
-function plNew(){trk=[];LS.s('trk',trk);LS.s('fix',[]);LS.s('trkT0',Date.now());plBackStop0();rec=true;LS.s('rec',true);startGeo();wake(1);
- if(pos&&pos.acc<60&&Date.now()-pos.t<15000){trk.push({lat:+pos.lat.toFixed(6),lon:+pos.lon.toFixed(6),t:Math.round(Date.now()/1000)});LS.s('trk',trk)}
- PL.off=null;PL.cur=null;PL.hide=true;vib(80);try{beep(880,80)}catch(e){}plSheetClose();plUI();plReq();plInfo(1);plToast('▶️ '+L2('Η καταγραφή ξεκίνησε – περπάτα!','Recording started – go!'))}
-function plResume(){rec=true;LS.s('rec',true);if(!LS.g('trkT0',null))LS.s('trkT0',Date.now());startGeo();wake(1);PL.hide=true;plSheetClose();plUI();plReq();plInfo(1)}
-function plFix(){if(!pos){alert(L2('Περίμενε να βρεθεί η θέση σου (GPS).','Wait until your GPS position is found.'));return}
- const F=fixes();F.push({lat:+pos.lat.toFixed(6),lon:+pos.lon.toFixed(6),t:Date.now(),acc:Math.round(pos.acc)});LS.s('fix',F);
- vib(60);try{beep(1200,60)}catch(e){}plToast(`📍 ${L2('Στίγμα','Fix')} ${F.length} · ${hm(Date.now())}`);plReq();plInfo(1)}
-/* ---- κλίμακα / προσανατολισμός / μονάδες ---- */
-function plZoom(d){const cur=PL.r||PL.rng||4;let i=PLR.indexOf(cur);if(i<0)i=Math.max(0,PLR.findIndex(r=>r>=cur));i=Math.max(0,Math.min(PLR.length-1,i+d));PL.r=PLR[i];LS.s('plR',PL.r);plUI();plReq()}
-function plSetR(r){PL.r=r;LS.s('plR',r);plSheetClose();plUI();plReq()}
-function plRangeSheet(){plSheet(`<b>📏 ${L2('Κλίμακα (ακτίνα από εσένα ως την άκρη)','Range (radius from you to the edge)')}</b>
- <div class="tools"><button class="btn ${PL.r?'':'p'}" style="flex:1 1 100%" onclick="plSetR(0)">AUTO – ${L2('χωράει όλη τη διαδρομή','fits the whole track')}</button>${PLR.map(r=>`<button class="btn ${PL.r===r?'p':''}" style="flex:1 1 22%" onclick="plSetR(${r})">${fmN(r)} ${UNL()}</button>`).join('')}</div>
- <div class="muted">${L2('Όπως στο ραντάρ: κάθε κλίμακα έχει κύκλους απόστασης (π.χ. 4 NM → κύκλοι ανά 1 NM). Με δύο δάχτυλα: τσίμπημα για μεγέθυνση/σμίκρυνση.','Like a radar: each range has distance rings (e.g. 4 NM → rings every 1 NM). Pinch with two fingers to zoom.')}</div>`)}
-function plOrient(){if(orientOn&&hdg!=null)return;if(orientOn){window.removeEventListener('deviceorientation',onOr,true);window.removeEventListener('deviceorientationabsolute',onOr,true);orientOn=false}try{startOrient()}catch(e){}}
-function plHup(){PL.hup=!PL.hup;LS.s('plH',PL.hup);if(PL.hup)plOrient();plUI();plReq()}
-function plUnit(){PL.u=PL.u==='nm'?'km':'nm';LS.s('plU',PL.u);plUI();plReq();plInfo(1)}
-function plRecenter(){PL.off=null;PL.cur=null;plSheetClose();plReq()}
-/* ---- πάτημα στον χάρτη: διόπτευση/απόσταση → σημείο ή «πήγαινε εκεί» ---- */
-function plTap(sx,sy){if(!PL.c)return;PL.cur=plUnproj(sx,sy);const c=PL.cur;
- plSheet(`<div style="text-align:center"><b style="font-size:1.25em;color:${PC.cur}">⌖ ${pos?`${b3(brg(pos,c))} · ${fmU(dist(pos,c))}`:''}</b><div class="mono muted">${ddm(c.lat,'N','S')} ${ddm(c.lon,'E','W')}</div><div class="muted">${pos?L2('πορεία και απόσταση από εσένα ως εκεί','course and distance from you to there'):''}</div></div>
- <div class="tools"><button class="btn g" style="flex:1" onclick="plCurSave(0)">⭐ ${L2('Σημείο εδώ','Waypoint here')}</button><button class="btn p" style="flex:1" onclick="plCurSave(1)">➡️ ${L2('Πήγαινε εκεί','Go there')}</button></div>`);plReq()}
-function plCurSave(goTo){const c=PL.cur;if(!c)return;const w=LS.g('wps',[]),n=prompt(L2('Όνομα σημείου:','Waypoint name:'),L2('Σημείο ','Point ')+(w.length+1));if(!n)return;
- w.push({n,lat:+c.lat.toFixed(6),lon:+c.lon.toFixed(6),t:Date.now()});LS.s('wps',w);if(goTo){tgt=w.length-1;LS.s('tgt',tgt);if(PL.back)plBackStop0()}PL.cur=null;plSheetClose();plUI();plReq();plInfo(1)}
-function plNoTgt(){tgt=null;LS.s('tgt',null);plSheetClose();plReq();plInfo(1)}
-/* ---- μενού, ημερολόγιο στιγμάτων, GPX, βοήθεια ---- */
-function plMenu(){plSheet(`<b>☰ Plotter</b>
- <button class="row" onclick="plLog()"><span class="e">📋</span><span><b>${L2('Στίγματα & πορείες','Fixes & courses')}</b><small>${L2('ώρα, θέση, πορεία, απόσταση, ταχύτητα – σαν ημερολόγιο γέφυρας','time, position, course, distance, speed – like a deck log')}</small></span></button>
- <button class="row" onclick="plGPX()"><span class="e">💾</span><span><b>${L2('Αποθήκευση GPX','Save GPX')}</b><small>${L2('για Garmin, Google Earth, OpenCPN, Navionics','for Garmin, Google Earth, OpenCPN, Navionics')}</small></span></button>
- ${tgt!=null?`<button class="row" onclick="plNoTgt()"><span class="e">✖</span><span><b>${L2('Ακύρωσε το «Πήγαινε»','Cancel «Go to»')}</b></span></button>`:''}
- <button class="row" onclick="plSheetClose();go('compass')"><span class="e">⭐</span><span><b>${L2('Τα σημεία μου & πυξίδα','My waypoints & compass')}</b><small>${L2('σπίτι, αυτοκίνητο, συνάντηση – με συντεταγμένες','home, car, meeting point – by coordinates')}</small></span></button>
- <button class="row" onclick="plNewAsk()"><span class="e">🆕</span><span><b>${L2('Νέα διαδρομή','New track')}</b><small>${L2('σβήνει διαδρομή και στίγματα','erases track and fixes')}</small></span></button>
- <button class="row" onclick="plHelp()"><span class="e">❓</span><span><b>${L2('Πώς δουλεύει','How it works')}</b></span></button>`)}
-function plNewAsk(){if(confirm(L2('Να σβηστεί η διαδρομή και τα στίγματα και να ξεκινήσει νέα καταγραφή από εδώ;','Erase the track and fixes and start a new recording from here?')))plNew()}
-function plLog(){const F=fixes(),R=[];const s=trk[0];if(s)R.push({n:L2('🏁 Αρχή','🏁 Start'),p:s,t:plT0()});F.forEach((f,i)=>R.push({n:'📍 '+(i+1),p:f,t:f.t}));if(pos)R.push({n:L2('🔵 Τώρα','🔵 Now'),p:pos,t:Date.now()});
- const rows=R.map((r,i)=>{const pv=i?R[i-1]:null,d=pv?dist(pv.p,r.p):0,dt=pv&&r.t&&pv.t?(r.t-pv.t)/1000:0;
-  return `<tr><td><b>${r.n}</b><br>${r.t?hm(r.t):''}</td><td class="mono">${ddm(r.p.lat,'N','S')}<br>${ddm(r.p.lon,'E','W')}</td><td>${pv?`${b3(brg(pv.p,r.p))}<br>${fmUs(d)}${dt>30?`<br><small>${fmV(d/dt)}</small>`:''}`:'—'}</td></tr>`}).join('');
- plSheet(`<b>📋 ${L2('Στίγματα & πορείες','Fixes & courses')}</b><div class="muted">${L2('Διαδρομή','Track')}: <b>${fmU(trkLen())}</b>${plT0()?` · ${L2('χρόνος','time')} ${plDur(Date.now()-plT0())}`:''}</div>
- ${R.length?`<table class="sunt"><tr><th>#</th><th>${L2('Θέση','Position')}</th><th>${L2('Πορεία · απόσταση · ταχύτητα από το προηγούμενο','Course · distance · speed from previous')}</th></tr>${rows}</table>`:`<div class="muted">${L2('Δεν υπάρχουν ακόμα στίγματα.','No fixes yet.')}</div>`}
- <div class="tools"><button class="btn" onclick="plGPX()">💾 GPX</button>${F.length?`<button class="btn r" onclick="if(confirm('${L2('Σβήσιμο όλων των στιγμάτων;','Delete all fixes?')}')){LS.s('fix',[]);plReq();plLog()}">🧹 ${L2('Σβήσε στίγματα','Delete fixes')}</button>`:''}</div>`)}
-function plGPX(){const w=LS.g('wps',[]),F=fixes(),iso=t=>new Date(t).toISOString(),xe=s=>String(s).replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&apos;'}[c]));
- if(!trk.length&&!w.length&&!F.length){alert(L2('Δεν υπάρχει ακόμα τίποτα για αποθήκευση.','Nothing to save yet.'));return}
- const d=new Date(),ds=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+'_'+String(d.getHours()).padStart(2,'0')+String(d.getMinutes()).padStart(2,'0');
- let g='<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="Survival 72+ (George Barbaris)" xmlns="http://www.topografix.com/GPX/1/1">\n';
- w.forEach(p=>g+=`<wpt lat="${p.lat}" lon="${p.lon}">${p.t?`<time>${iso(p.t)}</time>`:''}<name>${xe(p.n)}</name><sym>Flag, Blue</sym></wpt>\n`);
- F.forEach((p,i)=>g+=`<wpt lat="${p.lat}" lon="${p.lon}"><time>${iso(p.t)}</time><name>FIX ${i+1}</name><sym>Navaid, Red</sym></wpt>\n`);
- if(trk.length)g+=`<trk><name>Track ${ds}</name><trkseg>\n`+trk.map(p=>`<trkpt lat="${p.lat}" lon="${p.lon}">${p.t?`<time>${iso(p.t*1000)}</time>`:''}</trkpt>`).join('\n')+'\n</trkseg></trk>\n';
- g+='</gpx>\n';const name=`track_${ds}.gpx`,bl=new Blob([g],{type:'application/gpx+xml'});
- try{const f=new File([bl],name,{type:'application/gpx+xml'});if(navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],title:name}).catch(()=>{});return}}catch(e){}
- const a=document.createElement('a');a.href=URL.createObjectURL(bl);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},2000);plToast('💾 '+name)}
-function plHelp(){plSheet(`<b>❓ ${L2('Πώς δουλεύει ο Plotter','How the Plotter works')}</b>
- <div class="step"><span class="n">1</span><span>${L2('Πάτα <b>▶️ ΕΝΑΡΞΗ</b> εκεί που ξεκινάς (σπίτι, αυτοκίνητο, λιμάνι). Μπαίνει η σημαία 🏁.','Press <b>▶️ START</b> where you set off (home, car, harbour). The 🏁 flag is placed.')}</span></div>
- <div class="step"><span class="n">2</span><span>${L2('Περπάτα / οδήγα / πλέε. Η <b style="color:#fcbf49">κίτρινη γραμμή</b> δείχνει από πού πέρασες, τα βελάκια τη φορά.','Walk / drive / sail. The <b style="color:#fcbf49">yellow line</b> shows where you passed, the arrows the direction.')}</span></div>
- <div class="step"><span class="n">3</span><span>${L2('<b>📍 Στίγμα</b> = σημάδι με ώρα. Η <b style="color:#4cc9f0">γαλάζια γραμμή</b> δείχνει πορεία ° και απόσταση από στίγμα σε στίγμα – όπως στον χάρτη της γέφυρας.','<b>📍 Fix</b> = a mark with time. The <b style="color:#4cc9f0">light-blue line</b> shows course ° and distance from fix to fix – like on the chart on the bridge.')}</span></div>
- <div class="step"><span class="n">4</span><span>${L2('<b>↩️ ΕΠΙΣΤΡΟΦΗ</b>: η <b style="color:#2ecc71">πράσινη γραμμή</b> σε γυρίζει πίσω από τον ίδιο δρόμο. Πάνω γράφει απόσταση, πορεία και «στρίψε δεξιά/αριστερά».','<b>↩️ RETURN</b>: the <b style="color:#2ecc71">green line</b> takes you back the same way. The top bar shows distance, course and «turn right/left».')}</span></div>
- <div class="step"><span class="n">5</span><span>${L2('<b>＋ / －</b> ή τσίμπημα = κλίμακα, όπως στο ραντάρ (0.25 … 4 · 6 · 8 · 10 · 12 · 16 NM). Σύρε τον χάρτη με το δάχτυλο, <b>⌖</b> = ξανά στο κέντρο. Πάτα ένα σημείο = πορεία & απόσταση ως εκεί.','<b>＋ / －</b> or pinch = range, like a radar (0.25 … 4 · 6 · 8 · 10 · 12 · 16 NM). Drag the map with a finger, <b>⌖</b> = back to centre. Tap a spot = course & distance to it.')}</span></div>
- <div class="step"><span class="n">6</span><span>${L2('<b>N UP</b> = ο Βορράς πάνω (σαν χάρτης). <b>H UP</b> = ό,τι έχεις μπροστά σου είναι πάνω (θέλει πυξίδα). Λευκή γραμμή = πού κοιτάς, πορτοκαλί = πού κινείσαι.','<b>N UP</b> = north up (like a chart). <b>H UP</b> = what is ahead of you is up (needs the compass). White line = where you face, orange = where you move.')}</span></div>
- <div class="warn" style="font-size:.85em">${L2('Το κινητό καταγράφει μόνο με την εφαρμογή ανοιχτή και την οθόνη αναμμένη (μένει αναμμένη μόνη της). Χαμήλωσε τη φωτεινότητα και έχε powerbank.','The phone records only with the app open and the screen on (it stays on by itself). Lower the brightness and carry a powerbank.')}</div>`)}
-/* ---- φύλλο κάτω, μήνυμα, πληροφορίες ---- */
-function plSheet(h){const s=$('#plsh');if(!s)return;s.innerHTML=h+`<button class="btn" style="width:100%;margin-top:8px" onclick="plSheetClose()">✖ ${L2('Κλείσε','Close')}</button>`;s.style.display='block';s.scrollTop=0}
-function plSheetClose(){const s=$('#plsh');if(s)s.style.display='none';if(PL.cur){PL.cur=null;plReq()}}
-let plTt=null;function plToast(t){const e=$('#pltoast');if(!e)return;e.textContent=t;e.style.display='block';clearTimeout(plTt);plTt=setTimeout(()=>{e.style.display='none'},2600)}
-function plUI(){const g=$('#plgo');if(!g)return;
- g.className='plbig '+(rec?'stop':'go');g.innerHTML=rec?`⏹<small>${L2('ΤΕΛΟΣ','STOP')}</small>`:`▶️<small>${L2('ΕΝΑΡΞΗ','START')}</small>`;
- const b=$('#plbk');b.className='plbig '+(PL.back?'stop':'bk');b.innerHTML=PL.back?`⏹<small>${L2('Τέλος επιστροφής','End return')}</small>`:`↩️<small>${L2('ΕΠΙΣΤΡΟΦΗ','RETURN')}</small>`;
- $('#plrb').innerHTML=PL.r?`${fmN(PL.r)}<small>${UNL()}</small>`:`AUTO<small>${UNL()}</small>`;
- $('#plhb').innerHTML=PL.hup?`H UP<small>${L2('μπροστά','ahead')}</small>`:`N UP<small>${L2('Βορράς','north')}</small>`;
- $('#plub').innerHTML=PL.u==='nm'?`NM<small>${L2('ναυτ. μίλια','naut. miles')}</small>`:`km<small>${L2('χιλιόμ.','kilom.')}</small>`;
- const st=$('#plst');if(st){const show=!rec&&trk.length<2&&!PL.back&&!PL.hide;st.style.display=show?'block':'none';
-  if(show)st.innerHTML=`<b>🛰️ ${L2('Ξεκίνα από εδώ','Start here')}</b><div style="margin:6px 0">1️⃣ ${L2('Πάτα <b>▶️ ΕΝΑΡΞΗ</b> εκεί που ξεκινάς.','Press <b>▶️ START</b> where you set off.')}<br>2️⃣ ${L2('Η <b style="color:#fcbf49">κίτρινη γραμμή</b> δείχνει τη διαδρομή σου.','The <b style="color:#fcbf49">yellow line</b> shows your way.')}<br>3️⃣ ${L2('<b>📍 Στίγμα</b> = σημάδι με ώρα.','<b>📍 Fix</b> = a mark with the time.')}<br>4️⃣ ${L2('<b>↩️ ΕΠΙΣΤΡΟΦΗ</b> = σε γυρίζει πίσω.','<b>↩️ RETURN</b> = takes you back.')}</div><div class="tools" style="margin:0"><button class="btn g" style="flex:2" onclick="plGo()">▶️ ${L2('ΕΝΑΡΞΗ','START')}</button><button class="btn" style="flex:1" onclick="PL.hide=true;plUI()">✖</button></div>`}}
-function plInfo(force){const e=$('#plinf');if(!e)return;const now=Date.now();if(!force&&now-PL.li<700)return;PL.li=now;
- const t0=plT0(),sog=plSog(),cog=plCog(),w=LS.g('wps',[]),tg=tgt!=null?w[tgt]:null,BK=plBackUpd(),dir=plDir();let nv='';
- const turn=b=>dir!=null?' · '+turnTxt(b-dir):'';
- if(!pos)nv=`<span class="nv">📡 ${L2('Περιμένω GPS… βγες σε ανοιχτό ουρανό','Waiting for GPS… go out under open sky')}</span>`;
- else if(BK)nv=BK.done?`<span class="nv" style="color:#2ecc71">🏁 ${L2('Έφτασες στην αρχή!','You reached the start!')}</span>`:`<span class="nv" style="color:#2ecc71">↩️ <b>${fmU(BK.d)}</b> ${L2('στις','at')} <b>${b3(BK.b)}</b>${turn(BK.b)}</span><br>${L2('Ως την αρχή','To the start')} ~${fmUs(BK.rem)} · ${L2('σημείο','point')} ${PL.bi+1}/${PL.bp.length}`;
- else if(tg)nv=`<span class="nv">➡️ <span class="notr">${esc(tg.n)}</span>: <b>${fmU(dist(pos,tg))}</b> ${L2('στις','at')} <b>${b3(brg(pos,tg))}</b>${turn(brg(pos,tg))}</span>`;
- else if(trk.length)nv=`<span class="nv" style="color:#2ecc71">🏁 ${L2('Αρχή','Start')}: <b>${fmU(dist(pos,trk[0]))}</b> ${L2('στις','at')} <b>${b3(brg(pos,trk[0]))}</b></span>`;
- e.innerHTML=`<div>${rec?`<span class="rc">⏺ ${L2('ΚΑΤΑΓΡΑΦΗ','REC')}</span> ${t0?plDur(now-t0):''}`:trk.length>1?`⏸ ${L2('Χωρίς καταγραφή','Not recording')}`:`⏹ ${L2('Δεν ξεκίνησε','Not started')}`} · ${L2('Διαδρομή','Track')} <b>${fmUs(trkLen())}</b> · GPS ${pos?'±'+Math.round(pos.acc)+' m':'—'}</div>
- <div>${L2('Ταχύτητα','Speed')} <b>${fmV(sog)}</b> · ${L2('Πορεία','Course')} <b>${cog!=null?b3(cog):'—'}</b>${hdg!=null?` · ${L2('Πυξίδα','Compass')} <b>${b3(hdg)}</b>`:''}</div>
- ${nv?`<div>${nv}</div>`:''}${pos?`<div class="mono" style="opacity:.85">${ddm(pos.lat,'N','S')} ${ddm(pos.lon,'E','W')}</div>`:''}`}
-/* ---- αφή: σύρσιμο, τσίμπημα, πάτημα ---- */
-function plPtr(cv){const P=new Map();let pz=null,dr=null,mv=false;
- cv.addEventListener('pointerdown',e=>{try{cv.setPointerCapture(e.pointerId)}catch(_){}P.set(e.pointerId,[e.clientX,e.clientY]);
-  if(P.size===2){const [a,b]=[...P.values()];pz=Math.hypot(a[0]-b[0],a[1]-b[1]);dr=null;mv=true}else if(P.size===1){dr={x:e.clientX,y:e.clientY,o:PL.off?{...PL.off}:{e:0,n:0}};mv=false}});
- cv.addEventListener('pointermove',e=>{if(!P.has(e.pointerId))return;P.set(e.pointerId,[e.clientX,e.clientY]);
-  if(P.size===2&&pz){const [a,b]=[...P.values()],d=Math.hypot(a[0]-b[0],a[1]-b[1]);if(d/pz>1.35){plZoom(-1);pz=d}else if(d/pz<.74){plZoom(1);pz=d}return}
-  if(!dr||!PL.sc)return;const dx=e.clientX-dr.x,dy=e.clientY-dr.y;if(!mv&&Math.hypot(dx,dy)<10)return;if(!mv&&!PL.r){PL.r=PL.rng;LS.s('plR',PL.r);plUI()}mv=true;
-  const k=cv.width/cv.getBoundingClientRect().width,X=-dx*k/PL.sc,Y=dy*k/PL.sc,cs=Math.cos(rad(PL.rot)),sn=Math.sin(rad(PL.rot));PL.off={e:dr.o.e+X*cs+Y*sn,n:dr.o.n-X*sn+Y*cs};plReq()});
- const up=e=>{if(!P.has(e.pointerId))return;P.delete(e.pointerId);if(P.size<2)pz=null;
-  if(!P.size){if(dr&&!mv&&e.type==='pointerup'){const r=cv.getBoundingClientRect(),k=cv.width/r.width;plTap((e.clientX-r.left)*k,(e.clientY-r.top)*k)}dr=null}};
- cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);cv.addEventListener('wheel',e=>{e.preventDefault();plZoom(e.deltaY>0?1:-1)},{passive:false})}
-/* ---- η οθόνη του Plotter ---- */
-function tPlot(){T('🛰️ Plotter');M.innerHTML='';let w=$('#plw');if(w)w.remove();w=document.createElement('div');w.id='plw';
- w.innerHTML=`<div id="plinf" class="plinf"></div><div class="plmid"><canvas id="plc"></canvas>
- <div class="plside"><button class="plb" onclick="plZoom(-1)" aria-label="zoom in">＋</button><button class="plb plr" id="plrb" onclick="plRangeSheet()"></button><button class="plb" onclick="plZoom(1)" aria-label="zoom out">－</button><button class="plb" id="plhb" onclick="plHup()"></button><button class="plb" id="plub" onclick="plUnit()"></button><button class="plb" onclick="plRecenter()" aria-label="centre">⌖<small>${L2('κέντρο','centre')}</small></button></div>
- <div id="plst" class="plstart"></div><div id="pltoast" class="pltoast"></div><div id="plsh" class="plsh"></div></div>
- <div class="plbar"><button class="plbig" id="plgo" onclick="plGo()"></button><button class="plbig" onclick="plFix()">📍<small>${L2('ΣΤΙΓΜΑ','FIX')}</small></button><button class="plbig" id="plbk" onclick="plBackSheet()"></button><button class="plbig" onclick="plMenu()">☰<small>${L2('Μενού','Menu')}</small></button><button class="plbig" onclick="back()">✖<small>${L2('Έξοδος','Exit')}</small></button></div>`;
- document.body.appendChild(w);startGeo();wake(1);plPtr($('#plc'));PL.off=null;PL.cur=null;PL.bi=null;
- const rs=()=>plReq(),iv=setInterval(()=>{plInfo();plReq()},1000);window.addEventListener('resize',rs);
- TS.push(()=>{clearInterval(iv);window.removeEventListener('resize',rs);const e=$('#plw');if(e)e.remove();PL.cur=null});
- PL.oTry=false;const needP=typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function';
- if((PL.hup||PL.back)&&!needP)plOrient();w.addEventListener('click',()=>{if((PL.hup||PL.back)&&hdg==null&&!PL.oTry){PL.oTry=true;plOrient()}},true);plUI();plInfo(1);plReq()}
-TOOLS.splice(Math.max(0,TOOLS.findIndex(t=>t[0]==='back')),0,['plot','🛰️',L2('Plotter – χάρτης διαδρομής','Plotter – track map'),L2('ΕΝΑΡΞΗ · στίγματα · πορείες · γύρνα πίσω – σαν GPS/ραντάρ, κλίμακες NM/km','START · fixes · courses · go back – like a GPS/radar, NM/km ranges')]);
-{const _t=tool;tool=function(id){if(id==='plot')return tPlot();_t(id)}}
-{const _h=home;home=function(){_h();const n=M.querySelector('[onclick="go(\'near\')"]');if(n)n.insertAdjacentHTML('beforebegin',`<button class="tile" onclick="go('t/plot')" style="grid-column:1/-1;min-height:80px;background:#0b3b2e;border-color:var(--grn)"><span class="e" style="font-size:1.6em">🛰️</span>${L2('Plotter – διαδρομή & γύρνα πίσω','Plotter – track & go back')}<small>${L2('▶️ ΕΝΑΡΞΗ · 📍 στίγματα · πορείες · ↩️ επιστροφή · κλίμακες σαν ραντάρ','▶️ START · 📍 fixes · courses · ↩️ return · radar-like ranges')}</small></button>`)}}
-
 try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{})}catch(e){}
 
 if(rec)startGeo();
