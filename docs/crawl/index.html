@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="el"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Crawl Calculator · Overland’s Habit</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Crawl Calc">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#1f1e1d">
+<script src="data.js"></script>
+<style>
+:root{--bg:#1a1918;--card:#262422;--line:#3d3935;--tx:#f5f0e8;--mut:#a8a29e;--red:#d9534f;--org:#d97757;--grn:#5f9e7a;--yel:#e8b86d;--blu:#6a9fb5}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--tx);font-family:-apple-system,system-ui,"Segoe UI",Roboto,Arial,sans-serif;font-size:18px;line-height:1.45}
+header{position:sticky;top:0;z-index:5;background:#1f1e1d;display:flex;align-items:center;gap:10px;padding:calc(env(safe-area-inset-top) + 10px) 12px 8px;border-bottom:1px solid var(--line)}
+header img{width:44px;height:44px;border-radius:10px}
+.tw{flex:1;min-width:0}header h1{font-size:1.08em;margin:0;white-space:nowrap}
+#tag{font-size:.72em;color:#c96442;font-style:italic;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hb{background:var(--card);color:var(--tx);border:1px solid var(--line);border-radius:12px;min-width:48px;height:44px;font-size:.9em;font-weight:800}
+main{padding:12px 12px calc(env(safe-area-inset-bottom) + 40px);max-width:760px;margin:0 auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin:0 0 14px}
+.card h2{font-size:1.05em;margin:0 0 10px;color:var(--org)}
+.card h2 b{display:inline-block;background:var(--org);color:#1a1918;border-radius:50%;width:1.6em;height:1.6em;text-align:center;line-height:1.6em;margin-right:6px;font-size:.85em}
+label{display:block;font-size:.78em;color:var(--mut);margin:0 0 3px}
+input,select{width:100%;font-size:1.05em;padding:11px 10px;border-radius:12px;border:1px solid var(--line);background:#1a1918;color:var(--tx);font-family:inherit}
+input:focus,select:focus{outline:2px solid var(--org);border-color:transparent}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.note{font-size:.8em;color:var(--mut);margin:8px 0 0}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px}
+.chip{background:#1a1918;color:var(--tx);border:1px solid var(--line);border-radius:999px;padding:9px 14px;font-size:.95em;font-weight:700}
+.chip.on{background:var(--org);border-color:var(--org);color:#1a1918}
+.btn{border:0;border-radius:12px;padding:12px 14px;font-size:.95em;font-weight:800;background:var(--blu);color:#fff}
+.btn.g{background:var(--grn)}.btn.r{background:#4a2b2a;color:#f3b9b7}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.big3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center}
+.kpi{background:#1a1918;border:1px solid var(--line);border-radius:14px;padding:10px 4px}
+.kpi .v{font-size:1.55em;font-weight:900;line-height:1.1}.kpi .l{font-size:.68em;color:var(--mut);margin-top:3px}
+.scale{position:relative;height:14px;border-radius:7px;margin:16px 0 4px;background:linear-gradient(90deg,#6b6460 0%,#6a9fb5 25%,#5f9e7a 45%,#e8b86d 70%,#d9534f 100%)}
+.mk{position:absolute;top:-6px;width:4px;height:26px;border-radius:2px;background:#fff;box-shadow:0 0 0 2px #1a1918}
+.mk.s{background:#a8a29e}
+.sl{display:flex;justify-content:space-between;font-size:.65em;color:var(--mut)}
+.verdict{margin-top:10px;padding:10px 12px;border-radius:12px;background:#1a1918;border-left:5px solid var(--org);font-size:.92em}
+.opt{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}
+.opt:last-child{border-bottom:0}.opt .t{font-size:.9em}.opt .t small{display:block;color:var(--mut);font-size:.8em}
+.opt .n{font-size:1.25em;font-weight:900;color:var(--yel);text-align:right;white-space:nowrap}.opt .n small{display:block;font-size:.55em;color:var(--mut);font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:.88em}
+th{color:var(--mut);font-weight:600;font-size:.78em;text-align:right;padding:6px 4px}th:first-child,td:first-child{text-align:left}
+td{padding:9px 4px;border-top:1px solid var(--line);text-align:right;font-weight:700}
+td .lim{display:block;font-size:.72em;font-weight:500;color:var(--mut)}
+.bar{height:8px;border-radius:4px;background:#1a1918;margin-top:4px;overflow:hidden}.bar i{display:block;height:100%;background:var(--grn)}
+details{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:0 14px;margin:0 0 14px}
+summary{padding:14px 0;font-weight:800;color:var(--org);list-style:none;cursor:pointer}summary::-webkit-details-marker{display:none}
+summary:after{content:"＋";float:right;color:var(--mut)}details[open] summary:after{content:"－"}
+details .in{padding:0 0 14px;font-size:.93em}details p{margin:0 0 10px}
+.s10{background:#2f2a24;border-radius:12px;padding:10px 12px;margin:0 0 10px;border-left:5px solid var(--yel)}
+.good{color:#8fd1a8}.bad{color:#f08a86}.warn{color:var(--yel)}
+footer{text-align:center;color:var(--mut);font-size:.75em;padding:8px 0 20px}
+footer b{color:var(--org)}
+</style></head>
+<body>
+<header><img src="icon-192.png" alt=""><div class="tw"><h1>Crawl Calculator</h1><div id="tag">Overland’s Habit · Adventure is a Habit…</div></div><button class="hb" id="lang"></button></header>
+<main id="app"></main>
+<script>
+/* Overland's Habit · Crawl Calculator · Created by George Barbaris */
+let LANG=localStorage.getItem('crawl_lang')||((navigator.language||'el').startsWith('el')?'el':'en');
+const L=(el,en)=>LANG==='el'?el:en;
+const G=9.81, CRR=0.015;
+const COMMON=[3.55,3.73,3.91,4.10,4.30,4.56,4.88,5.13,5.38,5.71,5.89];
+/* Jimny 3ης γενιάς: δύο διαφορετικά βοηθητικά (λεβιές/πλανητικό & ηλεκτρικό/κουμπί) + αυτόματο. 4ης γενιάς για σύγκριση. */
+const JIMNY=[
+{id:"j1",name:"Suzuki Jimny 3ης γεν. 2000–2005 · βοηθητικό με λεβιέ",en:"Suzuki Jimny Gen 3 2000–2005 · lever-shift transfer case",tq:110,g1:3.652,lo:2.145,fd:3.909,tyre:"205/70R15",kg:1420,
+ n:["Βοηθητικό με λεβιέ (πλανητικό): high 1.320 · low 2.145 · διαφορικό 3.909. Crawl ≈ 30,6:1.","Lever-shift (planetary) transfer case: high 1.320 · low 2.145 · diff 3.909. Crawl ≈ 30.6:1."]},
+{id:"j2",name:"Suzuki Jimny 3ης γεν. 2005–2018 · βοηθητικό με κουμπί (μηχανικό)",en:"Suzuki Jimny Gen 3 2005–2018 · push-button transfer case (manual)",tq:110,g1:4.425,lo:2.002,fd:4.300,tyre:"205/70R15",kg:1420,
+ n:["Ηλεκτρικό βοηθητικό (κουμπί): high 1.000 · low 2.002 · διαφορικό 4.300. Crawl ≈ 38,1:1.","Electric push-button transfer case: high 1.000 · low 2.002 · diff 4.300. Crawl ≈ 38.1:1."]},
+{id:"j3",name:"Suzuki Jimny 3ης γεν. 2005–2018 · αυτόματο",en:"Suzuki Jimny Gen 3 2005–2018 · automatic",tq:110,g1:2.875,lo:2.643,fd:4.090,tyre:"205/70R15",kg:1420,
+ n:["Αυτόματο 4AT: 1η 2.875 · βοηθητικό high 1.320 / low 2.643 · διαφορικό 4.090. Crawl ≈ 31,1:1 (ο μετατροπέας ροπής δίνει κάτι παραπάνω στο ξεκίνημα).","4-speed auto: 1st 2.875 · transfer high 1.320 / low 2.643 · diff 4.090. Crawl ≈ 31.1:1 (the torque converter adds a little at take-off)."]},
+{id:"j4",name:"Suzuki Jimny 4ης γεν. (JB74) 2018– · μηχανικό",en:"Suzuki Jimny Gen 4 (JB74) 2018– · manual",tq:130,g1:4.425,lo:2.002,fd:4.090,tyre:"195/80R15",kg:1435,
+ n:["1η 4.425 · low 2.002 · διαφορικό 4.090. Crawl ≈ 36,2:1.","1st 4.425 · low 2.002 · diff 4.090. Crawl ≈ 36.2:1."]}];
+const DB=(typeof VEH!=='undefined'?VEH:[]).filter(v=>v.ia>1.2&&!/JIMNY/i.test(v.name)).map(v=>({id:v.id,name:v.name,tq:v.tq,g1:v.ig,lo:v.ia,fd:v.iv,tyre:String(Math.round(v.r*2000)),kg:v.gvw}));
+let MY=[];try{MY=JSON.parse(localStorage.getItem('crawl_my')||'[]')}catch(e){}
+let S={};try{S=JSON.parse(localStorage.getItem('crawl_state')||'{}')}catch(e){}
+const DEF={vid:"j2",tq:110,g1:4.425,lo:2.002,fd:4.300,tyre:"205/70R15",kg:1420,eff:0.8,ntyre:"31",nfd:"",nlo:"",mu:0.8};
+S=Object.assign({},DEF,S);
+const save=()=>{try{localStorage.setItem('crawl_state',JSON.stringify(S))}catch(e){}};
+const allV=()=>[...JIMNY,...MY,...DB];
+const num=x=>{const v=parseFloat(String(x).replace(',','.'));return isFinite(v)?v:NaN};
+const f=(x,d=1)=>isFinite(x)?x.toLocaleString(LANG==='el'?'el-GR':'en-GB',{minimumFractionDigits:d,maximumFractionDigits:d}):'–';
+/* λάστιχο → διάμετρος σε mm. Δέχεται 205/70R15, 31x10.5R15, 31, 787 */
+function tyreMM(s){s=String(s||'').trim().replace(',','.');let m;
+ if(m=s.match(/(\d{3})\s*\/\s*(\d{2,3})\s*[a-z]*\s*R?\s*(\d{2}(\.\d)?)/i))return +m[3]*25.4+2*m[1]*m[2]/100;
+ if(m=s.match(/^(\d{2}(\.\d+)?)\s*[x×]/i))return +m[1]*25.4;
+ const v=num(s);if(!isFinite(v)||v<=0)return NaN;return v<60?v*25.4:v;}
+function render(){
+ document.documentElement.lang=LANG;document.getElementById('lang').textContent=LANG==='el'?'EN':'ΕΛ';
+ const opt=v=>`<option value="${v.id}"${v.id===S.vid?' selected':''}>${LANG==='en'&&v.en?v.en:v.name}</option>`;
+ document.getElementById('app').innerHTML=`
+<div class="card"><h2><b>1</b>${L('Το αυτοκίνητό σου','Your vehicle')}</h2>
+ <label>${L('Διάλεξε ή γράψε τα δικά σου νούμερα','Pick one or type your own numbers')}</label>
+ <select id="vid"><optgroup label="${L('Παράδειγμα: Suzuki Jimny','Example: Suzuki Jimny')}">${JIMNY.map(opt).join('')}</optgroup>
+ ${MY.length?`<optgroup label="${L('Τα δικά μου','My vehicles')}">${MY.map(opt).join('')}</optgroup>`:''}
+ <optgroup label="${L('Βάση Overland’s Habit','Overland’s Habit database')}">${DB.map(opt).join('')}</optgroup>
+ <option value="custom"${S.vid==='custom'?' selected':''}>✏️ ${L('Δικό μου (γράφω τα νούμερα)','My own (type the numbers)')}</option></select>
+ <div class="note" id="vnote"></div>
+ <div class="grid" style="margin-top:12px">
+  <div><label>${L('Ροπή κινητήρα (Nm)','Engine torque (Nm)')}</label><input id="tq" inputmode="decimal" value="${S.tq}"></div>
+  <div><label>${L('1η ταχύτητα','1st gear')}</label><input id="g1" inputmode="decimal" value="${S.g1}"></div>
+  <div><label>${L('Βοηθητικό (κοντά / low)','Transfer case low')}</label><input id="lo" inputmode="decimal" value="${S.lo}"></div>
+  <div><label>${L('Διαφορικό (τελική σχέση)','Axle / final drive ratio')}</label><input id="fd" inputmode="decimal" value="${S.fd}"></div>
+  <div><label>${L('Εργοστασιακό λάστιχο','Stock tyre')}</label><input id="tyre" value="${S.tyre}"></div>
+  <div><label>${L('Βάρος με φορτίο (kg)','Loaded weight (kg)')}</label><input id="kg" inputmode="decimal" value="${S.kg}"></div>
+ </div>
+ <div class="note" id="tnote"></div>
+ <div class="row"><button class="btn g" id="sv">💾 ${L('Κράτα το ως δικό μου','Save as mine')}</button>${MY.some(v=>v.id===S.vid)?`<button class="btn r" id="del">🗑 ${L('Σβήσε','Delete')}</button>`:''}</div>
+</div>
+
+<div class="card"><h2><b>2</b>${L('Νέα λάστιχα','New tyres')}</h2>
+ <div class="chips" id="tch">${['29','30','31','32','33','35'].map(t=>`<button class="chip${S.ntyre===t?' on':''}" data-t="${t}">${t}″</button>`).join('')}</div>
+ <label>${L('Ή γράψε μέγεθος (π.χ. 235/75R15, 31x10.5R15, 790 mm)','Or type a size (e.g. 235/75R15, 31x10.5R15, 790 mm)')}</label>
+ <input id="ntyre" value="${S.ntyre}">
+ <div class="note" id="nnote"></div>
+</div>
+
+<div class="card"><h2>⚙️ Crawl ratio</h2>
+ <div class="big3">
+  <div class="kpi"><div class="v" id="k0"></div><div class="l">${L('Εργοστασιακό','Stock')}</div></div>
+  <div class="kpi"><div class="v bad" id="k1"></div><div class="l">${L('Με τα νέα λάστιχα','With new tyres')}</div></div>
+  <div class="kpi"><div class="v good" id="k2"></div><div class="l">${L('Με το σχέδιό σου','With your plan')}</div></div>
+ </div>
+ <div class="scale" id="scale"></div><div class="sl"><span>0</span><span>30</span><span>50</span><span>70</span><span>100+</span></div>
+ <div class="verdict" id="verd"></div>
+</div>
+
+<div class="card"><h2><b>3</b>${L('Πώς το διορθώνω;','How do I fix it?')}</h2>
+ <div class="note" style="margin:0 0 6px">${L('Για να πάρεις πίσω το εργοστασιακό crawl με τα νέα λάστιχα:','To get the stock crawl back with the new tyres:')}</div>
+ <div id="fix"></div>
+ <div style="border-top:1px solid var(--line);margin-top:6px;padding-top:12px">
+ <label style="font-size:.9em;color:var(--tx);font-weight:700">${L('Το σχέδιό σου (δοκίμασε νούμερα)','Your plan (try numbers)')}</label>
+ <div class="grid"><div><label>${L('Νέο διαφορικό','New axle ratio')}</label><input id="nfd" inputmode="decimal" placeholder="${S.fd}" value="${S.nfd}"></div>
+ <div><label>${L('Νέο βοηθητικό low','New transfer low')}</label><input id="nlo" inputmode="decimal" placeholder="${S.lo}" value="${S.nlo}"></div></div>
+ <div class="note">${L('Άδειο = μένει το εργοστασιακό. Πάτα μια πρόταση από πάνω για να τη βάλεις.','Empty = stock stays. Tap a suggestion above to fill it in.')}</div>
+ <div id="plan" style="margin-top:8px"></div></div>
+</div>
+
+<div class="card"><h2><b>4</b>${L('Πόση ανηφόρα ανεβαίνει; (άσφαλτος, θεωρητικά)','How steep can it climb? (tarmac, theoretical)')}</h2>
+ <div class="chips" id="mch"><button class="chip${S.mu==0.8?' on':''}" data-m="0.8">☀️ ${L('Στεγνή','Dry')}</button><button class="chip${S.mu==0.5?' on':''}" data-m="0.5">🌧 ${L('Βρεγμένη','Wet')}</button></div>
+ <div id="climb"></div>
+ <div class="note">${L('1η ταχύτητα, 4L, ροπή στο μέγιστο, απόδοση μετάδοσης','1st gear, 4L, peak torque, driveline efficiency')} <input id="eff" inputmode="decimal" value="${S.eff}" style="width:4.2em;padding:4px 6px;font-size:.95em;display:inline-block">. ${L('Η πρόσφυση (λάστιχο-άσφαλτος) βάζει ταβάνι: όσο κι αν πατήσεις, πάνω από αυτό σπινάρει.','Grip (tyre-to-tarmac) sets a ceiling: above it the wheels spin no matter what.')}</div>
+</div>
+
+<details open><summary>🔩 ${L('Μικραίνουν τα γρανάζια όσο ανεβαίνει το crawl; Σπάνε;','Do gears get smaller as crawl goes up? Do they break?')}</summary><div class="in">
+ <div class="s10">${L('<b>Με απλά λόγια:</b> το μεγάλο λάστιχο είναι σαν μακρύ κλειδί. Με μακρύ κλειδί σφίγγεις πιο δυνατά, αλλά σπας και πιο εύκολα τη βίδα. Τα κοντά γρανάζια σού δίνουν πίσω τη δύναμη, αλλά τα δόντια του μικρού γραναζιού (pinion) γίνονται πιο λίγα και πιο μικρά.','<b>In plain words:</b> a big tyre is like a long wrench. A long wrench tightens harder, but it also snaps the bolt more easily. Lower gears give you the force back, but the small gear (pinion) ends up with fewer, smaller teeth.')}</div>
+ <p><b>${L('Στέκει; Ναι, στο διαφορικό.','Is it true? Yes, in the axle.')}</b> ${L('Η κορώνα (ring gear) έχει το ίδιο μέγεθος γιατί την περιορίζει το κέλυφος. Για πιο κοντή σχέση, το pinion παίρνει λιγότερα δόντια και μικραίνει (π.χ. 5.38 = 43/8 δόντια, 2.73 = 49/18). Στις πολύ κοντές σχέσεις μπορεί να πατάει σχεδόν ένα δόντι τη φορά. Γι’ αυτό στην Αμερική πολλοί σταματούν στο 4.88 στον Dana 44 και πάνω από εκεί πάνε σε μεγαλύτερο άξονα.','The ring gear stays the same size because the housing limits it. For a lower ratio the pinion gets fewer teeth and shrinks (e.g. 5.38 = 43/8 teeth, 2.73 = 49/18). At very low ratios almost one tooth carries the load at a time. That is why many in the US stop at 4.88 in a Dana 44 and go to a bigger axle beyond that.')}</p>
+ <p><b>${L('Στο βοηθητικό:','In the transfer case:')}</b> ${L('τα κιτ μπαίνουν στο ίδιο κουτί, άρα δεν μεγαλώνουν. Οι σοβαροί κατασκευαστές το καλύπτουν με σκληρότερο ατσάλι (π.χ. SCM415 με ενανθράκωση). Όταν κονταίνεις στο βοηθητικό, μεγαλύτερη ροπή περνάει από τους άξονες μετάδοσης, τα διαφορικά και τα ημιαξόνια. Το καλό: οι δρόμοι στην εθνική δεν αλλάζουν, γιατί το high μένει ίδιο (σε πολλά κιτ του Jimny αλλάζει λίγο και το high).','kits fit the same case, so the gears cannot grow. Good makers make up for it with harder steel (e.g. carburised SCM415). Gearing down in the transfer case sends more torque through the driveshafts, diffs and axle shafts. The upside: highway revs stay the same because high range is untouched (many Jimny kits change high range a little too).')}</p>
+ <p><b>${L('Το μεγάλο μυστικό:','The big secret:')}</b> ${L('δεν σπάει μόνο το γρανάζι, σπάει ό,τι είναι πιο αδύνατο. Η μέγιστη ροπή που φτάνει στον άξονα είναι όση επιτρέπει η πρόσφυση: τριβή × βάρος × ακτίνα λάστιχου. Μεγαλύτερη ακτίνα = περισσότερη ροπή πριν σπινάρει = μεγαλύτερο φορτίο σε ημιαξόνια, μπιλιοφόρους (CV) και pinion. Τα χειρότερα είναι τα χτυπήματα: σπινάρισμα που ξαφνικά πιάνει, πήδημα τροχού (wheel hop), γκάζι με μπλοκέ.','it is not just the gear that breaks, it is the weakest part. The most torque the axle can see is what grip allows: friction × weight × tyre radius. Bigger radius = more torque before the tyre spins = more load on axle shafts, CV joints and pinion. Shock loads are the killer: wheelspin that suddenly grips, wheel hop, throttle with lockers in.')}</p>
+ <p><b>${L('Κανόνες:','Rules:')}</b> ${L('① Κόντυνε τόσο όσο να πάρεις πίσω το εργοστασιακό, όχι υπερβολές. ② Άλλαξε και τα δύο διαφορικά στην ίδια σχέση, αλλιώς σφίγγει στο 4×4. ③ Πάνω από +2″ λάστιχο, σκέψου πιο γερά ημιαξόνια/μπιλιοφόρους. ④ Ομαλό γκάζι, ποτέ σπινάρισμα με μπλοκέ. ⑤ Σωστό crawl ξεκουράζει συμπλέκτη και κιβώτιο, γιατί δεν τα «καις» για να σέρνεσαι.','① Gear down only enough to get stock back, no excess. ② Change both axles to the same ratio or it binds in 4×4. ③ Beyond +2″ of tyre, think about stronger axle shafts/CVs. ④ Smooth throttle, never wheelspin with lockers in. ⑤ The right crawl ratio spares the clutch and gearbox because you are not slipping them to crawl.')}</p>
+</div></details>
+
+<details><summary>📏 ${L('Τι σημαίνουν τα νούμερα','What the numbers mean')}</summary><div class="in">
+ <p>${L('<b>Crawl ratio</b> = 1η × βοηθητικό low × διαφορικό. Πόσες φορές γυρίζει η μηχανή για μία στροφή του τροχού. Μεγαλύτερο = πιο αργά και πιο δυνατά.','<b>Crawl ratio</b> = 1st × transfer low × axle ratio. How many times the engine turns for one turn of the wheel. Higher = slower and stronger.')}</p>
+ <p>${L('<b>Με μεγαλύτερο λάστιχο</b> κάθε στροφή του τροχού πάει πιο μακριά, άρα το «πραγματικό» crawl πέφτει: crawl × (παλιό λάστιχο ÷ νέο).','<b>With a bigger tyre</b> each wheel turn travels further, so the real crawl drops: crawl × (old tyre ÷ new).')}</p>
+ <p>${L('Κάτω από 30 = δρόμος / χωματόδρομος · 30–49 = trail & overland · 50–69 = καλό για βράχια · 70–99 = πολύ τεχνικό · 100+ = extreme. Για ταξίδι overland προτείνεται περίπου 30–38 με αυτόματο και 45–60 με μηχανικό.','Under 30 = road / gravel · 30–49 = trail & overland · 50–69 = good for rocks · 70–99 = very technical · 100+ = extreme. For an overland rig, roughly 30–38 with an automatic and 45–60 with a manual is often suggested.')}</p>
+ <p class="note">${L('Πηγές: Crawlpedia, Metalcloak, Randy’s Worldwide (carrier breaks), ARB (thick gears), Trail-Gear (κιτ Jimny), BigJimny.','Sources: Crawlpedia, Metalcloak, Randy’s Worldwide (carrier breaks), ARB (thick gears), Trail-Gear (Jimny kits), BigJimny.')}</p>
+</div></details>
+
+<footer><b>Overland’s Habit</b> · Crawl Calculator · ${L('δωρεάν','free')}<br>Created by George Barbaris<br>${L('Θεωρητικοί υπολογισμοί. Έλεγξε τις σχέσεις στο εγχειρίδιο ή με ειδικό πριν αγοράσεις γρανάζια.','Theoretical calculations. Check ratios in your manual or with a specialist before buying gears.')}</footer>`;
+ bind();calc();}
+function bind(){
+ const $=id=>document.getElementById(id);
+ ['tq','g1','lo','fd','tyre','kg','ntyre','nfd','nlo','eff'].forEach(k=>$(k).addEventListener('input',e=>{S[k]=e.target.value;
+  if(['tq','g1','lo','fd','tyre','kg'].includes(k)&&!MY.some(v=>v.id===S.vid)){S.vid='custom';$('vid').value='custom';}
+  if(k==='ntyre')document.querySelectorAll('#tch .chip').forEach(c=>c.classList.toggle('on',c.dataset.t===S.ntyre));
+  save();calc();}));
+ $('vid').addEventListener('change',e=>{S.vid=e.target.value;const v=allV().find(x=>x.id===S.vid);
+  if(v){Object.assign(S,{tq:v.tq,g1:v.g1,lo:v.lo,fd:v.fd,tyre:v.tyre,kg:v.kg,nfd:'',nlo:''});}
+  save();render();});
+ document.querySelectorAll('#tch .chip').forEach(c=>c.onclick=()=>{S.ntyre=c.dataset.t;save();render();});
+ document.querySelectorAll('#mch .chip').forEach(c=>c.onclick=()=>{S.mu=+c.dataset.m;save();render();});
+ $('sv').onclick=()=>{const nm=prompt(L('Όνομα (π.χ. «Το Jimny μου»)','Name (e.g. "My Jimny")'),'');if(!nm)return;
+  const id='m'+Date.now();MY.push({id,name:nm,tq:num(S.tq),g1:num(S.g1),lo:num(S.lo),fd:num(S.fd),tyre:S.tyre,kg:num(S.kg)});
+  localStorage.setItem('crawl_my',JSON.stringify(MY));S.vid=id;save();render();};
+ if($('del'))$('del').onclick=()=>{if(!confirm(L('Να σβηστεί;','Delete it?')))return;MY=MY.filter(v=>v.id!==S.vid);
+  localStorage.setItem('crawl_my',JSON.stringify(MY));S.vid='custom';save();render();};
+ document.getElementById('lang').onclick=()=>{LANG=LANG==='el'?'en':'el';localStorage.setItem('crawl_lang',LANG);render();};}
+function climb(T,CR,eff,Dmm,m,mu){const r=Dmm/2000,F=T*CR*eff/r,k=F/(m*G),h=Math.hypot(1,CRR);
+ const te=k>=h?90:(Math.asin(k/h)-Math.atan(CRR))*180/Math.PI, tg=Math.atan(mu)*180/Math.PI;
+ const t=Math.max(0,Math.min(te,tg));return{t,pct:Math.tan(t*Math.PI/180)*100,grip:tg<=te,axle:Math.min(T*CR*eff,mu*m*G*r)};}
+function rating(c){return c<30?[L('δρόμος / χωματόδρομος','road / gravel'),'#a8a29e']:c<50?[L('trail & overland','trail & overland'),'#6a9fb5']:c<70?[L('καλό για βράχια','good for rocks'),'#5f9e7a']:c<100?[L('πολύ τεχνικό','very technical'),'#e8b86d']:['extreme','#d9534f'];}
+function near(x){let lo=null,hi=null;COMMON.forEach(c=>{if(c<=x+1e-3)lo=c;if(hi===null&&c>=x-1e-3)hi=c;});return[lo,hi];}
+function calc(){
+ const $=id=>document.getElementById(id);
+ const T=num(S.tq),g1=num(S.g1),lo=num(S.lo),fd=num(S.fd),m=num(S.kg),eff=num(S.eff)||0.8,mu=+S.mu||0.8;
+ const D0=tyreMM(S.tyre),D1=tyreMM(S.ntyre)||D0;
+ const nfd=num(S.nfd)>0?num(S.nfd):fd, nlo=num(S.nlo)>0?num(S.nlo):lo;
+ const v=allV().find(x=>x.id===S.vid);
+ $('vnote').textContent=v&&v.n?v.n[LANG==='el'?0:1]:(v?'':L('Γράψε τις σχέσεις από το εγχειρίδιο ή το βιβλιαράκι του αυτοκινήτου.','Type the ratios from your owner’s manual or spec sheet.'));
+ const inch=d=>f(d/25.4,1)+'″';
+ $('tnote').textContent=isFinite(D0)?L('Διάμετρος: ','Diameter: ')+f(D0,0)+' mm ('+inch(D0)+')':L('⚠️ Δεν καταλαβαίνω το μέγεθος','⚠️ Can’t read the size');
+ const ok=[T,g1,lo,fd,m,D0,D1].every(x=>isFinite(x)&&x>0);
+ if(!ok){['k0','k1','k2'].forEach(k=>$(k).textContent='–');$('fix').innerHTML=$('plan').innerHTML=$('climb').innerHTML=$('verd').innerHTML='';$('nnote').textContent='';return;}
+ const grow=D1/D0;
+ $('nnote').innerHTML=L('Διάμετρος: ','Diameter: ')+f(D1,0)+' mm ('+inch(D1)+') · <b class="'+(grow>1?'warn':'good')+'">'+(grow>=1?'+':'')+f((grow-1)*100,1)+'%</b> '+L('από το εργοστασιακό','vs stock');
+ const CR0=g1*lo*fd, CR1=CR0/grow, CR2=g1*nlo*nfd/grow;
+ $('k0').textContent=f(CR0,1);$('k1').textContent=f(CR1,1);$('k2').textContent=f(CR2,1);
+ $('k2').className='v '+(CR2>=CR0*0.98?'good':'warn');
+ const pos=c=>Math.min(100,c)/100*100;
+ $('scale').innerHTML=`<i class="mk s" style="left:calc(${pos(CR0)}% - 2px)"></i><i class="mk" style="left:calc(${pos(CR2)}% - 2px);background:${rating(CR2)[1]}"></i>`;
+ const [rt]=rating(CR2);
+ $('verd').innerHTML=(grow>1.001?L(`Με τα νέα λάστιχα χάνεις <b>${f((1-1/grow)*100,0)}%</b> από τη δύναμη και τη «σέρνα». `,`The new tyres cost you <b>${f((1-1/grow)*100,0)}%</b> of pulling force and crawl. `):'')+
+  L(`Με το σχέδιό σου: <b>${f(CR2,1)}:1</b> → ${rt}`,`With your plan: <b>${f(CR2,1)}:1</b> → ${rt}`)+
+  (CR2<CR0*0.98?L(' · ακόμα κάτω από το εργοστασιακό.',' · still below stock.'):CR2>CR0*1.25?L(' · πολύ πάνω από το εργοστασιακό, πρόσεξε την αντοχή.',' · well above stock, mind the strength.'):L(' · σωστό ✔',' · on target ✔'));
+ /* προτάσεις */
+ const fdX=fd*grow, loX=lo*grow, sq=Math.sqrt(grow), fdH=fd*sq, loH=lo*sq;
+ const [a,b]=near(fdX),[ha,hb]=near(fdH);
+ const pick=(x,y)=>`<button class="chip" style="padding:5px 10px;font-size:.8em" data-fd="${x||''}" data-lo="${y||''}">${L('βάλ’ το','use it')}</button>`;
+ $('fix').innerHTML=grow<=1.001?`<div class="note">${L('Το λάστιχο δεν μεγάλωσε, δεν χρειάζεται αλλαγή.','The tyre did not get bigger, no change needed.')}</div>`:`
+ <div class="opt"><div class="t">① ${L('Μόνο διαφορικά (και τα δύο)','Axles only (both)')}<small>${L('Διορθώνει και τις στροφές στην εθνική','Also fixes highway revs')} ${a?pick(a,''):''}${b&&b!==a?' '+pick(b,''):''}</small></div><div class="n">${f(fdX,2)}<small>${L('στην αγορά','on the market')}: ${a?f(a,2):'–'} / ${b?f(b,2):'–'}</small></div></div>
+ <div class="opt"><div class="t">② ${L('Μόνο βοηθητικό (low)','Transfer case only (low)')}<small>${L('Η εθνική μένει ίδια, μόνο το 4L δυναμώνει','Highway stays the same, only 4L gets stronger')} ${pick('',+loX.toFixed(3))}</small></div><div class="n">${f(loX,3)}<small>${L('κιτ με','kit with')} ≈${f((grow-1)*100,0)}% ${L('μείωση','reduction')}</small></div></div>
+ <div class="opt"><div class="t">③ ${L('Λίγο και από τα δύο','A bit of both')}<small>${L('Μοιράζει το φορτίο','Shares the load')} ${pick(hb||ha,+(CR0*grow/(g1*(hb||ha))).toFixed(3))}</small></div><div class="n">${f(fdH,2)} + ${f(loH,3)}<small>${L('π.χ.','e.g.')} ${f(hb||ha,2)} + ${f(CR0*grow/(g1*(hb||ha)),3)}</small></div></div>`;
+ document.querySelectorAll('#fix [data-fd]').forEach(btn=>btn.onclick=()=>{S.nfd=btn.dataset.fd?String(btn.dataset.fd):'';S.nlo=btn.dataset.lo?String(btn.dataset.lo):'';save();render();});
+ /* σχέδιο */
+ const kmh=(cr,D)=>1000*Math.PI*D/1000*60/(cr*1000);
+ const hw=(nfd/fd)/grow, spd=grow*fd/nfd;
+ $('plan').innerHTML=`<div class="opt"><div class="t">🐢 ${L('Ταχύτητα στις 1000 στροφές (1η, 4L)','Speed at 1000 rpm (1st, 4L)')}<small>${L('Εργοστασιακό','Stock')}: ${f(kmh(CR0,D0),2)} km/h</small></div><div class="n">${f(kmh(CR2*grow,D1),2)}<small>km/h</small></div></div>
+ <div class="opt"><div class="t">🛣 ${L('Στροφές στην εθνική','Highway revs')}<small>${L('σε σχέση με το εργοστασιακό','vs stock')}</small></div><div class="n ${Math.abs(hw-1)<.03?'good':'warn'}">${hw>=1?'+':''}${f((hw-1)*100,0)}%</div></div>
+ <div class="opt"><div class="t">⏱ ${L('Κοντέρ: όταν δείχνει 100','Speedo: when it shows 100')}<small>${L('η πραγματική ταχύτητα (αν μετράει από το κιβώτιο)','actual speed (if read from the gearbox)')}</small></div><div class="n">${f(100*spd,0)}<small>km/h</small></div></div>`;
+ /* ανηφόρα */
+ const rows=[[L('Εργοστασιακό','Stock'),climb(T,CR0,eff,D0,m,mu)],[L('Νέα λάστιχα','New tyres'),climb(T,CR0,eff,D1,m,mu)],[L('Νέα λάστιχα + σχέδιο','New tyres + plan'),climb(T,g1*nlo*nfd,eff,D1,m,mu)]];
+ const ax0=rows[0][1].axle;
+ $('climb').innerHTML=`<table><tr><th></th><th>${L('Κλίση','Grade')}</th><th>${L('Μοίρες','Degrees')}</th><th>${L('Ροπή αξόνων','Axle torque')}</th></tr>`+
+ rows.map(([n,c])=>`<tr><td>${n}<span class="lim">${c.grip?L('ταβάνι: πρόσφυση','limit: grip'):L('ταβάνι: κινητήρας','limit: engine')}</span><div class="bar"><i style="width:${Math.min(100,c.t/45*100)}%;background:${c.grip?'#5f9e7a':'#e8b86d'}"></i></div></td><td>${f(c.pct,0)}%</td><td>${f(c.t,1)}°</td><td>${f(c.axle/1000,1)} kNm<span class="lim ${c.axle>ax0*1.05?'bad':''}">${c===rows[0][1]?L('βάση','base'):(c.axle>=ax0?'+':'')+f((c.axle/ax0-1)*100,0)+'%'}</span></td></tr>`).join('')+`</table>`;
+}
+render();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js');
+</script>
+</body></html>
