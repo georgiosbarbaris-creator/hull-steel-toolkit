@@ -7,6 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#1f1e1d">
 <script src="data.js"></script>
 <script src="strength.js"></script>
+<script src="extra.js"></script>
 <style>
 :root{--bg:#1a1918;--card:#262422;--line:#3d3935;--tx:#f5f0e8;--mut:#a8a29e;--red:#d9534f;--org:#d97757;--grn:#5f9e7a;--yel:#e8b86d;--blu:#6a9fb5}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -50,6 +51,7 @@ td{padding:9px 4px;border-top:1px solid var(--line);text-align:right;font-weight
 td .lim{display:block;font-size:.72em;font-weight:500;color:var(--mut)}
 .bar{height:8px;border-radius:4px;background:#1a1918;margin-top:4px;overflow:hidden}.bar i{display:block;height:100%;background:var(--grn)}
 details{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:0 14px;margin:0 0 14px}
+#howto{border-color:var(--org)}
 summary{padding:14px 0;font-weight:800;color:var(--org);list-style:none;cursor:pointer}summary::-webkit-details-marker{display:none}
 summary:after{content:"＋";float:right;color:var(--mut)}details[open] summary:after{content:"－"}
 details .in{padding:0 0 14px;font-size:.93em}details p{margin:0 0 10px}
@@ -100,7 +102,8 @@ const SURF={dry:{mu:.8,crr:.015,el:"☀️ Στεγνή άσφαλτος",en:"�
 const CROSSF={"0":.35,"r":.65,"fr":1};
 S=Object.assign({},DEF,S);
 const save=()=>{try{localStorage.setItem('crawl_state',JSON.stringify(S))}catch(e){}};
-const allV=()=>[...JIMNY,...MY,...DB];
+const EX=(typeof EXTRA!=='undefined'?EXTRA:[]);
+const allV=()=>[...JIMNY,...MY,...EX,...DB];
 const num=x=>{const v=parseFloat(String(x).replace(',','.'));return isFinite(v)?v:NaN};
 const f=(x,d=1)=>isFinite(x)?x.toLocaleString(LANG==='el'?'el-GR':'en-GB',{minimumFractionDigits:d,maximumFractionDigits:d}):'–';
 /* λάστιχο → διάμετρος σε mm. Δέχεται 205/70R15, 31x10.5R15, 31, 787 */
@@ -112,13 +115,40 @@ function render(){
  document.documentElement.lang=LANG;document.getElementById('lang').textContent=LANG==='el'?'EN':'ΕΛ';
  const opt=v=>`<option value="${v.id}"${v.id===S.vid?' selected':''}>${LANG==='en'&&v.en?v.en:v.name}</option>`;
  document.getElementById('app').innerHTML=`
+<details${localStorage.getItem('crawl_seen')?'':' open'} id="howto"><summary>📖 ${L('Πώς τη χρησιμοποιώ; (1 λεπτό)','How do I use it? (1 minute)')}</summary><div class="in">
+ <div class="s10">${L('<b>Με δύο λόγια:</b> διαλέγεις το αυτοκίνητό σου, διαλέγεις το νέο λάστιχο, και η εφαρμογή σου λέει πόση δύναμη χάνεις, τι γρανάζια θέλεις για να την πάρεις πίσω, πόση ανηφόρα ανεβαίνεις και πόσο κινδυνεύεις να σπάσεις.','<b>In short:</b> pick your vehicle, pick the new tyre, and the app tells you how much pulling force you lose, which gears get it back, how steep you can climb and how likely you are to break something.')}</div>
+ <p><b>1.</b> ${L('<b>Το αυτοκίνητό σου:</b> διάλεξέ το από τη λίστα. Αν δεν υπάρχει, διάλεξε «✏️ Δικό μου» και γράψε τα νούμερα (δες από κάτω «🔎 Πού βρίσκω τα στοιχεία»). Πάτα «💾 Κράτα το» για να μην τα ξαναγράφεις.','<b>Your vehicle:</b> pick it from the list. If it is not there, choose “✏️ My own” and type the numbers (see “🔎 Where do I find the data” below). Tap “💾 Save” so you do not retype them.')}</p>
+ <p><b>2.</b> ${L('<b>Νέα λάστιχα:</b> πάτα ίντσες (31″, 33″…) ή διάλεξε πλάτος / προφίλ / ζάντα όπως γράφει στο πλάι του λάστιχου.','<b>New tyres:</b> tap inches (31″, 33″…) or pick width / profile / rim as written on the tyre sidewall.')}</p>
+ <p><b>3.</b> ${L('<b>Crawl ratio:</b> βλέπεις εργοστασιακό, με τα νέα λάστιχα (πόσο χάνεις) και με το σχέδιό σου.','<b>Crawl ratio:</b> see stock, with the new tyres (how much you lose) and with your plan.')}</p>
+ <p><b>4.</b> ${L('<b>Πώς το διορθώνω:</b> πάτα «βάλ’ το» σε μία πρόταση (διαφορικά, βοηθητικό ή λίγο και από τα δύο). Μπορείς να δοκιμάσεις και δική σου ροπή (remap/turbo) ή ελάφρυνση.','<b>How to fix it:</b> tap “use it” on a suggestion (axles, transfer case or a bit of both). You can also try more torque (remap/turbo) or less weight.')}</p>
+ <p><b>5.</b> ${L('<b>Ανηφόρα:</b> διάλεξε επιφάνεια (άσφαλτος, λάσπη, χιόνι, άμμος, χιαστί λακκούβες).','<b>Climb:</b> pick the surface (tarmac, mud, snow, sand, cross-axle ruts).')}</p>
+ <p><b>6.</b> ${L('<b>Αντοχή:</b> δες τον δείκτη κινδύνου θραύσης, τι σπάει πρώτο και τι ενισχύεις. Δήλωσε αν έχεις μπλοκέ και πώς οδηγάς.','<b>Strength:</b> see the breakage risk index, what breaks first and what to strengthen. Tell it if you have lockers and how you drive.')}</p>
+ <p class="note">${L('Όλα τα νούμερα είναι θεωρητικά. Αλλαγές μόνο από ειδικό συνεργείο.','All figures are theoretical. Modifications only by a specialist workshop.')}</p>
+ <button class="btn" style="width:100%" onclick="localStorage.setItem('crawl_seen','1');document.getElementById('howto').open=false">👍 ${L('Κατάλαβα','Got it')}</button>
+</div></details>
+
 <div class="card"><h2><b>1</b>${L('Το αυτοκίνητό σου','Your vehicle')}</h2>
  <label>${L('Διάλεξε ή γράψε τα δικά σου νούμερα','Pick one or type your own numbers')}</label>
  <select id="vid"><optgroup label="${L('Παράδειγμα: Suzuki Jimny','Example: Suzuki Jimny')}">${JIMNY.map(opt).join('')}</optgroup>
  ${MY.length?`<optgroup label="${L('Τα δικά μου','My vehicles')}">${MY.map(opt).join('')}</optgroup>`:''}
+ ${EX.length?`<optgroup label="🌍 ${L('Νέα από την κοινότητα','New from the community')}">${EX.map(opt).join('')}</optgroup>`:''}
  <optgroup label="${L('Βάση Overland’s Habit','Overland’s Habit database')}">${DB.map(opt).join('')}</optgroup>
  <option value="custom"${S.vid==='custom'?' selected':''}>✏️ ${L('Δικό μου (γράφω τα νούμερα)','My own (type the numbers)')}</option></select>
  <div class="note" id="vnote"></div>
+ <details class="tx"><summary style="font-size:.85em;color:var(--org)">🔎 ${L('Δεν είναι στη λίστα; Πού βρίσκω τα στοιχεία','Not in the list? Where do I find the data')}</summary><div style="font-size:.86em;line-height:1.5;padding:4px 0 8px">
+ <div class="opt"><div class="t">🛞 ${L('Λάστιχο','Tyre')}<small>${L('Γράφει στο πλάι του λάστιχου, π.χ. 265/70 R17. Και στην άδεια κυκλοφορίας.','Written on the tyre sidewall, e.g. 265/70 R17. Also on the registration papers.')}</small></div></div>
+ <div class="opt"><div class="t">⚖️ ${L('Βάρος','Weight')}<small>${L('Άδεια κυκλοφορίας: «Μικτό βάρος» (F.1). Για άδειο αυτοκίνητο «Κενό βάρος» (G). Βάλε το μικτό αν πας φορτωμένος.','Registration papers: “Gross weight” (F.1). Empty vehicle: “Kerb weight” (G). Use gross if you travel loaded.')}</small></div></div>
+ <div class="opt"><div class="t">💪 ${L('Ροπή και στροφές','Torque and rpm')}<small>${L('Τεχνικά χαρακτηριστικά του μοντέλου (σελίδες από κάτω) ή το βιβλιαράκι του αυτοκινήτου.','Model specifications (sites below) or the owner’s manual.')}</small></div></div>
+ <div class="opt"><div class="t">⚙️ ${L('1η, βοηθητικό, διαφορικό','1st gear, low range, axle ratio')}<small>${L('Στα specs γράφονται ως «1st gear», «transfer case low range» και «final drive / axle ratio». Το διαφορικό γράφεται συχνά και σε ταμπελάκι πάνω στο ίδιο το διαφορικό ή στο καπάκι του. Αλλιώς ψάξε: «[μοντέλο] transfer case low range ratio».','In specs they appear as “1st gear”, “transfer case low range” and “final drive / axle ratio”. The axle ratio is often on a tag on the diff or its cover. Otherwise search: “[model] transfer case low range ratio”.')}</small></div></div>
+ <div style="margin:10px 0 4px;font-weight:800">🌐 ${L('Σελίδες με specs','Spec sites')}</div>
+ ${[['automobile-catalog.com','https://www.automobile-catalog.com/',L('σχέσεις κιβωτίου, ροπή & στροφές, βάρη','gear ratios, torque & rpm, weights')],
+   ['carexpert.com.au','https://www.carexpert.com.au/',L('πολλά 4×4: σχέσεις κιβωτίου, διαφορικό, ροπή & στροφές','many 4×4s: gear ratios, axle ratio, torque & rpm')],
+   ['carfromjapan.com','https://carfromjapan.com/specifications',L('ιαπωνικά μοντέλα: σχέσεις κιβωτίου και διαφορικού','Japanese models: gear and final drive ratios')],
+   ['ultimatespecs.com','https://www.ultimatespecs.com/',L('ροπή & στροφές, βάρη, λάστιχα','torque & rpm, weights, tyres')],
+   ['auto-data.net','https://www.auto-data.net/',L('ροπή & στροφές, βάρη, λάστιχα','torque & rpm, weights, tyres')]]
+   .map(([n,u,d])=>`<div style="margin:4px 0">• <a href="${u}" target="_blank" rel="noopener" style="color:var(--blu)">${n}</a> <span style="color:var(--mut)">: ${d}</span></div>`).join('')}
+ <div class="note">${L('Συμβουλή: τα φόρουμ ιδιοκτητών (π.χ. «[μοντέλο] forum gear ratios») έχουν συχνά όλες τις σχέσεις μαζί. Όταν τα βρεις, πάτα «📤 Πρότεινέ το για τη λίστα» για να μπει για όλους.','Tip: owner forums (e.g. “[model] forum gear ratios”) often list all ratios together. Once you find them, tap “📤 Suggest it for the list” so everyone gets it.')}</div>
+ </div></details>
  <div class="grid" style="margin-top:12px">
   <div><label>${L('Μέγιστη ροπή (Nm)','Max torque (Nm)')}</label><input id="tq" inputmode="decimal" value="${S.tq}"></div>
   <div><label>${L('…στις στροφές (rpm)','…at engine speed (rpm)')}</label><input id="rpm" value="${S.rpm||''}" placeholder="${L('π.χ.','e.g.')} 3200"></div>
@@ -130,7 +160,7 @@ function render(){
  </div>
  <div style="margin-top:12px">${tyreBlock('tyre',L('Εργοστασιακό λάστιχο (όπως γράφει στο πλάι)','Stock tyre (as written on the sidewall)'),L('ή γράψε άλλο μέγεθος (π.χ. 31x10.5R15)','or type another size (e.g. 31x10.5R15)'))}</div>
  <div class="note" id="tnote"></div>
- <div class="row"><button class="btn g" id="sv">💾 ${L('Κράτα το ως δικό μου','Save as mine')}</button>${MY.some(v=>v.id===S.vid)?`<button class="btn r" id="del">🗑 ${L('Σβήσε','Delete')}</button>`:''}</div>
+ <div class="row"><button class="btn g" id="sv">💾 ${L('Κράτα το ως δικό μου','Save as mine')}</button><button class="btn" id="sug">📤 ${L('Πρότεινέ το για τη λίστα','Suggest it for the list')}</button>${MY.some(v=>v.id===S.vid)?`<button class="btn r" id="del">🗑 ${L('Σβήσε','Delete')}</button>`:''}</div>
 </div>
 
 <div class="card"><h2><b>2</b>${L('Νέα λάστιχα','New tyres')}</h2>
@@ -214,6 +244,12 @@ function bind(){
   localStorage.setItem('crawl_my',JSON.stringify(MY));S.vid=id;save();render();};
  if($('del'))$('del').onclick=()=>{if(!confirm(L('Να σβηστεί;','Delete it?')))return;MY=MY.filter(v=>v.id!==S.vid);
   localStorage.setItem('crawl_my',JSON.stringify(MY));S.vid='custom';save();render();};
+ $('sug').onclick=()=>{const v=allV().find(x=>x.id===S.vid);const nm=prompt(L('Μάρκα, μοντέλο, κινητήρας, κιβώτιο, έτη (π.χ. «Nissan Patrol Y60 2.8 TD μηχανικό 1988-1997»)','Make, model, engine, gearbox, years (e.g. “Nissan Patrol Y60 2.8 TD manual 1988-1997”)'),v&&!/^custom$/.test(S.vid)?(v.en&&LANG==='en'?v.en:v.name):'');if(!nm)return;
+  const src=prompt(L('Από πού τα βρήκες; (σελίδα, βιβλιαράκι, φόρουμ)','Where did you find them? (site, manual, forum)'),'')||'';
+  const o={name:nm,tq:num(S.tq),rpm:S.rpm||'',g1:num(S.g1),lo:num(S.lo),fd:num(S.fd),tyre:S.tyre,kg:num(S.kg),src};
+  const txt=`Overland’s Habit · Crawl Calculator\n${L('Νέο αυτοκίνητο για τη λίστα','New vehicle for the list')}:\n${nm}\n${L('Ροπή','Torque')}: ${o.tq} Nm @ ${o.rpm||'?'} rpm\n1η: ${o.g1} · Low: ${o.lo} · ${L('Διαφορικό','Axle')}: ${o.fd}\n${L('Λάστιχο','Tyre')}: ${o.tyre} · ${L('Βάρος','Weight')}: ${o.kg} kg\n${L('Πηγή','Source')}: ${src||'-'}\n#CRAWLADD ${JSON.stringify(o)}`;
+  const done=()=>alert(L('Αντιγράφηκε! Στείλ’ το με DM στο @overlandshabit στο Instagram για να μπει στη λίστα για όλους. Ευχαριστούμε!','Copied! Send it by DM to @overlandshabit on Instagram so it goes into the list for everyone. Thank you!'));
+  if(navigator.share){navigator.share({text:txt}).catch(()=>{});}else if(navigator.clipboard){navigator.clipboard.writeText(txt).then(done,()=>prompt('',txt));}else prompt('',txt);};
  document.getElementById('lang').onclick=()=>{LANG=LANG==='el'?'en':'el';localStorage.setItem('crawl_lang',LANG);render();};}
 function climb(T,CR,eff,Dmm,m,mu,crr){crr=crr||CRR;const r=Dmm/2000,F=T*CR*eff/r,k=F/(m*G),h=Math.hypot(1,crr);
  const te=k>=h?90:(Math.asin(Math.min(1,k/h))-Math.atan(crr))*180/Math.PI, tg=Math.atan(Math.max(0,mu-crr))*180/Math.PI;
