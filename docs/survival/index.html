@@ -2116,7 +2116,7 @@ function setLang(l){try{localStorage.setItem('sv_lang',JSON.stringify(l))}catch(
 const encURI=s=>encodeURIComponent(trS(String(s)));
 const $=s=>document.querySelector(s),M=$('#m');
 const esc=s=>UX(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const APP_V='36',APP_D='14/11/2026';
+const APP_V='37',APP_D='14/11/2026';
 const LS={g(k,d){try{const v=localStorage.getItem('sv_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},s(k,v){try{localStorage.setItem('sv_'+k,JSON.stringify(v))}catch(e){}}};
 let fs=LS.g('fs',19);document.documentElement.style.setProperty('--fs',fs+'px');
 function fz(d){fs=Math.max(15,Math.min(28,fs+d*2));LS.s('fs',fs);document.documentElement.style.setProperty('--fs',fs+'px')}
@@ -2162,6 +2162,7 @@ function home(){T('Επιβίωση 72+');
  <button class="tile" onclick="go('morse')"><span class="e">📡</span>Morse<small>λέξεις με φως & ήχο</small></button>
  <button class="tile" onclick="go('sun')"><span class="e">🌅</span>Ήλιος<small>ανατολή – δύση, όλο τον χρόνο</small></button>
  <button class="tile" onclick="go('near')" style="grid-column:1/-1;min-height:80px;background:#3a1014;border-color:var(--red)"><span class="e" style="font-size:1.6em">📍</span>Κοντά μου – χωρίς internet<small>πιο κοντινό νοσοκομείο · φαρμακείο · απινιδωτής · νερό · χώρος συγκέντρωσης</small></button>
+ <button class="tile notr" onclick="go('t/print')" style="grid-column:1/-1;min-height:70px;background:#1f3a2e;border-color:var(--grn)"><span class="e" style="font-size:1.5em">🖨️</span>${L2('Ο οδηγός σε χαρτί – PDF','The guide on paper – PDF')}<small>${L2('κατέβασε & τύπωσε τα πάντα · για όταν δεν έχεις ρεύμα','download & print everything · for when there is no power')}</small></button>
  <button class="tile notr" onclick="go('t/scam')" style="grid-column:1/-1;min-height:70px;background:#3a2a10;border-color:var(--org)"><span class="e" style="font-size:1.5em">🕵️</span>${L2('Είναι απάτη; – έλεγξε ένα μήνυμα','Is it a scam? – check a message')}<small>${L2('SMS, Viber, email · κουίζ για όλη την οικογένεια','SMS, Viber, email · quiz for the whole family')}</small></button>
  <button class="tile" onclick="go('tools')" style="grid-column:1/-1;min-height:80px;background:#1d3557;border-color:var(--blu)"><span class="e" style="font-size:1.6em">🧰</span>Εργαλεία κινητού<small>φύλακας πτώσης · check-in · παλμοί · σεισμογράφος · σελήνη · έγγραφα…</small></button>
  <button class="tile" onclick="go('search')" style="grid-column:1/-1;min-height:70px"><span class="e" style="font-size:1.4em">🔎</span>Αναζήτηση</button>
@@ -2940,6 +2941,121 @@ function qzShow(){T('🎯 '+L2('Θα σε ξεγελούσαν;','Would they foo
 function qzAns(v){if(qzA)return;qzA=true;const q=QZ[qzI],ok=v===q[2];if(ok)qzS++;vib(ok?40:[80,60,80]);
  $('#qzr').innerHTML=`<div class="${ok?'tip':'warn'}" style="margin-top:12px">${ok?'✅ '+L2('Σωστά!','Correct!'):'❌ '+L2('Λάθος.','Wrong.')} ${esc(LANG==='en'?q[4]:q[3])}</div><button class="btn p" style="width:100%;margin-top:8px" onclick="qzI++;qzShow();window.scrollTo(0,0)">${qzI<QZ.length-1?L2('Επόμενο ▶','Next ▶'):L2('Αποτέλεσμα 🏁','Result 🏁')}</button>`}
 {const _t=tool;tool=function(id){const f={scam:tScam,quiz:tQuiz}[id];f?f():_t(id)}}
+/* ===== v37: «Ο οδηγός σε χαρτί» – PDF / εκτύπωση όλων των οδηγιών + κάρτα τσέπης + το σχέδιό μου – © 2026 Γεώργιος Μπαρμπαρής ===== */
+TOOLS.unshift(['print','🖨️',L2('Ο οδηγός σε χαρτί (PDF)','The guide on paper (PDF)'),L2('κατέβασε ή τύπωσε τα πάντα – για όταν δεν έχεις ρεύμα','download or print everything – for when there is no power')]);
+const PV_PDF={el:'Epiviosi72_Odigos.pdf',en:'Survival72_Guide.pdf'};
+function tPrint(){T('🖨️ '+L2('Ο οδηγός σε χαρτί','The guide on paper'));const E=LANG==='en',f=E?PV_PDF.en:PV_PDF.el,f2=E?PV_PDF.el:PV_PDF.en;
+ M.innerHTML=`<div class="notr"><div class="box" style="text-align:center"><div style="font-size:2.6em">📄</div><b>${L2('Αν σβήσει το κινητό, το χαρτί δεν σβήνει.','If your phone dies, paper doesn\'t.')}</b><div class="muted" style="margin-top:6px">${L2('Όλες οι οδηγίες, οι πρώτες βοήθειες, οι λίστες, Morse και SOS σε ένα PDF για να το τυπώσεις και να το έχεις στο σακίδιο, στο αυτοκίνητο και δίπλα στην πόρτα.','All instructions, first aid, lists, Morse and SOS in one PDF to print and keep in your bag, your car and by the door.')}</div></div>
+ <a class="big grn" href="${f}" download="${f}" style="display:block;text-decoration:none;text-align:center">📥 ${L2('Κατέβασε το PDF (Ελληνικά)','Download the PDF (English)')}<small>${L2('έτοιμο για εκτύπωση Α4 · δουλεύει και χωρίς internet','ready to print on A4 · works offline too')}</small></a>
+ <a class="btn" href="${f2}" download="${f2}" style="display:block;text-align:center;text-decoration:none;margin:6px 0 14px">${L2('📥 English version','📥 Ελληνική έκδοση')}</a>
+ <h3>${L2('🖨️ Τύπωσε με τα ΔΙΚΑ σου στοιχεία','🖨️ Print with YOUR details')}</h3>
+ <div class="muted">${L2('Βάζει μέσα την «Κάρτα μου» (επαφές, σημεία συνάντησης, υγεία). Ό,τι λείπει μένει κενό για να το γράψεις με το χέρι.','Adds your «My card» (contacts, meeting points, health). Anything missing is left blank to fill in by hand.')}</div>
+ <label class="li" style="display:flex;gap:10px;align-items:center"><input type="checkbox" id="pv_c" checked style="width:22px;height:22px"> ${L2('Κάρτα τσέπης (2 σελίδες)','Pocket card (2 pages)')}</label>
+ <label class="li" style="display:flex;gap:10px;align-items:center"><input type="checkbox" id="pv_m" checked style="width:22px;height:22px"> ${L2('Το σχέδιό μου & τηλέφωνα','My plan & phone numbers')}</label>
+ <label class="li" style="display:flex;gap:10px;align-items:center"><input type="checkbox" id="pv_g" checked style="width:22px;height:22px"> ${L2('Όλος ο οδηγός (όλες οι κάρτες)','The whole guide (all cards)')}</label>
+ <label class="li" style="display:flex;gap:10px;align-items:center"><input type="checkbox" id="pv_i" checked style="width:22px;height:22px"> ${L2('Με τα σχέδια (περισσότερες σελίδες)','With the drawings (more pages)')}</label>
+ <button class="big blu" onclick="pvOpen({card:$('#pv_c').checked,plan:$('#pv_m').checked,guide:$('#pv_g').checked,img:$('#pv_i').checked})">🖨️ ${L2('Προεπισκόπηση & εκτύπωση','Preview & print')}</button>
+ <div class="tip">💡 ${L2('Στην εκτύπωση διάλεξε «Αποθήκευση ως PDF» για να το κρατήσεις στο κινητό ή στον υπολογιστή. iPhone: Κοινοποίηση → Εκτύπωση → τσίμπημα με 2 δάχτυλα στην προεπισκόπηση → αποθήκευση.','In the print window choose «Save as PDF» to keep it on your phone or computer. iPhone: Share → Print → pinch out on the preview → save.')}</div>
+ <div class="tip">🖨️ ${L2('Τύπωσε 2 αντίγραφα: ένα στο σακίδιο, ένα στο αυτοκίνητο. Βάλ\' τα σε διαφανή θήκη ή σακούλα με φερμουάρ για το νερό. Ξανατύπωσε κάθε χρόνο.','Print 2 copies: one for the bag, one for the car. Keep them in a clear sleeve or zip bag against water. Reprint every year.')}</div></div>`}
+const PV_CSS=`#pv{position:fixed;inset:0;z-index:9999;background:#fff;color:#111;overflow:auto;font:10pt/1.38 -apple-system,Segoe UI,Roboto,Arial,sans-serif;-webkit-text-size-adjust:100%}
+#pv .pvbar{position:sticky;top:0;z-index:2;display:flex;gap:8px;padding:8px;background:#16283d;justify-content:center;flex-wrap:wrap}
+#pv .pvbar button{font:600 15px system-ui;padding:10px 14px;border-radius:10px;border:0;background:#2a9d8f;color:#fff}#pv .pvbar button.k{background:#5c6b7a}
+#pv .pg{max-width:190mm;margin:0 auto;padding:6mm 6mm 10mm}
+#pv h1{font-size:24pt;margin:0 0 4px;line-height:1.1}#pv h2{font-size:14pt;margin:0 0 2px;padding:4px 8px;background:#eef2f6;border-left:6px solid #d62828;border-radius:4px;break-after:avoid}
+#pv h3{font-size:10.5pt;margin:8px 0 3px;color:#16283d;border-bottom:1px solid #c9d2dc;break-after:avoid}
+#pv .cat{break-before:page;font-size:20pt;font-weight:900;margin:0 0 10px;padding:10px 12px;border:3px solid #111;border-radius:10px;text-align:center}
+#pv .cols{column-count:2;column-gap:7mm;column-fill:auto}#pv .one{column-count:1}
+#pv .art{break-inside:auto;margin:0 0 12px}#pv .art .sub{font-style:italic;color:#444;margin:0 0 4px;break-after:avoid}
+#pv .st{display:flex;gap:6px;margin:2px 0;break-inside:avoid}#pv .st b{flex:0 0 auto;min-width:16px;height:16px;border-radius:50%;background:#111;color:#fff;font-size:8pt;text-align:center;line-height:16px;margin-top:1px}
+#pv .li{margin:2px 0 2px 12px;text-indent:-10px;break-inside:avoid}#pv .li:before{content:"• "}
+#pv .ck{margin:2px 0 2px 16px;text-indent:-16px;break-inside:avoid}#pv .ck:before{content:"☐ ";font-size:11pt}
+#pv .wn{border:2px solid #d62828;border-radius:6px;padding:4px 6px;margin:4px 0;font-weight:600;break-inside:avoid}
+#pv .tp{border:1px dashed #2a9d8f;border-radius:6px;padding:4px 6px;margin:4px 0;break-inside:avoid}
+#pv figure,#pv figure.fig{background:#fff!important;border:0!important;padding:0!important;margin:4px 0 6px;break-inside:avoid;text-align:center}#pv figure svg{width:100%;max-width:85mm;height:auto;border:1px solid #bbb;border-radius:6px}#pv figcaption{font-size:8pt;color:#333}
+#pv table{border-collapse:collapse;width:100%;font-size:9.5pt}#pv td,#pv th{border:1px solid #999;padding:2px 4px;text-align:left;vertical-align:top}
+#pv .mo td{font-family:Consolas,Menlo,monospace;font-size:11pt;font-weight:700}
+#pv .blank{border-bottom:1px solid #555;min-height:20px;margin:2px 0 6px}
+#pv .cover{text-align:center;padding-top:22mm}#pv .cover .big{font-size:60pt;line-height:1}#pv .cover h1{font-size:34pt}
+#pv .pcard{border:2px dashed #111;border-radius:10px;padding:5mm;break-inside:avoid;margin-bottom:5mm}
+#pv .grid2{display:grid;grid-template-columns:1fr 1fr;gap:3mm}#pv .pc .box2{font-size:8.8pt;line-height:1.3;padding:2.5mm}#pv .pc .big112{font-size:24pt}#pv .box2{border:1.5px solid #111;border-radius:8px;padding:3mm;break-inside:avoid}
+#pv .box2 b.t{display:block;font-size:11pt;margin-bottom:2px}#pv .big112{font-size:30pt;font-weight:900;text-align:center;line-height:1}
+#pv .toc{column-count:3;font-size:8.6pt;line-height:1.25}#pv .toc div{break-inside:avoid}
+#pv .foot{font-size:8pt;color:#555;text-align:center;margin-top:8mm}
+#pv .brk{break-before:page}
+@media print{@page{size:A4;margin:11mm 10mm 12mm}html,body{background:#fff!important;height:auto!important;overflow:visible!important}
+ body>*:not(#pv){display:none!important}#pv{position:static;overflow:visible;inset:auto}#pv .pvbar{display:none}#pv .pg{max-width:none;padding:0}}`;
+const PV_MAP={'#16283d':'#ffffff','#0a1522':'#eef2f6','#24405f':'#dde6ef','#e8eef5':'#1b2733','#f2f6fa':'#2b2b2b','#5c6b7a':'#7d8a97'};
+function pvLight(h){return h.replace(/#[0-9a-fA-F]{6}\b/g,c=>PV_MAP[c.toLowerCase()]||c)}
+function pvE(s){return esc(String(s==null?'':s))}
+function pvArt(a,img){let h=`<div class="art" id="pv_${a.id}"><h2>${a.emoji} ${pvE(a.title)}</h2><div class="sub">${pvE(a.sub)}</div>`;
+ let n=0,hi=-1;const FG=(img&&typeof SIMG!=='undefined'&&SIMG[a.id])||[],fg=k=>FG.filter(x=>x.at===k).map(x=>pvLight(figH(x))).join('');h+=fg(-1);
+ for(const b of a.blocks){if(b.t!=='step')n=0;const x=pvE(b.x);
+  if(b.t==='h'){hi++;h+=`<h3>${x}</h3>`+fg(hi)}
+  else if(b.t==='step'){n++;h+=`<div class="st"><b>${n}</b><span>${x}</span></div>`}
+  else if(b.t==='li')h+=`<div class="li">${x}</div>`;
+  else if(b.t==='warn')h+=`<div class="wn">⚠ ${x}</div>`;
+  else if(b.t==='tip')h+=`<div class="tp">💡 ${x}</div>`;
+  else if(b.t==='chk')h+=`<div class="ck">${x}</div>`}
+ return h+'</div>'}
+function pvMorse(){const row=(o)=>Object.entries(o).map(([k,v])=>`<tr><td style="font-family:inherit">${k}</td><td>${v.replace(/\./g,'·').replace(/-/g,'–')}</td></tr>`).join('');
+ const t=(o,n)=>{const e=Object.entries(o),h=Math.ceil(e.length/n);let s='<div style="display:flex;gap:3mm">';for(let i=0;i<n;i++)s+=`<table class="mo">${row(Object.fromEntries(e.slice(i*h,i*h+h)))}</table>`;return s+'</div>'};
+ return `<div class="cat">📡 ${L2('Σήματα κινδύνου – SOS – Morse','Distress signals – SOS – Morse')}</div>
+ <div class="grid2"><div class="box2"><b class="t">🆘 SOS = ··· ––– ···</b>${L2('3 σύντομα – 3 μακριά – 3 σύντομα. Με φακό, καθρέφτη, σφυρίχτρα, χτυπήματα σε σωλήνα ή τοίχο. Κάνε παύση και επανάλαβε.','3 short – 3 long – 3 short. With a torch, mirror, whistle, knocking on a pipe or wall. Pause and repeat.')}<br><b>${L2('Κανόνας του 3:','Rule of 3:')}</b> ${L2('3 από οτιδήποτε = κίνδυνος (3 σφυρίγματα, 3 λάμψεις, 3 φωτιές σε τρίγωνο, 3 σωροί πέτρες).','3 of anything = distress (3 whistle blasts, 3 flashes, 3 fires in a triangle, 3 piles of stones).')}</div>
+ <div class="box2"><b class="t">⏱ ${L2('Χρόνοι Morse','Morse timing')}</b>${L2('τελεία = 1 μονάδα · παύλα = 3 · κενό μέσα στο γράμμα = 1 · ανάμεσα σε γράμματα = 3 · ανάμεσα σε λέξεις = 7.','dot = 1 unit · dash = 3 · gap inside a letter = 1 · between letters = 3 · between words = 7.')}<br>${L2('Μάθε απ\' έξω: <b>SOS</b>, <b>OK</b> (––– –·–), <b>HELP</b>, <b>ΒΟΗΘΕΙΑ</b>.','Learn by heart: <b>SOS</b>, <b>OK</b> (––– –·–), <b>HELP</b>.')}</div></div>
+ <h3>${L2('Λατινικά γράμματα & αριθμοί','Latin letters & numbers')}</h3>${t(Object.assign({},MO_LAT,MO_NUM),5)}
+ <h3>${L2('Ελληνικά γράμματα','Greek letters')}</h3>${t(MO_GR,4)}
+ <h3>${L2('Σήματα εδάφους προς ελικόπτερο / αεροπλάνο','Ground-to-air signals (helicopter / plane)')}</h3>
+ <div class="muted" style="font-size:9pt">${L2('Φτιάξ\' τα ΜΕΓΑΛΑ (τουλάχιστον 3 m), σε ανοιχτό χώρο, με χρώμα που ξεχωρίζει: κλαδιά, πέτρες, ρούχα, αυλάκι στο χιόνι.','Make them BIG (at least 3 m), in the open, in a contrasting colour: branches, stones, clothes, a trench in snow.')}</div>
+ <table style="margin-top:3px"><tr><th style="width:18%">${L2('Σχήμα','Sign')}</th><th>${L2('Σημαίνει','Means')}</th></tr>
+ <tr><td class="mo">V</td><td>${L2('Χρειαζόμαστε βοήθεια','We need assistance')}</td></tr><tr><td class="mo">X</td><td>${L2('Χρειαζόμαστε γιατρό / ιατρική βοήθεια','We need medical help')}</td></tr>
+ <tr><td class="mo">N</td><td>${L2('Όχι','No')}</td></tr><tr><td class="mo">Y</td><td>${L2('Ναι','Yes')}</td></tr><tr><td class="mo">→</td><td>${L2('Φύγαμε προς αυτή την κατεύθυνση','We went this way')}</td></tr></table>
+ <h3>${L2('Σήματα με το σώμα (προς ελικόπτερο)','Body signals (to a helicopter)')}</h3>
+ <div class="grid2"><div class="box2"><b class="t">🙌 ${L2('Και τα δύο χέρια ψηλά (Υ)','Both arms up (Y)')}</b>${L2('«ΝΑΙ – χρειαζόμαστε βοήθεια, προσγειωθείτε εδώ».','«YES – we need help, land here».')}</div>
+ <div class="box2"><b class="t">🙋 ${L2('Ένα χέρι πάνω, ένα κάτω (Ν)','One arm up, one down (N)')}</b>${L2('«ΟΧΙ – δεν χρειαζόμαστε βοήθεια». Μην το κάνεις κατά λάθος όταν χαιρετάς!','«NO – we don\'t need help». Don\'t do it by mistake when waving!')}</div></div>
+ <div class="tp">💡 ${L2('Στη μέρα: καθρέφτης ή CD για ανταύγειες, φωτεινό ύφασμα, καπνός (πράσινα φύλλα στη φωτιά = λευκός καπνός). Τη νύχτα: φακός, φωτιά. Σφυρίχτρα: ακούγεται πολύ πιο μακριά από τη φωνή και δεν σε κουράζει.','By day: a mirror or CD for flashes, bright cloth, smoke (green leaves on a fire = white smoke). At night: torch, fire. Whistle: carries much further than your voice and doesn\'t tire you.')}</div>`}
+function pvLines(n){return Array(n).fill('<div class="blank"></div>').join('')}
+function pvCard(m){const c=s=>pvE(s||'');return `<div class="cat">✂️ ${L2('Κάρτα τσέπης – κόψε, δίπλωσε, κράτα τη πάντα μαζί σου','Pocket card – cut, fold, always carry it')}</div>
+ <div class="grid2 pc">
+ <div class="box2"><div class="big112">112</div><div style="text-align:center">${L2('Δουλεύει <b>χωρίς SIM</b>, από κάθε δίκτυο, και με <b>SMS</b>. Πες: ΤΙ έγινε – ΠΟΥ είσαι – ΠΟΣΟΙ είστε. Μην κλείσεις πρώτος.','Works <b>without a SIM</b>, on any network, and by <b>SMS</b>. Say: WHAT happened – WHERE you are – HOW MANY. Don\'t hang up first.')}</div>
+ <div style="margin-top:4px;font-size:9.5pt">${L2('ΕΚΑΒ <b>166</b> · Πυροσβεστική <b>199</b> · Αστυνομία <b>100</b> · Λιμενικό <b>108</b> · Δηλητηριάσεις <b>210 779 3777</b>','Ambulance <b>166</b> · Fire <b>199</b> · Police <b>100</b> · Coast Guard <b>108</b> · Poison centre <b>+30 210 779 3777</b>')}</div></div>
+ <div class="box2"><b class="t">🪪 ${L2('Τα στοιχεία μου','My details')}</b>${L2('Όνομα','Name')}: <b>${c(m.name)}</b>${m.name?'':pvLines(1)}<br>${L2('Ομάδα αίματος','Blood type')}: <b>${c(m.blood)}</b> · ${L2('Αλλεργίες','Allergies')}: <b>${c(m.allergy)}</b>${m.allergy?'':pvLines(1)}${L2('Φάρμακα','Medicines')}: <b>${c(m.meds)}</b>${m.meds?'':pvLines(1)}
+ <b>${L2('Επαφές ανάγκης','Emergency contacts')}:</b><br>${m.contacts?c(m.contacts).replace(/\n/g,'<br>'):pvLines(2)}<br><b>${L2('Σημείο συνάντησης','Meeting point')}:</b> ${c(m.meet1)}${m.meet1?'':pvLines(1)}</div>
+ <div class="box2"><b class="t">🏚️ ${L2('Σεισμός','Earthquake')}</b>${L2('<b>ΣΚΥΨΕ – ΚΑΛΥΨΕ – ΚΡΑΤΗΣΟΥ</b> κάτω από γερό τραπέζι. Μακριά από τζάμια. Όχι ασανσέρ, όχι σκάλες όσο κουνιέται. Μετά: έξω σε ανοιχτό χώρο, έλεγξε γκάζι.','<b>DROP – COVER – HOLD ON</b> under a strong table. Away from glass. No lift, no stairs while shaking. After: out to open space, check the gas.')}</div>
+ <div class="box2"><b class="t">🔥 ${L2('Φωτιά','Fire')}</b>${L2('Σπίτι: βγες ΧΑΜΗΛΑ, κλείσε πόρτες πίσω σου, 199. Δασική: φύγε ΝΩΡΙΣ, όχι προς τα πάνω σε πλαγιά, κόντρα στον αέρα. Εγκλωβισμός: σε ήδη καμένο ή γυμνό έδαφος, βρεγμένο πανί στο στόμα.','Home: get out LOW, close doors behind you, 112. Wildfire: leave EARLY, not uphill, against the wind. Trapped: on already burnt or bare ground, wet cloth over your mouth.')}</div>
+ <div class="box2"><b class="t">🌊 ${L2('Πλημμύρα','Flood')}</b>${L2('ΨΗΛΑ, όχι υπόγεια. ΠΟΤΕ μην περάσεις με αυτοκίνητο ή με τα πόδια ρέμα ή νερό που τρέχει – 30 cm νερού παρασύρουν αυτοκίνητο. Κλείσε ρεύμα αν είναι ασφαλές.','Go HIGH, never basements. NEVER drive or walk through moving water – 30 cm of water can sweep a car away. Switch off power if safe.')}</div>
+ <div class="box2"><b class="t">❤️ ${L2('ΚΑΡΠΑ','CPR')}</b>${L2('Δεν απαντά, δεν αναπνέει κανονικά → 112, ζήτα απινιδωτή. <b>30 πιέσεις</b> στο κέντρο του στήθους, βάθος 5–6 cm, <b>100–120/λεπτό</b> (ρυθμός «Stayin\' Alive»). Αν ξέρεις: 2 εμφυσήσεις. ΜΗ σταματάς.','Unresponsive, not breathing normally → 112, ask for a defibrillator. <b>30 compressions</b> centre of chest, 5–6 cm deep, <b>100–120/min</b> («Stayin\' Alive»). If trained: 2 breaths. DON\'T stop.')}</div>
+ <div class="box2"><b class="t">🩸 ${L2('Αιμορραγία','Bleeding')}</b>${L2('Πίεσε ΔΥΝΑΤΑ και σταθερά με πανί, 10 λεπτά χωρίς να κοιτάς. Αίμα που πετάγεται από χέρι/πόδι και δεν σταματά: περίδεση 5–7 cm πάνω από την πληγή, γράψε την ώρα.','Press HARD and steadily with a cloth for 10 minutes without peeking. Spurting from an arm/leg that won\'t stop: tourniquet 5–7 cm above the wound, write the time.')}</div>
+ <div class="box2"><b class="t">🫁 ${L2('Πνιγμονή','Choking')}</b>${L2('Μπορεί να βήξει → βήχας. Δεν μπορεί → <b>5 χτυπήματα</b> στην πλάτη, <b>5 ωθήσεις</b> κοιλιάς (Heimlich), εναλλάξ. Χάνει τις αισθήσεις → 112 + ΚΑΡΠΑ.','Can cough → keep coughing. Cannot → <b>5 back blows</b>, <b>5 abdominal thrusts</b> (Heimlich), alternate. Unconscious → 112 + CPR.')}</div>
+ <div class="box2"><b class="t">🛌 ${L2('Θέση ανάνηψης','Recovery position')}</b>${L2('Αναίσθητος αλλά αναπνέει: στο πλάι, το πάνω πόδι λυγισμένο, κεφάλι προς τα πίσω, στόμα προς τα κάτω. Έλεγχε την αναπνοή.','Unconscious but breathing: on their side, top leg bent, head tilted back, mouth downwards. Keep checking breathing.')}</div>
+ <div class="box2"><b class="t">🆘 SOS</b>··· ––– ··· · ${L2('3 από οτιδήποτε = κίνδυνος','3 of anything = distress')}<br>${L2('Εδάφους: <b>V</b> βοήθεια · <b>X</b> γιατρός · <b>N</b> όχι · <b>Y</b> ναι','Ground: <b>V</b> help · <b>X</b> doctor · <b>N</b> no · <b>Y</b> yes')}<br>${L2('Κανόνας 3: 3 λεπτά χωρίς αέρα · 3 ώρες χωρίς ζέστη (κρύο) · 3 μέρες χωρίς νερό · 3 εβδομάδες χωρίς φαγητό.','Rule of 3: 3 min without air · 3 h without warmth (cold) · 3 days without water · 3 weeks without food.')}</div>
+ <div class="box2"><b class="t">💧 ${L2('Νερό','Water')}</b>${L2('3–4 λίτρα το άτομο τη μέρα. Βράσε 1 λεπτό. Ή 2 σταγόνες απλή χλωρίνη (χωρίς άρωμα) ανά λίτρο, περίμενε 30 λεπτά.','3–4 litres per person per day. Boil 1 minute. Or 2 drops of plain unscented bleach per litre, wait 30 minutes.')}</div>
+ <div class="box2"><b class="t">☢️ ${L2('Χημικό / πυρηνικό','Chemical / nuclear')}</b>${L2('ΜΠΕΣ μέσα – ΜΕΙΝΕ μέσα – ΑΚΟΥ ραδιόφωνο. Κλείσε πόρτες, παράθυρα, κλιματιστικά. Βγάλε τα εξωτερικά ρούχα σε σακούλα, πλύσου.','GET in – STAY in – TUNE in (radio). Close doors, windows, air-con. Bag your outer clothes, wash.')}</div>
+ </div>`}
+function pvPlan(m){const F=[['contacts',L2('Επαφές έκτακτης ανάγκης','Emergency contacts'),4],['out',L2('Συγγενής «κέντρο επικοινωνίας» σε άλλη πόλη','Out-of-town contact person'),2],['meet1',L2('Σημείο συνάντησης κοντά στο σπίτι','Meeting point near home'),2],['meet2',L2('Σημείο συνάντησης έξω από την πόλη','Meeting point outside town'),2],['shut',L2('Πού κλείνει γκάζι / νερό / ρεύμα','Where to shut off gas / water / power'),2],['name',L2('Όνομα','Name'),1],['blood',L2('Ομάδα αίματος','Blood type'),1],['allergy',L2('Αλλεργίες','Allergies'),1],['meds',L2('Φάρμακα που παίρνω','Medicines I take'),2],['cond',L2('Υγεία – σημειώσεις','Health notes'),2],['notes',L2('Άλλες σημειώσεις','Other notes'),2]];
+ let h=`<div class="cat">🪪 ${L2('Το σχέδιο της οικογένειάς μου','My family plan')}</div><div class="one">`;
+ for(const [k,t,n] of F)h+=`<h3>${t}</h3>`+(m[k]?`<div style="white-space:pre-wrap;font-size:11pt">${pvE(m[k])}</div>`:pvLines(n));
+ h+=`<h3>${L2('Μέλη οικογένειας – σχολείο / δουλειά','Family members – school / work')}</h3>${pvLines(4)}<h3>${L2('Κατοικίδια – κτηνίατρος','Pets – vet')}</h3>${pvLines(1)}</div>`;
+ h+=`<h3 style="margin-top:12px">📞 ${L2('Τηλέφωνα ανάγκης (Ελλάδα)','Emergency numbers (Greece)')}</h3><table>`+PH.map(p=>`<tr><td style="width:30%"><b style="font-size:12pt">${p[0].length>6?p[0].replace(/(\d{3})(\d{3})(\d+)/,'$1 $2 $3'):p[0]}</b></td><td>${pvE(LANG==='en'?trS(p[1]):p[1])}${p[2]?'<br><small>'+pvE(LANG==='en'?trS(p[2]):p[2])+'</small>':''}</td></tr>`).join('')+`<tr><td><b style="font-size:12pt">11188</b></td><td>${L2('Δίωξη Ηλεκτρονικού Εγκλήματος (απάτες, χάκερ)','Cyber Crime Division (scams, hacking)')}</td></tr></table>`;
+ return h}
+function pvBuild(o){const a=D,img=o.img!==false,m=o.personal===false?{}:LS.g('me',{}),E=LANG==='en';
+ const C=['now','aid','list','wild','gear','tips'];
+ let h=`<div class="pg"><div class="cover"><div class="big">🎒</div><h1>${L2('Επιβίωση 72+','Survival 72+')}</h1><div style="font-size:15pt;margin:6px 0 14px">${L2('Ο οδηγός σε χαρτί – για όταν δεν υπάρχει ρεύμα, internet ή μπαταρία','The guide on paper – for when there is no power, internet or battery')}</div>
+ <div style="font-size:11pt;max-width:140mm;margin:0 auto">${L2('Κράτα ένα αντίγραφο στο σακίδιο, ένα στο αυτοκίνητο και ένα δίπλα στην πόρτα. Διάβασέ το ΜΙΑ φορά τώρα, με ηρεμία – στην κρίση δεν θα έχεις χρόνο.','Keep one copy in your bag, one in the car and one by the door. Read it ONCE now, calmly – in a crisis you won\'t have time.')}</div>
+ <div class="big112" style="margin:12mm 0 2mm">112</div><div>${L2('Ευρωπαϊκός αριθμός έκτακτης ανάγκης – δωρεάν, χωρίς SIM','European emergency number – free, no SIM needed')}</div>
+ <div style="margin-top:14mm;font-size:9.5pt;color:#444">${L2('Έκδοση','Version')} v${APP_V} · ${APP_D}<br>${L2('Η εφαρμογή (δωρεάν, χωρίς internet):','The app (free, works offline):')} georgiosbarbaris-creator.github.io/hull-steel-toolkit/survival/<br><br>${L2('© 2026 Γεώργιος Μπαρμπαρής – Με επιφύλαξη παντός δικαιώματος. Ευγενική χορηγία – διανέμεται δωρεάν.','© 2026 Georgios Barmparis – All rights reserved. Kindly sponsored – distributed free of charge.')}<br>Powered by Overland’s Habit Creator<br><br><i>${L2('Οι οδηγίες είναι γενικές πληροφορίες και δεν αντικαθιστούν το 112, τις επίσημες αρχές ή την εκπαίδευση σε πρώτες βοήθειες.','These instructions are general information and do not replace 112, the official authorities or first-aid training.')}</i></div></div>`;
+ if(o.card)h+=pvCard(m);
+ if(o.plan)h+=pvPlan(m);
+ if(o.guide){h+=`<div class="cat">📑 ${L2('Περιεχόμενα','Contents')}</div><div class="toc">`+C.map(c=>`<div><b>${CATS[c][0]} ${pvE(LANG==='en'?trS(CATS[c][1]):CATS[c][1])}</b>${a.filter(x=>x.cat===c).map(x=>`<div style="margin-left:10px">${x.emoji} ${pvE(x.title)}</div>`).join('')}</div>`).join('')+`<div><b>📡 ${L2('Σήματα – SOS – Morse','Signals – SOS – Morse')}</b></div></div>`;
+  for(const c of C){h+=`<div class="cat">${CATS[c][0]} ${pvE(LANG==='en'?trS(CATS[c][1]):CATS[c][1])}</div><div class="cols">`+a.filter(x=>x.cat===c).map(x=>pvArt(x,img)).join('')+`</div>`}
+  h+=pvMorse()}
+ h+=`</div>`;
+ return h}
+function pvOpen(o){pvClose();if(!$('#pvcss')){const s=document.createElement('style');s.id='pvcss';s.textContent=PV_CSS;document.head.appendChild(s)}
+ const d=document.createElement('div');d.id='pv';d.className='notr';d.innerHTML=`<div class="pvbar"><button onclick="window.print()">🖨️ ${L2('Εκτύπωση / Αποθήκευση PDF','Print / Save as PDF')}</button><button class="k" onclick="pvClose()">✕ ${L2('Κλείσιμο','Close')}</button></div>`+pvBuild(o);document.body.appendChild(d);d.scrollTop=0}
+function pvClose(){const d=$('#pv');if(d)d.remove()}
+window.addEventListener('hashchange',pvClose);
+{const _t=tool;tool=function(id){id==='print'?tPrint():_t(id)}}
+
 
 /* ---- οθόνη νύχτας & πάντα ανοιχτή ---- */
 let night=LS.g('night',false),keepOn=LS.g('keepon',false);
