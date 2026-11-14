@@ -27,6 +27,8 @@ input:focus,select:focus{outline:2px solid var(--org);border-color:transparent}
 .note{font-size:.8em;color:var(--mut);margin:8px 0 0}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px}
 .chip{background:#1a1918;color:var(--tx);border:1px solid var(--line);border-radius:999px;padding:9px 14px;font-size:.95em;font-weight:700}
+.tsel{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:6px;align-items:center;margin-bottom:4px}.tsel span{color:var(--mut);font-weight:800}.tsel select{padding:11px 6px;text-align:center}
+.tx{margin:4px 0 0}.tx summary{font-size:.78em;color:var(--mut);cursor:pointer;padding:4px 0}
 .chip.on{background:var(--org);border-color:var(--org);color:#1a1918}
 .btn{border:0;border-radius:12px;padding:12px 14px;font-size:.95em;font-weight:800;background:var(--blu);color:#fff}
 .btn.g{background:var(--grn)}.btn.r{background:#4a2b2a;color:#f3b9b7}
@@ -75,7 +77,16 @@ const JIMNY=[
  n:["Αυτόματο 4AT: 1η 2.875 · βοηθητικό high 1.320 / low 2.643 · διαφορικό 4.090. Crawl ≈ 31,1:1 (ο μετατροπέας ροπής δίνει κάτι παραπάνω στο ξεκίνημα).","4-speed auto: 1st 2.875 · transfer high 1.320 / low 2.643 · diff 4.090. Crawl ≈ 31.1:1 (the torque converter adds a little at take-off)."]},
 {id:"j4",name:"Suzuki Jimny 4ης γεν. (JB74) 2018– · μηχανικό",en:"Suzuki Jimny Gen 4 (JB74) 2018– · manual",tq:130,rpm:4000,g1:4.425,lo:2.002,fd:4.090,tyre:"195/80R15",kg:1435,
  n:["1η 4.425 · low 2.002 · διαφορικό 4.090. Crawl ≈ 36,2:1.","1st 4.425 · low 2.002 · diff 4.090. Crawl ≈ 36.2:1."]}];
-const DB=(typeof VEH!=='undefined'?VEH:[]).filter(v=>v.ia>1.2&&!/JIMNY/i.test(v.name)).map(v=>({id:v.id,name:v.name,tq:v.tq,rpm:v.rpm||'',g1:v.ig,lo:v.ia,fd:v.iv,tyre:String(Math.round(v.r*2000)),kg:v.gvw}));
+const WID=[175,185,195,205,215,225,235,245,255,265,275,285,295,305,315,325,335],ASP=[50,55,60,65,70,75,80,85],RIM=[14,15,16,17,18,19,20,21,22];
+const COMMON_T=['195/80R15','205/70R15','205/75R15','205/80R16','215/75R15','215/70R16','215/65R16','225/75R15','225/75R16','225/70R16','225/65R17','235/75R15','235/70R16','235/85R16','235/65R17','245/70R16','245/75R16','255/70R15','255/70R16','255/60R18','255/55R18','265/70R15','265/70R16','265/75R16','265/65R17','265/70R17','265/60R18','275/65R17','275/70R17','275/60R18','275/55R20','285/70R17','285/75R16','185/75R16','175/80R16','245/75R15','255/75R15','265/75R15','235/85R16','255/85R16','285/75R17','295/70R17','315/70R17','285/70R18','295/70R18','265/70R18','275/70R18','305/55R20','285/55R20','35x12.5R15'.replace('35x12.5R15','315/75R16')];
+function tyreMMs(c){const m=c.match(/(\d{3})\/(\d{2})R(\d{2})/);return +m[3]*25.4+2*m[1]*m[2]/100}
+function nearestMetric(mm,tol,rim){let b='',d=1e9;const pick=list=>list.forEach(c=>{const x=Math.abs(tyreMMs(c)-mm);if(x<d){d=x;b=c}});if(rim)pick(COMMON_T.filter(c=>c.endsWith('R'+rim)));if(!rim||d>(tol||10)){if(rim&&d<=(tol||10)+5)return b;d=1e9;pick(COMMON_T);}return d<=(tol||10)?b:''}
+function tyreBlock(key,label,hint){const m=String(S[key]||'').match(/(\d{3})\s*\/\s*(\d{2})\s*[a-z]*\s*R?\s*(\d{2})/i),cur=m?[+m[1],+m[2],+m[3]]:['','',''];
+ const sel=(p,arr,v,ph)=>`<select data-tk="${key}" data-p="${p}"><option value="">${ph}</option>${arr.map(x=>`<option${x===v?' selected':''}>${x}</option>`).join('')}</select>`;
+ return `<label>${label}</label><div class="tsel">${sel('w',WID,cur[0],L('Πλάτος','Width'))}<span>/</span>${sel('a',ASP,cur[1],L('Προφίλ','Profile'))}<span>R</span>${sel('r',RIM,cur[2],L('Ζάντα','Rim'))}</div>
+ <div style="font-size:.72em;color:var(--mut);display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:6px;text-align:center"><span>${L('πλάτος mm','width mm')}</span><span></span><span>${L('προφίλ %','profile %')}</span><span></span><span>${L('ζάντα ″','rim ″')}</span></div>
+ <details class="tx"><summary>${hint}</summary><input id="${key}" value="${S[key]||''}"></details>`;}
+const DB=(typeof VEH!=='undefined'?VEH:[]).filter(v=>v.ia>1.2&&!/JIMNY/i.test(v.name)).map(v=>({id:v.id,name:v.name,tq:v.tq,rpm:v.rpm||'',g1:v.ig,lo:v.ia,fd:v.iv,tyre:nearestMetric(v.r*2000)||String(Math.round(v.r*2000)),kg:v.gvw}));
 let MY=[];try{MY=JSON.parse(localStorage.getItem('crawl_my')||'[]')}catch(e){}
 let S={};try{S=JSON.parse(localStorage.getItem('crawl_state')||'{}')}catch(e){}
 const DEF={lock:"0",style:"t",vid:"j2",tq:110,rpm:4100,idle:800,g1:4.425,lo:2.002,fd:4.300,tyre:"205/70R15",kg:1420,eff:0.8,ntyre:"31",nfd:"",nlo:"",surf:"dry"};
@@ -114,18 +125,17 @@ function render(){
   <div><label>${L('1η ταχύτητα','1st gear')}</label><input id="g1" inputmode="decimal" value="${S.g1}"></div>
   <div><label>${L('Βοηθητικό (κοντά / low)','Transfer case low')}</label><input id="lo" inputmode="decimal" value="${S.lo}"></div>
   <div><label>${L('Διαφορικό (τελική σχέση)','Axle / final drive ratio')}</label><input id="fd" inputmode="decimal" value="${S.fd}"></div>
-  <div><label>${L('Εργοστασιακό λάστιχο','Stock tyre')}</label><input id="tyre" value="${S.tyre}"></div>
   <div><label>${L('Βάρος με φορτίο (kg)','Loaded weight (kg)')}</label><input id="kg" inputmode="decimal" value="${S.kg}"></div>
   <div><label>${L('Ρελαντί (rpm)','Idle (rpm)')}</label><input id="idle" inputmode="decimal" value="${S.idle||800}"></div>
  </div>
+ <div style="margin-top:12px">${tyreBlock('tyre',L('Εργοστασιακό λάστιχο (όπως γράφει στο πλάι)','Stock tyre (as written on the sidewall)'),L('ή γράψε άλλο μέγεθος (π.χ. 31x10.5R15)','or type another size (e.g. 31x10.5R15)'))}</div>
  <div class="note" id="tnote"></div>
  <div class="row"><button class="btn g" id="sv">💾 ${L('Κράτα το ως δικό μου','Save as mine')}</button>${MY.some(v=>v.id===S.vid)?`<button class="btn r" id="del">🗑 ${L('Σβήσε','Delete')}</button>`:''}</div>
 </div>
 
 <div class="card"><h2><b>2</b>${L('Νέα λάστιχα','New tyres')}</h2>
  <div class="chips" id="tch">${['29','30','31','32','33','34','35','36','37','38','39','40'].map(t=>`<button class="chip${S.ntyre===t?' on':''}" data-t="${t}">${t}″</button>`).join('')}</div>
- <label>${L('Ή γράψε μέγεθος (π.χ. 235/75R15, 31x10.5R15, 790 mm)','Or type a size (e.g. 235/75R15, 31x10.5R15, 790 mm)')}</label>
- <input id="ntyre" value="${S.ntyre}">
+ ${tyreBlock('ntyre',L('ή διάλεξε τις διαστάσεις (π.χ. 265 / 70 R17)','or pick the size (e.g. 265 / 70 R17)'),L('ή γράψε σε ίντσες (π.χ. 31x10.5R15)','or type in inches (e.g. 31x10.5R15)'))}
  <div class="note" id="nnote"></div>
 </div>
 
@@ -189,6 +199,9 @@ function bind(){
   if(v){Object.assign(S,{ntq:'',nkg:'',tq:v.tq,rpm:v.rpm||'',g1:v.g1,lo:v.lo,fd:v.fd,tyre:v.tyre,kg:v.kg,nfd:'',nlo:'',pk:v.pk!==undefined?v.pk:((platFor(v.id)||{}).key||'')});}
   save();render();});
  document.querySelectorAll('#tch .chip').forEach(c=>c.onclick=()=>{S.ntyre=c.dataset.t;save();render();});
+ document.querySelectorAll('select[data-tk]').forEach(sl=>sl.onchange=()=>{const k=sl.dataset.tk,g=p=>document.querySelector('select[data-tk="'+k+'"][data-p="'+p+'"]').value,w=g('w'),a=g('a'),r=g('r');if(!(w&&a&&r))return;S[k]=w+'/'+a+'R'+r;$(k).value=S[k];
+  if(k==='tyre'&&!MY.some(v=>v.id===S.vid)){S.vid='custom';$('vid').value='custom';}
+  if(k==='ntyre')document.querySelectorAll('#tch .chip').forEach(c=>c.classList.remove('on'));save();calc();});
  document.querySelectorAll('[data-tq]').forEach(c=>c.onclick=()=>{S.ntq=String(Math.round(num(S.tq)*(1+(+c.dataset.tq)/100)));save();render();});
  document.querySelectorAll('[data-kg]').forEach(c=>c.onclick=()=>{S.nkg=String(Math.round(num(S.kg)+(+c.dataset.kg)));save();render();});
  document.querySelectorAll('[data-rst]').forEach(c=>c.onclick=()=>{S.ntq='';S.nkg='';S.nfd='';S.nlo='';save();render();});
@@ -217,6 +230,7 @@ function calc(){
  if(!ok){['k0','k1','k2'].forEach(k=>$(k).textContent='–');$('fix').innerHTML=$('plan').innerHTML=$('climb').innerHTML=$('verd').innerHTML='';$('nnote').textContent='';return;}
  const grow=D1/D0;
  $('nnote').innerHTML=L('Διάμετρος: ','Diameter: ')+f(D1,0)+' mm ('+inch(D1)+') · <b class="'+(grow>1?'warn':'good')+'">'+(grow>=1?'+':'')+f((grow-1)*100,1)+'%</b> '+L('από το εργοστασιακό','vs stock');
+ if(!/\d{3}\s*\//.test(S.ntyre||'')){const rm=String(S.tyre||'').match(/R\s*(\d{2})/i),eq=nearestMetric(D1,15,rm?rm[1]:'');if(eq)$('nnote').innerHTML+=' · '+L('αντιστοιχεί περίπου σε','roughly equals')+' <b>'+eq+'</b>';}
  const CR0=g1*lo*fd, CR1=CR0/grow, CR2=g1*nlo*nfd/grow;
  $('k0').textContent=f(CR0,1);$('k1').textContent=f(CR1,1);$('k2').textContent=f(CR2,1);
  $('k2').className='v '+(CR2>=CR0*0.98?'good':'warn');
