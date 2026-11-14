@@ -8,6 +8,7 @@
 <script src="data.js"></script>
 <script src="strength.js"></script>
 <script src="extra.js"></script>
+<script src="vehicles2.js"></script>
 <style>
 :root{--bg:#1a1918;--card:#262422;--line:#3d3935;--tx:#f5f0e8;--mut:#a8a29e;--red:#d9534f;--org:#d97757;--grn:#5f9e7a;--yel:#e8b86d;--blu:#6a9fb5}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -88,7 +89,7 @@ function tyreBlock(key,label,hint){const m=String(S[key]||'').match(/(\d{3})\s*\
  return `<label>${label}</label><div class="tsel">${sel('w',WID,cur[0],L('Πλάτος','Width'))}<span>/</span>${sel('a',ASP,cur[1],L('Προφίλ','Profile'))}<span>R</span>${sel('r',RIM,cur[2],L('Ζάντα','Rim'))}</div>
  <div style="font-size:.72em;color:var(--mut);display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:6px;text-align:center"><span>${L('πλάτος mm','width mm')}</span><span></span><span>${L('προφίλ %','profile %')}</span><span></span><span>${L('ζάντα ″','rim ″')}</span></div>
  <details class="tx"><summary>${hint}</summary><input id="${key}" value="${S[key]||''}"></details>`;}
-const DB=(typeof VEH!=='undefined'?VEH:[]).filter(v=>v.ia>1.2&&!/JIMNY/i.test(v.name)).map(v=>({id:v.id,name:v.name,tq:v.tq,rpm:v.rpm||'',g1:v.ig,lo:v.ia,fd:v.iv,tyre:nearestMetric(v.r*2000)||String(Math.round(v.r*2000)),kg:v.gvw}));
+const DB=[...(typeof VEH!=='undefined'?VEH:[]).filter(v=>v.ia>1.2&&!/JIMNY/i.test(v.name)).map(v=>({id:v.id,name:v.name,tq:v.tq,rpm:v.rpm||'',g1:v.ig,lo:v.ia,fd:v.iv,tyre:nearestMetric(v.r*2000)||String(Math.round(v.r*2000)),kg:v.gvw})),...(typeof VEH2!=='undefined'?VEH2:[]).filter(v=>v.lo>1.05)].sort((a,b)=>a.name.localeCompare(b.name));
 let MY=[];try{MY=JSON.parse(localStorage.getItem('crawl_my')||'[]')}catch(e){}
 let S={};try{S=JSON.parse(localStorage.getItem('crawl_state')||'{}')}catch(e){}
 const DEF={lock:"0",style:"t",vid:"j2",tq:110,rpm:4100,idle:800,g1:4.425,lo:2.002,fd:4.300,tyre:"205/70R15",kg:1420,eff:0.8,ntyre:"31",nfd:"",nlo:"",surf:"dry"};
@@ -262,7 +263,7 @@ function calc(){
  const D0=tyreMM(S.tyre),D1=tyreMM(S.ntyre)||D0;
  const nfd=num(S.nfd)>0?num(S.nfd):fd, nlo=num(S.nlo)>0?num(S.nlo):lo, Tn=num(S.ntq)>0?num(S.ntq):T, mn=num(S.nkg)>0?num(S.nkg):m;
  const v=allV().find(x=>x.id===S.vid);
- $('vnote').textContent=v&&v.n?v.n[LANG==='el'?0:1]:(v?'':L('Γράψε τις σχέσεις από το εγχειρίδιο ή το βιβλιαράκι του αυτοκινήτου.','Type the ratios from your owner’s manual or spec sheet.'));
+ $('vnote').textContent=v&&v.n?v.n[LANG==='el'?0:1]:v&&(v.src||v.note)?(v.src?L('Πηγές: ','Sources: ')+v.src:'')+(v.note?' · '+v.note:''):(v?'':L('Γράψε τις σχέσεις από το εγχειρίδιο ή το βιβλιαράκι του αυτοκινήτου.','Type the ratios from your owner’s manual or spec sheet.'));
  const inch=d=>f(d/25.4,1)+'″';
  const tl=x=>/\d{3}\s*\//.test(String(x||''))?String(x).toUpperCase().replace(/\s/g,''):'';
  $('tnote').innerHTML=isFinite(D0)?'<b>'+(tl(S.tyre)||nearestMetric(D0,10)||'')+'</b>'+(tl(S.tyre)||nearestMetric(D0,10)?' = ':'')+L('διάμετρος ','diameter ')+inch(D0):L('⚠️ Δεν καταλαβαίνω το μέγεθος','⚠️ Can’t read the size');
