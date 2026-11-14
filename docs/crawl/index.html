@@ -6,6 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Crawl Calc">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#1f1e1d">
 <script src="data.js"></script>
+<script src="strength.js"></script>
 <style>
 :root{--bg:#1a1918;--card:#262422;--line:#3d3935;--tx:#f5f0e8;--mut:#a8a29e;--red:#d9534f;--org:#d97757;--grn:#5f9e7a;--yel:#e8b86d;--blu:#6a9fb5}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -77,7 +78,7 @@ const JIMNY=[
 const DB=(typeof VEH!=='undefined'?VEH:[]).filter(v=>v.ia>1.2&&!/JIMNY/i.test(v.name)).map(v=>({id:v.id,name:v.name,tq:v.tq,g1:v.ig,lo:v.ia,fd:v.iv,tyre:String(Math.round(v.r*2000)),kg:v.gvw}));
 let MY=[];try{MY=JSON.parse(localStorage.getItem('crawl_my')||'[]')}catch(e){}
 let S={};try{S=JSON.parse(localStorage.getItem('crawl_state')||'{}')}catch(e){}
-const DEF={vid:"j2",tq:110,g1:4.425,lo:2.002,fd:4.300,tyre:"205/70R15",kg:1420,eff:0.8,ntyre:"31",nfd:"",nlo:"",mu:0.8};
+const DEF={lock:"0",style:"t",vid:"j2",tq:110,g1:4.425,lo:2.002,fd:4.300,tyre:"205/70R15",kg:1420,eff:0.8,ntyre:"31",nfd:"",nlo:"",mu:0.8};
 S=Object.assign({},DEF,S);
 const save=()=>{try{localStorage.setItem('crawl_state',JSON.stringify(S))}catch(e){}};
 const allV=()=>[...JIMNY,...MY,...DB];
@@ -144,6 +145,7 @@ function render(){
  <div id="climb"></div>
  <div class="note">${L('1η ταχύτητα, 4L, ροπή στο μέγιστο, απόδοση μετάδοσης','1st gear, 4L, peak torque, driveline efficiency')} <input id="eff" inputmode="decimal" value="${S.eff}" style="width:4.2em;padding:4px 6px;font-size:.95em;display:inline-block">. ${L('Η πρόσφυση (λάστιχο-άσφαλτος) βάζει ταβάνι: όσο κι αν πατήσεις, πάνω από αυτό σπινάρει.','Grip (tyre-to-tarmac) sets a ceiling: above it the wheels spin no matter what.')}</div>
 </div>
+${strengthCard()}
 
 <details open><summary>🔩 ${L('Μικραίνουν τα γρανάζια όσο ανεβαίνει το crawl; Σπάνε;','Do gears get smaller as crawl goes up? Do they break?')}</summary><div class="in">
  <div class="s10">${L('<b>Με απλά λόγια:</b> το μεγάλο λάστιχο είναι σαν μακρύ κλειδί. Με μακρύ κλειδί σφίγγεις πιο δυνατά, αλλά σπας και πιο εύκολα τη βίδα. Τα κοντά γρανάζια σού δίνουν πίσω τη δύναμη, αλλά τα δόντια του μικρού γραναζιού (pinion) γίνονται πιο λίγα και πιο μικρά.','<b>In plain words:</b> a big tyre is like a long wrench. A long wrench tightens harder, but it also snaps the bolt more easily. Lower gears give you the force back, but the small gear (pinion) ends up with fewer, smaller teeth.')}</div>
@@ -161,7 +163,7 @@ function render(){
 </div></details>
 
 <footer><b>Overland’s Habit</b> · Crawl Calculator · ${L('δωρεάν','free')}<br>Created by George Barbaris<br>© 2026 George Barbaris · ${L('Με την επιφύλαξη παντός δικαιώματος','All rights reserved')}<br><a href="#" onclick="legalOpen();return false" style="color:var(--org)">⚖️ ${L('Όροι χρήσης & αποποίηση ευθύνης','Terms of use & disclaimer')}</a><br>${L('Θεωρητικοί υπολογισμοί. Έλεγξε τις σχέσεις στο εγχειρίδιο ή με ειδικό πριν αγοράσεις γρανάζια.','Theoretical calculations. Check ratios in your manual or with a specialist before buying gears.')}</footer>`;
- bind();calc();}
+ bind();strengthBind();calc();}
 function bind(){
  const $=id=>document.getElementById(id);
  ['tq','g1','lo','fd','tyre','kg','ntyre','nfd','nlo','eff'].forEach(k=>$(k).addEventListener('input',e=>{S[k]=e.target.value;
@@ -169,12 +171,12 @@ function bind(){
   if(k==='ntyre')document.querySelectorAll('#tch .chip').forEach(c=>c.classList.toggle('on',c.dataset.t===S.ntyre));
   save();calc();}));
  $('vid').addEventListener('change',e=>{S.vid=e.target.value;const v=allV().find(x=>x.id===S.vid);
-  if(v){Object.assign(S,{tq:v.tq,g1:v.g1,lo:v.lo,fd:v.fd,tyre:v.tyre,kg:v.kg,nfd:'',nlo:''});}
+  if(v){Object.assign(S,{tq:v.tq,g1:v.g1,lo:v.lo,fd:v.fd,tyre:v.tyre,kg:v.kg,nfd:'',nlo:'',pk:v.pk!==undefined?v.pk:((platFor(v.id)||{}).key||'')});}
   save();render();});
  document.querySelectorAll('#tch .chip').forEach(c=>c.onclick=()=>{S.ntyre=c.dataset.t;save();render();});
  document.querySelectorAll('#mch .chip').forEach(c=>c.onclick=()=>{S.mu=+c.dataset.m;save();render();});
  $('sv').onclick=()=>{const nm=prompt(L('Όνομα (π.χ. «Το Jimny μου»)','Name (e.g. "My Jimny")'),'');if(!nm)return;
-  const id='m'+Date.now();MY.push({id,name:nm,tq:num(S.tq),g1:num(S.g1),lo:num(S.lo),fd:num(S.fd),tyre:S.tyre,kg:num(S.kg)});
+  const id='m'+Date.now();MY.push({id,name:nm,tq:num(S.tq),g1:num(S.g1),lo:num(S.lo),fd:num(S.fd),tyre:S.tyre,kg:num(S.kg),pk:S.pk||''});
   localStorage.setItem('crawl_my',JSON.stringify(MY));S.vid=id;save();render();};
  if($('del'))$('del').onclick=()=>{if(!confirm(L('Να σβηστεί;','Delete it?')))return;MY=MY.filter(v=>v.id!==S.vid);
   localStorage.setItem('crawl_my',JSON.stringify(MY));S.vid='custom';save();render();};
@@ -226,6 +228,7 @@ function calc(){
  const ax0=rows[0][1].axle;
  $('climb').innerHTML=`<table><tr><th></th><th>${L('Κλίση','Grade')}</th><th>${L('Μοίρες','Degrees')}</th><th>${L('Ροπή αξόνων','Axle torque')}</th></tr>`+
  rows.map(([n,c])=>`<tr><td>${n}<span class="lim">${c.grip?L('ταβάνι: πρόσφυση','limit: grip'):L('ταβάνι: κινητήρας','limit: engine')}</span><div class="bar"><i style="width:${Math.min(100,c.t/45*100)}%;background:${c.grip?'#5f9e7a':'#e8b86d'}"></i></div></td><td>${f(c.pct,0)}%</td><td>${f(c.t,1)}°</td><td>${f(c.axle/1000,1)} kNm<span class="lim ${c.axle>ax0*1.05?'bad':''}">${c===rows[0][1]?L('βάση','base'):(c.axle>=ax0?'+':'')+f((c.axle/ax0-1)*100,0)+'%'}</span></td></tr>`).join('')+`</table>`;
+ strengthCalc(T,m,eff,D0,D1,CR0,g1*nlo*nfd);
 }
 render();
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js');
