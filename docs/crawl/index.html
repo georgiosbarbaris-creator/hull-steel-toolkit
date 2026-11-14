@@ -134,7 +134,9 @@ function render(){
 </div>
 
 <div class="card"><h2><b>2</b>${L('Νέα λάστιχα','New tyres')}</h2>
- <div class="chips" id="tch">${(()=>{const rm=String(S.tyre||'').match(/R\s*(\d{2})/i),rim=rm?rm[1]:'',dn=tyreMM(S.ntyre)/25.4;return ['29','30','31','32','33','34','35','36','37','38','39','40'].map(t=>{const eq=nearestMetric(t*25.4,15,rim);return `<button class="chip${Math.abs(dn-t)<0.35?' on':''}" data-t="${eq||t}" style="line-height:1.15;padding:7px 12px">${t}″${eq?`<small style="display:block;font-size:.68em;font-weight:600;opacity:.85">${eq}</small>`:''}</button>`}).join('')})()}</div>
+ <div class="chips" id="tch">${(()=>{const rm=String(S.tyre||'').match(/R\s*(\d{2})/i),rim=rm?rm[1]:'',dn=tyreMM(S.ntyre)/25.4;const TS=['29','30','31','32','33','34','35','36','37','38','39','40'],EQ=TS.map(t=>{let b='',d=9;COMMON_T.forEach(c=>{if(rim&&!c.endsWith('R'+rim))return;const x=tyreMMs(c)/25.4;if(Math.round(x)===+t&&Math.abs(x-t)<d){d=Math.abs(x-t);b=c}});return b;});
+ const onI=isFinite(dn)?TS.indexOf(String(Math.round(dn))):-1;
+ return TS.map((t,i)=>{const eq=EQ[i];return `<button class="chip${i===onI?' on':''}" data-t="${eq||t}" style="line-height:1.15;padding:7px 12px">${t}″${eq?`<small style="display:block;font-size:.68em;font-weight:600;opacity:.85">${eq}</small>`:''}</button>`}).join('')})()}</div>
  ${tyreBlock('ntyre',L('ή διάλεξε τις διαστάσεις (π.χ. 265 / 70 R17)','or pick the size (e.g. 265 / 70 R17)'),L('ή γράψε σε ίντσες (π.χ. 31x10.5R15)','or type in inches (e.g. 31x10.5R15)'))}
  <div class="note" id="nnote"></div>
 </div>
@@ -235,6 +237,7 @@ function calc(){
  if(!/\d{3}\s*\//.test(S.ntyre||'')){const rm=String(S.tyre||'').match(/R\s*(\d{2})/i),eq=nearestMetric(D1,15,rm?rm[1]:'');if(eq)$('nnote').innerHTML+=' · '+L('αντιστοιχεί περίπου σε','roughly equals')+' <b>'+eq+'</b>';}
  const CR0=g1*lo*fd, CR1=CR0/grow, CR2=g1*nlo*nfd/grow;
  $('k0').textContent=f(CR0,1);$('k1').textContent=f(CR1,1);$('k2').textContent=f(CR2,1);
+ $('k1').className='v '+(grow>1.005?'bad':'good');
  $('k2').className='v '+(CR2>=CR0*0.98?'good':'warn');
  const pos=c=>Math.min(100,c)/100*100;
  $('scale').innerHTML=`<i class="mk s" style="left:calc(${pos(CR0)}% - 2px)"></i><i class="mk" style="left:calc(${pos(CR2)}% - 2px);background:${rating(CR2)[1]}"></i>`;
