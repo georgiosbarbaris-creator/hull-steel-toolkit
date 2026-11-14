@@ -160,7 +160,7 @@ function render(){
  <p class="note">${L('Πηγές: Crawlpedia, Metalcloak, Randy’s Worldwide (carrier breaks), ARB (thick gears), Trail-Gear (κιτ Jimny), BigJimny.','Sources: Crawlpedia, Metalcloak, Randy’s Worldwide (carrier breaks), ARB (thick gears), Trail-Gear (Jimny kits), BigJimny.')}</p>
 </div></details>
 
-<footer><b>Overland’s Habit</b> · Crawl Calculator · ${L('δωρεάν','free')}<br>Created by George Barbaris<br>${L('Θεωρητικοί υπολογισμοί. Έλεγξε τις σχέσεις στο εγχειρίδιο ή με ειδικό πριν αγοράσεις γρανάζια.','Theoretical calculations. Check ratios in your manual or with a specialist before buying gears.')}</footer>`;
+<footer><b>Overland’s Habit</b> · Crawl Calculator · ${L('δωρεάν','free')}<br>Created by George Barbaris<br>© 2026 George Barbaris · ${L('Με την επιφύλαξη παντός δικαιώματος','All rights reserved')}<br><a href="#" onclick="legalOpen();return false" style="color:var(--org)">⚖️ ${L('Όροι χρήσης & αποποίηση ευθύνης','Terms of use & disclaimer')}</a><br>${L('Θεωρητικοί υπολογισμοί. Έλεγξε τις σχέσεις στο εγχειρίδιο ή με ειδικό πριν αγοράσεις γρανάζια.','Theoretical calculations. Check ratios in your manual or with a specialist before buying gears.')}</footer>`;
  bind();calc();}
 function bind(){
  const $=id=>document.getElementById(id);
@@ -230,4 +230,5 @@ function calc(){
 render();
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js');
 </script>
+<script src="legal.js"></script>
 </body></html>
