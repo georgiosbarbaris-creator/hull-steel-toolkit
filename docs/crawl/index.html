@@ -78,7 +78,15 @@ const JIMNY=[
 const DB=(typeof VEH!=='undefined'?VEH:[]).filter(v=>v.ia>1.2&&!/JIMNY/i.test(v.name)).map(v=>({id:v.id,name:v.name,tq:v.tq,g1:v.ig,lo:v.ia,fd:v.iv,tyre:String(Math.round(v.r*2000)),kg:v.gvw}));
 let MY=[];try{MY=JSON.parse(localStorage.getItem('crawl_my')||'[]')}catch(e){}
 let S={};try{S=JSON.parse(localStorage.getItem('crawl_state')||'{}')}catch(e){}
-const DEF={lock:"0",style:"t",vid:"j2",tq:110,g1:4.425,lo:2.002,fd:4.300,tyre:"205/70R15",kg:1420,eff:0.8,ntyre:"31",nfd:"",nlo:"",mu:0.8};
+const DEF={lock:"0",style:"t",vid:"j2",tq:110,g1:4.425,lo:2.002,fd:4.300,tyre:"205/70R15",kg:1420,eff:0.8,ntyre:"31",nfd:"",nlo:"",surf:"dry"};
+const SURF={dry:{mu:.8,crr:.015,el:"☀️ Στεγνή άσφαλτος",en:"☀️ Dry tarmac",tel:"",ten:""},
+ wet:{mu:.5,crr:.015,el:"🌧 Βρεγμένη άσφαλτος",en:"🌧 Wet tarmac",tel:"Πρόσεχε τις λευκές διαγραμμίσεις και τα φύλλα: γλιστράνε πολύ περισσότερο.",ten:"Watch out for painted lines and leaves: they are far more slippery."},
+ gravel:{mu:.6,crr:.04,el:"🪨 Χαλίκι / χώμα",en:"🪨 Gravel / dirt",tel:"Σταθερό γκάζι, χωρίς απότομες κινήσεις, για να μη σκάβουν οι ρόδες.",ten:"Steady throttle, no sudden moves, so the wheels do not dig in."},
+ mud:{mu:.3,crr:.12,el:"🟤 Λάσπη",en:"🟤 Mud",tel:"Η λάσπη θέλει ορμή και λάστιχα mud-terrain. Αν σταματήσεις στη μέση, δύσκολα ξεκινάς ξανά. Η πρόσφυση εξαρτάται πολύ από το λάστιχο.",ten:"Mud needs momentum and mud-terrain tyres. If you stop halfway, restarting is hard. Grip depends a lot on the tyre."},
+ snow:{mu:.22,crr:.07,el:"❄️ Χιόνι",en:"❄️ Snow",tel:"Με αλυσίδες ή χειμερινά λάστιχα η πρόσφυση σχεδόν διπλασιάζεται. Χαμηλή ταχύτητα, ήπιο γκάζι, ποτέ σπινάρισμα.",ten:"With chains or winter tyres grip almost doubles. Low gear, gentle throttle, never spin."},
+ sand:{mu:.5,crr:.2,el:"🏜 Άμμος (μαλακή)",en:"🏜 Sand (soft)",tel:"Η άμμος «φρενάρει» πολύ (μεγάλη αντίσταση κύλισης). Κατέβασε την πίεση στα 15–20 psi, κράτα ορμή και μη σταματάς σε ανηφόρα.",ten:"Sand drags a lot (high rolling resistance). Air down to 15–20 psi, keep momentum and do not stop on a climb."},
+ cross:{mu:.6,crr:.05,cross:1,el:"↗↘ Χιαστί λακκούβες",en:"↗↘ Cross-axle ruts",tel:"Στις χιαστί λακκούβες σηκώνονται διαγώνια δύο ρόδες. Χωρίς μπλοκέ, η δύναμη φεύγει στη ρόδα που κρέμεται και σπινάρει. Με μπλοκέ πίσω ή μπρος+πίσω ανεβαίνεις πολύ πιο σίγουρα.",ten:"On cross-axle ruts two wheels lift diagonally. Without lockers, the power goes to the wheel in the air and it spins. With a rear or front+rear locker you climb far more surely."}};
+const CROSSF={"0":.35,"r":.65,"fr":1};
 S=Object.assign({},DEF,S);
 const save=()=>{try{localStorage.setItem('crawl_state',JSON.stringify(S))}catch(e){}};
 const allV=()=>[...JIMNY,...MY,...DB];
@@ -113,7 +121,7 @@ function render(){
 </div>
 
 <div class="card"><h2><b>2</b>${L('Νέα λάστιχα','New tyres')}</h2>
- <div class="chips" id="tch">${['29','30','31','32','33','35'].map(t=>`<button class="chip${S.ntyre===t?' on':''}" data-t="${t}">${t}″</button>`).join('')}</div>
+ <div class="chips" id="tch">${['29','30','31','32','33','34','35','36','37','38','39','40'].map(t=>`<button class="chip${S.ntyre===t?' on':''}" data-t="${t}">${t}″</button>`).join('')}</div>
  <label>${L('Ή γράψε μέγεθος (π.χ. 235/75R15, 31x10.5R15, 790 mm)','Or type a size (e.g. 235/75R15, 31x10.5R15, 790 mm)')}</label>
  <input id="ntyre" value="${S.ntyre}">
  <div class="note" id="nnote"></div>
@@ -140,10 +148,12 @@ function render(){
  <div id="plan" style="margin-top:8px"></div></div>
 </div>
 
-<div class="card"><h2><b>4</b>${L('Πόση ανηφόρα ανεβαίνει; (άσφαλτος, θεωρητικά)','How steep can it climb? (tarmac, theoretical)')}</h2>
- <div class="chips" id="mch"><button class="chip${S.mu==0.8?' on':''}" data-m="0.8">☀️ ${L('Στεγνή','Dry')}</button><button class="chip${S.mu==0.5?' on':''}" data-m="0.5">🌧 ${L('Βρεγμένη','Wet')}</button></div>
+<div class="card"><h2><b>4</b>${L('Πόση ανηφόρα ανεβαίνει; (θεωρητικά)','How steep can it climb? (theoretical)')}</h2>
+ <div class="chips" id="mch">${Object.keys(SURF).map(k=>`<button class="chip${S.surf===k?' on':''}" data-m="${k}">${L(SURF[k].el,SURF[k].en)}</button>`).join('')}</div>
+ ${SURF[S.surf]&&SURF[S.surf].cross?`<label>${L('Μπλοκέ','Lockers')}</label><div class="chips">${[['0',L('Όχι','No')],['r',L('Πίσω','Rear')],['fr',L('Μπρος+πίσω','Front+rear')]].map(([v,t])=>`<button class="chip${(S.lock||'0')===v?' on':''}" data-g="lock" data-v="${v}">${t}</button>`).join('')}</div>`:''}
+ <div class="note" id="stip" style="margin:0 0 8px"></div>
  <div id="climb"></div>
- <div class="note">${L('1η ταχύτητα, 4L, ροπή στο μέγιστο, απόδοση μετάδοσης','1st gear, 4L, peak torque, driveline efficiency')} <input id="eff" inputmode="decimal" value="${S.eff}" style="width:4.2em;padding:4px 6px;font-size:.95em;display:inline-block">. ${L('Η πρόσφυση (λάστιχο-άσφαλτος) βάζει ταβάνι: όσο κι αν πατήσεις, πάνω από αυτό σπινάρει.','Grip (tyre-to-tarmac) sets a ceiling: above it the wheels spin no matter what.')}</div>
+ <div class="note">${L('1η ταχύτητα, 4L, ροπή στο μέγιστο, απόδοση μετάδοσης','1st gear, 4L, peak torque, driveline efficiency')} <input id="eff" inputmode="decimal" value="${S.eff}" style="width:4.2em;padding:4px 6px;font-size:.95em;display:inline-block">. ${L('Η πρόσφυση (λάστιχο-έδαφος) βάζει ταβάνι: όσο κι αν πατήσεις, πάνω από αυτό σπινάρει.','Grip (tyre-to-ground) sets a ceiling: above it the wheels spin no matter what.')}</div>
 </div>
 ${strengthCard()}
 
@@ -174,21 +184,21 @@ function bind(){
   if(v){Object.assign(S,{tq:v.tq,g1:v.g1,lo:v.lo,fd:v.fd,tyre:v.tyre,kg:v.kg,nfd:'',nlo:'',pk:v.pk!==undefined?v.pk:((platFor(v.id)||{}).key||'')});}
   save();render();});
  document.querySelectorAll('#tch .chip').forEach(c=>c.onclick=()=>{S.ntyre=c.dataset.t;save();render();});
- document.querySelectorAll('#mch .chip').forEach(c=>c.onclick=()=>{S.mu=+c.dataset.m;save();render();});
+ document.querySelectorAll('#mch .chip').forEach(c=>c.onclick=()=>{S.surf=c.dataset.m;save();render();});
  $('sv').onclick=()=>{const nm=prompt(L('Όνομα (π.χ. «Το Jimny μου»)','Name (e.g. "My Jimny")'),'');if(!nm)return;
   const id='m'+Date.now();MY.push({id,name:nm,tq:num(S.tq),g1:num(S.g1),lo:num(S.lo),fd:num(S.fd),tyre:S.tyre,kg:num(S.kg),pk:S.pk||''});
   localStorage.setItem('crawl_my',JSON.stringify(MY));S.vid=id;save();render();};
  if($('del'))$('del').onclick=()=>{if(!confirm(L('Να σβηστεί;','Delete it?')))return;MY=MY.filter(v=>v.id!==S.vid);
   localStorage.setItem('crawl_my',JSON.stringify(MY));S.vid='custom';save();render();};
  document.getElementById('lang').onclick=()=>{LANG=LANG==='el'?'en':'el';localStorage.setItem('crawl_lang',LANG);render();};}
-function climb(T,CR,eff,Dmm,m,mu){const r=Dmm/2000,F=T*CR*eff/r,k=F/(m*G),h=Math.hypot(1,CRR);
- const te=k>=h?90:(Math.asin(k/h)-Math.atan(CRR))*180/Math.PI, tg=Math.atan(mu)*180/Math.PI;
+function climb(T,CR,eff,Dmm,m,mu,crr){crr=crr||CRR;const r=Dmm/2000,F=T*CR*eff/r,k=F/(m*G),h=Math.hypot(1,crr);
+ const te=k>=h?90:(Math.asin(Math.min(1,k/h))-Math.atan(crr))*180/Math.PI, tg=Math.atan(Math.max(0,mu-crr))*180/Math.PI;
  const t=Math.max(0,Math.min(te,tg));return{t,pct:Math.tan(t*Math.PI/180)*100,grip:tg<=te,axle:Math.min(T*CR*eff,mu*m*G*r)};}
 function rating(c){return c<30?[L('δρόμος / χωματόδρομος','road / gravel'),'#a8a29e']:c<50?[L('trail & overland','trail & overland'),'#6a9fb5']:c<70?[L('καλό για βράχια','good for rocks'),'#5f9e7a']:c<100?[L('πολύ τεχνικό','very technical'),'#e8b86d']:['extreme','#d9534f'];}
 function near(x){let lo=null,hi=null;COMMON.forEach(c=>{if(c<=x+1e-3)lo=c;if(hi===null&&c>=x-1e-3)hi=c;});return[lo,hi];}
 function calc(){
  const $=id=>document.getElementById(id);
- const T=num(S.tq),g1=num(S.g1),lo=num(S.lo),fd=num(S.fd),m=num(S.kg),eff=num(S.eff)||0.8,mu=+S.mu||0.8;
+ const T=num(S.tq),g1=num(S.g1),lo=num(S.lo),fd=num(S.fd),m=num(S.kg),eff=num(S.eff)||0.8,SF=SURF[S.surf]||SURF.dry,mu=SF.mu*(SF.cross?CROSSF[S.lock||'0']:1),crr=SF.crr;
  const D0=tyreMM(S.tyre),D1=tyreMM(S.ntyre)||D0;
  const nfd=num(S.nfd)>0?num(S.nfd):fd, nlo=num(S.nlo)>0?num(S.nlo):lo;
  const v=allV().find(x=>x.id===S.vid);
@@ -224,8 +234,9 @@ function calc(){
  <div class="opt"><div class="t">🛣 ${L('Στροφές στην εθνική','Highway revs')}<small>${L('σε σχέση με το εργοστασιακό','vs stock')}</small></div><div class="n ${Math.abs(hw-1)<.03?'good':'warn'}">${hw>=1?'+':''}${f((hw-1)*100,0)}%</div></div>
  <div class="opt"><div class="t">⏱ ${L('Κοντέρ: όταν δείχνει 100','Speedo: when it shows 100')}<small>${L('η πραγματική ταχύτητα (αν μετράει από το κιβώτιο)','actual speed (if read from the gearbox)')}</small></div><div class="n">${f(100*spd,0)}<small>km/h</small></div></div>`;
  /* ανηφόρα */
- const rows=[[L('Εργοστασιακό','Stock'),climb(T,CR0,eff,D0,m,mu)],[L('Νέα λάστιχα','New tyres'),climb(T,CR0,eff,D1,m,mu)],[L('Νέα λάστιχα + σχέδιο','New tyres + plan'),climb(T,g1*nlo*nfd,eff,D1,m,mu)]];
+ const rows=[[L('Εργοστασιακό','Stock'),climb(T,CR0,eff,D0,m,mu,crr)],[L('Νέα λάστιχα','New tyres'),climb(T,CR0,eff,D1,m,mu,crr)],[L('Νέα λάστιχα + σχέδιο','New tyres + plan'),climb(T,g1*nlo*nfd,eff,D1,m,mu,crr)]];
  const ax0=rows[0][1].axle;
+ $('stip').innerHTML=(SF.tel?L(SF.tel,SF.ten)+' ':'')+L(`Πρόσφυση μ≈${f(mu,2)} · αντίσταση κύλισης ${f(crr*100,1)}%`,`Grip μ≈${f(mu,2)} · rolling resistance ${f(crr*100,1)}%`);
  $('climb').innerHTML=`<table><tr><th></th><th>${L('Κλίση','Grade')}</th><th>${L('Μοίρες','Degrees')}</th><th>${L('Ροπή αξόνων','Axle torque')}</th></tr>`+
  rows.map(([n,c])=>`<tr><td>${n}<span class="lim">${c.grip?L('ταβάνι: πρόσφυση','limit: grip'):L('ταβάνι: κινητήρας','limit: engine')}</span><div class="bar"><i style="width:${Math.min(100,c.t/45*100)}%;background:${c.grip?'#5f9e7a':'#e8b86d'}"></i></div></td><td>${f(c.pct,0)}%</td><td>${f(c.t,1)}°</td><td>${f(c.axle/1000,1)} kNm<span class="lim ${c.axle>ax0*1.05?'bad':''}">${c===rows[0][1]?L('βάση','base'):(c.axle>=ax0?'+':'')+f((c.axle/ax0-1)*100,0)+'%'}</span></td></tr>`).join('')+`</table>`;
  strengthCalc(T,m,eff,D0,D1,CR0,g1*nlo*nfd);
