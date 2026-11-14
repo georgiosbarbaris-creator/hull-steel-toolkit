@@ -67,18 +67,18 @@ const G=9.81, CRR=0.015;
 const COMMON=[3.55,3.73,3.91,4.10,4.30,4.56,4.88,5.13,5.38,5.71,5.89];
 /* Jimny 3ης γενιάς: δύο διαφορετικά βοηθητικά (λεβιές/πλανητικό & ηλεκτρικό/κουμπί) + αυτόματο. 4ης γενιάς για σύγκριση. */
 const JIMNY=[
-{id:"j1",name:"Suzuki Jimny 3ης γεν. 2000–2005 · βοηθητικό με λεβιέ",en:"Suzuki Jimny Gen 3 2000–2005 · lever-shift transfer case",tq:110,g1:3.652,lo:2.145,fd:3.909,tyre:"205/70R15",kg:1420,
+{id:"j1",name:"Suzuki Jimny 3ης γεν. 2000–2005 · βοηθητικό με λεβιέ",en:"Suzuki Jimny Gen 3 2000–2005 · lever-shift transfer case",tq:110,rpm:4100,g1:3.652,lo:2.145,fd:3.909,tyre:"205/70R15",kg:1420,
  n:["Βοηθητικό με λεβιέ (πλανητικό): high 1.320 · low 2.145 · διαφορικό 3.909. Crawl ≈ 30,6:1.","Lever-shift (planetary) transfer case: high 1.320 · low 2.145 · diff 3.909. Crawl ≈ 30.6:1."]},
-{id:"j2",name:"Suzuki Jimny 3ης γεν. 2005–2018 · βοηθητικό με κουμπί (μηχανικό)",en:"Suzuki Jimny Gen 3 2005–2018 · push-button transfer case (manual)",tq:110,g1:4.425,lo:2.002,fd:4.300,tyre:"205/70R15",kg:1420,
+{id:"j2",name:"Suzuki Jimny 3ης γεν. 2005–2018 · βοηθητικό με κουμπί (μηχανικό)",en:"Suzuki Jimny Gen 3 2005–2018 · push-button transfer case (manual)",tq:110,rpm:4100,g1:4.425,lo:2.002,fd:4.300,tyre:"205/70R15",kg:1420,
  n:["Ηλεκτρικό βοηθητικό (κουμπί): high 1.000 · low 2.002 · διαφορικό 4.300. Crawl ≈ 38,1:1.","Electric push-button transfer case: high 1.000 · low 2.002 · diff 4.300. Crawl ≈ 38.1:1."]},
-{id:"j3",name:"Suzuki Jimny 3ης γεν. 2005–2018 · αυτόματο",en:"Suzuki Jimny Gen 3 2005–2018 · automatic",tq:110,g1:2.875,lo:2.643,fd:4.090,tyre:"205/70R15",kg:1420,
+{id:"j3",name:"Suzuki Jimny 3ης γεν. 2005–2018 · αυτόματο",en:"Suzuki Jimny Gen 3 2005–2018 · automatic",tq:110,rpm:4100,g1:2.875,lo:2.643,fd:4.090,tyre:"205/70R15",kg:1420,
  n:["Αυτόματο 4AT: 1η 2.875 · βοηθητικό high 1.320 / low 2.643 · διαφορικό 4.090. Crawl ≈ 31,1:1 (ο μετατροπέας ροπής δίνει κάτι παραπάνω στο ξεκίνημα).","4-speed auto: 1st 2.875 · transfer high 1.320 / low 2.643 · diff 4.090. Crawl ≈ 31.1:1 (the torque converter adds a little at take-off)."]},
-{id:"j4",name:"Suzuki Jimny 4ης γεν. (JB74) 2018– · μηχανικό",en:"Suzuki Jimny Gen 4 (JB74) 2018– · manual",tq:130,g1:4.425,lo:2.002,fd:4.090,tyre:"195/80R15",kg:1435,
+{id:"j4",name:"Suzuki Jimny 4ης γεν. (JB74) 2018– · μηχανικό",en:"Suzuki Jimny Gen 4 (JB74) 2018– · manual",tq:130,rpm:4000,g1:4.425,lo:2.002,fd:4.090,tyre:"195/80R15",kg:1435,
  n:["1η 4.425 · low 2.002 · διαφορικό 4.090. Crawl ≈ 36,2:1.","1st 4.425 · low 2.002 · diff 4.090. Crawl ≈ 36.2:1."]}];
-const DB=(typeof VEH!=='undefined'?VEH:[]).filter(v=>v.ia>1.2&&!/JIMNY/i.test(v.name)).map(v=>({id:v.id,name:v.name,tq:v.tq,g1:v.ig,lo:v.ia,fd:v.iv,tyre:String(Math.round(v.r*2000)),kg:v.gvw}));
+const DB=(typeof VEH!=='undefined'?VEH:[]).filter(v=>v.ia>1.2&&!/JIMNY/i.test(v.name)).map(v=>({id:v.id,name:v.name,tq:v.tq,rpm:v.rpm||'',g1:v.ig,lo:v.ia,fd:v.iv,tyre:String(Math.round(v.r*2000)),kg:v.gvw}));
 let MY=[];try{MY=JSON.parse(localStorage.getItem('crawl_my')||'[]')}catch(e){}
 let S={};try{S=JSON.parse(localStorage.getItem('crawl_state')||'{}')}catch(e){}
-const DEF={lock:"0",style:"t",vid:"j2",tq:110,g1:4.425,lo:2.002,fd:4.300,tyre:"205/70R15",kg:1420,eff:0.8,ntyre:"31",nfd:"",nlo:"",surf:"dry"};
+const DEF={lock:"0",style:"t",vid:"j2",tq:110,rpm:4100,idle:800,g1:4.425,lo:2.002,fd:4.300,tyre:"205/70R15",kg:1420,eff:0.8,ntyre:"31",nfd:"",nlo:"",surf:"dry"};
 const SURF={dry:{mu:.8,crr:.015,el:"☀️ Στεγνή άσφαλτος",en:"☀️ Dry tarmac",tel:"",ten:""},
  wet:{mu:.5,crr:.015,el:"🌧 Βρεγμένη άσφαλτος",en:"🌧 Wet tarmac",tel:"Πρόσεχε τις λευκές διαγραμμίσεις και τα φύλλα: γλιστράνε πολύ περισσότερο.",ten:"Watch out for painted lines and leaves: they are far more slippery."},
  gravel:{mu:.6,crr:.04,el:"🪨 Χαλίκι / χώμα",en:"🪨 Gravel / dirt",tel:"Σταθερό γκάζι, χωρίς απότομες κινήσεις, για να μη σκάβουν οι ρόδες.",ten:"Steady throttle, no sudden moves, so the wheels do not dig in."},
@@ -109,12 +109,14 @@ function render(){
  <option value="custom"${S.vid==='custom'?' selected':''}>✏️ ${L('Δικό μου (γράφω τα νούμερα)','My own (type the numbers)')}</option></select>
  <div class="note" id="vnote"></div>
  <div class="grid" style="margin-top:12px">
-  <div><label>${L('Ροπή κινητήρα (Nm)','Engine torque (Nm)')}</label><input id="tq" inputmode="decimal" value="${S.tq}"></div>
+  <div><label>${L('Μέγιστη ροπή (Nm)','Max torque (Nm)')}</label><input id="tq" inputmode="decimal" value="${S.tq}"></div>
+  <div><label>${L('…στις στροφές (rpm)','…at engine speed (rpm)')}</label><input id="rpm" value="${S.rpm||''}" placeholder="${L('π.χ.','e.g.')} 3200"></div>
   <div><label>${L('1η ταχύτητα','1st gear')}</label><input id="g1" inputmode="decimal" value="${S.g1}"></div>
   <div><label>${L('Βοηθητικό (κοντά / low)','Transfer case low')}</label><input id="lo" inputmode="decimal" value="${S.lo}"></div>
   <div><label>${L('Διαφορικό (τελική σχέση)','Axle / final drive ratio')}</label><input id="fd" inputmode="decimal" value="${S.fd}"></div>
   <div><label>${L('Εργοστασιακό λάστιχο','Stock tyre')}</label><input id="tyre" value="${S.tyre}"></div>
   <div><label>${L('Βάρος με φορτίο (kg)','Loaded weight (kg)')}</label><input id="kg" inputmode="decimal" value="${S.kg}"></div>
+  <div><label>${L('Ρελαντί (rpm)','Idle (rpm)')}</label><input id="idle" inputmode="decimal" value="${S.idle||800}"></div>
  </div>
  <div class="note" id="tnote"></div>
  <div class="row"><button class="btn g" id="sv">💾 ${L('Κράτα το ως δικό μου','Save as mine')}</button>${MY.some(v=>v.id===S.vid)?`<button class="btn r" id="del">🗑 ${L('Σβήσε','Delete')}</button>`:''}</div>
@@ -143,7 +145,10 @@ function render(){
  <div style="border-top:1px solid var(--line);margin-top:6px;padding-top:12px">
  <label style="font-size:.9em;color:var(--tx);font-weight:700">${L('Το σχέδιό σου (δοκίμασε νούμερα)','Your plan (try numbers)')}</label>
  <div class="grid"><div><label>${L('Νέο διαφορικό','New axle ratio')}</label><input id="nfd" inputmode="decimal" placeholder="${S.fd}" value="${S.nfd}"></div>
- <div><label>${L('Νέο βοηθητικό low','New transfer low')}</label><input id="nlo" inputmode="decimal" placeholder="${S.lo}" value="${S.nlo}"></div></div>
+ <div><label>${L('Νέο βοηθητικό low','New transfer low')}</label><input id="nlo" inputmode="decimal" placeholder="${S.lo}" value="${S.nlo}"></div>
+ <div><label>${L('Νέα ροπή (Nm)','New torque (Nm)')}</label><input id="ntq" inputmode="decimal" placeholder="${S.tq}" value="${S.ntq||''}"></div>
+ <div><label>${L('Νέο βάρος (kg)','New weight (kg)')}</label><input id="nkg" inputmode="decimal" placeholder="${S.kg}" value="${S.nkg||''}"></div></div>
+ <div class="chips" style="margin:8px 0 0">${[['+15','Remap +15%'],['+30','Turbo +30%'],['+50','Swap +50%']].map(([v,t])=>`<button class="chip" style="padding:6px 11px;font-size:.8em" data-tq="${v}">💥 ${t}</button>`).join('')}${['-50','-100','-200'].map(v=>`<button class="chip" style="padding:6px 11px;font-size:.8em" data-kg="${v}">🪶 ${v} kg</button>`).join('')}<button class="chip" style="padding:6px 11px;font-size:.8em" data-rst="1">↺ ${L('Εργοστασιακά','Stock')}</button></div>
  <div class="note">${L('Άδειο = μένει το εργοστασιακό. Πάτα μια πρόταση από πάνω για να τη βάλεις.','Empty = stock stays. Tap a suggestion above to fill it in.')}</div>
  <div id="plan" style="margin-top:8px"></div></div>
 </div>
@@ -153,7 +158,7 @@ function render(){
  ${SURF[S.surf]&&SURF[S.surf].cross?`<label>${L('Μπλοκέ','Lockers')}</label><div class="chips">${[['0',L('Όχι','No')],['r',L('Πίσω','Rear')],['fr',L('Μπρος+πίσω','Front+rear')]].map(([v,t])=>`<button class="chip${(S.lock||'0')===v?' on':''}" data-g="lock" data-v="${v}">${t}</button>`).join('')}</div>`:''}
  <div class="note" id="stip" style="margin:0 0 8px"></div>
  <div id="climb"></div>
- <div class="note">${L('1η ταχύτητα, 4L, ροπή στο μέγιστο, απόδοση μετάδοσης','1st gear, 4L, peak torque, driveline efficiency')} <input id="eff" inputmode="decimal" value="${S.eff}" style="width:4.2em;padding:4px 6px;font-size:.95em;display:inline-block">. ${L('Η πρόσφυση (λάστιχο-έδαφος) βάζει ταβάνι: όσο κι αν πατήσεις, πάνω από αυτό σπινάρει.','Grip (tyre-to-ground) sets a ceiling: above it the wheels spin no matter what.')}</div>
+ <div class="note">${L('1η ταχύτητα, 4L, μέγιστη ροπή','1st gear, 4L, max torque')} (${S.tq} Nm${num(S.rpm)>0?' '+L('στις','at')+' '+S.rpm+' rpm':''}), ${L('βάρος','weight')} ${S.kg} kg, ${L('απόδοση μετάδοσης','driveline efficiency')} <input id="eff" inputmode="decimal" value="${S.eff}" style="width:4.2em;padding:4px 6px;font-size:.95em;display:inline-block">. ${L('Η πρόσφυση (λάστιχο-έδαφος) βάζει ταβάνι: όσο κι αν πατήσεις, πάνω από αυτό σπινάρει.','Grip (tyre-to-ground) sets a ceiling: above it the wheels spin no matter what.')}</div>
 </div>
 ${strengthCard()}
 
@@ -176,17 +181,20 @@ ${strengthCard()}
  bind();strengthBind();calc();}
 function bind(){
  const $=id=>document.getElementById(id);
- ['tq','g1','lo','fd','tyre','kg','ntyre','nfd','nlo','eff'].forEach(k=>$(k).addEventListener('input',e=>{S[k]=e.target.value;
-  if(['tq','g1','lo','fd','tyre','kg'].includes(k)&&!MY.some(v=>v.id===S.vid)){S.vid='custom';$('vid').value='custom';}
+ ['tq','rpm','g1','lo','fd','tyre','kg','idle','ntyre','nfd','nlo','ntq','nkg','eff'].forEach(k=>$(k).addEventListener('input',e=>{S[k]=e.target.value;
+  if(['tq','rpm','g1','lo','fd','tyre','kg'].includes(k)&&!MY.some(v=>v.id===S.vid)){S.vid='custom';$('vid').value='custom';}
   if(k==='ntyre')document.querySelectorAll('#tch .chip').forEach(c=>c.classList.toggle('on',c.dataset.t===S.ntyre));
   save();calc();}));
  $('vid').addEventListener('change',e=>{S.vid=e.target.value;const v=allV().find(x=>x.id===S.vid);
-  if(v){Object.assign(S,{tq:v.tq,g1:v.g1,lo:v.lo,fd:v.fd,tyre:v.tyre,kg:v.kg,nfd:'',nlo:'',pk:v.pk!==undefined?v.pk:((platFor(v.id)||{}).key||'')});}
+  if(v){Object.assign(S,{ntq:'',nkg:'',tq:v.tq,rpm:v.rpm||'',g1:v.g1,lo:v.lo,fd:v.fd,tyre:v.tyre,kg:v.kg,nfd:'',nlo:'',pk:v.pk!==undefined?v.pk:((platFor(v.id)||{}).key||'')});}
   save();render();});
  document.querySelectorAll('#tch .chip').forEach(c=>c.onclick=()=>{S.ntyre=c.dataset.t;save();render();});
+ document.querySelectorAll('[data-tq]').forEach(c=>c.onclick=()=>{S.ntq=String(Math.round(num(S.tq)*(1+(+c.dataset.tq)/100)));save();render();});
+ document.querySelectorAll('[data-kg]').forEach(c=>c.onclick=()=>{S.nkg=String(Math.round(num(S.kg)+(+c.dataset.kg)));save();render();});
+ document.querySelectorAll('[data-rst]').forEach(c=>c.onclick=()=>{S.ntq='';S.nkg='';S.nfd='';S.nlo='';save();render();});
  document.querySelectorAll('#mch .chip').forEach(c=>c.onclick=()=>{S.surf=c.dataset.m;save();render();});
  $('sv').onclick=()=>{const nm=prompt(L('Όνομα (π.χ. «Το Jimny μου»)','Name (e.g. "My Jimny")'),'');if(!nm)return;
-  const id='m'+Date.now();MY.push({id,name:nm,tq:num(S.tq),g1:num(S.g1),lo:num(S.lo),fd:num(S.fd),tyre:S.tyre,kg:num(S.kg),pk:S.pk||''});
+  const id='m'+Date.now();MY.push({id,name:nm,tq:num(S.tq),rpm:S.rpm||'',g1:num(S.g1),lo:num(S.lo),fd:num(S.fd),tyre:S.tyre,kg:num(S.kg),pk:S.pk||''});
   localStorage.setItem('crawl_my',JSON.stringify(MY));S.vid=id;save();render();};
  if($('del'))$('del').onclick=()=>{if(!confirm(L('Να σβηστεί;','Delete it?')))return;MY=MY.filter(v=>v.id!==S.vid);
   localStorage.setItem('crawl_my',JSON.stringify(MY));S.vid='custom';save();render();};
@@ -200,7 +208,7 @@ function calc(){
  const $=id=>document.getElementById(id);
  const T=num(S.tq),g1=num(S.g1),lo=num(S.lo),fd=num(S.fd),m=num(S.kg),eff=num(S.eff)||0.8,SF=SURF[S.surf]||SURF.dry,mu=SF.mu*(SF.cross?CROSSF[S.lock||'0']:1),crr=SF.crr;
  const D0=tyreMM(S.tyre),D1=tyreMM(S.ntyre)||D0;
- const nfd=num(S.nfd)>0?num(S.nfd):fd, nlo=num(S.nlo)>0?num(S.nlo):lo;
+ const nfd=num(S.nfd)>0?num(S.nfd):fd, nlo=num(S.nlo)>0?num(S.nlo):lo, Tn=num(S.ntq)>0?num(S.ntq):T, mn=num(S.nkg)>0?num(S.nkg):m;
  const v=allV().find(x=>x.id===S.vid);
  $('vnote').textContent=v&&v.n?v.n[LANG==='el'?0:1]:(v?'':L('Γράψε τις σχέσεις από το εγχειρίδιο ή το βιβλιαράκι του αυτοκινήτου.','Type the ratios from your owner’s manual or spec sheet.'));
  const inch=d=>f(d/25.4,1)+'″';
@@ -230,16 +238,19 @@ function calc(){
  /* σχέδιο */
  const kmh=(cr,D)=>1000*Math.PI*D/1000*60/(cr*1000);
  const hw=(nfd/fd)/grow, spd=grow*fd/nfd;
- $('plan').innerHTML=`<div class="opt"><div class="t">🐢 ${L('Ταχύτητα στις 1000 στροφές (1η, 4L)','Speed at 1000 rpm (1st, 4L)')}<small>${L('Εργοστασιακό','Stock')}: ${f(kmh(CR0,D0),2)} km/h</small></div><div class="n">${f(kmh(CR2*grow,D1),2)}<small>km/h</small></div></div>
+ const idle=num(S.idle)||800,rr=String(S.rpm||'').match(/\d+/g)||[],rpmA=+(rr[0]||0),rpmB=+(rr[rr.length-1]||0),rpmT=rpmA,rng=(k)=>f(k*rpmA/1000,1)+(rpmB>rpmA?'–'+f(k*rpmB/1000,1):'');
+ $('plan').innerHTML=`<div class="opt"><div class="t">🐢 ${L('Crawl στο ρελαντί, χωρίς γκάζι','Idle crawl, no throttle')}<small>${L('1η, 4L, στις','1st, 4L, at')} ${f(idle,0)} rpm · ${L('Εργοστασιακό','Stock')}: ${f(kmh(CR0,D0)*idle/1000,2)} km/h · ${L('όσο πιο αργά, τόσο καλύτερα στα βράχια','the slower, the better on rocks')}</small></div><div class="n">${f(kmh(CR2*grow,D1)*idle/1000,2)}<small>km/h</small></div></div>
+ ${rpmT>0?`<div class="opt"><div class="t">💪 ${L('Ταχύτητα στη μέγιστη ροπή','Speed at max torque')}<small>${f(T,0)} Nm ${L('στις','at')} ${S.rpm} rpm · 1η, 4L · ${L('Εργοστασιακό','Stock')}: ${rng(kmh(CR0,D0))} km/h</small></div><div class="n">${rng(kmh(CR2*grow,D1))}<small>km/h</small></div></div>`:''}
+ <div class="opt"><div class="t">⚙️ ${L('Ταχύτητα στις 1000 στροφές (1η, 4L)','Speed at 1000 rpm (1st, 4L)')}<small>${L('Εργοστασιακό','Stock')}: ${f(kmh(CR0,D0),2)} km/h</small></div><div class="n">${f(kmh(CR2*grow,D1),2)}<small>km/h</small></div></div>
  <div class="opt"><div class="t">🛣 ${L('Στροφές στην εθνική','Highway revs')}<small>${L('σε σχέση με το εργοστασιακό','vs stock')}</small></div><div class="n ${Math.abs(hw-1)<.03?'good':'warn'}">${hw>=1?'+':''}${f((hw-1)*100,0)}%</div></div>
  <div class="opt"><div class="t">⏱ ${L('Κοντέρ: όταν δείχνει 100','Speedo: when it shows 100')}<small>${L('η πραγματική ταχύτητα (αν μετράει από το κιβώτιο)','actual speed (if read from the gearbox)')}</small></div><div class="n">${f(100*spd,0)}<small>km/h</small></div></div>`;
  /* ανηφόρα */
- const rows=[[L('Εργοστασιακό','Stock'),climb(T,CR0,eff,D0,m,mu,crr)],[L('Νέα λάστιχα','New tyres'),climb(T,CR0,eff,D1,m,mu,crr)],[L('Νέα λάστιχα + σχέδιο','New tyres + plan'),climb(T,g1*nlo*nfd,eff,D1,m,mu,crr)]];
+ const rows=[[L('Εργοστασιακό','Stock'),climb(T,CR0,eff,D0,m,mu,crr)],[L('Νέα λάστιχα','New tyres'),climb(T,CR0,eff,D1,m,mu,crr)],[L('Νέα λάστιχα + σχέδιο','New tyres + plan')+(Tn!==T||mn!==m?' ('+(Tn!==T?f(Tn,0)+' Nm':'')+(Tn!==T&&mn!==m?', ':'')+(mn!==m?f(mn,0)+' kg':'')+')':''),climb(Tn,g1*nlo*nfd,eff,D1,mn,mu,crr)]];
  const ax0=rows[0][1].axle;
  $('stip').innerHTML=(SF.tel?L(SF.tel,SF.ten)+' ':'')+L(`Πρόσφυση μ≈${f(mu,2)} · αντίσταση κύλισης ${f(crr*100,1)}%`,`Grip μ≈${f(mu,2)} · rolling resistance ${f(crr*100,1)}%`);
  $('climb').innerHTML=`<table><tr><th></th><th>${L('Κλίση','Grade')}</th><th>${L('Μοίρες','Degrees')}</th><th>${L('Ροπή αξόνων','Axle torque')}</th></tr>`+
  rows.map(([n,c])=>`<tr><td>${n}<span class="lim">${c.grip?L('ταβάνι: πρόσφυση','limit: grip'):L('ταβάνι: κινητήρας','limit: engine')}</span><div class="bar"><i style="width:${Math.min(100,c.t/45*100)}%;background:${c.grip?'#5f9e7a':'#e8b86d'}"></i></div></td><td>${f(c.pct,0)}%</td><td>${f(c.t,1)}°</td><td>${f(c.axle/1000,1)} kNm<span class="lim ${c.axle>ax0*1.05?'bad':''}">${c===rows[0][1]?L('βάση','base'):(c.axle>=ax0?'+':'')+f((c.axle/ax0-1)*100,0)+'%'}</span></td></tr>`).join('')+`</table>`;
- strengthCalc(T,m,eff,D0,D1,CR0,g1*nlo*nfd);
+ strengthCalc(T,m,eff,D0,D1,CR0,g1*nlo*nfd,Tn,mn);
 }
 render();
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js');

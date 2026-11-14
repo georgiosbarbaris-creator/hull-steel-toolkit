@@ -18,15 +18,15 @@ function strengthCard(){
 function strengthBind(){const p=document.getElementById('pk');if(!p)return;p.onchange=e=>{S.pk=e.target.value;save();render();};
  document.querySelectorAll('[data-g]').forEach(c=>c.onclick=()=>{S[c.dataset.g]=c.dataset.v;save();render();});}
 function lerp2(x,x0,x1,y0,y1){return x<=x0?y0:x>=x1?y1:y0+(y1-y0)*(x-x0)/(x1-x0)}
-function strengthCalc(T,m,eff,D0,D1,CR0,CRn){
+function strengthCalc(T,m,eff,D0,D1,CR0,CRn,Tn,mn){Tn=Tn||T;mn=mn||m;
  const out=document.getElementById('strout');if(!out)return;
  const p=platByKey(S.pk||'');const d0=D0/25.4,d1=D1/25.4;
  const s=p&&p.stock_tyre_in?p.stock_tyre_in:d0, ok=p?p.ok_in:s+2, ca=p?Math.max(p.caution_in,ok+0.5):s+4;
  // (α) θέση του λάστιχου πάνω στα όρια του μοντέλου
  let base=d1<=s?6:d1<=ok?lerp2(d1,s,ok,6,22):d1<=ca?lerp2(d1,ok,ca,22,55):d1<=ca+2?lerp2(d1,ca,ca+2,55,82):lerp2(d1,ca+2,ca+5,82,96);
  // (β) ροπή στους άξονες: ό,τι επιτρέπει η πρόσφυση σε βράχο (μ≈1) ή ο κινητήρας, το μικρότερο
- const ax=(cr,D)=>Math.min(T*cr*eff,1.0*m*9.81*D/2000), R=ax(CRn,D1)/ax(CR0,D0);
- const reg=CRn/CR0, mReg=reg>1.02?1+0.45*(reg-1):1;
+ const ax=(cr,D,TT,mm)=>Math.min(TT*cr*eff,1.0*mm*9.81*D/2000), R=ax(CRn,D1,Tn,mn)/ax(CR0,D0,T,m);
+ const mReg=R>1.02?1+0.45*(R-1):1;
  const mLock={'0':1,'r':1.15,'fr':1.35}[S.lock||'0'], mSty={'g':0.8,'t':1,'h':1.35}[S.style||'t'];
  const pct=Math.round(Math.min(99,Math.max(2,base*mReg*mLock*mSty)));
  const z=pct<25?[L('Χαμηλός','Low'),'#5f9e7a']:pct<50?[L('Μέτριος','Moderate'),'#e8b86d']:pct<75?[L('Υψηλός','High'),'#d97757']:[L('Πολύ υψηλός','Very high'),'#d9534f'];
