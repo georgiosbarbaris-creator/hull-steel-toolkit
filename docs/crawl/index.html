@@ -89,7 +89,7 @@ function tyreBlock(key,label,hint){const m=String(S[key]||'').match(/(\d{3})\s*\
  return `<label>${label}</label><div class="tsel">${sel('w',WID,cur[0],L('Πλάτος','Width'))}<span>/</span>${sel('a',ASP,cur[1],L('Προφίλ','Profile'))}<span>R</span>${sel('r',RIM,cur[2],L('Ζάντα','Rim'))}</div>
  <div style="font-size:.72em;color:var(--mut);display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:6px;text-align:center"><span>${L('πλάτος mm','width mm')}</span><span></span><span>${L('προφίλ %','profile %')}</span><span></span><span>${L('ζάντα ″','rim ″')}</span></div>
  <details class="tx"><summary>${hint}</summary><input id="${key}" value="${S[key]||''}"></details>`;}
-const DB=[...(typeof VEH!=='undefined'?VEH:[]).filter(v=>v.ia>1.2&&!/JIMNY/i.test(v.name)).map(v=>({id:v.id,name:v.name,tq:v.tq,rpm:v.rpm||'',g1:v.ig,lo:v.ia,fd:v.iv,tyre:nearestMetric(v.r*2000)||String(Math.round(v.r*2000)),kg:v.gvw})),...(typeof VEH2!=='undefined'?VEH2:[]).filter(v=>v.lo>1.05)].sort((a,b)=>a.name.localeCompare(b.name));
+const DB=[...(typeof VEH!=='undefined'?VEH:[]).filter(v=>v.ia>1.2&&!/JIMNY/i.test(v.name)).map(v=>({id:v.id,name:v.name,tq:v.tq,rpm:v.rpm||'',g1:v.ig,lo:v.ia,fd:v.iv,tyre:nearestMetric(v.r*2000)||String(Math.round(v.r*2000)),kg:v.gvw})),...(typeof VEH2!=='undefined'?VEH2:[]).filter(v=>v.lo>=1)].sort((a,b)=>a.name.localeCompare(b.name));
 let MY=[];try{MY=JSON.parse(localStorage.getItem('crawl_my')||'[]')}catch(e){}
 let S={};try{S=JSON.parse(localStorage.getItem('crawl_state')||'{}')}catch(e){}
 const DEF={lock:"0",style:"t",vid:"j2",tq:110,rpm:4100,idle:800,g1:4.425,lo:2.002,fd:4.300,tyre:"205/70R15",kg:1420,eff:0.8,ntyre:"31",nfd:"",nlo:"",surf:"dry"};
@@ -109,6 +109,8 @@ const num=x=>{const v=parseFloat(String(x).replace(',','.'));return isFinite(v)?
 const f=(x,d=1)=>isFinite(x)?x.toLocaleString(LANG==='el'?'el-GR':'en-GB',{minimumFractionDigits:d,maximumFractionDigits:d}):'–';
 /* λάστιχο → διάμετρος σε mm. Δέχεται 205/70R15, 31x10.5R15, 31, 787 */
 function tyreMM(s){s=String(s||'').trim().replace(',','.');let m;
+ if(m=s.match(/^(\d{1,2}\.\d{2})\s*-?\s*R?\s*-?\s*(\d{2})/i))return +m[2]*25.4+2*m[1]*25.4*1.05;
+ if(m=s.match(/^(\d{3})\s*R\s*(\d{2})/i))return +m[2]*25.4+2*m[1]*0.8;
  if(m=s.match(/(\d{3})\s*\/\s*(\d{2,3})\s*[a-z]*\s*R?\s*(\d{2}(\.\d)?)/i))return +m[3]*25.4+2*m[1]*m[2]/100;
  if(m=s.match(/^(\d{2}(\.\d+)?)\s*[x×]/i))return +m[1]*25.4;
  const v=num(s);if(!isFinite(v)||v<=0)return NaN;return v<60?v*25.4:v;}
@@ -288,8 +290,8 @@ function calc(){
  const pick=(x,y)=>`<button class="chip" style="padding:5px 10px;font-size:.8em" data-fd="${x||''}" data-lo="${y||''}">${L('βάλ’ το','use it')}</button>`;
  $('fix').innerHTML=grow<=1.001?`<div class="note">${L('Το λάστιχο δεν μεγάλωσε, δεν χρειάζεται αλλαγή.','The tyre did not get bigger, no change needed.')}</div>`:`
  <div class="opt"><div class="t">① ${L('Μόνο διαφορικά (και τα δύο)','Axles only (both)')}<small>${L('Διορθώνει και τις στροφές στην εθνική','Also fixes highway revs')} ${a?pick(a,''):''}${b&&b!==a?' '+pick(b,''):''}</small></div><div class="n">${f(fdX,2)}<small>${L('στην αγορά','on the market')}: ${a?f(a,2):'–'} / ${b?f(b,2):'–'}</small></div></div>
- <div class="opt"><div class="t">② ${L('Μόνο βοηθητικό (low)','Transfer case only (low)')}<small>${L('Η εθνική μένει ίδια, μόνο το 4L δυναμώνει','Highway stays the same, only 4L gets stronger')} ${pick('',+loX.toFixed(3))}</small></div><div class="n">${f(loX,3)}<small>${L('κιτ με','kit with')} ≈${f((grow-1)*100,0)}% ${L('μείωση','reduction')}</small></div></div>
- <div class="opt"><div class="t">③ ${L('Λίγο και από τα δύο','A bit of both')}<small>${L('Μοιράζει το φορτίο','Shares the load')} ${pick(hb||ha,+(CR0*grow/(g1*(hb||ha))).toFixed(3))}</small></div><div class="n">${f(fdH,2)} + ${f(loH,3)}<small>${L('π.χ.','e.g.')} ${f(hb||ha,2)} + ${f(CR0*grow/(g1*(hb||ha)),3)}</small></div></div>`;
+${lo>1.05?` <div class="opt"><div class="t">② ${L('Μόνο βοηθητικό (low)','Transfer case only (low)')}<small>${L('Η εθνική μένει ίδια, μόνο το 4L δυναμώνει','Highway stays the same, only 4L gets stronger')} ${pick('',+loX.toFixed(3))}</small></div><div class="n">${f(loX,3)}<small>${L('κιτ με','kit with')} ≈${f((grow-1)*100,0)}% ${L('μείωση','reduction')}</small></div></div>
+ <div class="opt"><div class="t">③ ${L('Λίγο και από τα δύο','A bit of both')}<small>${L('Μοιράζει το φορτίο','Shares the load')} ${pick(hb||ha,+(CR0*grow/(g1*(hb||ha))).toFixed(3))}</small></div><div class="n">${f(fdH,2)} + ${f(loH,3)}<small>${L('π.χ.','e.g.')} ${f(hb||ha,2)} + ${f(CR0*grow/(g1*(hb||ha)),3)}</small></div></div>`:`<div class="note" style="padding:8px 0">⚠️ ${L('Αυτό το αυτοκίνητο δεν έχει κοντά (low range) στο βοηθητικό. Ο μόνος τρόπος να πάρεις πίσω τη δύναμη είναι τα διαφορικά.','This vehicle has no low range in the transfer case. The only way to get the force back is the axle gears.')}</div>`}`;
  document.querySelectorAll('#fix [data-fd]').forEach(btn=>btn.onclick=()=>{S.nfd=btn.dataset.fd?String(btn.dataset.fd):'';S.nlo=btn.dataset.lo?String(btn.dataset.lo):'';save();render();});
  /* σχέδιο */
  const kmh=(cr,D)=>1000*Math.PI*D/1000*60/(cr*1000);
