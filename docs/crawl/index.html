@@ -94,6 +94,7 @@ let MY=[];try{MY=JSON.parse(localStorage.getItem('crawl_my')||'[]')}catch(e){}
 let S={};try{S=JSON.parse(localStorage.getItem('crawl_state')||'{}')}catch(e){}
 const DEF={lock:"0",style:"t",vid:"j2",tq:110,rpm:4100,idle:800,g1:4.425,lo:2.002,fd:4.300,tyre:"205/70R15",kg:1420,eff:0.8,ntyre:"31",nfd:"",nlo:"",surf:"dry"};
 const SURF={dry:{mu:.8,crr:.015,el:"☀️ Στεγνή άσφαλτος",en:"☀️ Dry tarmac",tel:"",ten:""},
+ rock:{mu:1.0,crr:.02,el:"🧗 Βράχος / τραχύ τσιμέντο",en:"🧗 Rock / rough concrete",tel:"Πολύ τραχιά επιφάνεια με μεγάλο κράτημα, όπως στις ράμπες δοκιμής των κατασκευαστών. Εκεί μετράνε τα 100% (45°) που γράφουν τα φυλλάδια.",ten:"Very rough, high-grip surface, like manufacturers’ test ramps. That is where brochure figures such as 100% (45°) are measured."},
  wet:{mu:.5,crr:.015,el:"🌧 Βρεγμένη άσφαλτος",en:"🌧 Wet tarmac",tel:"Πρόσεχε τις λευκές διαγραμμίσεις και τα φύλλα: γλιστράνε πολύ περισσότερο.",ten:"Watch out for painted lines and leaves: they are far more slippery."},
  gravel:{mu:.6,crr:.04,el:"🪨 Χαλίκι / χώμα",en:"🪨 Gravel / dirt",tel:"Σταθερό γκάζι, χωρίς απότομες κινήσεις, για να μη σκάβουν οι ρόδες.",ten:"Steady throttle, no sudden moves, so the wheels do not dig in."},
  mud:{mu:.3,crr:.12,el:"🟤 Λάσπη",en:"🟤 Mud",tel:"Η λάσπη θέλει ορμή και λάστιχα mud-terrain. Αν σταματήσεις στη μέση, δύσκολα ξεκινάς ξανά. Η πρόσφυση εξαρτάται πολύ από το λάστιχο.",ten:"Mud needs momentum and mud-terrain tyres. If you stop halfway, restarting is hard. Grip depends a lot on the tyre."},
@@ -135,7 +136,8 @@ function render(){
  <select id="vid"><optgroup label="${L('Παράδειγμα: Suzuki Jimny','Example: Suzuki Jimny')}">${JIMNY.map(opt).join('')}</optgroup>
  ${MY.length?`<optgroup label="${L('Τα δικά μου','My vehicles')}">${MY.map(opt).join('')}</optgroup>`:''}
  ${EX.length?`<optgroup label="🌍 ${L('Νέα από την κοινότητα','New from the community')}">${EX.map(opt).join('')}</optgroup>`:''}
- <optgroup label="${L('Βάση Overland’s Habit','Overland’s Habit database')}">${DB.map(opt).join('')}</optgroup>
+ <optgroup label="⛰ ${L('Με βοηθητικό (κοντά / low range)','With low range')}">${DB.filter(v=>v.lo>1.05).map(opt).join('')}</optgroup>
+ ${DB.some(v=>v.lo<=1.05)?`<optgroup label="🚙 ${L('Χωρίς βοηθητικό: κοντή 1η (SUV / AWD)','No low range: short 1st gear (SUV / AWD)')}">${DB.filter(v=>v.lo<=1.05).map(opt).join('')}</optgroup>`:''}
  <option value="custom"${S.vid==='custom'?' selected':''}>✏️ ${L('Δικό μου (γράφω τα νούμερα)','My own (type the numbers)')}</option></select>
  <div class="note" id="vnote"></div>
  <details class="tx"><summary style="font-size:.85em;color:var(--org)">🔎 ${L('Δεν είναι στη λίστα; Πού βρίσκω τα στοιχεία','Not in the list? Where do I find the data')}</summary><div style="font-size:.86em;line-height:1.5;padding:4px 0 8px">
@@ -256,7 +258,7 @@ function bind(){
  document.getElementById('lang').onclick=()=>{LANG=LANG==='el'?'en':'el';localStorage.setItem('crawl_lang',LANG);render();};}
 function climb(T,CR,eff,Dmm,m,mu,crr){crr=crr||CRR;const r=Dmm/2000,F=T*CR*eff/r,k=F/(m*G),h=Math.hypot(1,crr);
  const te=k>=h?90:(Math.asin(Math.min(1,k/h))-Math.atan(crr))*180/Math.PI, tg=Math.atan(Math.max(0,mu-crr))*180/Math.PI;
- const t=Math.max(0,Math.min(te,tg));return{t,pct:Math.tan(t*Math.PI/180)*100,grip:tg<=te,axle:Math.min(T*CR*eff,mu*m*G*r)};}
+ const t=Math.max(0,Math.min(te,tg));return{t,te,pct:Math.tan(t*Math.PI/180)*100,grip:tg<=te,axle:Math.min(T*CR*eff,mu*m*G*r)};}
 function rating(c){return c<30?[L('δρόμος / χωματόδρομος','road / gravel'),'#a8a29e']:c<50?[L('trail & overland','trail & overland'),'#6a9fb5']:c<70?[L('καλό για βράχια','good for rocks'),'#5f9e7a']:c<100?[L('πολύ τεχνικό','very technical'),'#e8b86d']:['extreme','#d9534f'];}
 function near(x){let lo=null,hi=null;COMMON.forEach(c=>{if(c<=x+1e-3)lo=c;if(hi===null&&c>=x-1e-3)hi=c;});return[lo,hi];}
 function calc(){
@@ -307,7 +309,7 @@ ${lo>1.05?` <div class="opt"><div class="t">② ${L('Μόνο βοηθητικό
  const ax0=rows[0][1].axle;
  $('stip').innerHTML=(SF.tel?L(SF.tel,SF.ten)+' ':'')+L(`Πρόσφυση μ≈${f(mu,2)} · αντίσταση κύλισης ${f(crr*100,1)}%`,`Grip μ≈${f(mu,2)} · rolling resistance ${f(crr*100,1)}%`);
  $('climb').innerHTML=`<table><tr><th></th><th>${L('Κλίση','Grade')}</th><th>${L('Μοίρες','Degrees')}</th><th>${L('Ροπή αξόνων','Axle torque')}</th></tr>`+
- rows.map(([n,c])=>`<tr><td>${n}<span class="lim">${c.grip?L('ταβάνι: πρόσφυση','limit: grip'):L('ταβάνι: κινητήρας','limit: engine')}</span><div class="bar"><i style="width:${Math.min(100,c.t/45*100)}%;background:${c.grip?'#5f9e7a':'#e8b86d'}"></i></div></td><td>${f(c.pct,0)}%</td><td>${f(c.t,1)}°</td><td>${f(c.axle/1000,1)} kNm<span class="lim ${c.axle>ax0*1.05?'bad':''}">${c===rows[0][1]?L('βάση','base'):(c.axle>=ax0?'+':'')+f((c.axle/ax0-1)*100,0)+'%'}</span></td></tr>`).join('')+`</table>`;
+ rows.map(([n,c])=>`<tr><td>${n}<span class="lim">${c.grip?L('ταβάνι: πρόσφυση','limit: grip'):L('ταβάνι: κινητήρας','limit: engine')}</span><div class="bar"><i style="width:${Math.min(100,c.t/45*100)}%;background:${c.grip?'#5f9e7a':'#e8b86d'}"></i></div></td><td>${f(c.pct,0)}%</td><td>${f(c.t,1)}°</td><td>${f(c.axle/1000,1)} kNm<span class="lim ${c.axle>ax0*1.05?'bad':''}">${c===rows[0][1]?L('βάση','base'):(c.axle>=ax0?'+':'')+f((c.axle/ax0-1)*100,0)+'%'}</span></td></tr>`).join('')+`</table><div class="verdict" style="font-size:.86em">⚙️ ${L('Όριο κινητήρα/μετάδοσης (χωρίς να γλιστράει το λάστιχο)','Engine/driveline limit (if the tyres never slipped)')}: <b>${rows.map(([n,c])=>c.te>=89.9?'90°+':f(c.te,0)+'°').join(' · ')}</b><br>${L('Οι κατασκευαστές δίνουν συνήθως αυτό το νούμερο, περιορισμένο από τη λίπανση του κινητήρα και την ευστάθεια (π.χ. 100% = 45°). Στην πράξη ταβάνι είναι η πρόσφυση: για 45° χρειάζεσαι πρόσφυση μ ≥ 1,0, που η στεγνή άσφαλτος (≈0,8) δεν δίνει.','Manufacturers usually quote this figure, limited by engine lubrication and stability (e.g. 100% = 45°). In practice grip is the ceiling: 45° needs μ ≥ 1.0, which dry tarmac (≈0.8) does not give.')}</div>`;
  strengthCalc(T,m,eff,D0,D1,CR0,g1*nlo*nfd,Tn,mn);
 }
 render();
