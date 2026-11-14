@@ -134,7 +134,7 @@ function render(){
 </div>
 
 <div class="card"><h2><b>2</b>${L('Νέα λάστιχα','New tyres')}</h2>
- <div class="chips" id="tch">${['29','30','31','32','33','34','35','36','37','38','39','40'].map(t=>`<button class="chip${S.ntyre===t?' on':''}" data-t="${t}">${t}″</button>`).join('')}</div>
+ <div class="chips" id="tch">${(()=>{const rm=String(S.tyre||'').match(/R\s*(\d{2})/i),rim=rm?rm[1]:'',dn=tyreMM(S.ntyre)/25.4;return ['29','30','31','32','33','34','35','36','37','38','39','40'].map(t=>{const eq=nearestMetric(t*25.4,15,rim);return `<button class="chip${Math.abs(dn-t)<0.35?' on':''}" data-t="${eq||t}" style="line-height:1.15;padding:7px 12px">${t}″${eq?`<small style="display:block;font-size:.68em;font-weight:600;opacity:.85">${eq}</small>`:''}</button>`}).join('')})()}</div>
  ${tyreBlock('ntyre',L('ή διάλεξε τις διαστάσεις (π.χ. 265 / 70 R17)','or pick the size (e.g. 265 / 70 R17)'),L('ή γράψε σε ίντσες (π.χ. 31x10.5R15)','or type in inches (e.g. 31x10.5R15)'))}
  <div class="note" id="nnote"></div>
 </div>
@@ -196,12 +196,13 @@ function bind(){
   if(k==='ntyre')document.querySelectorAll('#tch .chip').forEach(c=>c.classList.toggle('on',c.dataset.t===S.ntyre));
   save();calc();}));
  $('vid').addEventListener('change',e=>{S.vid=e.target.value;const v=allV().find(x=>x.id===S.vid);
-  if(v){Object.assign(S,{ntq:'',nkg:'',tq:v.tq,rpm:v.rpm||'',g1:v.g1,lo:v.lo,fd:v.fd,tyre:v.tyre,kg:v.kg,nfd:'',nlo:'',pk:v.pk!==undefined?v.pk:((platFor(v.id)||{}).key||'')});}
+  if(v){const dOld=tyreMM(S.ntyre),rmN=String(v.tyre||'').match(/R\s*(\d{2})/i);if(isFinite(dOld)&&rmN){const eq=nearestMetric(dOld,15,rmN[1]);if(eq)S.ntyre=eq;}
+  Object.assign(S,{ntq:'',nkg:'',tq:v.tq,rpm:v.rpm||'',g1:v.g1,lo:v.lo,fd:v.fd,tyre:v.tyre,kg:v.kg,nfd:'',nlo:'',pk:v.pk!==undefined?v.pk:((platFor(v.id)||{}).key||'')});}
   save();render();});
  document.querySelectorAll('#tch .chip').forEach(c=>c.onclick=()=>{S.ntyre=c.dataset.t;save();render();});
  document.querySelectorAll('select[data-tk]').forEach(sl=>sl.onchange=()=>{const k=sl.dataset.tk,g=p=>document.querySelector('select[data-tk="'+k+'"][data-p="'+p+'"]').value,w=g('w'),a=g('a'),r=g('r');if(!(w&&a&&r))return;S[k]=w+'/'+a+'R'+r;$(k).value=S[k];
   if(k==='tyre'&&!MY.some(v=>v.id===S.vid)){S.vid='custom';$('vid').value='custom';}
-  if(k==='ntyre')document.querySelectorAll('#tch .chip').forEach(c=>c.classList.remove('on'));save();calc();});
+  save();render();});
  document.querySelectorAll('[data-tq]').forEach(c=>c.onclick=()=>{S.ntq=String(Math.round(num(S.tq)*(1+(+c.dataset.tq)/100)));save();render();});
  document.querySelectorAll('[data-kg]').forEach(c=>c.onclick=()=>{S.nkg=String(Math.round(num(S.kg)+(+c.dataset.kg)));save();render();});
  document.querySelectorAll('[data-rst]').forEach(c=>c.onclick=()=>{S.ntq='';S.nkg='';S.nfd='';S.nlo='';save();render();});
@@ -225,11 +226,12 @@ function calc(){
  const v=allV().find(x=>x.id===S.vid);
  $('vnote').textContent=v&&v.n?v.n[LANG==='el'?0:1]:(v?'':L('Γράψε τις σχέσεις από το εγχειρίδιο ή το βιβλιαράκι του αυτοκινήτου.','Type the ratios from your owner’s manual or spec sheet.'));
  const inch=d=>f(d/25.4,1)+'″';
- $('tnote').textContent=isFinite(D0)?L('Διάμετρος: ','Diameter: ')+f(D0,0)+' mm ('+inch(D0)+')':L('⚠️ Δεν καταλαβαίνω το μέγεθος','⚠️ Can’t read the size');
+ const tl=x=>/\d{3}\s*\//.test(String(x||''))?String(x).toUpperCase().replace(/\s/g,''):'';
+ $('tnote').innerHTML=isFinite(D0)?'<b>'+(tl(S.tyre)||nearestMetric(D0,10)||'')+'</b>'+(tl(S.tyre)||nearestMetric(D0,10)?' = ':'')+L('διάμετρος ','diameter ')+inch(D0):L('⚠️ Δεν καταλαβαίνω το μέγεθος','⚠️ Can’t read the size');
  const ok=[T,g1,lo,fd,m,D0,D1].every(x=>isFinite(x)&&x>0);
  if(!ok){['k0','k1','k2'].forEach(k=>$(k).textContent='–');$('fix').innerHTML=$('plan').innerHTML=$('climb').innerHTML=$('verd').innerHTML='';$('nnote').textContent='';return;}
  const grow=D1/D0;
- $('nnote').innerHTML=L('Διάμετρος: ','Diameter: ')+f(D1,0)+' mm ('+inch(D1)+') · <b class="'+(grow>1?'warn':'good')+'">'+(grow>=1?'+':'')+f((grow-1)*100,1)+'%</b> '+L('από το εργοστασιακό','vs stock');
+ $('nnote').innerHTML=(tl(S.ntyre)?'<b>'+tl(S.ntyre)+'</b> = ':'')+L('διάμετρος ','diameter ')+inch(D1)+' · <b class="'+(grow>1?'warn':'good')+'">'+(grow>=1?'+':'')+f((grow-1)*100,1)+'%</b> '+L('από το εργοστασιακό','vs stock');
  if(!/\d{3}\s*\//.test(S.ntyre||'')){const rm=String(S.tyre||'').match(/R\s*(\d{2})/i),eq=nearestMetric(D1,15,rm?rm[1]:'');if(eq)$('nnote').innerHTML+=' · '+L('αντιστοιχεί περίπου σε','roughly equals')+' <b>'+eq+'</b>';}
  const CR0=g1*lo*fd, CR1=CR0/grow, CR2=g1*nlo*nfd/grow;
  $('k0').textContent=f(CR0,1);$('k1').textContent=f(CR1,1);$('k2').textContent=f(CR2,1);
