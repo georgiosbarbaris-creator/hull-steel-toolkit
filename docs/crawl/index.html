@@ -92,7 +92,7 @@ function tyreBlock(key,label,hint){const m=String(S[key]||'').match(/(\d{3})\s*\
 const DB=[...(typeof VEH!=='undefined'?VEH:[]).filter(v=>v.ia>1.2&&!/JIMNY/i.test(v.name)).map(v=>({id:v.id,name:v.name,tq:v.tq,rpm:v.rpm||'',g1:v.ig,lo:v.ia,fd:v.iv,tyre:nearestMetric(v.r*2000)||String(Math.round(v.r*2000)),kg:v.gvw})),...(typeof VEH2!=='undefined'?VEH2:[]).filter(v=>v.lo>=1)].sort((a,b)=>a.name.localeCompare(b.name));
 let MY=[];try{MY=JSON.parse(localStorage.getItem('crawl_my')||'[]')}catch(e){}
 let S={};try{S=JSON.parse(localStorage.getItem('crawl_state')||'{}')}catch(e){}
-const DEF={lock:"0",style:"t",vid:"j2",tq:110,rpm:4100,idle:800,g1:4.425,lo:2.002,fd:4.300,tyre:"205/70R15",kg:1420,eff:0.8,ntyre:"31",nfd:"",nlo:"",surf:"dry"};
+const DEF={lock:"0",style:"t",vid:"j2",tq:110,rpm:4100,idle:800,g1:4.425,lo:2.002,fd:4.300,tyre:"205/70R15",kg:1420,eff:0.8,ntyre:"31",tchip:"31",nfd:"",nlo:"",surf:"dry"};
 const SURF={dry:{mu:.8,crr:.015,el:"☀️ Στεγνή άσφαλτος",en:"☀️ Dry tarmac",tel:"",ten:""},
  rock:{mu:1.0,crr:.02,el:"🧗 Βράχος / τραχύ τσιμέντο",en:"🧗 Rock / rough concrete",tel:"Πολύ τραχιά επιφάνεια με μεγάλο κράτημα, όπως στις ράμπες δοκιμής των κατασκευαστών. Εκεί μετράνε τα 100% (45°) που γράφουν τα φυλλάδια.",ten:"Very rough, high-grip surface, like manufacturers’ test ramps. That is where brochure figures such as 100% (45°) are measured."},
  wet:{mu:.5,crr:.015,el:"🌧 Βρεγμένη άσφαλτος",en:"🌧 Wet tarmac",tel:"Πρόσεχε τις λευκές διαγραμμίσεις και τα φύλλα: γλιστράνε πολύ περισσότερο.",ten:"Watch out for painted lines and leaves: they are far more slippery."},
@@ -170,8 +170,8 @@ function render(){
 
 <div class="card"><h2><b>2</b>${L('Νέα λάστιχα','New tyres')}</h2>
  <div class="chips" id="tch">${(()=>{const rm=String(S.tyre||'').match(/R\s*(\d{2})/i),rim=rm?rm[1]:'',dn=tyreMM(S.ntyre)/25.4;const TS=['29','30','31','32','33','34','35','36','37','38','39','40'],EQ=TS.map(t=>{let b='',d=9;COMMON_T.forEach(c=>{if(rim&&!c.endsWith('R'+rim))return;const x=tyreMMs(c)/25.4;if(Math.round(x)===+t&&Math.abs(x-t)<d){d=Math.abs(x-t);b=c}});return b;});
- const onI=isFinite(dn)?TS.indexOf(String(Math.round(dn))):-1;
- return TS.map((t,i)=>{const eq=EQ[i];return `<button class="chip${i===onI?' on':''}" data-t="${eq||t}" style="line-height:1.15;padding:7px 12px">${t}″${eq?`<small style="display:block;font-size:.68em;font-weight:600;opacity:.85">${eq}</small>`:''}</button>`}).join('')})()}</div>
+ const onI=S.tchip?TS.indexOf(S.tchip):-1;
+ return TS.map((t,i)=>{const eq=EQ[i];return `<button class="chip${i===onI?' on':''}" data-in="${t}" data-t="${eq||t}" style="line-height:1.15;padding:7px 12px">${t}″${eq?`<small style="display:block;font-size:.68em;font-weight:600;opacity:.85">${eq}</small>`:''}</button>`}).join('')})()}</div>
  ${tyreBlock('ntyre',L('ή διάλεξε τις διαστάσεις (π.χ. 265 / 70 R17)','or pick the size (e.g. 265 / 70 R17)'),L('ή γράψε σε ίντσες (π.χ. 31x10.5R15)','or type in inches (e.g. 31x10.5R15)'))}
  <div class="note" id="nnote"></div>
 </div>
@@ -191,8 +191,10 @@ function render(){
  <div id="fix"></div>
  <div style="border-top:1px solid var(--line);margin-top:6px;padding-top:12px">
  <label style="font-size:.9em;color:var(--tx);font-weight:700">${L('Το σχέδιό σου (δοκίμασε νούμερα)','Your plan (try numbers)')}</label>
- <div class="grid"><div><label>${L('Νέο διαφορικό','New axle ratio')}</label><input id="nfd" inputmode="decimal" placeholder="${S.fd}" value="${S.nfd}"></div>
- <div><label>${L('Νέο βοηθητικό low','New transfer low')}</label><input id="nlo" inputmode="decimal" placeholder="${S.lo}" value="${S.nlo}"></div>
+ <div class="grid"><div><label>${L('Νέο διαφορικό','New axle ratio')}</label><input id="nfd" inputmode="decimal" placeholder="${S.fd}" value="${S.nfd}"><div class="note" id="nfdP" style="margin:3px 0 0"></div></div>
+ <div><label>${L('Νέο βοηθητικό low','New transfer low')}</label><input id="nlo" inputmode="decimal" placeholder="${S.lo}" value="${S.nlo}"><div class="note" id="nloP" style="margin:3px 0 0"></div></div>
+ <div><label>${L('Κιτ βοηθητικού: low (%)','Transfer kit: low (%)')}</label><input id="nlop" inputmode="decimal" placeholder="${L('π.χ.','e.g.')} 100" value="${num(S.nlo)>0&&num(S.lo)>0?Math.round((num(S.nlo)/num(S.lo)-1)*100):''}"></div>
+ <div><label>${L('Κιτ βοηθητικού: high (%)','Transfer kit: high (%)')}</label><input id="hip" inputmode="decimal" placeholder="${L('π.χ.','e.g.')} 17" value="${S.hip||''}"></div>
  <div><label>${L('Νέα ροπή (Nm)','New torque (Nm)')}</label><input id="ntq" inputmode="decimal" placeholder="${S.tq}" value="${S.ntq||''}"></div>
  <div><label>${L('Νέο βάρος (kg)','New weight (kg)')}</label><input id="nkg" inputmode="decimal" placeholder="${S.kg}" value="${S.nkg||''}"></div></div>
  <div class="chips" style="margin:8px 0 0">${[['+15','Remap +15%'],['+30','Turbo +30%'],['+50','Swap +50%']].map(([v,t])=>`<button class="chip" style="padding:6px 11px;font-size:.8em" data-tq="${v}">💥 ${t}</button>`).join('')}${['-50','-100','-200'].map(v=>`<button class="chip" style="padding:6px 11px;font-size:.8em" data-kg="${v}">🪶 ${v} kg</button>`).join('')}<button class="chip" style="padding:6px 11px;font-size:.8em" data-rst="1">↺ ${L('Εργοστασιακά','Stock')}</button></div>
@@ -228,21 +230,23 @@ ${strengthCard()}
  bind();strengthBind();calc();}
 function bind(){
  const $=id=>document.getElementById(id);
- ['tq','rpm','g1','lo','fd','tyre','kg','idle','ntyre','nfd','nlo','ntq','nkg','eff'].forEach(k=>$(k).addEventListener('input',e=>{S[k]=e.target.value;
+ ['tq','rpm','g1','lo','fd','tyre','kg','idle','ntyre','nfd','nlo','ntq','nkg','eff','hip'].forEach(k=>$(k).addEventListener('input',e=>{S[k]=e.target.value;
   if(['tq','rpm','g1','lo','fd','tyre','kg'].includes(k)&&!MY.some(v=>v.id===S.vid)){S.vid='custom';$('vid').value='custom';}
-  if(k==='ntyre')document.querySelectorAll('#tch .chip').forEach(c=>c.classList.toggle('on',c.dataset.t===S.ntyre));
+  if(k==='ntyre'){S.tchip='';document.querySelectorAll('#tch .chip').forEach(c=>c.classList.remove('on'));}
   save();calc();}));
  $('vid').addEventListener('change',e=>{S.vid=e.target.value;const v=allV().find(x=>x.id===S.vid);
   if(v){const dOld=tyreMM(S.ntyre),rmN=String(v.tyre||'').match(/R\s*(\d{2})/i);if(isFinite(dOld)&&rmN){const eq=nearestMetric(dOld,15,rmN[1]);if(eq)S.ntyre=eq;}
   Object.assign(S,{ntq:'',nkg:'',tq:v.tq,rpm:v.rpm||'',g1:v.g1,lo:v.lo,fd:v.fd,tyre:v.tyre,kg:v.kg,nfd:'',nlo:'',pk:v.pk!==undefined?v.pk:((platFor(v.id)||{}).key||'')});}
   save();render();});
- document.querySelectorAll('#tch .chip').forEach(c=>c.onclick=()=>{S.ntyre=c.dataset.t;save();render();});
- document.querySelectorAll('select[data-tk]').forEach(sl=>sl.onchange=()=>{const k=sl.dataset.tk,g=p=>document.querySelector('select[data-tk="'+k+'"][data-p="'+p+'"]').value,w=g('w'),a=g('a'),r=g('r');if(!(w&&a&&r))return;S[k]=w+'/'+a+'R'+r;$(k).value=S[k];
+ document.querySelectorAll('#tch .chip').forEach(c=>c.onclick=()=>{if(S.tchip===c.dataset.in){S.tchip='';S.ntyre=S.tyre;}else{S.tchip=c.dataset.in;S.ntyre=c.dataset.t;}save();render();});
+ $('nlop').addEventListener('input',e=>{const p=num(e.target.value);S.nlo=isFinite(p)?String(+(num(S.lo)*(1+p/100)).toFixed(3)):'';$('nlo').value=S.nlo;save();calc();});
+ $('nlo').addEventListener('input',()=>{$('nlop').value=num(S.nlo)>0?Math.round((num(S.nlo)/num(S.lo)-1)*100):'';});
+ document.querySelectorAll('select[data-tk]').forEach(sl=>sl.onchange=()=>{const k=sl.dataset.tk,g=p=>document.querySelector('select[data-tk="'+k+'"][data-p="'+p+'"]').value,w=g('w'),a=g('a'),r=g('r');if(!(w&&a&&r))return;S[k]=w+'/'+a+'R'+r;if(k==='ntyre')S.tchip='';$(k).value=S[k];
   if(k==='tyre'&&!MY.some(v=>v.id===S.vid)){S.vid='custom';$('vid').value='custom';}
   save();render();});
  document.querySelectorAll('[data-tq]').forEach(c=>c.onclick=()=>{S.ntq=String(Math.round(num(S.tq)*(1+(+c.dataset.tq)/100)));save();render();});
  document.querySelectorAll('[data-kg]').forEach(c=>c.onclick=()=>{S.nkg=String(Math.round(num(S.kg)+(+c.dataset.kg)));save();render();});
- document.querySelectorAll('[data-rst]').forEach(c=>c.onclick=()=>{S.ntq='';S.nkg='';S.nfd='';S.nlo='';save();render();});
+ document.querySelectorAll('[data-rst]').forEach(c=>c.onclick=()=>{S.ntq='';S.nkg='';S.nfd='';S.nlo='';S.hip='';save();render();});
  document.querySelectorAll('#mch .chip').forEach(c=>c.onclick=()=>{S.surf=c.dataset.m;save();render();});
  $('sv').onclick=()=>{const nm=prompt(L('Όνομα (π.χ. «Το Jimny μου»)','Name (e.g. "My Jimny")'),'');if(!nm)return;
   const id='m'+Date.now();MY.push({id,name:nm,tq:num(S.tq),rpm:S.rpm||'',g1:num(S.g1),lo:num(S.lo),fd:num(S.fd),tyre:S.tyre,kg:num(S.kg),pk:S.pk||''});
@@ -297,7 +301,9 @@ ${lo>1.05?` <div class="opt"><div class="t">② ${L('Μόνο βοηθητικό
  document.querySelectorAll('#fix [data-fd]').forEach(btn=>btn.onclick=()=>{S.nfd=btn.dataset.fd?String(btn.dataset.fd):'';S.nlo=btn.dataset.lo?String(btn.dataset.lo):'';save();render();});
  /* σχέδιο */
  const kmh=(cr,D)=>1000*Math.PI*D/1000*60/(cr*1000);
- const hw=(nfd/fd)/grow, spd=grow*fd/nfd;
+ const hip=num(S.hip)||0,hw=(nfd/fd)/grow*(1+hip/100), spd=grow*fd/nfd;
+ const pc=(a,b)=>{const p=(a/b-1)*100;return Math.abs(p)<0.5?L('ίδιο με το εργοστασιακό','same as stock'):(p>0?'+':'')+f(p,0)+'% '+L('από το εργοστασιακό','vs stock')+' ('+f(b,b<10?3:2)+')'};
+ $('nfdP').textContent=num(S.nfd)>0?pc(nfd,fd):'';$('nloP').textContent=num(S.nlo)>0?pc(nlo,lo):'';
  const idle=num(S.idle)||800,rr=String(S.rpm||'').match(/\d+/g)||[],rpmA=+(rr[0]||0),rpmB=+(rr[rr.length-1]||0),rpmT=rpmA,rng=(k)=>f(k*rpmA/1000,1)+(rpmB>rpmA?'–'+f(k*rpmB/1000,1):'');
  $('plan').innerHTML=`<div class="opt"><div class="t">🐢 ${L('Crawl στο ρελαντί, χωρίς γκάζι','Idle crawl, no throttle')}<small>${L('1η, 4L, στις','1st, 4L, at')} ${f(idle,0)} rpm · ${L('Εργοστασιακό','Stock')}: ${f(kmh(CR0,D0)*idle/1000,2)} km/h · ${L('όσο πιο αργά, τόσο καλύτερα στα βράχια','the slower, the better on rocks')}</small></div><div class="n">${f(kmh(CR2*grow,D1)*idle/1000,2)}<small>km/h</small></div></div>
  ${rpmT>0?`<div class="opt"><div class="t">💪 ${L('Ταχύτητα στη μέγιστη ροπή','Speed at max torque')}<small>${f(T,0)} Nm ${L('στις','at')} ${S.rpm} rpm · 1η, 4L · ${L('Εργοστασιακό','Stock')}: ${rng(kmh(CR0,D0))} km/h</small></div><div class="n">${rng(kmh(CR2*grow,D1))}<small>km/h</small></div></div>`:''}
