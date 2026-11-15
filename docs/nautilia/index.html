@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Ναυτιλία – Μελέτη</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Ναυτιλία">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#14385c">
+<style>
+:root{--bg:#eef2f6;--card:#fff;--ink:#14212e;--muted:#5a6876;--line:#d3dae1;--navy:#14385c;--ok:#2f8f55;--okbg:#e5f4ea;--bad:#d0312d;--badbg:#fbe9e8;--tip:#fff6dd;--acc:#1f6fbf}
+@media (prefers-color-scheme:dark){:root{--bg:#0e151d;--card:#17212c;--ink:#e3e9ef;--muted:#97a5b3;--line:#2a3846;--okbg:#14301f;--badbg:#3a1817;--tip:#2e2a16;--acc:#7fb2e6}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,system-ui,Segoe UI,Roboto,sans-serif}
+header{position:sticky;top:0;z-index:5;background:var(--navy);color:#fff;padding:calc(env(safe-area-inset-top) + 10px) 14px 10px;display:flex;align-items:center;gap:10px}
+header h1{font-size:18px;margin:0;line-height:1.2}header .sub{font-size:12px;opacity:.85}
+header .back{background:rgba(255,255,255,.15);border:0;color:#fff;font:700 15px system-ui;border-radius:10px;padding:8px 11px;cursor:pointer}
+main{max-width:640px;margin:0 auto;padding:12px 12px calc(env(safe-area-inset-bottom) + 34px)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+h2{font-size:17px;margin:0 0 8px}
+.muted{color:var(--muted);font-size:13px}
+.big{display:block;width:100%;border:0;border-radius:14px;padding:15px;font:800 17px system-ui;color:#fff;background:var(--navy);cursor:pointer;margin-top:10px}
+@media (prefers-color-scheme:dark){.big{background:#2d5c8a}}
+.big.alt{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.big:disabled{opacity:.45}
+.ch{display:flex;gap:12px;align-items:center}
+.ch .num{flex:0 0 40px;height:40px;border-radius:12px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font:800 17px system-ui}
+@media (prefers-color-scheme:dark){.ch .num{background:#2d5c8a}}
+.ch .tt{flex:1;font-weight:700;font-size:15px;line-height:1.3}
+.bar{height:7px;background:var(--line);border-radius:5px;overflow:hidden;margin-top:6px}.bar i{display:block;height:100%;background:var(--ok)}
+.row{display:flex;gap:8px;margin-top:10px}
+.btn{flex:1;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:11px;padding:11px 8px;font:700 14px system-ui;cursor:pointer}
+.btn.pri{background:var(--navy);border-color:var(--navy);color:#fff}
+@media (prefers-color-scheme:dark){.btn.pri{background:#2d5c8a;border-color:#2d5c8a}}
+.qtag{font-size:12px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.3px}
+.qtext{font-size:18px;font-weight:700;margin:6px 0 12px;line-height:1.4}
+.opt{display:block;width:100%;text-align:left;border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:13px 14px;margin:8px 0;font:600 16px/1.35 system-ui;cursor:pointer}
+.opt b{display:inline-block;width:24px;color:var(--muted)}
+.opt.ok{border-color:var(--ok);background:var(--okbg)}
+.opt.bad{border-color:var(--bad);background:var(--badbg)}
+.opt.dim{opacity:.55}
+.verdict{font-size:19px;font-weight:800;margin:12px 0 6px}
+.verdict.ok{color:var(--ok)}.verdict.bad{color:var(--bad)}
+.why{border-left:4px solid var(--bad);background:var(--badbg);border-radius:8px;padding:10px 12px;margin:8px 0}
+.expl{border-left:4px solid var(--ok);background:var(--okbg);border-radius:8px;padding:10px 12px;margin:8px 0;white-space:pre-line}
+.why h4,.expl h4{margin:0 0 4px;font-size:14px}
+.prog{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:6px}
+.theory ul{padding-left:20px;margin:6px 0}.theory li{margin:7px 0}
+.tip{background:var(--tip);border-radius:10px;padding:10px 12px;font-size:15px}
+.fig{display:block;width:100%;max-width:360px;margin:10px auto;color:var(--ink)}
+.score{font-size:46px;font-weight:900;text-align:center;margin:6px 0}
+.center{text-align:center}
+.pill{display:inline-block;font-size:12px;font-weight:700;border-radius:20px;padding:2px 9px;background:var(--okbg);color:var(--ok);margin-left:6px}
+.pill.bad{background:var(--badbg);color:var(--bad)}
+footer{text-align:center;color:var(--muted);font-size:12px;margin-top:16px}
+.hide{display:none!important}
+</style>
+</head>
+<body>
+<header><button class="back hide" id="back" onclick="home()">‹</button><div><h1 id="htitle">⚓ Ναυτιλία – Μελέτη</h1><div class="sub" id="hsub">Κεφάλαια 1–9 • για τις εξετάσεις της Γιούλης</div></div></header>
+<main id="app"></main>
+<script src="questions.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const app=$("#app");
+const KEY="nautilia_stats_v1";
+let ST={}; try{ST=JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){ST={}}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(ST))}catch(e){}};
+const esc=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const chT=n=>CHAPTERS.find(c=>c.n===n).t;
+let S=null; // τρέχον τεστ
+
+function header(title,sub,back){$("#htitle").textContent=title;$("#hsub").textContent=sub;$("#back").classList.toggle("hide",!back);window.scrollTo(0,0)}
+function chStats(n){const qs=Q.filter(q=>q.c===n);let seen=0,ok=0;qs.forEach(q=>{const s=ST[q.id];if(s){seen++;if(s.last)ok++}});return{tot:qs.length,seen,ok}}
+function wrongIds(){return Q.filter(q=>ST[q.id]&&!ST[q.id].last).map(q=>q.id)}
+
+function home(){
+ S=null;header("⚓ Ναυτιλία – Μελέτη","Κεφάλαια 1–9 • για τις εξετάσεις της Γιούλη",false);
+ const w=wrongIds().length;
+ let h=`<div class="card"><h2>Πώς δουλεύει</h2><div class="muted">Διάβασε πρώτα τη <b>📖 Θεωρία</b> κάθε κεφαλαίου και μετά κάνε τις <b>✍️ Ερωτήσεις</b>. Σε κάθε απάντηση βλέπεις <b>γιατί</b> είναι σωστό – κι αν έκανες λάθος, <b>γιατί</b> αυτό που διάλεξες είναι λάθος. Οι 🧮 ασκήσεις πράξεων βγάζουν κάθε φορά νέους αριθμούς.</div>
+ <button class="big" onclick="startMix()">🎯 Τεστ εξετάσεων – 20 ερωτήσεις από όλα</button>
+ <button class="big alt" onclick="startWrong()" ${w?"":"disabled"}>🔁 Τα λάθη μου (${w})</button>
+ <button class="big alt" onclick="startCalc()">🧮 Μόνο ασκήσεις πράξεων (10)</button></div>`;
+ CHAPTERS.forEach(c=>{const s=chStats(c.n);const pct=s.tot?Math.round(s.ok/s.tot*100):0;
+  h+=`<div class="card"><div class="ch"><div class="num">${c.n}</div><div class="tt">${esc(c.t)}<div class="bar"><i style="width:${pct}%"></i></div><div class="muted">${s.ok}/${s.tot} σωστές${s.seen?` • ${s.seen} απαντημένες`:""}${GEN_BY_CH[c.n]?" • + 🧮 πράξεις":""}</div></div></div>
+  <div class="row"><button class="btn" onclick="theory(${c.n})">📖 Θεωρία</button><button class="btn pri" onclick="startCh(${c.n})">✍️ Ερωτήσεις</button></div></div>`});
+ h+=`<div class="card center"><button class="btn" onclick="resetAll()">🧹 Μηδενισμός προόδου</button></div><footer>Created by George Barbaris</footer>`;
+ app.innerHTML=h;
+}
+function theory(n){
+ header(`📖 Κεφ. ${n} – Θεωρία`,chT(n),true);
+ app.innerHTML=`<div class="card theory"><h2>${esc(chT(n))}</h2>${THEORY[n]}</div>
+ <button class="big" onclick="startCh(${n})">✍️ Πάμε στις ερωτήσεις</button>${n<9?`<button class="big alt" onclick="theory(${n+1})">Επόμενο κεφάλαιο ›</button>`:""}`;
+}
+function makeGen(chs,k){const out=[];const pool=[];chs.forEach(c=>(GEN_BY_CH[c]||[]).forEach(g=>pool.push(g)));if(!pool.length)return out;for(let i=0;i<k;i++){const g=GEN[pool[i%pool.length]]();g.id=null;out.push(g)}return shuffle(out)}
+function startCh(n){const st=Q.filter(q=>q.c===n);const g=makeGen([n],GEN_BY_CH[n]?4:0);run(shuffle(st.concat(g)),`✍️ Κεφ. ${n}`,chT(n))}
+function startMix(){const st=shuffle(Q).slice(0,15);run(shuffle(st.concat(makeGen([2,4,5,6,7,8],5))),"🎯 Τεστ εξετάσεων","20 ερωτήσεις από όλα τα κεφάλαια")}
+function startWrong(){const ids=new Set(wrongIds());run(shuffle(Q.filter(q=>ids.has(q.id))),"🔁 Τα λάθη μου","Ξανά οι ερωτήσεις που έκανες λάθος")}
+function startCalc(){run(makeGen([2,5,6,7,8],10),"🧮 Ασκήσεις πράξεων","Δφ, Δλ, πορείες, διοπτεύσεις, Πρ/Τρ/Απ")}
+function run(list,title,sub){
+ if(!list.length){home();return}
+ S={list:list.map(q=>({q,opts:shuffle(q.o.map((o,i)=>({t:o[0],w:o[1],ok:i===0})))})),i:0,ok:0,title,sub,wrong:[]};
+ show();
+}
+function show(){
+ const it=S.list[S.i],q=it.q;
+ header(S.title,S.sub,true);
+ app.innerHTML=`<div class="card"><div class="prog"><span>Ερώτηση ${S.i+1} / ${S.list.length}</span><span>✅ ${S.ok}</span></div>
+ <div class="qtag">Κεφ. ${q.c}${q.gen?" • 🧮 πράξη":""}</div><div class="qtext">${esc(q.q)}</div>
+ <div id="opts">${it.opts.map((o,i)=>`<button class="opt" data-i="${i}"><b>${"ΑΒΓΔ"[i]}</b>${esc(o.t)}</button>`).join("")}</div>
+ <div id="fb"></div></div>`;
+ document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>answer(+b.dataset.i));
+}
+function answer(i){
+ const it=S.list[S.i],q=it.q;if(it.done)return;it.done=true;
+ const ch=it.opts[i];
+ document.querySelectorAll(".opt").forEach((b,k)=>{b.disabled=true;const o=it.opts[k];if(o.ok)b.classList.add("ok");else if(k===i)b.classList.add("bad");else b.classList.add("dim")});
+ if(ch.ok)S.ok++;else S.wrong.push(q);
+ if(q.id){const s=ST[q.id]||{c:0,w:0};ch.ok?s.c++:s.w++;s.last=ch.ok;ST[q.id]=s;save()}
+ const cor=it.opts.find(o=>o.ok);
+ let h=ch.ok?`<div class="verdict ok">✅ Σωστό!</div>`:`<div class="verdict bad">❌ Λάθος</div>
+ <div class="why"><h4>Γιατί το «${esc(ch.t)}» είναι λάθος:</h4>${esc(ch.w||"")}</div>
+ <div class="muted">Σωστή απάντηση: <b>${esc(cor.t)}</b></div>`;
+ h+=`<div class="expl"><h4>💡 Γιατί ισχύει αυτό:</h4>${esc(q.e)}</div>
+ <button class="big" onclick="next()">${S.i+1<S.list.length?"Επόμενη ›":"Τέλος – δες το αποτέλεσμα"}</button>`;
+ $("#fb").innerHTML=h;
+ setTimeout(()=>{const f=$("#fb");if(f)window.scrollTo({top:f.getBoundingClientRect().top+window.scrollY-110,behavior:"smooth"})},60);
+}
+function next(){S.i++;if(S.i<S.list.length)show();else result()}
+function result(){
+ const n=S.list.length,p=Math.round(S.ok/n*100);
+ header(S.title,"Αποτέλεσμα",true);
+ const msg=p>=90?"Εξαιρετικά! Είσαι έτοιμη 🌟":p>=70?"Πολύ καλά! Λίγη επανάληψη ακόμα 💪":p>=50?"Καλή αρχή – ξαναδιάβασε τη θεωρία και ξαναπροσπάθησε 📖":"Μην αγχώνεσαι – διάβασε τη θεωρία και ξαναδοκίμασε, θα βγει 🙂";
+ const wrongStatic=S.wrong.filter(q=>q.id);
+ app.innerHTML=`<div class="card center"><div class="score">${S.ok}/${n}</div><div class="muted">${p}% σωστές</div><h2 style="margin-top:10px">${msg}</h2></div>
+ ${S.wrong.length?`<div class="card"><h2>Τα λάθη αυτού του γύρου</h2>${S.wrong.map(q=>`<div style="margin:10px 0"><div class="qtag">Κεφ. ${q.c}</div><div><b>${esc(q.q)}</b></div><div class="muted">✔ ${esc(q.o[0][0])}</div></div>`).join("")}</div>`:""}
+ ${wrongStatic.length?`<button class="big" onclick="retryWrong()">🔁 Ξανά μόνο αυτά τα λάθη</button>`:""}
+ <button class="big alt" onclick="home()">🏠 Αρχική</button>`;
+}
+function retryWrong(){const t=S.title;run(shuffle(S.wrong.filter(q=>q.id)),t,"Ξανά τα λάθη του γύρου")}
+function resetAll(){if(confirm("Να μηδενιστεί όλη η πρόοδος;")){ST={};save();home()}}
+home();
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>
