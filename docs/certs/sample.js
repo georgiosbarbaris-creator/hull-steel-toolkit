@@ -5,7 +5,7 @@
 const SHIP="MV SAMPLE STAR",IMO="9000000";
 const e=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 function wrap(t,n){const w=String(t).split(" "),o=[];let l="";w.forEach(x=>{if((l+" "+x).trim().length>n){o.push(l.trim());l=x}else l+=" "+x});if(l.trim())o.push(l.trim());return o;}
-const OV={csr:"csr",llrec:"book",tsr:"report",boil:"report",biof:"book",potw:"report",liftsm:"report",charts:"book",vacc:"cert",pest:"report",amsa:"book",nzbio:"book",cn:"book",m_bra:"book",g_pil:"cert",g_moor:"cert",LR_sirb:"crew",MH_sirb:"crew",PA_sirb:"crew",LR_water:"report",PA_med:"report",incin:"cert",bdn:"report",rso:"report",thick:"report",audits:"report",gd_fum:"report",pressv:"report",LR_med:"report",fumig:"report",g_falls:"cert",g_hcov:"report",g_fall:"report",ca:"book",usnoa:"book",cmach:"cert"};
+const OV={csr:"csr",semp2c:"cert",semp3c:"cert",semp:"book",llrec:"book",tsr:"report",boil:"report",biof:"book",potw:"report",liftsm:"report",charts:"book",vacc:"cert",pest:"report",amsa:"book",nzbio:"book",cn:"book",m_bra:"book",g_pil:"cert",g_moor:"cert",LR_sirb:"crew",MH_sirb:"crew",PA_sirb:"crew",LR_water:"report",PA_med:"report",incin:"cert",bdn:"report",rso:"report",thick:"report",audits:"report",gd_fum:"report",pressv:"report",LR_med:"report",fumig:"report",g_falls:"cert",g_hcov:"report",g_fall:"report",ca:"book",usnoa:"book",cmach:"cert"};
 function typeOf(i){if(OV[i.id])return OV[i.id];const n=i.n;
  if(i.c==="post")return "poster";
  if(i.c==="ins")return /COFR|eCOFR/.test(n)?"cert":"ins";
