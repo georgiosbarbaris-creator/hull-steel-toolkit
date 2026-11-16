@@ -42,7 +42,7 @@ input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:
 .ch{display:flex;align-items:center;gap:8px;padding:11px 12px;cursor:pointer;font-weight:700}
 .ch .cn{flex:1}.ch .cc{font-size:12px;font-weight:600;color:var(--muted)}
 .pill{font-size:11.5px;border-radius:20px;padding:1px 7px;font-weight:700}
-.pb{background:var(--badb);color:var(--bad)}.pw{background:var(--wrnb);color:var(--wrn)}.pk{background:var(--okb);color:var(--ok)}
+.pb{background:var(--badb);color:var(--bad)}.pw{background:var(--wrnb);color:var(--wrn)}.pk{background:var(--okb);color:var(--ok)}.pna{background:var(--nab);color:var(--na)}
 .it{border-top:1px solid var(--line);padding:9px 12px}
 .it.s-y{background:linear-gradient(90deg,var(--okb) 4px,transparent 4px)}
 .it.s-n{background:linear-gradient(90deg,var(--bad) 4px,var(--badb) 4px)}
@@ -77,6 +77,8 @@ input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chips label{flex-direction:row;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--line);border-radius:20px;padding:5px 10px;font-size:13px;color:var(--ink)}
 .chips input{width:auto}
+table.sv{width:100%;border-collapse:collapse;font-size:12.5px}table.sv td,table.sv th{border-top:1px solid var(--line);padding:6px 4px;vertical-align:top;text-align:left}table.sv th{font-size:11.5px;color:var(--muted)}.svh{background:var(--bg);font-weight:800;color:var(--pri)}
+details.gd{border-top:1px solid var(--line);padding:8px 0}details.gd summary{cursor:pointer;font-size:14.5px}details.gd p{font-size:13.5px;margin:6px 0 0}
 .credit{text-align:center;font-size:11.5px;color:var(--muted);margin-top:16px}
 .legend{font-size:12px;color:var(--muted);margin-top:6px}
 @media print{header,nav,.noprint{display:none!important}body{background:#fff}}
@@ -91,6 +93,7 @@ input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:
  </div>
  <nav>
   <button data-tab="check" class="on" id="nb_check">✅ Έλεγχος</button>
+  <button data-tab="surv" id="nb_surv">📅 Surveys</button>
   <button data-tab="folders" id="nb_folders">📁 Φάκελοι</button>
   <button data-tab="ship" id="nb_ship">🚢 Πλοίο</button>
   <button data-tab="upd" id="nb_upd">🆕 Νέοι κανονισμοί</button>
@@ -118,6 +121,8 @@ input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:
   <div class="row" style="margin-top:6px"><input id="a_r" placeholder="Ref (optional)" style="flex:1"><button class="btn p" id="a_go">+</button></div>
  </div>
 </section>
+<!-- SURVEYS -->
+<section id="v-surv" class="hide"></section>
 <!-- FOLDERS -->
 <section id="v-folders" class="hide">
  <div class="card"><h2 id="t_fold">📁 Φάκελοι Πλοιάρχου – σειρά & θέση</h2><p class="note" id="t_foldn"></p>
@@ -179,8 +184,9 @@ input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:
 <script src="data2.js"></script>
 <script src="data3.js"></script>
 <script src="sample.js"></script>
+<script src="survey.js"></script>
 <script>
-const VER="v1.4 · Nov 2026";
+const VER="v1.5 · Nov 2026";
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 let DB;try{DB=JSON.parse(localStorage.getItem("certs_db")||"null")}catch(e){}
@@ -190,7 +196,7 @@ const uid=()=>Math.random().toString(36).slice(2,9);
 function newVessel(name){const id=uid(),p={};PROFILE.forEach(x=>p[x[0]]=!!x[3]);
  DB.v[id]={id,name:name||"NEW VESSEL",imo:"",flag:"LR",cls:"",built:"",dwt:"",date:new Date().toISOString().slice(0,10),port:"",by:"Capt. George Barbaris",prof:p,st:{},custom:[]};DB.cur=id;save();return DB.v[id];}
 if(!DB.cur||!DB.v[DB.cur]){const ks=Object.keys(DB.v);if(ks.length)DB.cur=ks[0];else newVessel("MV ");}
-const V=()=>DB.v[DB.cur];
+const V=()=>DB.v[DB.cur];window.V_=V;window.save_=()=>save();
 let L=DB.lang||"el";const T=(en,el)=>L==="en"?en:el;
 let F={f:"all",q:"",fire:false,open:{}};
 function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("on"),1800);}
@@ -301,11 +307,11 @@ $("#r_share").onclick=()=>{const v=V(),rows=repRows();const m=rows.filter(r=>r.s
  if(navigator.share)navigator.share({text:txt}).catch(()=>{});else navigator.clipboard.writeText(txt).then(()=>toast("Copied"));};
 
 /* ---------- tabs & lang ---------- */
-function setTab(t){document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.tab===t));["check","folders","ship","upd","rep"].forEach(x=>$("#v-"+x).classList.toggle("hide",x!==t));
- if(t==="folders")renderFolders();if(t==="ship")renderShip();if(t==="upd")renderUpd();if(t==="rep")renderRep();window.scrollTo(0,0);}
+function setTab(t){document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.tab===t));["check","surv","folders","ship","upd","rep"].forEach(x=>$("#v-"+x).classList.toggle("hide",x!==t));
+ if(t==="folders")renderFolders();if(t==="surv")renderSurvey();if(t==="ship")renderShip();if(t==="upd")renderUpd();if(t==="rep")renderRep();window.scrollTo(0,0);}
 document.querySelector("nav").onclick=e=>{const b=e.target.closest("button");if(b)setTab(b.dataset.tab);};
 function texts(){$("#lang").textContent=L==="en"?"ΕΛ":"EN";document.documentElement.lang=L;
- const m={nb_check:["✅ Check","✅ Έλεγχος"],nb_folders:["📁 Folders","📁 Φάκελοι"],nb_ship:["🚢 Ship","🚢 Πλοίο"],nb_upd:["🆕 New rules","🆕 Νέοι κανονισμοί"],nb_rep:["📄 Report","📄 Αναφορά"],
+ const m={nb_check:["✅ Check","✅ Έλεγχος"],nb_surv:["📅 Surveys","📅 Surveys"],nb_folders:["📁 Folders","📁 Φάκελοι"],nb_ship:["🚢 Ship","🚢 Πλοίο"],nb_upd:["🆕 New rules","🆕 Νέοι κανονισμοί"],nb_rep:["📄 Report","📄 Αναφορά"],
  t_add:["➕ Add your own document","➕ Πρόσθεσε δικό σου χαρτί"],t_fold:["📁 Master's files – order & location","📁 Φάκελοι Πλοιάρχου – σειρά & θέση"],
  t_foldn:["Suggested folder set-up. Items follow the order of the folder; ✓/✗ from your check. Print it and put it as index in each folder.","Προτεινόμενο στήσιμο φακέλων. Τα χαρτιά με τη σειρά του φακέλου· ✓/✗ από τον έλεγχό σου. Τύπωσέ το και βάλ' το ευρετήριο σε κάθε φάκελο."],
  t_ship:["🚢 Vessel particulars","🚢 Στοιχεία πλοίου"],t_prof:["⚙️ What applies to this ship","⚙️ Τι ισχύει για αυτό το πλοίο"],t_profn:["Ticks hide/show the items that depend on equipment or trading area. The flag adds its own flag-State documents.","Τα τικ κρύβουν/δείχνουν χαρτιά που εξαρτώνται από εξοπλισμό ή περιοχή. Η σημαία προσθέτει τα δικά της έγγραφα."],
