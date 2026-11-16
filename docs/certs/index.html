@@ -57,6 +57,8 @@ input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:
 .sb .na.on{background:var(--na);border-color:var(--na);color:#fff}
 .exp{margin-top:8px;font-size:13.5px}
 .exp p{margin:4px 0}
+.why{font-size:13px;margin-top:5px;line-height:1.4}.why .w2{color:var(--muted);font-size:12px;margin-top:3px}
+.more{font-size:12px;color:var(--acc);font-weight:600;cursor:pointer;margin-top:4px;display:inline-block}
 .chk{background:var(--bg);border-radius:9px;padding:7px 9px;margin:6px 0;font-size:13px}
 .dl{display:flex;gap:6px;align-items:center;margin-top:6px;flex-wrap:wrap}
 .dl input[type=date]{width:auto;padding:5px 8px;font-size:13.5px}
@@ -102,6 +104,7 @@ input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:
   <div class="row" style="margin-top:8px">
    <input id="q" placeholder="🔎 Search / Αναζήτηση" style="flex:1">
    <button class="btn sm" id="b_fire">🔥 PSC</button>
+   <button class="btn sm" id="b_why">📖</button>
    <button class="btn sm" id="b_exp">⇕</button>
   </div>
   <div class="legend" id="legend"></div>
@@ -172,8 +175,9 @@ input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:
 <div class="toast" id="toast"></div>
 <script src="data.js"></script>
 <script src="data2.js"></script>
+<script src="data3.js"></script>
 <script>
-const VER="v1.0 · Nov 2026";
+const VER="v1.1 · Nov 2026";
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 let DB;try{DB=JSON.parse(localStorage.getItem("certs_db")||"null")}catch(e){}
@@ -208,7 +212,7 @@ function render(){const v=V(),all=items(),cs=counts(all);
  const st=[["all",cs.t,T("All","Όλα")],["o",cs.o,T("Open","Ανοιχτά")],["y",cs.y,"✓ "+T("OK","OK")],["n",cs.n,"✗ "+T("Missing","Λείπει")],["e",cs.e,"⚠ "+T("Expiring","Λήγει")]];
  $("#stats").innerHTML=st.map(s=>`<div data-f="${s[0]}" class="${F.f===s[0]?"on":""}"><b style="color:${s[0]==="n"?"var(--bad)":s[0]==="e"?"var(--wrn)":s[0]==="y"?"var(--ok)":"inherit"}">${s[1]}</b><span>${s[2]}</span></div>`).join("");
  $("#pbar").style.width=((cs.y+cs.na)/Math.max(1,cs.t)*100)+"%";
- $("#b_fire").classList.toggle("p",F.fire);
+ $("#b_fire").classList.toggle("p",F.fire);$("#b_why").classList.toggle("p",DB.why!==false);
  const q=F.q.toLowerCase();
  let h="";cats().forEach(c=>{let li=all.filter(i=>i.c===c[0]);
   li=li.filter(i=>{const s=stOf(i.id),d=dueInfo(s.d);
@@ -221,13 +225,15 @@ function render(){const v=V(),all=items(),cs=counts(all);
   h+=`<div class="cat"><div class="ch" data-c="${c[0]}"><span>${c[1]}</span><span class="cn">${esc(T(c[2],c[3]))}</span>${cc.n?`<span class="pill pb">✗${cc.n}</span>`:""}${cc.e?`<span class="pill pw">⚠${cc.e}</span>`:""}<span class="cc">${cc.y+cc.na}/${cc.t}</span><span>${open?"▾":"▸"}</span></div>`;
   if(open)h+=li.map(itemHTML).join("");h+="</div>";});
  $("#list").innerHTML=h||`<div class="card note">${T("Nothing here.","Τίποτα εδώ.")}</div>`;
- $("#legend").innerHTML=T("✓ on board & valid · ✗ missing / expired / wrong · N/A not applicable · tap the name for explanation · 🔥 frequent PSC/RightShip finding","✓ υπάρχει & ισχύει · ✗ λείπει / έληξε / λάθος · N/A δεν ισχύει · πάτα το όνομα για εξήγηση · 🔥 συχνό PSC/RightShip finding");}
+ $("#legend").innerHTML=T("✓ on board & valid · ✗ missing / expired / wrong · N/A not applicable · 📖 show/hide explanations · tap 🔎 for check, expiry & note · 🔥 frequent PSC/RightShip finding","✓ υπάρχει & ισχύει · ✗ λείπει / έληξε / λάθος · N/A δεν ισχύει · 📖 εμφάνιση/απόκρυψη εξηγήσεων · πάτα 🔎 για έλεγχο, λήξη & σημείωση · 🔥 συχνό PSC/RightShip finding");}
 function itemHTML(i){const s=stOf(i.id),d=dueInfo(s.d),ex=F.open["i_"+i.id];
  const desc=L==="en"?(i.e||i.g):(i.g||i.e),chk=L==="en"?(i.k||i.kg):(i.kg||i.k);
  return `<div class="it ${s.s?"s-"+s.s:""}" data-id="${i.id}"><div class="itop"><div class="iname" data-x="${i.id}">${i.f?'<span class="fire">🔥</span> ':""}${esc(i.n)}${i.cu?" ✎":""}<div class="iref">${esc(i.r||"")}${i.v?" · ⏱ "+esc(i.v):""}</div></div>
  <div class="sb"><button class="y ${s.s==="y"?"on":""}" data-s="y">✓</button><button class="n ${s.s==="n"?"on":""}" data-s="n">✗</button><button class="na ${s.s==="na"?"on":""}" data-s="na">N/A</button></div></div>
  ${d&&s.s!=="na"?`<div style="margin-top:4px"><span class="due ${d.c}">⏱ ${d.t} · ${s.d}</span></div>`:""}
- ${ex?`<div class="exp">${desc?`<p>${esc(desc)}</p>`:""}${chk?`<div class="chk">🔎 <b>${T("Check","Έλεγξε")}:</b> ${esc(chk)}</div>`:""}
+ ${DB.why!==false&&desc?`<div class="why">📄 ${esc(desc)}${i.r?`<div class="w2">⚖️ ${T("Why on board: required by","Γιατί στο πλοίο: απαιτείται από")} ${esc(i.r)}</div>`:""}</div>`:""}
+ ${!ex?`<span class="more" data-x="${i.id}">${T("🔎 What to check · expiry · note ▸","🔎 Τι ελέγχω · λήξη · σημείωση ▸")}</span>`:""}
+ ${ex?`<div class="exp">${DB.why===false&&desc?`<p>${esc(desc)}</p>`:""}${chk?`<div class="chk">🔎 <b>${T("Check","Έλεγξε")}:</b> ${esc(chk)}</div>`:""}
  <div class="dl"><span class="note">${T("Expiry / next due","Λήξη / επόμενο")}</span><input type="date" data-d value="${s.d||""}"><input class="nt" data-nt placeholder="${T("Note (e.g. cert no., what is missing)","Σημείωση (π.χ. αρ. cert, τι λείπει)")}" value="${esc(s.nt||"")}">${i.cu?`<button class="btn sm d" data-del>🗑</button>`:""}</div></div>`:""}</div>`;}
 $("#list").addEventListener("click",e=>{const ch=e.target.closest(".ch");if(ch){F.open[ch.dataset.c]=!F.open[ch.dataset.c];render();return;}
  const it=e.target.closest(".it");if(!it)return;const id=it.dataset.id,v=V();
@@ -238,6 +244,7 @@ $("#list").addEventListener("change",e=>{const it=e.target.closest(".it");if(!it
  if(e.target.matches("[data-d]"))s.d=e.target.value;if(e.target.matches("[data-nt]"))s.nt=e.target.value;save();render();});
 $("#stats").onclick=e=>{const d=e.target.closest("[data-f]");if(d){F.f=d.dataset.f;render();}};
 $("#q").oninput=e=>{F.q=e.target.value;render();};
+$("#b_why").onclick=()=>{DB.why=DB.why===false;save();render();toast(DB.why===false?T("Explanations hidden","Εξηγήσεις κρυμμένες"):T("Explanations shown","Εξηγήσεις ορατές"));};
 $("#b_fire").onclick=()=>{F.fire=!F.fire;render();};
 $("#b_exp").onclick=()=>{const any=cats().some(c=>F.open[c[0]]);cats().forEach(c=>F.open[c[0]]=!any);render();};
 $("#a_go").onclick=()=>{const n=$("#a_n").value.trim();if(!n)return;const v=V();v.custom=v.custom||[];v.custom.push({id:"cu_"+uid(),c:$("#a_c").value,n,r:$("#a_r").value.trim(),e:"",g:""});$("#a_n").value="";$("#a_r").value="";save();render();toast("✓");};
