@@ -945,7 +945,7 @@ const GEN = {
  }
 };
 // ποιες γεννήτριες ανά κεφάλαιο
-const GEN_BY_CH = {2:["dphi","dlam"],4:["zl2zp","zp2zl"],5:["rel","azp2azl","zp2zl","zl2zp"],6:["dist"],7:["speed"],8:["pr","tr","apYear"],9:["azp2azl"]};
+const GEN_BY_CH = {"2":["dphi","dlam"],"4":["zl2zp","zp2zl"],"5":["rel","azp2azl","zp2zl","zl2zp"],"6":["dist"],"7":["speed"],"8":["pr","tr","apYear"],"9":["azp2azl"]};
 
 // ───────── ΘΕΩΡΙΑ (απλά, σαν σημειώσεις) ─────────
 const SVG_NORTHS = `<svg viewBox="0 0 300 240" class="fig" role="img" aria-label="Οι τρεις Βορράδες">

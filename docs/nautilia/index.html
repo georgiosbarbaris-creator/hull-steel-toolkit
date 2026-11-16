@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Ναυτιλία – Μελέτη</title>
+<title>Ναυτιλία & Ναυτικό Δίκαιο – Μελέτη</title>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Ναυτιλία">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#14385c">
@@ -54,12 +54,25 @@ h2{font-size:17px;margin:0 0 8px}
 .pill.bad{background:var(--badbg);color:var(--bad)}
 footer{text-align:center;color:var(--muted);font-size:12px;margin-top:16px}
 .hide{display:none!important}
+.tabs{display:flex;gap:8px;margin-bottom:12px}
+.tab{flex:1;border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:12px 6px;font:800 15px system-ui;cursor:pointer}
+.tab.on{background:var(--navy);border-color:var(--navy);color:#fff}
+@media (prefers-color-scheme:dark){.tab.on{background:#2d5c8a;border-color:#2d5c8a}}
+h3.part{font-size:14px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin:18px 4px 8px}
+.theory table{width:100%;border-collapse:collapse;font-size:14px;margin:6px 0}.theory td,.theory th{border-bottom:1px solid var(--line);padding:6px 4px;text-align:left;vertical-align:top}
+.ch .num{font-size:14px!important}
+
 </style>
 </head>
 <body>
 <header><button class="back hide" id="back" onclick="home()">‹</button><div><h1 id="htitle">⚓ Ναυτιλία – Μελέτη</h1><div class="sub" id="hsub">Κεφάλαια 1–9 • για τις εξετάσεις της Γιούλης</div></div></header>
 <main id="app"></main>
 <script src="questions.js"></script>
+<script src="subjects.js"></script>
+<script src="naftB.js"></script>
+<script src="dikaio1.js"></script>
+<script src="dikaio2.js"></script>
+<script src="dikaio3.js"></script>
 <script>
 const $=s=>document.querySelector(s);
 const app=$("#app");
@@ -68,36 +81,57 @@ let ST={}; try{ST=JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){ST={}}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(ST))}catch(e){}};
 const esc=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
-const chT=n=>CHAPTERS.find(c=>c.n===n).t;
+QX.forEach((q,i)=>q.id="x"+q.c+"_"+i);
+const ALLQ=Q.concat(QX);
+const SUBJ={
+ naft:{name:"Ναυτιλία",icon:"⚓",calc:true,parts:[
+   {title:"Μέρος Α' – Βιβλίο Ναυτιλίας, κεφάλαια 1–9",ch:CHAPTERS.map(c=>({k:String(c.n),n:"Κεφ. "+c.n,num:c.n,t:c.t}))},
+   {title:"Μέρος Β' – Ζητήματα 8–16 (σελ. 23–53)",ch:CH_B.map(c=>({k:c.k,n:"Ζήτημα "+c.n.slice(1),num:c.n,t:c.t}))}]},
+ dik:{name:"Ναυτικό Δίκαιο",icon:"⚖️",calc:false,parts:[
+   {title:"Ζητήματα 1–34",ch:CH_D.map(c=>({k:c.k,n:"Ζήτημα "+c.n,num:c.n,t:c.t}))}]}
+};
+const CH={}; for(const s in SUBJ) SUBJ[s].parts.forEach(p=>p.ch.forEach(c=>{c.s=s;CH[c.k]=c}));
+const chList=s=>SUBJ[s].parts.flatMap(p=>p.ch);
+const qOf=k=>ALLQ.filter(q=>String(q.c)===k);
+const qSubj=s=>ALLQ.filter(q=>CH[String(q.c)]&&CH[String(q.c)].s===s);
+const theoryOf=k=>THEORY[k]||THX[k]||"";
+let SUB="naft"; try{SUB=localStorage.getItem("nautilia_subj")||"naft"}catch(e){} if(!SUBJ[SUB])SUB="naft";
 let S=null; // τρέχον τεστ
 
 function header(title,sub,back){$("#htitle").textContent=title;$("#hsub").textContent=sub;$("#back").classList.toggle("hide",!back);window.scrollTo(0,0)}
-function chStats(n){const qs=Q.filter(q=>q.c===n);let seen=0,ok=0;qs.forEach(q=>{const s=ST[q.id];if(s){seen++;if(s.last)ok++}});return{tot:qs.length,seen,ok}}
-function wrongIds(){return Q.filter(q=>ST[q.id]&&!ST[q.id].last).map(q=>q.id)}
+function chStats(k){const qs=qOf(k);let seen=0,ok=0;qs.forEach(q=>{const s=ST[q.id];if(s){seen++;if(s.last)ok++}});return{tot:qs.length,seen,ok}}
+function wrongIds(s){return qSubj(s).filter(q=>ST[q.id]&&!ST[q.id].last).map(q=>q.id)}
+function setSub(s){SUB=s;try{localStorage.setItem("nautilia_subj",s)}catch(e){};home()}
 
 function home(){
- S=null;header("⚓ Ναυτιλία – Μελέτη","Κεφάλαια 1–9 • για τις εξετάσεις της Γιούλη",false);
- const w=wrongIds().length;
- let h=`<div class="card"><h2>Πώς δουλεύει</h2><div class="muted">Διάβασε πρώτα τη <b>📖 Θεωρία</b> κάθε κεφαλαίου και μετά κάνε τις <b>✍️ Ερωτήσεις</b>. Σε κάθε απάντηση βλέπεις <b>γιατί</b> είναι σωστό – κι αν έκανες λάθος, <b>γιατί</b> αυτό που διάλεξες είναι λάθος. Οι 🧮 ασκήσεις πράξεων βγάζουν κάθε φορά νέους αριθμούς.</div>
- <button class="big" onclick="startMix()">🎯 Τεστ εξετάσεων – 20 ερωτήσεις από όλα</button>
+ S=null;const sj=SUBJ[SUB];
+ header(sj.icon+" "+sj.name+" – Μελέτη","Για τις εξετάσεις της Γιούλη",false);
+ const w=wrongIds(SUB).length, tot=qSubj(SUB).length;
+ let h=`<div class="tabs">${Object.keys(SUBJ).map(s=>`<button class="tab ${s===SUB?"on":""}" onclick="setSub('${s}')">${SUBJ[s].icon} ${SUBJ[s].name}</button>`).join("")}</div>
+ <div class="card"><h2>Πώς δουλεύει</h2><div class="muted">Διάλεξε μάθημα πάνω. Διάβασε πρώτα τη <b>📖 Θεωρία</b> κάθε κεφαλαίου και μετά κάνε τις <b>✍️ Ερωτήσεις</b>. Σε κάθε απάντηση βλέπεις <b>γιατί</b> είναι σωστό – κι αν έκανες λάθος, <b>γιατί</b> αυτό που διάλεξες είναι λάθος. (${tot} ερωτήσεις${sj.calc?" + 🧮 ασκήσεις με νέους αριθμούς κάθε φορά":""})</div>
+ <button class="big" onclick="startMix()">🎯 Τεστ εξετάσεων – 20 ερωτήσεις από όλο το μάθημα</button>
  <button class="big alt" onclick="startWrong()" ${w?"":"disabled"}>🔁 Τα λάθη μου (${w})</button>
- <button class="big alt" onclick="startCalc()">🧮 Μόνο ασκήσεις πράξεων (10)</button></div>`;
- CHAPTERS.forEach(c=>{const s=chStats(c.n);const pct=s.tot?Math.round(s.ok/s.tot*100):0;
-  h+=`<div class="card"><div class="ch"><div class="num">${c.n}</div><div class="tt">${esc(c.t)}<div class="bar"><i style="width:${pct}%"></i></div><div class="muted">${s.ok}/${s.tot} σωστές${s.seen?` • ${s.seen} απαντημένες`:""}${GEN_BY_CH[c.n]?" • + 🧮 πράξεις":""}</div></div></div>
-  <div class="row"><button class="btn" onclick="theory(${c.n})">📖 Θεωρία</button><button class="btn pri" onclick="startCh(${c.n})">✍️ Ερωτήσεις</button></div></div>`});
+ ${sj.calc?`<button class="big alt" onclick="startCalc()">🧮 Μόνο ασκήσεις πράξεων (10)</button>`:""}</div>`;
+ sj.parts.forEach(p=>{
+  if(sj.parts.length>1)h+=`<h3 class="part">${esc(p.title)}</h3>`;
+  p.ch.forEach(c=>{const s=chStats(c.k);const pct=s.tot?Math.round(s.ok/s.tot*100):0;
+   h+=`<div class="card"><div class="ch"><div class="num">${esc(c.num)}</div><div class="tt">${esc(c.t)}<div class="bar"><i style="width:${pct}%"></i></div><div class="muted">${s.ok}/${s.tot} σωστές${s.seen?` • ${s.seen} απαντημένες`:""}${GEN_BY_CH[c.k]?" • + 🧮 πράξεις":""}</div></div></div>
+   <div class="row"><button class="btn" onclick="theory('${c.k}')">📖 Θεωρία</button><button class="btn pri" onclick="startCh('${c.k}')">✍️ Ερωτήσεις</button></div></div>`});
+ });
  h+=`<div class="card center"><button class="btn" onclick="resetAll()">🧹 Μηδενισμός προόδου</button></div><footer>Created by George Barbaris</footer>`;
  app.innerHTML=h;
 }
-function theory(n){
- header(`📖 Κεφ. ${n} – Θεωρία`,chT(n),true);
- app.innerHTML=`<div class="card theory"><h2>${esc(chT(n))}</h2>${THEORY[n]}</div>
- <button class="big" onclick="startCh(${n})">✍️ Πάμε στις ερωτήσεις</button>${n<9?`<button class="big alt" onclick="theory(${n+1})">Επόμενο κεφάλαιο ›</button>`:""}`;
+function theory(k){
+ const c=CH[k], list=chList(c.s), i=list.findIndex(x=>x.k===k), nx=list[i+1];
+ header(`📖 ${c.n} – Θεωρία`,c.t,true);
+ app.innerHTML=`<div class="card theory"><h2>${esc(c.t)}</h2>${theoryOf(k)}</div>
+ <button class="big" onclick="startCh('${k}')">✍️ Πάμε στις ερωτήσεις</button>${nx?`<button class="big alt" onclick="theory('${nx.k}')">Επόμενο: ${esc(nx.n)} ›</button>`:""}`;
 }
-function makeGen(chs,k){const out=[];const pool=[];chs.forEach(c=>(GEN_BY_CH[c]||[]).forEach(g=>pool.push(g)));if(!pool.length)return out;for(let i=0;i<k;i++){const g=GEN[pool[i%pool.length]]();g.id=null;out.push(g)}return shuffle(out)}
-function startCh(n){const st=Q.filter(q=>q.c===n);const g=makeGen([n],GEN_BY_CH[n]?4:0);run(shuffle(st.concat(g)),`✍️ Κεφ. ${n}`,chT(n))}
-function startMix(){const st=shuffle(Q).slice(0,15);run(shuffle(st.concat(makeGen([2,4,5,6,7,8],5))),"🎯 Τεστ εξετάσεων","20 ερωτήσεις από όλα τα κεφάλαια")}
-function startWrong(){const ids=new Set(wrongIds());run(shuffle(Q.filter(q=>ids.has(q.id))),"🔁 Τα λάθη μου","Ξανά οι ερωτήσεις που έκανες λάθος")}
-function startCalc(){run(makeGen([2,5,6,7,8],10),"🧮 Ασκήσεις πράξεων","Δφ, Δλ, πορείες, διοπτεύσεις, Πρ/Τρ/Απ")}
+function makeGen(chs,k){const out=[];const pool=[];chs.forEach(c=>(GEN_BY_CH[c]||[]).forEach(g=>pool.push(g)));if(!pool.length)return out;for(let i=0;i<k;i++){const g=GEN[pool[i%pool.length]]();g.c=String(g.c);g.id=null;out.push(g)}return shuffle(out)}
+function startCh(k){const c=CH[k];const g=makeGen([k],GEN_BY_CH[k]?4:0);run(shuffle(qOf(k).concat(g)),`✍️ ${c.n}`,c.t)}
+function startMix(){const sj=SUBJ[SUB];const st=shuffle(qSubj(SUB)).slice(0,sj.calc?15:20);run(shuffle(st.concat(sj.calc?makeGen(["2","4","5","6","7","8"],5):[])),"🎯 Τεστ εξετάσεων – "+sj.name,"20 ερωτήσεις από όλο το μάθημα")}
+function startWrong(){const ids=new Set(wrongIds(SUB));run(shuffle(ALLQ.filter(q=>ids.has(q.id))),"🔁 Τα λάθη μου – "+SUBJ[SUB].name,"Ξανά οι ερωτήσεις που έκανες λάθος")}
+function startCalc(){run(makeGen(["2","5","6","7","8"],10),"🧮 Ασκήσεις πράξεων","Δφ, Δλ, πορείες, διοπτεύσεις, Πρ/Τρ/Απ")}
 function run(list,title,sub){
  if(!list.length){home();return}
  S={list:list.map(q=>({q,opts:shuffle(q.o.map((o,i)=>({t:o[0],w:o[1],ok:i===0})))})),i:0,ok:0,title,sub,wrong:[]};
@@ -107,7 +141,7 @@ function show(){
  const it=S.list[S.i],q=it.q;
  header(S.title,S.sub,true);
  app.innerHTML=`<div class="card"><div class="prog"><span>Ερώτηση ${S.i+1} / ${S.list.length}</span><span>✅ ${S.ok}</span></div>
- <div class="qtag">Κεφ. ${q.c}${q.gen?" • 🧮 πράξη":""}</div><div class="qtext">${esc(q.q)}</div>
+ <div class="qtag">${esc((CH[String(q.c)]||{n:""}).n)}${q.gen?" • 🧮 πράξη":""}</div><div class="qtext">${esc(q.q)}</div>
  <div id="opts">${it.opts.map((o,i)=>`<button class="opt" data-i="${i}"><b>${"ΑΒΓΔ"[i]}</b>${esc(o.t)}</button>`).join("")}</div>
  <div id="fb"></div></div>`;
  document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>answer(+b.dataset.i));
@@ -120,7 +154,7 @@ function answer(i){
  if(q.id){const s=ST[q.id]||{c:0,w:0};ch.ok?s.c++:s.w++;s.last=ch.ok;ST[q.id]=s;save()}
  const cor=it.opts.find(o=>o.ok);
  let h=ch.ok?`<div class="verdict ok">✅ Σωστό!</div>`:`<div class="verdict bad">❌ Λάθος</div>
- <div class="why"><h4>Γιατί το «${esc(ch.t)}» είναι λάθος:</h4>${esc(ch.w||"")}</div>
+ <div class="why"><h4>Γιατί το «${esc(ch.t)}» είναι λάθος:</h4>${esc((ch.w||"").length<16?((ch.w?ch.w+" ":"")+"Αυτό δεν ισχύει – σύμφωνα με το βιβλίο σωστό είναι: «"+cor.t+"»."):ch.w)}</div>
  <div class="muted">Σωστή απάντηση: <b>${esc(cor.t)}</b></div>`;
  h+=`<div class="expl"><h4>💡 Γιατί ισχύει αυτό:</h4>${esc(q.e)}</div>
  <button class="big" onclick="next()">${S.i+1<S.list.length?"Επόμενη ›":"Τέλος – δες το αποτέλεσμα"}</button>`;
@@ -134,7 +168,7 @@ function result(){
  const msg=p>=90?"Εξαιρετικά! Είσαι έτοιμη 🌟":p>=70?"Πολύ καλά! Λίγη επανάληψη ακόμα 💪":p>=50?"Καλή αρχή – ξαναδιάβασε τη θεωρία και ξαναπροσπάθησε 📖":"Μην αγχώνεσαι – διάβασε τη θεωρία και ξαναδοκίμασε, θα βγει 🙂";
  const wrongStatic=S.wrong.filter(q=>q.id);
  app.innerHTML=`<div class="card center"><div class="score">${S.ok}/${n}</div><div class="muted">${p}% σωστές</div><h2 style="margin-top:10px">${msg}</h2></div>
- ${S.wrong.length?`<div class="card"><h2>Τα λάθη αυτού του γύρου</h2>${S.wrong.map(q=>`<div style="margin:10px 0"><div class="qtag">Κεφ. ${q.c}</div><div><b>${esc(q.q)}</b></div><div class="muted">✔ ${esc(q.o[0][0])}</div></div>`).join("")}</div>`:""}
+ ${S.wrong.length?`<div class="card"><h2>Τα λάθη αυτού του γύρου</h2>${S.wrong.map(q=>`<div style="margin:10px 0"><div class="qtag">${esc((CH[String(q.c)]||{n:""}).n)}</div><div><b>${esc(q.q)}</b></div><div class="muted">✔ ${esc(q.o[0][0])}</div></div>`).join("")}</div>`:""}
  ${wrongStatic.length?`<button class="big" onclick="retryWrong()">🔁 Ξανά μόνο αυτά τα λάθη</button>`:""}
  <button class="big alt" onclick="home()">🏠 Αρχική</button>`;
 }
