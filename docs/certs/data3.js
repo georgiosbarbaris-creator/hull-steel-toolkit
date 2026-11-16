@@ -87,3 +87,21 @@ const fe={msm:["Shows the minimum number of officers and ratings, and their grad
 ["LR","MH","PA"].forEach(f=>FLAGS[f].items.forEach(i=>{const k=i.id.split("_")[1];if(fe[k]){i.e=fe[k][0];i.g=fe[k][1];}}));
 const pp=F("PA_pub");if(pp){pp.e="Panama Merchant Marine Circulars (MMCs) are the flag's instructions on how international rules apply to Panamanian ships. MMC-107 lists the publications and records that must be on board, and the Panama annual safety inspector checks them.";pp.g="Τα Merchant Marine Circulars (MMC) είναι οι οδηγίες του Παναμά για το πώς εφαρμόζονται οι διεθνείς κανόνες στα πλοία του. Το MMC-107 λέει ποιες εκδόσεις και αρχεία πρέπει να είναι στο πλοίο· τα ελέγχει ο Panama inspector στο ASI.";}
 })();
+
+/* SEEMP certificates (separate from the plan) */
+(function(){const k=ITEMS.findIndex(i=>i.id==="semp");const add=[
+{id:"semp2c",c:"env",f:1,n:"SEEMP Part II – Confirmation of Compliance (issued by Flag / RO)",r:"MARPOL Annex VI Reg.5.4.5 & Reg.26.2 · MEPC.346(78) · revised Part II for MEPC.385(81) (DCS)",v:"Permanent – re-issued whenever Part II is revised (e.g. new IMO DCS data 2025)",
+ e:"A separate certificate (Confirmation of Compliance) issued by the Flag or the RO after it checks the SEEMP Part II – the ship's fuel oil data collection plan for IMO DCS. It proves the plan is approved. The manual alone is NOT enough: PSC asks for the Confirmation of Compliance. When Part II was revised for the enhanced IMO DCS data (MEPC.385(81), from 1 Aug 2025), a new Confirmation is needed for the revised plan.",
+ g:"Ξεχωριστό πιστοποιητικό (Confirmation of Compliance) που εκδίδει η Σημαία ή ο RO αφού ελέγξει το SEEMP Part II, δηλαδή το σχέδιο συλλογής στοιχείων καυσίμων για το IMO DCS. Αποδεικνύει ότι το σχέδιο εγκρίθηκε. Το manual μόνο του ΔΕΝ αρκεί: το PSC ζητά την Confirmation of Compliance. Όταν το Part II αναθεωρήθηκε για το νέο IMO DCS (MEPC.385(81), από 1/8/2025), χρειάζεται νέα Confirmation για το αναθεωρημένο σχέδιο.",
+ k:"Confirmation on board · ship name/IMO correct · refers to the SAME revision of Part II that is on board (check revision No./date) · issued after the 2025 DCS revision",
+ kg:"Confirmation στο πλοίο · σωστό όνομα/IMO · αναφέρεται στην ΙΔΙΑ αναθεώρηση του Part II που είναι στο πλοίο (έλεγξε αρ./ημερομηνία αναθεώρησης) · εκδόθηκε μετά την αναθεώρηση DCS 2025"},
+{id:"semp3c",c:"env",f:1,n:"SEEMP Part III – Confirmation of Compliance (CII plan verified by Flag / RO)",r:"MARPOL Annex VI Reg.5.4.6 & Reg.26.3 · MEPC.346(78)",v:"Re-verified when Part III is updated (new 3-year plan or corrective action plan)",
+ e:"The Flag or RO verifies SEEMP Part III – the ship's CII calculation method, the required CII for the next 3 years and the implementation plan – and issues a Confirmation of Compliance. If the ship is rated D for 3 years in a row, or E in one year, a corrective action plan must be added and verified again. The plan without the Confirmation is a deficiency.",
+ g:"Η Σημαία ή ο RO επαληθεύει το SEEMP Part III (μέθοδος υπολογισμού CII, required CII για τα επόμενα 3 χρόνια, πλάνο εφαρμογής) και εκδίδει Confirmation of Compliance. Αν το πλοίο πάρει D για 3 χρόνια συνεχόμενα ή E σε ένα χρόνο, προστίθεται διορθωτικό πλάνο που επαληθεύεται ξανά. Σχέδιο χωρίς Confirmation = έλλειψη.",
+ k:"Confirmation on board · covers current period (e.g. 2026–2028) · if CII D×3 or E → corrective action plan verified",
+ kg:"Confirmation στο πλοίο · καλύπτει την τρέχουσα περίοδο (π.χ. 2026–2028) · αν CII D×3 ή E → διορθωτικό πλάνο επαληθευμένο"}];
+ ITEMS.splice(k+1,0,...add);
+ const s=ITEMS.find(i=>i.id==="semp");if(s){s.n="SEEMP Part I, II & III – the plan / manual (latest revision)";
+  s.k="Plan on board (Part I, II, III) · latest revision · crew know the measures · ⚠️ the Confirmations of Compliance for Part II and Part III are SEPARATE items below";
+  s.kg="Το σχέδιο στο πλοίο (Part I, II, III) · τελευταία αναθεώρηση · το πλήρωμα ξέρει τα μέτρα · ⚠️ οι Confirmations of Compliance για Part II και Part III είναι ΞΕΧΩΡΙΣΤΑ χαρτιά από κάτω";}
+})();
