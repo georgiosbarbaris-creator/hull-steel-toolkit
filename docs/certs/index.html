@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ship Certs Check</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Certs Check">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#0b2e4f">
+<style>
+:root{--bg:#eef2f6;--card:#fff;--ink:#132033;--muted:#5d6b7c;--line:#d5dde7;--pri:#0b2e4f;--acc:#1565c0;--ok:#1d7a46;--okb:#e0f3e8;--bad:#c0392b;--badb:#fde4e1;--wrn:#9a6700;--wrnb:#fff3d1;--na:#6b7280;--nab:#eceff3}
+@media (prefers-color-scheme:dark){:root{--bg:#0c131c;--card:#151f2b;--ink:#e3eaf2;--muted:#93a3b5;--line:#283648;--pri:#9cc7f0;--acc:#4ea1ff;--ok:#5cc98a;--okb:#173326;--bad:#ff8a80;--badb:#3d1a18;--wrn:#e3b341;--wrnb:#3a2f10;--na:#9aa3ad;--nab:#232c37}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+header{position:sticky;top:0;z-index:9;background:#0b2e4f;color:#fff;padding:calc(8px + env(safe-area-inset-top)) 12px 8px}
+.hr{display:flex;gap:8px;align-items:center}
+header h1{margin:0;font-size:17px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+header .s{font-size:11.5px;opacity:.8}
+header button,header select{background:rgba(255,255,255,.16);color:#fff;border:0;border-radius:8px;padding:7px 10px;font:700 14px system-ui}
+header select option{color:#000}
+#vsel{max-width:38vw;font-size:13px}
+nav{display:flex;gap:4px;margin-top:8px;overflow-x:auto}
+nav button{flex:1;white-space:nowrap;font-weight:600;font-size:13.5px;opacity:.75}
+nav button.on{background:#fff;color:#0b2e4f;opacity:1}
+main{max-width:820px;margin:0 auto;padding:8px 10px calc(40px + env(safe-area-inset-bottom))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin:8px 0}
+h2{font-size:15px;color:var(--pri);margin:2px 0 8px}
+label{display:flex;flex-direction:column;gap:3px;font-size:12.5px;color:var(--muted)}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px;width:100%;min-width:0}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.btn{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:9px 13px;font-weight:600;cursor:pointer}
+.btn.p{background:var(--acc);border-color:var(--acc);color:#fff}.btn.d{color:var(--bad)}.btn.sm{padding:5px 9px;font-size:13.5px}
+.row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.note{font-size:12.5px;color:var(--muted)}
+.hide{display:none!important}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;text-align:center}
+.stats div{border-radius:10px;padding:6px 2px;background:var(--bg);cursor:pointer;border:2px solid transparent}
+.stats div.on{border-color:var(--acc)}
+.stats b{display:block;font-size:20px}.stats span{font-size:11px;color:var(--muted)}
+.bar{height:8px;border-radius:5px;background:var(--line);overflow:hidden;margin-top:8px}.bar i{display:block;height:100%;background:var(--ok)}
+.cat{background:var(--card);border:1px solid var(--line);border-radius:14px;margin:8px 0;overflow:hidden}
+.ch{display:flex;align-items:center;gap:8px;padding:11px 12px;cursor:pointer;font-weight:700}
+.ch .cn{flex:1}.ch .cc{font-size:12px;font-weight:600;color:var(--muted)}
+.pill{font-size:11.5px;border-radius:20px;padding:1px 7px;font-weight:700}
+.pb{background:var(--badb);color:var(--bad)}.pw{background:var(--wrnb);color:var(--wrn)}.pk{background:var(--okb);color:var(--ok)}
+.it{border-top:1px solid var(--line);padding:9px 12px}
+.it.s-y{background:linear-gradient(90deg,var(--okb) 4px,transparent 4px)}
+.it.s-n{background:linear-gradient(90deg,var(--bad) 4px,var(--badb) 4px)}
+.it.s-na{opacity:.6}
+.itop{display:flex;gap:8px;align-items:flex-start}
+.iname{flex:1;font-weight:600;font-size:14.5px;cursor:pointer}
+.iref{font-size:11.5px;color:var(--muted);font-weight:400}
+.sb{display:flex;gap:4px;flex-shrink:0}
+.sb button{border:1px solid var(--line);background:var(--card);border-radius:9px;min-width:40px;height:36px;font:700 14px system-ui;color:var(--muted);cursor:pointer}
+.sb .y.on{background:var(--ok);border-color:var(--ok);color:#fff}
+.sb .n.on{background:var(--bad);border-color:var(--bad);color:#fff}
+.sb .na.on{background:var(--na);border-color:var(--na);color:#fff}
+.exp{margin-top:8px;font-size:13.5px}
+.exp p{margin:4px 0}
+.chk{background:var(--bg);border-radius:9px;padding:7px 9px;margin:6px 0;font-size:13px}
+.dl{display:flex;gap:6px;align-items:center;margin-top:6px;flex-wrap:wrap}
+.dl input[type=date]{width:auto;padding:5px 8px;font-size:13.5px}
+.dl input.nt{flex:1;min-width:140px;padding:5px 8px;font-size:13.5px}
+.due{font-size:12px;font-weight:700;border-radius:8px;padding:2px 7px}
+.fire{font-size:12px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%);background:#132033;color:#fff;padding:9px 16px;border-radius:20px;font-size:14px;z-index:99;opacity:0;transition:.3s;pointer-events:none}
+.toast.on{opacity:1}
+.fold{border-left:4px solid var(--acc);padding-left:10px;margin:10px 0}
+.fold ol{margin:4px 0 0;padding-left:22px;font-size:13.5px}
+.fold li{margin:2px 0}
+.upd{border-top:1px solid var(--line);padding:8px 0;font-size:13.5px}
+.upd b{color:var(--acc)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips label{flex-direction:row;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--line);border-radius:20px;padding:5px 10px;font-size:13px;color:var(--ink)}
+.chips input{width:auto}
+.credit{text-align:center;font-size:11.5px;color:var(--muted);margin-top:16px}
+.legend{font-size:12px;color:var(--muted);margin-top:6px}
+@media print{header,nav,.noprint{display:none!important}body{background:#fff}}
+</style>
+</head>
+<body>
+<header>
+ <div class="hr">
+  <div style="flex:1;min-width:0"><h1 id="t_title">📋 Ship Certs Check</h1><div class="s" id="t_sub">Bulk Carrier · Certificates · Manuals · Records</div></div>
+  <select id="vsel" title="Vessel"></select>
+  <button id="lang">EN</button>
+ </div>
+ <nav>
+  <button data-tab="check" class="on" id="nb_check">✅ Έλεγχος</button>
+  <button data-tab="folders" id="nb_folders">📁 Φάκελοι</button>
+  <button data-tab="ship" id="nb_ship">🚢 Πλοίο</button>
+  <button data-tab="upd" id="nb_upd">🆕 Νέοι κανονισμοί</button>
+  <button data-tab="rep" id="nb_rep">📄 Αναφορά</button>
+ </nav>
+</header>
+<main>
+<!-- CHECK -->
+<section id="v-check">
+ <div class="card">
+  <div class="stats" id="stats"></div>
+  <div class="bar"><i id="pbar" style="width:0"></i></div>
+  <div class="row" style="margin-top:8px">
+   <input id="q" placeholder="🔎 Search / Αναζήτηση" style="flex:1">
+   <button class="btn sm" id="b_fire">🔥 PSC</button>
+   <button class="btn sm" id="b_exp">⇕</button>
+  </div>
+  <div class="legend" id="legend"></div>
+ </div>
+ <div id="list"></div>
+ <div class="card noprint">
+  <h2 id="t_add">➕ Πρόσθεσε δικό σου χαρτί</h2>
+  <div class="g2"><input id="a_n" placeholder="Name / Όνομα"><select id="a_c"></select></div>
+  <div class="row" style="margin-top:6px"><input id="a_r" placeholder="Ref (optional)" style="flex:1"><button class="btn p" id="a_go">+</button></div>
+ </div>
+</section>
+<!-- FOLDERS -->
+<section id="v-folders" class="hide">
+ <div class="card"><h2 id="t_fold">📁 Φάκελοι Πλοιάρχου – σειρά & θέση</h2><p class="note" id="t_foldn"></p>
+ <div class="row noprint"><button class="btn sm" onclick="window.print()">🖨️ Print / PDF</button></div>
+ <div id="folds"></div></div>
+</section>
+<!-- SHIP -->
+<section id="v-ship" class="hide">
+ <div class="card">
+  <h2 id="t_ship">🚢 Στοιχεία πλοίου</h2>
+  <div class="g2">
+   <label>Vessel<input id="s_name"></label><label>IMO<input id="s_imo" inputmode="numeric"></label>
+   <label id="l_flag">Flag<select id="s_flag"><option value="LR">🇱🇷 Liberia</option><option value="MH">🇲🇭 Marshall Islands</option><option value="PA">🇵🇦 Panama</option><option value="OT">Other</option></select></label>
+   <label>Class<select id="s_class"><option>ABS</option><option>BV</option><option>ClassNK</option><option>DNV</option><option>KR</option><option>LR</option><option>RINA</option><option>CCS</option><option>IRS</option><option>Other</option></select></label>
+   <label id="l_built">Built<input id="s_built" inputmode="numeric" placeholder="2012"></label><label>DWT<input id="s_dwt" inputmode="numeric"></label>
+   <label id="l_insp">Inspection date<input id="s_date" type="date"></label><label id="l_port">Port<input id="s_port"></label>
+  </div>
+  <label style="margin-top:8px" id="l_by">Inspector<input id="s_by" value="Capt. George Barbaris"></label>
+  <h2 style="margin-top:12px" id="t_prof">⚙️ Τι ισχύει για αυτό το πλοίο</h2>
+  <div class="chips" id="prof"></div>
+  <p class="note" id="t_profn"></p>
+ </div>
+ <div class="card">
+  <h2 id="t_ves">Πλοία / Επιθεωρήσεις</h2>
+  <div class="row">
+   <button class="btn p" id="v_new">+ New vessel</button>
+   <button class="btn" id="v_copy">⧉ New inspection (copy dates)</button>
+   <button class="btn d" id="v_del">🗑 Delete</button>
+  </div>
+  <div class="row" style="margin-top:8px">
+   <button class="btn" id="v_exp">⬇️ Backup (.json)</button>
+   <label class="btn" style="flex-direction:row">⬆️ Restore<input type="file" id="v_imp" accept=".json" class="hide"></label>
+   <button class="btn d" id="v_reset">↺ Clear statuses</button>
+  </div>
+ </div>
+</section>
+<!-- UPDATES -->
+<section id="v-upd" class="hide">
+ <div class="card"><h2 id="t_upd">🆕 Νέοι κανονισμοί & ημερομηνίες</h2><div id="upds"></div>
+ <p class="note" id="t_updn"></p></div>
+</section>
+<!-- REPORT -->
+<section id="v-rep" class="hide">
+ <div class="card noprint">
+  <h2 id="t_rep">📄 Αναφορά</h2>
+  <div class="row">
+   <button class="btn p" onclick="window.print()">🖨️ PDF</button>
+   <button class="btn" id="r_csv">CSV</button>
+   <button class="btn" id="r_share">📤 Text</button>
+  </div>
+  <div class="chips" style="margin-top:8px"><label><input type="checkbox" id="r_all"> <span id="t_rall">Όλα τα χαρτιά (όχι μόνο ελλείψεις)</span></label></div>
+ </div>
+ <div class="card" id="report"></div>
+</section>
+<div class="credit">Created by George Barbaris · <span id="ver"></span><br><span id="t_disc"></span></div>
+</main>
+<div class="toast" id="toast"></div>
+<script src="data.js"></script>
+<script src="data2.js"></script>
+<script>
+const VER="v1.0 · Nov 2026";
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let DB;try{DB=JSON.parse(localStorage.getItem("certs_db")||"null")}catch(e){}
+if(!DB||!DB.v){DB={lang:"el",cur:null,v:{}}}
+const save=()=>{try{localStorage.setItem("certs_db",JSON.stringify(DB))}catch(e){toast("Storage full")}};
+const uid=()=>Math.random().toString(36).slice(2,9);
+function newVessel(name){const id=uid(),p={};PROFILE.forEach(x=>p[x[0]]=!!x[3]);
+ DB.v[id]={id,name:name||"NEW VESSEL",imo:"",flag:"LR",cls:"",built:"",dwt:"",date:new Date().toISOString().slice(0,10),port:"",by:"Capt. George Barbaris",prof:p,st:{},custom:[]};DB.cur=id;save();return DB.v[id];}
+if(!DB.cur||!DB.v[DB.cur]){const ks=Object.keys(DB.v);if(ks.length)DB.cur=ks[0];else newVessel("MV ");}
+const V=()=>DB.v[DB.cur];
+let L=DB.lang||"el";const T=(en,el)=>L==="en"?en:el;
+let F={f:"all",q:"",fire:false,open:{}};
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("on"),1800);}
+
+/* ---------- items for current vessel ---------- */
+function items(){const v=V(),p=v.prof||{};let a=ITEMS.filter(i=>!i.w||p[i.w]);
+ const fl=(FLAGS[v.flag]||{}).items||[];a=a.concat(fl.map(x=>Object.assign({c:"flag"},x)));
+ a=a.concat((v.custom||[]).map(x=>Object.assign({cu:1},x)));return a;}
+function cats(){const v=V();const c=CATS.slice();if((FLAGS[v.flag]||{}).items)c.splice(1,0,["flag",FLAGS[v.flag].ic,"Flag State – "+FLAGS[v.flag].name,"Σημαία – "+FLAGS[v.flag].name]);return c;}
+function dueInfo(d){if(!d)return null;const days=Math.floor((new Date(d)-new Date(new Date().toISOString().slice(0,10)))/864e5);
+ if(days<0)return{c:"pb",t:T("EXPIRED ","ΕΛΗΞΕ ")+(-days)+T("d","μ"),k:2,days};
+ if(days<=30)return{c:"pb",t:days+T(" days"," ημέρες"),k:2,days};
+ if(days<=90)return{c:"pw",t:days+T(" days"," ημέρες"),k:1,days};
+ return{c:"pk",t:Math.round(days/30.4)+T(" mo"," μήν."),k:0,days};}
+function stOf(id){return V().st[id]||{};}
+function counts(list){let y=0,n=0,na=0,o=0,e=0;list.forEach(i=>{const s=stOf(i.id);if(s.s==="y")y++;else if(s.s==="n")n++;else if(s.s==="na")na++;else o++;const d=dueInfo(s.d);if(d&&d.k>=1&&s.s!=="na")e++;});return{y,n,na,o,e,t:list.length};}
+
+/* ---------- render check ---------- */
+function render(){const v=V(),all=items(),cs=counts(all);
+ $("#t_title").textContent="📋 "+(v.name||"Ship Certs Check");
+ $("#t_sub").textContent=[v.imo&&("IMO "+v.imo),(FLAGS[v.flag]||{}).name,v.cls,v.date].filter(Boolean).join(" · ")||"Bulk Carrier";
+ const st=[["all",cs.t,T("All","Όλα")],["o",cs.o,T("Open","Ανοιχτά")],["y",cs.y,"✓ "+T("OK","OK")],["n",cs.n,"✗ "+T("Missing","Λείπει")],["e",cs.e,"⚠ "+T("Expiring","Λήγει")]];
+ $("#stats").innerHTML=st.map(s=>`<div data-f="${s[0]}" class="${F.f===s[0]?"on":""}"><b style="color:${s[0]==="n"?"var(--bad)":s[0]==="e"?"var(--wrn)":s[0]==="y"?"var(--ok)":"inherit"}">${s[1]}</b><span>${s[2]}</span></div>`).join("");
+ $("#pbar").style.width=((cs.y+cs.na)/Math.max(1,cs.t)*100)+"%";
+ $("#b_fire").classList.toggle("p",F.fire);
+ const q=F.q.toLowerCase();
+ let h="";cats().forEach(c=>{let li=all.filter(i=>i.c===c[0]);
+  li=li.filter(i=>{const s=stOf(i.id),d=dueInfo(s.d);
+   if(F.fire&&!i.f)return false;
+   if(F.f==="o"&&s.s)return false;if(F.f==="y"&&s.s!=="y")return false;if(F.f==="n"&&s.s!=="n")return false;
+   if(F.f==="e"&&!(d&&d.k>=1&&s.s!=="na"))return false;
+   if(q&&!(i.n+" "+(i.r||"")+" "+(i.e||"")+" "+(i.g||"")).toLowerCase().includes(q))return false;return true;});
+  if(!li.length)return;const cc=counts(all.filter(i=>i.c===c[0]));
+  const open=F.open[c[0]]||q||F.f!=="all"||F.fire;
+  h+=`<div class="cat"><div class="ch" data-c="${c[0]}"><span>${c[1]}</span><span class="cn">${esc(T(c[2],c[3]))}</span>${cc.n?`<span class="pill pb">✗${cc.n}</span>`:""}${cc.e?`<span class="pill pw">⚠${cc.e}</span>`:""}<span class="cc">${cc.y+cc.na}/${cc.t}</span><span>${open?"▾":"▸"}</span></div>`;
+  if(open)h+=li.map(itemHTML).join("");h+="</div>";});
+ $("#list").innerHTML=h||`<div class="card note">${T("Nothing here.","Τίποτα εδώ.")}</div>`;
+ $("#legend").innerHTML=T("✓ on board & valid · ✗ missing / expired / wrong · N/A not applicable · tap the name for explanation · 🔥 frequent PSC/RightShip finding","✓ υπάρχει & ισχύει · ✗ λείπει / έληξε / λάθος · N/A δεν ισχύει · πάτα το όνομα για εξήγηση · 🔥 συχνό PSC/RightShip finding");}
+function itemHTML(i){const s=stOf(i.id),d=dueInfo(s.d),ex=F.open["i_"+i.id];
+ const desc=L==="en"?(i.e||i.g):(i.g||i.e),chk=L==="en"?(i.k||i.kg):(i.kg||i.k);
+ return `<div class="it ${s.s?"s-"+s.s:""}" data-id="${i.id}"><div class="itop"><div class="iname" data-x="${i.id}">${i.f?'<span class="fire">🔥</span> ':""}${esc(i.n)}${i.cu?" ✎":""}<div class="iref">${esc(i.r||"")}${i.v?" · ⏱ "+esc(i.v):""}</div></div>
+ <div class="sb"><button class="y ${s.s==="y"?"on":""}" data-s="y">✓</button><button class="n ${s.s==="n"?"on":""}" data-s="n">✗</button><button class="na ${s.s==="na"?"on":""}" data-s="na">N/A</button></div></div>
+ ${d&&s.s!=="na"?`<div style="margin-top:4px"><span class="due ${d.c}">⏱ ${d.t} · ${s.d}</span></div>`:""}
+ ${ex?`<div class="exp">${desc?`<p>${esc(desc)}</p>`:""}${chk?`<div class="chk">🔎 <b>${T("Check","Έλεγξε")}:</b> ${esc(chk)}</div>`:""}
+ <div class="dl"><span class="note">${T("Expiry / next due","Λήξη / επόμενο")}</span><input type="date" data-d value="${s.d||""}"><input class="nt" data-nt placeholder="${T("Note (e.g. cert no., what is missing)","Σημείωση (π.χ. αρ. cert, τι λείπει)")}" value="${esc(s.nt||"")}">${i.cu?`<button class="btn sm d" data-del>🗑</button>`:""}</div></div>`:""}</div>`;}
+$("#list").addEventListener("click",e=>{const ch=e.target.closest(".ch");if(ch){F.open[ch.dataset.c]=!F.open[ch.dataset.c];render();return;}
+ const it=e.target.closest(".it");if(!it)return;const id=it.dataset.id,v=V();
+ const b=e.target.closest("[data-s]");if(b){const s=v.st[id]=v.st[id]||{};s.s=s.s===b.dataset.s?"":b.dataset.s;s.t=Date.now();save();render();return;}
+ if(e.target.closest("[data-del]")){if(confirm(T("Delete this item?","Διαγραφή;"))){v.custom=v.custom.filter(x=>x.id!==id);save();render();}return;}
+ if(e.target.closest("[data-x]")){F.open["i_"+id]=!F.open["i_"+id];render();}});
+$("#list").addEventListener("change",e=>{const it=e.target.closest(".it");if(!it)return;const v=V(),id=it.dataset.id,s=v.st[id]=v.st[id]||{};
+ if(e.target.matches("[data-d]"))s.d=e.target.value;if(e.target.matches("[data-nt]"))s.nt=e.target.value;save();render();});
+$("#stats").onclick=e=>{const d=e.target.closest("[data-f]");if(d){F.f=d.dataset.f;render();}};
+$("#q").oninput=e=>{F.q=e.target.value;render();};
+$("#b_fire").onclick=()=>{F.fire=!F.fire;render();};
+$("#b_exp").onclick=()=>{const any=cats().some(c=>F.open[c[0]]);cats().forEach(c=>F.open[c[0]]=!any);render();};
+$("#a_go").onclick=()=>{const n=$("#a_n").value.trim();if(!n)return;const v=V();v.custom=v.custom||[];v.custom.push({id:"cu_"+uid(),c:$("#a_c").value,n,r:$("#a_r").value.trim(),e:"",g:""});$("#a_n").value="";$("#a_r").value="";save();render();toast("✓");};
+
+/* ---------- folders ---------- */
+function renderFolders(){const all=items();let h="",k=0;
+ FOLDERS.forEach(f=>{const li=all.filter(i=>(i.fo||catFolder(i.c))===f.id);if(!li.length)return;k++;
+  h+=`<div class="fold"><b>${esc(T(f.en,f.el))}</b><div class="note">📍 ${esc(T(f.locE,f.locG))}</div><ol>${li.map(i=>{const s=stOf(i.id);return `<li>${s.s==="y"?"✓ ":s.s==="n"?"✗ ":""}${esc(i.n)}${s.d?` <span class="note">(${s.d})</span>`:""}</li>`}).join("")}</ol></div>`;});
+ $("#folds").innerHTML=h;}
+function catFolder(c){return (FOLDERS.find(f=>f.cats&&f.cats.includes(c))||FOLDERS[FOLDERS.length-1]).id;}
+
+/* ---------- ship ---------- */
+function renderShip(){const v=V();$("#s_name").value=v.name;$("#s_imo").value=v.imo;$("#s_flag").value=v.flag;$("#s_class").value=v.cls||"Other";$("#s_built").value=v.built;$("#s_dwt").value=v.dwt;$("#s_date").value=v.date;$("#s_port").value=v.port;$("#s_by").value=v.by;
+ $("#prof").innerHTML=PROFILE.map(p=>`<label><input type="checkbox" data-p="${p[0]}" ${v.prof[p[0]]?"checked":""}> ${esc(T(p[1],p[2]))}</label>`).join("");}
+["name","imo","flag","built","dwt","date","port","by"].forEach(k=>$("#s_"+k).addEventListener("change",e=>{V()[k]=e.target.value;save();fillVsel();render();}));
+$("#s_class").onchange=e=>{V().cls=e.target.value;save();render();};
+$("#prof").onchange=e=>{const p=e.target.dataset.p;if(p){V().prof[p]=e.target.checked;save();render();}};
+function fillVsel(){$("#vsel").innerHTML=Object.values(DB.v).map(v=>`<option value="${v.id}" ${v.id===DB.cur?"selected":""}>${esc(v.name)} ${esc(v.date||"")}</option>`).join("");}
+$("#vsel").onchange=e=>{DB.cur=e.target.value;save();renderAll();};
+$("#v_new").onclick=()=>{const n=prompt(T("Vessel name","Όνομα πλοίου"),"MV ");if(n){newVessel(n.toUpperCase());renderAll();setTab("ship");}};
+$("#v_copy").onclick=()=>{const o=V(),c=JSON.parse(JSON.stringify(o));c.id=uid();c.date=new Date().toISOString().slice(0,10);Object.values(c.st).forEach(s=>{s.s="";});DB.v[c.id]=c;DB.cur=c.id;save();renderAll();toast(T("New inspection – dates kept","Νέα επιθεώρηση – κρατήθηκαν οι λήξεις"));};
+$("#v_del").onclick=()=>{if(!confirm(T("Delete this vessel/inspection?","Διαγραφή πλοίου/επιθεώρησης;")))return;delete DB.v[DB.cur];DB.cur=Object.keys(DB.v)[0]||null;if(!DB.cur)newVessel("MV ");save();renderAll();};
+$("#v_reset").onclick=()=>{if(!confirm(T("Clear all ✓/✗ (dates kept)?","Καθαρισμός όλων των ✓/✗ (κρατά ημερομηνίες);")))return;Object.values(V().st).forEach(s=>s.s="");save();renderAll();};
+$("#v_exp").onclick=()=>{const b=new Blob([JSON.stringify({kind:"certs",db:DB},null,1)],{type:"application/json"});dl(b,"certs_backup_"+new Date().toISOString().slice(0,10)+".json");};
+$("#v_imp").onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{const j=JSON.parse(t);if(j.kind!=="certs")throw 0;Object.assign(DB.v,j.db.v);save();renderAll();toast("✓ Restored");}).catch(()=>toast("Wrong file"));};
+function dl(b,n){const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=n;document.body.appendChild(a);a.click();setTimeout(()=>a.remove(),500);}
+
+/* ---------- updates ---------- */
+function renderUpd(){$("#upds").innerHTML=UPDATES.slice().sort((a,b)=>a[0]<b[0]?-1:1).map(u=>{const past=u[0]<=new Date().toISOString().slice(0,10);return `<div class="upd"><b>${u[0]}</b> ${past?"✅":"⏳"}<br>${esc(T(u[1],u[2]))}</div>`}).join("");}
+
+/* ---------- report ---------- */
+function repRows(){const all=items(),cl=cats();return all.map(i=>{const s=stOf(i.id),d=dueInfo(s.d);return{i,s,d,cat:(cl.find(c=>c[0]===i.c)||[,"",""])[2]};});}
+function renderRep(){const v=V(),rows=repRows(),cs=counts(items()),showAll=$("#r_all").checked;
+ const miss=rows.filter(r=>r.s.s==="n"),exp=rows.filter(r=>r.d&&r.d.k>=1&&r.s.s!=="na"),open=rows.filter(r=>!r.s.s);
+ const tb=(list,title)=>list.length?`<h2>${title} (${list.length})</h2><table style="width:100%;border-collapse:collapse;font-size:12.5px">${list.map((r,k)=>`<tr style="border-top:1px solid var(--line)"><td style="padding:4px;width:22px">${k+1}</td><td style="padding:4px"><b>${esc(r.i.n)}</b><br><span class="note">${esc(r.i.r||"")}</span>${r.s.nt?`<br>📝 ${esc(r.s.nt)}`:""}</td><td style="padding:4px;white-space:nowrap">${r.s.d?esc(r.s.d):""}${r.d?`<br><span class="due ${r.d.c}">${r.d.t}</span>`:""}</td></tr>`).join("")}</table>`:"";
+ $("#report").innerHTML=`<h2>📋 ${T("Certificates & Documents Check","Έλεγχος Πιστοποιητικών & Εγγράφων")}</h2>
+ <div style="font-size:13px">${esc(v.name)} · IMO ${esc(v.imo)} · ${esc((FLAGS[v.flag]||{}).name||"")} · ${esc(v.cls||"")}<br>${T("Date","Ημερομηνία")}: ${esc(v.date)} · ${T("Port","Λιμάνι")}: ${esc(v.port)} · ${T("By","Από")}: ${esc(v.by)}</div>
+ <p style="font-size:13px">${T("Checked","Ελέγχθηκαν")}: ${cs.t-cs.o}/${cs.t} · ✓ ${cs.y} · ✗ ${cs.n} · N/A ${cs.na} · ⚠ ${cs.e}</p>
+ ${tb(miss,"✗ "+T("Missing / not in order","Λείπουν / όχι σε τάξη"))}${tb(exp,"⚠ "+T("Expiring ≤ 90 days / expired","Λήγουν ≤ 90 ημέρες / ληγμένα"))}${tb(open,"○ "+T("Not yet checked","Δεν ελέγχθηκαν"))}
+ ${showAll?tb(rows.filter(r=>r.s.s==="y"||r.s.s==="na"),"✓ "+T("In order / N/A","Σε τάξη / N/A")):""}
+ <p class="note">Created by George Barbaris · Ship Certs Check ${VER}</p>`;}
+$("#r_all").onchange=renderRep;
+$("#r_csv").onclick=()=>{const v=V(),rows=repRows();const q=x=>'"'+String(x??"").replace(/"/g,'""')+'"';
+ const csv=["Vessel,IMO,Category,Item,Reference,Status,Expiry,Note"].concat(rows.map(r=>[v.name,v.imo,r.cat,r.i.n,r.i.r,({y:"OK",n:"MISSING",na:"N/A"})[r.s.s]||"Open",r.s.d||"",r.s.nt||""].map(q).join(","))).join("\n");
+ dl(new Blob(["﻿"+csv],{type:"text/csv"}),(v.name||"vessel").replace(/\W+/g,"_")+"_certs.csv");};
+$("#r_share").onclick=()=>{const v=V(),rows=repRows();const m=rows.filter(r=>r.s.s==="n"),e=rows.filter(r=>r.d&&r.d.k>=1&&r.s.s!=="na");
+ const txt=`${v.name} – Certificates check ${v.date}\n\nMISSING / NOT IN ORDER (${m.length}):\n`+m.map((r,k)=>`${k+1}. ${r.i.n}${r.s.nt?" – "+r.s.nt:""}`).join("\n")+`\n\nEXPIRING ≤90 DAYS (${e.length}):\n`+e.map((r,k)=>`${k+1}. ${r.i.n} – ${r.s.d}`).join("\n")+"\n\nCapt. George Barbaris\nMarine Superintendent, Samios Shipping";
+ if(navigator.share)navigator.share({text:txt}).catch(()=>{});else navigator.clipboard.writeText(txt).then(()=>toast("Copied"));};
+
+/* ---------- tabs & lang ---------- */
+function setTab(t){document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.tab===t));["check","folders","ship","upd","rep"].forEach(x=>$("#v-"+x).classList.toggle("hide",x!==t));
+ if(t==="folders")renderFolders();if(t==="ship")renderShip();if(t==="upd")renderUpd();if(t==="rep")renderRep();window.scrollTo(0,0);}
+document.querySelector("nav").onclick=e=>{const b=e.target.closest("button");if(b)setTab(b.dataset.tab);};
+function texts(){$("#lang").textContent=L==="en"?"ΕΛ":"EN";document.documentElement.lang=L;
+ const m={nb_check:["✅ Check","✅ Έλεγχος"],nb_folders:["📁 Folders","📁 Φάκελοι"],nb_ship:["🚢 Ship","🚢 Πλοίο"],nb_upd:["🆕 New rules","🆕 Νέοι κανονισμοί"],nb_rep:["📄 Report","📄 Αναφορά"],
+ t_add:["➕ Add your own document","➕ Πρόσθεσε δικό σου χαρτί"],t_fold:["📁 Master's files – order & location","📁 Φάκελοι Πλοιάρχου – σειρά & θέση"],
+ t_foldn:["Suggested folder set-up. Items follow the order of the folder; ✓/✗ from your check. Print it and put it as index in each folder.","Προτεινόμενο στήσιμο φακέλων. Τα χαρτιά με τη σειρά του φακέλου· ✓/✗ από τον έλεγχό σου. Τύπωσέ το και βάλ' το ευρετήριο σε κάθε φάκελο."],
+ t_ship:["🚢 Vessel particulars","🚢 Στοιχεία πλοίου"],t_prof:["⚙️ What applies to this ship","⚙️ Τι ισχύει για αυτό το πλοίο"],t_profn:["Ticks hide/show the items that depend on equipment or trading area. The flag adds its own flag-State documents.","Τα τικ κρύβουν/δείχνουν χαρτιά που εξαρτώνται από εξοπλισμό ή περιοχή. Η σημαία προσθέτει τα δικά της έγγραφα."],
+ t_ves:["Vessels / inspections","Πλοία / Επιθεωρήσεις"],t_upd:["🆕 New rules & dates","🆕 Νέοι κανονισμοί & ημερομηνίες"],t_updn:["✅ in force · ⏳ coming. Always confirm with latest flag circulars and class technical news.","✅ σε ισχύ · ⏳ έρχεται. Επιβεβαίωνε πάντα με τις τελευταίες εγκυκλίους σημαίας και class."],
+ t_rep:["📄 Report","📄 Αναφορά"],t_rall:["All documents (not only findings)","Όλα τα χαρτιά (όχι μόνο ελλείψεις)"],
+ t_disc:["Guidance tool – always verify with flag, class and company SMS.","Βοηθητικό εργαλείο – επιβεβαίωνε πάντα με σημαία, class και SMS εταιρείας."],
+ l_built:["Built","Έτος ναυπήγησης"],l_insp:["Inspection date","Ημερομηνία επιθεώρησης"],l_port:["Port","Λιμάνι"],l_by:["Inspector","Επιθεωρητής"],l_flag:["Flag","Σημαία"]};
+ Object.entries(m).forEach(([id,v])=>{const el=$("#"+id);if(!el)return;const t=T(v[0],v[1]);if(el.tagName==="LABEL")el.firstChild.textContent=t;else el.textContent=t;});
+ $("#a_c").innerHTML=cats().map(c=>`<option value="${c[0]}">${c[1]} ${esc(T(c[2],c[3]))}</option>`).join("");
+ $("#ver").textContent=VER;}
+$("#lang").onclick=()=>{L=L==="en"?"el":"en";DB.lang=L;save();renderAll();};
+function renderAll(){texts();fillVsel();render();const t=document.querySelector("nav .on").dataset.tab;if(t!=="check")setTab(t);}
+renderAll();
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>
