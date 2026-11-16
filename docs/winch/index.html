@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="el"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Winch Calculator · Overland’s Habit</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Winch Calc">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#1f1e1d">
+<script src="../crawl/data.js"></script>
+<script src="../crawl/vehicles2.js"></script>
+<script src="../crawl/extra.js"></script>
+<script src="guide.js"></script>
+<style>
+:root{--bg:#1a1918;--card:#262422;--line:#3d3935;--tx:#f5f0e8;--mut:#a8a29e;--red:#d9534f;--org:#d97757;--grn:#5f9e7a;--yel:#e8b86d;--blu:#6a9fb5}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--tx);font-family:-apple-system,system-ui,"Segoe UI",Roboto,Arial,sans-serif;font-size:18px;line-height:1.45}
+header{position:sticky;top:0;z-index:5;background:#1f1e1d;display:flex;align-items:center;gap:10px;padding:calc(env(safe-area-inset-top) + 10px) 12px 8px;border-bottom:1px solid var(--line)}
+header img{width:44px;height:44px;border-radius:10px}
+.tw{flex:1;min-width:0}header h1{font-size:1.08em;margin:0;white-space:nowrap}
+#tag{font-size:.72em;color:#c96442;font-style:italic;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hb{background:var(--card);color:var(--tx);border:1px solid var(--line);border-radius:12px;min-width:48px;height:44px;font-size:.9em;font-weight:800}
+main{padding:12px 12px calc(env(safe-area-inset-bottom) + 40px);max-width:760px;margin:0 auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin:0 0 14px}
+.card h2{font-size:1.05em;margin:0 0 10px;color:var(--org)}
+.card h2 b{display:inline-block;background:var(--org);color:#1a1918;border-radius:50%;width:1.6em;height:1.6em;text-align:center;line-height:1.6em;margin-right:6px;font-size:.85em}
+label{display:block;font-size:.78em;color:var(--mut);margin:0 0 3px}
+input,select{width:100%;font-size:1.05em;padding:11px 10px;border-radius:12px;border:1px solid var(--line);background:#1a1918;color:var(--tx);font-family:inherit}
+input[type=range]{padding:0;height:34px;accent-color:var(--org);background:transparent;border:0}
+input:focus,select:focus{outline:2px solid var(--org);border-color:transparent}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.note{font-size:.8em;color:var(--mut);margin:8px 0 0}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px}
+.chip{background:#1a1918;color:var(--tx);border:1px solid var(--line);border-radius:999px;padding:9px 14px;font-size:.92em;font-weight:700;font-family:inherit}
+.chip small{display:block;font-size:.68em;font-weight:600;opacity:.85}
+.chip.on{background:var(--org);border-color:var(--org);color:#1a1918}
+.btn{border:0;border-radius:12px;padding:12px 14px;font-size:.95em;font-weight:800;background:var(--blu);color:#fff;font-family:inherit}
+.btn.g{background:var(--grn)}.btn.r{background:#4a2b2a;color:#f3b9b7}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.big3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center}
+.kpi{background:#1a1918;border:1px solid var(--line);border-radius:14px;padding:10px 4px}
+.kpi .v{font-size:1.45em;font-weight:900;line-height:1.1}.kpi .l{font-size:.68em;color:var(--mut);margin-top:3px}
+.verdict{margin-top:10px;padding:10px 12px;border-radius:12px;background:#1a1918;border-left:5px solid var(--org);font-size:.92em}
+.opt{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}
+.opt:last-child{border-bottom:0}.opt .t{font-size:.9em}.opt .t small{display:block;color:var(--mut);font-size:.8em}
+.opt .n{font-size:1.15em;font-weight:900;color:var(--yel);text-align:right;white-space:nowrap}.opt .n small{display:block;font-size:.55em;color:var(--mut);font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:.86em}
+th{color:var(--mut);font-weight:600;font-size:.78em;text-align:right;padding:6px 4px}th:first-child,td:first-child{text-align:left}
+td{padding:9px 4px;border-top:1px solid var(--line);text-align:right;font-weight:700;vertical-align:top}
+td .lim{display:block;font-size:.72em;font-weight:500;color:var(--mut)}
+table.cmp td,table.cmp th{text-align:left;font-weight:500;font-size:.92em}table.cmp td:first-child{font-weight:800;color:var(--mut)}
+.bar{height:8px;border-radius:4px;background:#1a1918;margin-top:4px;overflow:hidden}.bar i{display:block;height:100%;background:var(--grn)}
+details{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:0 14px;margin:0 0 14px}
+#howto{border-color:var(--org)}
+summary{padding:14px 0;font-weight:800;color:var(--org);list-style:none;cursor:pointer}summary::-webkit-details-marker{display:none}
+summary:after{content:"＋";float:right;color:var(--mut)}details[open] summary:after{content:"－"}
+details .in{padding:0 0 14px;font-size:.93em}details p{margin:0 0 10px}
+details h4{margin:14px 0 6px;font-size:.98em;color:var(--yel)}details ul,details ol{margin:0 0 8px;padding-left:22px}details li{margin:0 0 6px}
+.s10{background:#2f2a24;border-radius:12px;padding:10px 12px;margin:0 0 10px;border-left:5px solid var(--yel)}
+.good{color:#8fd1a8}.bad{color:#f08a86}.warn{color:var(--yel)}
+.ck{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px dashed var(--line);font-size:.95em;color:var(--tx)}
+.ck input{width:24px;height:24px;flex:none;margin-top:1px;accent-color:var(--grn)}.ck.done span{color:var(--mut);text-decoration:line-through}
+svg.rig{width:100%;height:auto;display:block;margin:4px 0 2px}
+.rg{background:#1a1918;border:1px solid var(--line);border-radius:14px;padding:8px 10px;margin:0 0 10px}
+.rg.best{border-color:var(--grn);box-shadow:0 0 0 1px var(--grn) inset}
+.rg h3{margin:0;font-size:.95em;display:flex;justify-content:space-between;gap:8px}
+.rg .st{font-size:.85em;font-weight:900;white-space:nowrap}
+.rg .nums{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;font-size:.78em;color:var(--mut);margin-top:4px}.rg .nums b{display:block;color:var(--tx);font-size:1.15em}
+.slv{display:flex;justify-content:space-between;align-items:baseline;font-size:.9em}.slv b{font-size:1.25em;color:var(--yel)}
+footer{text-align:center;color:var(--mut);font-size:.75em;padding:8px 0 20px}
+footer b{color:var(--org)}
+</style></head>
+<body>
+<header><img src="icon-192.png" alt=""><div class="tw"><h1>Winch Calculator</h1><div id="tag">Overland’s Habit · Adventure is a Habit…</div></div><button class="hb" id="lang"></button></header>
+<main id="app"></main>
+<script>
+/* Overland's Habit · Winch Calculator · Created by George Barbaris */
+let LANG=localStorage.getItem('winch_lang')||((navigator.language||'el').startsWith('el')?'el':'en');
+const L=(el,en)=>LANG==='el'?el:en;
+const LB=2.20462, ETA=0.92; /* απόδοση ανά τροχαλία ≈ 92% (5–10% απώλεια) */
+const LAY=[1,0.85,0.73,0.65,0.58]; /* Warn: 8.000 → 6.777 → 5.878 → 5.189 lb (~15% ανά στρώση) */
+const SIZES=[8000,8500,9000,9500,10000,12000,12500,13000,15000,16500,17500];
+/* Αντίσταση εδάφους (ground condition): βάρος ÷ GC */
+const SURF={road:{k:1/25,el:'🛣 Άσφαλτος / σκληρό',en:'🛣 Tarmac / hard'},grass:{k:1/7,el:'🌱 Γρασίδι',en:'🌱 Grass'},
+ wsand:{k:1/6,el:'🏖 Σκληρή βρεγμένη άμμος',en:'🏖 Hard wet sand'},gravel:{k:1/5,el:'🪨 Χαλίκι / μαλακή βρεγμένη άμμος',en:'🪨 Gravel / soft wet sand'},
+ dsand:{k:1/4,el:'🏜 Χαλαρή ξερή άμμος',en:'🏜 Loose dry sand'},snow:{k:1/4,est:1,el:'❄️ Χιόνι (εκτίμηση)',en:'❄️ Snow (estimate)'},
+ shingle:{k:1/3,el:'⚪ Βότσαλο / χαλίκι ποταμού',en:'⚪ Shingle / river stones'},mud:{k:1/2,el:'🟤 Λάσπη / πηλός',en:'🟤 Mud / clay'}};
+/* Βύθιση (mire): αντικαθιστά την αντίσταση εδάφους αν είναι μεγαλύτερη */
+const BOG=[{k:0,el:'Δεν βούλιαξε',en:'Not bogged'},{k:1,el:'Ως τη μέση της ρόδας',en:'To the wheel hubs'},{k:2,el:'Πάνω από τις ρόδες / φτερά',en:'Above wheels / to fenders'},{k:3,el:'Ως το σώμα / κάθεται στη λάσπη',en:'To the body / sitting in mud'}];
+const SHK=[['1/2″',2],['5/8″',3.25],['3/4″',4.75],['7/8″',6.5],['1″',8.5],['1 1/8″',9.5]];
+const DEF={vid:'',kg:2850,gvw:2850,lb:9500,rope:'syn',layer:2,surf:'mud',bog:1,deg:0,dist:20,rlen:28,ang:30,side:0};
+let S={};try{S=JSON.parse(localStorage.getItem('winch_state')||'{}')}catch(e){}
+let MY=[];try{MY=JSON.parse(localStorage.getItem('winch_my')||'[]')}catch(e){}
+let CK={};try{CK=JSON.parse(localStorage.getItem('winch_chk')||'{}')}catch(e){}
+S=Object.assign({},DEF,S);
+const save=()=>{try{localStorage.setItem('winch_state',JSON.stringify(S))}catch(e){}};
+/* Λίστα οχημάτων: κοινή με το Crawl Calculator (μεγαλώνει μαζί) */
+const DB=(()=>{const o=[],seen={};const add=(id,name,kg,curb)=>{if(!kg||seen[id])return;seen[id]=1;o.push({id,name,kg:+kg,curb:curb?+curb:0});};
+ (typeof EXTRA!=='undefined'?EXTRA:[]).forEach(v=>add(v.id,v.name,v.kg,v.curb));
+ (typeof VEH2!=='undefined'?VEH2:[]).forEach(v=>add(v.id,v.name,v.kg,v.curb));
+ (typeof VEH!=='undefined'?VEH:[]).forEach(v=>add(v.id,v.name.replace(/\b([A-Z]{2,})\b/g,w=>w[0]+w.slice(1).toLowerCase()),v.gvw,v.curb));
+ return o.sort((a,b)=>a.name.localeCompare(b.name));})();
+if(!S.vid){const lc=DB.find(v=>/Land Cruiser 120 3\.0/i.test(v.name));if(lc){S.vid=lc.id;S.kg=S.gvw=lc.kg;}}
+const allV=()=>[...MY,...DB];
+const num=x=>{const v=parseFloat(String(x).replace(',','.'));return isFinite(v)?v:NaN};
+const f=(x,d=0)=>isFinite(x)?x.toLocaleString(LANG==='el'?'el-GR':'en-GB',{minimumFractionDigits:d,maximumFractionDigits:d}):'–';
+const kgS=x=>`${f(x)} kg`, lbS=x=>`${f(Math.round(x*LB/10)*10)} lb`, tS=x=>`${f(x/1000,x<1000?2:1)} t`, kN=x=>`${f(x*9.81/1000,1)} kN`;
+const all3=x=>`<b>${kgS(x)}</b> · ${lbS(x)} · ${tS(x)} · ${kN(x)}`;
+const pickSize=kg=>SIZES.find(s=>s/LB>=kg-0.5)||null;
+const svgCar=y=>`<rect x="6" y="${y-18}" width="64" height="36" rx="7" fill="#3d3935"/><rect x="18" y="${y-28}" width="34" height="14" rx="4" fill="#3d3935"/><circle cx="20" cy="${y+18}" r="7" fill="#1a1918" stroke="#a8a29e"/><circle cx="56" cy="${y+18}" r="7" fill="#1a1918" stroke="#a8a29e"/><rect x="66" y="${y-6}" width="8" height="10" rx="2" fill="#d97757"/>`;
+const svgTree=`<rect x="292" y="20" width="10" height="60" fill="#7a5a3a"/><circle cx="297" cy="20" r="16" fill="#5f9e7a"/>`;
+const blk=(x,y)=>`<circle cx="${x}" cy="${y}" r="7" fill="#1a1918" stroke="#e8b86d" stroke-width="3"/>`;
+const ln=(x1,y1,x2,y2)=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#e8b86d" stroke-width="2.5"/>`;
+function rigSvg(n){let s=`<svg class="rig" viewBox="0 0 320 92">${svgCar(50)}${svgTree}`;
+ if(n===1)s+=ln(74,49,290,49);
+ if(n===2)s+=ln(74,46,282,46)+ln(282,58,74,58)+blk(285,52)+`<circle cx="74" cy="58" r="3" fill="#d97757"/>`;
+ if(n===3)s+=ln(74,40,282,40)+ln(282,52,86,52)+ln(86,64,290,64)+blk(285,46)+blk(84,58);
+ return s+'</svg>';}
+function render(){
+ document.documentElement.lang=LANG;document.getElementById('lang').textContent=LANG==='el'?'EN':'ΕΛ';
+ const opt=v=>`<option value="${v.id}"${v.id===S.vid?' selected':''}>${v.name}</option>`;
+ const lbNow=num(S.lb);
+ document.getElementById('app').innerHTML=`
+<details${localStorage.getItem('winch_seen')?'':' open'} id="howto"><summary>📖 ${L('Πώς τη χρησιμοποιώ; (1 λεπτό)','How do I use it? (1 minute)')}</summary><div class="in">
+ <div class="s10">${L('<b>Με δύο λόγια:</b> διαλέγεις αυτοκίνητο, λες τι εργάτη έχεις και πού κόλλησες. Η εφαρμογή σού λέει πόση δύναμη χρειάζεται, αν φτάνει ο εργάτης σου, αν θέλεις τροχαλία, πόσο φορτώνεται η άγκυρα και τι κλειδιά (shackles) και ιμάντες πρέπει να έχεις.','<b>In short:</b> pick your vehicle, tell it which winch you have and where you are stuck. The app tells you how much pull is needed, whether your winch is enough, whether you need a snatch block, how much load the anchor takes and which shackles and straps you need.')}</div>
+ <p><b>1.</b> ${L('<b>Αυτοκίνητο:</b> διάλεξέ το ή γράψε το βάρος του. Βάλε το βάρος όπως είναι <b>τώρα</b>, φορτωμένο.','<b>Vehicle:</b> pick it or type its weight. Use the weight <b>as it is now</b>, loaded.')}</p>
+ <p><b>2.</b> ${L('<b>Εργάτης:</b> πόσες λίμπρες (lb) γράφει πάνω του, σύρμα ή συνθετικό. Αν δεν έχεις ακόμα, η εφαρμογή σου λέει τι να πάρεις.','<b>Winch:</b> the lb rating written on it, steel or synthetic. If you do not have one yet, the app tells you what to buy.')}</p>
+ <p><b>3.</b> ${L('<b>Πού κόλλησες:</b> έδαφος, πόσο βούλιαξε, ανηφόρα.','<b>Where you are stuck:</b> surface, how deep it sank, slope.')}</p>
+ <p><b>4.</b> ${L('<b>Αποτέλεσμα:</b> μονή, διπλή ή τριπλή γραμμή με τροχαλία. Η πράσινη κάρτα είναι η πρότασή μας.','<b>Result:</b> single, double or triple line with a snatch block. The green card is our suggestion.')}</p>
+ <p><b>5.</b> ${L('Από κάτω: <b>κιτ</b>, <b>αγκύρωση</b> (και χωρίς δέντρο), <b>τεχνικές</b>, <b>σύρμα/συνθετικό</b>, <b>συντήρηση</b>.','Below: <b>kit</b>, <b>anchoring</b> (even without a tree), <b>techniques</b>, <b>steel/synthetic</b>, <b>maintenance</b>.')}</p>
+ <p class="note">${L('Όλα τα νούμερα είναι θεωρητικά και ενδεικτικά. Η πραγματική έλξη αλλάζει με το έδαφος. Πάντα με περιθώριο ασφαλείας.','All figures are theoretical and indicative. Real pull changes with the ground. Always keep a safety margin.')}</p>
+ <button class="btn" style="width:100%" onclick="localStorage.setItem('winch_seen','1');document.getElementById('howto').open=false">👍 ${L('Κατάλαβα','Got it')}</button>
+</div></details>
+
+<div class="card"><h2><b>1</b>${L('Το αυτοκίνητό σου','Your vehicle')}</h2>
+ <label>${L('Διάλεξε από τη λίστα ή γράψε το βάρος','Pick from the list or type the weight')}</label>
+ <select id="vid">${MY.length?`<optgroup label="${L('Τα δικά μου','My vehicles')}">${MY.map(opt).join('')}</optgroup>`:''}
+ <optgroup label="🚙 ${L('Λίστα Overland’s Habit','Overland’s Habit list')}">${DB.map(opt).join('')}</optgroup>
+ <option value="custom"${S.vid==='custom'?' selected':''}>✏️ ${L('Δικό μου (γράφω το βάρος)','My own (type the weight)')}</option></select>
+ <div class="grid" style="margin-top:12px">
+  <div><label>${L('Μικτό βάρος (GVW) kg','Gross weight (GVW) kg')}</label><input id="gvw" inputmode="decimal" value="${S.gvw}"></div>
+  <div><label>${L('Βάρος τώρα, φορτωμένο (kg)','Weight now, loaded (kg)')}</label><input id="kg" inputmode="decimal" value="${S.kg}"></div>
+ </div>
+ <div class="chips" style="margin:8px 0 0">${[100,200,300,500].map(v=>`<button class="chip" style="padding:6px 11px;font-size:.8em" data-add="${v}">+${v} kg</button>`).join('')}<button class="chip" style="padding:6px 11px;font-size:.8em" data-add="0">↺ GVW</button></div>
+ <div class="note">${L('Το μικτό βάρος (GVW) γράφεται στην άδεια κυκλοφορίας (F.1). Σκηνή οροφής, νερά, εργαλεία, τρέιλερ: πρόσθεσέ τα στο «βάρος τώρα».','Gross weight (GVW) is on the registration papers (F.1). Roof tent, water, tools, trailer: add them to “weight now”.')}</div>
+ <div class="row"><button class="btn g" id="sv">💾 ${L('Κράτα το ως δικό μου','Save as mine')}</button>${MY.some(v=>v.id===S.vid)?`<button class="btn r" id="del">🗑 ${L('Σβήσε','Delete')}</button>`:''}</div>
+</div>
+
+<div class="card"><h2><b>2</b>${L('Τι εργάτη χρειάζομαι;','Which winch do I need?')}</h2>
+ <div class="big3">
+  <div class="kpi"><div class="v warn" id="r15"></div><div class="l">${L('Ελάχιστο (μικτό × 1,5)','Minimum (GVW × 1.5)')}</div></div>
+  <div class="kpi"><div class="v good" id="rbuy"></div><div class="l">${L('Πάρε τουλάχιστον','Buy at least')}</div></div>
+  <div class="kpi"><div class="v" id="r20"></div><div class="l">${L('Βαρύ overland (× 2)','Heavy overland (× 2)')}</div></div>
+ </div>
+ <div class="verdict" id="sizev"></div>
+ <div style="margin-top:14px"><label>${L('Ο εργάτης μου (ή αυτός που σκέφτομαι) σε λίμπρες (lb)','My winch (or the one I am considering) in pounds (lb)')}</label>
+ <div class="chips" id="lbch">${SIZES.map(s=>`<button class="chip${s===lbNow?' on':''}" data-lb="${s}" style="padding:7px 11px;line-height:1.15">${f(s/1000,1)}k<small>${f(s/LB/1000,2)} t</small></button>`).join('')}</div>
+ <div class="grid"><div><label>${L('ή γράψε lb','or type lb')}</label><input id="lb" inputmode="decimal" value="${S.lb}"></div>
+ <div><label>${L('Σχοινί','Rope')}</label><select id="rope"><option value="syn"${S.rope==='syn'?' selected':''}>🧵 ${L('Συνθετικό','Synthetic')}</option><option value="steel"${S.rope==='steel'?' selected':''}>🔩 ${L('Σύρμα (ατσάλι)','Steel cable')}</option></select></div></div>
+ <div class="note" id="lbnote"></div></div>
+ <div style="margin-top:12px"><label>${L('Σε ποια στρώση (layer) είναι το σχοινί στο ταμπούρο;','Which layer is the rope on the drum?')}</label>
+ <div class="chips" id="laych">${LAY.map((p,i)=>`<button class="chip${i+1===+S.layer?' on':''}" data-ly="${i+1}" style="padding:7px 12px;line-height:1.15">${i+1}${L('η','')}<small>${f(p*100)}%</small></button>`).join('')}</div>
+ <div class="note">${L('Ο εργάτης βγάζει τη γραμμένη δύναμη <b>μόνο στην 1η στρώση</b>. Κάθε στρώση πάνω χάνει ~15% (Warn). Βγάλε όσο περισσότερο σχοινί μπορείς, αφήνοντας τουλάχιστον 5 βόλτες.','The winch gives its rated pull <b>only on the 1st layer</b>. Each layer above loses ~15% (Warn). Pull out as much rope as you can, leaving at least 5 wraps.')}</div>
+ <div class="opt" style="padding-top:8px"><div class="t">${L('Η δύναμή σου τώρα','Your pull right now')}<small id="laynote"></small></div><div class="n" id="laycap"></div></div></div>
+</div>
+
+<div class="card"><h2><b>3</b>${L('Πού κόλλησες;','Where are you stuck?')}</h2>
+ <label>${L('Έδαφος','Surface')}</label>
+ <div class="chips" id="sch">${Object.entries(SURF).map(([k,s])=>`<button class="chip${S.surf===k?' on':''}" data-s="${k}">${LANG==='el'?s.el:s.en}<small>${f(s.k*100)}% ${L('του βάρους','of weight')}</small></button>`).join('')}</div>
+ <label>${L('Πόσο βούλιαξε;','How deep is it bogged?')}</label>
+ <div class="chips" id="bch">${BOG.map((b,i)=>`<button class="chip${+S.bog===i?' on':''}" data-b="${i}">${LANG==='el'?b.el:b.en}${b.k?`<small>× ${b.k} ${L('το βάρος','the weight')}</small>`:''}</button>`).join('')}</div>
+ <div class="slv"><label style="margin:0">${L('Ανηφόρα (προς την άγκυρα)','Uphill slope (towards the anchor)')}</label><span><b id="degv"></b></span></div>
+ <input type="range" id="deg" min="0" max="45" step="1" value="${S.deg}">
+ <div class="note">${L('Τράβηγμα σε κατηφόρα: βάλε 0. Ο εργάτης δεν είναι για να «κρατάει» αυτοκίνητο που κατεβαίνει.','Pulling downhill: set 0. A winch is not for holding back a vehicle going down.')}</div>
+</div>
+
+<div class="card"><h2>💪 ${L('Πόση δύναμη χρειάζεται','How much pull is needed')}</h2>
+ <div style="text-align:center;font-size:1.5em;font-weight:900;color:var(--yel)" id="need"></div>
+ <div style="text-align:center;font-size:.82em;color:var(--mut)" id="need2"></div>
+ <div id="needbd" style="margin-top:8px"></div>
+ <div class="verdict" id="needv"></div>
+</div>
+
+<div class="card"><h2><b>4</b>${L('Πώς το στήνω: μονή, διπλή ή τριπλή γραμμή','How to rig it: single, double or triple line')}</h2>
+ <div class="grid" style="margin-bottom:10px"><div><label>${L('Απόσταση ως την άγκυρα (m)','Distance to the anchor (m)')}</label><input id="dist" inputmode="decimal" value="${S.dist}"></div>
+ <div><label>${L('Μήκος σχοινιού εργάτη (m)','Winch rope length (m)')}</label><input id="rlen" inputmode="decimal" value="${S.rlen}"></div></div>
+ <div id="rigs"></div>
+ <div class="note">${L('Κάθε τροχαλία (snatch block) σχεδόν διπλασιάζει τη δύναμη και μισεί την ταχύτητα. Υπολογίζουμε ~8% απώλεια σε κάθε τροχαλία. Το φορτίο στην άγκυρα μένει περίπου ίσο με όλη την έλξη. Η διπλή γραμμή βγάζει και περισσότερο σχοινί, άρα πέφτεις σε πιο χαμηλή (δυνατή) στρώση.','Each snatch block almost doubles the pull and halves the speed. We assume ~8% loss per block. The anchor load stays about equal to the whole pull. A double line also takes out more rope, so you drop to a lower (stronger) layer.')}</div>
+</div>
+
+<div class="card"><h2>🔁 ${L('Τροχαλία για αλλαγή κατεύθυνσης (redirect)','Snatch block to change direction (redirect)')}</h2>
+ <div class="s10" style="font-size:.88em">${L('Όταν η άγκυρα δεν είναι μπροστά σου, βάζεις την τροχαλία σε άγκυρα στο πλάι και «στρίβεις» το σχοινί. <b>Προσοχή:</b> η τροχαλία και η άγκυρά της σηκώνουν <b>περισσότερο</b> από το σχοινί. Όσο πιο κλειστή η γωνία ανάμεσα στα δύο σκέλη, τόσο πιο κοντά στο <b>διπλάσιο</b>.','When the anchor is not in front of you, put the block on an anchor to the side and “turn” the rope. <b>Careful:</b> the block and its anchor carry <b>more</b> than the rope. The tighter the angle between the two legs, the closer to <b>double</b>.')}</div>
+ <div class="slv"><label style="margin:0">${L('Γωνία ανάμεσα στα δύο σκέλη του σχοινιού','Angle between the two rope legs')}</label><span><b id="angv"></b></span></div>
+ <input type="range" id="ang" min="0" max="180" step="5" value="${S.ang}">
+ <svg class="rig" viewBox="0 0 320 120" id="angsvg"></svg>
+ <div id="angout"></div>
+</div>
+
+<div class="card"><h2>📐 ${L('Πλάγια γωνία έλξης','Side pull angle')}</h2>
+ <div class="slv"><label style="margin:0">${L('Πόσο λοξά από την ευθεία του αυτοκινήτου τραβάει το σχοινί','How far off the vehicle’s straight line the rope pulls')}</label><span><b id="sidev"></b></span></div>
+ <input type="range" id="side" min="0" max="60" step="5" value="${S.side}">
+ <div id="sideout"></div>
+</div>
+
+<div class="card"><h2>🧰 ${L('Τι κιτ θέλει ο εργάτης σου','Kit your winch needs')}</h2>
+ <div class="note" style="margin:0 0 6px" id="kitnote"></div>
+ <div id="kit"></div>
+</div>
+
+<div class="card"><h2>⚡ ${L('Ρεύμα και μπαταρία (εκτίμηση)','Power and battery (estimate)')}</h2><div id="amps"></div></div>
+
+${GUIDE[LANG].map(([id,ic,t,h],i)=>`<details id="g_${id}"${i===0?'':''}><summary>${ic} ${t}</summary><div class="in">${h.replace(/CHK:(\w+)/g,(m,k)=>chkHtml(k))}</div></details>`).join('')}
+
+<footer><b>Overland’s Habit</b> · Winch Calculator · ${L('δωρεάν','free')}<br>Created by George Barbaris<br>© 2026 George Barbaris · ${L('Με την επιφύλαξη παντός δικαιώματος','All rights reserved')}<br><a href="#" onclick="legalOpen();return false" style="color:var(--org)">⚖️ ${L('Όροι χρήσης & αποποίηση ευθύνης','Terms of use & disclaimer')}</a><br>${L('Θεωρητικοί υπολογισμοί. Ακολούθησε πάντα τις οδηγίες του κατασκευαστή του εργάτη σου.','Theoretical calculations. Always follow your winch maker’s instructions.')}</footer>`;
+ bind();calc();}
+function chkHtml(k){return `<div>${CHK[k].map((c,i)=>{const id=k+i,on=!!CK[id];return `<label class="ck${on?' done':''}"><input type="checkbox" data-ck="${id}"${on?' checked':''}><span>${c[LANG==='el'?0:1]}</span></label>`}).join('')}<button class="chip" style="padding:5px 10px;font-size:.75em;margin-top:6px" data-ckr="${k}">↺ ${L('Καθάρισε τη λίστα','Clear the list')}</button></div>`}
+function bind(){
+ const $=id=>document.getElementById(id);
+ ['gvw','kg','lb','dist','rlen'].forEach(k=>$(k).addEventListener('input',e=>{S[k]=e.target.value;
+  if((k==='gvw'||k==='kg')&&!MY.some(v=>v.id===S.vid)){S.vid='custom';$('vid').value='custom';}
+  if(k==='lb')document.querySelectorAll('#lbch .chip').forEach(c=>c.classList.toggle('on',+c.dataset.lb===num(S.lb)));
+  save();calc();}));
+ ['deg','ang','side'].forEach(k=>$(k).addEventListener('input',e=>{S[k]=+e.target.value;save();calc();}));
+ $('rope').onchange=e=>{S.rope=e.target.value;save();calc();};
+ $('vid').onchange=e=>{S.vid=e.target.value;const v=allV().find(x=>x.id===S.vid);if(v){S.gvw=v.kg;S.kg=v.now||v.kg;}save();render();};
+ document.querySelectorAll('[data-add]').forEach(c=>c.onclick=()=>{const a=+c.dataset.add;S.kg=a?Math.round((num(S.kg)||num(S.gvw))+a):num(S.gvw);save();render();});
+ document.querySelectorAll('#lbch .chip').forEach(c=>c.onclick=()=>{S.lb=+c.dataset.lb;save();render();});
+ document.querySelectorAll('#laych .chip').forEach(c=>c.onclick=()=>{S.layer=+c.dataset.ly;save();render();});
+ document.querySelectorAll('#sch .chip').forEach(c=>c.onclick=()=>{S.surf=c.dataset.s;save();render();});
+ document.querySelectorAll('#bch .chip').forEach(c=>c.onclick=()=>{S.bog=+c.dataset.b;save();render();});
+ document.querySelectorAll('[data-ck]').forEach(c=>c.onchange=()=>{CK[c.dataset.ck]=c.checked?1:0;c.parentNode.classList.toggle('done',c.checked);localStorage.setItem('winch_chk',JSON.stringify(CK));});
+ document.querySelectorAll('[data-ckr]').forEach(b=>b.onclick=()=>{const k=b.dataset.ckr;Object.keys(CK).forEach(x=>{if(x.startsWith(k)&&/^\d+$/.test(x.slice(k.length)))delete CK[x]});localStorage.setItem('winch_chk',JSON.stringify(CK));
+  b.parentNode.querySelectorAll('input').forEach(i=>{i.checked=false;i.parentNode.classList.remove('done')});});
+ $('sv').onclick=()=>{const nm=prompt(L('Όνομα (π.χ. «Το Land Cruiser μου»)','Name (e.g. "My Land Cruiser")'),'');if(!nm)return;
+  const id='w'+Date.now();MY.push({id,name:nm,kg:num(S.gvw),now:num(S.kg)});localStorage.setItem('winch_my',JSON.stringify(MY));S.vid=id;save();render();};
+ if($('del'))$('del').onclick=()=>{if(!confirm(L('Να σβηστεί;','Delete it?')))return;MY=MY.filter(v=>v.id!==S.vid);localStorage.setItem('winch_my',JSON.stringify(MY));S.vid='custom';save();render();};
+ $('lang').onclick=()=>{LANG=LANG==='el'?'en':'el';localStorage.setItem('winch_lang',LANG);render();};}
+function calc(){
+ const $=id=>document.getElementById(id);
+ const W=num(S.kg),GVW=num(S.gvw)||W,P1=num(S.lb)/LB,lay=+S.layer||1,cap=P1*LAY[lay-1];
+ const sf=SURF[S.surf]||SURF.mud,bg=BOG[+S.bog]||BOG[0],deg=+S.deg||0,sl=Math.sin(deg*Math.PI/180);
+ $('degv').textContent=`${deg}° · ${f(Math.tan(deg*Math.PI/180)*100)}%`;
+ /* 2. μέγεθος */
+ const m15=GVW*1.5,m20=GVW*2,buy=pickSize(m15),buy2=pickSize(m20);
+ $('r15').innerHTML=`${f(m15*LB/1000,1)}k<small style="display:block;font-size:.5em;color:var(--mut)">lb · ${tS(m15)}</small>`;
+ $('rbuy').innerHTML=buy?`${f(buy/1000,1)}k<small style="display:block;font-size:.5em;color:var(--mut)">lb · ${tS(buy/LB)}</small>`:'–';
+ $('r20').innerHTML=`${f(m20*LB/1000,1)}k<small style="display:block;font-size:.5em;color:var(--mut)">lb · ${tS(m20)}</small>`;
+ const okSize=P1>=m15-1;
+ $('sizev').innerHTML=isFinite(P1)&&P1>0?(okSize?`✅ ${L('Ο εργάτης','The')} <b>${f(num(S.lb))} lb</b> (${tS(P1)}) ${L('καλύπτει τον κανόνα 1,5 × μικτό βάρος','winch meets the 1.5 × GVW rule')}${P1>=m20?L(' και το × 2 για βαρύ overland.',' and the × 2 for heavy overland.'):'.'}`:`⚠️ <b>${f(num(S.lb))} lb</b> ${L('είναι <b>μικρός</b> για αυτό το αυτοκίνητο. Θέλει τουλάχιστον','is <b>too small</b> for this vehicle. It needs at least')} <b>${f(Math.ceil(m15*LB/100)*100)} lb</b>${buy?` (${L('εμπορικά','commercially')} ${f(buy)} lb)`:''}. ${L('Αλλιώς δούλευε πάντα με τροχαλία.','Otherwise always rig with a snatch block.')}`)
+  +`<div class="note">${L('Ο κανόνας του κατασκευαστή (Warn): μικτό βάρος (GVW) × 1,5 = ελάχιστη δύναμη εργάτη. Για βαριά φορτωμένο overland, λάσπη και ανηφόρες, πολλοί πάνε προς το × 2.','The maker’s rule (Warn): gross weight (GVW) × 1.5 = minimum winch pull. For heavily loaded overland, mud and climbs, many go towards × 2.')}${buy2&&buy2!==buy?' '+L('Για × 2: ','For × 2: ')+f(buy2)+' lb.':''}</div>`:'';
+ $('lbnote').innerHTML=isFinite(P1)?`${f(num(S.lb))} lb = <b>${kgS(P1)}</b> · ${tS(P1)} · ${kN(P1)}`:'';
+ $('laycap').innerHTML=isFinite(cap)?`${kgS(cap)}<small>${lbS(cap)} · ${tS(cap)}</small>`:'–';
+ $('laynote').textContent=L(`${lay}η στρώση = ${f(LAY[lay-1]*100)}% της ονομαστικής`,`layer ${lay} = ${f(LAY[lay-1]*100)}% of rated`);
+ /* 3. απαιτούμενη δύναμη */
+ if(!(W>0)){$('need').textContent='–';return;}
+ const kS=Math.max(sf.k,bg.k),R=W*(kS+sl),Rg=W*kS,Rs=W*sl;
+ $('need').innerHTML=`${kgS(R)}`;$('need2').innerHTML=`${lbS(R)} · ${tS(R)} · ${kN(R)} · ${f(R/W*100)}% ${L('του βάρους','of the weight')}`;
+ $('needbd').innerHTML=`<div class="opt"><div class="t">${bg.k>sf.k?L('Βύθιση','Bogging'):L('Αντίσταση εδάφους','Ground resistance')}<small>${bg.k>sf.k?(LANG==='el'?bg.el:bg.en)+' · × '+bg.k:(LANG==='el'?sf.el:sf.en)+' · '+L('βάρος ÷ ','weight ÷ ')+f(1/sf.k)}</small></div><div class="n">${kgS(Rg)}</div></div>
+ <div class="opt"><div class="t">${L('Ανηφόρα','Slope')}<small>${L('βάρος × ημ(γωνίας)','weight × sin(angle)')} · ${deg}°</small></div><div class="n">${kgS(Rs)}</div></div>
+ <div class="opt"><div class="t"><b>${L('Σύνολο','Total')}</b><small>${L('με','at')} ${kgS(W)} ${L('βάρος','weight')}</small></div><div class="n">${kgS(R)}</div></div>`;
+ $('needv').innerHTML=(sf.est&&bg.k<=sf.k?L('❄️ Το χιόνι αλλάζει πάρα πολύ (φρέσκο, παγωμένο, βρεγμένο). Κράτα μεγάλο περιθώριο. ','❄️ Snow varies a lot (fresh, icy, wet). Keep a big margin. '):'')+
+  L('Οι ρόδες υποθέτουμε ότι γυρίζουν ελεύθερα (κιβώτιο σε νεκρά). Αν οι ρόδες είναι μπλοκαρισμένες, το αυτοκίνητο κάθεται στο σασί ή σέρνεται πάνω σε βράχο, η αντίσταση ανεβαίνει πολύ: πάντα με τροχαλία.','We assume the wheels turn freely (gearbox in neutral). If the wheels are locked, the vehicle is high-centred or dragging on rock, resistance rises a lot: always use a snatch block.');
+ /* 4. γραμμές */
+ const dist=num(S.dist)||0,rlen=num(S.rlen)||0;
+ let best=0;const rows=[1,2,3].map(n=>{let sum=0;for(let k=0;k<n;k++)sum+=Math.pow(ETA,k);const T=R/sum,u=T/cap,blkL=n===1?0:T*(1+ETA),need=n*dist;return{n,T,u,blkL,need};});
+ best=(rows.find(r=>r.u<=0.7)||rows.slice().sort((a,b)=>a.u-b.u)[0]).n;
+ const nm={1:L('Μονή γραμμή','Single line'),2:L('Διπλή γραμμή (1 τροχαλία)','Double line (1 block)'),3:L('Τριπλή γραμμή (2 τροχαλίες)','Triple line (2 blocks)')};
+ const how={1:L('Από τον εργάτη κατευθείαν στην άγκυρα.','From the winch straight to the anchor.'),2:L('Τροχαλία στην άγκυρα, το σχοινί γυρίζει πίσω και δένει σε σημείο έλξης του αυτοκινήτου.','Block on the anchor, the rope comes back and attaches to a recovery point on the vehicle.'),3:L('Τροχαλία στην άγκυρα και τροχαλία στο αυτοκίνητο, η άκρη δένει πάλι στην άγκυρα.','Block on the anchor and block on the vehicle; the end goes back to the anchor.')};
+ $('rigs').innerHTML=rows.map(r=>{const st=r.u<=0.7?['good','✅ '+L('Άνετα','Comfortable')]:r.u<=1?['warn','⚠️ '+L('Στο όριο','At the limit')]:['bad','❌ '+L('Δεν φτάνει','Not enough')];
+  const short=rlen&&dist&&r.need>rlen-2;
+  return `<div class="rg${r.n===best?' best':''}"><h3><span>${r.n===best?'⭐ ':''}${nm[r.n]}</span><span class="st ${st[0]}">${st[1]}</span></h3>${rigSvg(r.n)}
+  <div class="note" style="margin:0 0 4px">${how[r.n]}</div>
+  <div class="nums"><div>${L('Φορτίο εργάτη','Winch load')}<b>${kgS(r.T)}</b>${f(r.u*100)}% ${L('της δύναμής σου','of your pull')}</div><div>${L('Φορτίο στην άγκυρα','Load on the anchor')}<b>${kgS(R)}</b>${tS(R)}</div><div>${r.n>1?L('Φορτίο τροχαλίας','Load on block'):L('Ταχύτητα','Speed')}<b>${r.n>1?tS(r.blkL):'100%'}</b>${r.n>1?L('ταχύτητα ','speed ')+f(100/r.n)+'%':''}</div></div>
+  <div class="bar"><i style="width:${Math.min(100,r.u*100)}%;background:${r.u<=0.7?'#5f9e7a':r.u<=1?'#e8b86d':'#d9534f'}"></i></div>
+  ${dist?`<div class="note" style="margin-top:4px">${L('Θέλει','Needs')} ~${f(r.need)} m ${L('σχοινί','of rope')}${short?` · <span class="bad">${L('δεν φτάνει το σχοινί σου: πρόσθεσε extension','your rope is too short: add an extension')}</span>`:''}</div>`:''}</div>`}).join('')+
+  (rows[2].u>1?`<div class="verdict" style="border-color:var(--red)">❌ ${L('Ακόμα και με τριπλή γραμμή ο εργάτης δεν φτάνει. Σκάψε, ξεφούσκωσε λάστιχα, βάλε πλάκες, ελάφρυνε το αυτοκίνητο, ή φέρε δεύτερο όχημα/εργάτη.','Even a triple line is not enough. Dig, air down, use boards, lighten the vehicle, or bring a second vehicle/winch.')}</div>`:'');
+ /* redirect */
+ const a=+S.ang||0,fac=2*Math.cos(a/2*Math.PI/180),Tsingle=Math.min(R,cap);
+ $('angv').textContent=`${a}° → × ${f(fac,2)}`;
+ const rad=a*Math.PI/180,cx=250,cy=60,Lg=150,x1=cx-Lg*Math.cos(rad/2),y1=cy-Lg*Math.sin(rad/2),x2=cx-Lg*Math.cos(rad/2),y2=cy+Lg*Math.sin(rad/2);
+ $('angsvg').innerHTML=`<line x1="${cx}" y1="${cy}" x2="${Math.max(4,x1)}" y2="${Math.max(4,y1)}" stroke="#e8b86d" stroke-width="3"/><line x1="${cx}" y1="${cy}" x2="${Math.max(4,x2)}" y2="${Math.min(116,y2)}" stroke="#e8b86d" stroke-width="3"/><line x1="${cx}" y1="${cy}" x2="${cx+50}" y2="${cy}" stroke="#d9534f" stroke-width="${2+fac*2}"/><polygon points="${cx+60},${cy} ${cx+48},${cy-7} ${cx+48},${cy+7}" fill="#d9534f"/>${blk(cx,cy)}<text x="${cx+8}" y="${cy-14}" fill="#a8a29e" font-size="12">${a}°</text><text x="6" y="14" fill="#a8a29e" font-size="11">${L('προς εργάτη','to winch')}</text><text x="6" y="114" fill="#a8a29e" font-size="11">${L('προς φορτίο','to load')}</text>`;
+ $('angout').innerHTML=`<div class="opt"><div class="t">${L('Φορτίο στην τροχαλία και στην άγκυρά της','Load on the block and its anchor')}<small>2 × ${L('έλξη','tension')} × cos(${a}° ÷ 2) · ${L('με έλξη','at tension')} ${kgS(Tsingle)}</small></div><div class="n">${kgS(Tsingle*fac)}<small>${tS(Tsingle*fac)}</small></div></div>
+ <table><tr><th>${L('Γωνία','Angle')}</th>${[0,30,60,90,120,150].map(x=>`<th>${x}°</th>`).join('')}</tr><tr><td>×</td>${[0,30,60,90,120,150].map(x=>`<td>${f(2*Math.cos(x/2*Math.PI/180),2)}</td>`).join('')}</tr></table>
+ <div class="note">${L('0° = τα σκέλη παράλληλα (το σχοινί γυρίζει πίσω): η τροχαλία σηκώνει <b>διπλάσιο</b>. 120° = ίσο με την έλξη. Γι’ αυτό η τροχαλία θέλει WLL τουλάχιστον <b>2 ×</b> τη δύναμη του εργάτη.','0° = legs parallel (rope doubles back): the block carries <b>double</b>. 120° = equal to the tension. That is why the block needs a WLL of at least <b>2 ×</b> the winch pull.')}</div>`;
+ /* πλάγια */
+ const b=+S.side||0,cs=Math.cos(b*Math.PI/180),sn=Math.sin(b*Math.PI/180);
+ $('sidev').textContent=`${b}°`;
+ $('sideout').innerHTML=`<div class="opt"><div class="t">${L('Πάει στο τράβηγμα','Goes into the pull')}<small>${L('cos της γωνίας','cos of the angle')}</small></div><div class="n">${f(cs*100)}%</div></div>
+ <div class="opt"><div class="t">${L('Φεύγει στο πλάι (σπρώχνει το αυτοκίνητο και στοιβάζει το σχοινί)','Goes sideways (pushes the vehicle and piles the rope)')}<small>${L('με έλξη','at tension')} ${kgS(Tsingle)}</small></div><div class="n ${b>15?'bad':''}">${kgS(Tsingle*sn)}</div></div>
+ <div class="verdict" style="border-color:${b<=15?'var(--grn)':'var(--red)'}">${b<=15?'✅ '+L('Μικρή γωνία. Πρόσεχε μόνο να τυλίγεται ίσια.','Small angle. Just watch that it spools evenly.'):'⚠️ '+L('Μεγάλη πλάγια γωνία: το σχοινί στοιβάζεται στη μια άκρη του ταμπούρου και φορτώνει το fairlead. Βάλε τροχαλία σε άγκυρα μπροστά σου (redirect) ή τράβα λίγο και ξαναστήσε.','Big side angle: the rope piles to one end of the drum and loads the fairlead. Put a snatch block on an anchor in front of you (redirect), or pull a bit and re-rig.')}</div>`;
+ /* κιτ */
+ const Pt=P1/1000,sh=SHK.find(s=>s[1]>=Pt-0.005)||SHK[SHK.length-1],dia=P1*LB<=12500?'3/8″ (9,5 mm)':P1*LB<=13500?'3/8″–7/16″ (10–11 mm)':'7/16″–1/2″ (11–13 mm)';
+ $('kitnote').innerHTML=L(`Με βάση τη <b>μέγιστη δύναμη του εργάτη σου στην 1η στρώση</b>: ${all3(P1)}. Ό,τι μπαίνει στη γραμμή πρέπει να αντέχει τουλάχιστον τόσο.`,`Based on your <b>winch’s maximum pull on the 1st layer</b>: ${all3(P1)}. Everything in the line must hold at least that.`);
+ const kit=[
+  ['🔗',L('Κλειδιά (bow shackles), ατσάλινα','Bow shackles, steel'),L(`WLL ≥ ${tS(P1)}. Πάρε <b>${sh[0]} με WLL ${f(sh[1],2)} t</b> (σφραγισμένο). Τουλάχιστον 2–3 τεμάχια.`,`WLL ≥ ${tS(P1)}. Get <b>${sh[0]} with WLL ${f(sh[1],2)} t</b> (stamped). At least 2–3 pieces.`)],
+  ['🪢',L('Soft shackles (συνθετικά κλειδιά)','Soft shackles'),L(`MBS ≥ ${tS(P1*2)} (2 × έλξη). Τα καλά είναι 13–20 t MBS. Ελαφριά, δεν γίνονται βλήμα. 2 τεμάχια.`,`MBS ≥ ${tS(P1*2)} (2 × pull). Good ones are 13–20 t MBS. Light, do not become projectiles. 2 pieces.`)],
+  ['🌳',L('Tree trunk protector (ιμάντας δέντρου)','Tree trunk protector'),L(`WLL ≥ ${tS(P1)}, φάρδος 7,5–10 cm, μήκος 3–5 m. Χαμηλά στον κορμό.`,`WLL ≥ ${tS(P1)}, 7.5–10 cm wide, 3–5 m long. Low on the trunk.`)],
+  ['🔁',L('Τροχαλία (snatch block)','Snatch block'),L(`WLL ≥ <b>${tS(P1*2)}</b> (2 × έλξη, γιατί στη διπλή γραμμή σηκώνει διπλάσιο). Με πλαϊνές πλάκες που ανοίγουν. ${S.rope==='syn'?'Για συνθετικό: τροχαλία με λεία, φαρδιά τροχαλία ή soft block.':'Για σύρμα: τροχαλία μεγάλης διαμέτρου.'}`,`WLL ≥ <b>${tS(P1*2)}</b> (2 × pull, because on a double line it carries double). With opening side plates. ${S.rope==='syn'?'For synthetic: a smooth, wide sheave or a soft block.':'For steel: a large-diameter sheave.'}`)],
+  ['➰',L('Extension (προέκταση σχοινιού)','Winch line extension'),L(`20–30 m, MBS ≥ ${tS(P1*2)}, ίδιου τύπου με το σχοινί σου. Για άγκυρες μακριά και για τη διπλή γραμμή.`,`20–30 m, MBS ≥ ${tS(P1*2)}, same type as your rope. For far anchors and double lines.`)],
+  ['🧵',L('Σχοινί εργάτη','Winch rope'),L(`Συνήθως ${dia}. Ελάχιστη αντοχή θραύσης ≥ ~${tS(P1*1.9)} (≈ 1,9–2 × έλξη, όπως ζητάνε οι κατασκευαστές). Δες το εγχειρίδιο του εργάτη.`,`Usually ${dia}. Minimum breaking strength ≥ ~${tS(P1*1.9)} (≈ 1.9–2 × pull, as makers specify). Check your winch manual.`)],
+  ['🔩',L('Σημεία έλξης (recovery points)','Recovery points'),L(`Βιδωμένα στο σασί, WLL ≥ ${tS(P1)} το καθένα, μπρος και πίσω. Ποτέ μπίλια κοτσαδόρου.`,`Bolted to the chassis, WLL ≥ ${tS(P1)} each, front and rear. Never a tow ball.`)],
+  ['🧺',L('Damper (σάκος/κουβέρτα αποσβεστήρας)','Line damper'),L('1–2 τεμάχια. Στη μέση του σχοινιού. Υποχρεωτικό σε σύρμα.','1–2 pieces. At the middle of the rope. Mandatory with steel.')],
+  ['🧤',L('Δερμάτινα γάντια + hook strap','Leather gloves + hook strap'),L('Για όλους όσοι πιάνουν σχοινί.','For everyone who handles the rope.')],
+  ['🛡',L('Chafe sleeve (προστατευτικό τριβής)','Chafe sleeve'),S.rope==='syn'?L('Απαραίτητο για συνθετικό σε βράχο/ακμές.','Essential for synthetic over rock/edges.'):L('Χρήσιμο και για ιμάντες σε βράχους.','Useful for straps over rocks too.')],
+  ['⛏',L('Φτυάρι, πλάκες (recovery boards), ξεφουσκωτής','Shovel, recovery boards, tyre deflator'),L('Συχνά λύνουν το πρόβλημα πριν τον εργάτη. Οι πλάκες γίνονται και άγκυρα θαμμένες.','They often solve it before the winch. Boards also work as a buried anchor.')],
+  ['⚓',L('Άγκυρα εδάφους (όταν δεν έχει δέντρα)','Ground anchor (when there are no trees)'),L('Πτυσσόμενη άγκυρα ή σάκος άμμου. Αλλιώς θαμμένη ρεζέρβα (δες «Αγκύρωση»).','Folding anchor or sand bag. Otherwise a buried spare tyre (see “Anchoring”).')]];
+ $('kit').innerHTML=kit.map(([ic,t,d])=>`<div class="opt"><div class="t">${ic} <b>${t}</b><small>${d}</small></div></div>`).join('');
+ /* ρεύμα */
+ const rT=rows.find(r=>r.n===best)||rows[0],Tl=Math.min(rT.T,cap),amps=50+0.04*(Tl*LB)/LAY[lay-1];
+ $('amps').innerHTML=`<div class="opt"><div class="t">${L('Ρεύμα με την πρότασή μας','Current with our suggestion')}<small>${nm[best]} · ${kgS(Tl)} ${L('στον εργάτη','on the winch')}</small></div><div class="n">~${f(Math.round(amps/10)*10)} A</div></div>
+ <div class="opt"><div class="t">${L('Πόση ώρα συνεχόμενα','How long continuously')}<small>${L('κοντά στο μέγιστο ~1 λεπτό, μετά ξεκούραση. Με μισό φορτίο περίπου διπλάσιο.','near maximum ~1 minute, then rest. At half load roughly double.')}</small></div><div class="n">${Tl/cap>0.7?'~1′':Tl/cap>0.4?'~2′':'~4–5′'}</div></div>
+ <div class="note">${L('Μηχανή αναμμένη, ψηλό ρελαντί αν γίνεται. Ο εναλλάκτης δίνει 90–200 A: τα υπόλοιπα τα δίνει η μπαταρία.','Engine running, high idle if possible. The alternator gives 90–200 A: the battery gives the rest.')}</div>`;
+}
+render();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js');
+</script>
+<script src="legal.js"></script>
+</body></html>
