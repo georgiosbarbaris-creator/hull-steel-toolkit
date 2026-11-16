@@ -58,6 +58,8 @@ input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:
 .exp{margin-top:8px;font-size:13.5px}
 .exp p{margin:4px 0}
 .why{font-size:13px;margin-top:5px;line-height:1.4}.why .w2{color:var(--muted);font-size:12px;margin-top:3px}
+.smp{margin:8px 0;text-align:center}.smp .note{text-align:left;margin-bottom:6px}.pins{text-align:left;font-size:13px;margin:6px 0 0;padding-left:24px}.pins li::marker{color:#d32f2f;font-weight:700}
+.phs{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}.ph{position:relative}.ph img{width:96px;height:96px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}.ph button{position:absolute;top:2px;right:2px;border:0;border-radius:50%;width:22px;height:22px;background:rgba(0,0,0,.6);color:#fff;font-size:12px}
 .more{font-size:12px;color:var(--acc);font-weight:600;cursor:pointer;margin-top:4px;display:inline-block}
 .chk{background:var(--bg);border-radius:9px;padding:7px 9px;margin:6px 0;font-size:13px}
 .dl{display:flex;gap:6px;align-items:center;margin-top:6px;flex-wrap:wrap}
@@ -176,8 +178,9 @@ input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:
 <script src="data.js"></script>
 <script src="data2.js"></script>
 <script src="data3.js"></script>
+<script src="sample.js"></script>
 <script>
-const VER="v1.1 · Nov 2026";
+const VER="v1.2 · Nov 2026";
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 let DB;try{DB=JSON.parse(localStorage.getItem("certs_db")||"null")}catch(e){}
@@ -206,7 +209,7 @@ function stOf(id){return V().st[id]||{};}
 function counts(list){let y=0,n=0,na=0,o=0,e=0;list.forEach(i=>{const s=stOf(i.id);if(s.s==="y")y++;else if(s.s==="n")n++;else if(s.s==="na")na++;else o++;const d=dueInfo(s.d);if(d&&d.k>=1&&s.s!=="na")e++;});return{y,n,na,o,e,t:list.length};}
 
 /* ---------- render check ---------- */
-function render(){const v=V(),all=items(),cs=counts(all);
+function render(){window.L_=L;const v=V(),all=items(),cs=counts(all);
  $("#t_title").textContent="📋 "+(v.name||"Ship Certs Check");
  $("#t_sub").textContent=[v.imo&&("IMO "+v.imo),(FLAGS[v.flag]||{}).name,v.cls,v.date].filter(Boolean).join(" · ")||"Bulk Carrier";
  const st=[["all",cs.t,T("All","Όλα")],["o",cs.o,T("Open","Ανοιχτά")],["y",cs.y,"✓ "+T("OK","OK")],["n",cs.n,"✗ "+T("Missing","Λείπει")],["e",cs.e,"⚠ "+T("Expiring","Λήγει")]];
@@ -225,6 +228,7 @@ function render(){const v=V(),all=items(),cs=counts(all);
   h+=`<div class="cat"><div class="ch" data-c="${c[0]}"><span>${c[1]}</span><span class="cn">${esc(T(c[2],c[3]))}</span>${cc.n?`<span class="pill pb">✗${cc.n}</span>`:""}${cc.e?`<span class="pill pw">⚠${cc.e}</span>`:""}<span class="cc">${cc.y+cc.na}/${cc.t}</span><span>${open?"▾":"▸"}</span></div>`;
   if(open)h+=li.map(itemHTML).join("");h+="</div>";});
  $("#list").innerHTML=h||`<div class="card note">${T("Nothing here.","Τίποτα εδώ.")}</div>`;
+ document.querySelectorAll(".phbox").forEach(el=>{try{photoBox(el,el.dataset.ph)}catch(x){}});
  $("#legend").innerHTML=T("✓ on board & valid · ✗ missing / expired / wrong · N/A not applicable · 📖 show/hide explanations · tap 🔎 for check, expiry & note · 🔥 frequent PSC/RightShip finding","✓ υπάρχει & ισχύει · ✗ λείπει / έληξε / λάθος · N/A δεν ισχύει · 📖 εμφάνιση/απόκρυψη εξηγήσεων · πάτα 🔎 για έλεγχο, λήξη & σημείωση · 🔥 συχνό PSC/RightShip finding");}
 function itemHTML(i){const s=stOf(i.id),d=dueInfo(s.d),ex=F.open["i_"+i.id];
  const desc=L==="en"?(i.e||i.g):(i.g||i.e),chk=L==="en"?(i.k||i.kg):(i.kg||i.k);
@@ -234,13 +238,15 @@ function itemHTML(i){const s=stOf(i.id),d=dueInfo(s.d),ex=F.open["i_"+i.id];
  ${DB.why!==false&&desc?`<div class="why">📄 ${esc(desc)}${i.r?`<div class="w2">⚖️ ${T("Why on board: required by","Γιατί στο πλοίο: απαιτείται από")} ${esc(i.r)}</div>`:""}</div>`:""}
  ${!ex?`<span class="more" data-x="${i.id}">${T("🔎 What to check · expiry · note ▸","🔎 Τι ελέγχω · λήξη · σημείωση ▸")}</span>`:""}
  ${ex?`<div class="exp">${DB.why===false&&desc?`<p>${esc(desc)}</p>`:""}${chk?`<div class="chk">🔎 <b>${T("Check","Έλεγξε")}:</b> ${esc(chk)}</div>`:""}
+ <div class="row" style="margin:6px 0"><button class="btn sm" data-smp>🖼️ ${T("Sample – what it looks like","Δείγμα – πώς μοιάζει")}</button></div>${F.open["s_"+i.id]?sampleHTML(i):""}<div class="phbox" data-ph="${i.id}"></div>
  <div class="dl"><span class="note">${T("Expiry / next due","Λήξη / επόμενο")}</span><input type="date" data-d value="${s.d||""}"><input class="nt" data-nt placeholder="${T("Note (e.g. cert no., what is missing)","Σημείωση (π.χ. αρ. cert, τι λείπει)")}" value="${esc(s.nt||"")}">${i.cu?`<button class="btn sm d" data-del>🗑</button>`:""}</div></div>`:""}</div>`;}
 $("#list").addEventListener("click",e=>{const ch=e.target.closest(".ch");if(ch){F.open[ch.dataset.c]=!F.open[ch.dataset.c];render();return;}
  const it=e.target.closest(".it");if(!it)return;const id=it.dataset.id,v=V();
  const b=e.target.closest("[data-s]");if(b){const s=v.st[id]=v.st[id]||{};s.s=s.s===b.dataset.s?"":b.dataset.s;s.t=Date.now();save();render();return;}
  if(e.target.closest("[data-del]")){if(confirm(T("Delete this item?","Διαγραφή;"))){v.custom=v.custom.filter(x=>x.id!==id);save();render();}return;}
+ if(e.target.closest("[data-smp]")){F.open["s_"+id]=!F.open["s_"+id];render();return;}
  if(e.target.closest("[data-x]")){F.open["i_"+id]=!F.open["i_"+id];render();}});
-$("#list").addEventListener("change",e=>{const it=e.target.closest(".it");if(!it)return;const v=V(),id=it.dataset.id,s=v.st[id]=v.st[id]||{};
+$("#list").addEventListener("change",e=>{if(e.target.matches("[data-pa]"))return;const it=e.target.closest(".it");if(!it)return;const v=V(),id=it.dataset.id,s=v.st[id]=v.st[id]||{};
  if(e.target.matches("[data-d]"))s.d=e.target.value;if(e.target.matches("[data-nt]"))s.nt=e.target.value;save();render();});
 $("#stats").onclick=e=>{const d=e.target.closest("[data-f]");if(d){F.f=d.dataset.f;render();}};
 $("#q").oninput=e=>{F.q=e.target.value;render();};
