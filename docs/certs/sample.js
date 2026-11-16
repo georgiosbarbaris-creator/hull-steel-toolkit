@@ -5,7 +5,7 @@
 const SHIP="MV SAMPLE STAR",IMO="9000000";
 const e=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 function wrap(t,n){const w=String(t).split(" "),o=[];let l="";w.forEach(x=>{if((l+" "+x).trim().length>n){o.push(l.trim());l=x}else l+=" "+x});if(l.trim())o.push(l.trim());return o;}
-const OV={csr:"cert",llrec:"book",tsr:"report",boil:"report",biof:"book",potw:"report",liftsm:"report",charts:"book",vacc:"cert",pest:"report",amsa:"book",nzbio:"book",cn:"book",m_bra:"book",g_pil:"cert",g_moor:"cert",LR_sirb:"crew",MH_sirb:"crew",PA_sirb:"crew",LR_water:"report",PA_med:"report",incin:"cert",bdn:"report",rso:"report",thick:"report",audits:"report",gd_fum:"report",pressv:"report",LR_med:"report",fumig:"report",g_falls:"cert",g_hcov:"report",g_fall:"report",ca:"book",usnoa:"book",cmach:"cert"};
+const OV={csr:"csr",llrec:"book",tsr:"report",boil:"report",biof:"book",potw:"report",liftsm:"report",charts:"book",vacc:"cert",pest:"report",amsa:"book",nzbio:"book",cn:"book",m_bra:"book",g_pil:"cert",g_moor:"cert",LR_sirb:"crew",MH_sirb:"crew",PA_sirb:"crew",LR_water:"report",PA_med:"report",incin:"cert",bdn:"report",rso:"report",thick:"report",audits:"report",gd_fum:"report",pressv:"report",LR_med:"report",fumig:"report",g_falls:"cert",g_hcov:"report",g_fall:"report",ca:"book",usnoa:"book",cmach:"cert"};
 function typeOf(i){if(OV[i.id])return OV[i.id];const n=i.n;
  if(i.c==="post")return "poster";
  if(i.c==="ins")return /COFR|eCOFR/.test(n)?"cert":"ins";
@@ -29,6 +29,10 @@ const LBL={
  shipb:["Ship-specific (this ship's name, not a generic copy)","Ειδικό για το πλοίο (όχι γενικό αντίγραφο)"],
  entr:["Entries complete, correct codes, no blank lines","Εγγραφές πλήρεις, σωστοί κωδικοί, χωρίς κενά"],
  blank:["No blank lines / pages; a wrong entry struck through once, dated & signed (no correction fluid)","Χωρίς κενές γραμμές/σελίδες· λάθος εγγραφή διαγραμμένη μία φορά, με ημερομηνία & υπογραφή (όχι blanco)"],
+ csr1:["ALL CSRs from No.1 kept – count them, no gap in numbers (also previous flags)","ΟΛΑ τα CSR από το No.1 – μέτρα τα, χωρίς κενό στην αρίθμηση (και προηγούμενων σημαιών)"],
+ csr2:["Latest CSR on top = current situation","Το τελευταίο CSR πάνω-πάνω = τρέχουσα κατάσταση"],
+ csr3:["Company / Class / DOC-SMC-ISSC issuer = same as the certificates on board","Εταιρεία / Class / εκδότης DOC-SMC-ISSC = ίδια με τα πιστοποιητικά στο πλοίο"],
+ csr4:["Each CSR with its Form 2 & Form 3 – never remove old ones","Κάθε CSR με Form 2 & Form 3 – ποτέ μην αφαιρείς τα παλιά"],
  msig:["Signed by officer in charge & Master on each page","Υπογραφή υπευθύνου & Πλοιάρχου σε κάθε σελίδα"],
  serial:["Equipment / serial No. = item on board","Εξοπλισμός / serial No. = αυτό που είναι στο πλοίο"],
  result:["Result PASS / remarks closed","Αποτέλεσμα PASS / παρατηρήσεις κλεισμένες"],
@@ -57,6 +61,12 @@ function shipBox(y){return `<rect x="30" y="${y}" width="360" height="62" fill="
  <text x="40" y="${y+54}" font-size="11" fill="#555">Port of registry</text><text x="140" y="${y+54}" font-size="12" font-weight="700">SAMPLETOWN</text>`;}
 function seal(x,y,t){return `<circle cx="${x}" cy="${y}" r="30" fill="none" stroke="#1565c0" stroke-width="3"/><circle cx="${x}" cy="${y}" r="23" fill="none" stroke="#1565c0" stroke-width="1"/><text x="${x}" y="${y+4}" text-anchor="middle" font-size="9" font-weight="700" fill="#1565c0">${e(t)}</text>`;}
 const R={
+csr(i){const n=5;let st="";for(let k=0;k<n;k++){const x=40+k*18,y=40+k*26;st+=`<rect x="${x}" y="${y}" width="300" height="360" fill="#fff" stroke="#0b2e4f" stroke-width="${k===n-1?3:1}"/><rect x="${x}" y="${y}" width="300" height="24" fill="${k===n-1?"#0b2e4f":"#9aa9b8"}"/><text x="${x+10}" y="${y+17}" font-size="12" font-weight="700" fill="#fff">CSR No. ${k+1}${k===n-1?"  (LATEST)":""}</text>`;}
+ const x=40+(n-1)*18,y=40+(n-1)*26;
+ st+=`<text x="${x+150}" y="${y+50}" text-anchor="middle" font-size="12" font-weight="700" fill="#0b2e4f">CONTINUOUS SYNOPSIS RECORD</text>`+[["1 Flag State","SAMPLELAND"],["3 Name of ship",SHIP],["5 Port of registry","SAMPLETOWN"],["7 Registered owner","SAMPLE OWNERS INC."],["9 Company (ISM)","SAMPLE MANAGEMENT S.A."],["10 Class society","SAMPLE CLASS"],["11 DOC issued by","SAMPLE CLASS"],["13 SMC issued by","SAMPLE CLASS"],["14 ISSC issued by","SAMPLE CLASS"]].map((r,k)=>`<text x="${x+10}" y="${y+76+k*24}" font-size="9" fill="#555">${r[0]}</text><text x="${x+130}" y="${y+76+k*24}" font-size="10" font-weight="700">${e(r[1])}</text>`).join("");
+ st+=`<rect x="20" y="480" width="380" height="60" fill="#ffebee" stroke="#d32f2f"/><text x="210" y="502" text-anchor="middle" font-size="12" font-weight="800" fill="#d32f2f">No.1 + No.2 + No.3 + No.4 + No.5 = ALL ON BOARD</text><text x="210" y="522" text-anchor="middle" font-size="11" fill="#d32f2f">+ Form 2 (amendments) &amp; Form 3 (index) for each</text>`;
+ st+=pin(30,52,1)+pin(400,y+12,2)+pin(400,y+76+4*24,3)+pin(20,510,4);
+ return {svg:frame(st),pins:["csr1","csr2","csr3","csr4"]};},
 cert(i){const sup=/IOPP|IAPP|Safety Equipment|Safety Radio|Form|Supplement/i.test(i.n);
  const s=`<rect x="12" y="12" width="396" height="536" fill="none" stroke="#0b2e4f" stroke-width="3"/><rect x="18" y="18" width="384" height="524" fill="none" stroke="#0b2e4f" stroke-width="1"/>
  <text x="210" y="44" text-anchor="middle" font-size="10" fill="#555">ISSUED UNDER THE PROVISIONS OF</text><text x="210" y="58" text-anchor="middle" font-size="10" font-weight="700" fill="#555">${e((i.r||"").split("·")[0].slice(0,48))}</text>
@@ -133,7 +143,7 @@ ins(i){const s=`<rect x="14" y="14" width="392" height="532" fill="#fff" stroke=
  return {svg:frame(s),pins:["club","period","sign"]};}
 };
 window.sampleHTML=function(i){const L=(window.L_||"el")==="en"?0:1;let t=typeOf(i),r;try{r=R[t](i)}catch(x){r=R.book(i);t="book";}
- const tn={cert:["Certificate","Πιστοποιητικό"],book:["Manual / plan / publication","Manual / σχέδιο / έκδοση"],log:["Record book / log","Record book / ημερολόγιο"],report:["Service / test / analysis report","Report service / δοκιμής / ανάλυσης"],plan:["Plan / drawing","Σχέδιο / plan"],poster:["Poster / placard","Αφίσα / πινακίδα"],crew:["Personal certificate (seafarer)","Προσωπικό πιστοποιητικό ναυτικού"],ins:["Insurance certificate","Ασφαλιστικό πιστοποιητικό"]}[t];
+ const tn={csr:["CSR file – all numbers","Φάκελος CSR – όλα τα νούμερα"],cert:["Certificate","Πιστοποιητικό"],book:["Manual / plan / publication","Manual / σχέδιο / έκδοση"],log:["Record book / log","Record book / ημερολόγιο"],report:["Service / test / analysis report","Report service / δοκιμής / ανάλυσης"],plan:["Plan / drawing","Σχέδιο / plan"],poster:["Poster / placard","Αφίσα / πινακίδα"],crew:["Personal certificate (seafarer)","Προσωπικό πιστοποιητικό ναυτικού"],ins:["Insurance certificate","Ασφαλιστικό πιστοποιητικό"]}[t];
  return `<div class="smp"><div class="note">🖼️ ${L?"Δείγμα":"Sample"}: <b>${e(tn[L])}</b> — ${L?"γενική εικόνα, φανταστικό πλοίο· κάθε σημαία/class έχει δική της φόρμα":"generic illustration, fictional ship; every flag/class has its own form"}</div>${r.svg}
  <ol class="pins">${r.pins.map((p,k)=>`<li>${e(LBL[p][L])}</li>`).join("")}</ol>${r.note?`<div class="note">${e(r.note[L])}</div>`:""}</div>`;};
 
