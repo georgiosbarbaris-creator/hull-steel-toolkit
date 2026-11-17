@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Αρετή Calendar</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Αρετή">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#7b3a6b">
+<style>
+:root{--bg:#f7f1f3;--card:#fff;--ink:#2a1d26;--muted:#7a6a74;--line:#eadde3;--pri:#7b3a6b;--acc:#e8577a;--ok:#2e8b57;--okb:#e2f4ea;--bad:#c0392b;--badb:#fde6e3;--soft:#fbeef3}
+@media (prefers-color-scheme:dark){:root{--bg:#160f14;--card:#21171e;--ink:#f1e6ec;--muted:#b09aa7;--line:#3a2a34;--pri:#e2a4d0;--acc:#ff7c9c;--ok:#6fd49a;--okb:#16301f;--bad:#ff8a80;--badb:#3d1a18;--soft:#2b1c26}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font:18px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:calc(96px + env(safe-area-inset-bottom))}
+header{position:sticky;top:0;z-index:8;background:linear-gradient(135deg,#7b3a6b,#b4517f);color:#fff;padding:calc(10px + env(safe-area-inset-top)) 14px 10px;display:flex;gap:10px;align-items:center}
+header h1{font-size:22px;margin:0;flex:1;font-weight:700;letter-spacing:.2px}
+header button{background:rgba(255,255,255,.18);color:#fff;border:0;border-radius:12px;padding:8px 13px;font-size:24px}
+main{padding:12px;max-width:760px;margin:0 auto}
+nav{position:fixed;bottom:0;left:0;right:0;z-index:9;background:var(--card);border-top:1px solid var(--line);display:flex;padding:4px 4px calc(4px + env(safe-area-inset-bottom))}
+nav button{flex:1;background:none;border:0;color:var(--muted);font-size:13px;padding:6px 0;display:flex;flex-direction:column;align-items:center;gap:1px}
+nav button b{font-size:32px;font-weight:400;line-height:1.1}
+nav button.on{color:var(--pri);font-weight:700}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin-bottom:12px}
+.card h2{font-size:19px;margin:0 0 8px;color:var(--pri)}
+.muted{color:var(--muted);font-size:15px}
+.row{display:flex;gap:8px;align-items:center}
+.wrap{flex-wrap:wrap}
+.grow{flex:1;min-width:0}
+.btn{border:0;border-radius:14px;padding:14px 16px;font-size:18px;font-weight:600;background:var(--pri);color:#fff}
+.btn.acc{background:var(--acc)}.btn.ghost{background:var(--soft);color:var(--pri)}.btn.bad{background:var(--badb);color:var(--bad)}.btn.ok{background:var(--ok)}
+.btn.sm{padding:9px 12px;font-size:15px;border-radius:12px}
+.full{width:100%}
+.hb{flex:1 1 0;display:flex;flex-direction:column;align-items:center;gap:2px;padding:12px 4px}.hb span{font-size:34px;line-height:1.1}
+.item{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-top:1px solid var(--line)}
+.item:first-of-type{border-top:0}
+.dot{width:14px;height:14px;border-radius:50%;margin-top:6px;flex:none}
+.tag{display:inline-block;font-size:13px;padding:1px 7px;border-radius:9px;background:var(--soft);color:var(--pri);margin-left:4px;vertical-align:1px}
+.tag.sh{background:#e3f0ff;color:#1f5fa8}
+@media (prefers-color-scheme:dark){.tag.sh{background:#17304d;color:#9cc8ff}}
+.hol{color:var(--bad);font-weight:600}
+input,select,textarea{font:inherit;width:100%;padding:12px 13px;border:1px solid var(--line);border-radius:11px;background:var(--bg);color:var(--ink)}
+textarea{min-height:64px}
+label{display:block;font-size:15px;color:var(--muted);margin:10px 0 4px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:22px;padding:10px 14px;font-size:17px}
+.chip.on{background:var(--pri);border-color:var(--pri);color:#fff}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal .h{text-align:center;font-size:14px;font-weight:600;color:var(--muted);padding:2px 0}
+.cal .d{min-height:62px;border-radius:10px;background:var(--bg);padding:4px 2px;text-align:center;font-size:19px;position:relative;border:1px solid transparent}
+.cal .d.o{opacity:.35}.cal .d.t{border-color:var(--acc)}.cal .d.s{background:var(--pri);color:#fff}
+.cal .d.hd .n{color:var(--bad);font-weight:700}.cal .d.s.hd .n{color:#ffd6e0}
+.cal .d .ds{display:flex;gap:2px;justify-content:center;flex-wrap:wrap;margin-top:2px}
+.cal .d .ds i{width:8px;height:8px;border-radius:50%;display:block}
+.cal .d .em{font-size:13px;line-height:1}
+.mhead{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.mhead h2{flex:1;text-align:center;margin:0;font-size:21px;color:var(--ink)}
+.mhead button{background:var(--soft);color:var(--pri);border:0;border-radius:12px;padding:8px 18px;font-size:26px}
+.sum{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.sum div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:9px;text-align:center}
+.sum b{display:block;font-size:19px}.sum span{font-size:14px;color:var(--muted)}
+.pos{color:var(--ok)}.neg{color:var(--bad)}
+.bar{height:12px;background:var(--bg);border-radius:6px;overflow:hidden;margin-top:4px}
+.bar i{display:block;height:100%;background:var(--acc);border-radius:6px}
+.sheet{position:fixed;inset:0;z-index:20;background:rgba(20,8,16,.45);display:flex;align-items:flex-end;justify-content:center}
+.sheet>div{background:var(--card);width:100%;max-width:760px;max-height:92vh;overflow:auto;border-radius:20px 20px 0 0;padding:14px 16px calc(18px + env(safe-area-inset-bottom))}
+.sheet h3{margin:0 0 4px;font-size:22px;color:var(--pri)}
+.hide{display:none!important}
+#toast{position:fixed;left:50%;bottom:calc(110px + env(safe-area-inset-bottom));transform:translateX(-50%);background:#2a1d26;color:#fff;padding:12px 18px;border-radius:14px;font-size:16px;z-index:40;max-width:90%;text-align:center}
+.love{text-align:center;color:var(--acc);font-size:16px;margin:4px 0 14px}
+.amt{font-size:36px;font-weight:700;text-align:center}
+.seg{display:flex;background:var(--bg);border-radius:12px;padding:3px}
+.seg button{flex:1;border:0;background:none;padding:12px;border-radius:10px;font-weight:600;color:var(--muted);font-size:18px}
+.seg button.on{background:var(--card);color:var(--pri);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.chk{width:34px;height:34px;border-radius:50%;border:2px solid var(--pri);flex:none;display:flex;align-items:center;justify-content:center;color:#fff;font-size:19px;background:none}
+.chk.on{background:var(--ok);border-color:var(--ok)}
+.done .tx{text-decoration:line-through;color:var(--muted)}
+.welcome{position:fixed;inset:0;z-index:50;background:linear-gradient(160deg,#7b3a6b,#e8577a);color:#fff;display:flex;align-items:center;justify-content:center;padding:28px;text-align:center}
+.welcome div{max-width:420px}.welcome h2{font-size:30px;margin:6px 0}.welcome p{font-size:17px;line-height:1.55}
+.welcome button{background:#fff;color:#7b3a6b;border:0;border-radius:14px;padding:13px 26px;font-size:17px;font-weight:700;margin-top:10px}
+.sw{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;background:var(--soft);margin-top:10px}
+.sw input{width:28px;height:28px;flex:none}
+.big{font-size:25px}
+a{color:var(--pri)}
+</style>
+</head>
+<body>
+<header><h1>💛 Αρετή Calendar</h1><button id="bSet" aria-label="Ρυθμίσεις">⚙️</button></header>
+<main id="main"></main>
+<nav id="nav">
+ <button data-t="home" class="on"><b>🏠</b>Σήμερα</button>
+ <button data-t="cal"><b>📅</b>Ημερολόγιο</button>
+ <button data-t="todo"><b>✅</b>Οργάνωση</button>
+ <button data-t="bd"><b>🎂</b>Γενέθλια</button>
+ <button data-t="fin"><b>💶</b>Οικονομικά</button>
+</nav>
+<div id="sheet" class="sheet hide"><div id="sheetIn"></div></div>
+<div id="toast" class="hide"></div>
+<input type="file" id="fileIn" class="hide" accept=".json,.ics,text/calendar,application/json">
+
+<script>
+"use strict";
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const pad=n=>String(n).padStart(2,"0");
+const ymd=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const pd=s=>{const[a,b,c]=s.split("-").map(Number);return new Date(a,b-1,c);};
+const today=()=>ymd(new Date());
+const addD=(s,n)=>{const d=pd(s);d.setDate(d.getDate()+n);return ymd(d);};
+const diffD=(a,b)=>Math.round((pd(b)-pd(a))/864e5);
+const DOW=["Κυριακή","Δευτέρα","Τρίτη","Τετάρτη","Πέμπτη","Παρασκευή","Σάββατο"],DOWS=["Κυρ","Δευ","Τρί","Τετ","Πέμ","Παρ","Σάβ"];
+const MON=["Ιανουάριος","Φεβρουάριος","Μάρτιος","Απρίλιος","Μάιος","Ιούνιος","Ιούλιος","Αύγουστος","Σεπτέμβριος","Οκτώβριος","Νοέμβριος","Δεκέμβριος"];
+const MONG=["Ιανουαρίου","Φεβρουαρίου","Μαρτίου","Απριλίου","Μαΐου","Ιουνίου","Ιουλίου","Αυγούστου","Σεπτεμβρίου","Οκτωβρίου","Νοεμβρίου","Δεκεμβρίου"];
+const fdl=s=>{const d=pd(s);return DOW[d.getDay()]+" "+d.getDate()+" "+MONG[d.getMonth()];};
+const fds=s=>{const d=pd(s);return DOWS[d.getDay()]+" "+d.getDate()+"/"+(d.getMonth()+1);};
+const eur=n=>(Math.round(n*100)/100).toLocaleString("el-GR",{minimumFractionDigits:2,maximumFractionDigits:2})+" €";
+const num=v=>{const x=parseFloat(String(v||"").replace(/\s/g,"").replace(",","."));return isNaN(x)?0:x;};
+
+/* ---------- κατηγορίες ---------- */
+const ECAT={rantevou:["📌 Ραντεβού","#3b82f6"],therapeia:["💊 Θεραπεία","#16a34a"],douleia:["💼 Δουλειά","#f59e0b"],spiti:["🏠 Σπίτι","#8b5cf6"],prosopiko:["🌸 Προσωπικό","#e8577a"],allo:["⭐ Άλλο","#64748b"]};
+const TCAT=["🏠 Σπίτι","🛒 Ψώνια","📄 Χαρτιά","💼 Δουλειά","📞 Τηλέφωνα","⭐ Άλλο"];
+const DEF_OUT=["🛒 Σούπερ μάρκετ","💊 Φαρμακείο","⛽ Καύσιμα","💡 Λογαριασμοί","🏠 Ενοίκιο/Σπίτι","🍽️ Φαγητό έξω","☕ Καφές","👗 Ρούχα","🩺 Υγεία","🚗 Αυτοκίνητο","🎁 Δώρα","🎉 Διασκέδαση","💇 Ομορφιά","📱 Τηλέφωνο/Internet","⭐ Άλλο"];
+const DEF_IN=["💼 Μισθός","🎁 Δώρο","💰 Επίδομα","⭐ Άλλο"];
+const REP={none:"Καμία",d:"Κάθε μέρα",w:"Κάθε εβδομάδα","2w":"Κάθε 2 εβδομάδες",m:"Κάθε μήνα",y:"Κάθε χρόνο"};
+const REM={0:"Χωρίς υπενθύμιση",15:"15 λεπτά πριν",30:"30 λεπτά πριν",60:"1 ώρα πριν",120:"2 ώρες πριν",1440:"1 μέρα πριν"};
+const BDK={b:"🎂 Γενέθλια",n:"🎉 Γιορτή",a:"💍 Επέτειος"};
+
+/* ---------- δεδομένα ---------- */
+const K="areti_cal_v1";
+function fix(x){x=x||{};x.ev=x.ev||[];x.todo=x.todo||[];x.bd=x.bd||[];x.tx=x.tx||[];
+ x.cats=x.cats||{};x.cats.out=x.cats.out||[...DEF_OUT];x.cats.in=x.cats.in||[...DEF_IN];
+ x.set=Object.assign({partner:"Γιάννης",budget:0,names:true,welcomed:false},x.set||{});return x;}
+let D;try{D=fix(JSON.parse(localStorage.getItem(K)));}catch(e){D=fix();}
+function save(){try{localStorage.setItem(K,JSON.stringify(D));}catch(e){toast("⚠️ Δεν αποθηκεύτηκε – γέμισε ο χώρος");}}
+if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{});
+const P=()=>D.set.partner||"Γιάννης";
+const Pa=()=>P().replace(/ς$/,"");
+
+/* ---------- γιορτές & αργίες ---------- */
+function easter(y){const a=y%4,b=y%7,c=y%19,d=(19*c+15)%30,e=(2*a+4*b-d+34)%7,m=Math.floor((d+e+114)/31),dd=(d+e+114)%31+1;const r=new Date(y,m-1,dd);r.setDate(r.getDate()+13);return ymd(r);}
+const HOL=[["01-01","Πρωτοχρονιά"],["01-06","Θεοφάνεια"],["03-25","25η Μαρτίου – Ευαγγελισμός"],["05-01","Πρωτομαγιά"],["08-15","Κοίμηση της Θεοτόκου"],["10-28","28η Οκτωβρίου – Επέτειος του ΟΧΙ"],["12-25","Χριστούγεννα"],["12-26","Σύναξη της Θεοτόκου"]];
+const OBS=[["01-30","Τριών Ιεραρχών (σχολεία κλειστά)"],["02-14","Αγίου Βαλεντίνου ❤️"],["03-08","Ημέρα της Γυναίκας"],["11-17","Επέτειος Πολυτεχνείου"],["12-24","Παραμονή Χριστουγέννων"],["12-31","Παραμονή Πρωτοχρονιάς"]];
+const NAMES=[["01-01","Βασίλειος, Βασιλική, Βάσω"],["01-02","Σίλβεστρος"],["01-07","Ιωάννης, Ιωάννα, Γιάννης"],["01-11","Θεοδόσιος"],["01-17","Αντώνιος, Αντωνία"],["01-18","Αθανάσιος, Αθανασία, Θανάσης"],["01-20","Ευθύμιος"],["01-22","Τιμόθεος, Αναστάσιος ο Πέρσης"],["01-25","Γρηγόριος, Γρηγορία"],["01-27","Ιωάννης Χρυσόστομος"],["02-01","Τρύφων"],["02-02","Υπαπαντή – Υπαπαντή"],["02-10","Χαράλαμπος, Χαραλαμπία, Μπάμπης"],["02-11","Βλάσιος"],["02-17","Θεόδωρος ο Τήρων"],["03-09","Σαράντα Μάρτυρες"],["03-25","Ευάγγελος, Ευαγγελία, Βαγγέλης"],["04-23","Γεώργιος, Γεωργία, Γιώργος"],["04-25","Μάρκος"],["05-02","Αθανάσιος (ανακομιδή)"],["05-05","Ειρήνη"],["05-08","Ιωάννης ο Θεολόγος"],["05-15","Αχίλλειος"],["05-21","Κωνσταντίνος, Ελένη, Κώστας"],["06-11","Βαρθολομαίος, Βαρνάβας"],["06-29","Πέτρος, Παύλος"],["06-30","Απόστολος"],["07-01","Ανάργυροι – Κοσμάς, Δαμιανός"],["07-07","Κυριακή"],["07-17","Μαρίνα"],["07-20","Ηλίας, Ηλιάνα"],["07-22","Μαγδαληνή"],["07-25","Άννα (Κοίμηση)"],["07-26","Παρασκευή, Παρασκευάς, Βιβή"],["07-27","Παντελεήμων, Παντελής"],["08-06","Σωτήριος, Σωτηρία, Σωτήρης"],["08-15","Μαρία, Παναγιώτης, Παναγιώτα, Δέσποινα"],["08-26","Αδριανός, Νατάλια"],["08-30","Αλέξανδρος, Αλεξάνδρα"],["09-14","Σταύρος, Σταυρούλα"],["09-17","Σοφία, Ελπίδα, Πίστη, Αγάπη"],["09-20","Ευστάθιος, Στάθης"],["10-03","Διονύσιος (Αρεοπαγίτης)"],["10-18","Λουκάς"],["10-26","Δημήτριος, Δήμητρα, Δημήτρης"],["11-08","Μιχαήλ, Γαβριήλ, Άγγελος, Αγγελική, Ραφαήλ"],["11-09","Νεκτάριος"],["11-11","Μηνάς"],["11-13","Ιωάννης Χρυσόστομος"],["11-14","Φίλιππος"],["11-16","Ματθαίος"],["11-25","Αικατερίνη, Κατερίνα"],["11-26","Στυλιανός, Στέλιος"],["11-30","Ανδρέας"],["12-04","Βαρβάρα"],["12-05","Σάββας"],["12-06","Νικόλαος, Νικολέτα, Νίκος"],["12-09","Άννα"],["12-12","Σπυρίδων, Σπύρος"],["12-15","Ελευθέριος, Ελευθερία, Λευτέρης"],["12-17","Διονύσιος (Ζακύνθου)"],["12-25","Χρήστος, Χριστίνα, Εμμανουήλ, Μανώλης"],["12-27","Στέφανος, Στεφανία"]];
+const yc={};
+function specials(y){if(yc[y])return yc[y];const m={};const add=(s,t,k)=>(m[s]=m[s]||[]).push({t,k});
+ const E=easter(y);
+ HOL.forEach(([md,t])=>add(y+"-"+md,t,"hol"));
+ [[-48,"Καθαρά Δευτέρα","hol"],[-2,"Μεγάλη Παρασκευή","hol"],[0,"Κυριακή του Πάσχα 🕯️","hol"],[1,"Δευτέρα του Πάσχα","hol"],[50,"Αγίου Πνεύματος","hol"],
+  [-59,"Τσικνοπέμπτη","obs"],[-7,"Κυριακή των Βαΐων","obs"],[-3,"Μεγάλη Πέμπτη","obs"],[-1,"Μεγάλο Σάββατο","obs"],[49,"Πεντηκοστή","obs"]].forEach(([n,t,k])=>add(addD(E,n),t,k));
+ OBS.forEach(([md,t])=>add(y+"-"+md,t,"obs"));
+ const may=new Date(y,4,1);const ms=1+((7-may.getDay())%7)+7;add(y+"-05-"+pad(ms),"Γιορτή της Μητέρας 💐","obs");
+ if(D.set.names){
+  NAMES.forEach(([md,t])=>{let s=y+"-"+md;if(md==="04-23"&&s<=E)s=addD(E,1);if(md==="04-25"&&s<=addD(E,1))s=addD(E,2);add(s,t,"name");});
+  [[-8,"Λάζαρος, Λαζαρία"],[-7,"Βάιος, Βάγια"],[0,"Αναστάσιος, Αναστασία, Τάσος"],[5,"Ζωή, Πηγή (Ζωοδόχου Πηγής)"],[7,"Θωμάς"],[50,"Τριαντάφυλλος (Αγίου Πνεύματος)"]].forEach(([n,t])=>add(addD(E,n),t,"name"));}
+ return yc[y]=m;}
+const spOf=s=>specials(+s.slice(0,4))[s]||[];
+const isHol=s=>spOf(s).some(x=>x.k==="hol")||pd(s).getDay()===0;
+
+/* ---------- επαναλήψεις ---------- */
+function occ(e,a,b){const r=[],sk=e.skip||[];const lim=e.until&&e.until<b?e.until:b;
+ if(!e.rep||e.rep==="none"){if(e.date>=a&&e.date<=b)r.push(e.date);return r;}
+ if(e.date>lim)return r;
+ const base=pd(e.date);
+ if(e.rep==="d"||e.rep==="w"||e.rep==="2w"){const st=e.rep==="d"?1:e.rep==="w"?7:14;let k=Math.max(0,Math.floor(diffD(e.date,a)/st));
+  for(let i=0;i<800;i++){const s=addD(e.date,(k+i)*st);if(s>lim)break;if(s>=a&&!sk.includes(s))r.push(s);}return r;}
+ for(let i=0;i<600;i++){const d=e.rep==="m"?new Date(base.getFullYear(),base.getMonth()+i,base.getDate()):new Date(base.getFullYear()+i,base.getMonth(),base.getDate());
+  if(d.getDate()!==base.getDate())continue;const s=ymd(d);if(s>lim)break;if(s>=a&&!sk.includes(s))r.push(s);}return r;}
+function bdOn(s){const md=s.slice(5);return D.bd.filter(b=>b.md===md||(b.md==="02-29"&&md==="02-28"&&!leap(+s.slice(0,4))));}
+const leap=y=>(y%4===0&&y%100!==0)||y%400===0;
+function evOn(s){return D.ev.filter(e=>occ(e,s,s).length).sort((x,y)=>(x.time||"").localeCompare(y.time||""));}
+function nextBd(b,from){const y=+from.slice(0,4);for(let k=0;k<2;k++){let s=(y+k)+"-"+b.md;if(b.md==="02-29"&&!leap(y+k))s=(y+k)+"-02-28";if(s>=from)return s;}return (y+1)+"-"+b.md;}
+
+/* ---------- UI βασικά ---------- */
+let tab="home",calM=new Date();calM.setDate(1);let sel=today(),finM=new Date();finM.setDate(1);let todoF="open";
+function toast(t,ms=2400){const x=$("#toast");x.textContent=t;x.classList.remove("hide");clearTimeout(x._t);x._t=setTimeout(()=>x.classList.add("hide"),ms);}
+function openSheet(h){$("#sheetIn").innerHTML=h;$("#sheet").classList.remove("hide");$("#sheet").scrollTop=0;}
+function closeSheet(){$("#sheet").classList.add("hide");$("#sheetIn").innerHTML="";}
+$("#sheet").addEventListener("click",e=>{if(e.target.id==="sheet")closeSheet();});
+$$("#nav button").forEach(b=>b.onclick=()=>go(b.dataset.t));
+function go(t){tab=t;$$("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===t));render();window.scrollTo(0,0);}
+function render(){({home:rHome,cal:rCal,todo:rTodo,bd:rBd,fin:rFin})[tab]();}
+$("#bSet").onclick=settings;
+
+function evLine(e,s){const c=ECAT[e.cat]||ECAT.allo;
+ return `<div class="item" data-ev="${e.id}" data-d="${s}"><span class="dot" style="background:${c[1]}"></span><div class="grow"><b>${e.time?esc(e.time)+(e.end?"–"+esc(e.end):"")+" · ":""}${esc(e.title)}</b>${e.shared?`<span class="tag sh">👫 ${esc(P())}</span>`:""}${e.who?`<span class="tag sh">από ${esc(e.who)}</span>`:""}${e.rep&&e.rep!=="none"?`<span class="tag">🔁</span>`:""}${+e.rem?`<span class="tag">🔔</span>`:""}
+ <div class="muted">${c[0]}${e.place?" · 📍 "+esc(e.place):""}${e.notes?" · "+esc(e.notes):""}</div></div></div>`;}
+function bindEv(root){root.querySelectorAll("[data-ev]").forEach(x=>x.onclick=()=>editEv(x.dataset.ev,x.dataset.d));}
+
+/* ---------- ΣΗΜΕΡΑ ---------- */
+function rHome(){const t=today(),h=new Date().getHours(),tm=addD(t,1);
+ const gr=h<12?"Καλημέρα":h<18?"Καλό απόγευμα":"Καλησπέρα";
+ const sp=spOf(t),hol=sp.filter(x=>x.k!=="name"),nm=sp.filter(x=>x.k==="name");
+ let o=`<div class="card"><div class="big"><b>${gr} Αρετή! ${h<18?"☀️":"🌙"}</b></div><div class="muted">${fdl(t)} ${pd(t).getFullYear()}</div>
+ ${hol.map(x=>`<div class="${x.k==="hol"?"hol":""}" style="margin-top:4px">${x.k==="hol"?"🇬🇷 ":"📌 "}${esc(x.t)}</div>`).join("")}
+ ${nm.length?`<div style="margin-top:4px">🎉 Γιορτάζουν: ${esc(nm.map(x=>x.t).join(", "))}</div>`:""}</div>`;
+ o+=`<div class="row" style="margin-bottom:12px"><button class="btn grow hb" id="hEv"><span>📅</span>Ραντεβού</button><button class="btn acc grow hb" id="hTx"><span>💶</span>Έξοδο</button><button class="btn ghost grow hb" id="hTd"><span>✅</span>Δουλειά</button></div>`;
+ // γενέθλια
+ const bds=D.bd.map(b=>({b,s:nextBd(b,t)})).filter(x=>diffD(t,x.s)<=7).sort((a,b)=>a.s.localeCompare(b.s));
+ if(bds.length)o+=`<div class="card"><h2>🎂 Γενέθλια & γιορτές (7 μέρες)</h2>${bds.map(({b,s})=>{const n=diffD(t,s);return `<div class="item"><div class="grow"><b>${esc(b.name)}</b> <span class="muted">${BDK[b.k||"b"]}${b.year&&(b.k||"b")!=="n"?" · "+(+s.slice(0,4)-b.year)+(b.k==="a"?" χρόνια":" χρονών"):""}</span><div class="${n===0?"hol":"muted"}">${n===0?"ΣΗΜΕΡΑ! 🎉":n===1?"Αύριο":"σε "+n+" μέρες · "+fds(s)}</div></div>${n<=1?`<button class="btn sm acc" data-wish="${b.id}">💬 Ευχές</button>`:""}</div>`;}).join("")}</div>`;
+ // σήμερα / αύριο
+ const et=evOn(t),em=evOn(tm);
+ o+=`<div class="card"><h2>📅 Σήμερα</h2>${et.length?et.map(e=>evLine(e,t)).join(""):`<div class="muted">Τίποτα προγραμματισμένο. Ήρεμη μέρα 🌿</div>`}</div>`;
+ o+=`<div class="card"><h2>🌅 Αύριο · ${fds(tm)}</h2>${em.length?em.map(e=>evLine(e,tm)).join(""):`<div class="muted">Τίποτα ακόμα.</div>`}
+ ${spOf(tm).filter(x=>x.k==="name").length?`<div class="muted" style="margin-top:6px">🎉 Αύριο γιορτάζουν: ${esc(spOf(tm).filter(x=>x.k==="name").map(x=>x.t).join(", "))}</div>`:""}</div>`;
+ // επόμενες μέρες
+ let up="";for(let i=2;i<=7;i++){const s=addD(t,i);evOn(s).forEach(e=>up+=evLine(e,s).replace("<b>",`<b>${fds(s)} · `));}
+ if(up)o+=`<div class="card"><h2>🗓️ Την εβδομάδα</h2>${up}</div>`;
+ // δουλειές
+ const td=D.todo.filter(x=>!x.done&&x.due&&x.due<=tm).sort((a,b)=>a.due.localeCompare(b.due));
+ if(td.length)o+=`<div class="card"><h2>✅ Δουλειές για τώρα</h2>${td.map(x=>todoLine(x)).join("")}</div>`;
+ // οικονομικά μήνα
+ const mk=t.slice(0,7),mt=D.tx.filter(x=>x.date.startsWith(mk)),out=mt.filter(x=>x.type==="out").reduce((a,x)=>a+x.amt,0),inn=mt.filter(x=>x.type==="in").reduce((a,x)=>a+x.amt,0);
+ o+=`<div class="card" id="hFin"><h2>💶 ${MON[pd(t).getMonth()]} μέχρι τώρα</h2><div class="row"><div class="grow">Έξοδα: <b class="neg">${eur(out)}</b></div><div class="grow">Έσοδα: <b class="pos">${eur(inn)}</b></div></div>
+ ${D.set.budget?`<div class="bar"><i style="width:${Math.min(100,out/D.set.budget*100)}%;${out>D.set.budget?"background:var(--bad)":""}"></i></div><div class="muted">${out>D.set.budget?"⚠️ Ξεπέρασες το όριο κατά "+eur(out-D.set.budget):"Μένουν "+eur(D.set.budget-out)+" από το όριο του μήνα"}</div>`:""}</div>`;
+ o+=`<div class="love">💛 Με αγάπη, από τον αδερφό σου</div>`;
+ $("#main").innerHTML=o;bindEv($("#main"));bindTodo($("#main"));
+ $("#hEv").onclick=()=>editEv(null,t);$("#hTx").onclick=()=>editTx(null,"out");$("#hTd").onclick=()=>editTodo(null);
+ $("#hFin").onclick=()=>go("fin");$$("[data-wish]").forEach(b=>b.onclick=()=>wish(b.dataset.wish));}
+
+/* ---------- ΗΜΕΡΟΛΟΓΙΟ ---------- */
+function rCal(){const y=calM.getFullYear(),m=calM.getMonth(),t=today();
+ const first=new Date(y,m,1),off=(first.getDay()+6)%7,start=new Date(y,m,1-off);
+ let g=["Δε","Τρ","Τε","Πε","Πα","Σα","Κυ"].map(x=>`<div class="h">${x}</div>`).join("");
+ const a=ymd(start),b=addD(a,41);
+ const map={};D.ev.forEach(e=>occ(e,a,b).forEach(s=>(map[s]=map[s]||[]).push(e)));
+ for(let i=0;i<42;i++){const s=addD(a,i),d=pd(s),ev=map[s]||[],sp=spOf(s),bd=bdOn(s);
+  const dots=ev.slice(0,4).map(e=>`<i style="background:${(ECAT[e.cat]||ECAT.allo)[1]}"></i>`).join("");
+  g+=`<div class="d ${d.getMonth()!==m?"o":""} ${s===t?"t":""} ${s===sel?"s":""} ${isHol(s)?"hd":""}" data-s="${s}"><div class="n">${d.getDate()}</div><div class="ds">${dots}</div><div class="em">${bd.length?"🎂":""}${sp.some(x=>x.k==="hol")?"🇬🇷":""}</div></div>`;}
+ let o=`<div class="card"><div class="mhead"><button id="cP">‹</button><h2>${MON[m]} ${y}</h2><button id="cN">›</button></div><div class="cal">${g}</div>
+ <div class="row" style="margin-top:8px"><button class="btn sm ghost" id="cT">Σήμερα</button><div class="grow"></div><span class="muted">${Object.entries(ECAT).map(([k,v])=>`<span style="color:${v[1]}">●</span>${v[0].split(" ")[1]}`).join(" ")}</span></div></div>`;
+ const sp=spOf(sel),bd=bdOn(sel),ev=evOn(sel);
+ o+=`<div class="card"><h2>${fdl(sel)}</h2>
+ ${sp.map(x=>`<div class="${x.k==="hol"?"hol":"muted"}">${x.k==="name"?"🎉 Γιορτάζουν: ":x.k==="hol"?"🇬🇷 ":"📌 "}${esc(x.t)}</div>`).join("")}
+ ${bd.map(x=>`<div>🎂 <b>${esc(x.name)}</b> <span class="muted">${BDK[x.k||"b"]}</span></div>`).join("")}
+ ${ev.length?ev.map(e=>evLine(e,sel)).join(""):`<div class="muted" style="margin-top:6px">Κανένα ραντεβού.</div>`}
+ <button class="btn full" style="margin-top:10px" id="cAdd">+ Νέο ραντεβού ${fds(sel)}</button></div>`;
+ o+=`<div class="row wrap"><button class="btn ghost grow" id="cShare">📤 Στείλε τα κοινά στον ${esc(Pa())}</button><button class="btn ghost grow" id="cIcs">🔔 Όλα στο κινητό</button></div>`;
+ $("#main").innerHTML=o;bindEv($("#main"));
+ $$(".cal .d").forEach(x=>x.onclick=()=>{sel=x.dataset.s;const d=pd(sel);if(d.getMonth()!==m){calM=new Date(d.getFullYear(),d.getMonth(),1);}rCal();});
+ $("#cP").onclick=()=>{calM=new Date(y,m-1,1);rCal();};$("#cN").onclick=()=>{calM=new Date(y,m+1,1);rCal();};
+ $("#cT").onclick=()=>{calM=new Date();calM.setDate(1);sel=today();rCal();};
+ $("#cAdd").onclick=()=>editEv(null,sel);$("#cShare").onclick=shareAllShared;$("#cIcs").onclick=allToPhone;
+ let sx=null;$(".cal").addEventListener("touchstart",e=>sx=e.touches[0].clientX,{passive:true});
+ $(".cal").addEventListener("touchend",e=>{if(sx===null)return;const dx=e.changedTouches[0].clientX-sx;sx=null;if(Math.abs(dx)>60){calM=new Date(y,m+(dx<0?1:-1),1);rCal();}});}
+
+function editEv(id,day){const e0=id?D.ev.find(x=>x.id===id):null;
+ const e=e0?{...e0}:{id:uid(),title:"",date:day||sel,time:"",end:"",cat:"rantevou",rep:"none",until:"",rem:60,place:"",notes:"",shared:false};
+ const isRep=e0&&e0.rep&&e0.rep!=="none";
+ openSheet(`<h3>${e0?"✏️ Ραντεβού":"➕ Νέο ραντεβού"}</h3>
+ <label>Τι;</label><input id="eT" value="${esc(e.title)}" placeholder="π.χ. Οδοντίατρος, Φυσικοθεραπεία…">
+ <label>Κατηγορία</label><div class="chips" id="eC">${Object.entries(ECAT).map(([k,v])=>`<button class="chip ${k===e.cat?"on":""}" data-k="${k}">${v[0]}</button>`).join("")}</div>
+ <div class="row"><div class="grow"><label>Ημερομηνία</label><input type="date" id="eD" value="${e.date}"></div></div>
+ <div class="row"><div class="grow"><label>Ώρα (κενό = όλη μέρα)</label><input type="time" id="eH" value="${e.time}"></div><div class="grow"><label>Μέχρι</label><input type="time" id="eE" value="${e.end||""}"></div></div>
+ <label>📍 Πού</label><input id="eP" value="${esc(e.place)}" placeholder="π.χ. Ιατρείο Κηφισιάς">
+ <div class="row"><div class="grow"><label>🔁 Επανάληψη</label><select id="eR">${Object.entries(REP).map(([k,v])=>`<option value="${k}" ${k===e.rep?"selected":""}>${v}</option>`).join("")}</select></div>
+ <div class="grow" id="eUw"><label>Μέχρι (ημ/νία)</label><input type="date" id="eU" value="${e.until||""}"></div></div>
+ <label>🔔 Ειδοποίηση</label><select id="eM">${Object.entries(REM).map(([k,v])=>`<option value="${k}" ${+k===+e.rem?"selected":""}>${v}</option>`).join("")}</select>
+ <label>Σημειώσεις</label><textarea id="eN" placeholder="π.χ. να πάρω τις εξετάσεις">${esc(e.notes)}</textarea>
+ <label class="sw"><input type="checkbox" id="eS" ${e.shared?"checked":""}><span>👫 <b>Κοινό με τον ${esc(Pa())}</b><br><span class="muted">Μόνο ό,τι τσεκάρεις εδώ φεύγει στον ${esc(Pa())}. Τα υπόλοιπα μένουν μόνο δικά σου.</span></span></label>
+ <button class="btn full" style="margin-top:14px" id="eSave">💾 Αποθήκευση</button>
+ <div class="row wrap" style="margin-top:8px"><button class="btn ghost grow" id="ePh">🔔 Στο ημερολόγιο του κινητού</button>${`<button class="btn ghost grow" id="eSh">📤 Στείλε στον ${esc(Pa())}</button>`}</div>
+ ${e0?`<div class="row wrap" style="margin-top:8px">${isRep?`<button class="btn bad grow" id="eDel1">🗑 Μόνο ${fds(day)}</button>`:""}<button class="btn bad grow" id="eDel">🗑 Διαγραφή${isRep?" όλων":""}</button></div>`:""}
+ <button class="btn ghost full" style="margin-top:8px" onclick="closeSheet()">Κλείσιμο</button>`);
+ let cat=e.cat;$$("#eC .chip").forEach(c=>c.onclick=()=>{cat=c.dataset.k;$$("#eC .chip").forEach(x=>x.classList.toggle("on",x===c));});
+ const uw=()=>$("#eUw").classList.toggle("hide",$("#eR").value==="none");uw();$("#eR").onchange=uw;
+ const read=()=>{e.title=$("#eT").value.trim();e.cat=cat;e.date=$("#eD").value||today();e.time=$("#eH").value;e.end=e.time?$("#eE").value:"";e.place=$("#eP").value.trim();e.rep=$("#eR").value;e.until=e.rep==="none"?"":$("#eU").value;e.rem=+$("#eM").value;e.notes=$("#eN").value.trim();e.shared=$("#eS").checked;return e;};
+ const commit=()=>{read();if(!e.title){toast("Γράψε τι είναι 🙂");$("#eT").focus();return false;}
+  const i=D.ev.findIndex(x=>x.id===e.id);if(i>=0)D.ev[i]=e;else D.ev.push(e);save();return true;};
+ $("#eSave").onclick=()=>{if(!commit())return;closeSheet();sel=e.date;render();toast(+e.rem?"Αποθηκεύτηκε ✔ — για ειδοποίηση πάτα «🔔 Στο κινητό»":"Αποθηκεύτηκε ✔",3200);};
+ $("#ePh").onclick=()=>{if(!commit())return;shareFile(ics([e],[]),"Areti_"+slug(e.title)+".ics");render();};
+ $("#eSh").onclick=()=>{read();if(!e.title){toast("Γράψε τι είναι 🙂");return;}e.shared=true;$("#eS").checked=true;commit();sendToPartner([e]);render();};
+ if(e0){$("#eDel").onclick=()=>{if(!confirm("Διαγραφή;"))return;D.ev=D.ev.filter(x=>x.id!==e.id);save();closeSheet();render();toast("Διαγράφηκε");};
+  if(isRep)$("#eDel1").onclick=()=>{e0.skip=[...(e0.skip||[]),day];save();closeSheet();render();toast("Διαγράφηκε μόνο αυτή η φορά");};}
+ if(!e0)setTimeout(()=>{const z=$("#eT");if(z)z.focus();},250);}
+
+/* ---------- ΟΡΓΑΝΩΣΗ ---------- */
+function todoLine(x){const ov=x.due&&!x.done&&x.due<today();
+ return `<div class="item ${x.done?"done":""}"><button class="chk ${x.done?"on":""}" data-tk="${x.id}">${x.done?"✓":""}</button><div class="grow" data-te="${x.id}"><span class="tx">${esc(x.text)}</span>${x.shared?`<span class="tag sh">👫</span>`:""}
+ <div class="muted">${esc(x.cat||"")}${x.due?` · <span class="${ov?"neg":""}">${ov?"⚠️ ":""}${fds(x.due)}</span>`:""}${x.note?" · "+esc(x.note):""}</div></div></div>`;}
+function bindTodo(r){r.querySelectorAll("[data-tk]").forEach(b=>b.onclick=ev=>{ev.stopPropagation();const x=D.todo.find(t=>t.id===b.dataset.tk);x.done=!x.done;x.doneAt=x.done?today():"";save();render();if(x.done)toast("Μπράβο! ✔");});
+ r.querySelectorAll("[data-te]").forEach(b=>b.onclick=()=>editTodo(b.dataset.te));}
+function rTodo(){const open=D.todo.filter(x=>!x.done),done=D.todo.filter(x=>x.done);
+ const srt=(a,b)=>(a.due||"9999").localeCompare(b.due||"9999");
+ let o=`<div class="seg" style="margin-bottom:12px"><button data-f="open" class="${todoF==="open"?"on":""}">Να γίνουν (${open.length})</button><button data-f="done" class="${todoF==="done"?"on":""}">Έγιναν (${done.length})</button></div>`;
+ o+=`<button class="btn full" id="tAdd" style="margin-bottom:12px">+ Νέα δουλειά</button>`;
+ if(todoF==="open"){const groups={};open.sort(srt).forEach(x=>(groups[x.cat||"⭐ Άλλο"]=groups[x.cat||"⭐ Άλλο"]||[]).push(x));
+  o+=Object.keys(groups).length?Object.entries(groups).map(([k,v])=>`<div class="card"><h2>${esc(k)}</h2>${v.map(todoLine).join("")}</div>`).join(""):`<div class="card muted">Όλα έτοιμα! 🎉 Πρόσθεσε δουλειές, ψώνια, χαρτιά…</div>`;
+  if(open.some(x=>x.shared))o+=`<button class="btn ghost full" id="tSh">📤 Στείλε τις κοινές δουλειές στον ${esc(Pa())}</button>`;}
+ else{o+=`<div class="card">${done.length?done.sort((a,b)=>(b.doneAt||"").localeCompare(a.doneAt||"")).map(todoLine).join(""):`<div class="muted">Τίποτα ακόμα.</div>`}</div>`;
+  if(done.length)o+=`<button class="btn bad full" id="tClr">🧹 Καθάρισε όσα έγιναν</button>`;}
+ $("#main").innerHTML=o;bindTodo($("#main"));
+ $$("[data-f]").forEach(b=>b.onclick=()=>{todoF=b.dataset.f;rTodo();});$("#tAdd").onclick=()=>editTodo(null);
+ if($("#tSh"))$("#tSh").onclick=()=>{const l=D.todo.filter(x=>!x.done&&x.shared);shareText(`✅ Δουλειές (από την Αρετή):\n`+l.map(x=>`• ${x.text}${x.due?" — "+fds(x.due):""}`).join("\n"));};
+ if($("#tClr"))$("#tClr").onclick=()=>{if(confirm("Να σβηστούν όσα έγιναν;")){D.todo=D.todo.filter(x=>!x.done);save();rTodo();}};}
+function editTodo(id){const x0=id?D.todo.find(x=>x.id===id):null;const x=x0?{...x0}:{id:uid(),text:"",cat:"🏠 Σπίτι",due:"",note:"",shared:false,done:false};
+ openSheet(`<h3>${x0?"✏️ Δουλειά":"➕ Νέα δουλειά"}</h3><label>Τι πρέπει να γίνει;</label><input id="tT" value="${esc(x.text)}" placeholder="π.χ. Πληρωμή ΔΕΗ, γάλα, συνταγή…">
+ <label>Κατηγορία</label><div class="chips" id="tC">${TCAT.map(c=>`<button class="chip ${c===x.cat?"on":""}">${c}</button>`).join("")}</div>
+ <label>Μέχρι πότε (προαιρετικό)</label><div class="row"><input type="date" id="tD" value="${x.due}" class="grow"><button class="btn sm ghost" data-q="0">Σήμερα</button><button class="btn sm ghost" data-q="1">Αύριο</button><button class="btn sm ghost" data-q="7">+7</button></div>
+ <label>Σημείωση</label><input id="tN" value="${esc(x.note)}">
+ <label class="sw"><input type="checkbox" id="tS" ${x.shared?"checked":""}><span>👫 Κοινή με τον ${esc(Pa())}</span></label>
+ <button class="btn full" style="margin-top:14px" id="tSave">💾 Αποθήκευση</button>
+ ${x0?`<button class="btn bad full" style="margin-top:8px" id="tDel">🗑 Διαγραφή</button>`:""}<button class="btn ghost full" style="margin-top:8px" onclick="closeSheet()">Κλείσιμο</button>`);
+ let cat=x.cat;$$("#tC .chip").forEach(c=>c.onclick=()=>{cat=c.textContent;$$("#tC .chip").forEach(z=>z.classList.toggle("on",z===c));});
+ $$("[data-q]").forEach(b=>b.onclick=()=>$("#tD").value=addD(today(),+b.dataset.q));
+ $("#tSave").onclick=()=>{x.text=$("#tT").value.trim();if(!x.text){toast("Γράψε τι πρέπει να γίνει");return;}x.cat=cat;x.due=$("#tD").value;x.note=$("#tN").value.trim();x.shared=$("#tS").checked;
+  const i=D.todo.findIndex(z=>z.id===x.id);if(i>=0)D.todo[i]=x;else D.todo.push(x);save();closeSheet();render();toast("Αποθηκεύτηκε ✔");};
+ if(x0)$("#tDel").onclick=()=>{D.todo=D.todo.filter(z=>z.id!==x.id);save();closeSheet();render();};
+ if(!x0)setTimeout(()=>{const z=$("#tT");if(z)z.focus();},250);}
+
+/* ---------- ΓΕΝΕΘΛΙΑ ---------- */
+function rBd(){const t=today();const l=D.bd.map(b=>({b,s:nextBd(b,t)})).sort((a,b)=>a.s.localeCompare(b.s));
+ let o=`<button class="btn full" id="bAdd" style="margin-bottom:12px">+ Γενέθλια / γιορτή / επέτειος</button>`;
+ o+=`<div class="card"><h2>🎂 Τα επόμενα</h2>${l.length?l.map(({b,s})=>{const n=diffD(t,s),k=b.k||"b";return `<div class="item" data-b="${b.id}"><div class="grow"><b>${esc(b.name)}</b> <span class="muted">${BDK[k]}${b.rel?" · "+esc(b.rel):""}</span>
+ <div class="${n===0?"hol":"muted"}">${fdl(s)}${b.year&&k!=="n"?" · κλείνει "+(+s.slice(0,4)-b.year):""} · ${n===0?"ΣΗΜΕΡΑ 🎉":n===1?"αύριο":"σε "+n+" μέρες"}</div>${b.note?`<div class="muted">🎁 ${esc(b.note)}</div>`:""}</div></div>`;}).join(""):`<div class="muted">Πρόσθεσε τα γενέθλια της οικογένειας και των φίλων — θα σου τα θυμίζει η αρχική σελίδα 7 μέρες πριν.</div>`}</div>`;
+ if(l.length)o+=`<button class="btn ghost full" id="bIcs">🔔 Βάλε όλα στο ημερολόγιο του κινητού (ειδοποίηση κάθε χρόνο)</button>`;
+ // γιορτές μήνα
+ const y=+t.slice(0,4),m=t.slice(0,7),sp=specials(y);const nm=Object.keys(sp).filter(s=>s>=t&&diffD(t,s)<=31).sort().map(s=>({s,n:sp[s].filter(x=>x.k==="name")})).filter(x=>x.n.length);
+ if(D.set.names&&nm.length)o+=`<div class="card"><h2>🎉 Ονομαστικές εορτές (επόμενες 30 μέρες)</h2>${nm.map(x=>`<div class="item"><div class="grow"><b>${fds(x.s)}</b> · ${esc(x.n.map(z=>z.t).join(", "))}</div></div>`).join("")}</div>`;
+ $("#main").innerHTML=o;$("#bAdd").onclick=()=>editBd(null);$$("[data-b]").forEach(x=>x.onclick=()=>editBd(x.dataset.b));if($("#bIcs"))$("#bIcs").onclick=()=>shareFile(ics([],D.bd),"Areti_Genethlia.ics");}
+function editBd(id){const b0=id?D.bd.find(x=>x.id===id):null;const b=b0?{...b0}:{id:uid(),name:"",md:"01-01",year:"",k:"b",rel:"",note:""};
+ const [mm,dd]=b.md.split("-");
+ openSheet(`<h3>${b0?"✏️":"➕"} ${BDK[b.k]}</h3><div class="chips" id="bK">${Object.entries(BDK).map(([k,v])=>`<button class="chip ${k===b.k?"on":""}" data-k="${k}">${v}</button>`).join("")}</div>
+ <label>Όνομα</label><input id="bN" value="${esc(b.name)}" placeholder="π.χ. Μαμά, Γιάννης, Μαρία">
+ <div class="row"><div class="grow"><label>Μέρα</label><select id="bD">${Array.from({length:31},(_,i)=>`<option ${i+1===+dd?"selected":""}>${i+1}</option>`).join("")}</select></div>
+ <div class="grow" style="flex:2"><label>Μήνας</label><select id="bM">${MON.map((x,i)=>`<option value="${i+1}" ${i+1===+mm?"selected":""}>${x}</option>`).join("")}</select></div>
+ <div class="grow"><label>Έτος (προαιρ.)</label><input id="bY" inputmode="numeric" value="${b.year||""}" placeholder="1990"></div></div>
+ <label>Σχέση</label><input id="bR" value="${esc(b.rel)}" placeholder="π.χ. φίλη, ξάδερφος">
+ <label>🎁 Ιδέες για δώρο / σημειώσεις</label><input id="bO" value="${esc(b.note)}">
+ <button class="btn full" style="margin-top:14px" id="bSave">💾 Αποθήκευση</button>
+ ${b0?`<div class="row" style="margin-top:8px"><button class="btn ghost grow" id="bW">💬 Στείλε ευχές</button><button class="btn bad grow" id="bDel">🗑 Διαγραφή</button></div>`:""}<button class="btn ghost full" style="margin-top:8px" onclick="closeSheet()">Κλείσιμο</button>`);
+ let k=b.k;$$("#bK .chip").forEach(c=>c.onclick=()=>{k=c.dataset.k;$$("#bK .chip").forEach(z=>z.classList.toggle("on",z===c));});
+ $("#bSave").onclick=()=>{b.name=$("#bN").value.trim();if(!b.name){toast("Γράψε όνομα");return;}b.k=k;b.md=pad($("#bM").value)+"-"+pad($("#bD").value);const y=parseInt($("#bY").value);b.year=y>1900&&y<2100?y:"";b.rel=$("#bR").value.trim();b.note=$("#bO").value.trim();
+  const i=D.bd.findIndex(z=>z.id===b.id);if(i>=0)D.bd[i]=b;else D.bd.push(b);save();closeSheet();render();toast("Αποθηκεύτηκε ✔ 🎂");};
+ if(b0){$("#bDel").onclick=()=>{if(!confirm("Διαγραφή;"))return;D.bd=D.bd.filter(z=>z.id!==b.id);save();closeSheet();render();};$("#bW").onclick=()=>wish(b.id);}
+ if(!b0)setTimeout(()=>{const z=$("#bN");if(z)z.focus();},250);}
+function wish(id){const b=D.bd.find(x=>x.id===id);if(!b)return;const k=b.k||"b";
+ const t=k==="a"?`Χρόνια πολλά για την επέτειό σας! 💍 Να είστε πάντα αγαπημένοι!`:k==="n"?`Χρόνια πολλά ${b.name}! 🎉 Να χαίρεσαι το όνομά σου, με υγεία και αγάπη!`:`Χρόνια πολλά ${b.name}! 🎂🎉 Να τα εκατοστήσεις με υγεία, αγάπη και χαμόγελα!`;
+ location.href="https://wa.me/?text="+encodeURIComponent(t);}
+
+/* ---------- ΟΙΚΟΝΟΜΙΚΑ ---------- */
+function rFin(){const y=finM.getFullYear(),m=finM.getMonth(),mk=y+"-"+pad(m+1);const pm=new Date(y,m-1,1),pk=pm.getFullYear()+"-"+pad(pm.getMonth()+1);
+ const L=D.tx.filter(x=>x.date.startsWith(mk)),PL=D.tx.filter(x=>x.date.startsWith(pk));
+ const sum=(l,t)=>l.filter(x=>x.type===t).reduce((a,x)=>a+x.amt,0);
+ const out=sum(L,"out"),inn=sum(L,"in"),pout=sum(PL,"out");
+ let o=`<div class="mhead"><button id="fP">‹</button><h2>${MON[m]} ${y}</h2><button id="fN">›</button></div>
+ <div class="sum"><div><span>Έσοδα</span><b class="pos">${eur(inn)}</b></div><div><span>Έξοδα</span><b class="neg">${eur(out)}</b></div><div><span>Υπόλοιπο</span><b class="${inn-out>=0?"pos":"neg"}">${eur(inn-out)}</b></div></div>
+ <div class="row" style="margin-bottom:12px"><button class="btn acc grow" id="fOut">− Έξοδο</button><button class="btn ok grow" id="fIn">+ Έσοδο</button></div>`;
+ if(D.set.budget)o+=`<div class="card"><h2>🎯 Όριο μήνα ${eur(D.set.budget)}</h2><div class="bar"><i style="width:${Math.min(100,out/D.set.budget*100)}%;${out>D.set.budget?"background:var(--bad)":""}"></i></div><div class="muted">${out>D.set.budget?"⚠️ Πάνω από το όριο κατά "+eur(out-D.set.budget):"Μένουν "+eur(D.set.budget-out)}</div></div>`;
+ const outs=L.filter(x=>x.type==="out");
+ if(outs.length){const bc={};outs.forEach(x=>bc[x.cat]=(bc[x.cat]||0)+x.amt);const pc={};PL.filter(x=>x.type==="out").forEach(x=>pc[x.cat]=(pc[x.cat]||0)+x.amt);
+  const arr=Object.entries(bc).sort((a,b)=>b[1]-a[1]),mx=arr[0][1];
+  o+=`<div class="card"><h2>📊 Πού πήγαν τα λεφτά</h2>${arr.map(([c,v])=>{const d=v-(pc[c]||0);return `<div style="margin:8px 0"><div class="row"><div class="grow">${esc(c)}</div><b>${eur(v)}</b><span class="muted" style="width:42px;text-align:right">${Math.round(v/out*100)}%</span></div><div class="bar"><i style="width:${v/mx*100}%"></i></div>${pc[c]!==undefined||PL.length?`<div class="muted">${d>0.005?"▲ "+eur(d)+" από τον προηγ. μήνα":d<-0.005?"▼ "+eur(-d)+" λιγότερα 👍":"ίδια με τον προηγ. μήνα"}</div>`:""}</div>`;}).join("")}</div>`;
+  const bp={};outs.filter(x=>x.place).forEach(x=>{const k=x.place.trim();bp[k]=bp[k]||{v:0,n:0};bp[k].v+=x.amt;bp[k].n++;});
+  const pa=Object.entries(bp).sort((a,b)=>b[1].v-a[1].v).slice(0,7);
+  if(pa.length)o+=`<div class="card"><h2>📍 Πού ξόδεψες περισσότερα</h2>${pa.map(([p,v])=>`<div class="item"><div class="grow">${esc(p)} <span class="muted">· ${v.n} φορ${v.n===1?"ά":"ές"}</span></div><b>${eur(v.v)}</b></div>`).join("")}</div>`;
+  const now=today(),days=mk===now.slice(0,7)?+now.slice(8):new Date(y,m+1,0).getDate();
+  o+=`<div class="card"><h2>💡 Σε μια ματιά</h2><div>• Κατά μέσο όρο <b>${eur(out/days)}</b> τη μέρα</div><div>• Μεγαλύτερο έξοδο: <b>${eur(Math.max(...outs.map(x=>x.amt)))}</b> (${esc(outs.reduce((a,x)=>x.amt>a.amt?x:a).cat)})</div>
+  ${PL.length?`<div>• Σε σχέση με ${MON[pm.getMonth()]}: ${out>pout?`<span class="neg">▲ ${eur(out-pout)} περισσότερα</span>`:`<span class="pos">▼ ${eur(pout-out)} λιγότερα 👏</span>`}</div>`:""}
+  ${inn?`<div>• Αποταμίευσες το <b>${Math.max(0,Math.round((inn-out)/inn*100))}%</b> των εσόδων</div>`:""}</div>`;}
+ // κινήσεις
+ const byD={};L.slice().sort((a,b)=>b.date.localeCompare(a.date)||(b.ts||0)-(a.ts||0)).forEach(x=>(byD[x.date]=byD[x.date]||[]).push(x));
+ o+=`<div class="card"><h2>🧾 Κινήσεις</h2>${Object.keys(byD).length?Object.entries(byD).map(([d,l])=>`<div class="muted" style="margin-top:8px"><b>${fdl(d)}</b></div>${l.map(x=>`<div class="item" data-x="${x.id}"><div class="grow">${esc(x.cat)}${x.place?` <span class="muted">· ${esc(x.place)}</span>`:""}${x.note?`<div class="muted">${esc(x.note)}</div>`:""}</div><b class="${x.type==="in"?"pos":"neg"}">${x.type==="in"?"+":"−"}${eur(x.amt)}</b></div>`).join("")}`).join(""):`<div class="muted">Καμία κίνηση. Γράψε κάθε έξοδο (ακόμα και μόνο ποσό + είδος) και στο τέλος του μήνα θα δεις πού πάνε τα λεφτά.</div>`}</div>`;
+ o+=`<div class="row wrap"><button class="btn ghost grow" id="fCat">🏷️ Κατηγορίες</button><button class="btn ghost grow" id="fCsv">⬇ Excel (CSV)</button><button class="btn ghost grow" id="fRep">📤 Αναφορά μήνα</button></div>`;
+ $("#main").innerHTML=o;
+ $("#fP").onclick=()=>{finM=new Date(y,m-1,1);rFin();};$("#fN").onclick=()=>{finM=new Date(y,m+1,1);rFin();};
+ $("#fOut").onclick=()=>editTx(null,"out");$("#fIn").onclick=()=>editTx(null,"in");$$("[data-x]").forEach(x=>x.onclick=()=>editTx(x.dataset.x));
+ $("#fCat").onclick=cats;$("#fCsv").onclick=()=>{const rows=[["Ημερομηνία","Τύπος","Κατηγορία","Πού","Ποσό","Σημείωση"],...L.sort((a,b)=>a.date.localeCompare(b.date)).map(x=>[x.date,x.type==="in"?"Έσοδο":"Έξοδο",x.cat.replace(/^\S+\s/,""),x.place||"",(x.type==="in"?x.amt:-x.amt).toFixed(2).replace(".",","),x.note||""])];
+  shareFile(new Blob(["\ufeff"+rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(";")).join("\r\n")],{type:"text/csv"}),`Areti_${mk}.csv`);};
+ $("#fRep").onclick=()=>{const bc={};outs.forEach(x=>bc[x.cat]=(bc[x.cat]||0)+x.amt);
+  shareText(`💶 ${MON[m]} ${y}\nΈσοδα: ${eur(inn)}\nΈξοδα: ${eur(out)}\nΥπόλοιπο: ${eur(inn-out)}\n\n`+Object.entries(bc).sort((a,b)=>b[1]-a[1]).map(([c,v])=>`${c}: ${eur(v)}`).join("\n"),"Αναφορά μήνα");};}
+function editTx(id,type){const x0=id?D.tx.find(x=>x.id===id):null;const x=x0?{...x0}:{id:uid(),type:type||"out",amt:0,cat:"",place:"",note:"",date:today()};
+ const places=[...new Set(D.tx.map(z=>z.place).filter(Boolean))].slice(-60);
+ const draw=()=>{const cl=D.cats[x.type];if(!cl.includes(x.cat))x.cat=x0&&x0.type===x.type?x0.cat:"";
+  openSheet(`<div class="seg"><button data-ty="out" class="${x.type==="out"?"on":""}">− Έξοδο</button><button data-ty="in" class="${x.type==="in"?"on":""}">+ Έσοδο</button></div>
+  <label>Ποσό (€)</label><input id="xA" class="amt" inputmode="decimal" placeholder="0,00" value="${x.amt?String(x.amt).replace(".",","):""}">
+  <label>Είδος</label><div class="chips" id="xC">${cl.map(c=>`<button class="chip ${c===x.cat?"on":""}">${esc(c)}</button>`).join("")}<button class="chip" id="xNew">＋ Νέα</button></div>
+  <label>📍 Πού (προαιρετικό)</label><input id="xP" list="plL" value="${esc(x.place)}" placeholder="π.χ. Σκλαβενίτης, Φαρμακείο Λαγονήσι"><datalist id="plL">${places.map(p=>`<option value="${esc(p)}">`).join("")}</datalist>
+  <div class="row"><div class="grow"><label>Ημερομηνία</label><input type="date" id="xD" value="${x.date}"></div></div>
+  <label>Σημείωση</label><input id="xN" value="${esc(x.note)}" placeholder="π.χ. τι αγόρασες">
+  <button class="btn full ${x.type==="out"?"acc":"ok"}" style="margin-top:14px" id="xSave">💾 Αποθήκευση</button>
+  ${x0?`<button class="btn bad full" style="margin-top:8px" id="xDel">🗑 Διαγραφή</button>`:""}<button class="btn ghost full" style="margin-top:8px" onclick="closeSheet()">Κλείσιμο</button>`);
+  const keep=()=>{x.amt=num($("#xA").value);x.place=$("#xP").value;x.note=$("#xN").value;x.date=$("#xD").value||today();};
+  $$("[data-ty]").forEach(b=>b.onclick=()=>{keep();x.type=b.dataset.ty;draw();});
+  $$("#xC .chip:not(#xNew)").forEach(c=>c.onclick=()=>{x.cat=c.textContent;$$("#xC .chip").forEach(z=>z.classList.toggle("on",z===c));});
+  $("#xNew").onclick=()=>{keep();const n=prompt("Νέα κατηγορία (μπορείς να βάλεις και emoji μπροστά, π.χ. 🐶 Σκύλος):");if(n&&n.trim()){const v=/^\p{Extended_Pictographic}/u.test(n.trim())?n.trim():"🏷️ "+n.trim();if(!cl.includes(v))cl.splice(cl.length-1,0,v);x.cat=v;save();draw();}};
+  $("#xSave").onclick=()=>{keep();if(!(x.amt>0)){toast("Γράψε ποσό");$("#xA").focus();return;}if(!x.cat)x.cat=cl[cl.length-1];x.place=x.place.trim();x.note=x.note.trim();x.ts=x.ts||Date.now();
+   const i=D.tx.findIndex(z=>z.id===x.id);if(i>=0)D.tx[i]=x;else D.tx.push(x);save();closeSheet();finM=pd(x.date);finM.setDate(1);render();toast((x.type==="in"?"+":"−")+eur(x.amt)+" ✔");};
+  if(x0)$("#xDel").onclick=()=>{if(!confirm("Διαγραφή κίνησης;"))return;D.tx=D.tx.filter(z=>z.id!==x.id);save();closeSheet();render();};
+  if(!x0)setTimeout(()=>{const z=$("#xA");if(z)z.focus();},250);};
+ draw();}
+function cats(){const dr=()=>openSheet(`<h3>🏷️ Κατηγορίες</h3><div class="muted">Πρόσθεσε δικές σου (π.χ. 💊 Φαρμακείο) ή σβήσε όσες δεν χρειάζεσαι. Οι παλιές κινήσεις δεν αλλάζουν.</div>
+ ${["out","in"].map(t=>`<label>${t==="out"?"Έξοδα":"Έσοδα"}</label><div class="chips">${D.cats[t].map((c,i)=>`<button class="chip" data-t="${t}" data-i="${i}">${esc(c)} ✕</button>`).join("")}<button class="chip on" data-add="${t}">＋ Νέα</button></div>`).join("")}
+ <button class="btn ghost full" style="margin-top:14px" onclick="closeSheet();render()">Τέλος</button>`,bind());
+ const bind=()=>setTimeout(()=>{$$("#sheetIn [data-i]").forEach(b=>b.onclick=()=>{const l=D.cats[b.dataset.t];if(l.length<=1)return;if(confirm("Σβήσιμο «"+l[b.dataset.i]+"»;")){l.splice(+b.dataset.i,1);save();dr();}});
+  $$("#sheetIn [data-add]").forEach(b=>b.onclick=()=>{const n=prompt("Όνομα κατηγορίας (π.χ. 🐶 Σκύλος):");if(n&&n.trim()){const v=/^\p{Extended_Pictographic}/u.test(n.trim())?n.trim():"🏷️ "+n.trim();D.cats[b.dataset.add].push(v);save();dr();}});},0);
+ dr();}
+
+/* ---------- ημερολόγιο κινητού (.ics) & κοινοποίηση ---------- */
+const slug=s=>String(s).replace(/[^\p{L}\p{N}]+/gu,"_").slice(0,30);
+function icsEsc(s){return String(s||"").replace(/\\/g,"\\\\").replace(/;/g,"\\;").replace(/,/g,"\\,").replace(/\n/g,"\\n");}
+const icd=(s,t)=>s.replace(/-/g,"")+(t?"T"+t.replace(":","")+"00":"");
+function plus1h(t){const[h,m]=t.split(":").map(Number);return pad(Math.min(23,h+1))+":"+pad(m);}
+function ics(evs,bds){const st=new Date().toISOString().replace(/[-:]/g,"").slice(0,15)+"Z";
+ let t="BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Areti Calendar//EL\r\nCALSCALE:GREGORIAN\r\n";
+ evs.forEach(e=>{const L=["BEGIN:VEVENT","UID:"+e.id+"@areti-calendar","DTSTAMP:"+st];
+  if(e.time){L.push("DTSTART:"+icd(e.date,e.time),"DTEND:"+icd(e.date,e.end&&e.end>e.time?e.end:plus1h(e.time)));}
+  else L.push("DTSTART;VALUE=DATE:"+icd(e.date),"DTEND;VALUE=DATE:"+icd(addD(e.date,1)));
+  if(e.rep&&e.rep!=="none"){let r="RRULE:FREQ="+{d:"DAILY",w:"WEEKLY","2w":"WEEKLY;INTERVAL=2",m:"MONTHLY",y:"YEARLY"}[e.rep];if(e.until)r+=";UNTIL="+icd(e.until)+(e.time?"T235959":"");L.push(r);
+   if(e.skip&&e.skip.length)L.push((e.time?"EXDATE:":"EXDATE;VALUE=DATE:")+e.skip.map(s=>icd(s,e.time)).join(","));}
+  L.push("SUMMARY:"+icsEsc(e.title));if(e.place)L.push("LOCATION:"+icsEsc(e.place));
+  L.push("DESCRIPTION:"+icsEsc(((ECAT[e.cat]||ECAT.allo)[0])+(e.notes?"\n"+e.notes:"")+"\n— Αρετή Calendar"));
+  if(+e.rem){const tr=e.time?"-PT"+e.rem+"M":(+e.rem>=1440?"-PT15H":"PT9H");L.push("BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:"+icsEsc(e.title),"TRIGGER:"+tr,"END:VALARM");}
+  L.push("END:VEVENT");t+=L.join("\r\n")+"\r\n";});
+ bds.forEach(b=>{const y=b.year||2000,s=(b.md==="02-29"?2000:y)+"-"+b.md,k=b.k||"b";
+  t+=["BEGIN:VEVENT","UID:"+b.id+"@areti-bd","DTSTAMP:"+st,"DTSTART;VALUE=DATE:"+icd(s),"DTEND;VALUE=DATE:"+icd(addD(s,1)),"RRULE:FREQ=YEARLY",
+   "SUMMARY:"+icsEsc((k==="b"?"🎂 Γενέθλια ":k==="n"?"🎉 Γιορτή ":"💍 Επέτειος ")+b.name),"DESCRIPTION:"+icsEsc((b.note?"🎁 "+b.note+"\n":"")+"— Αρετή Calendar"),
+   "BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:"+icsEsc("Αύριο: "+b.name),"TRIGGER:-PT15H","END:VALARM",
+   "BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:"+icsEsc("Σήμερα: "+b.name+" 🎉"),"TRIGGER:PT9H","END:VALARM","END:VEVENT"].join("\r\n")+"\r\n";});
+ return new Blob([t+"END:VCALENDAR\r\n"],{type:"text/calendar"});}
+async function shareFile(blob,name,text){const file=new File([blob],name,{type:blob.type});
+ try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:name,...(text?{text}:{})});return;}}catch(e){return;}
+ const a=document.createElement("a");a.href=URL.createObjectURL(file);a.download=name;a.target="_blank";document.body.appendChild(a);a.click();a.remove();}
+async function shareText(t,title){try{if(navigator.share){await navigator.share({title:title||"Αρετή",text:t});return;}await navigator.clipboard.writeText(t);toast("Αντιγράφηκε ✔");}catch(e){}}
+function evText(e,s){return `📅 ${fdl(s||e.date)}${e.time?" · "+e.time+(e.end?"–"+e.end:""):""}\n${e.title}${e.place?"\n📍 "+e.place:""}${e.rep&&e.rep!=="none"?"\n🔁 "+REP[e.rep]+(e.until?" μέχρι "+fds(e.until):""):""}${e.notes?"\n📝 "+e.notes:""}`;}
+function sendToPartner(list){
+ openSheet(`<h3>📤 Στον ${esc(Pa())}</h3><div class="muted">${list.length===1?esc(list[0].title):list.length+" κοινά ραντεβού"}</div>
+ <button class="btn full" style="margin-top:12px" id="pWa">💬 Μήνυμα WhatsApp</button><div class="muted" style="margin:4px 2px 0">Του στέλνει το ραντεβού γραμμένο.</div>
+ <button class="btn acc full" style="margin-top:12px" id="pIcs">📅 Αρχείο για το ημερολόγιό του</button><div class="muted" style="margin:4px 2px 0">Στο Viber/WhatsApp/Mail διάλεξε τον ${esc(Pa())}. Μόλις το ανοίξει → «Προσθήκη» και μπαίνει στο ημερολόγιο του κινητού του με ειδοποίηση. Αν έχει κι αυτός την εφαρμογή: ⚙️ → «Εισαγωγή αρχείου».</div>
+ <button class="btn ghost full" style="margin-top:14px" onclick="closeSheet()">Κλείσιμο</button>`);
+ $("#pWa").onclick=()=>{location.href="https://wa.me/?text="+encodeURIComponent((list.length>1?"👫 Το κοινό μας πρόγραμμα:\n\n":"")+list.map(e=>evText(e)).join("\n\n")+"\n\n💛 Αρετή");};
+ $("#pIcs").onclick=()=>shareFile(ics(list,[]),list.length===1?"Areti_"+slug(list[0].title)+".ics":"Areti_koina.ics");}
+function shareAllShared(){const t=today();const l=D.ev.filter(e=>e.shared&&!e.who&&(occ(e,t,addD(t,400)).length));
+ if(!l.length){toast(`Δεν έχεις κοινά ραντεβού. Άνοιξε ένα ραντεβού και τσέκαρε «👫 Κοινό με τον ${Pa()}»`,4000);return;}sendToPartner(l);}
+function allToPhone(){const t=today();const l=D.ev.filter(e=>occ(e,t,addD(t,400)).length);
+ if(!l.length&&!D.bd.length){toast("Δεν υπάρχουν μελλοντικά ραντεβού");return;}
+ shareFile(ics(l,D.bd),"Areti_Calendar.ics");toast(`${l.length} ραντεβού + ${D.bd.length} γενέθλια → «Προσθήκη όλων»`,3500);}
+
+/* ---------- εισαγωγή .ics (από τον Γιάννη) ---------- */
+function parseICS(txt){txt=txt.replace(/\r?\n[ \t]/g,"");const out=[];const un=s=>(s||"").replace(/\\n/gi,"\n").replace(/\\([,;\\])/g,"$1");
+ txt.split("BEGIN:VEVENT").slice(1).forEach(b=>{b=b.split("END:VEVENT")[0];const g=k=>{const m=b.match(new RegExp("^"+k+"(;[^:]*)?:(.*)$","m"));return m?m[2].trim():"";};
+  const ds=g("DTSTART");if(!ds)return;const de=g("DTEND");const date=ds.slice(0,4)+"-"+ds.slice(4,6)+"-"+ds.slice(6,8);const time=ds.length>=13?ds.slice(9,11)+":"+ds.slice(11,13):"";
+  const end=de.length>=13&&time?de.slice(9,11)+":"+de.slice(11,13):"";const rr=g("RRULE");let rep="none",until="";
+  if(rr){const f=(rr.match(/FREQ=(\w+)/)||[])[1],iv=(rr.match(/INTERVAL=(\d+)/)||[])[1];rep={DAILY:"d",WEEKLY:iv==="2"?"2w":"w",MONTHLY:"m",YEARLY:"y"}[f]||"none";const u=(rr.match(/UNTIL=(\d{8})/)||[])[1];if(u)until=u.slice(0,4)+"-"+u.slice(4,6)+"-"+u.slice(6,8);}
+  const al=(b.match(/TRIGGER:-PT(\d+)([MH])/)||[]);const rem=al[1]?(al[2]==="H"?+al[1]*60:+al[1]):0;
+  const desc=un(g("DESCRIPTION")).replace(/\n?— Αρετή Calendar/,"");
+  out.push({id:(g("UID")||uid()).replace(/@.*/,""),title:un(g("SUMMARY"))||"(χωρίς τίτλο)",date,time,end,place:un(g("LOCATION")),notes:desc.replace(/^[^\n]*\n?/,m=>/^(📌|💊|💼|🏠|🌸|⭐)/.test(m)?"":m).trim(),cat:"allo",rep,until,rem:[0,15,30,60,120,1440].includes(rem)?rem:60,shared:true,who:P()});});
+ return out;}
+$("#fileIn").onchange=async ev=>{const f=ev.target.files[0];ev.target.value="";if(!f)return;const txt=await f.text();
+ if(/BEGIN:VCALENDAR/.test(txt)){const l=parseICS(txt);let n=0;l.forEach(e=>{const i=D.ev.findIndex(x=>x.id===e.id);if(i>=0){if(D.ev[i].who){D.ev[i]=e;n++;}}else{D.ev.push(e);n++;}});save();closeSheet();render();toast(`📥 ${n} ραντεβού από τον ${Pa()} ✔`);return;}
+ try{const j=JSON.parse(txt);if(!j.ev)throw 0;if(!confirm("Επαναφορά αντιγράφου; Θα αντικατασταθούν τα τωρινά δεδομένα."))return;D=fix(j);D.set.welcomed=true;save();closeSheet();render();toast("Έγινε επαναφορά ✔");}catch(e){toast("Άγνωστο αρχείο");}};
+
+/* ---------- ρυθμίσεις ---------- */
+function settings(){openSheet(`<h3>⚙️ Ρυθμίσεις</h3>
+ <label>Όνομα του συντρόφου (για τα κοινά)</label><input id="sP" value="${esc(P())}">
+ <label>🎯 Όριο εξόδων μήνα (€, 0 = χωρίς)</label><input id="sB" inputmode="decimal" value="${D.set.budget||""}" placeholder="π.χ. 1200">
+ <label class="sw"><input type="checkbox" id="sN" ${D.set.names?"checked":""}><span>🎉 Δείχνε ονομαστικές εορτές</span></label>
+ <button class="btn full" style="margin-top:12px" id="sSave">💾 Αποθήκευση</button>
+ <div class="card" style="margin-top:14px"><h2>🔔 Πώς έρχονται οι ειδοποιήσεις</h2><div class="muted">Στο iPhone μια εφαρμογή σαν αυτή δεν μπορεί να χτυπήσει μόνη της. Γι' αυτό: σε κάθε ραντεβού πάτα <b>«🔔 Στο ημερολόγιο του κινητού»</b> → «Προσθήκη». Από εκεί το κινητό σού χτυπάει κανονικά, την ώρα που διάλεξες. Τα γενέθλια μπαίνουν όλα μαζί από την καρτέλα 🎂 και σε ειδοποιούν κάθε χρόνο, την προηγούμενη και την ίδια μέρα.</div></div>
+ <div class="card"><h2>👫 Κοινό πρόγραμμα με τον ${esc(Pa())}</h2><div class="muted">Ό,τι τσεκάρεις «Κοινό» το στέλνεις με «📤». Εκείνος το βάζει στο ημερολόγιό του με ένα πάτημα. Αν σου στείλει κι αυτός αρχείο (.ics), το φέρνεις εδώ:</div>
+ <button class="btn ghost full" style="margin-top:8px" id="sImp">📥 Εισαγωγή αρχείου (.ics) ή αντιγράφου</button></div>
+ <div class="card"><h2>🛟 Αντίγραφο ασφαλείας</h2><div class="muted">Όλα μένουν μόνο στο κινητό σου. Κράτα πού και πού ένα αντίγραφο (π.χ. στο iCloud Drive ή στείλ' το στον εαυτό σου).</div>
+ <button class="btn ghost full" style="margin-top:8px" id="sBak">⬇ Αντίγραφο όλων</button></div>
+ <div class="card" style="text-align:center"><div style="font-size:34px">💛</div><b>Αρετή μου, σε αγαπώ πολύ!</b><div class="muted">Ένα δώρο από τον αδερφό σου.</div><button class="btn sm ghost" style="margin-top:8px" id="sW">Δες ξανά το μήνυμα</button><div class="muted" style="margin-top:10px">Created by George Barbaris · v1</div></div>
+ <button class="btn ghost full" onclick="closeSheet()">Κλείσιμο</button>`);
+ $("#sSave").onclick=()=>{D.set.partner=$("#sP").value.trim()||"Γιάννης";D.set.budget=num($("#sB").value);D.set.names=$("#sN").checked;for(const k in yc)delete yc[k];save();closeSheet();render();toast("Αποθηκεύτηκε ✔");};
+ $("#sImp").onclick=()=>$("#fileIn").click();$("#sW").onclick=()=>{closeSheet();welcome();};
+ $("#sBak").onclick=()=>shareFile(new Blob([JSON.stringify(D)],{type:"application/json"}),"Areti_Calendar_backup_"+today()+".json");}
+
+function welcome(){const w=document.createElement("div");w.className="welcome";
+ const ios=/iphone|ipad/i.test(navigator.userAgent),st=matchMedia("(display-mode: standalone)").matches||navigator.standalone;
+ w.innerHTML=`<div><div style="font-size:64px">💛</div><h2>Αρετή μου,</h2><p>αυτή η εφαρμογή είναι φτιαγμένη μόνο για σένα — για τα ραντεβού σου, το κοινό πρόγραμμα με τον ${esc(Pa())}, τα γενέθλια που δεν πρέπει να ξεχνάς και για να βάλεις τάξη στα οικονομικά σου.</p><p style="font-size:21px"><b>Σε αγαπώ πολύ!</b></p><p>— ο αδερφός σου 🤍</p>
+ ${ios&&!st?`<p style="font-size:14px;opacity:.9">📲 Για να την έχεις σαν κανονική εφαρμογή: πάτα <b>Κοινοποίηση ⬆️</b> στο Safari → <b>«Προσθήκη στην οθόνη Αφετηρίας»</b>.</p>`:""}
+ <button>Ξεκινάμε ✨</button></div>`;document.body.appendChild(w);
+ w.querySelector("button").onclick=()=>{w.remove();D.set.welcomed=true;save();};}
+
+render();if(!D.set.welcomed)welcome();
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>
