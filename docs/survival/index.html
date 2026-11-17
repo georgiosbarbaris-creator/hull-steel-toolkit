@@ -2116,7 +2116,7 @@ function setLang(l){try{localStorage.setItem('sv_lang',JSON.stringify(l))}catch(
 const encURI=s=>encodeURIComponent(trS(String(s)));
 const $=s=>document.querySelector(s),M=$('#m');
 const esc=s=>UX(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const APP_V='37',APP_D='14/11/2026';
+const APP_V='38',APP_D='17/11/2026';
 const LS={g(k,d){try{const v=localStorage.getItem('sv_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},s(k,v){try{localStorage.setItem('sv_'+k,JSON.stringify(v))}catch(e){}}};
 let fs=LS.g('fs',19);document.documentElement.style.setProperty('--fs',fs+'px');
 function fz(d){fs=Math.max(15,Math.min(28,fs+d*2));LS.s('fs',fs);document.documentElement.style.setProperty('--fs',fs+'px')}
@@ -3038,7 +3038,7 @@ function pvPlan(m){const F=[['contacts',L2('Επαφές έκτακτης ανά
  h+=`<h3 style="margin-top:12px">📞 ${L2('Τηλέφωνα ανάγκης (Ελλάδα)','Emergency numbers (Greece)')}</h3><table>`+PH.map(p=>`<tr><td style="width:30%"><b style="font-size:12pt">${p[0].length>6?p[0].replace(/(\d{3})(\d{3})(\d+)/,'$1 $2 $3'):p[0]}</b></td><td>${pvE(LANG==='en'?trS(p[1]):p[1])}${p[2]?'<br><small>'+pvE(LANG==='en'?trS(p[2]):p[2])+'</small>':''}</td></tr>`).join('')+`<tr><td><b style="font-size:12pt">11188</b></td><td>${L2('Δίωξη Ηλεκτρονικού Εγκλήματος (απάτες, χάκερ)','Cyber Crime Division (scams, hacking)')}</td></tr></table>`;
  return h}
 function pvBuild(o){const a=D,img=o.img!==false,m=o.personal===false?{}:LS.g('me',{}),E=LANG==='en';
- const C=['now','aid','list','wild','gear','tips'];
+ const C0=['now','aid','comm','list','wild','gear','tips'],C=C0.filter(c=>CATS[c]).concat(Object.keys(CATS).filter(c=>!C0.includes(c)));
  let h=`<div class="pg"><div class="cover"><div class="big">🎒</div><h1>${L2('Επιβίωση 72+','Survival 72+')}</h1><div style="font-size:15pt;margin:6px 0 14px">${L2('Ο οδηγός σε χαρτί – για όταν δεν υπάρχει ρεύμα, internet ή μπαταρία','The guide on paper – for when there is no power, internet or battery')}</div>
  <div style="font-size:11pt;max-width:140mm;margin:0 auto">${L2('Κράτα ένα αντίγραφο στο σακίδιο, ένα στο αυτοκίνητο και ένα δίπλα στην πόρτα. Διάβασέ το ΜΙΑ φορά τώρα, με ηρεμία – στην κρίση δεν θα έχεις χρόνο.','Keep one copy in your bag, one in the car and one by the door. Read it ONCE now, calmly – in a crisis you won\'t have time.')}</div>
  <div class="big112" style="margin:12mm 0 2mm">112</div><div>${L2('Ευρωπαϊκός αριθμός έκτακτης ανάγκης – δωρεάν, χωρίς SIM','European emergency number – free, no SIM needed')}</div>
@@ -3054,6 +3054,16 @@ function pvOpen(o){pvClose();if(!$('#pvcss')){const s=document.createElement('st
  const d=document.createElement('div');d.id='pv';d.className='notr';d.innerHTML=`<div class="pvbar"><button onclick="window.print()">🖨️ ${L2('Εκτύπωση / Αποθήκευση PDF','Print / Save as PDF')}</button><button class="k" onclick="pvClose()">✕ ${L2('Κλείσιμο','Close')}</button></div>`+pvBuild(o);document.body.appendChild(d);d.scrollTop=0}
 function pvClose(){const d=$('#pv');if(d)d.remove()}
 window.addEventListener('hashchange',pvClose);
+if(LANG==='en')Object.assign(TRM,{"Brrro – μηνύματα με Bluetooth": "Brrro – messages over Bluetooth", "ελληνική εφαρμογή: από κινητό σε κινητό, χωρίς internet": "Greek-made app: phone to phone, no internet", "Brrro: ελληνική, iPhone και Android. Μηνύματα εκτός σύνδεσης με Bluetooth, έως 12 κινητά μακριά – δες την κάρτα «Brrro».": "Brrro: Greek-made, iPhone and Android. Offline messages over Bluetooth, up to 12 phones away – see the «Brrro» card.", "Τι κάνει": "What it does", "Όταν δεν υπάρχει internet, τα μηνύματα προς τις επαφές σου («bros») και τις ομάδες σου περνούν από κινητό σε κινητό με Bluetooth – έως και 12 κινητά μακριά.": "When there is no internet, messages to your contacts («bros») and your groups travel from phone to phone over Bluetooth – up to 12 phones away.", "Τα κινητά που μεταφέρουν ένα μήνυμα το κρατούν έως μία μέρα, μέχρι να βρουν το σωστό κινητό – και δεν μπορούν να το διαβάσουν. Μόλις ξαναβρεθεί internet, όλα περνούν κανονικά.": "Phones that carry a message keep it for up to one day until they find the right phone – and they cannot read it. Once internet is back, everything goes through normally.", "Το «Κοντά» είναι ένα δημόσιο δωμάτιο για όλους γύρω σου που έχουν Brrro. Μη γράφεις εκεί προσωπικά στοιχεία.": "«Nearby» is a public room for everyone around you who has Brrro. Don't post personal details there.", "Υπάρχει για iPhone (App Store, θέλει νέα έκδοση iOS) και Android (Google Play). Δωρεάν, με αγορές μέσα στην εφαρμογή – κάποιες λειτουργίες είναι για συνδρομητές.": "Available for iPhone (App Store, needs a recent iOS) and Android (Google Play). Free, with in-app purchases – some features are for subscribers.", "Ετοιμάσου ΤΩΡΑ (θέλει internet)": "Get ready NOW (needs internet)", "Κατέβασε «Brrro – Secure Messenger» από το App Store ή το Google Play. Πρόσεξε το σωστό όνομα και το μπλε εικονίδιο με το χέρι 🤙.": "Download «Brrro – Secure Messenger» from the App Store or Google Play. Check the exact name and the blue icon with the hand 🤙.", "Φτιάξε λογαριασμό και πρόσθεσε ως «Bros» την οικογένεια και τους φίλους σου («Προσθήκη Bros» ή QR). Χωρίς internet ΔΕΝ μπορείς να προσθέσεις καινούργιες επαφές.": "Create an account and add your family and friends as «Bros» («Add Bros» or QR). Without internet you CANNOT add new contacts.", "Ρυθμίσεις ⚙️ → «Μηνύματα εκτός σύνδεσης» → άνοιξέ το. Δώσε άδεια για Bluetooth (και για Τοποθεσία στο Android).": "Settings ⚙️ → «Offline messaging» → switch it on. Allow Bluetooth (and Location on Android).", "Φτιάξτε μια ομάδα «Οικογένεια» με όλους μέσα.": "Make a «Family» group with everyone in it.", "Δοκιμή: όλοι σε λειτουργία πτήσης ✈️, ανοίξτε ξανά ΜΟΝΟ το Bluetooth και στείλτε «Test». Στη συνομιλία γράφει «Αποστολή εκτός σύνδεσης».": "Test: everyone in airplane mode ✈️, switch ONLY Bluetooth back on and send «Test». The chat shows «Offline sending».", "Στην κρίση": "In the crisis", "Bluetooth ανοιχτό (και μέσα στη λειτουργία πτήσης), εφαρμογή ανοιχτή, κινητό φορτισμένο ή σε powerbank.": "Bluetooth on (even in airplane mode), app open, phone charged or on a powerbank.", "Γράφε σύντομα: ΠΟΙΟΣ – ΠΟΥ – ΤΙ ΧΡΕΙΑΖΕΣΑΙ. Π.χ. «Γιώργος, στην πλατεία, όλοι καλά».": "Write short: WHO – WHERE – WHAT YOU NEED. E.g. «George, at the square, all fine».", "Όσο περισσότεροι γύρω σου έχουν Brrro, τόσο πιο μακριά φτάνει το μήνυμα. Πες το σε γείτονες και συγγενείς από τώρα.": "The more people around you have Brrro, the further the message reaches. Tell neighbours and relatives now.", "Βάλτε τουλάχιστον ΔΥΟ τέτοιες εφαρμογές (π.χ. Brrro + bitchat). Σε μια κρίση θα δουλέψει αυτή που έχουν οι γύρω σου.": "Install at least TWO such apps (e.g. Brrro + bitchat). In a crisis, the one people around you have is the one that works.", "Νέα εμπορική εφαρμογή, κλειστού κώδικα, χωρίς ανεξάρτητο έλεγχο ασφαλείας. Μη βασίζεσαι μόνο σε αυτή – κράτα και ραδιόφωνο, σφυρίχτρα και συμφωνημένα σημεία συνάντησης.": "A new commercial, closed-source app with no independent security audit. Don't rely on it alone – also keep a radio, a whistle and agreed meeting points."});
+if(LANG==='en'){const _G='Α-Ωα-ωάέήίόύώΆΈΉΊΌΎΏϊϋΐΰ';Object.keys(TRM).filter(k=>k.length>=5&&!TRK.some(t=>t[0]===k)).forEach(k=>TRK.push([k,new RegExp('(^|[^'+_G+'])'+k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(?!['+_G+'])','g')]));TRK.sort((a,b)=>b[0].length-a[0].length)}
+Object.assign(SIMG,{c_brrro:[{at:0,c:['Το μήνυμα πηδάει από κινητό σε κινητό με Bluetooth – έως 12 κινητά μακριά. Όσοι το μεταφέρουν δεν μπορούν να το διαβάσουν.','The message hops from phone to phone over Bluetooth – up to 12 phones away. The phones carrying it cannot read it.'],f:()=>{
+ let h='';const X=[34,112,190,268];
+ X.forEach((x,i)=>{h+=iPhone(x,86,1.05,i===0?'✉️':i===3?'✅':'🔒')});
+ [0,1,2].forEach(i=>{const a=X[i]+18,b=X[i+1]-18;h+=`<path d="M${a},70 Q${(a+b)/2},44 ${b},70" fill="none" stroke="${IC.bl}" stroke-width="3" stroke-dasharray="5 4"/><path d="M${b-7},62 L${b},70 L${b-9},71" fill="none" stroke="${IC.bl}" stroke-width="3"/>`});
+ h+=iT(160,24,L2('Bluetooth: κινητό → κινητό → κινητό','Bluetooth: phone → phone → phone'),{b:1,s:12,c:IC.yl});
+ h+=iT(34,150,L2('εσύ','you'),{b:1,s:12,c:IC.sn})+iT(151,150,L2('μεταφέρουν 🔒','carry it 🔒'),{b:1,s:12,c:IC.sn})+iT(268,150,L2('φτάνει','arrives'),{b:1,s:12,c:IC.gn});
+ h+=iT(160,170,L2('έως 12 κινητά · χωρίς internet · ✈️ + Bluetooth','up to 12 phones · no internet · ✈️ + Bluetooth'),{s:11,c:IC.gr});
+ return h}}]});
 {const _t=tool;tool=function(id){id==='print'?tPrint():_t(id)}}
 
 
@@ -3498,6 +3508,7 @@ A('c_bt','📲','bitchat, Briar, Bridgefy','εφαρμογές Bluetooth από 
 ['li','bitchat: iPhone (App Store) και Android (επίσημα από τη σελίδα GitHub «permissionlesstech/bitchat-android»). iPhone και Android μιλάνε μεταξύ τους. Χωρίς λογαριασμό, χωρίς αριθμό τηλεφώνου. Νέα εφαρμογή, χωρίς ανεξάρτητο έλεγχο ασφαλείας ακόμα.'],
 ['li','Briar: μόνο Android (Google Play / F-Droid). Πολύ ασφαλής, Bluetooth + Wi-Fi χωρίς internet. Προσθέτεις επαφές πρόσωπο με πρόσωπο με QR. Το έργο πλέον κάνει μόνο διορθώσεις, όχι νέες λειτουργίες – δουλεύει κανονικά.'],
 ['li','Bridgefy: iPhone και Android, Bluetooth mesh. Γνωστή από διαδηλώσεις και συναυλίες. Για απλά μηνύματα, όχι για ευαίσθητα.'],
+['li',"Brrro: ελληνική, iPhone και Android. Μηνύματα εκτός σύνδεσης με Bluetooth, έως 12 κινητά μακριά – δες την κάρτα «Brrro»."],
 ['tip','Οικογένεια με iPhone ΚΑΙ Android → bitchat. Όλοι με Android → Briar. Για χιλιόμετρα → Meshtastic.'],
 ['warn','Στο Google Play υπάρχουν ψεύτικες «bitchat». Κατέβασε μόνο την επίσημη.'],
 ['h','Ετοιμάσου τώρα (θέλει internet)'],
@@ -3505,6 +3516,24 @@ A('c_bt','📲','bitchat, Briar, Bridgefy','εφαρμογές Bluetooth από 
 ['step','Briar: προσθέστε ο ένας τον άλλον με QR, ενώ είστε μαζί. Δεν γίνεται από μακριά χωρίς internet.'],
 ['step','Δοκιμή: λειτουργία πτήσης + άνοιξε ξανά Bluetooth (και Wi-Fi). Στείλτε μήνυμα από δωμάτιο σε δωμάτιο και μετά από τον δρόμο.'],
 ['step','Στην κρίση: Bluetooth ανοιχτό, εφαρμογή ανοιχτή στην οθόνη (το iPhone την «κοιμίζει» στο παρασκήνιο), φορτιστής/powerbank.']]);
+A('c_brrro','🤙',"Brrro – μηνύματα με Bluetooth","ελληνική εφαρμογή: από κινητό σε κινητό, χωρίς internet",[
+["h", "Τι κάνει"],
+["li", "Όταν δεν υπάρχει internet, τα μηνύματα προς τις επαφές σου («bros») και τις ομάδες σου περνούν από κινητό σε κινητό με Bluetooth – έως και 12 κινητά μακριά."],
+["li", "Τα κινητά που μεταφέρουν ένα μήνυμα το κρατούν έως μία μέρα, μέχρι να βρουν το σωστό κινητό – και δεν μπορούν να το διαβάσουν. Μόλις ξαναβρεθεί internet, όλα περνούν κανονικά."],
+["li", "Το «Κοντά» είναι ένα δημόσιο δωμάτιο για όλους γύρω σου που έχουν Brrro. Μη γράφεις εκεί προσωπικά στοιχεία."],
+["li", "Υπάρχει για iPhone (App Store, θέλει νέα έκδοση iOS) και Android (Google Play). Δωρεάν, με αγορές μέσα στην εφαρμογή – κάποιες λειτουργίες είναι για συνδρομητές."],
+["h", "Ετοιμάσου ΤΩΡΑ (θέλει internet)"],
+["step", "Κατέβασε «Brrro – Secure Messenger» από το App Store ή το Google Play. Πρόσεξε το σωστό όνομα και το μπλε εικονίδιο με το χέρι 🤙."],
+["step", "Φτιάξε λογαριασμό και πρόσθεσε ως «Bros» την οικογένεια και τους φίλους σου («Προσθήκη Bros» ή QR). Χωρίς internet ΔΕΝ μπορείς να προσθέσεις καινούργιες επαφές."],
+["step", "Ρυθμίσεις ⚙️ → «Μηνύματα εκτός σύνδεσης» → άνοιξέ το. Δώσε άδεια για Bluetooth (και για Τοποθεσία στο Android)."],
+["step", "Φτιάξτε μια ομάδα «Οικογένεια» με όλους μέσα."],
+["step", "Δοκιμή: όλοι σε λειτουργία πτήσης ✈️, ανοίξτε ξανά ΜΟΝΟ το Bluetooth και στείλτε «Test». Στη συνομιλία γράφει «Αποστολή εκτός σύνδεσης»."],
+["h", "Στην κρίση"],
+["li", "Bluetooth ανοιχτό (και μέσα στη λειτουργία πτήσης), εφαρμογή ανοιχτή, κινητό φορτισμένο ή σε powerbank."],
+["li", "Γράφε σύντομα: ΠΟΙΟΣ – ΠΟΥ – ΤΙ ΧΡΕΙΑΖΕΣΑΙ. Π.χ. «Γιώργος, στην πλατεία, όλοι καλά»."],
+["li", "Όσο περισσότεροι γύρω σου έχουν Brrro, τόσο πιο μακριά φτάνει το μήνυμα. Πες το σε γείτονες και συγγενείς από τώρα."],
+["tip", "Βάλτε τουλάχιστον ΔΥΟ τέτοιες εφαρμογές (π.χ. Brrro + bitchat). Σε μια κρίση θα δουλέψει αυτή που έχουν οι γύρω σου."],
+["warn", "Νέα εμπορική εφαρμογή, κλειστού κώδικα, χωρίς ανεξάρτητο έλεγχο ασφαλείας. Μη βασίζεσαι μόνο σε αυτή – κράτα και ραδιόφωνο, σφυρίχτρα και συμφωνημένα σημεία συνάντησης."]]);
 })();
 
 /* ===================== v14: 🆘 ΚΟΥΜΠΙ ΠΑΝΙΚΟΥ ===================== */
