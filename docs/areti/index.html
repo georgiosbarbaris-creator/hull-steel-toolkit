@@ -81,10 +81,16 @@ label{display:block;font-size:15px;color:var(--muted);margin:10px 0 4px}
 .sw input{width:28px;height:28px;flex:none}
 .big{font-size:25px}
 a{color:var(--pri)}
+details.hp{background:var(--soft);border-radius:14px;margin:10px 0;padding:0 14px}
+details.hp summary{font-size:20px;font-weight:700;color:var(--pri);padding:14px 0;list-style:none;cursor:pointer}
+details.hp summary::after{content:" ▾";font-size:16px}details.hp[open] summary::after{content:" ▴"}
+details.hp ol,details.hp ul{margin:0 0 14px;padding-left:24px}details.hp li{margin:8px 0;font-size:18px;line-height:1.5}
+.tip{background:var(--card);border-left:5px solid var(--acc);border-radius:10px;padding:10px 12px;margin:0 0 14px;font-size:17px}
+.qh{float:right;background:var(--soft);color:var(--pri);border:0;border-radius:12px;padding:6px 12px;font-size:16px;font-weight:600}
 </style>
 </head>
 <body>
-<header><h1>💛 Αρετή Calendar</h1><button id="bSet" aria-label="Ρυθμίσεις">⚙️</button></header>
+<header><h1>💛 Αρετή Calendar</h1><button id="bHelp" aria-label="Οδηγίες">❓</button><button id="bSet" aria-label="Ρυθμίσεις">⚙️</button></header>
 <main id="main"></main>
 <nav id="nav">
  <button data-t="home" class="on"><b>🏠</b>Σήμερα</button>
@@ -178,7 +184,7 @@ function closeSheet(){$("#sheet").classList.add("hide");$("#sheetIn").innerHTML=
 $("#sheet").addEventListener("click",e=>{if(e.target.id==="sheet")closeSheet();});
 $$("#nav button").forEach(b=>b.onclick=()=>go(b.dataset.t));
 function go(t){tab=t;$$("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===t));render();window.scrollTo(0,0);}
-function render(){({home:rHome,cal:rCal,todo:rTodo,bd:rBd,fin:rFin})[tab]();}
+function render(){({home:rHome,cal:rCal,todo:rTodo,bd:rBd,fin:rFin})[tab]();bindQh();}
 $("#bSet").onclick=settings;
 
 function evLine(e,s){const c=ECAT[e.cat]||ECAT.allo;
@@ -199,7 +205,7 @@ function rHome(){const t=today(),h=new Date().getHours(),tm=addD(t,1);
  if(bds.length)o+=`<div class="card"><h2>🎂 Γενέθλια & γιορτές (7 μέρες)</h2>${bds.map(({b,s})=>{const n=diffD(t,s);return `<div class="item"><div class="grow"><b>${esc(b.name)}</b> <span class="muted">${BDK[b.k||"b"]}${b.year&&(b.k||"b")!=="n"?" · "+(+s.slice(0,4)-b.year)+(b.k==="a"?" χρόνια":" χρονών"):""}</span><div class="${n===0?"hol":"muted"}">${n===0?"ΣΗΜΕΡΑ! 🎉":n===1?"Αύριο":"σε "+n+" μέρες · "+fds(s)}</div></div>${n<=1?`<button class="btn sm acc" data-wish="${b.id}">💬 Ευχές</button>`:""}</div>`;}).join("")}</div>`;
  // σήμερα / αύριο
  const et=evOn(t),em=evOn(tm);
- o+=`<div class="card"><h2>📅 Σήμερα</h2>${et.length?et.map(e=>evLine(e,t)).join(""):`<div class="muted">Τίποτα προγραμματισμένο. Ήρεμη μέρα 🌿</div>`}</div>`;
+ o+=`<div class="card"><h2>${qh("home")}📅 Σήμερα</h2>${et.length?et.map(e=>evLine(e,t)).join(""):`<div class="muted">Τίποτα προγραμματισμένο. Ήρεμη μέρα 🌿</div>`}</div>`;
  o+=`<div class="card"><h2>🌅 Αύριο · ${fds(tm)}</h2>${em.length?em.map(e=>evLine(e,tm)).join(""):`<div class="muted">Τίποτα ακόμα.</div>`}
  ${spOf(tm).filter(x=>x.k==="name").length?`<div class="muted" style="margin-top:6px">🎉 Αύριο γιορτάζουν: ${esc(spOf(tm).filter(x=>x.k==="name").map(x=>x.t).join(", "))}</div>`:""}</div>`;
  // επόμενες μέρες
@@ -218,7 +224,7 @@ function rHome(){const t=today(),h=new Date().getHours(),tm=addD(t,1);
  $("#hFin").onclick=()=>go("fin");$$("[data-wish]").forEach(b=>b.onclick=()=>wish(b.dataset.wish));}
 
 /* ---------- ΗΜΕΡΟΛΟΓΙΟ ---------- */
-function rCal(){const y=calM.getFullYear(),m=calM.getMonth(),t=today();
+function rCal(){setTimeout(bindQh,0);const y=calM.getFullYear(),m=calM.getMonth(),t=today();
  const first=new Date(y,m,1),off=(first.getDay()+6)%7,start=new Date(y,m,1-off);
  let g=["Δε","Τρ","Τε","Πε","Πα","Σα","Κυ"].map(x=>`<div class="h">${x}</div>`).join("");
  const a=ymd(start),b=addD(a,41);
@@ -229,7 +235,7 @@ function rCal(){const y=calM.getFullYear(),m=calM.getMonth(),t=today();
  let o=`<div class="card"><div class="mhead"><button id="cP">‹</button><h2>${MON[m]} ${y}</h2><button id="cN">›</button></div><div class="cal">${g}</div>
  <div class="row" style="margin-top:8px"><button class="btn sm ghost" id="cT">Σήμερα</button><div class="grow"></div><span class="muted">${Object.entries(ECAT).map(([k,v])=>`<span style="color:${v[1]}">●</span>${v[0].split(" ")[1]}`).join(" ")}</span></div></div>`;
  const sp=spOf(sel),bd=bdOn(sel),ev=evOn(sel);
- o+=`<div class="card"><h2>${fdl(sel)}</h2>
+ o+=`<div class="card"><h2>${qh("cal")}${fdl(sel)}</h2>
  ${sp.map(x=>`<div class="${x.k==="hol"?"hol":"muted"}">${x.k==="name"?"🎉 Γιορτάζουν: ":x.k==="hol"?"🇬🇷 ":"📌 "}${esc(x.t)}</div>`).join("")}
  ${bd.map(x=>`<div>🎂 <b>${esc(x.name)}</b> <span class="muted">${BDK[x.k||"b"]}</span></div>`).join("")}
  ${ev.length?ev.map(e=>evLine(e,sel)).join(""):`<div class="muted" style="margin-top:6px">Κανένα ραντεβού.</div>`}
@@ -258,6 +264,7 @@ function editEv(id,day){const e0=id?D.ev.find(x=>x.id===id):null;
  <label>Σημειώσεις</label><textarea id="eN" placeholder="π.χ. να πάρω τις εξετάσεις">${esc(e.notes)}</textarea>
  <label class="sw"><input type="checkbox" id="eS" ${e.shared?"checked":""}><span>👫 <b>Κοινό με τον ${esc(Pa())}</b><br><span class="muted">Μόνο ό,τι τσεκάρεις εδώ φεύγει στον ${esc(Pa())}. Τα υπόλοιπα μένουν μόνο δικά σου.</span></span></label>
  <button class="btn full" style="margin-top:14px" id="eSave">💾 Αποθήκευση</button>
+ <div class="row" style="margin-top:6px"><button class="btn sm ghost grow" id="eH1">❓ Πώς με ειδοποιεί;</button><button class="btn sm ghost grow" id="eH2">❓ Πώς στέλνω στον ${esc(Pa())};</button></div>
  <div class="row wrap" style="margin-top:8px"><button class="btn ghost grow" id="ePh">🔔 Στο ημερολόγιο του κινητού</button>${`<button class="btn ghost grow" id="eSh">📤 Στείλε στον ${esc(Pa())}</button>`}</div>
  ${e0?`<div class="row wrap" style="margin-top:8px">${isRep?`<button class="btn bad grow" id="eDel1">🗑 Μόνο ${fds(day)}</button>`:""}<button class="btn bad grow" id="eDel">🗑 Διαγραφή${isRep?" όλων":""}</button></div>`:""}
  <button class="btn ghost full" style="margin-top:8px" onclick="closeSheet()">Κλείσιμο</button>`);
@@ -266,6 +273,7 @@ function editEv(id,day){const e0=id?D.ev.find(x=>x.id===id):null;
  const read=()=>{e.title=$("#eT").value.trim();e.cat=cat;e.date=$("#eD").value||today();e.time=$("#eH").value;e.end=e.time?$("#eE").value:"";e.place=$("#eP").value.trim();e.rep=$("#eR").value;e.until=e.rep==="none"?"":$("#eU").value;e.rem=+$("#eM").value;e.notes=$("#eN").value.trim();e.shared=$("#eS").checked;return e;};
  const commit=()=>{read();if(!e.title){toast("Γράψε τι είναι 🙂");$("#eT").focus();return false;}
   const i=D.ev.findIndex(x=>x.id===e.id);if(i>=0)D.ev[i]=e;else D.ev.push(e);save();return true;};
+ $("#eH1").onclick=()=>help("notif");$("#eH2").onclick=()=>help("share");
  $("#eSave").onclick=()=>{if(!commit())return;closeSheet();sel=e.date;render();toast(+e.rem?"Αποθηκεύτηκε ✔ — για ειδοποίηση πάτα «🔔 Στο κινητό»":"Αποθηκεύτηκε ✔",3200);};
  $("#ePh").onclick=()=>{if(!commit())return;shareFile(ics([e],[]),"Areti_"+slug(e.title)+".ics");render();};
  $("#eSh").onclick=()=>{read();if(!e.title){toast("Γράψε τι είναι 🙂");return;}e.shared=true;$("#eS").checked=true;commit();sendToPartner([e]);render();};
@@ -279,10 +287,10 @@ function todoLine(x){const ov=x.due&&!x.done&&x.due<today();
  <div class="muted">${esc(x.cat||"")}${x.due?` · <span class="${ov?"neg":""}">${ov?"⚠️ ":""}${fds(x.due)}</span>`:""}${x.note?" · "+esc(x.note):""}</div></div></div>`;}
 function bindTodo(r){r.querySelectorAll("[data-tk]").forEach(b=>b.onclick=ev=>{ev.stopPropagation();const x=D.todo.find(t=>t.id===b.dataset.tk);x.done=!x.done;x.doneAt=x.done?today():"";save();render();if(x.done)toast("Μπράβο! ✔");});
  r.querySelectorAll("[data-te]").forEach(b=>b.onclick=()=>editTodo(b.dataset.te));}
-function rTodo(){const open=D.todo.filter(x=>!x.done),done=D.todo.filter(x=>x.done);
+function rTodo(){setTimeout(bindQh,0);const open=D.todo.filter(x=>!x.done),done=D.todo.filter(x=>x.done);
  const srt=(a,b)=>(a.due||"9999").localeCompare(b.due||"9999");
  let o=`<div class="seg" style="margin-bottom:12px"><button data-f="open" class="${todoF==="open"?"on":""}">Να γίνουν (${open.length})</button><button data-f="done" class="${todoF==="done"?"on":""}">Έγιναν (${done.length})</button></div>`;
- o+=`<button class="btn full" id="tAdd" style="margin-bottom:12px">+ Νέα δουλειά</button>`;
+ o+=`<div style="overflow:hidden;margin-bottom:8px">${qh("todo")}</div><button class="btn full" id="tAdd" style="margin-bottom:12px">+ Νέα δουλειά</button>`;
  if(todoF==="open"){const groups={};open.sort(srt).forEach(x=>(groups[x.cat||"⭐ Άλλο"]=groups[x.cat||"⭐ Άλλο"]||[]).push(x));
   o+=Object.keys(groups).length?Object.entries(groups).map(([k,v])=>`<div class="card"><h2>${esc(k)}</h2>${v.map(todoLine).join("")}</div>`).join(""):`<div class="card muted">Όλα έτοιμα! 🎉 Πρόσθεσε δουλειές, ψώνια, χαρτιά…</div>`;
   if(open.some(x=>x.shared))o+=`<button class="btn ghost full" id="tSh">📤 Στείλε τις κοινές δουλειές στον ${esc(Pa())}</button>`;}
@@ -308,8 +316,8 @@ function editTodo(id){const x0=id?D.todo.find(x=>x.id===id):null;const x=x0?{...
  if(!x0)setTimeout(()=>{const z=$("#tT");if(z)z.focus();},250);}
 
 /* ---------- ΓΕΝΕΘΛΙΑ ---------- */
-function rBd(){const t=today();const l=D.bd.map(b=>({b,s:nextBd(b,t)})).sort((a,b)=>a.s.localeCompare(b.s));
- let o=`<button class="btn full" id="bAdd" style="margin-bottom:12px">+ Γενέθλια / γιορτή / επέτειος</button>`;
+function rBd(){setTimeout(bindQh,0);const t=today();const l=D.bd.map(b=>({b,s:nextBd(b,t)})).sort((a,b)=>a.s.localeCompare(b.s));
+ let o=`<div style="overflow:hidden;margin-bottom:8px">${qh("bd")}</div><button class="btn full" id="bAdd" style="margin-bottom:12px">+ Γενέθλια / γιορτή / επέτειος</button>`;
  o+=`<div class="card"><h2>🎂 Τα επόμενα</h2>${l.length?l.map(({b,s})=>{const n=diffD(t,s),k=b.k||"b";return `<div class="item" data-b="${b.id}"><div class="grow"><b>${esc(b.name)}</b> <span class="muted">${BDK[k]}${b.rel?" · "+esc(b.rel):""}</span>
  <div class="${n===0?"hol":"muted"}">${fdl(s)}${b.year&&k!=="n"?" · κλείνει "+(+s.slice(0,4)-b.year):""} · ${n===0?"ΣΗΜΕΡΑ 🎉":n===1?"αύριο":"σε "+n+" μέρες"}</div>${b.note?`<div class="muted">🎁 ${esc(b.note)}</div>`:""}</div></div>`;}).join(""):`<div class="muted">Πρόσθεσε τα γενέθλια της οικογένειας και των φίλων — θα σου τα θυμίζει η αρχική σελίδα 7 μέρες πριν.</div>`}</div>`;
  if(l.length)o+=`<button class="btn ghost full" id="bIcs">🔔 Βάλε όλα στο ημερολόγιο του κινητού (ειδοποίηση κάθε χρόνο)</button>`;
@@ -338,14 +346,14 @@ function wish(id){const b=D.bd.find(x=>x.id===id);if(!b)return;const k=b.k||"b";
  location.href="https://wa.me/?text="+encodeURIComponent(t);}
 
 /* ---------- ΟΙΚΟΝΟΜΙΚΑ ---------- */
-function rFin(){const y=finM.getFullYear(),m=finM.getMonth(),mk=y+"-"+pad(m+1);const pm=new Date(y,m-1,1),pk=pm.getFullYear()+"-"+pad(pm.getMonth()+1);
+function rFin(){setTimeout(bindQh,0);const y=finM.getFullYear(),m=finM.getMonth(),mk=y+"-"+pad(m+1);const pm=new Date(y,m-1,1),pk=pm.getFullYear()+"-"+pad(pm.getMonth()+1);
  const L=D.tx.filter(x=>x.date.startsWith(mk)),PL=D.tx.filter(x=>x.date.startsWith(pk));
  const sum=(l,t)=>l.filter(x=>x.type===t).reduce((a,x)=>a+x.amt,0);
  const out=sum(L,"out"),inn=sum(L,"in"),pout=sum(PL,"out");
  let o=`<div class="mhead"><button id="fP">‹</button><h2>${MON[m]} ${y}</h2><button id="fN">›</button></div>
  <div class="sum"><div><span>Έσοδα</span><b class="pos">${eur(inn)}</b></div><div><span>Έξοδα</span><b class="neg">${eur(out)}</b></div><div><span>Υπόλοιπο</span><b class="${inn-out>=0?"pos":"neg"}">${eur(inn-out)}</b></div></div>
  <div class="row" style="margin-bottom:12px"><button class="btn acc grow" id="fOut">− Έξοδο</button><button class="btn ok grow" id="fIn">+ Έσοδο</button></div>`;
- if(D.set.budget)o+=`<div class="card"><h2>🎯 Όριο μήνα ${eur(D.set.budget)}</h2><div class="bar"><i style="width:${Math.min(100,out/D.set.budget*100)}%;${out>D.set.budget?"background:var(--bad)":""}"></i></div><div class="muted">${out>D.set.budget?"⚠️ Πάνω από το όριο κατά "+eur(out-D.set.budget):"Μένουν "+eur(D.set.budget-out)}</div></div>`;
+ if(D.set.budget)o+=`<div class="card"><h2>${qh("fin")}🎯 Όριο μήνα ${eur(D.set.budget)}</h2><div class="bar"><i style="width:${Math.min(100,out/D.set.budget*100)}%;${out>D.set.budget?"background:var(--bad)":""}"></i></div><div class="muted">${out>D.set.budget?"⚠️ Πάνω από το όριο κατά "+eur(out-D.set.budget):"Μένουν "+eur(D.set.budget-out)}</div></div>`;
  const outs=L.filter(x=>x.type==="out");
  if(outs.length){const bc={};outs.forEach(x=>bc[x.cat]=(bc[x.cat]||0)+x.amt);const pc={};PL.filter(x=>x.type==="out").forEach(x=>pc[x.cat]=(pc[x.cat]||0)+x.amt);
   const arr=Object.entries(bc).sort((a,b)=>b[1]-a[1]),mx=arr[0][1];
@@ -359,7 +367,7 @@ function rFin(){const y=finM.getFullYear(),m=finM.getMonth(),mk=y+"-"+pad(m+1);c
   ${inn?`<div>• Αποταμίευσες το <b>${Math.max(0,Math.round((inn-out)/inn*100))}%</b> των εσόδων</div>`:""}</div>`;}
  // κινήσεις
  const byD={};L.slice().sort((a,b)=>b.date.localeCompare(a.date)||(b.ts||0)-(a.ts||0)).forEach(x=>(byD[x.date]=byD[x.date]||[]).push(x));
- o+=`<div class="card"><h2>🧾 Κινήσεις</h2>${Object.keys(byD).length?Object.entries(byD).map(([d,l])=>`<div class="muted" style="margin-top:8px"><b>${fdl(d)}</b></div>${l.map(x=>`<div class="item" data-x="${x.id}"><div class="grow">${esc(x.cat)}${x.place?` <span class="muted">· ${esc(x.place)}</span>`:""}${x.note?`<div class="muted">${esc(x.note)}</div>`:""}</div><b class="${x.type==="in"?"pos":"neg"}">${x.type==="in"?"+":"−"}${eur(x.amt)}</b></div>`).join("")}`).join(""):`<div class="muted">Καμία κίνηση. Γράψε κάθε έξοδο (ακόμα και μόνο ποσό + είδος) και στο τέλος του μήνα θα δεις πού πάνε τα λεφτά.</div>`}</div>`;
+ o+=`<div class="card"><h2>${qh("fin")}🧾 Κινήσεις</h2>${Object.keys(byD).length?Object.entries(byD).map(([d,l])=>`<div class="muted" style="margin-top:8px"><b>${fdl(d)}</b></div>${l.map(x=>`<div class="item" data-x="${x.id}"><div class="grow">${esc(x.cat)}${x.place?` <span class="muted">· ${esc(x.place)}</span>`:""}${x.note?`<div class="muted">${esc(x.note)}</div>`:""}</div><b class="${x.type==="in"?"pos":"neg"}">${x.type==="in"?"+":"−"}${eur(x.amt)}</b></div>`).join("")}`).join(""):`<div class="muted">Καμία κίνηση. Γράψε κάθε έξοδο (ακόμα και μόνο ποσό + είδος) και στο τέλος του μήνα θα δεις πού πάνε τα λεφτά.</div>`}</div>`;
  o+=`<div class="row wrap"><button class="btn ghost grow" id="fCat">🏷️ Κατηγορίες</button><button class="btn ghost grow" id="fCsv">⬇ Excel (CSV)</button><button class="btn ghost grow" id="fRep">📤 Αναφορά μήνα</button></div>`;
  $("#main").innerHTML=o;
  $("#fP").onclick=()=>{finM=new Date(y,m-1,1);rFin();};$("#fN").onclick=()=>{finM=new Date(y,m+1,1);rFin();};
@@ -449,29 +457,107 @@ $("#fileIn").onchange=async ev=>{const f=ev.target.files[0];ev.target.value="";i
  if(/BEGIN:VCALENDAR/.test(txt)){const l=parseICS(txt);let n=0;l.forEach(e=>{const i=D.ev.findIndex(x=>x.id===e.id);if(i>=0){if(D.ev[i].who){D.ev[i]=e;n++;}}else{D.ev.push(e);n++;}});save();closeSheet();render();toast(`📥 ${n} ραντεβού από τον ${Pa()} ✔`);return;}
  try{const j=JSON.parse(txt);if(!j.ev)throw 0;if(!confirm("Επαναφορά αντιγράφου; Θα αντικατασταθούν τα τωρινά δεδομένα."))return;D=fix(j);D.set.welcomed=true;save();closeSheet();render();toast("Έγινε επαναφορά ✔");}catch(e){toast("Άγνωστο αρχείο");}};
 
+
+/* ---------- οδηγίες ---------- */
+const HELP=[
+["start","👋 Πρώτα βήματα",`<ol>
+<li>Άνοιξε τη σελίδα στο <b>Safari</b>.</li>
+<li>Πάτα <b>Κοινοποίηση ⬆️</b> (κάτω στη μέση).</li>
+<li>Πάτα <b>«Προσθήκη στην οθόνη Αφετηρίας»</b> → <b>Προσθήκη</b>.</li>
+<li>Τώρα έχεις το εικονίδιο 💛 στο κινητό σαν κανονική εφαρμογή. Ανοίγει και χωρίς internet.</li>
+</ol><div class="tip">Κάτω έχεις 5 κουμπιά: 🏠 Σήμερα · 📅 Ημερολόγιο · ✅ Οργάνωση · 🎂 Γενέθλια · 💶 Οικονομικά. Πάνω δεξιά: ❓ οδηγίες, ⚙️ ρυθμίσεις.</div>`],
+["home","🏠 Σήμερα",`<ul>
+<li>Βλέπεις με μια ματιά: τι έχεις <b>σήμερα</b> και <b>αύριο</b>, ποιος έχει <b>γενέθλια</b>, ποιοι <b>γιορτάζουν</b>, ποιες <b>δουλειές</b> πρέπει να γίνουν και <b>πόσα ξόδεψες</b> τον μήνα.</li>
+<li>Τα 3 μεγάλα κουμπιά είναι για γρήγορη καταχώριση: <b>📅 Ραντεβού</b>, <b>💶 Έξοδο</b>, <b>✅ Δουλειά</b>.</li>
+<li>Πάτα πάνω σε ένα ραντεβού για να το δεις ή να το αλλάξεις.</li></ul>`],
+["cal","📅 Ημερολόγιο & ραντεβού",`<ol>
+<li>Πάτα μια <b>μέρα</b> στο ημερολόγιο → από κάτω βλέπεις τι έχει.</li>
+<li>Πάτα <b>«+ Νέο ραντεβού»</b>.</li>
+<li>Γράψε <b>τι είναι</b> (π.χ. Οδοντίατρος) και διάλεξε <b>κατηγορία</b> (Ραντεβού, Θεραπεία, Δουλειά…).</li>
+<li>Βάλε <b>ώρα</b>. Αν το αφήσεις κενό, είναι για όλη τη μέρα.</li>
+<li>Αν γίνεται συχνά (π.χ. φυσικοθεραπεία κάθε Τρίτη), διάλεξε <b>🔁 Επανάληψη</b> και μέχρι πότε.</li>
+<li>Πάτα <b>💾 Αποθήκευση</b>.</li></ol>
+<div class="tip">🎨 Τα χρωματιστά τελάκια στις μέρες δείχνουν ραντεβού. Με <span class="hol">κόκκινο</span> οι αργίες και οι Κυριακές, 🇬🇷 = αργία, 🎂 = γενέθλια.<br>👉 Σύρε το ημερολόγιο αριστερά/δεξιά για να αλλάξεις μήνα.</div>
+<ul><li><b>Αλλαγή:</b> πάτα το ραντεβού → άλλαξε → Αποθήκευση.</li>
+<li><b>Διαγραφή:</b> πάτα το ραντεβού → 🗑. Αν επαναλαμβάνεται, μπορείς να σβήσεις <b>μόνο εκείνη τη μέρα</b> ή <b>όλα</b>.</li></ul>`],
+["notif","🔔 Να με ειδοποιεί",`<div class="tip">Το iPhone δεν αφήνει αυτή την εφαρμογή να χτυπάει μόνη της. Γι' αυτό τα ραντεβού περνάνε <b>στο κανονικό Ημερολόγιο του κινητού</b>, κι εκείνο σε ειδοποιεί.</div><ol>
+<li>Στο ραντεβού διάλεξε <b>🔔 Ειδοποίηση</b> (π.χ. 1 ώρα πριν).</li>
+<li>Πάτα <b>«🔔 Στο ημερολόγιο του κινητού»</b>.</li>
+<li>Στο παράθυρο που ανοίγει πάτα <b>«Προσθήκη»</b> (ή «Προσθήκη όλων»).</li>
+<li>Έτοιμο! Το κινητό θα σε ειδοποιήσει την ώρα που διάλεξες ✔</li></ol>
+<ul><li>Για πολλά μαζί: 📅 Ημερολόγιο → κάτω <b>«🔔 Όλα στο κινητό»</b>.</li>
+<li>⚠️ Κάθε ραντεβού πέρασέ το <b>μία φορά</b>, αλλιώς θα εμφανιστεί διπλό στο κινητό. Αν αλλάξεις ώρα, σβήσε το παλιό από το Ημερολόγιο του κινητού.</li></ul>`],
+["share","👫 Κοινά με τον Γιάννη",`<div class="tip">Ο Γιάννης βλέπει <b>ΜΟΝΟ</b> όσα του στέλνεις εσύ. Όλα τα άλλα μένουν κρυφά, μόνο δικά σου 🔒</div><ol>
+<li>Στο ραντεβού τσέκαρε <b>«👫 Κοινό με τον Γιάννη»</b>.</li>
+<li>Πάτα <b>«📤 Στείλε στον Γιάννη»</b>.</li>
+<li>Διάλεξε:<br><b>💬 Μήνυμα WhatsApp</b>: του στέλνει το ραντεβού γραμμένο.<br><b>📅 Αρχείο για το ημερολόγιό του</b>: διάλεξε τον Γιάννη στο Viber/WhatsApp. Εκείνος το ανοίγει, πατάει <b>«Προσθήκη»</b> και μπαίνει στο ημερολόγιο του κινητού του, με ειδοποίηση.</li></ol>
+<ul><li>Όλα τα κοινά μαζί: 📅 Ημερολόγιο → <b>«📤 Στείλε τα κοινά στον Γιάννη»</b>.</li>
+<li>Αν έχει κι εκείνος την εφαρμογή και σου στείλει αρχείο: ⚙️ → <b>«📥 Εισαγωγή αρχείου»</b>.</li>
+<li>Κάθε φορά που αλλάζει κάτι, στείλ' του το ξανά. Δεν ενημερώνεται μόνο του.</li></ul>`],
+["todo","✅ Οργάνωση (δουλειές)",`<ol>
+<li>Πάτα <b>«+ Νέα δουλειά»</b>, γράψε τι πρέπει να γίνει (π.χ. Πληρωμή ΔΕΗ, γάλα, συνταγή).</li>
+<li>Διάλεξε κατηγορία (🏠 Σπίτι, 🛒 Ψώνια, 📄 Χαρτιά…) και, αν θες, <b>μέχρι πότε</b>.</li>
+<li>Όταν το κάνεις, πάτα τον <b>κύκλο ◯</b> → γίνεται ✓ πράσινο.</li></ol>
+<ul><li>Όσες έχουν ημερομηνία βγαίνουν και στην 🏠 Σήμερα. Οι καθυστερημένες βγαίνουν με ⚠️.</li>
+<li>Κοινή λίστα (π.χ. ψώνια): τσέκαρε «Κοινή» → <b>«📤 Στείλε τις κοινές δουλειές»</b>.</li></ul>`],
+["bd","🎂 Γενέθλια & γιορτές",`<ol>
+<li>Πάτα <b>«+ Γενέθλια / γιορτή / επέτειος»</b>.</li>
+<li>Διάλεξε είδος (🎂 / 🎉 / 💍), γράψε <b>όνομα</b>, μέρα και μήνα. Το <b>έτος</b> είναι προαιρετικό. Αν το βάλεις, σου λέει πόσα κλείνει.</li>
+<li>Στο <b>🎁</b> γράψε ιδέες για δώρο.</li></ol>
+<ul><li>7 μέρες πριν σού το θυμίζει η 🏠 Σήμερα. Την ημέρα πατάς <b>💬 Ευχές</b> και ανοίγει το WhatsApp με έτοιμες ευχές.</li>
+<li>Για ειδοποίηση κάθε χρόνο: πάτα <b>«🔔 Βάλε όλα στο ημερολόγιο του κινητού»</b> → Προσθήκη όλων. Σε ειδοποιεί την προηγούμενη μέρα και την ίδια μέρα στις 9:00.</li>
+<li>Οι ονομαστικές εορτές και οι αργίες βγαίνουν <b>μόνες τους</b>. Το Πάσχα υπολογίζεται κάθε χρόνο.</li></ul>`],
+["fin","💶 Έσοδα & έξοδα",`<div class="tip">Ο κανόνας: <b>κάθε φορά που πληρώνεις, γράψ' το αμέσως</b>. Θέλει 5 δευτερόλεπτα.</div><ol>
+<li>Πάτα <b>«− Έξοδο»</b> (ή «+ Έσοδο» για μισθό κ.λπ.).</li>
+<li>Γράψε το <b>ποσό</b> (π.χ. 23,40).</li>
+<li>Διάλεξε <b>είδος</b> (Σούπερ μάρκετ, Φαρμακείο, Καύσιμα…).</li>
+<li>Αν θες, γράψε <b>πού</b> (π.χ. Σκλαβενίτης). Τα μέρη που έγραψες ξαναβγαίνουν έτοιμα.</li>
+<li><b>💾 Αποθήκευση</b>. Αρκεί και μόνο ποσό και είδος!</li></ol>
+<ul><li><b>Τέλος του μήνα</b> βλέπεις: 📊 πού πήγαν τα λεφτά (σε μπάρες και %), 📍 πού ξόδεψες περισσότερα, ▲▼ σύγκριση με τον προηγούμενο μήνα, 💡 μέσο όρο τη μέρα.</li>
+<li>Με τα βελάκια ‹ › αλλάζεις μήνα.</li>
+<li><b>Νέα κατηγορία:</b> στο έξοδο πάτα <b>«＋ Νέα»</b> ή κάτω <b>«🏷️ Κατηγορίες»</b>. Μπορείς να σβήσεις όσες δεν θες.</li>
+<li><b>🎯 Όριο μήνα:</b> ⚙️ → γράψε π.χ. 1200 €. Θα βλέπεις μπάρα με το πόσα σου μένουν.</li>
+<li><b>Λάθος καταχώριση;</b> Πάτα πάνω της → άλλαξε ή 🗑.</li>
+<li><b>⬇ Excel</b> για αρχείο. <b>📤 Αναφορά μήνα</b> για να τη στείλεις σε μήνυμα.</li></ul>`],
+["backup","🛟 Να μη χαθεί τίποτα",`<div class="tip">Όλα είναι αποθηκευμένα <b>μόνο στο κινητό σου</b>. Δεν τα βλέπει κανείς άλλος.</div><ol>
+<li>Μία φορά τον μήνα: ⚙️ → <b>«⬇ Αντίγραφο όλων»</b> → αποθήκευσέ το στα <b>Αρχεία / iCloud Drive</b> ή στείλ' το στον εαυτό σου.</li>
+<li>Αν αλλάξεις κινητό: άνοιξε την εφαρμογή στο νέο → ⚙️ → <b>«📥 Εισαγωγή»</b> → διάλεξε το αντίγραφο.</li></ol>
+<ul><li>⚠️ Μη σβήσεις το εικονίδιο της εφαρμογής χωρίς αντίγραφο.</li>
+<li>Για να πάρεις τις νέες βελτιώσεις: άνοιξέ την με internet, κλείσ' την τελείως και ξανάνοιξέ την.</li></ul>`]];
+function help(open){openSheet(`<h3>❓ Οδηγίες</h3><div class="muted" style="margin-bottom:6px">Πάτα ένα θέμα για να ανοίξει.</div>
+ ${HELP.map(([k,t,h])=>`<details class="hp" data-h="${k}" ${k===open?"open":""}><summary>${t}</summary>${h.replace(/τον Γιάννη/g,"τον "+esc(Pa())).replace(/Ο Γιάννης/g,"Ο "+esc(P())).replace(/Γιάννης/g,esc(P()))}</details>`).join("")}
+ <div class="love" style="margin-top:14px">💛 Ό,τι δεν καταλαβαίνεις, πάρε τηλέφωνο τον αδερφό σου!</div>
+ <button class="btn full" onclick="closeSheet()">Κατάλαβα 👍</button>`);
+ if(open)setTimeout(()=>{const d=document.querySelector(`[data-h="${open}"]`);if(d)d.scrollIntoView({block:"start"});},60);}
+$("#bHelp").onclick=()=>help({home:"home",cal:"cal",todo:"todo",bd:"bd",fin:"fin"}[tab]);
+const qh=k=>`<button class="qh" data-qh="${k}">❓ Πώς;</button>`;
+function bindQh(){$$("[data-qh]").forEach(b=>b.onclick=ev=>{ev.stopPropagation();help(b.dataset.qh);});}
+
 /* ---------- ρυθμίσεις ---------- */
 function settings(){openSheet(`<h3>⚙️ Ρυθμίσεις</h3>
  <label>Όνομα του συντρόφου (για τα κοινά)</label><input id="sP" value="${esc(P())}">
  <label>🎯 Όριο εξόδων μήνα (€, 0 = χωρίς)</label><input id="sB" inputmode="decimal" value="${D.set.budget||""}" placeholder="π.χ. 1200">
  <label class="sw"><input type="checkbox" id="sN" ${D.set.names?"checked":""}><span>🎉 Δείχνε ονομαστικές εορτές</span></label>
  <button class="btn full" style="margin-top:12px" id="sSave">💾 Αποθήκευση</button>
+ <button class="btn ghost full" style="margin-top:8px" id="sHelp">❓ Όλες οι οδηγίες</button>
  <div class="card" style="margin-top:14px"><h2>🔔 Πώς έρχονται οι ειδοποιήσεις</h2><div class="muted">Στο iPhone μια εφαρμογή σαν αυτή δεν μπορεί να χτυπήσει μόνη της. Γι' αυτό: σε κάθε ραντεβού πάτα <b>«🔔 Στο ημερολόγιο του κινητού»</b> → «Προσθήκη». Από εκεί το κινητό σού χτυπάει κανονικά, την ώρα που διάλεξες. Τα γενέθλια μπαίνουν όλα μαζί από την καρτέλα 🎂 και σε ειδοποιούν κάθε χρόνο, την προηγούμενη και την ίδια μέρα.</div></div>
  <div class="card"><h2>👫 Κοινό πρόγραμμα με τον ${esc(Pa())}</h2><div class="muted">Ό,τι τσεκάρεις «Κοινό» το στέλνεις με «📤». Εκείνος το βάζει στο ημερολόγιό του με ένα πάτημα. Αν σου στείλει κι αυτός αρχείο (.ics), το φέρνεις εδώ:</div>
  <button class="btn ghost full" style="margin-top:8px" id="sImp">📥 Εισαγωγή αρχείου (.ics) ή αντιγράφου</button></div>
  <div class="card"><h2>🛟 Αντίγραφο ασφαλείας</h2><div class="muted">Όλα μένουν μόνο στο κινητό σου. Κράτα πού και πού ένα αντίγραφο (π.χ. στο iCloud Drive ή στείλ' το στον εαυτό σου).</div>
  <button class="btn ghost full" style="margin-top:8px" id="sBak">⬇ Αντίγραφο όλων</button></div>
- <div class="card" style="text-align:center"><div style="font-size:34px">💛</div><b>Αρετή μου, σε αγαπώ πολύ!</b><div class="muted">Ένα δώρο από τον αδερφό σου.</div><button class="btn sm ghost" style="margin-top:8px" id="sW">Δες ξανά το μήνυμα</button><div class="muted" style="margin-top:10px">Created by George Barbaris · v1</div></div>
+ <div class="card" style="text-align:center"><div style="font-size:34px">💛</div><b>Αρετή μου, σε αγαπώ πολύ!</b><div class="muted">Ένα δώρο από τον αδερφό σου.</div><button class="btn sm ghost" style="margin-top:8px" id="sW">Δες ξανά το μήνυμα</button><div class="muted" style="margin-top:10px">Created by George Barbaris · v2</div></div>
  <button class="btn ghost full" onclick="closeSheet()">Κλείσιμο</button>`);
  $("#sSave").onclick=()=>{D.set.partner=$("#sP").value.trim()||"Γιάννης";D.set.budget=num($("#sB").value);D.set.names=$("#sN").checked;for(const k in yc)delete yc[k];save();closeSheet();render();toast("Αποθηκεύτηκε ✔");};
- $("#sImp").onclick=()=>$("#fileIn").click();$("#sW").onclick=()=>{closeSheet();welcome();};
+ $("#sHelp").onclick=()=>help();$("#sImp").onclick=()=>$("#fileIn").click();$("#sW").onclick=()=>{closeSheet();welcome();};
  $("#sBak").onclick=()=>shareFile(new Blob([JSON.stringify(D)],{type:"application/json"}),"Areti_Calendar_backup_"+today()+".json");}
 
 function welcome(){const w=document.createElement("div");w.className="welcome";
  const ios=/iphone|ipad/i.test(navigator.userAgent),st=matchMedia("(display-mode: standalone)").matches||navigator.standalone;
  w.innerHTML=`<div><div style="font-size:64px">💛</div><h2>Αρετή μου,</h2><p>αυτή η εφαρμογή είναι φτιαγμένη μόνο για σένα — για τα ραντεβού σου, το κοινό πρόγραμμα με τον ${esc(Pa())}, τα γενέθλια που δεν πρέπει να ξεχνάς και για να βάλεις τάξη στα οικονομικά σου.</p><p style="font-size:21px"><b>Σε αγαπώ πολύ!</b></p><p>— ο αδερφός σου 🤍</p>
  ${ios&&!st?`<p style="font-size:14px;opacity:.9">📲 Για να την έχεις σαν κανονική εφαρμογή: πάτα <b>Κοινοποίηση ⬆️</b> στο Safari → <b>«Προσθήκη στην οθόνη Αφετηρίας»</b>.</p>`:""}
- <button>Ξεκινάμε ✨</button></div>`;document.body.appendChild(w);
- w.querySelector("button").onclick=()=>{w.remove();D.set.welcomed=true;save();};}
+ <button id="wGo">Ξεκινάμε ✨</button><br><button id="wHelp" style="background:rgba(255,255,255,.2);color:#fff">❓ Δείξε μου πώς δουλεύει</button></div>`;document.body.appendChild(w);
+ w.querySelector("#wGo").onclick=()=>{w.remove();D.set.welcomed=true;save();};
+ w.querySelector("#wHelp").onclick=()=>{w.remove();D.set.welcomed=true;save();help("start");};}
 
 render();if(!D.set.welcomed)welcome();
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
