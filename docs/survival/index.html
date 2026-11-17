@@ -2116,7 +2116,7 @@ function setLang(l){try{localStorage.setItem('sv_lang',JSON.stringify(l))}catch(
 const encURI=s=>encodeURIComponent(trS(String(s)));
 const $=s=>document.querySelector(s),M=$('#m');
 const esc=s=>UX(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const APP_V='38',APP_D='17/11/2026';
+const APP_V='39',APP_D='17/11/2026';
 const LS={g(k,d){try{const v=localStorage.getItem('sv_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},s(k,v){try{localStorage.setItem('sv_'+k,JSON.stringify(v))}catch(e){}}};
 let fs=LS.g('fs',19);document.documentElement.style.setProperty('--fs',fs+'px');
 function fz(d){fs=Math.max(15,Math.min(28,fs+d*2));LS.s('fs',fs);document.documentElement.style.setProperty('--fs',fs+'px')}
@@ -4114,14 +4114,14 @@ function eleUD(arr,ref){let up=0,dn=0;for(const e of arr){if(e==null)continue;if
 function eleSt(){const E=[];let d=0,mn=Infinity,mx=-Infinity;for(let i=0;i<trk.length;i++){if(i)d+=dist(trk[i-1],trk[i]);const e=trk[i].e;if(e!=null){E.push([d,e]);mn=Math.min(mn,e);mx=Math.max(mx,e)}}
  const u=eleUD(E.map(q=>q[1]));return {E,g:u.up,l:u.dn,mn,mx,d}}
 function eleGrade(E){const n=trk.length;if(E.length<2||!n||!trk[n-1].t||Date.now()-trk[n-1].t>120000)return null;const [d1,e1]=E[E.length-1];
- for(let i=E.length-2;i>=0;i--){const [d0,e0]=E[i];if(d1-d0>=40)return d1-d0<400?(e1-e0)/(d1-d0)*100:null}return null}
+ for(let i=E.length-2;i>=0;i--){const [d0,e0]=E[i];if(d1-d0>=60)return d1-d0<500?(e1-e0)/(d1-d0)*100:null}return null}
 const eleM=v=>v==null||!isFinite(v)?'—':Math.round(v)+' m';
 function niceStep(v){const p=10**Math.floor(Math.log10(v||1)),n=v/p;return (n<=1?1:n<=2?2:n<=5?5:10)*p}
 /* ---- το κουτί κάτω από το Plotter ---- */
 let eleLast=0;
 function eleUpd(force){const box=$('#plele');if(!box)return;const now=Date.now();if(!force&&now-eleLast<1200)return;eleLast=now;
  const S=eleSt(),o=altOff(),cur=ALT.v!=null?ALT.v:(pos&&pos.alt!=null?pos.alt:null),gr=eleGrade(S.E),t0=S.E.length?S.E[0][1]:null,ok=S.E.length>1;
- const F=(l,v,c)=>`<div style="background:#0d1b2a;border:1px solid var(--line);border-radius:10px;padding:6px 4px;text-align:center"><div class="muted" style="font-size:.7em">${l}</div><div class="mono" style="font-weight:800;font-size:1.05em;${c?'color:'+c:''}">${v}</div></div>`;
+ const F=(l,v,c)=>`<div style="background:#0d1b2a;border:1px solid var(--line);border-radius:10px;padding:6px 4px;text-align:center"><div class="muted" style="font-size:.7em">${l}</div><div class="mono" style="font-weight:800;font-size:1em;white-space:nowrap;${c?'color:'+c:''}">${v}</div></div>`;
  $('#eleg').innerHTML=F('⛰️ '+L2('Υψόμετρο','Altitude'),cur!=null?eleM(cur+o):'—')+F('↗ '+L2('Ανάβαση','Ascent'),ok?'+'+Math.round(S.g)+' m':'—','#2ecc71')+F('↘ '+L2('Κατάβαση','Descent'),ok?'−'+Math.round(S.l)+' m':'—','#ff8a65')+F(L2('Κλίση','Grade'),gr!=null?(gr>0?'+':'')+Math.round(gr)+'%':'—',gr!=null&&Math.abs(gr)>=20?'#f77f00':'');
  let h='';
  if(cur==null)h=L2('⛰️ Περιμένω υψόμετρο από το GPS… (1–2 λεπτά σε ανοιχτό ουρανό)','⛰️ Waiting for GPS altitude… (1–2 minutes under open sky)');
@@ -4132,7 +4132,7 @@ function eleUpd(force){const box=$('#plele');if(!box)return;const now=Date.now()
 /* ---- υψομετρικό προφίλ ---- */
 function eleProf(cv,S,o){if(!cv)return;const r=cv.getBoundingClientRect();if(!r.width)return;const u=Math.min(3,window.devicePixelRatio||1),W=Math.round(r.width*u),H=Math.round(140*u);
  if(cv.width!==W||cv.height!==H){cv.width=W;cv.height=H}const x=cv.getContext('2d'),E=S.E;x.setTransform(1,0,0,1,0,0);x.fillStyle='#07111c';x.fillRect(0,0,W,H);
- if(E.length<2){x.fillStyle='#a9b8c8';x.font=`${Math.round(13*u)}px sans-serif`;x.textAlign='center';x.textBaseline='middle';x.fillText(rec?L2('⛰️ Το προφίλ φτιάχνεται καθώς προχωράς…','⛰️ The profile builds as you move…'):L2('⛰️ Υψομετρικό προφίλ: πάτα «⏺ Κατέγραφε»','⛰️ Elevation profile: press “⏺ Record”'),W/2,H/2);return}
+ const pm=$('#plprofm');if(E.length<2){if(pm){pm.style.display='flex';pm.textContent=rec?L2('⛰️ Το προφίλ φτιάχνεται καθώς προχωράς…','⛰️ The profile builds as you move…'):L2('⛰️ Υψομετρικό προφίλ: πάτα «⏺ Κατέγραφε τη διαδρομή μου»','⛰️ Elevation profile: press “⏺ Record my route”')}return}if(pm)pm.style.display='none';/* v39: το μήνυμα είναι πλέον HTML πάνω στον καμβά (στο iPhone το κείμενο του καμβά έβγαινε κομμένο δεξιά) */
  const L=40*u,R=10*u,T=12*u,B=18*u,D=Math.max(E[E.length-1][0],1);let lo=S.mn,hi=S.mx;if(hi-lo<20){const m=(hi+lo)/2;lo=m-10;hi=m+10}const pd=(hi-lo)*.12;lo-=pd;hi+=pd;
  const X=d=>L+(W-L-R)*d/D,Y=e=>T+(H-T-B)*(1-(e-lo)/(hi-lo));
  x.strokeStyle='#1f3550';x.lineWidth=u;x.fillStyle='#8fb3d9';x.font=`${Math.round(10*u)}px sans-serif`;x.textAlign='right';x.textBaseline='middle';
@@ -4153,7 +4153,7 @@ function eleCal(){const cur=ALT.v!=null?ALT.v:(pos&&pos.alt!=null?pos.alt:null);
 {const _p=plInfo;plInfo=function(c){_p(c);eleUpd()}}
 {const _c=compass;compass=function(){_c();const pi=$('#plinfo');if(!pi)return;
  pi.insertAdjacentHTML('afterend',`<div id="plele" style="margin-top:8px"><b>⛰️ ${L2('Υψομετρική','Elevation')}</b><div id="eleg" style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:5px"></div><div id="elei" class="muted" style="margin:6px 2px"></div>
- <canvas id="plprof" style="height:140px;touch-action:manipulation"></canvas><div class="tools" style="margin:4px 0;gap:5px"><button class="btn" style="padding:7px 9px" onclick="eleCal()">📏 ${L2('Διόρθωση υψομέτρου','Calibrate altitude')}</button></div></div>`);eleUpd(1)}}
+ <div style="position:relative"><canvas id="plprof" style="height:140px;touch-action:manipulation;display:block"></canvas><div id="plprofm" class="notr" style="position:absolute;inset:0;display:none;align-items:center;justify-content:center;text-align:center;padding:10px 14px;color:#a9b8c8;font-size:.85em;line-height:1.35;pointer-events:none"></div></div><div class="tools" style="margin:4px 0;gap:5px"><button class="btn" style="padding:7px 9px" onclick="eleCal()">📏 ${L2('Διόρθωση υψομέτρου','Calibrate altitude')}</button></div></div>`);eleUpd(1)}}
 /* ---- «Γύρνα πίσω»: πόσο ανεβαίνεις / κατεβαίνεις ως την αρχή ---- */
 {const _b=tBack;tBack=function(){_b();const S=eleSt();if(S.E.length<2)return;const bx=M.querySelector('.box');if(bx)bx.insertAdjacentHTML('beforeend',`<div class="muted" style="margin-top:4px">⛰️ ${L2('Ως την αρχή','To the start')}: ↗ <b>+${Math.round(S.l)} m</b> ${L2('ανάβαση','climb')} · ↘ <b>−${Math.round(S.g)} m</b> ${L2('κατάβαση','descent')}</div>`)}}
 {const _u=bkUpd;bkUpd=function(){_u();if(!bk.on||!pos)return;const m=$('#bkm');if(!m||!m.textContent||m.textContent.includes('⛰️'))return;
@@ -4261,6 +4261,44 @@ let plHid=0;document.addEventListener('visibilitychange',()=>{if(document.visibi
 ['li','💡 Οθόνη / 🔋 Τσέπη: με σβηστή οθόνη το κινητό ΔΕΝ γράφει θέση. «💡 Οθόνη» = δεν σβήνει μόνη της. «🔋 Τσέπη» = μαύρη οθόνη με λίγα αμυδρά στοιχεία – σε οθόνη OLED καίει ελάχιστη μπαταρία· έξοδος με παρατεταμένο πάτημα 2″, για να μη βγαίνει κατά λάθος στην τσέπη. Μην πατάς το κουμπί κλειδώματος.','💡 Screen / 🔋 Pocket: with the screen off the phone does NOT record position. “💡 Screen” = it never turns off by itself. “🔋 Pocket” = a black screen with a few dim details – on an OLED screen it uses very little battery; exit with a 2″ long press so it does not exit by accident in your pocket. Do not press the lock button.'],
 ['li','Αν η οθόνη κλείσει κατά την καταγραφή, η εφαρμογή σε ειδοποιεί όταν την ξανανοίξεις και το κομμάτι που λείπει φαίνεται με λεπτή διακεκομμένη γραμμή (ευθεία – όχι ο πραγματικός δρόμος).','If the screen turns off while recording, the app warns you when you reopen it and the missing part is shown as a thin dashed line (straight – not the real way).']];
  const bl=add.map(([t,x,e])=>LANG==='en'?{t,x:e,k:x,e}:{t,x,e}),wi=a.blocks.findIndex(b=>/^💾 GPX/.test(b.k||b.x));a.blocks.splice(wi<0?a.blocks.length:wi+1,0,...bl)})();
+
+/* ===================== v39: 🧭 Πυξίδα HUD (σκούρο φόντο, κυανές γραμμές, περιστρεφόμενος δίσκος μοιρών) – Created by George Barbaris ===================== */
+function hudSvg(){const C='#5ee6f0',Cd='#2b8c99',f=(n,d=0)=>n.toFixed(d);let tk='',nm='',inr='';
+ for(let a=0;a<360;a+=2){const big=a%10===0,l=a%30===0?16:big?10:5;tk+=`<line x1="0" y1="-146" x2="0" y2="${-146+l}" stroke="${a%30===0?C:Cd}" stroke-width="${a%30===0?2.2:big?1.4:.9}" transform="rotate(${a})"/>`}
+ for(let a=0;a<360;a+=10){if(a%90===0)continue;const m=a%30===0;nm+=`<text transform="rotate(${a}) translate(0,${m?-118:-122})" text-anchor="middle" dominant-baseline="middle" font-size="${m?12:8.5}" font-weight="${m?700:500}" fill="${m?C:Cd}" font-family="ui-monospace,Menlo,monospace">${String(a).padStart(3,'0')}</text>`}
+ for(let a=0;a<360;a+=5)inr+=`<line x1="0" y1="-86" x2="0" y2="${a%45===0?-78:-82}" stroke="${a%45===0?C:Cd}" stroke-width="${a%45===0?1.6:.8}" transform="rotate(${a})"/>`;
+ const cd=[[L2('Β','N'),0,'#ff5a5a'],[L2('Α','E'),90,C],[L2('Ν','S'),180,C],[L2('Δ','W'),270,C]].map(c=>`<text transform="rotate(${c[1]}) translate(0,-98)" text-anchor="middle" dominant-baseline="middle" font-size="22" font-weight="900" fill="${c[2]}" filter="url(#hg)">${c[0]}</text>`).join('');
+ const ic=[[L2('ΒΑ','NE'),45],[L2('ΝΑ','SE'),135],[L2('ΝΔ','SW'),225],[L2('ΒΔ','NW'),315]].map(c=>`<text transform="rotate(${c[1]}) translate(0,-98)" text-anchor="middle" dominant-baseline="middle" font-size="10" font-weight="700" fill="${Cd}">${c[0]}</text>`).join('');
+ let grid='';for(let i=-160;i<=160;i+=32)grid+=`<line x1="${i}" y1="-160" x2="${i}" y2="160"/><line x1="-160" y1="${i}" x2="160" y2="${i}"/>`;
+ return `<svg viewBox="-160 -160 320 320" class="hudsvg"><defs><radialGradient id="hbg"><stop offset="0" stop-color="#0c2230"/><stop offset="1" stop-color="#050d14"/></radialGradient>
+ <filter id="hg" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+ <clipPath id="hcl"><circle r="158"/></clipPath></defs>
+ <circle r="158" fill="url(#hbg)"/><g clip-path="url(#hcl)" stroke="#123040" stroke-width=".6" opacity=".7">${grid}</g>
+ <circle r="157" fill="none" stroke="${Cd}" stroke-width="1" opacity=".6"/>
+ <g id="rose"><circle r="146" fill="none" stroke="${C}" stroke-width="1.2" opacity=".85" filter="url(#hg)"/>${tk}${nm}${cd}${ic}
+  <circle r="86" fill="none" stroke="${Cd}" stroke-width="1" stroke-dasharray="2 4"/>${inr}
+  <path d="M0,-74 L7,-52 L0,-57 L-7,-52 Z" fill="#ff5a5a" filter="url(#hg)"/></g>
+ <g id="tarr" style="display:none"><path d="M0,-158 L11,-138 L0,-143 L-11,-138 Z" fill="#fcbf49" stroke="#000" stroke-width=".8" filter="url(#hg)"/></g>
+ <path d="M0,-147 L-9,-160 L9,-160 Z" fill="${C}" filter="url(#hg)"/>
+ <g stroke="${C}" stroke-width="1.6" fill="none" filter="url(#hg)"><path d="M-16,-10 V-16 H-10 M10,-16 H16 V-10 M16,10 V16 H10 M-10,16 H-16 V10"/>
+ <line x1="-62" y1="0" x2="-24" y2="0"/><line x1="24" y1="0" x2="62" y2="0"/><line x1="0" y1="-62" x2="0" y2="-24" opacity=".6"/><line x1="0" y1="24" x2="0" y2="50" opacity=".4"/></g>
+ <path d="M-70,0 L-56,-8 L-56,8 Z" fill="none" stroke="${C}" stroke-width="1.6"/><path d="M70,0 L56,-8 L56,8 Z" fill="${C}"/>
+ <path d="M0,-30 L9,-4 L0,-9 L-9,-4 Z" fill="${C}" filter="url(#hg)"/><circle r="2.2" fill="#fff"/></svg>`}
+function hudUpd(){const h=$('#hudfr');if(!h)return;const d=new Date(),p=n=>String(n).padStart(2,'0');
+ const S=(id,v)=>{const e=$(id);if(e)e.innerHTML=v};
+ S('#hTL',`${d.getFullYear()}.${p(d.getMonth()+1)}.${p(d.getDate())}<br><b>${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}</b>`);
+ S('#hTR',pos?`${ddm(pos.lat,'N','S')}<br>${ddm(pos.lon,'E','W')}`:L2('GPS…','GPS…'));
+ const v=pos&&pos.spd!=null&&pos.spd>=0?pos.spd:null;S('#hBL',`<span>${L2('ταχύτητα','speed')}</span><br><b>${v!=null?(v*3.6).toFixed(1)+' km/h':'—'}</b>${v!=null?` · ${(v*1.94384).toFixed(1)} kn`:''}`);
+ const al=typeof ALT!=='undefined'&&ALT.v!=null?ALT.v+altOff():(pos&&pos.alt!=null?pos.alt:null);
+ S('#hBR',`<span>${L2('υψόμετρο','altitude')}</span><br><b>${al!=null?'▲ '+Math.round(al)+' m':'—'}</b>${pos?` · ±${Math.round(pos.acc)} m`:''}`);
+ S('#hHD',hdg!=null?`HDG <b>${String(Math.round(hdg)).padStart(3,'0')}°</b>`:L2('HDG — (πάτα «Ενεργοποίηση»)','HDG — (press “Enable”)'))}
+{const _c=compass;compass=function(){_c();const c=M.querySelector('.comp');if(!c)return;
+ c.outerHTML=`<div id="hudfr" class="notr"><div class="hudrow"><div id="hTL"></div><div id="hTR" style="text-align:right"></div></div><div class="comp hudc">${hudSvg()}</div><div class="hudrow"><div id="hBL"></div><div id="hBR" style="text-align:right"></div></div><div id="hHD" style="text-align:center;margin-top:2px"></div></div>`;
+ hudUpd();upd();clearInterval(window.__hudT);window.__hudT=setInterval(()=>{if(!$('#hudfr')){clearInterval(window.__hudT);return}hudUpd()},1000)}}
+{const _u=upd;upd=function(f){_u(f);if(hdg!=null){const e=$('#hdn');if(e)e.textContent=L2('Η κόκκινη μύτη δείχνει πάντα Βορρά. Το κυανό τρίγωνο πάνω = προς τα πού κοιτάς.','The red tip always points North. The cyan triangle on top = where you are facing.')}if(!f)hudUpd()}}
+(()=>{const st=document.createElement('style');st.textContent=`#hudfr{background:radial-gradient(circle at 50% 45%,#0b1d29,#050c12 75%);border:1px solid #1d4a57;border-radius:16px;padding:10px 10px 8px;margin:8px 0;box-shadow:inset 0 0 30px #5ee6f012;color:#5ee6f0;font-family:ui-monospace,Menlo,monospace}
+#hudfr .hudrow{display:flex;justify-content:space-between;gap:8px;font-size:.78em;line-height:1.3;color:#8fe9f1}#hudfr .hudrow b{color:#d8fbff;font-size:1.15em}#hudfr .hudrow span{color:#4aa7b2;font-size:.85em}
+#hudfr .hudc{width:min(86vw,340px);height:min(86vw,340px);margin:4px auto}#hHD{font-size:.9em;color:#8fe9f1}#hHD b{color:#fff;font-size:1.2em}`;document.head.appendChild(st)})();
 
 if(rec){startGeo();wake(1)}/* v32: η οθόνη μένει ανοιχτή και όταν ξανανοίγεις την εφαρμογή ενώ καταγράφει */
 setTimeout(grdBar,300);
