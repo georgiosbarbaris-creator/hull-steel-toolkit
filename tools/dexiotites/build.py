@@ -33,7 +33,7 @@ json.dump(app, open(f"{OUT}/dexiotites.json", "w", encoding="utf-8"), ensure_asc
 # ---------- PDF ----------
 T = {
  "el": dict(title="Οι Δεξιότητες<br>του Παππού Διαμαντή", sub=f"Εγχειρίδιο αυτάρκειας – {N} γνώσεις του παλιού καιρού, βήμα βήμα με σχέδια",
-   free="ΔΩΡΕΑΝ – για το καλό όλων", ded="Αφιερωμένο στη μνήμη του παππού μου, Διαμαντή.", ded2="Για να μη χαθεί ποτέ η γνώση των παππούδων μας – και να περάσει στα παιδιά και στα εγγόνια μας.", sign="Γιώργος Μπαρμπαρής", ded3="Και ό,τι είναι φαγητό και τροφή, στη γιαγιά Μαρία και στη γιαγιά Αρετή.", app="Από την εφαρμογή «Επιβίωση 72+»",
+   free="ΔΩΡΕΑΝ – για το καλό όλων", ded="Αφιερωμένο στη μνήμη του παππού μου, Διαμαντή.", ded2="Για να μη χαθεί ποτέ η γνώση των παππούδων μας – και να περάσει στα παιδιά και στα εγγόνια μας.", sign="Γιώργος Μπαρμπαρής", ded3="Και ό,τι είναι φαγητό, τροφή και δουλειές του σπιτιού – πλύσιμο, ράψιμο, πλέξιμο, σαπούνι – στη γιαγιά Μαρία και στη γιαγιά Αρετή.", app="Από την εφαρμογή «Επιβίωση 72+»",
    spons="Ευγενική χορηγία του Γιώργου Μπαρμπαρή – γιατί όσα σώζουν ζωές δεν έχουν τιμή.",
    copy="© 2026 Γεώργιος Μπαρμπαρής – Διανέμεται δωρεάν. Επιτρέπεται η εκτύπωση και η δωρεάν διανομή, όχι η πώληση.",
    how="Πώς να το χρησιμοποιήσεις", toc="Περιεχόμενα", need="Τι χρειάζεσαι", steps="Βήμα βήμα", why="Γιατί",
@@ -45,7 +45,7 @@ T = {
      "Μάθε τες στα παιδιά και στα εγγόνια. Μια γνώση που περνάει από χέρι σε χέρι δεν χάνεται ποτέ."],
    disc="Οι οδηγίες είναι γενικές πληροφορίες, όχι ιατρική ή επαγγελματική συμβουλή. Διάβαζε πάντα τις προειδοποιήσεις. Για σοβαρά θέματα υγείας πήγαινε σε γιατρό ή φαρμακοποιό. Τήρησε τους νόμους της περιοχής σου (ψάρεμα, συλλογή φυτών, φωτιά στην ύπαιθρο). Ο δημιουργός δεν φέρει ευθύνη για λάθος χρήση."),
  "en": dict(title="Grandpa Diamantis'<br>Skills", sub=f"A self-reliance handbook – {N} old-time skills, step by step with drawings",
-   free="FREE – for the good of all", ded="Dedicated to the memory of my grandfather, Diamantis.", ded2="So that the knowledge of our grandparents is never lost – and passes on to our children and grandchildren.", sign="Georgios Barmparis", ded3="And all that is food and cooking, to Grandma Maria and Grandma Areti.", app="From the app «Survival 72+»",
+   free="FREE – for the good of all", ded="Dedicated to the memory of my grandfather, Diamantis.", ded2="So that the knowledge of our grandparents is never lost – and passes on to our children and grandchildren.", sign="Georgios Barmparis", ded3="And all that is food, cooking and the work of the home – washing, sewing, knitting, soap – to Grandma Maria and Grandma Areti.", app="From the app «Survival 72+»",
    spons="Kindly sponsored by George Barbaris – because the things that save lives are priceless.",
    copy="© 2026 Georgios Barmparis – Distributed free. Printing and free sharing allowed, selling is not.",
    how="How to use this book", toc="Contents", need="What you need", steps="Step by step", why="Why",
@@ -108,6 +108,7 @@ h2.sec{font-size:20pt;margin:0 0 4mm;color:#3b2a1a;border-bottom:2px solid #3b2a
 """
 
 FOOD = ("preserve", "kitchen")
+GM_SKILLS = ["water-ashlye","water-laundry","tool-sewing","tool-patch","tool-darning","tool-knitting","tool-broom","herb-soap","herb-disinfect","herb-dry","herb-infusion"]
 GM = {"el": ["Συμβουλή της γιαγιάς Μαρίας", "Συμβουλή της γιαγιάς Αρετής"], "en": ["Grandma Maria's tip", "Grandma Areti's tip"]}
 GMDED = {"el": "Αφιερωμένο στη γιαγιά Μαρία και στη γιαγιά Αρετή", "en": "Dedicated to Grandma Maria and Grandma Areti"}
 def e(x): return html.escape(str(x or ""))
@@ -139,7 +140,7 @@ def build_html(L):
             toc_entries.append(("sk", f"{i}.{j} {s['title_' + L]}", "s_" + s["id"]))
             need = "".join(f"<li>{e(x)}</li>" for x in s["need_" + L])
             steps = "".join(f"<li>{e(x)}</li>" for x in s["steps_" + L])
-            tip = f'<div class="tipb"><span class="lbl">💡 {(GM[L][(j-1)%2] if c["ch"] in FOOD else t["tip"])}: </span>{e(s["tip_" + L])}</div>' if s.get("tip_" + L) else ""
+            tip = f'<div class="tipb"><span class="lbl">💡 {(GM[L][(j-1)%2] if c["ch"] in FOOD else (GM[L][GM_SKILLS.index(s["id"])%2] if s["id"] in GM_SKILLS else t["tip"]))}: </span>{e(s["tip_" + L])}</div>' if s.get("tip_" + L) else ""
             warn = f'<div class="warnb"><span class="lbl">⚠ {t["warn"]}: </span>{e(s["warn_" + L])}</div>' if s.get("warn_" + L) else ""
             o.append(f"""<div class="page sk" id="s_{s['id']}"><div class="hd"><div><div class="tag">{c['icon']} {e(c['title_' + L])} · {i}.{j}</div>
             <h3>{e(s['title_' + L])}</h3></div><div class="meta">{t['lvl']}: {dots(s.get('level'))}<br>{t['time']}: {e(s.get('time_' + L))}</div></div>
