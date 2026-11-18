@@ -1,0 +1,745 @@
+{
+ "ch": "kitchen",
+ "title_el": "Ψωμί & Κουζίνα του παλιού καιρού",
+ "title_en": "Bread & the old-time kitchen",
+ "intro_el": "Οι γιαγιάδες μας έφτιαχναν ψωμί, τυρί, βούτυρο και τροφές για όλο τον χειμώνα με τα χέρια τους. Εδώ μαθαίνεις να ψήνεις, να αλέθεις και να φυλάς φαγητό χωρίς μαγαζί και χωρίς ρεύμα, και να μαγειρεύεις με λίγο καύσιμο.",
+ "intro_en": "Our grandmothers made bread, cheese, butter and winter food with their own hands. Here you learn to bake, grind and store food without shops or power, and to cook with very little fuel.",
+ "opener_svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 300\"><rect width=\"400\" height=\"300\" fill=\"#f6ecd6\"/><g fill=\"none\" stroke=\"#3b2a1a\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"10\" y1=\"255\" x2=\"390\" y2=\"255\"/><line x1=\"18\" y1=\"257\" x2=\"12\" y2=\"264\" stroke-width=\"1\"/><line x1=\"30\" y1=\"257\" x2=\"24\" y2=\"264\" stroke-width=\"1\"/><line x1=\"42\" y1=\"257\" x2=\"36\" y2=\"264\" stroke-width=\"1\"/><line x1=\"54\" y1=\"257\" x2=\"48\" y2=\"264\" stroke-width=\"1\"/><line x1=\"66\" y1=\"257\" x2=\"60\" y2=\"264\" stroke-width=\"1\"/><line x1=\"78\" y1=\"257\" x2=\"72\" y2=\"264\" stroke-width=\"1\"/><line x1=\"90\" y1=\"257\" x2=\"84\" y2=\"264\" stroke-width=\"1\"/><line x1=\"102\" y1=\"257\" x2=\"96\" y2=\"264\" stroke-width=\"1\"/><line x1=\"114\" y1=\"257\" x2=\"108\" y2=\"264\" stroke-width=\"1\"/><line x1=\"126\" y1=\"257\" x2=\"120\" y2=\"264\" stroke-width=\"1\"/><line x1=\"138\" y1=\"257\" x2=\"132\" y2=\"264\" stroke-width=\"1\"/><line x1=\"150\" y1=\"257\" x2=\"144\" y2=\"264\" stroke-width=\"1\"/><line x1=\"162\" y1=\"257\" x2=\"156\" y2=\"264\" stroke-width=\"1\"/><line x1=\"174\" y1=\"257\" x2=\"168\" y2=\"264\" stroke-width=\"1\"/><line x1=\"186\" y1=\"257\" x2=\"180\" y2=\"264\" stroke-width=\"1\"/><line x1=\"198\" y1=\"257\" x2=\"192\" y2=\"264\" stroke-width=\"1\"/><line x1=\"210\" y1=\"257\" x2=\"204\" y2=\"264\" stroke-width=\"1\"/><line x1=\"222\" y1=\"257\" x2=\"216\" y2=\"264\" stroke-width=\"1\"/><line x1=\"234\" y1=\"257\" x2=\"228\" y2=\"264\" stroke-width=\"1\"/><line x1=\"246\" y1=\"257\" x2=\"240\" y2=\"264\" stroke-width=\"1\"/><line x1=\"258\" y1=\"257\" x2=\"252\" y2=\"264\" stroke-width=\"1\"/><line x1=\"270\" y1=\"257\" x2=\"264\" y2=\"264\" stroke-width=\"1\"/><line x1=\"282\" y1=\"257\" x2=\"276\" y2=\"264\" stroke-width=\"1\"/><line x1=\"294\" y1=\"257\" x2=\"288\" y2=\"264\" stroke-width=\"1\"/><line x1=\"306\" y1=\"257\" x2=\"300\" y2=\"264\" stroke-width=\"1\"/><line x1=\"318\" y1=\"257\" x2=\"312\" y2=\"264\" stroke-width=\"1\"/><line x1=\"330\" y1=\"257\" x2=\"324\" y2=\"264\" stroke-width=\"1\"/><line x1=\"342\" y1=\"257\" x2=\"336\" y2=\"264\" stroke-width=\"1\"/><line x1=\"354\" y1=\"257\" x2=\"348\" y2=\"264\" stroke-width=\"1\"/><line x1=\"366\" y1=\"257\" x2=\"360\" y2=\"264\" stroke-width=\"1\"/><line x1=\"378\" y1=\"257\" x2=\"372\" y2=\"264\" stroke-width=\"1\"/><rect x=\"25\" y=\"205\" width=\"200\" height=\"50\" fill=\"#bdb5a6\"/><line x1=\"65\" y1=\"205\" x2=\"65\" y2=\"230\" stroke-width=\"1\"/><line x1=\"115\" y1=\"205\" x2=\"115\" y2=\"230\" stroke-width=\"1\"/><line x1=\"165\" y1=\"205\" x2=\"165\" y2=\"230\" stroke-width=\"1\"/><line x1=\"25\" y1=\"230\" x2=\"225\" y2=\"230\" stroke-width=\"1\"/><line x1=\"45\" y1=\"230\" x2=\"45\" y2=\"255\" stroke-width=\"1\"/><line x1=\"90\" y1=\"230\" x2=\"90\" y2=\"255\" stroke-width=\"1\"/><line x1=\"140\" y1=\"230\" x2=\"140\" y2=\"255\" stroke-width=\"1\"/><line x1=\"190\" y1=\"230\" x2=\"190\" y2=\"255\" stroke-width=\"1\"/><path d=\"M40,205 C40,95 210,95 210,205 Z\" fill=\"#d98e5c\"/><path d=\"M98,205 L98,172 Q125,140 152,172 L152,205 Z\" fill=\"#3b2a1a\"/><g transform=\"translate(115,204) scale(0.8)\"><path d=\"M0,0 C-13,-5 -11,-20 -2,-32 C0,-22 6,-24 6,-30 C15,-18 13,-5 0,0 Z\" fill=\"#f2a65a\"/><path d=\"M0,-2 C-5,-5 -4,-12 0,-18 C3,-12 6,-6 0,-2 Z\" fill=\"#e2603a\" stroke-width=\"1\"/></g><g transform=\"translate(135,204) scale(0.7)\"><path d=\"M0,0 C-13,-5 -11,-20 -2,-32 C0,-22 6,-24 6,-30 C15,-18 13,-5 0,0 Z\" fill=\"#f2a65a\"/><path d=\"M0,-2 C-5,-5 -4,-12 0,-18 C3,-12 6,-6 0,-2 Z\" fill=\"#e2603a\" stroke-width=\"1\"/></g><path d=\"M150,108 q-8,-12 2,-22 q10,-10 0,-24\" stroke-width=\"1.5\"/><path d=\"M165,112 q-6,-10 2,-18 q8,-8 0,-18\" stroke-width=\"1.5\"/><rect x=\"240\" y=\"200\" width=\"145\" height=\"9\" fill=\"#d9b77e\"/><line x1=\"252\" y1=\"209\" x2=\"252\" y2=\"255\"/><line x1=\"373\" y1=\"209\" x2=\"373\" y2=\"255\"/><path d=\"M248,200 Q248,165 290,165 Q332,165 332,200 Z\" fill=\"#d9b77e\"/><path d=\"M268,176 q8,-6 14,0 M286,172 q8,-6 14,0 M304,176 q8,-6 14,0\" stroke-width=\"1.5\"/><rect x=\"343\" y=\"158\" width=\"34\" height=\"42\" rx=\"9\" fill=\"#ffffff\"/><rect x=\"348\" y=\"150\" width=\"24\" height=\"10\" rx=\"2\" fill=\"#ffffff\"/><path d=\"M345,170 L375,170 L375,191 Q375,198 368,198 L352,198 Q345,198 345,191 Z\" fill=\"#d9b77e\" fill-opacity=\"0.6\" stroke-width=\"1.5\"/><circle cx=\"352\" cy=\"180\" r=\"2\" fill=\"#ffffff\" stroke-width=\"1.2\"/><circle cx=\"364\" cy=\"186\" r=\"2.5\" fill=\"#ffffff\" stroke-width=\"1.2\"/><circle cx=\"357\" cy=\"192\" r=\"1.6\" fill=\"#ffffff\" stroke-width=\"1.2\"/><path d=\"M339,160 Q360,146 381,160 L379,166 Q360,156 341,166 Z\" fill=\"#ffffff\"/><g transform=\"translate(250,120) rotate(-8)\"><line x1=\"0\" y1=\"0\" x2=\"0\" y2=\"45\" stroke=\"#6f9a52\"/><ellipse cx=\"-3\" cy=\"-2\" rx=\"3\" ry=\"6\" fill=\"#d9b77e\" stroke-width=\"1\"/><ellipse cx=\"3\" cy=\"-6\" rx=\"3\" ry=\"6\" fill=\"#d9b77e\" stroke-width=\"1\"/><ellipse cx=\"-3\" cy=\"-12\" rx=\"3\" ry=\"6\" fill=\"#d9b77e\" stroke-width=\"1\"/><ellipse cx=\"3\" cy=\"-16\" rx=\"3\" ry=\"6\" fill=\"#d9b77e\" stroke-width=\"1\"/><ellipse cx=\"0\" cy=\"-22\" rx=\"3\" ry=\"6\" fill=\"#d9b77e\" stroke-width=\"1\"/></g><g transform=\"translate(265,120) rotate(0)\"><line x1=\"0\" y1=\"0\" x2=\"0\" y2=\"45\" stroke=\"#6f9a52\"/><ellipse cx=\"-3\" cy=\"-2\" rx=\"3\" ry=\"6\" fill=\"#d9b77e\" stroke-width=\"1\"/><ellipse cx=\"3\" cy=\"-6\" rx=\"3\" ry=\"6\" fill=\"#d9b77e\" stroke-width=\"1\"/><ellipse cx=\"-3\" cy=\"-12\" rx=\"3\" ry=\"6\" fill=\"#d9b77e\" stroke-width=\"1\"/><ellipse cx=\"3\" cy=\"-16\" rx=\"3\" ry=\"6\" fill=\"#d9b77e\" stroke-width=\"1\"/><ellipse cx=\"0\" cy=\"-22\" rx=\"3\" ry=\"6\" fill=\"#d9b77e\" stroke-width=\"1\"/></g><g transform=\"translate(280,120) rotate(9)\"><line x1=\"0\" y1=\"0\" x2=\"0\" y2=\"45\" stroke=\"#6f9a52\"/><ellipse cx=\"-3\" cy=\"-2\" rx=\"3\" ry=\"6\" fill=\"#d9b77e\" stroke-width=\"1\"/><ellipse cx=\"3\" cy=\"-6\" rx=\"3\" ry=\"6\" fill=\"#d9b77e\" stroke-width=\"1\"/><ellipse cx=\"-3\" cy=\"-12\" rx=\"3\" ry=\"6\" fill=\"#d9b77e\" stroke-width=\"1\"/><ellipse cx=\"3\" cy=\"-16\" rx=\"3\" ry=\"6\" fill=\"#d9b77e\" stroke-width=\"1\"/><ellipse cx=\"0\" cy=\"-22\" rx=\"3\" ry=\"6\" fill=\"#d9b77e\" stroke-width=\"1\"/></g><path d=\"M240,165 L300,165\" stroke=\"none\"/><circle cx=\"345\" cy=\"55\" r=\"20\" fill=\"#f2a65a\"/><line x1=\"371\" y1=\"55\" x2=\"381\" y2=\"55\" stroke-width=\"1.5\"/><line x1=\"363\" y1=\"73\" x2=\"370\" y2=\"80\" stroke-width=\"1.5\"/><line x1=\"345\" y1=\"81\" x2=\"345\" y2=\"91\" stroke-width=\"1.5\"/><line x1=\"327\" y1=\"73\" x2=\"320\" y2=\"80\" stroke-width=\"1.5\"/><line x1=\"319\" y1=\"55\" x2=\"309\" y2=\"55\" stroke-width=\"1.5\"/><line x1=\"327\" y1=\"37\" x2=\"320\" y2=\"30\" stroke-width=\"1.5\"/><line x1=\"345\" y1=\"29\" x2=\"345\" y2=\"19\" stroke-width=\"1.5\"/><line x1=\"363\" y1=\"37\" x2=\"370\" y2=\"30\" stroke-width=\"1.5\"/></g></svg>",
+ "skills": [
+  {
+   "id": "kit-starter",
+   "level": 1,
+   "title_el": "Προζύμι από αλεύρι και νερό — και πώς το κρατάς ζωντανό",
+   "title_en": "Sourdough starter (prozymi) from flour and water — and keeping it alive",
+   "time_el": "5–7 μέρες (λίγα λεπτά τη μέρα)",
+   "time_en": "5–7 days (a few minutes a day)",
+   "why_el": "Χωρίς μαγιά από το μαγαζί, το προζύμι φουσκώνει το ψωμί. Το φτιάχνεις μόνο με αλεύρι και νερό, και ζει για χρόνια.",
+   "why_en": "With no shop yeast, a starter makes bread rise. You make it from flour and water only, and it can live for years.",
+   "need_el": [
+    "Αλεύρι, καλύτερα ολικής άλεσης ή σίκαλη",
+    "Νερό χωρίς χλώριο (βρόχινο, πηγής ή βρασμένο και κρύο)",
+    "Γυάλινο βάζο και ξύλινο κουτάλι",
+    "Καθαρό πανί και λαστιχάκι ή σπάγκος"
+   ],
+   "need_en": [
+    "Flour, best wholemeal or rye",
+    "Water without chlorine (rain, spring, or boiled and cooled)",
+    "Glass jar and wooden spoon",
+    "Clean cloth and a rubber band or string"
+   ],
+   "steps_el": [
+    "Μέρα 1: Ανακάτεψε 50 γρ. αλεύρι με 50 ml χλιαρό νερό, σαν πηχτή κρέμα.",
+    "Σκέπασε το βάζο με πανί και δέσ' το. Άφησέ το σε ζεστό μέρος (20–26 °C).",
+    "Κάθε μέρα πέτα τη μισή μάζα και τάισε με 50 γρ. αλεύρι και 50 ml νερό.",
+    "Μέρα 3–4: θα δεις φουσκαλίτσες και θα μυρίσει ξινό. Αυτό είναι καλό.",
+    "Μετά το τάισμα, δέσε ένα λαστιχάκι στο ύψος της μάζας για σημάδι.",
+    "Μέρα 5–7: όταν διπλασιάζεται σε 4–8 ώρες, το προζύμι είναι έτοιμο.",
+    "Για να το κρατάς: φύλαξέ το σε δροσερό μέρος και τάιζέ το 1 φορά τη βδομάδα."
+   ],
+   "steps_en": [
+    "Day 1: Mix 50 g flour with 50 ml lukewarm water into a thick paste.",
+    "Cover the jar with a cloth and tie it. Keep it warm (20–26 °C).",
+    "Every day throw away half and feed it 50 g flour and 50 ml water.",
+    "Day 3–4: you will see bubbles and smell something sour. This is good.",
+    "After feeding, put a rubber band at the level of the mix as a mark.",
+    "Day 5–7: when it doubles in 4–8 hours, the starter is ready.",
+    "To keep it: store it in a cool place and feed it once a week."
+   ],
+   "tip_el": "Οι γιαγιάδες κρατούσαν ένα κομμάτι από το ζυμάρι κάθε ζυμώματος, με λίγο αλάτι, για το επόμενο. Αν κάποτε δεν ξυπνά, βάλε μια κουταλιά μέλι ή λίγο χυμό σταφυλιού.",
+   "tip_en": "Grandmothers kept a piece of dough from each baking, with a little salt, for next time. If it is slow to wake, add a spoon of honey or a little grape juice.",
+   "warn_el": "Αν δεις ροζ, πορτοκαλί ή κόκκινες γραμμές, ή χνουδωτή μούχλα, πέτα ΟΛΟ το βάζο και ξεκίνα από την αρχή. Ένα γκρίζο υγρό από πάνω είναι απλώς πείνα: ανακάτεψε και τάισε.",
+   "warn_en": "If you see pink, orange or red streaks, or fuzzy mould, throw away the WHOLE jar and start again. A grey liquid on top only means hunger: stir it in and feed.",
+   "fig_el": "Αριστερά μέρα 1, στη μέση μέρα 3, δεξιά μέρα 5–7. ① Αλεύρι + νερό 1:1 ② Πανί δεμένο στο στόμιο ③ Φουσκαλίτσες ④ Λαστιχάκι στο σημάδι μετά το τάισμα ⑤ Η μάζα διπλασιάστηκε — έτοιμο.",
+   "fig_en": "Left day 1, middle day 3, right day 5–7. ① Flour + water 1:1 ② Cloth tied over the mouth ③ Bubbles ④ Rubber band at the level after feeding ⑤ The mix has doubled — ready.",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 260\"><rect width=\"400\" height=\"260\" fill=\"#f6ecd6\"/><g fill=\"none\" stroke=\"#3b2a1a\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"133\" y1=\"15\" x2=\"133\" y2=\"245\" stroke-width=\"1\"/><line x1=\"266\" y1=\"15\" x2=\"266\" y2=\"245\" stroke-width=\"1\"/><rect x=\"36\" y=\"88\" width=\"60\" height=\"122\" rx=\"9\" fill=\"#ffffff\"/><rect x=\"41\" y=\"80\" width=\"50\" height=\"10\" rx=\"2\" fill=\"#ffffff\"/><path d=\"M38,170 L94,170 L94,201 Q94,208 87,208 L45,208 Q38,208 38,201 Z\" fill=\"#d9b77e\" fill-opacity=\"0.55\" stroke-width=\"1.5\"/><path d=\"M72,185 L108,45\" stroke=\"#3b2a1a\" stroke-width=\"6\"/><path d=\"M72,185 L108,45\" stroke=\"#d9b77e\" stroke-width=\"3\"/><ellipse cx=\"71\" cy=\"190\" rx=\"5\" ry=\"8\" fill=\"#d9b77e\" transform=\"rotate(14 71 190)\"/><rect x=\"170\" y=\"88\" width=\"60\" height=\"122\" rx=\"9\" fill=\"#ffffff\"/><rect x=\"175\" y=\"80\" width=\"50\" height=\"10\" rx=\"2\" fill=\"#ffffff\"/><path d=\"M172,150 L228,150 L228,201 Q228,208 221,208 L179,208 Q172,208 172,201 Z\" fill=\"#d9b77e\" fill-opacity=\"0.55\" stroke-width=\"1.5\"/><path d=\"M164,92 Q200,68 236,92 L232,106 Q200,96 168,106 Z\" fill=\"#ffffff\"/><line x1=\"171\" y1=\"100\" x2=\"229\" y2=\"100\" stroke=\"#b23a2a\" stroke-width=\"1.5\"/><circle cx=\"185\" cy=\"165\" r=\"3\" fill=\"#ffffff\" stroke-width=\"1.2\"/><circle cx=\"205\" cy=\"175\" r=\"4\" fill=\"#ffffff\" stroke-width=\"1.2\"/><circle cx=\"220\" cy=\"160\" r=\"2.5\" fill=\"#ffffff\" stroke-width=\"1.2\"/><circle cx=\"195\" cy=\"190\" r=\"2\" fill=\"#ffffff\" stroke-width=\"1.2\"/><circle cx=\"214\" cy=\"195\" r=\"3\" fill=\"#ffffff\" stroke-width=\"1.2\"/><circle cx=\"190\" cy=\"155\" r=\"2\" fill=\"#ffffff\" stroke-width=\"1.2\"/><rect x=\"303\" y=\"88\" width=\"60\" height=\"122\" rx=\"9\" fill=\"#ffffff\"/><rect x=\"308\" y=\"80\" width=\"50\" height=\"10\" rx=\"2\" fill=\"#ffffff\"/><path d=\"M305,110 L361,110 L361,201 Q361,208 354,208 L312,208 Q305,208 305,201 Z\" fill=\"#d9b77e\" fill-opacity=\"0.55\" stroke-width=\"1.5\"/><path d=\"M297,92 Q333,68 369,92 L365,106 Q333,96 301,106 Z\" fill=\"#ffffff\"/><line x1=\"304\" y1=\"100\" x2=\"362\" y2=\"100\" stroke=\"#b23a2a\" stroke-width=\"1.5\"/><circle cx=\"318\" cy=\"130\" r=\"4\" fill=\"#ffffff\" stroke-width=\"1.2\"/><circle cx=\"345\" cy=\"140\" r=\"3\" fill=\"#ffffff\" stroke-width=\"1.2\"/><circle cx=\"330\" cy=\"160\" r=\"5\" fill=\"#ffffff\" stroke-width=\"1.2\"/><circle cx=\"350\" cy=\"175\" r=\"3\" fill=\"#ffffff\" stroke-width=\"1.2\"/><circle cx=\"320\" cy=\"185\" r=\"2.5\" fill=\"#ffffff\" stroke-width=\"1.2\"/><circle cx=\"340\" cy=\"195\" r=\"4\" fill=\"#ffffff\" stroke-width=\"1.2\"/><circle cx=\"325\" cy=\"120\" r=\"2\" fill=\"#ffffff\" stroke-width=\"1.2\"/><line x1=\"301\" y1=\"170\" x2=\"365\" y2=\"170\" stroke=\"#b23a2a\" stroke-width=\"3\"/><path d=\"M376,172 Q380,140 376,114\" stroke=\"#b23a2a\" stroke-width=\"2.5\"/><path d=\"M376,114 L381.1,121.4 L373.4,122.6 Z\" fill=\"#b23a2a\" stroke=\"#b23a2a\" stroke-width=\"1\"/></g><line x1=\"24\" y1=\"236\" x2=\"52\" y2=\"195\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"52\" cy=\"195\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"24\" cy=\"236\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"24\" y=\"240.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">1</text><line x1=\"160\" y1=\"40\" x2=\"185\" y2=\"85\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"185\" cy=\"85\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"160\" cy=\"40\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"160\" y=\"44.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">2</text><line x1=\"245\" y1=\"236\" x2=\"214\" y2=\"192\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"214\" cy=\"192\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"245\" cy=\"236\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"245\" y=\"240.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">3</text><line x1=\"290\" y1=\"236\" x2=\"303\" y2=\"171\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"303\" cy=\"171\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"290\" cy=\"236\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"290\" y=\"240.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">4</text><line x1=\"300\" y1=\"40\" x2=\"320\" y2=\"112\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"320\" cy=\"112\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"300\" cy=\"40\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"300\" y=\"44.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">5</text></svg>"
+  },
+  {
+   "id": "kit-bread",
+   "level": 2,
+   "title_el": "Ψωμί με προζύμι — ζύμωμα, φούσκωμα, ψήσιμο",
+   "title_en": "Sourdough bread — kneading, rising, baking",
+   "time_el": "1 μέρα (κυρίως αναμονή)",
+   "time_en": "1 day (mostly waiting)",
+   "why_el": "Το ψωμί είναι η βάση του τραπεζιού. Με προζύμι, αλεύρι, νερό και αλάτι ψήνεις καθημερινό ψωμί χωρίς μαγαζί.",
+   "why_en": "Bread is the base of every meal. With starter, flour, water and salt you bake daily bread without any shop.",
+   "need_el": [
+    "500 γρ. αλεύρι",
+    "330 ml χλιαρό νερό",
+    "100 γρ. ενεργό προζύμι (φουσκωμένο)",
+    "10 γρ. αλάτι (2 κουταλάκια)",
+    "Λεκάνη, πανί, ταψί, φούρνο ή γάστρα"
+   ],
+   "need_en": [
+    "500 g flour",
+    "330 ml lukewarm water",
+    "100 g active (bubbly) starter",
+    "10 g salt (2 teaspoons)",
+    "Bowl, cloth, tray, oven or cast-iron pot"
+   ],
+   "steps_el": [
+    "Διάλυσε το προζύμι στο νερό. Ρίξε το αλεύρι και το αλάτι.",
+    "Ζύμωσε 10 λεπτά: σπρώξε με την παλάμη, δίπλωσε, γύρισε. Ξανά και ξανά.",
+    "Η ζύμη είναι έτοιμη όταν είναι λεία και γυρίζει πίσω αν την πατήσεις.",
+    "Βάλ' τη σε λεκάνη, σκέπασε με πανί. Άφησέ τη 4–8 ώρες να διπλασιαστεί.",
+    "Πλάσε στρογγυλό καρβέλι χωρίς να το πατήσεις πολύ. Άφησέ το άλλη 1–2 ώρες.",
+    "Χάραξε τη ράχη με κοφτερό μαχαίρι, βάθος 1 εκ.",
+    "Ψήσε σε καυτό φούρνο (230 °C) για 40–45 λεπτά.",
+    "Χτύπα τον πάτο: αν ακούγεται κούφιο, είναι ψημένο. Άφησέ το 1 ώρα να κρυώσει."
+   ],
+   "steps_en": [
+    "Mix the starter into the water. Add the flour and the salt.",
+    "Knead for 10 minutes: push with your palm, fold, turn. Again and again.",
+    "The dough is ready when it is smooth and springs back when pressed.",
+    "Put it in a bowl, cover with a cloth. Leave 4–8 hours to double.",
+    "Shape a round loaf without pressing hard. Leave it another 1–2 hours.",
+    "Cut the top with a sharp knife, 1 cm deep.",
+    "Bake in a very hot oven (230 °C) for 40–45 minutes.",
+    "Tap the bottom: if it sounds hollow, it is done. Let it cool 1 hour."
+   ],
+   "tip_el": "Βάλε ένα ταψάκι με νερό στον φούρνο τα πρώτα 15 λεπτά: η κόρα βγαίνει τραγανή. Κράτα ένα κομμάτι ζύμη για προζύμι του επόμενου ψησίματος.",
+   "tip_en": "Put a small tray of water in the oven for the first 15 minutes: the crust comes out crisp. Keep a piece of dough as starter for next time.",
+   "warn_el": "Ο φούρνος και το ταψί καίνε: φόρα χοντρά γάντια ή διπλωμένο πανί. Πρόσεχε τον καυτό ατμό όταν ανοίγεις την πόρτα.",
+   "warn_en": "The oven and tray are very hot: use thick gloves or a folded cloth. Watch out for hot steam when you open the door.",
+   "fig_el": "① Ζύμωμα: σπρώχνεις και διπλώνεις ② Η ζύμη φουσκώνει στη λεκάνη, σκεπασμένη με πανί ③ Διπλασιάζεται ④ Χαρακιές στη ράχη ⑤ Ταψί σε καυτό φούρνο.",
+   "fig_en": "① Kneading: push and fold ② The dough rises in the bowl under a cloth ③ It doubles ④ Cuts on the top ⑤ Tray in a very hot oven.",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 260\"><rect width=\"400\" height=\"260\" fill=\"#f6ecd6\"/><g fill=\"none\" stroke=\"#3b2a1a\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"133\" y1=\"15\" x2=\"133\" y2=\"245\" stroke-width=\"1\"/><line x1=\"266\" y1=\"15\" x2=\"266\" y2=\"245\" stroke-width=\"1\"/><rect x=\"12\" y=\"190\" width=\"110\" height=\"12\" rx=\"3\" fill=\"#d9b77e\"/><path d=\"M24,190 Q22,160 60,158 Q104,156 110,190 Z\" fill=\"#ffffff\"/><path d=\"M48,170 q14,-8 30,2\" stroke-width=\"1.5\"/><path d=\"M30,140 Q66,100 102,140\" stroke=\"#b23a2a\" stroke-width=\"2.5\"/><path d=\"M102,140 L93.7,136.6 L99.5,131.4 Z\" fill=\"#b23a2a\" stroke=\"#b23a2a\" stroke-width=\"1\"/><path d=\"M100,120 Q66,150 40,128\" stroke=\"#b23a2a\" stroke-width=\"2\"/><path d=\"M40,128 L48.7,130.2 L43.7,136.2 Z\" fill=\"#b23a2a\" stroke=\"#b23a2a\" stroke-width=\"1\"/><path d=\"M144,172 Q144,150 154,144 Q200,72 246,144 Q256,150 256,172 Z\" fill=\"#ffffff\"/><path d=\"M180,104 L188,160 M214,102 L208,160\" stroke=\"#b23a2a\" stroke-width=\"1.5\"/><path d=\"M145,152 Q145,222 200.0,222 Q255,222 255,152 Z\" fill=\"#d98e5c\"/><line x1=\"140\" y1=\"152\" x2=\"260\" y2=\"152\"/><line x1=\"146\" y1=\"140\" x2=\"160\" y2=\"140\" stroke-dasharray=\"4 3\" stroke-width=\"1.5\"/><path d=\"M262,200 Q262,160 262,118\" stroke=\"#b23a2a\" stroke-width=\"2.5\"/><path d=\"M262,118 L265.9,126.1 L258.1,126.1 Z\" fill=\"#b23a2a\" stroke=\"#b23a2a\" stroke-width=\"1\"/><rect x=\"278\" y=\"200\" width=\"112\" height=\"7\" rx=\"2\" fill=\"#c9ccd1\"/><path d=\"M286,200 Q286,145 334,145 Q382,145 382,200 Z\" fill=\"#d9b77e\"/><path d=\"M304,168 q10,-14 22,-8 M322,160 q10,-14 22,-8 M340,168 q10,-14 22,-8\" stroke-width=\"2.5\"/><path d=\"M300,130 q-6,-8 0,-16 q6,-8 0,-16\" stroke=\"#e2603a\" stroke-width=\"1.5\"/><path d=\"M334,130 q-6,-8 0,-16 q6,-8 0,-16\" stroke=\"#e2603a\" stroke-width=\"1.5\"/><path d=\"M368,130 q-6,-8 0,-16 q6,-8 0,-16\" stroke=\"#e2603a\" stroke-width=\"1.5\"/><path d=\"M300,228 q-6,-8 0,-14\" stroke=\"#e2603a\" stroke-width=\"1.5\"/><path d=\"M334,228 q-6,-8 0,-14\" stroke=\"#e2603a\" stroke-width=\"1.5\"/><path d=\"M368,228 q-6,-8 0,-14\" stroke=\"#e2603a\" stroke-width=\"1.5\"/></g><line x1=\"66\" y1=\"50\" x2=\"66\" y2=\"103\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"66\" cy=\"103\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"66\" cy=\"50\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"66\" y=\"54.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">1</text><line x1=\"160\" y1=\"40\" x2=\"182\" y2=\"112\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"182\" cy=\"112\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"160\" cy=\"40\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"160\" y=\"44.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">2</text><line x1=\"245\" y1=\"40\" x2=\"262\" y2=\"125\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"262\" cy=\"125\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"245\" cy=\"40\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"245\" y=\"44.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">3</text><line x1=\"300\" y1=\"40\" x2=\"316\" y2=\"158\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"316\" cy=\"158\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"300\" cy=\"40\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"300\" y=\"44.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">4</text><line x1=\"300\" y1=\"245\" x2=\"290\" y2=\"205\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"290\" cy=\"205\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"300\" cy=\"245\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"300\" y=\"249.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">5</text></svg>"
+  },
+  {
+   "id": "kit-flatbread",
+   "level": 1,
+   "title_el": "Πίτα χωρίς μαγιά στο τηγάνι ή σε πέτρα (σαν λαγάνα)",
+   "title_en": "Flatbread without yeast on a pan or hot stone",
+   "time_el": "45 λεπτά",
+   "time_en": "45 minutes",
+   "why_el": "Όταν δεν έχεις φούρνο ούτε προζύμι, η πίτα ψήνεται σε λίγα λεπτά πάνω σε τηγάνι, λαμαρίνα ή πέτρα στη φωτιά.",
+   "why_en": "When you have no oven and no starter, flatbread cooks in minutes on a pan, metal sheet or stone over a fire.",
+   "need_el": [
+    "250 γρ. αλεύρι",
+    "150 ml χλιαρό νερό",
+    "½ κουταλάκι αλάτι",
+    "1 κουταλιά λάδι",
+    "Πλάστη ή μπουκάλι, τηγάνι ή λεία πέτρα"
+   ],
+   "need_en": [
+    "250 g flour",
+    "150 ml lukewarm water",
+    "½ teaspoon salt",
+    "1 tablespoon oil",
+    "Rolling pin or bottle, pan or flat stone"
+   ],
+   "steps_el": [
+    "Ανακάτεψε αλεύρι, αλάτι, λάδι και νερό. Ζύμωσε 5 λεπτά.",
+    "Σκέπασε τη ζύμη με πανί. Άφησέ τη 30 λεπτά να ξεκουραστεί.",
+    "Κόψε τη σε 6 μπαλάκια.",
+    "Άνοιξε κάθε μπαλάκι με τον πλάστη σε λεπτό φύλλο, 2–3 χιλ.",
+    "Ζέστανε καλά το τηγάνι ή την πέτρα, χωρίς λάδι.",
+    "Ψήσε κάθε πίτα 1–2 λεπτά από κάθε μεριά, μέχρι να φουσκώσει και να πάρει καφέ βούλες.",
+    "Τύλιξε τις ψημένες πίτες σε πανί για να μείνουν μαλακές."
+   ],
+   "steps_en": [
+    "Mix flour, salt, oil and water. Knead for 5 minutes.",
+    "Cover the dough with a cloth. Let it rest 30 minutes.",
+    "Cut it into 6 small balls.",
+    "Roll each ball into a thin sheet, 2–3 mm.",
+    "Heat the pan or stone well, with no oil.",
+    "Cook each flatbread 1–2 minutes per side, until it puffs and gets brown spots.",
+    "Wrap the cooked breads in a cloth to keep them soft."
+   ],
+   "tip_el": "Ένα μπουκάλι κρασιού κάνει για πλάστης. Αν έχεις λίγο προζύμι ή γιαούρτι, βάλε μια κουταλιά: η πίτα βγαίνει πιο αφράτη.",
+   "tip_en": "A wine bottle works as a rolling pin. If you have a little starter or yogurt, add a spoonful: the bread comes out softer.",
+   "warn_el": "Μη βάζεις στη φωτιά βρεγμένες πέτρες ή πέτρες από ποτάμι: μπορεί να σκάσουν. Το τηγάνι καίει — πιάνε το με πανί. Κράτα τα παιδιά μακριά από τη φωτιά.",
+   "warn_en": "Never heat wet stones or river stones: they can burst. The pan is very hot — hold it with a cloth. Keep children away from the fire.",
+   "fig_el": "① Μπαλάκι ζύμης ② Πλάστης ③ Λεπτό φύλλο 2–3 χιλ. ④ Τηγάνι με την πίτα ⑤ Πέτρες που κρατούν το τηγάνι ⑥ Μικρή φωτιά από κάτω.",
+   "fig_en": "① Ball of dough ② Rolling pin ③ Thin sheet 2–3 mm ④ Pan with the flatbread ⑤ Stones holding the pan ⑥ Small fire underneath.",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 260\"><rect width=\"400\" height=\"260\" fill=\"#f6ecd6\"/><g fill=\"none\" stroke=\"#3b2a1a\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"10\" y1=\"228\" x2=\"390\" y2=\"228\"/><line x1=\"18\" y1=\"230\" x2=\"12\" y2=\"237\" stroke-width=\"1\"/><line x1=\"30\" y1=\"230\" x2=\"24\" y2=\"237\" stroke-width=\"1\"/><line x1=\"42\" y1=\"230\" x2=\"36\" y2=\"237\" stroke-width=\"1\"/><line x1=\"54\" y1=\"230\" x2=\"48\" y2=\"237\" stroke-width=\"1\"/><line x1=\"66\" y1=\"230\" x2=\"60\" y2=\"237\" stroke-width=\"1\"/><line x1=\"78\" y1=\"230\" x2=\"72\" y2=\"237\" stroke-width=\"1\"/><line x1=\"90\" y1=\"230\" x2=\"84\" y2=\"237\" stroke-width=\"1\"/><line x1=\"102\" y1=\"230\" x2=\"96\" y2=\"237\" stroke-width=\"1\"/><line x1=\"114\" y1=\"230\" x2=\"108\" y2=\"237\" stroke-width=\"1\"/><line x1=\"126\" y1=\"230\" x2=\"120\" y2=\"237\" stroke-width=\"1\"/><line x1=\"138\" y1=\"230\" x2=\"132\" y2=\"237\" stroke-width=\"1\"/><line x1=\"150\" y1=\"230\" x2=\"144\" y2=\"237\" stroke-width=\"1\"/><line x1=\"162\" y1=\"230\" x2=\"156\" y2=\"237\" stroke-width=\"1\"/><line x1=\"174\" y1=\"230\" x2=\"168\" y2=\"237\" stroke-width=\"1\"/><line x1=\"186\" y1=\"230\" x2=\"180\" y2=\"237\" stroke-width=\"1\"/><line x1=\"198\" y1=\"230\" x2=\"192\" y2=\"237\" stroke-width=\"1\"/><line x1=\"210\" y1=\"230\" x2=\"204\" y2=\"237\" stroke-width=\"1\"/><line x1=\"222\" y1=\"230\" x2=\"216\" y2=\"237\" stroke-width=\"1\"/><line x1=\"234\" y1=\"230\" x2=\"228\" y2=\"237\" stroke-width=\"1\"/><line x1=\"246\" y1=\"230\" x2=\"240\" y2=\"237\" stroke-width=\"1\"/><line x1=\"258\" y1=\"230\" x2=\"252\" y2=\"237\" stroke-width=\"1\"/><line x1=\"270\" y1=\"230\" x2=\"264\" y2=\"237\" stroke-width=\"1\"/><line x1=\"282\" y1=\"230\" x2=\"276\" y2=\"237\" stroke-width=\"1\"/><line x1=\"294\" y1=\"230\" x2=\"288\" y2=\"237\" stroke-width=\"1\"/><line x1=\"306\" y1=\"230\" x2=\"300\" y2=\"237\" stroke-width=\"1\"/><line x1=\"318\" y1=\"230\" x2=\"312\" y2=\"237\" stroke-width=\"1\"/><line x1=\"330\" y1=\"230\" x2=\"324\" y2=\"237\" stroke-width=\"1\"/><line x1=\"342\" y1=\"230\" x2=\"336\" y2=\"237\" stroke-width=\"1\"/><line x1=\"354\" y1=\"230\" x2=\"348\" y2=\"237\" stroke-width=\"1\"/><line x1=\"366\" y1=\"230\" x2=\"360\" y2=\"237\" stroke-width=\"1\"/><line x1=\"378\" y1=\"230\" x2=\"372\" y2=\"237\" stroke-width=\"1\"/><rect x=\"15\" y=\"180\" width=\"150\" height=\"10\" rx=\"2\" fill=\"#d9b77e\"/><line x1=\"25\" y1=\"190\" x2=\"25\" y2=\"228\"/><line x1=\"155\" y1=\"190\" x2=\"155\" y2=\"228\"/><ellipse cx=\"42\" cy=\"170\" rx=\"18\" ry=\"11\" fill=\"#ffffff\"/><ellipse cx=\"112\" cy=\"176\" rx=\"42\" ry=\"5\" fill=\"#ffffff\"/><rect x=\"70\" y=\"150\" width=\"84\" height=\"12\" rx=\"6\" fill=\"#d9b77e\"/><rect x=\"58\" y=\"153\" width=\"13\" height=\"6\" rx=\"3\" fill=\"#d9b77e\"/><rect x=\"153\" y=\"153\" width=\"13\" height=\"6\" rx=\"3\" fill=\"#d9b77e\"/><g transform=\"translate(262,226) scale(0.85)\"><path d=\"M0,0 C-13,-5 -11,-20 -2,-32 C0,-22 6,-24 6,-30 C15,-18 13,-5 0,0 Z\" fill=\"#f2a65a\"/><path d=\"M0,-2 C-5,-5 -4,-12 0,-18 C3,-12 6,-6 0,-2 Z\" fill=\"#e2603a\" stroke-width=\"1\"/></g><g transform=\"translate(282,226) scale(1.0)\"><path d=\"M0,0 C-13,-5 -11,-20 -2,-32 C0,-22 6,-24 6,-30 C15,-18 13,-5 0,0 Z\" fill=\"#f2a65a\"/><path d=\"M0,-2 C-5,-5 -4,-12 0,-18 C3,-12 6,-6 0,-2 Z\" fill=\"#e2603a\" stroke-width=\"1\"/></g><g transform=\"translate(300,226) scale(0.85)\"><path d=\"M0,0 C-13,-5 -11,-20 -2,-32 C0,-22 6,-24 6,-30 C15,-18 13,-5 0,0 Z\" fill=\"#f2a65a\"/><path d=\"M0,-2 C-5,-5 -4,-12 0,-18 C3,-12 6,-6 0,-2 Z\" fill=\"#e2603a\" stroke-width=\"1\"/></g><ellipse cx=\"225\" cy=\"212\" rx=\"22\" ry=\"16\" fill=\"#bdb5a6\"/><ellipse cx=\"338\" cy=\"212\" rx=\"22\" ry=\"16\" fill=\"#bdb5a6\"/><ellipse cx=\"282\" cy=\"186\" rx=\"76\" ry=\"14\" fill=\"#c9ccd1\"/><path d=\"M206,186 Q210,200 282,200 Q354,200 358,186\" /><path d=\"M356,182 L395,166\" stroke=\"#3b2a1a\" stroke-width=\"7\"/><path d=\"M356,182 L395,166\" stroke=\"#c9ccd1\" stroke-width=\"3\"/><ellipse cx=\"282\" cy=\"184\" rx=\"56\" ry=\"9\" fill=\"#d9b77e\"/><ellipse cx=\"258\" cy=\"183\" rx=\"4\" ry=\"1.8\" fill=\"#c8a27a\" stroke-width=\"1\"/><ellipse cx=\"280\" cy=\"188\" rx=\"4\" ry=\"1.8\" fill=\"#c8a27a\" stroke-width=\"1\"/><ellipse cx=\"300\" cy=\"181\" rx=\"4\" ry=\"1.8\" fill=\"#c8a27a\" stroke-width=\"1\"/><ellipse cx=\"312\" cy=\"186\" rx=\"4\" ry=\"1.8\" fill=\"#c8a27a\" stroke-width=\"1\"/><ellipse cx=\"270\" cy=\"179\" rx=\"4\" ry=\"1.8\" fill=\"#c8a27a\" stroke-width=\"1\"/></g><line x1=\"30\" y1=\"120\" x2=\"40\" y2=\"160\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"40\" cy=\"160\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"30\" cy=\"120\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"30\" y=\"124.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">1</text><line x1=\"112\" y1=\"110\" x2=\"112\" y2=\"150\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"112\" cy=\"150\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"112\" cy=\"110\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"112\" y=\"114.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">2</text><line x1=\"140\" y1=\"225\" x2=\"128\" y2=\"178\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"128\" cy=\"178\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"140\" cy=\"225\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"140\" y=\"229.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">3</text><line x1=\"240\" y1=\"130\" x2=\"262\" y2=\"183\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"262\" cy=\"183\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"240\" cy=\"130\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"240\" y=\"134.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">4</text><line x1=\"210\" y1=\"248\" x2=\"222\" y2=\"220\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"222\" cy=\"220\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"210\" cy=\"248\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"210\" y=\"252.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">5</text><line x1=\"300\" y1=\"248\" x2=\"290\" y2=\"218\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"290\" cy=\"218\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"300\" cy=\"248\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"300\" y=\"252.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">6</text></svg>"
+  },
+  {
+   "id": "kit-dutchoven",
+   "level": 2,
+   "title_el": "Ψήσιμο σε μαντέμι κατσαρόλα (γάστρα) στη θράκα",
+   "title_en": "Baking in a cast-iron pot in the embers",
+   "time_el": "1 ώρα",
+   "time_en": "1 hour",
+   "why_el": "Μια βαριά μαντεμένια κατσαρόλα με καπάκι γίνεται φούρνος στη φωτιά. Ψήνεις ψωμί, φαγητό ή πίτα χωρίς ρεύμα.",
+   "why_en": "A heavy cast-iron pot with a lid becomes an oven over the fire. You bake bread, stews or pies with no power.",
+   "need_el": [
+    "Μαντεμένια κατσαρόλα με καπάκι (καλύτερα με ποδαράκια)",
+    "Θράκα από ξύλα ή κάρβουνα",
+    "Φτυαράκι, τσιμπίδα, χοντρά γάντια",
+    "3 πέτρες, αν η κατσαρόλα δεν έχει πόδια"
+   ],
+   "need_en": [
+    "Cast-iron pot with lid (best with legs)",
+    "Embers from wood or charcoal",
+    "Small shovel, tongs, thick gloves",
+    "3 stones, if the pot has no legs"
+   ],
+   "steps_el": [
+    "Άναψε φωτιά 45 λεπτά πριν, να βγάλει καλή θράκα.",
+    "Ζέστανε την άδεια κατσαρόλα και το καπάκι 10 λεπτά.",
+    "Βάλε μέσα το ψωμί πάνω σε λαδόχαρτο ή λίγο αλεύρι. Κλείσε το καπάκι.",
+    "Βάλε λίγη θράκα από κάτω και διπλάσια πάνω στο καπάκι.",
+    "Για κατσαρόλα 25–30 εκ.: περίπου 8 κάρβουνα κάτω, 16 πάνω (περίπου 200 °C).",
+    "Κάθε 15 λεπτά γύρισε την κατσαρόλα ¼ στροφή και το καπάκι ¼ ανάποδα.",
+    "Ψήσε ψωμί 35–45 λεπτά. Άλλαξε τη θράκα όταν σβήνει."
+   ],
+   "steps_en": [
+    "Light a fire 45 minutes before, to make good embers.",
+    "Heat the empty pot and lid for 10 minutes.",
+    "Put the bread inside on baking paper or a little flour. Close the lid.",
+    "Put a few embers underneath and twice as many on the lid.",
+    "For a 25–30 cm pot: about 8 coals under, 16 on top (about 200 °C).",
+    "Every 15 minutes turn the pot ¼ turn one way and the lid ¼ turn the other.",
+    "Bake bread 35–45 minutes. Replace embers when they fade."
+   ],
+   "tip_el": "Η ζέστη ανεβαίνει: γι' αυτό η περισσότερη θράκα μπαίνει πάνω. Αν ο πάτος καίγεται, βάλε ένα στρώμα άμμο ή στάχτη κάτω από την κατσαρόλα.",
+   "tip_en": "Heat rises: that is why most embers go on top. If the bottom burns, put a layer of sand or ash under the pot.",
+   "warn_el": "ΠΟΤΕ κάρβουνα ή θράκα μέσα σε σπίτι, σκηνή ή γκαράζ: βγάζουν μονοξείδιο του άνθρακα (αέριο χωρίς μυρωδιά που σκοτώνει). Το καπάκι είναι καυτό και βαρύ: σήκωνέ το με γάντια και γάντζο.",
+   "warn_en": "NEVER use charcoal or embers inside a house, tent or garage: they make carbon monoxide (an odourless gas that kills). The lid is hot and heavy: lift it with gloves and a hook.",
+   "fig_el": "① Πολλή θράκα πάνω στο καπάκι ② Λίγη θράκα από κάτω ③ Ποδαράκια ή πέτρες που κρατούν την κατσαρόλα ψηλά ④ Το ψωμί μέσα ⑤ Καπάκι με χείλος για να μένει η θράκα.",
+   "fig_en": "① Many embers on the lid ② A few embers below ③ Legs or stones keep the pot up ④ The bread inside ⑤ Lid with a rim so embers stay on.",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 260\"><rect width=\"400\" height=\"260\" fill=\"#f6ecd6\"/><g fill=\"none\" stroke=\"#3b2a1a\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"10\" y1=\"238\" x2=\"390\" y2=\"238\"/><line x1=\"18\" y1=\"240\" x2=\"12\" y2=\"247\" stroke-width=\"1\"/><line x1=\"30\" y1=\"240\" x2=\"24\" y2=\"247\" stroke-width=\"1\"/><line x1=\"42\" y1=\"240\" x2=\"36\" y2=\"247\" stroke-width=\"1\"/><line x1=\"54\" y1=\"240\" x2=\"48\" y2=\"247\" stroke-width=\"1\"/><line x1=\"66\" y1=\"240\" x2=\"60\" y2=\"247\" stroke-width=\"1\"/><line x1=\"78\" y1=\"240\" x2=\"72\" y2=\"247\" stroke-width=\"1\"/><line x1=\"90\" y1=\"240\" x2=\"84\" y2=\"247\" stroke-width=\"1\"/><line x1=\"102\" y1=\"240\" x2=\"96\" y2=\"247\" stroke-width=\"1\"/><line x1=\"114\" y1=\"240\" x2=\"108\" y2=\"247\" stroke-width=\"1\"/><line x1=\"126\" y1=\"240\" x2=\"120\" y2=\"247\" stroke-width=\"1\"/><line x1=\"138\" y1=\"240\" x2=\"132\" y2=\"247\" stroke-width=\"1\"/><line x1=\"150\" y1=\"240\" x2=\"144\" y2=\"247\" stroke-width=\"1\"/><line x1=\"162\" y1=\"240\" x2=\"156\" y2=\"247\" stroke-width=\"1\"/><line x1=\"174\" y1=\"240\" x2=\"168\" y2=\"247\" stroke-width=\"1\"/><line x1=\"186\" y1=\"240\" x2=\"180\" y2=\"247\" stroke-width=\"1\"/><line x1=\"198\" y1=\"240\" x2=\"192\" y2=\"247\" stroke-width=\"1\"/><line x1=\"210\" y1=\"240\" x2=\"204\" y2=\"247\" stroke-width=\"1\"/><line x1=\"222\" y1=\"240\" x2=\"216\" y2=\"247\" stroke-width=\"1\"/><line x1=\"234\" y1=\"240\" x2=\"228\" y2=\"247\" stroke-width=\"1\"/><line x1=\"246\" y1=\"240\" x2=\"240\" y2=\"247\" stroke-width=\"1\"/><line x1=\"258\" y1=\"240\" x2=\"252\" y2=\"247\" stroke-width=\"1\"/><line x1=\"270\" y1=\"240\" x2=\"264\" y2=\"247\" stroke-width=\"1\"/><line x1=\"282\" y1=\"240\" x2=\"276\" y2=\"247\" stroke-width=\"1\"/><line x1=\"294\" y1=\"240\" x2=\"288\" y2=\"247\" stroke-width=\"1\"/><line x1=\"306\" y1=\"240\" x2=\"300\" y2=\"247\" stroke-width=\"1\"/><line x1=\"318\" y1=\"240\" x2=\"312\" y2=\"247\" stroke-width=\"1\"/><line x1=\"330\" y1=\"240\" x2=\"324\" y2=\"247\" stroke-width=\"1\"/><line x1=\"342\" y1=\"240\" x2=\"336\" y2=\"247\" stroke-width=\"1\"/><line x1=\"354\" y1=\"240\" x2=\"348\" y2=\"247\" stroke-width=\"1\"/><line x1=\"366\" y1=\"240\" x2=\"360\" y2=\"247\" stroke-width=\"1\"/><line x1=\"378\" y1=\"240\" x2=\"372\" y2=\"247\" stroke-width=\"1\"/><ellipse cx=\"155\" cy=\"232\" rx=\"7\" ry=\"4\" fill=\"#e2603a\" stroke-width=\"1.5\"/><ellipse cx=\"178\" cy=\"232\" rx=\"7\" ry=\"4\" fill=\"#e2603a\" stroke-width=\"1.5\"/><ellipse cx=\"200\" cy=\"232\" rx=\"7\" ry=\"4\" fill=\"#e2603a\" stroke-width=\"1.5\"/><ellipse cx=\"222\" cy=\"232\" rx=\"7\" ry=\"4\" fill=\"#e2603a\" stroke-width=\"1.5\"/><ellipse cx=\"245\" cy=\"232\" rx=\"7\" ry=\"4\" fill=\"#e2603a\" stroke-width=\"1.5\"/><line x1=\"140\" y1=\"215\" x2=\"134\" y2=\"232\"/><line x1=\"260\" y1=\"215\" x2=\"266\" y2=\"232\"/><line x1=\"200\" y1=\"222\" x2=\"200\" y2=\"232\"/><path d=\"M120,138 L280,138 L276,210 Q200,228 124,210 Z\" fill=\"#c9ccd1\"/><path d=\"M130,140 L270,140 L267,205 Q200,220 133,205 Z\" fill=\"#ffffff\" stroke-width=\"1.5\"/><path d=\"M150,205 Q150,160 200,160 Q250,160 250,205 Q200,214 150,205 Z\" fill=\"#d9b77e\"/><path d=\"M178,172 q8,-6 14,0 M206,172 q8,-6 14,0\" stroke-width=\"1.5\"/><path d=\"M112,138 L288,138 L284,126 Q200,114 116,126 Z\" fill=\"#c9ccd1\"/><line x1=\"116\" y1=\"126\" x2=\"114\" y2=\"114\"/><line x1=\"284\" y1=\"126\" x2=\"286\" y2=\"114\"/><ellipse cx=\"130\" cy=\"117\" rx=\"7\" ry=\"4\" fill=\"#e2603a\" stroke-width=\"1.5\"/><ellipse cx=\"150\" cy=\"115\" rx=\"7\" ry=\"4\" fill=\"#e2603a\" stroke-width=\"1.5\"/><ellipse cx=\"170\" cy=\"113\" rx=\"7\" ry=\"4\" fill=\"#e2603a\" stroke-width=\"1.5\"/><ellipse cx=\"190\" cy=\"112\" rx=\"7\" ry=\"4\" fill=\"#e2603a\" stroke-width=\"1.5\"/><ellipse cx=\"210\" cy=\"112\" rx=\"7\" ry=\"4\" fill=\"#e2603a\" stroke-width=\"1.5\"/><ellipse cx=\"230\" cy=\"113\" rx=\"7\" ry=\"4\" fill=\"#e2603a\" stroke-width=\"1.5\"/><ellipse cx=\"250\" cy=\"115\" rx=\"7\" ry=\"4\" fill=\"#e2603a\" stroke-width=\"1.5\"/><ellipse cx=\"270\" cy=\"117\" rx=\"7\" ry=\"4\" fill=\"#e2603a\" stroke-width=\"1.5\"/><ellipse cx=\"160\" cy=\"107\" rx=\"7\" ry=\"4\" fill=\"#e2603a\" stroke-width=\"1.5\"/><ellipse cx=\"180\" cy=\"105\" rx=\"7\" ry=\"4\" fill=\"#e2603a\" stroke-width=\"1.5\"/><ellipse cx=\"200\" cy=\"104\" rx=\"7\" ry=\"4\" fill=\"#e2603a\" stroke-width=\"1.5\"/><ellipse cx=\"220\" cy=\"105\" rx=\"7\" ry=\"4\" fill=\"#e2603a\" stroke-width=\"1.5\"/><ellipse cx=\"240\" cy=\"107\" rx=\"7\" ry=\"4\" fill=\"#e2603a\" stroke-width=\"1.5\"/><path d=\"M118,128 Q200,30 282,128\" stroke-width=\"2\"/><path d=\"M100,80 Q104,110 118,150\" stroke=\"#b23a2a\" stroke-width=\"2.5\"/><path d=\"M118,150 L111.6,143.6 L119.0,141.1 Z\" fill=\"#b23a2a\" stroke=\"#b23a2a\" stroke-width=\"1\"/><path d=\"M300,80 Q296,110 282,150\" stroke=\"#b23a2a\" stroke-width=\"2.5\"/><path d=\"M282,150 L281.0,141.1 L288.4,143.6 Z\" fill=\"#b23a2a\" stroke=\"#b23a2a\" stroke-width=\"1\"/><path d=\"M108,245 Q112,228 128,212\" stroke=\"#b23a2a\" stroke-width=\"2.5\"/><path d=\"M128,212 L125.0,220.5 L119.5,215.0 Z\" fill=\"#b23a2a\" stroke=\"#b23a2a\" stroke-width=\"1\"/><path d=\"M292,245 Q288,228 272,212\" stroke=\"#b23a2a\" stroke-width=\"2.5\"/><path d=\"M272,212 L280.5,215.0 L275.0,220.5 Z\" fill=\"#b23a2a\" stroke=\"#b23a2a\" stroke-width=\"1\"/></g><line x1=\"200\" y1=\"40\" x2=\"200\" y2=\"100\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"200\" cy=\"100\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"200\" cy=\"40\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"200\" y=\"44.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">1</text><line x1=\"60\" y1=\"230\" x2=\"155\" y2=\"232\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"155\" cy=\"232\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"60\" cy=\"230\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"60\" y=\"234.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">2</text><line x1=\"340\" y1=\"230\" x2=\"266\" y2=\"228\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"266\" cy=\"228\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"340\" cy=\"230\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"340\" y=\"234.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">3</text><line x1=\"350\" y1=\"175\" x2=\"248\" y2=\"190\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"248\" cy=\"190\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"350\" cy=\"175\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"350\" y=\"179.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">4</text><line x1=\"50\" y1=\"140\" x2=\"113\" y2=\"135\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"113\" cy=\"135\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"50\" cy=\"140\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"50\" y=\"144.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">5</text></svg>"
+  },
+  {
+   "id": "kit-claoven",
+   "level": 3,
+   "title_el": "Φτιάχνω απλό πήλινο φούρνο στην αυλή",
+   "title_en": "Building a simple clay (mud) oven outside",
+   "time_el": "2–3 μέρες δουλειά + 1–2 βδομάδες στέγνωμα",
+   "time_en": "2–3 days work + 1–2 weeks drying",
+   "why_el": "Ένας φούρνος από λάσπη ψήνει ψωμί για όλη τη γειτονιά με λίγα ξύλα. Τα υλικά είναι χώμα, άμμος, άχυρο και πέτρες.",
+   "why_en": "A mud oven bakes bread for a whole neighbourhood with little wood. The materials are earth, sand, straw and stones.",
+   "need_el": [
+    "Πέτρες ή τούβλα για βάση",
+    "Πυρότουβλα ή επίπεδες πλάκες για δάπεδο",
+    "Πηλόχωμα (λάσπη με άργιλο), άμμος, άχυρο",
+    "Βρεγμένη άμμος για καλούπι, εφημερίδες",
+    "Κουβάδες, φτυάρι"
+   ],
+   "need_en": [
+    "Stones or bricks for a base",
+    "Fire bricks or flat tiles for the floor",
+    "Clay soil, sand, straw",
+    "Wet sand for the form, newspaper",
+    "Buckets, shovel"
+   ],
+   "steps_el": [
+    "Χτίσε βάση από πέτρες 80–100 εκ. ψηλή, μακριά από σπίτι και δέντρα.",
+    "Στρώσε από πάνω τα πυρότουβλα, επίπεδα, πάνω σε λεπτή άμμο.",
+    "Κάνε με βρεγμένη άμμο ένα θόλο-καλούπι, περίπου 45 εκ. ψηλό. Σκέπασέ τον με βρεγμένη εφημερίδα.",
+    "Ανακάτεψε 1 μέρος πηλό με 2 μέρη άμμο και λίγο νερό, σαν πλαστελίνη.",
+    "Πάτα το μείγμα γύρω από το καλούπι σε πάχος 8–10 εκ.",
+    "Μετά από 1–2 μέρες κόψε πόρτα με ύψος περίπου τα ⅔ του θόλου.",
+    "Βγάλε την άμμο από μέσα με το χέρι.",
+    "Άφησε 1–2 βδομάδες να στεγνώσει στη σκιά. Μετά άναψε μικρές φωτιές για 3–4 μέρες."
+   ],
+   "steps_en": [
+    "Build a stone base 80–100 cm high, away from houses and trees.",
+    "Lay the fire bricks on top, level, on a thin bed of sand.",
+    "Make a dome form of wet sand, about 45 cm high. Cover it with wet newspaper.",
+    "Mix 1 part clay with 2 parts sand and a little water, like modelling clay.",
+    "Press the mix around the form, 8–10 cm thick.",
+    "After 1–2 days cut a door about ⅔ of the dome height.",
+    "Dig the sand out by hand.",
+    "Let it dry 1–2 weeks in shade. Then light small fires for 3–4 days."
+   ],
+   "tip_el": "Δοκιμή πηλού: κάνε μπαλάκι και άφησέ το να στεγνώσει. Αν ραγίσει πολύ, βάλε κι άλλη άμμο. Ένα δεύτερο στρώμα πηλό με άχυρο κρατά τη ζέστη πολλές ώρες.",
+   "tip_en": "Clay test: make a ball and let it dry. If it cracks a lot, add more sand. A second layer of clay mixed with straw keeps the heat for hours.",
+   "warn_el": "Φτιάξ' τον μακριά από ξερά χόρτα, δέντρα και τοίχους. Τις ξερές μέρες με αέρα, μην ανάβεις. Έχε πάντα κουβά νερό δίπλα. Μην καις βαμμένα ή πρεσαριστά ξύλα: βγάζουν δηλητήρια.",
+   "warn_en": "Build it away from dry grass, trees and walls. Do not light it on dry, windy days. Always keep a bucket of water near. Never burn painted or pressed wood: it gives off poisons.",
+   "fig_el": "Αριστερά: το καλούπι. Δεξιά: ο έτοιμος φούρνος. ① Πέτρινη βάση ② Δάπεδο από πυρότουβλα ③ Θόλος από βρεγμένη άμμο (καλούπι) ④ Τοίχωμα από πηλό, 8–10 εκ. ⑤ Πόρτα ⑥ Η φωτιά μέσα.",
+   "fig_en": "Left: the sand form. Right: the finished oven. ① Stone base ② Fire-brick floor ③ Dome of wet sand (the form) ④ Clay wall, 8–10 cm ⑤ Door ⑥ The fire inside.",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 260\"><rect width=\"400\" height=\"260\" fill=\"#f6ecd6\"/><g fill=\"none\" stroke=\"#3b2a1a\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"200\" y1=\"15\" x2=\"200\" y2=\"245\" stroke-width=\"1\"/><line x1=\"8\" y1=\"232\" x2=\"192\" y2=\"232\"/><line x1=\"16\" y1=\"234\" x2=\"10\" y2=\"241\" stroke-width=\"1\"/><line x1=\"28\" y1=\"234\" x2=\"22\" y2=\"241\" stroke-width=\"1\"/><line x1=\"40\" y1=\"234\" x2=\"34\" y2=\"241\" stroke-width=\"1\"/><line x1=\"52\" y1=\"234\" x2=\"46\" y2=\"241\" stroke-width=\"1\"/><line x1=\"64\" y1=\"234\" x2=\"58\" y2=\"241\" stroke-width=\"1\"/><line x1=\"76\" y1=\"234\" x2=\"70\" y2=\"241\" stroke-width=\"1\"/><line x1=\"88\" y1=\"234\" x2=\"82\" y2=\"241\" stroke-width=\"1\"/><line x1=\"100\" y1=\"234\" x2=\"94\" y2=\"241\" stroke-width=\"1\"/><line x1=\"112\" y1=\"234\" x2=\"106\" y2=\"241\" stroke-width=\"1\"/><line x1=\"124\" y1=\"234\" x2=\"118\" y2=\"241\" stroke-width=\"1\"/><line x1=\"136\" y1=\"234\" x2=\"130\" y2=\"241\" stroke-width=\"1\"/><line x1=\"148\" y1=\"234\" x2=\"142\" y2=\"241\" stroke-width=\"1\"/><line x1=\"160\" y1=\"234\" x2=\"154\" y2=\"241\" stroke-width=\"1\"/><line x1=\"172\" y1=\"234\" x2=\"166\" y2=\"241\" stroke-width=\"1\"/><line x1=\"184\" y1=\"234\" x2=\"178\" y2=\"241\" stroke-width=\"1\"/><rect x=\"20\" y=\"182\" width=\"160\" height=\"50\" fill=\"#bdb5a6\"/><line x1=\"55\" y1=\"182\" x2=\"55\" y2=\"207\" stroke-width=\"1\"/><line x1=\"100\" y1=\"182\" x2=\"100\" y2=\"207\" stroke-width=\"1\"/><line x1=\"145\" y1=\"182\" x2=\"145\" y2=\"207\" stroke-width=\"1\"/><line x1=\"20\" y1=\"207\" x2=\"180\" y2=\"207\" stroke-width=\"1\"/><line x1=\"40\" y1=\"207\" x2=\"40\" y2=\"232\" stroke-width=\"1\"/><line x1=\"80\" y1=\"207\" x2=\"80\" y2=\"232\" stroke-width=\"1\"/><line x1=\"122\" y1=\"207\" x2=\"122\" y2=\"232\" stroke-width=\"1\"/><line x1=\"162\" y1=\"207\" x2=\"162\" y2=\"232\" stroke-width=\"1\"/><rect x=\"28\" y=\"172\" width=\"144\" height=\"10\" fill=\"#d98e5c\"/><line x1=\"52\" y1=\"172\" x2=\"52\" y2=\"182\" stroke-width=\"1\"/><line x1=\"76\" y1=\"172\" x2=\"76\" y2=\"182\" stroke-width=\"1\"/><line x1=\"100\" y1=\"172\" x2=\"100\" y2=\"182\" stroke-width=\"1\"/><line x1=\"124\" y1=\"172\" x2=\"124\" y2=\"182\" stroke-width=\"1\"/><line x1=\"148\" y1=\"172\" x2=\"148\" y2=\"182\" stroke-width=\"1\"/><line x1=\"208\" y1=\"232\" x2=\"392\" y2=\"232\"/><line x1=\"216\" y1=\"234\" x2=\"210\" y2=\"241\" stroke-width=\"1\"/><line x1=\"228\" y1=\"234\" x2=\"222\" y2=\"241\" stroke-width=\"1\"/><line x1=\"240\" y1=\"234\" x2=\"234\" y2=\"241\" stroke-width=\"1\"/><line x1=\"252\" y1=\"234\" x2=\"246\" y2=\"241\" stroke-width=\"1\"/><line x1=\"264\" y1=\"234\" x2=\"258\" y2=\"241\" stroke-width=\"1\"/><line x1=\"276\" y1=\"234\" x2=\"270\" y2=\"241\" stroke-width=\"1\"/><line x1=\"288\" y1=\"234\" x2=\"282\" y2=\"241\" stroke-width=\"1\"/><line x1=\"300\" y1=\"234\" x2=\"294\" y2=\"241\" stroke-width=\"1\"/><line x1=\"312\" y1=\"234\" x2=\"306\" y2=\"241\" stroke-width=\"1\"/><line x1=\"324\" y1=\"234\" x2=\"318\" y2=\"241\" stroke-width=\"1\"/><line x1=\"336\" y1=\"234\" x2=\"330\" y2=\"241\" stroke-width=\"1\"/><line x1=\"348\" y1=\"234\" x2=\"342\" y2=\"241\" stroke-width=\"1\"/><line x1=\"360\" y1=\"234\" x2=\"354\" y2=\"241\" stroke-width=\"1\"/><line x1=\"372\" y1=\"234\" x2=\"366\" y2=\"241\" stroke-width=\"1\"/><line x1=\"384\" y1=\"234\" x2=\"378\" y2=\"241\" stroke-width=\"1\"/><rect x=\"220\" y=\"182\" width=\"160\" height=\"50\" fill=\"#bdb5a6\"/><line x1=\"255\" y1=\"182\" x2=\"255\" y2=\"207\" stroke-width=\"1\"/><line x1=\"300\" y1=\"182\" x2=\"300\" y2=\"207\" stroke-width=\"1\"/><line x1=\"345\" y1=\"182\" x2=\"345\" y2=\"207\" stroke-width=\"1\"/><line x1=\"220\" y1=\"207\" x2=\"380\" y2=\"207\" stroke-width=\"1\"/><line x1=\"240\" y1=\"207\" x2=\"240\" y2=\"232\" stroke-width=\"1\"/><line x1=\"280\" y1=\"207\" x2=\"280\" y2=\"232\" stroke-width=\"1\"/><line x1=\"322\" y1=\"207\" x2=\"322\" y2=\"232\" stroke-width=\"1\"/><line x1=\"362\" y1=\"207\" x2=\"362\" y2=\"232\" stroke-width=\"1\"/><rect x=\"228\" y=\"172\" width=\"144\" height=\"10\" fill=\"#d98e5c\"/><line x1=\"252\" y1=\"172\" x2=\"252\" y2=\"182\" stroke-width=\"1\"/><line x1=\"276\" y1=\"172\" x2=\"276\" y2=\"182\" stroke-width=\"1\"/><line x1=\"300\" y1=\"172\" x2=\"300\" y2=\"182\" stroke-width=\"1\"/><line x1=\"324\" y1=\"172\" x2=\"324\" y2=\"182\" stroke-width=\"1\"/><line x1=\"348\" y1=\"172\" x2=\"348\" y2=\"182\" stroke-width=\"1\"/><path d=\"M45,172 Q45,88 100,88 Q155,88 155,172 Z\" fill=\"#c8a27a\"/><circle cx=\"70\" cy=\"120\" r=\"1.5\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"90\" cy=\"105\" r=\"1.5\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"115\" cy=\"110\" r=\"1.5\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"130\" cy=\"130\" r=\"1.5\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"80\" cy=\"150\" r=\"1.5\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"105\" cy=\"140\" r=\"1.5\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"125\" cy=\"158\" r=\"1.5\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"65\" cy=\"160\" r=\"1.5\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"100\" cy=\"125\" r=\"1.5\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"140\" cy=\"150\" r=\"1.5\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"88\" cy=\"165\" r=\"1.5\" fill=\"#3b2a1a\" stroke=\"none\"/><path d=\"M42,172 Q42,84 100,84 Q158,84 158,172\" stroke-dasharray=\"5 4\" stroke-width=\"1.5\"/><path d=\"M222,172 Q222,72 300,72 Q378,72 378,172 Z\" fill=\"#d98e5c\"/><path d=\"M240,150 q6,-30 25,-50 M330,90 q20,12 30,40\" stroke-width=\"1\"/><path d=\"M278,172 L278,146 Q300,122 322,146 L322,172 Z\" fill=\"#3b2a1a\"/><g transform=\"translate(292,171) scale(0.7)\"><path d=\"M0,0 C-13,-5 -11,-20 -2,-32 C0,-22 6,-24 6,-30 C15,-18 13,-5 0,0 Z\" fill=\"#f2a65a\"/><path d=\"M0,-2 C-5,-5 -4,-12 0,-18 C3,-12 6,-6 0,-2 Z\" fill=\"#e2603a\" stroke-width=\"1\"/></g><g transform=\"translate(308,171) scale(0.6)\"><path d=\"M0,0 C-13,-5 -11,-20 -2,-32 C0,-22 6,-24 6,-30 C15,-18 13,-5 0,0 Z\" fill=\"#f2a65a\"/><path d=\"M0,-2 C-5,-5 -4,-12 0,-18 C3,-12 6,-6 0,-2 Z\" fill=\"#e2603a\" stroke-width=\"1\"/></g><path d=\"M318,64 q-8,-10 2,-20 q10,-10 0,-22\" stroke-width=\"1.5\"/></g><line x1=\"22\" y1=\"40\" x2=\"40\" y2=\"192\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"40\" cy=\"192\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"22\" cy=\"40\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"22\" y=\"44.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">1</text><line x1=\"172\" y1=\"40\" x2=\"160\" y2=\"177\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"160\" cy=\"177\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"172\" cy=\"40\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"172\" y=\"44.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">2</text><line x1=\"100\" y1=\"40\" x2=\"100\" y2=\"100\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"100\" cy=\"100\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"100\" cy=\"40\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"100\" y=\"44.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">3</text><line x1=\"225\" y1=\"40\" x2=\"250\" y2=\"110\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"250\" cy=\"110\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"225\" cy=\"40\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"225\" y=\"44.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">4</text><line x1=\"380\" y1=\"40\" x2=\"320\" y2=\"150\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"320\" cy=\"150\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"380\" cy=\"40\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"380\" y=\"44.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">5</text><line x1=\"300\" y1=\"248\" x2=\"300\" y2=\"165\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"300\" cy=\"165\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"300\" cy=\"248\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"300\" y=\"252.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">6</text></svg>"
+  },
+  {
+   "id": "kit-quern",
+   "level": 2,
+   "title_el": "Άλεσμα σταριού με το χέρι (χειρόμυλος) και κοσκίνισμα",
+   "title_en": "Grinding grain by hand (hand mill) and sifting flour",
+   "time_el": "1 ώρα για 1 κιλό",
+   "time_en": "1 hour for 1 kg",
+   "why_el": "Το σιτάρι κρατά χρόνια, το αλεύρι λίγους μήνες. Αν έχεις σιτάρι και δύο πέτρες, έχεις φρέσκο αλεύρι.",
+   "why_en": "Whole grain keeps for years, flour only a few months. If you have grain and two stones, you have fresh flour.",
+   "need_el": [
+    "Σιτάρι, κριθάρι ή καλαμπόκι, καθαρό και στεγνό",
+    "Χειρόμυλος ή δύο πέτρες (μία πλατιά, μία στρογγυλή)",
+    "Κόσκινο",
+    "Πανί ή ταψί από κάτω, λεκάνη"
+   ],
+   "need_en": [
+    "Wheat, barley or corn, clean and dry",
+    "Hand mill or two stones (one flat, one round)",
+    "Sieve",
+    "Cloth or tray underneath, bowl"
+   ],
+   "steps_el": [
+    "Λίχνισε το σιτάρι στον αέρα για να φύγουν άχυρα και σκόνη.",
+    "Απλώσ' το σε ταψί και βγάλε πετραδάκια και μαύρους κόκκους.",
+    "Ρίχνε λίγο σιτάρι στην τρύπα της πάνω πέτρας.",
+    "Γύρνα την πάνω πέτρα με τη λαβή, σταθερά, με τον ίδιο ρυθμό.",
+    "Το αλεύρι βγαίνει από τις άκρες στο πανί. Μάζεψέ το.",
+    "Άλεσέ το 2–3 φορές για πιο ψιλό αλεύρι.",
+    "Κοσκίνισε: το ψιλό πέφτει στη λεκάνη, το πίτουρο μένει πάνω."
+   ],
+   "steps_en": [
+    "Winnow the grain in the wind to blow away straw and dust.",
+    "Spread it on a tray and pick out small stones and black grains.",
+    "Pour a little grain into the hole of the top stone.",
+    "Turn the top stone with the handle, steady, at an even pace.",
+    "Flour comes out at the edges onto the cloth. Collect it.",
+    "Grind it 2–3 times for finer flour.",
+    "Sift: fine flour falls into the bowl, the bran stays on top."
+   ],
+   "tip_el": "Χωρίς μύλο: βάλε τους κόκκους σε πλατιά πέτρα και τρίψε μπρος-πίσω με στρογγυλή. Το πίτουρο μην το πετάς — κάνει για ζώα, κότες ή χυλό.",
+   "tip_en": "With no mill: put the grain on a flat stone and rub back and forth with a round one. Do not waste the bran — it is good for animals, hens or porridge.",
+   "warn_el": "Πέτα κάθε μαύρο-μωβ, μακρύ κόκκο (ερυσίβη): είναι δηλητηριώδης. Μην αλέθεις μουχλιασμένο ή βρεγμένο σιτάρι. Το αλεύρι ολικής χαλάει γρήγορα: άλεθε για 1–2 βδομάδες.",
+   "warn_en": "Throw away any long black-purple grain (ergot): it is poisonous. Never grind mouldy or damp grain. Wholemeal flour spoils fast: grind only for 1–2 weeks.",
+   "fig_el": "① Ρίχνεις τους κόκκους στην τρύπα ② Πάνω πέτρα (γυρίζει) ③ Λαβή ④ Κάτω πέτρα (μένει ακίνητη) ⑤ Το αλεύρι βγαίνει από την άκρη ⑥ Κόσκινο με το πίτουρο ⑦ Ψιλό αλεύρι στη λεκάνη.",
+   "fig_en": "① Grain poured into the hole ② Top stone (turns) ③ Handle ④ Bottom stone (stays still) ⑤ Flour comes out at the edge ⑥ Sieve holding the bran ⑦ Fine flour in the bowl.",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 260\"><rect width=\"400\" height=\"260\" fill=\"#f6ecd6\"/><g fill=\"none\" stroke=\"#3b2a1a\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"245\" y1=\"15\" x2=\"245\" y2=\"245\" stroke-width=\"1\"/><rect x=\"20\" y=\"205\" width=\"210\" height=\"8\" rx=\"2\" fill=\"#ffffff\"/><rect x=\"45\" y=\"168\" width=\"160\" height=\"36\" rx=\"4\" fill=\"#bdb5a6\"/><rect x=\"52\" y=\"128\" width=\"146\" height=\"38\" rx=\"4\" fill=\"#bdb5a6\"/><rect x=\"117\" y=\"128\" width=\"16\" height=\"38\" fill=\"#f6ecd6\"/><line x1=\"125\" y1=\"185\" x2=\"125\" y2=\"150\" stroke-width=\"3\"/><ellipse cx=\"122\" cy=\"96\" rx=\"2.5\" ry=\"4\" fill=\"#d9b77e\" stroke-width=\"1\"/><ellipse cx=\"128\" cy=\"106\" rx=\"2.5\" ry=\"4\" fill=\"#d9b77e\" stroke-width=\"1\"/><ellipse cx=\"123\" cy=\"116\" rx=\"2.5\" ry=\"4\" fill=\"#d9b77e\" stroke-width=\"1\"/><ellipse cx=\"127\" cy=\"136\" rx=\"2.5\" ry=\"4\" fill=\"#d9b77e\" stroke-width=\"1\"/><ellipse cx=\"121\" cy=\"144\" rx=\"2.5\" ry=\"4\" fill=\"#d9b77e\" stroke-width=\"1\"/><rect x=\"178\" y=\"78\" width=\"10\" height=\"52\" rx=\"3\" fill=\"#d9b77e\"/><path d=\"M62,118 Q125,96 168,112\" stroke=\"#b23a2a\" stroke-width=\"2.5\"/><path d=\"M168,112 L159.0,112.8 L161.8,105.5 Z\" fill=\"#b23a2a\" stroke=\"#b23a2a\" stroke-width=\"1\"/><path d=\"M30,205 Q38,192 46,205 Z\" fill=\"#ffffff\"/><path d=\"M204,205 Q212,192 220,205 Z\" fill=\"#ffffff\"/><circle cx=\"40\" cy=\"188\" r=\"1.3\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"34\" cy=\"196\" r=\"1.3\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"212\" cy=\"186\" r=\"1.3\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"218\" cy=\"195\" r=\"1.3\" fill=\"#3b2a1a\" stroke=\"none\"/><rect x=\"268\" y=\"100\" width=\"110\" height=\"20\" fill=\"#d9b77e\"/><ellipse cx=\"323\" cy=\"100\" rx=\"55\" ry=\"12\" fill=\"#ffffff\"/><line x1=\"283\" y1=\"91\" x2=\"283\" y2=\"109\" stroke-width=\"0.8\"/><line x1=\"292\" y1=\"91\" x2=\"292\" y2=\"109\" stroke-width=\"0.8\"/><line x1=\"301\" y1=\"91\" x2=\"301\" y2=\"109\" stroke-width=\"0.8\"/><line x1=\"310\" y1=\"91\" x2=\"310\" y2=\"109\" stroke-width=\"0.8\"/><line x1=\"319\" y1=\"91\" x2=\"319\" y2=\"109\" stroke-width=\"0.8\"/><line x1=\"328\" y1=\"91\" x2=\"328\" y2=\"109\" stroke-width=\"0.8\"/><line x1=\"337\" y1=\"91\" x2=\"337\" y2=\"109\" stroke-width=\"0.8\"/><line x1=\"346\" y1=\"91\" x2=\"346\" y2=\"109\" stroke-width=\"0.8\"/><line x1=\"355\" y1=\"91\" x2=\"355\" y2=\"109\" stroke-width=\"0.8\"/><line x1=\"364\" y1=\"91\" x2=\"364\" y2=\"109\" stroke-width=\"0.8\"/><ellipse cx=\"300\" cy=\"98\" rx=\"3\" ry=\"1.6\" fill=\"#c8a27a\" stroke-width=\"1\"/><ellipse cx=\"315\" cy=\"103\" rx=\"3\" ry=\"1.6\" fill=\"#c8a27a\" stroke-width=\"1\"/><ellipse cx=\"330\" cy=\"96\" rx=\"3\" ry=\"1.6\" fill=\"#c8a27a\" stroke-width=\"1\"/><ellipse cx=\"345\" cy=\"101\" rx=\"3\" ry=\"1.6\" fill=\"#c8a27a\" stroke-width=\"1\"/><ellipse cx=\"322\" cy=\"99\" rx=\"3\" ry=\"1.6\" fill=\"#c8a27a\" stroke-width=\"1\"/><circle cx=\"300\" cy=\"132\" r=\"1.3\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"315\" cy=\"140\" r=\"1.3\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"330\" cy=\"135\" r=\"1.3\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"345\" cy=\"145\" r=\"1.3\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"308\" cy=\"152\" r=\"1.3\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"338\" cy=\"160\" r=\"1.3\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"322\" cy=\"150\" r=\"1.3\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"318\" cy=\"170\" r=\"1.3\" fill=\"#3b2a1a\" stroke=\"none\"/><path d=\"M275,185 Q275,235 323.0,235 Q371,235 371,185 Z\" fill=\"#d98e5c\"/><path d=\"M295,185 Q323,168 351,185 Z\" fill=\"#ffffff\"/><path d=\"M260,120 Q262,92 290,70\" stroke=\"#b23a2a\" stroke-width=\"2\"/><path d=\"M290,70 L286.0,78.1 L281.2,71.9 Z\" fill=\"#b23a2a\" stroke=\"#b23a2a\" stroke-width=\"1\"/></g><line x1=\"80\" y1=\"80\" x2=\"122\" y2=\"100\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"122\" cy=\"100\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"80\" cy=\"80\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"80\" y=\"84.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">1</text><line x1=\"30\" y1=\"140\" x2=\"52\" y2=\"145\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"52\" cy=\"145\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"30\" cy=\"140\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"30\" y=\"144.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">2</text><line x1=\"215\" y1=\"60\" x2=\"186\" y2=\"82\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"186\" cy=\"82\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"215\" cy=\"60\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"215\" y=\"64.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">3</text><line x1=\"30\" y1=\"240\" x2=\"60\" y2=\"195\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"60\" cy=\"195\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"30\" cy=\"240\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"30\" y=\"244.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">4</text><line x1=\"225\" y1=\"238\" x2=\"212\" y2=\"200\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"212\" cy=\"200\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"225\" cy=\"238\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"225\" y=\"242.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">5</text><line x1=\"365\" y1=\"60\" x2=\"345\" y2=\"99\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"345\" cy=\"99\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"365\" cy=\"60\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"365\" y=\"64.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">6</text><line x1=\"385\" y1=\"220\" x2=\"345\" y2=\"182\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"345\" cy=\"182\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"385\" cy=\"220\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"385\" y=\"224.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">7</text></svg>"
+  },
+  {
+   "id": "kit-paximadi",
+   "level": 1,
+   "title_el": "Παξιμάδι — διπλοψημένο ψωμί που κρατά έναν χρόνο",
+   "title_en": "Paximadi — twice-baked rusks that last a year",
+   "time_el": "1 μέρα",
+   "time_en": "1 day",
+   "why_el": "Το φρέσκο ψωμί μουχλιάζει σε λίγες μέρες. Το παξιμάδι είναι στεγνό σαν πέτρα και κρατά μήνες. Το έπαιρναν οι ναυτικοί και οι βοσκοί.",
+   "why_en": "Fresh bread goes mouldy in a few days. A rusk is dry as stone and keeps for months. Sailors and shepherds always carried it.",
+   "need_el": [
+    "Καρβέλια ψωμί (σταρένιο ή κριθαρένιο)",
+    "Κοφτερό μαχαίρι",
+    "Φούρνος ή ζεστός ξυλόφουρνος που σβήνει",
+    "Τενεκές με καπάκι ή πανί σακούλι"
+   ],
+   "need_en": [
+    "Loaves of bread (wheat or barley)",
+    "Sharp knife",
+    "Oven, or a wood oven that is cooling down",
+    "Tin with lid or cloth bag"
+   ],
+   "steps_el": [
+    "Ψήσε ψωμί όπως πάντα. Άφησέ το 1 ώρα να κρυώσει λίγο.",
+    "Κόψε φέτες 2 εκ. ή κόψε το στη μέση κατά μήκος (κουλούρα).",
+    "Στρώσε τις φέτες στο ταψί, χωρίς να ακουμπάει η μία την άλλη.",
+    "Ψήσε σε χαμηλό φούρνο, 100–120 °C, για 3–5 ώρες.",
+    "Γύρισέ τες στη μέση του χρόνου.",
+    "Σπάσε μία: πρέπει να είναι στεγνή και σκληρή ως την καρδιά.",
+    "Άφησε να κρυώσουν τελείως. Φύλαξέ τες σε τενεκέ, σε ξερό μέρος."
+   ],
+   "steps_en": [
+    "Bake bread as usual. Let it cool for 1 hour.",
+    "Cut slices 2 cm thick, or cut the loaf in half lengthwise.",
+    "Lay the slices on the tray, not touching each other.",
+    "Dry them in a low oven, 100–120 °C, for 3–5 hours.",
+    "Turn them halfway through.",
+    "Break one: it must be dry and hard right to the centre.",
+    "Let them cool completely. Store in a tin, in a dry place."
+   ],
+   "tip_el": "Ο παλιός τρόπος: μετά το ψήσιμο, βάζεις τις φέτες στον ξυλόφουρνο που σβήνει και τις αφήνεις όλη νύχτα. Για να το φας, βρέξε το λίγο σε νερό και βάλε λάδι, ντομάτα, αλάτι.",
+   "tip_en": "The old way: after baking, put the slices in the cooling wood oven and leave them all night. To eat, dip it quickly in water and add oil, tomato and salt.",
+   "warn_el": "Αν η καρδιά μείνει υγρή, θα μουχλιάσει. Κοίτα τα παξιμάδια κάθε μήνα· αν δεις μούχλα, πέτα το κομμάτι. Τα πολύ σκληρά παξιμάδια σπάνε δόντια: μούσκεψέ τα πρώτα.",
+   "warn_en": "If the centre stays damp, it will mould. Check the rusks every month; if you see mould, throw that piece away. Very hard rusks can break teeth: soak them first.",
+   "fig_el": "① Φέτες πάχους 2 εκ. ② Οι φέτες όρθιες στο ταψί, σε χαμηλό φούρνο ③ Χαμηλή, ήπια φωτιά (100–120 °C) ④ Τενεκές με καπάκι ⑤ Το βρέχεις σε νερό πριν το φας.",
+   "fig_en": "① Slices 2 cm thick ② Slices standing on the tray in a low oven ③ Low, gentle heat (100–120 °C) ④ Tin with a lid ⑤ Dip in water before eating.",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 260\"><rect width=\"400\" height=\"260\" fill=\"#f6ecd6\"/><g fill=\"none\" stroke=\"#3b2a1a\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"133\" y1=\"15\" x2=\"133\" y2=\"245\" stroke-width=\"1\"/><line x1=\"266\" y1=\"15\" x2=\"266\" y2=\"245\" stroke-width=\"1\"/><rect x=\"8\" y=\"200\" width=\"118\" height=\"9\" rx=\"2\" fill=\"#d9b77e\"/><path d=\"M14,200 Q14,145 66,145 Q118,145 118,200 Z\" fill=\"#d9b77e\"/><line x1=\"34\" y1=\"150\" x2=\"34\" y2=\"200\" stroke-width=\"1.5\"/><line x1=\"50\" y1=\"150\" x2=\"50\" y2=\"200\" stroke-width=\"1.5\"/><line x1=\"66\" y1=\"150\" x2=\"66\" y2=\"200\" stroke-width=\"1.5\"/><line x1=\"82\" y1=\"150\" x2=\"82\" y2=\"200\" stroke-width=\"1.5\"/><line x1=\"98\" y1=\"150\" x2=\"98\" y2=\"200\" stroke-width=\"1.5\"/><path d=\"M30,95 L100,95 L96,106 L30,106 Z\" fill=\"#c9ccd1\"/><rect x=\"100\" y=\"94\" width=\"26\" height=\"13\" rx=\"4\" fill=\"#d9b77e\"/><rect x=\"142\" y=\"90\" width=\"116\" height=\"130\" rx=\"6\" fill=\"#d98e5c\"/><rect x=\"152\" y=\"105\" width=\"96\" height=\"100\" fill=\"#3b2a1a\"/><rect x=\"156\" y=\"170\" width=\"88\" height=\"5\" fill=\"#c9ccd1\"/><path d=\"M160,170 L160,150 Q168,140 176,150 L176,170 Z\" fill=\"#f6ecd6\" stroke=\"#d9b77e\" stroke-width=\"2.5\"/><path d=\"M180,170 L180,150 Q188,140 196,150 L196,170 Z\" fill=\"#f6ecd6\" stroke=\"#d9b77e\" stroke-width=\"2.5\"/><path d=\"M200,170 L200,150 Q208,140 216,150 L216,170 Z\" fill=\"#f6ecd6\" stroke=\"#d9b77e\" stroke-width=\"2.5\"/><path d=\"M220,170 L220,150 Q228,140 236,150 L236,170 Z\" fill=\"#f6ecd6\" stroke=\"#d9b77e\" stroke-width=\"2.5\"/><path d=\"M175,200 q-5,-6 0,-12 q5,-6 0,-10\" stroke=\"#f2a65a\" stroke-width=\"1.5\"/><path d=\"M200,200 q-5,-6 0,-12 q5,-6 0,-10\" stroke=\"#f2a65a\" stroke-width=\"1.5\"/><path d=\"M225,200 q-5,-6 0,-12 q5,-6 0,-10\" stroke=\"#f2a65a\" stroke-width=\"1.5\"/><rect x=\"282\" y=\"118\" width=\"64\" height=\"88\" rx=\"3\" fill=\"#c9ccd1\"/><rect x=\"278\" y=\"108\" width=\"72\" height=\"12\" rx=\"3\" fill=\"#c9ccd1\"/><line x1=\"282\" y1=\"140\" x2=\"346\" y2=\"140\" stroke-width=\"1\"/><line x1=\"282\" y1=\"185\" x2=\"346\" y2=\"185\" stroke-width=\"1\"/><path d=\"M330,200 Q330,234 360.0,234 Q390,234 390,200 Z\" fill=\"#d98e5c\"/><ellipse cx=\"360\" cy=\"200\" rx=\"30\" ry=\"4\" fill=\"#bcd9e3\"/><path d=\"M346,198 L352,180 Q362,174 372,182 L368,200 Z\" fill=\"#f6ecd6\" stroke=\"#d9b77e\" stroke-width=\"2.5\"/></g><line x1=\"66\" y1=\"50\" x2=\"58\" y2=\"98\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"58\" cy=\"98\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"66\" cy=\"50\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"66\" y=\"54.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">1</text><line x1=\"200\" y1=\"40\" x2=\"200\" y2=\"98\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"200\" cy=\"98\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"200\" cy=\"40\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"200\" y=\"44.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">2</text><line x1=\"155\" y1=\"240\" x2=\"175\" y2=\"196\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"175\" cy=\"196\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"155\" cy=\"240\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"155\" y=\"244.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">3</text><line x1=\"300\" y1=\"60\" x2=\"312\" y2=\"108\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"312\" cy=\"108\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"300\" cy=\"60\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"300\" y=\"64.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">4</text><line x1=\"372\" y1=\"240\" x2=\"362\" y2=\"214\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"362\" cy=\"214\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"372\" cy=\"240\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"372\" y=\"244.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">5</text></svg>"
+  },
+  {
+   "id": "kit-trahanas",
+   "level": 2,
+   "title_el": "Τραχανάς ξινός και γλυκός — φαγητό για όλο τον χειμώνα",
+   "title_en": "Trahanas (sour and sweet) — food that keeps all winter",
+   "time_el": "1 ώρα μαγείρεμα + 1 βδομάδα στέγνωμα",
+   "time_en": "1 hour cooking + 1 week drying",
+   "why_el": "Ο τραχανάς κλείνει το γάλα του καλοκαιριού σε ξερά τριμμένα κομματάκια. Κρατά έναν χρόνο και γίνεται ζεστή σούπα σε 15 λεπτά.",
+   "why_en": "Trahanas locks summer milk into dry crumbs. It keeps for a year and becomes a hot soup in 15 minutes.",
+   "need_el": [
+    "1 κιλό χοντροαλεσμένο σιτάρι (πλιγούρι)",
+    "2 λίτρα γάλα: ξινισμένο ή γιαούρτι αραιωμένο για ξινό, φρέσκο για γλυκό",
+    "1 κουταλιά αλάτι",
+    "Μεγάλη κατσαρόλα, ξύλινο κουτάλι",
+    "Καθαρά σεντόνια, κόσκινο, βάζα ή πάνινα σακούλια"
+   ],
+   "need_en": [
+    "1 kg coarse cracked wheat (bulgur)",
+    "2 litres milk: soured milk or thinned yogurt for sour, fresh for sweet",
+    "1 tablespoon salt",
+    "Large pot, wooden spoon",
+    "Clean sheets, sieve, jars or cloth bags"
+   ],
+   "steps_el": [
+    "Ζέστανε το γάλα με το αλάτι σε σιγανή φωτιά.",
+    "Ρίξε σιγά-σιγά το πλιγούρι, ανακατεύοντας συνέχεια.",
+    "Βράσε 20–30 λεπτά, ανακατεύοντας, μέχρι να γίνει πηχτός χυλός.",
+    "Άφησέ τον να κρυώσει. Κόψε τον σε κομματάκια σαν καρύδι.",
+    "Άπλωσέ τα σε καθαρό σεντόνι στον ήλιο. Σκέπασε με τούλι για τις μύγες.",
+    "Γύρνα τα 2 φορές τη μέρα. Μάζευέ τα μέσα το βράδυ.",
+    "Μετά από 2–3 μέρες, τρίψ' τα στο κόσκινο σε ψίχα.",
+    "Άπλωσε την ψίχα άλλες 3–5 μέρες, μέχρι να γίνει κατάξερη."
+   ],
+   "steps_en": [
+    "Heat the milk with the salt on a low fire.",
+    "Pour in the cracked wheat slowly, stirring all the time.",
+    "Cook 20–30 minutes, stirring, until it becomes a thick paste.",
+    "Let it cool. Break it into pieces the size of a walnut.",
+    "Spread them on a clean sheet in the sun. Cover with net against flies.",
+    "Turn them twice a day. Bring them in at night.",
+    "After 2–3 days, rub them through a sieve into crumbs.",
+    "Spread the crumbs 3–5 more days, until fully dry."
+   ],
+   "tip_el": "Σούπα: 1 φλιτζάνι τραχανά σε 4 φλιτζάνια νερό ή ζωμό, 15 λεπτά βράσιμο. Βάλε από πάνω τυρί ή λίγο βούτυρο.",
+   "tip_en": "Soup: 1 cup trahanas in 4 cups water or broth, boil 15 minutes. Add cheese or a little butter on top.",
+   "warn_el": "Πρέπει να στεγνώσει εντελώς πριν τον κλείσεις, αλλιώς μουχλιάζει. Αν μυρίζει μούχλα ή δεις χνούδι, πέτα όλη τη μερίδα. Φύλαγε μακριά από υγρασία και σκουλήκια (φύλλα δάφνης στο βάζο).",
+   "warn_en": "It must be fully dry before you close it in, or it will mould. If it smells mouldy or you see fuzz, throw the whole batch away. Keep it away from damp and insects (bay leaves in the jar help).",
+   "fig_el": "① Γάλα με πλιγούρι στην κατσαρόλα ② Σιγανή φωτιά, ανακατεύεις συνέχεια ③ Κομματάκια στο σεντόνι ④ Στέγνωμα στον ήλιο ⑤ Τρίψιμο στο κόσκινο ⑥ Ξερή ψίχα στο βάζο.",
+   "fig_en": "① Milk and cracked wheat in the pot ② Low fire, keep stirring ③ Pieces on the sheet ④ Drying in the sun ⑤ Rubbing through the sieve ⑥ Dry crumbs in the jar.",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 260\"><rect width=\"400\" height=\"260\" fill=\"#f6ecd6\"/><g fill=\"none\" stroke=\"#3b2a1a\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"133\" y1=\"15\" x2=\"133\" y2=\"245\" stroke-width=\"1\"/><line x1=\"266\" y1=\"15\" x2=\"266\" y2=\"245\" stroke-width=\"1\"/><line x1=\"8\" y1=\"222\" x2=\"125\" y2=\"222\"/><line x1=\"16\" y1=\"224\" x2=\"10\" y2=\"231\" stroke-width=\"1\"/><line x1=\"28\" y1=\"224\" x2=\"22\" y2=\"231\" stroke-width=\"1\"/><line x1=\"40\" y1=\"224\" x2=\"34\" y2=\"231\" stroke-width=\"1\"/><line x1=\"52\" y1=\"224\" x2=\"46\" y2=\"231\" stroke-width=\"1\"/><line x1=\"64\" y1=\"224\" x2=\"58\" y2=\"231\" stroke-width=\"1\"/><line x1=\"76\" y1=\"224\" x2=\"70\" y2=\"231\" stroke-width=\"1\"/><line x1=\"88\" y1=\"224\" x2=\"82\" y2=\"231\" stroke-width=\"1\"/><line x1=\"100\" y1=\"224\" x2=\"94\" y2=\"231\" stroke-width=\"1\"/><line x1=\"112\" y1=\"224\" x2=\"106\" y2=\"231\" stroke-width=\"1\"/><line x1=\"124\" y1=\"224\" x2=\"118\" y2=\"231\" stroke-width=\"1\"/><g transform=\"translate(50,220) scale(0.75)\"><path d=\"M0,0 C-13,-5 -11,-20 -2,-32 C0,-22 6,-24 6,-30 C15,-18 13,-5 0,0 Z\" fill=\"#f2a65a\"/><path d=\"M0,-2 C-5,-5 -4,-12 0,-18 C3,-12 6,-6 0,-2 Z\" fill=\"#e2603a\" stroke-width=\"1\"/></g><g transform=\"translate(68,220) scale(0.85)\"><path d=\"M0,0 C-13,-5 -11,-20 -2,-32 C0,-22 6,-24 6,-30 C15,-18 13,-5 0,0 Z\" fill=\"#f2a65a\"/><path d=\"M0,-2 C-5,-5 -4,-12 0,-18 C3,-12 6,-6 0,-2 Z\" fill=\"#e2603a\" stroke-width=\"1\"/></g><g transform=\"translate(86,220) scale(0.75)\"><path d=\"M0,0 C-13,-5 -11,-20 -2,-32 C0,-22 6,-24 6,-30 C15,-18 13,-5 0,0 Z\" fill=\"#f2a65a\"/><path d=\"M0,-2 C-5,-5 -4,-12 0,-18 C3,-12 6,-6 0,-2 Z\" fill=\"#e2603a\" stroke-width=\"1\"/></g><path d=\"M28,125 L108,125 L104,187 Q68.0,199 32,187 Z\" fill=\"#c9ccd1\"/><rect x=\"24\" y=\"121\" width=\"88\" height=\"6\" rx=\"2\" fill=\"#c9ccd1\"/><path d=\"M28,133 q-10,2 -10,10 q0,6 7,7\"/><path d=\"M108,133 q10,2 10,10 q0,6 -7,7\"/><ellipse cx=\"68\" cy=\"127\" rx=\"38\" ry=\"5\" fill=\"#ffffff\"/><circle cx=\"55\" cy=\"127\" r=\"1.3\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"70\" cy=\"126\" r=\"1.3\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"82\" cy=\"128\" r=\"1.3\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"62\" cy=\"129\" r=\"1.3\" fill=\"#3b2a1a\" stroke=\"none\"/><path d=\"M60,125 L100,62\" stroke=\"#3b2a1a\" stroke-width=\"6\"/><path d=\"M60,125 L100,62\" stroke=\"#d9b77e\" stroke-width=\"3\"/><circle cx=\"200\" cy=\"65\" r=\"17\" fill=\"#f2a65a\"/><line x1=\"222\" y1=\"65\" x2=\"231\" y2=\"65\" stroke-width=\"1.5\"/><line x1=\"216\" y1=\"81\" x2=\"222\" y2=\"87\" stroke-width=\"1.5\"/><line x1=\"200\" y1=\"87\" x2=\"200\" y2=\"96\" stroke-width=\"1.5\"/><line x1=\"184\" y1=\"81\" x2=\"178\" y2=\"87\" stroke-width=\"1.5\"/><line x1=\"178\" y1=\"65\" x2=\"169\" y2=\"65\" stroke-width=\"1.5\"/><line x1=\"184\" y1=\"49\" x2=\"178\" y2=\"43\" stroke-width=\"1.5\"/><line x1=\"200\" y1=\"43\" x2=\"200\" y2=\"34\" stroke-width=\"1.5\"/><line x1=\"216\" y1=\"49\" x2=\"222\" y2=\"43\" stroke-width=\"1.5\"/><path d=\"M140,205 L260,205 L248,165 L152,165 Z\" fill=\"#ffffff\"/><path d=\"M162,175 q4,-6 10,-2 q4,4 -2,7 q-6,2 -8,-5 Z\" fill=\"#d9b77e\" stroke-width=\"1.2\"/><path d=\"M185,172 q4,-6 10,-2 q4,4 -2,7 q-6,2 -8,-5 Z\" fill=\"#d9b77e\" stroke-width=\"1.2\"/><path d=\"M210,176 q4,-6 10,-2 q4,4 -2,7 q-6,2 -8,-5 Z\" fill=\"#d9b77e\" stroke-width=\"1.2\"/><path d=\"M232,173 q4,-6 10,-2 q4,4 -2,7 q-6,2 -8,-5 Z\" fill=\"#d9b77e\" stroke-width=\"1.2\"/><path d=\"M158,192 q4,-6 10,-2 q4,4 -2,7 q-6,2 -8,-5 Z\" fill=\"#d9b77e\" stroke-width=\"1.2\"/><path d=\"M182,190 q4,-6 10,-2 q4,4 -2,7 q-6,2 -8,-5 Z\" fill=\"#d9b77e\" stroke-width=\"1.2\"/><path d=\"M206,194 q4,-6 10,-2 q4,4 -2,7 q-6,2 -8,-5 Z\" fill=\"#d9b77e\" stroke-width=\"1.2\"/><path d=\"M230,190 q4,-6 10,-2 q4,4 -2,7 q-6,2 -8,-5 Z\" fill=\"#d9b77e\" stroke-width=\"1.2\"/><rect x=\"282\" y=\"95\" width=\"92\" height=\"16\" fill=\"#d9b77e\"/><ellipse cx=\"328\" cy=\"95\" rx=\"46\" ry=\"10\" fill=\"#ffffff\"/><line x1=\"294\" y1=\"87\" x2=\"294\" y2=\"103\" stroke-width=\"0.8\"/><line x1=\"303\" y1=\"87\" x2=\"303\" y2=\"103\" stroke-width=\"0.8\"/><line x1=\"312\" y1=\"87\" x2=\"312\" y2=\"103\" stroke-width=\"0.8\"/><line x1=\"321\" y1=\"87\" x2=\"321\" y2=\"103\" stroke-width=\"0.8\"/><line x1=\"330\" y1=\"87\" x2=\"330\" y2=\"103\" stroke-width=\"0.8\"/><line x1=\"339\" y1=\"87\" x2=\"339\" y2=\"103\" stroke-width=\"0.8\"/><line x1=\"348\" y1=\"87\" x2=\"348\" y2=\"103\" stroke-width=\"0.8\"/><line x1=\"357\" y1=\"87\" x2=\"357\" y2=\"103\" stroke-width=\"0.8\"/><path d=\"M310,92 q6,-6 12,-2 q4,4 -3,6 Z\" fill=\"#d9b77e\" stroke-width=\"1.2\"/><circle cx=\"318\" cy=\"120\" r=\"1.4\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"328\" cy=\"128\" r=\"1.4\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"338\" cy=\"118\" r=\"1.4\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"322\" cy=\"138\" r=\"1.4\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"334\" cy=\"142\" r=\"1.4\" fill=\"#3b2a1a\" stroke=\"none\"/><rect x=\"305\" y=\"158\" width=\"46\" height=\"58\" rx=\"9\" fill=\"#ffffff\"/><rect x=\"310\" y=\"150\" width=\"36\" height=\"10\" rx=\"2\" fill=\"#ffffff\"/><path d=\"M307,178 L349,178 L349,207 Q349,214 342,214 L314,214 Q307,214 307,207 Z\" fill=\"#d9b77e\" fill-opacity=\"0.8\" stroke-width=\"1.5\"/><circle cx=\"315\" cy=\"190\" r=\"1.3\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"330\" cy=\"186\" r=\"1.3\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"342\" cy=\"196\" r=\"1.3\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"322\" cy=\"204\" r=\"1.3\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"336\" cy=\"206\" r=\"1.3\" fill=\"#3b2a1a\" stroke=\"none\"/></g><line x1=\"22\" y1=\"90\" x2=\"50\" y2=\"127\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"50\" cy=\"127\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"22\" cy=\"90\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"22\" y=\"94.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">1</text><line x1=\"120\" y1=\"240\" x2=\"85\" y2=\"205\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"85\" cy=\"205\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"120\" cy=\"240\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"120\" y=\"244.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">2</text><line x1=\"150\" y1=\"240\" x2=\"168\" y2=\"195\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"168\" cy=\"195\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"150\" cy=\"240\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"150\" y=\"244.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">3</text><line x1=\"245\" y1=\"40\" x2=\"214\" y2=\"58\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"214\" cy=\"58\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"245\" cy=\"40\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"245\" y=\"44.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">4</text><line x1=\"380\" y1=\"70\" x2=\"360\" y2=\"94\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"360\" cy=\"94\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"380\" cy=\"70\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"380\" y=\"74.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">5</text><line x1=\"385\" y1=\"230\" x2=\"350\" y2=\"200\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"350\" cy=\"200\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"385\" cy=\"230\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"385\" y=\"234.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">6</text></svg>"
+  },
+  {
+   "id": "kit-pasta",
+   "level": 2,
+   "title_el": "Σπιτικά ζυμαρικά — χυλοπίτες και στέγνωμα",
+   "title_en": "Homemade pasta — hilopites (egg noodles) and drying",
+   "time_el": "1 πρωί + 2–3 μέρες στέγνωμα",
+   "time_en": "1 morning + 2–3 days drying",
+   "why_el": "Με αλεύρι, αυγά και γάλα φτιάχνεις ζυμαρικά που κρατούν μήνες. Είναι γρήγορο, χορταστικό φαγητό για όλη την οικογένεια.",
+   "why_en": "With flour, eggs and milk you make pasta that keeps for months. It is a quick, filling meal for the whole family.",
+   "need_el": [
+    "500 γρ. αλεύρι (σκληρό, αν έχεις)",
+    "3 αυγά",
+    "100 ml γάλα",
+    "Λίγο αλάτι",
+    "Μακρύς λεπτός πλάστης (ή ξύλινο ραβδί), μαχαίρι",
+    "Καθαρά πανιά, ένα ξύλο για κρέμασμα"
+   ],
+   "need_en": [
+    "500 g flour (hard wheat if you have it)",
+    "3 eggs",
+    "100 ml milk",
+    "A little salt",
+    "Long thin rolling pin (or wooden stick), knife",
+    "Clean cloths, a pole for hanging"
+   ],
+   "steps_el": [
+    "Ανακάτεψε αλεύρι και αλάτι. Ρίξε στη μέση αυγά και γάλα.",
+    "Ζύμωσε 10 λεπτά σε σφιχτή, λεία ζύμη. Άφησέ τη 30 λεπτά σκεπασμένη.",
+    "Άνοιξε φύλλο λεπτό, 1–2 χιλ., με τον πλάστη.",
+    "Άφησε το φύλλο 20–30 λεπτά να στεγνώσει λίγο, να μην κολλάει.",
+    "Κόψε λωρίδες 1 εκ. Για χυλοπίτες, κόψε τις λωρίδες σε τετραγωνάκια.",
+    "Κρέμασε τις μακριές λωρίδες σε ξύλο. Τα τετραγωνάκια άπλωσέ τα σε πανί.",
+    "Στέγνωσε 2–3 μέρες σε σκιά με αέρα. Ανακάτευε κάθε μέρα.",
+    "Όταν σπάνε σαν γυαλί, βάλ' τα σε βάζα ή πάνινα σακούλια."
+   ],
+   "steps_en": [
+    "Mix flour and salt. Put the eggs and milk in the middle.",
+    "Knead 10 minutes into a firm, smooth dough. Rest it 30 minutes covered.",
+    "Roll a thin sheet, 1–2 mm, with the rolling pin.",
+    "Let the sheet dry 20–30 minutes, so it does not stick.",
+    "Cut strips 1 cm wide. For hilopites, cut the strips into small squares.",
+    "Hang long strips on a pole. Spread the squares on a cloth.",
+    "Dry 2–3 days in airy shade. Stir them every day.",
+    "When they snap like glass, store them in jars or cloth bags."
+   ],
+   "tip_el": "Χωρίς αυγά: αλεύρι, νερό και αλάτι — βγαίνουν πιο απλά αλλά κρατούν το ίδιο. Πασπάλιζε αλεύρι στο φύλλο για να μην κολλάει.",
+   "tip_en": "With no eggs: flour, water and salt — plainer, but they keep just as well. Dust the sheet with flour so it does not stick.",
+   "warn_el": "Ζυμαρικά με αυγό πρέπει να στεγνώσουν τελείως σε 2–3 μέρες, αλλιώς μαγείρεψέ τα την ίδια μέρα. Μην τα στεγνώνεις στον καυτό ήλιο, ραγίζουν. Αν μυρίζουν ξινό ή μούχλα, πέτα τα.",
+   "warn_en": "Egg pasta must dry fully within 2–3 days; if not, cook it the same day. Do not dry it in hot sun: it cracks. If it smells sour or mouldy, throw it away.",
+   "fig_el": "① Μακρύς λεπτός πλάστης ② Λεπτό φύλλο ζύμης ③ Λωρίδες 1 εκ. ④ Κομμένες σε τετραγωνάκια (χυλοπίτες) ⑤ Μακριές λωρίδες κρεμασμένες σε ξύλο ⑥ Χυλοπίτες στο πανί.",
+   "fig_en": "① Long thin rolling pin ② Thin sheet of dough ③ Strips 1 cm wide ④ Cut into small squares (hilopites) ⑤ Long strips hung on a pole ⑥ Hilopites on a cloth.",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 260\"><rect width=\"400\" height=\"260\" fill=\"#f6ecd6\"/><g fill=\"none\" stroke=\"#3b2a1a\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"133\" y1=\"15\" x2=\"133\" y2=\"245\" stroke-width=\"1\"/><line x1=\"266\" y1=\"15\" x2=\"266\" y2=\"245\" stroke-width=\"1\"/><rect x=\"6\" y=\"190\" width=\"122\" height=\"9\" rx=\"2\" fill=\"#d9b77e\"/><ellipse cx=\"66\" cy=\"182\" rx=\"58\" ry=\"10\" fill=\"#ffffff\"/><rect x=\"4\" y=\"166\" width=\"124\" height=\"6\" rx=\"3\" fill=\"#d9b77e\"/><path d=\"M40,140 Q66,125 92,140\" stroke=\"#b23a2a\" stroke-width=\"2\"/><path d=\"M92,140 L83.0,139.3 L86.9,132.6 Z\" fill=\"#b23a2a\" stroke=\"#b23a2a\" stroke-width=\"1\"/><path d=\"M92,150 Q66,162 40,150\" stroke=\"#b23a2a\" stroke-width=\"2\"/><path d=\"M40,150 L49.0,149.8 L45.7,157.0 Z\" fill=\"#b23a2a\" stroke=\"#b23a2a\" stroke-width=\"1\"/><rect x=\"142\" y=\"190\" width=\"118\" height=\"9\" rx=\"2\" fill=\"#d9b77e\"/><rect x=\"150\" y=\"120\" width=\"102\" height=\"68\" fill=\"#ffffff\"/><line x1=\"160\" y1=\"120\" x2=\"160\" y2=\"188\" stroke-width=\"1.2\"/><line x1=\"170\" y1=\"120\" x2=\"170\" y2=\"188\" stroke-width=\"1.2\"/><line x1=\"180\" y1=\"120\" x2=\"180\" y2=\"188\" stroke-width=\"1.2\"/><line x1=\"190\" y1=\"120\" x2=\"190\" y2=\"188\" stroke-width=\"1.2\"/><line x1=\"200\" y1=\"120\" x2=\"200\" y2=\"188\" stroke-width=\"1.2\"/><line x1=\"210\" y1=\"120\" x2=\"210\" y2=\"188\" stroke-width=\"1.2\"/><line x1=\"220\" y1=\"120\" x2=\"220\" y2=\"188\" stroke-width=\"1.2\"/><line x1=\"230\" y1=\"120\" x2=\"230\" y2=\"188\" stroke-width=\"1.2\"/><line x1=\"240\" y1=\"120\" x2=\"240\" y2=\"188\" stroke-width=\"1.2\"/><line x1=\"250\" y1=\"120\" x2=\"250\" y2=\"188\" stroke-width=\"1.2\"/><line x1=\"150\" y1=\"160\" x2=\"252\" y2=\"160\" stroke-width=\"1.2\"/><line x1=\"150\" y1=\"170\" x2=\"252\" y2=\"170\" stroke-width=\"1.2\"/><line x1=\"150\" y1=\"180\" x2=\"252\" y2=\"180\" stroke-width=\"1.2\"/><path d=\"M180,70 L250,70 L245,80 L180,80 Z\" fill=\"#c9ccd1\"/><rect x=\"250\" y=\"69\" width=\"12\" height=\"12\" rx=\"3\" fill=\"#d9b77e\"/><line x1=\"280\" y1=\"70\" x2=\"392\" y2=\"70\" stroke-width=\"5\" stroke=\"#3b2a1a\"/><line x1=\"280\" y1=\"70\" x2=\"392\" y2=\"70\" stroke-width=\"2\" stroke=\"#d9b77e\"/><line x1=\"286\" y1=\"70\" x2=\"280\" y2=\"140\"/><line x1=\"386\" y1=\"70\" x2=\"392\" y2=\"140\"/><path d=\"M300,71 q-3,20 0,40 q3,10 0,18\" stroke=\"#d9b77e\" stroke-width=\"4\"/><path d=\"M310,71 q-3,20 0,40 q3,10 0,18\" stroke=\"#d9b77e\" stroke-width=\"4\"/><path d=\"M320,71 q-3,20 0,40 q3,10 0,18\" stroke=\"#d9b77e\" stroke-width=\"4\"/><path d=\"M330,71 q-3,20 0,40 q3,10 0,18\" stroke=\"#d9b77e\" stroke-width=\"4\"/><path d=\"M340,71 q-3,20 0,40 q3,10 0,18\" stroke=\"#d9b77e\" stroke-width=\"4\"/><path d=\"M350,71 q-3,20 0,40 q3,10 0,18\" stroke=\"#d9b77e\" stroke-width=\"4\"/><path d=\"M360,71 q-3,20 0,40 q3,10 0,18\" stroke=\"#d9b77e\" stroke-width=\"4\"/><path d=\"M370,71 q-3,20 0,40 q3,10 0,18\" stroke=\"#d9b77e\" stroke-width=\"4\"/><path d=\"M272,225 L392,225 L382,190 L282,190 Z\" fill=\"#ffffff\"/><rect x=\"292\" y=\"196\" width=\"7\" height=\"7\" fill=\"#d9b77e\" stroke-width=\"1\"/><rect x=\"308\" y=\"200\" width=\"7\" height=\"7\" fill=\"#d9b77e\" stroke-width=\"1\"/><rect x=\"325\" y=\"195\" width=\"7\" height=\"7\" fill=\"#d9b77e\" stroke-width=\"1\"/><rect x=\"342\" y=\"200\" width=\"7\" height=\"7\" fill=\"#d9b77e\" stroke-width=\"1\"/><rect x=\"358\" y=\"196\" width=\"7\" height=\"7\" fill=\"#d9b77e\" stroke-width=\"1\"/><rect x=\"290\" y=\"212\" width=\"7\" height=\"7\" fill=\"#d9b77e\" stroke-width=\"1\"/><rect x=\"306\" y=\"210\" width=\"7\" height=\"7\" fill=\"#d9b77e\" stroke-width=\"1\"/><rect x=\"324\" y=\"214\" width=\"7\" height=\"7\" fill=\"#d9b77e\" stroke-width=\"1\"/><rect x=\"342\" y=\"210\" width=\"7\" height=\"7\" fill=\"#d9b77e\" stroke-width=\"1\"/><rect x=\"362\" y=\"213\" width=\"7\" height=\"7\" fill=\"#d9b77e\" stroke-width=\"1\"/></g><line x1=\"20\" y1=\"120\" x2=\"28\" y2=\"168\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"28\" cy=\"168\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"20\" cy=\"120\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"20\" y=\"124.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">1</text><line x1=\"66\" y1=\"235\" x2=\"66\" y2=\"186\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"66\" cy=\"186\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"66\" cy=\"235\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"66\" y=\"239.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">2</text><line x1=\"160\" y1=\"40\" x2=\"190\" y2=\"120\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"190\" cy=\"120\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"160\" cy=\"40\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"160\" y=\"44.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">3</text><line x1=\"245\" y1=\"235\" x2=\"230\" y2=\"176\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"230\" cy=\"176\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"245\" cy=\"235\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"245\" y=\"239.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">4</text><line x1=\"300\" y1=\"40\" x2=\"330\" y2=\"72\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"330\" cy=\"72\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"300\" cy=\"40\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"300\" y=\"44.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">5</text><line x1=\"300\" y1=\"245\" x2=\"315\" y2=\"213\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"315\" cy=\"213\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"300\" cy=\"245\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"300\" y=\"249.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">6</text></svg>"
+  },
+  {
+   "id": "kit-yogurt",
+   "level": 1,
+   "title_el": "Γιαούρτι στο σπίτι χωρίς μηχάνημα",
+   "title_en": "Yogurt at home without a machine",
+   "time_el": "30 λεπτά + 8 ώρες αναμονή",
+   "time_en": "30 minutes + 8 hours waiting",
+   "why_el": "Το γιαούρτι κρατά το γάλα περισσότερες μέρες και είναι πολύ υγιεινό. Μια κουταλιά παλιό γιαούρτι φτιάχνει καινούριο για πάντα.",
+   "why_en": "Yogurt keeps milk good for more days and is very healthy. One spoon of old yogurt makes new yogurt forever.",
+   "need_el": [
+    "1 λίτρο γάλα",
+    "2 κουταλιές γιαούρτι (μαγιά)",
+    "Κατσαρόλα ή πήλινο, με καπάκι",
+    "Κουβέρτες ή παλιά ρούχα"
+   ],
+   "need_en": [
+    "1 litre milk",
+    "2 tablespoons yogurt (as starter)",
+    "Pot or clay bowl, with lid",
+    "Blankets or old clothes"
+   ],
+   "steps_el": [
+    "Ζέστανε το γάλα μέχρι να αρχίσει να φουσκώνει (85–90 °C). Κράτα το εκεί 5 λεπτά.",
+    "Κατέβασέ το και άφησέ το να κρυώσει στους 43–45 °C.",
+    "Δοκιμή με το δάχτυλο: βάλε το μικρό δάχτυλο και μέτρα ως το 10. Πρέπει να καίει λίγο, αλλά να αντέχεται.",
+    "Ανακάτεψε τις 2 κουταλιές γιαούρτι με λίγο ζεστό γάλα σε φλιτζάνι.",
+    "Ρίξ' το στην κατσαρόλα και ανακάτεψε απαλά. Κλείσε με καπάκι.",
+    "Τύλιξε την κατσαρόλα καλά σε κουβέρτες. Μην την κουνάς για 6–8 ώρες.",
+    "Όταν πήξει, βάλ' το σε δροσερό μέρος. Κράτα 2 κουταλιές για την επόμενη φορά."
+   ],
+   "steps_en": [
+    "Heat the milk until it starts to rise (85–90 °C). Keep it there 5 minutes.",
+    "Take it off the heat and let it cool to 43–45 °C.",
+    "Finger test: put in your little finger and count to 10. It should feel hot but bearable.",
+    "Mix the 2 spoons of yogurt with a little warm milk in a cup.",
+    "Pour it into the pot and stir gently. Close the lid.",
+    "Wrap the pot well in blankets. Do not move it for 6–8 hours.",
+    "When it has set, put it in a cool place. Keep 2 spoons for next time."
+   ],
+   "tip_el": "Για πιο πηχτό γιαούρτι, σούρωσέ το σε πανί 2–3 ώρες (στραγγιστό). Το υγρό που τρέχει κάνει για ζύμη ψωμιού.",
+   "tip_en": "For thicker yogurt, strain it in a cloth for 2–3 hours. The liquid that drips out is good for bread dough.",
+   "warn_el": "Πάντα ζέσταινε το γάλα πρώτα, ειδικά το φρέσκο από ζώο. Όλα τα σκεύη πεντακάθαρα. Αν το γιαούρτι βγει ροζ, γλοιώδες ή μυρίζει άσχημα, πέτα το.",
+   "warn_en": "Always heat the milk first, especially fresh milk from an animal. All tools must be very clean. If the yogurt turns pink, slimy or smells bad, throw it away.",
+   "fig_el": "① Ζεσταίνεις το γάλα μέχρι να φουσκώσει ② Δοκιμή με το μικρό δάχτυλο (43–45 °C) ③ Κουταλιά γιαούρτι για μαγιά ④ Κουβέρτες γύρω-γύρω ⑤ Η κατσαρόλα κρυμμένη μέσα.",
+   "fig_en": "① Heat the milk until it rises ② Little-finger test (43–45 °C) ③ A spoon of yogurt as starter ④ Blankets all around ⑤ The pot hidden inside.",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 260\"><rect width=\"400\" height=\"260\" fill=\"#f6ecd6\"/><g fill=\"none\" stroke=\"#3b2a1a\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"133\" y1=\"15\" x2=\"133\" y2=\"245\" stroke-width=\"1\"/><line x1=\"266\" y1=\"15\" x2=\"266\" y2=\"245\" stroke-width=\"1\"/><line x1=\"8\" y1=\"225\" x2=\"125\" y2=\"225\"/><line x1=\"16\" y1=\"227\" x2=\"10\" y2=\"234\" stroke-width=\"1\"/><line x1=\"28\" y1=\"227\" x2=\"22\" y2=\"234\" stroke-width=\"1\"/><line x1=\"40\" y1=\"227\" x2=\"34\" y2=\"234\" stroke-width=\"1\"/><line x1=\"52\" y1=\"227\" x2=\"46\" y2=\"234\" stroke-width=\"1\"/><line x1=\"64\" y1=\"227\" x2=\"58\" y2=\"234\" stroke-width=\"1\"/><line x1=\"76\" y1=\"227\" x2=\"70\" y2=\"234\" stroke-width=\"1\"/><line x1=\"88\" y1=\"227\" x2=\"82\" y2=\"234\" stroke-width=\"1\"/><line x1=\"100\" y1=\"227\" x2=\"94\" y2=\"234\" stroke-width=\"1\"/><line x1=\"112\" y1=\"227\" x2=\"106\" y2=\"234\" stroke-width=\"1\"/><line x1=\"124\" y1=\"227\" x2=\"118\" y2=\"234\" stroke-width=\"1\"/><g transform=\"translate(50,223) scale(0.7)\"><path d=\"M0,0 C-13,-5 -11,-20 -2,-32 C0,-22 6,-24 6,-30 C15,-18 13,-5 0,0 Z\" fill=\"#f2a65a\"/><path d=\"M0,-2 C-5,-5 -4,-12 0,-18 C3,-12 6,-6 0,-2 Z\" fill=\"#e2603a\" stroke-width=\"1\"/></g><g transform=\"translate(68,223) scale(0.8)\"><path d=\"M0,0 C-13,-5 -11,-20 -2,-32 C0,-22 6,-24 6,-30 C15,-18 13,-5 0,0 Z\" fill=\"#f2a65a\"/><path d=\"M0,-2 C-5,-5 -4,-12 0,-18 C3,-12 6,-6 0,-2 Z\" fill=\"#e2603a\" stroke-width=\"1\"/></g><g transform=\"translate(86,223) scale(0.7)\"><path d=\"M0,0 C-13,-5 -11,-20 -2,-32 C0,-22 6,-24 6,-30 C15,-18 13,-5 0,0 Z\" fill=\"#f2a65a\"/><path d=\"M0,-2 C-5,-5 -4,-12 0,-18 C3,-12 6,-6 0,-2 Z\" fill=\"#e2603a\" stroke-width=\"1\"/></g><path d=\"M28,130 L108,130 L104,192 Q68.0,204 32,192 Z\" fill=\"#c9ccd1\"/><rect x=\"24\" y=\"126\" width=\"88\" height=\"6\" rx=\"2\" fill=\"#c9ccd1\"/><path d=\"M28,138 q-10,2 -10,10 q0,6 7,7\"/><path d=\"M108,138 q10,2 10,10 q0,6 -7,7\"/><ellipse cx=\"68\" cy=\"132\" rx=\"38\" ry=\"5\" fill=\"#ffffff\"/><circle cx=\"36\" cy=\"129\" r=\"2.5\" fill=\"#ffffff\" stroke-width=\"1.2\"/><circle cx=\"45\" cy=\"127\" r=\"2\" fill=\"#ffffff\" stroke-width=\"1.2\"/><circle cx=\"92\" cy=\"127\" r=\"2\" fill=\"#ffffff\" stroke-width=\"1.2\"/><circle cx=\"100\" cy=\"129\" r=\"2.5\" fill=\"#ffffff\" stroke-width=\"1.2\"/><path d=\"M52,118 q-5,-8 0,-16 q5,-8 0,-16\" stroke-width=\"1.5\"/><path d=\"M68,118 q-5,-8 0,-16 q5,-8 0,-16\" stroke-width=\"1.5\"/><path d=\"M84,118 q-5,-8 0,-16 q5,-8 0,-16\" stroke-width=\"1.5\"/><path d=\"M162,140 L242,140 L238,202 Q202.0,214 166,202 Z\" fill=\"#c9ccd1\"/><rect x=\"158\" y=\"136\" width=\"88\" height=\"6\" rx=\"2\" fill=\"#c9ccd1\"/><path d=\"M162,148 q-10,2 -10,10 q0,6 7,7\"/><path d=\"M242,148 q10,2 10,10 q0,6 -7,7\"/><ellipse cx=\"202\" cy=\"142\" rx=\"38\" ry=\"5\" fill=\"#ffffff\"/><g transform=\"translate(184,92) rotate(-18)\"><rect x=\"-9\" y=\"-45\" width=\"18\" height=\"90\" rx=\"9\" fill=\"#f6ecd6\"/><rect x=\"-5\" y=\"28\" width=\"10\" height=\"12\" rx=\"4\" fill=\"#ffffff\" stroke-width=\"1.2\"/><path d=\"M-5,0 q5,3 10,0 M-5,4 q5,3 10,0 M-5,-30 q5,3 10,0\" stroke-width=\"1\"/></g><path d=\"M262,80 L226,108\" stroke=\"#3b2a1a\" stroke-width=\"5\"/><path d=\"M262,80 L226,108\" stroke=\"#c9ccd1\" stroke-width=\"2\"/><ellipse cx=\"220\" cy=\"114\" rx=\"11\" ry=\"7\" fill=\"#c9ccd1\" transform=\"rotate(-38 220 114)\"/><ellipse cx=\"219\" cy=\"111\" rx=\"7\" ry=\"4\" fill=\"#ffffff\" stroke-width=\"1\"/><path d=\"M280,225 Q276,150 300,128 Q333,100 366,128 Q390,150 386,225 Z\" fill=\"#c8a27a\"/><path d=\"M333,104 q-14,-14 -16,-4 q2,8 16,4 q14,-14 16,-4 q-2,8 -16,4 Z\" fill=\"#c8a27a\" stroke-width=\"1.5\"/><path d=\"M296,150 q14,30 4,70 M366,148 q-12,32 -4,72 M318,120 q-8,40 0,100\" stroke-width=\"1.2\"/><rect x=\"308\" y=\"160\" width=\"50\" height=\"58\" rx=\"6\" stroke-dasharray=\"4 3\" stroke-width=\"1.5\"/><line x1=\"286\" y1=\"225\" x2=\"286\" y2=\"232\" stroke-width=\"1.2\"/><line x1=\"294\" y1=\"225\" x2=\"294\" y2=\"232\" stroke-width=\"1.2\"/><line x1=\"302\" y1=\"225\" x2=\"302\" y2=\"232\" stroke-width=\"1.2\"/><line x1=\"310\" y1=\"225\" x2=\"310\" y2=\"232\" stroke-width=\"1.2\"/><line x1=\"318\" y1=\"225\" x2=\"318\" y2=\"232\" stroke-width=\"1.2\"/><line x1=\"326\" y1=\"225\" x2=\"326\" y2=\"232\" stroke-width=\"1.2\"/><line x1=\"334\" y1=\"225\" x2=\"334\" y2=\"232\" stroke-width=\"1.2\"/><line x1=\"342\" y1=\"225\" x2=\"342\" y2=\"232\" stroke-width=\"1.2\"/><line x1=\"350\" y1=\"225\" x2=\"350\" y2=\"232\" stroke-width=\"1.2\"/><line x1=\"358\" y1=\"225\" x2=\"358\" y2=\"232\" stroke-width=\"1.2\"/><line x1=\"366\" y1=\"225\" x2=\"366\" y2=\"232\" stroke-width=\"1.2\"/><line x1=\"374\" y1=\"225\" x2=\"374\" y2=\"232\" stroke-width=\"1.2\"/><line x1=\"382\" y1=\"225\" x2=\"382\" y2=\"232\" stroke-width=\"1.2\"/></g><line x1=\"20\" y1=\"60\" x2=\"48\" y2=\"128\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"48\" cy=\"128\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"20\" cy=\"60\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"20\" y=\"64.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">1</text><line x1=\"145\" y1=\"40\" x2=\"172\" y2=\"70\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"172\" cy=\"70\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"145\" cy=\"40\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"145\" y=\"44.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">2</text><line x1=\"245\" y1=\"40\" x2=\"235\" y2=\"100\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"235\" cy=\"100\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"245\" cy=\"40\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"245\" y=\"44.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">3</text><line x1=\"380\" y1=\"70\" x2=\"360\" y2=\"125\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"360\" cy=\"125\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"380\" cy=\"70\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"380\" y=\"74.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">4</text><line x1=\"300\" y1=\"245\" x2=\"315\" y2=\"205\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"315\" cy=\"205\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"300\" cy=\"245\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"300\" y=\"249.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">5</text></svg>"
+  },
+  {
+   "id": "kit-cheese",
+   "level": 1,
+   "title_el": "Απλό φρέσκο τυρί με λεμόνι ή ξίδι — και τι κάνεις τον ορό",
+   "title_en": "Simple fresh cheese with lemon or vinegar — and using the whey",
+   "time_el": "1 ώρα",
+   "time_en": "1 hour",
+   "why_el": "Όταν περισσεύει γάλα, το κάνεις τυρί σε μία ώρα. Είναι θρεπτικό, και ο ορός που μένει δεν πάει χαμένος.",
+   "why_en": "When you have extra milk, you turn it into cheese in one hour. It is nourishing, and the leftover whey is not wasted.",
+   "need_el": [
+    "2 λίτρα γάλα (όχι «υψηλής παστερίωσης»)",
+    "Χυμός από 2 λεμόνια ή 4 κουταλιές ξίδι",
+    "½ κουταλάκι αλάτι",
+    "Τρυπητό, καθαρό λεπτό πανί, λεκάνη",
+    "Σπάγκος"
+   ],
+   "need_en": [
+    "2 litres milk (not ultra-heat-treated)",
+    "Juice of 2 lemons or 4 tablespoons vinegar",
+    "½ teaspoon salt",
+    "Colander, clean thin cloth, bowl",
+    "String"
+   ],
+   "steps_el": [
+    "Ζέστανε το γάλα ανακατεύοντας, ώσπου να αρχίσει να αχνίζει και να φουσκώνει (85–90 °C).",
+    "Σβήσε τη φωτιά. Ρίξε το λεμόνι ή το ξίδι και ανακάτεψε απαλά.",
+    "Περίμενε 10 λεπτά. Γίνονται άσπροι σβόλοι και ένα κιτρινοπράσινο νερό (ορός).",
+    "Στρώσε το πανί μέσα στο τρυπητό, πάνω από τη λεκάνη.",
+    "Ρίξε μέσα τους σβόλους. Ο ορός στραγγίζει στη λεκάνη.",
+    "Βάλε το αλάτι και ανακάτεψε.",
+    "Δέσε το πανί και κρέμασέ το 1–2 ώρες. Για πιο σφιχτό, βάλε από πάνω βάρος."
+   ],
+   "steps_en": [
+    "Heat the milk, stirring, until it steams and starts to rise (85–90 °C).",
+    "Turn off the heat. Add the lemon or vinegar and stir gently.",
+    "Wait 10 minutes. White lumps form, plus a yellow-green liquid (whey).",
+    "Line the colander with the cloth, over the bowl.",
+    "Pour in the lumps. The whey drains into the bowl.",
+    "Add the salt and mix.",
+    "Tie the cloth and hang it 1–2 hours. For firmer cheese, put a weight on it."
+   ],
+   "tip_el": "Τον ορό μην τον πετάς: βάλ' τον αντί για νερό στο ψωμί ή στη σούπα, πιές τον δροσερό, ή αραίωσε 1 μέρος με 4 νερό για πότισμα.",
+   "tip_en": "Do not throw away the whey: use it instead of water in bread or soup, drink it cool, or mix 1 part with 4 parts water to water plants.",
+   "warn_el": "Μην πίνεις και μην πήζεις άβραστο γάλα από ζώα: φέρνει αρρώστιες όπως ο μελιταίος πυρετός. Το φρέσκο τυρί κρατά μόνο 3–4 μέρες σε δροσερό μέρος.",
+   "warn_en": "Never drink or use unheated animal milk: it can carry diseases such as brucellosis. Fresh cheese keeps only 3–4 days in a cool place.",
+   "fig_el": "① Λεμόνι ή ξίδι στο ζεστό γάλα ② Σβόλοι τυριού μέσα στον ορό ③ Πανί στρωμένο στο τρυπητό ④ Ο ορός μαζεύεται στη λεκάνη ⑤ Το τυρί κρεμασμένο σε πανί να στραγγίξει.",
+   "fig_en": "① Lemon or vinegar into hot milk ② Cheese lumps in the whey ③ Cloth lining the colander ④ Whey collects in the bowl ⑤ Cheese hanging in a cloth to drain.",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 260\"><rect width=\"400\" height=\"260\" fill=\"#f6ecd6\"/><g fill=\"none\" stroke=\"#3b2a1a\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"133\" y1=\"15\" x2=\"133\" y2=\"245\" stroke-width=\"1\"/><line x1=\"266\" y1=\"15\" x2=\"266\" y2=\"245\" stroke-width=\"1\"/><path d=\"M28,130 L108,130 L104,192 Q68.0,204 32,192 Z\" fill=\"#c9ccd1\"/><rect x=\"24\" y=\"126\" width=\"88\" height=\"6\" rx=\"2\" fill=\"#c9ccd1\"/><path d=\"M28,138 q-10,2 -10,10 q0,6 7,7\"/><path d=\"M108,138 q10,2 10,10 q0,6 -7,7\"/><ellipse cx=\"68\" cy=\"132\" rx=\"38\" ry=\"5\" fill=\"#bcd9e3\"/><ellipse cx=\"50\" cy=\"131\" rx=\"6\" ry=\"3\" fill=\"#ffffff\" stroke-width=\"1.2\"/><ellipse cx=\"66\" cy=\"133\" rx=\"6\" ry=\"3\" fill=\"#ffffff\" stroke-width=\"1.2\"/><ellipse cx=\"82\" cy=\"130\" rx=\"6\" ry=\"3\" fill=\"#ffffff\" stroke-width=\"1.2\"/><ellipse cx=\"95\" cy=\"132\" rx=\"6\" ry=\"3\" fill=\"#ffffff\" stroke-width=\"1.2\"/><g transform=\"rotate(25 72 72)\"><path d=\"M48,72 A24,24 0 0 1 96,72 Z\" fill=\"#f2a65a\"/><path d=\"M53,72 A19,19 0 0 1 91,72 Z\" fill=\"#ffffff\" fill-opacity=\"0.6\" stroke-width=\"1.2\"/><line x1=\"72\" y1=\"72\" x2=\"87\" y2=\"64\" stroke-width=\"1\"/><line x1=\"72\" y1=\"72\" x2=\"80\" y2=\"57\" stroke-width=\"1\"/><line x1=\"72\" y1=\"72\" x2=\"72\" y2=\"55\" stroke-width=\"1\"/><line x1=\"72\" y1=\"72\" x2=\"63\" y2=\"57\" stroke-width=\"1\"/><line x1=\"72\" y1=\"72\" x2=\"57\" y2=\"64\" stroke-width=\"1\"/></g><path d=\"M66,98 q-3,5 0,7 q3,-2 0,-7 Z\" fill=\"#bcd9e3\" stroke-width=\"1\"/><path d=\"M74,110 q-3,5 0,7 q3,-2 0,-7 Z\" fill=\"#bcd9e3\" stroke-width=\"1\"/><path d=\"M150,110 L250,110 L236,158 L164,158 Z\" fill=\"#c9ccd1\"/><circle cx=\"175\" cy=\"135\" r=\"1.6\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"190\" cy=\"140\" r=\"1.6\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"205\" cy=\"135\" r=\"1.6\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"220\" cy=\"140\" r=\"1.6\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"182\" cy=\"150\" r=\"1.6\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"210\" cy=\"150\" r=\"1.6\" fill=\"#3b2a1a\" stroke=\"none\"/><path d=\"M146,112 Q200,96 254,112 L258,132 L248,118 Q200,104 152,118 L142,132 Z\" fill=\"#ffffff\"/><ellipse cx=\"180\" cy=\"104\" rx=\"9\" ry=\"5\" fill=\"#ffffff\" stroke-width=\"1.2\"/><ellipse cx=\"198\" cy=\"100\" rx=\"9\" ry=\"5\" fill=\"#ffffff\" stroke-width=\"1.2\"/><ellipse cx=\"216\" cy=\"103\" rx=\"9\" ry=\"5\" fill=\"#ffffff\" stroke-width=\"1.2\"/><ellipse cx=\"190\" cy=\"108\" rx=\"9\" ry=\"5\" fill=\"#ffffff\" stroke-width=\"1.2\"/><ellipse cx=\"210\" cy=\"109\" rx=\"9\" ry=\"5\" fill=\"#ffffff\" stroke-width=\"1.2\"/><path d=\"M190,164 q-3,5 0,7 q3,-2 0,-7 Z\" fill=\"#bcd9e3\" stroke-width=\"1\"/><path d=\"M210,168 q-3,5 0,7 q3,-2 0,-7 Z\" fill=\"#bcd9e3\" stroke-width=\"1\"/><path d=\"M150,182 Q150,228 200.0,228 Q250,228 250,182 Z\" fill=\"#d98e5c\"/><ellipse cx=\"200\" cy=\"190\" rx=\"44\" ry=\"5\" fill=\"#bcd9e3\"/><line x1=\"164\" y1=\"158\" x2=\"160\" y2=\"182\"/><line x1=\"236\" y1=\"158\" x2=\"240\" y2=\"182\"/><line x1=\"280\" y1=\"70\" x2=\"392\" y2=\"70\" stroke-width=\"5\" stroke=\"#3b2a1a\"/><line x1=\"280\" y1=\"70\" x2=\"392\" y2=\"70\" stroke-width=\"2\" stroke=\"#d9b77e\"/><line x1=\"333\" y1=\"70\" x2=\"333\" y2=\"100\"/><path d=\"M333,100 Q300,140 315,160 Q333,172 351,160 Q366,140 333,100 Z\" fill=\"#ffffff\"/><path d=\"M326,104 L322,96 M340,104 L344,96\" stroke-width=\"1.5\"/><path d=\"M333,172 q-3,5 0,7 q3,-2 0,-7 Z\" fill=\"#bcd9e3\" stroke-width=\"1\"/><path d=\"M293,200 Q293,234 333.0,234 Q373,234 373,200 Z\" fill=\"#d98e5c\"/><ellipse cx=\"333\" cy=\"204\" rx=\"35\" ry=\"4\" fill=\"#bcd9e3\"/></g><line x1=\"120\" y1=\"40\" x2=\"96\" y2=\"66\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"96\" cy=\"66\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"120\" cy=\"40\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"120\" y=\"44.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">1</text><line x1=\"20\" y1=\"230\" x2=\"50\" y2=\"160\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"50\" cy=\"160\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"20\" cy=\"230\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"20\" y=\"234.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">2</text><line x1=\"140\" y1=\"60\" x2=\"160\" y2=\"118\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"160\" cy=\"118\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"140\" cy=\"60\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"140\" y=\"64.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">3</text><line x1=\"250\" y1=\"240\" x2=\"226\" y2=\"205\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"226\" cy=\"205\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"250\" cy=\"240\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"250\" y=\"244.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">4</text><line x1=\"380\" y1=\"130\" x2=\"352\" y2=\"145\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"352\" cy=\"145\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"380\" cy=\"130\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"380\" y=\"134.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">5</text></svg>"
+  },
+  {
+   "id": "kit-butter",
+   "level": 1,
+   "title_el": "Βούτυρο από κρέμα σε βάζο — και λιωμένο βούτυρο που κρατά μήνες",
+   "title_en": "Butter from cream in a jar — and clarified butter that keeps",
+   "time_el": "1 ώρα",
+   "time_en": "1 hour",
+   "why_el": "Το βούτυρο είναι πολύτιμο λίπος για το χειμώνα. Το λιωμένο, καθαρό βούτυρο κρατά μήνες χωρίς ψυγείο.",
+   "why_en": "Butter is a precious fat for winter. Clear, clarified butter keeps for months without a fridge.",
+   "need_el": [
+    "Κρέμα: η πέτσα του γάλακτος, μαζεμένη 1–2 μέρες",
+    "Γυάλινο βάζο με καλό καπάκι",
+    "Λεκάνη με κρύο νερό, ξύλινο κουτάλι",
+    "Κατσαρολάκι, λεπτό πανί, καθαρό στεγνό βάζο"
+   ],
+   "need_en": [
+    "Cream: skimmed from the top of milk over 1–2 days",
+    "Glass jar with a good lid",
+    "Bowl of cold water, wooden spoon",
+    "Small pot, thin cloth, clean dry jar"
+   ],
+   "steps_el": [
+    "Γέμισε το βάζο ως τη μέση με δροσερή κρέμα. Κλείσε καλά.",
+    "Κούνα δυνατά 10–20 λεπτά. Πρώτα γίνεται σαντιγί, μετά ακούς «πλατς».",
+    "Χωρίζει σε μπάλα βουτύρου και αραιό υγρό (ξινόγαλο). Κράτα το ξινόγαλο.",
+    "Βάλε το βούτυρο σε κρύο νερό. Πάτα το με το κουτάλι.",
+    "Άλλαξε νερό ώσπου να μείνει καθαρό. Πρόσθεσε αλάτι αν θέλεις (1–2%).",
+    "Για βούτυρο που κρατά: λιώσε το σε πολύ χαμηλή φωτιά 20–30 λεπτά.",
+    "Μάζεψε τον αφρό από πάνω. Τα άσπρα στερεά πάνε στον πάτο.",
+    "Σούρωσε το διάφανο χρυσό βούτυρο σε στεγνό βάζο. Κλείσε το."
+   ],
+   "steps_en": [
+    "Fill the jar halfway with cool cream. Close it tight.",
+    "Shake hard for 10–20 minutes. First it whips, then you hear a «splash».",
+    "It splits into a ball of butter and thin liquid (buttermilk). Keep the buttermilk.",
+    "Put the butter in cold water. Press it with the spoon.",
+    "Change the water until it stays clear. Add salt if you like (1–2%).",
+    "For butter that keeps: melt it on a very low fire for 20–30 minutes.",
+    "Skim the foam from the top. White solids sink to the bottom.",
+    "Strain the clear golden butter into a dry jar. Close it."
+   ],
+   "tip_el": "Το ξινόγαλο κάνει θαύματα σε ψωμί, πίτες και τηγανίτες. Η κρέμα «κόβει» πιο γρήγορα όταν είναι δροσερή, γύρω στους 12–15 °C.",
+   "tip_en": "Buttermilk is wonderful in bread, pies and pancakes. Cream turns to butter faster when cool, about 12–15 °C.",
+   "warn_el": "Το λιωμένο βούτυρο καίει πολύ και πιάνει φωτιά αν ζεσταθεί πολύ: χαμηλή φωτιά, ποτέ νερό πάνω του. Το νωπό βούτυρο θέλει δροσιά και τρώγεται σε λίγες μέρες. Αν μυρίζει τάγκιο, πέτα το.",
+   "warn_en": "Melted butter is very hot and can catch fire if overheated: low heat, never pour water on it. Fresh butter needs a cool place and is eaten within days. If it smells rancid, throw it away.",
+   "fig_el": "① Βάζο μισογεμάτο με κρέμα ② Κούνημα πάνω-κάτω ③ Μπάλα βουτύρου σε κρύο νερό ④ Ξύλινο κουτάλι πατάει να βγει το υγρό ⑤ Αφρός πάνω στο λιωμένο βούτυρο ⑥ Καθαρό χρυσό βούτυρο στο βάζο.",
+   "fig_en": "① Jar half full of cream ② Shake up and down ③ Butter ball in cold water ④ Wooden spoon presses out the liquid ⑤ Foam on the melted butter ⑥ Clear golden butter in the jar.",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 260\"><rect width=\"400\" height=\"260\" fill=\"#f6ecd6\"/><g fill=\"none\" stroke=\"#3b2a1a\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"133\" y1=\"15\" x2=\"133\" y2=\"245\" stroke-width=\"1\"/><line x1=\"266\" y1=\"15\" x2=\"266\" y2=\"245\" stroke-width=\"1\"/><rect x=\"40\" y=\"88\" width=\"54\" height=\"122\" rx=\"9\" fill=\"#ffffff\"/><rect x=\"45\" y=\"80\" width=\"44\" height=\"10\" rx=\"2\" fill=\"#ffffff\"/><path d=\"M42,140 L92,140 L92,201 Q92,208 85,208 L49,208 Q42,208 42,201 Z\" fill=\"#f6ecd6\" fill-opacity=\"1\" stroke-width=\"1.5\"/><rect x=\"42\" y=\"72\" width=\"50\" height=\"12\" rx=\"3\" fill=\"#c9ccd1\"/><path d=\"M28,100 Q10,140 28,180\" stroke=\"#b23a2a\" stroke-width=\"2.5\"/><path d=\"M28,180 L21.1,174.2 L28.2,171.0 Z\" fill=\"#b23a2a\" stroke=\"#b23a2a\" stroke-width=\"1\"/><path d=\"M106,180 Q124,140 106,100\" stroke=\"#b23a2a\" stroke-width=\"2.5\"/><path d=\"M106,100 L112.9,105.8 L105.8,109.0 Z\" fill=\"#b23a2a\" stroke=\"#b23a2a\" stroke-width=\"1\"/><path d=\"M145,150 Q145,214 200.0,214 Q255,214 255,150 Z\" fill=\"#d98e5c\"/><ellipse cx=\"200\" cy=\"152\" rx=\"54\" ry=\"7\" fill=\"#bcd9e3\"/><path d=\"M178,154 Q180,132 200,132 Q222,132 224,154 Z\" fill=\"#f2a65a\" fill-opacity=\"0.45\"/><path d=\"M232,60 L212,126\" stroke=\"#3b2a1a\" stroke-width=\"7\"/><path d=\"M232,60 L212,126\" stroke=\"#d9b77e\" stroke-width=\"4\"/><ellipse cx=\"210\" cy=\"132\" rx=\"9\" ry=\"5\" fill=\"#d9b77e\" transform=\"rotate(-20 210 132)\"/><line x1=\"272\" y1=\"228\" x2=\"392\" y2=\"228\"/><line x1=\"280\" y1=\"230\" x2=\"274\" y2=\"237\" stroke-width=\"1\"/><line x1=\"292\" y1=\"230\" x2=\"286\" y2=\"237\" stroke-width=\"1\"/><line x1=\"304\" y1=\"230\" x2=\"298\" y2=\"237\" stroke-width=\"1\"/><line x1=\"316\" y1=\"230\" x2=\"310\" y2=\"237\" stroke-width=\"1\"/><line x1=\"328\" y1=\"230\" x2=\"322\" y2=\"237\" stroke-width=\"1\"/><line x1=\"340\" y1=\"230\" x2=\"334\" y2=\"237\" stroke-width=\"1\"/><line x1=\"352\" y1=\"230\" x2=\"346\" y2=\"237\" stroke-width=\"1\"/><line x1=\"364\" y1=\"230\" x2=\"358\" y2=\"237\" stroke-width=\"1\"/><line x1=\"376\" y1=\"230\" x2=\"370\" y2=\"237\" stroke-width=\"1\"/><line x1=\"388\" y1=\"230\" x2=\"382\" y2=\"237\" stroke-width=\"1\"/><g transform=\"translate(300,226) scale(0.6)\"><path d=\"M0,0 C-13,-5 -11,-20 -2,-32 C0,-22 6,-24 6,-30 C15,-18 13,-5 0,0 Z\" fill=\"#f2a65a\"/><path d=\"M0,-2 C-5,-5 -4,-12 0,-18 C3,-12 6,-6 0,-2 Z\" fill=\"#e2603a\" stroke-width=\"1\"/></g><g transform=\"translate(316,226) scale(0.6)\"><path d=\"M0,0 C-13,-5 -11,-20 -2,-32 C0,-22 6,-24 6,-30 C15,-18 13,-5 0,0 Z\" fill=\"#f2a65a\"/><path d=\"M0,-2 C-5,-5 -4,-12 0,-18 C3,-12 6,-6 0,-2 Z\" fill=\"#e2603a\" stroke-width=\"1\"/></g><path d=\"M282,150 L334,150 L330,194 Q308.0,206 286,194 Z\" fill=\"#c9ccd1\"/><rect x=\"278\" y=\"146\" width=\"60\" height=\"6\" rx=\"2\" fill=\"#c9ccd1\"/><path d=\"M282,158 q-10,2 -10,10 q0,6 7,7\"/><path d=\"M334,158 q10,2 10,10 q0,6 -7,7\"/><ellipse cx=\"308\" cy=\"152\" rx=\"24\" ry=\"4\" fill=\"#f2a65a\" fill-opacity=\"0.6\"/><circle cx=\"296\" cy=\"150\" r=\"2.5\" fill=\"#ffffff\" stroke-width=\"1.2\"/><circle cx=\"306\" cy=\"149\" r=\"2\" fill=\"#ffffff\" stroke-width=\"1.2\"/><circle cx=\"318\" cy=\"150\" r=\"2.5\" fill=\"#ffffff\" stroke-width=\"1.2\"/><rect x=\"350\" y=\"148\" width=\"36\" height=\"52\" rx=\"9\" fill=\"#ffffff\"/><rect x=\"355\" y=\"140\" width=\"26\" height=\"10\" rx=\"2\" fill=\"#ffffff\"/><path d=\"M352,160 L384,160 L384,191 Q384,198 377,198 L359,198 Q352,198 352,191 Z\" fill=\"#f2a65a\" fill-opacity=\"0.45\" stroke-width=\"1.5\"/></g><line x1=\"66\" y1=\"40\" x2=\"66\" y2=\"150\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"66\" cy=\"150\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"66\" cy=\"40\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"66\" y=\"44.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">1</text><line x1=\"20\" y1=\"230\" x2=\"18\" y2=\"140\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"18\" cy=\"140\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"20\" cy=\"230\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"20\" y=\"234.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">2</text><line x1=\"160\" y1=\"40\" x2=\"190\" y2=\"140\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"190\" cy=\"140\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"160\" cy=\"40\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"160\" y=\"44.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">3</text><line x1=\"245\" y1=\"40\" x2=\"228\" y2=\"76\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"228\" cy=\"76\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"245\" cy=\"40\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"245\" y=\"44.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">4</text><line x1=\"290\" y1=\"100\" x2=\"300\" y2=\"147\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"300\" cy=\"147\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"290\" cy=\"100\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"290\" y=\"104.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">5</text><line x1=\"375\" y1=\"240\" x2=\"368\" y2=\"190\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"368\" cy=\"190\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"375\" cy=\"240\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"375\" y=\"244.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">6</text></svg>"
+  },
+  {
+   "id": "kit-haybox",
+   "level": 1,
+   "title_el": "Κουτί με άχυρο (θερμοκουτί) — μαγειρεύει χωρίς καύσιμο",
+   "title_en": "Hay-box (retained-heat cooker) — cooking with almost no fuel",
+   "time_el": "1 απόγευμα για να το φτιάξεις",
+   "time_en": "1 afternoon to build",
+   "why_el": "Βράζεις το φαγητό λίγα λεπτά και μετά το κουτί το μαγειρεύει μόνο του με τη ζέστη του. Γλιτώνεις πάνω από το μισό καύσιμο.",
+   "why_en": "You boil the food for a few minutes, then the box finishes cooking it with its own heat. You save more than half your fuel.",
+   "need_el": [
+    "Ξύλινο κιβώτιο, καλάθι ή χαρτόκουτο με καπάκι",
+    "Άχυρο, παλιές κουβέρτες, ρούχα ή εφημερίδες",
+    "Κατσαρόλα με καπάκι που κλείνει καλά",
+    "Μαξιλάρι"
+   ],
+   "need_en": [
+    "Wooden crate, basket or cardboard box with lid",
+    "Hay, old blankets, clothes or newspaper",
+    "Pot with a tight-fitting lid",
+    "A pillow"
+   ],
+   "steps_el": [
+    "Γέμισε το κουτί με άχυρο ή κουβέρτες, τουλάχιστον 10 εκ. γύρω-γύρω.",
+    "Άνοιξε στη μέση μια «φωλιά» στο σχήμα της κατσαρόλας.",
+    "Βράσε το φαγητό με καπάκι: ρύζι 5 λεπτά, όσπρια 15 λεπτά.",
+    "Βάλε γρήγορα την κατσαρόλα στη φωλιά, χωρίς να ανοίξεις το καπάκι.",
+    "Σκέπασε με το μαξιλάρι και κλείσε το κουτί.",
+    "Άφησε: ρύζι 1–1½ ώρα, όσπρια 3–4 ώρες, χυλό όλη νύχτα.",
+    "Πριν φας, ξαναβράσε το φαγητό λίγα λεπτά."
+   ],
+   "steps_en": [
+    "Fill the box with hay or blankets, at least 10 cm all around.",
+    "Make a «nest» in the middle, the shape of the pot.",
+    "Boil the food with the lid on: rice 5 minutes, beans 15 minutes.",
+    "Put the pot quickly into the nest without lifting the lid.",
+    "Cover with the pillow and close the box.",
+    "Leave it: rice 1–1½ hours, beans 3–4 hours, porridge all night.",
+    "Before eating, bring the food back to the boil for a few minutes."
+   ],
+   "tip_el": "Όσο πιο γεμάτη η κατσαρόλα, τόσο περισσότερη ζέστη κρατά. Τυλίγοντας την κατσαρόλα σε υπνόσακο κάνεις το ίδιο.",
+   "tip_en": "A full pot holds more heat than a half-empty one. Wrapping the pot in a sleeping bag works the same way.",
+   "warn_el": "Το φαγητό πρέπει να μένει πάνω από 60 °C. Αν κρυώσει και μείνει χλιαρό ώρες, αναπτύσσονται μικρόβια: ξαναβράσ' το καλά. Τα κόκκινα φασόλια θέλουν πρώτα 10 λεπτά δυνατό βράσιμο. Ποτέ άχυρο κοντά σε φλόγα.",
+   "warn_en": "Food must stay above 60 °C. If it cools and stays lukewarm for hours, germs grow: boil it again well. Red kidney beans need 10 minutes of hard boiling first. Never keep hay near a flame.",
+   "fig_el": "① Ξύλινο κουτί ② Άχυρο ή κουβέρτες, 10 εκ. γύρω-γύρω ③ Κατσαρόλα που μόλις έβρασε, με καπάκι ④ Μαξιλάρι από πάνω ⑤ Το καπάκι του κουτιού κλείνει σφιχτά.",
+   "fig_en": "① Wooden box ② Hay or blankets, 10 cm all round ③ Pot just off the boil, lid on ④ Pillow on top ⑤ The box lid closes tight.",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 260\"><rect width=\"400\" height=\"260\" fill=\"#f6ecd6\"/><g fill=\"none\" stroke=\"#3b2a1a\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"10\" y1=\"232\" x2=\"390\" y2=\"232\"/><line x1=\"18\" y1=\"234\" x2=\"12\" y2=\"241\" stroke-width=\"1\"/><line x1=\"30\" y1=\"234\" x2=\"24\" y2=\"241\" stroke-width=\"1\"/><line x1=\"42\" y1=\"234\" x2=\"36\" y2=\"241\" stroke-width=\"1\"/><line x1=\"54\" y1=\"234\" x2=\"48\" y2=\"241\" stroke-width=\"1\"/><line x1=\"66\" y1=\"234\" x2=\"60\" y2=\"241\" stroke-width=\"1\"/><line x1=\"78\" y1=\"234\" x2=\"72\" y2=\"241\" stroke-width=\"1\"/><line x1=\"90\" y1=\"234\" x2=\"84\" y2=\"241\" stroke-width=\"1\"/><line x1=\"102\" y1=\"234\" x2=\"96\" y2=\"241\" stroke-width=\"1\"/><line x1=\"114\" y1=\"234\" x2=\"108\" y2=\"241\" stroke-width=\"1\"/><line x1=\"126\" y1=\"234\" x2=\"120\" y2=\"241\" stroke-width=\"1\"/><line x1=\"138\" y1=\"234\" x2=\"132\" y2=\"241\" stroke-width=\"1\"/><line x1=\"150\" y1=\"234\" x2=\"144\" y2=\"241\" stroke-width=\"1\"/><line x1=\"162\" y1=\"234\" x2=\"156\" y2=\"241\" stroke-width=\"1\"/><line x1=\"174\" y1=\"234\" x2=\"168\" y2=\"241\" stroke-width=\"1\"/><line x1=\"186\" y1=\"234\" x2=\"180\" y2=\"241\" stroke-width=\"1\"/><line x1=\"198\" y1=\"234\" x2=\"192\" y2=\"241\" stroke-width=\"1\"/><line x1=\"210\" y1=\"234\" x2=\"204\" y2=\"241\" stroke-width=\"1\"/><line x1=\"222\" y1=\"234\" x2=\"216\" y2=\"241\" stroke-width=\"1\"/><line x1=\"234\" y1=\"234\" x2=\"228\" y2=\"241\" stroke-width=\"1\"/><line x1=\"246\" y1=\"234\" x2=\"240\" y2=\"241\" stroke-width=\"1\"/><line x1=\"258\" y1=\"234\" x2=\"252\" y2=\"241\" stroke-width=\"1\"/><line x1=\"270\" y1=\"234\" x2=\"264\" y2=\"241\" stroke-width=\"1\"/><line x1=\"282\" y1=\"234\" x2=\"276\" y2=\"241\" stroke-width=\"1\"/><line x1=\"294\" y1=\"234\" x2=\"288\" y2=\"241\" stroke-width=\"1\"/><line x1=\"306\" y1=\"234\" x2=\"300\" y2=\"241\" stroke-width=\"1\"/><line x1=\"318\" y1=\"234\" x2=\"312\" y2=\"241\" stroke-width=\"1\"/><line x1=\"330\" y1=\"234\" x2=\"324\" y2=\"241\" stroke-width=\"1\"/><line x1=\"342\" y1=\"234\" x2=\"336\" y2=\"241\" stroke-width=\"1\"/><line x1=\"354\" y1=\"234\" x2=\"348\" y2=\"241\" stroke-width=\"1\"/><line x1=\"366\" y1=\"234\" x2=\"360\" y2=\"241\" stroke-width=\"1\"/><line x1=\"378\" y1=\"234\" x2=\"372\" y2=\"241\" stroke-width=\"1\"/><rect x=\"70\" y=\"100\" width=\"260\" height=\"132\" fill=\"#d9b77e\"/><line x1=\"70\" y1=\"144\" x2=\"85\" y2=\"144\" stroke-width=\"1\"/><line x1=\"315\" y1=\"190\" x2=\"330\" y2=\"190\" stroke-width=\"1\"/><rect x=\"85\" y=\"112\" width=\"230\" height=\"110\" fill=\"#f6ecd6\"/><path d=\"M142,172 l3,7 M104,119 l-7,4 M147,141 l-8,0 M123,181 l-7,3 M257,177 l5,6 M97,205 l1,8 M247,210 l3,8 M266,162 l-8,2 M283,128 l7,3 M138,215 l2,8 M240,211 l-7,3 M308,185 l7,4 M279,214 l-8,2 M136,201 l-2,8 M278,217 l8,2 M266,159 l7,4 M282,122 l-3,7 M100,190 l4,7 M284,216 l-0,8 M310,149 l8,2 M133,159 l-3,8 M124,122 l-7,3 M159,214 l-8,3 M226,212 l-0,8 M142,148 l-8,1 M93,160 l-2,8 M94,180 l-3,7 M103,181 l1,8 M95,124 l-4,7 M302,143 l1,8 M260,121 l-2,8 M139,198 l6,5 M131,162 l-5,7 M112,150 l4,7 M273,162 l-7,4 M127,152 l-4,7 M285,163 l6,5 M117,171 l7,5 M267,202 l7,4 M150,153 l2,8 M293,134 l8,0 M298,206 l-8,0 M186,213 l-8,2 M139,193 l-7,4 M140,125 l-2,8 M100,208 l-5,7 M293,208 l-8,2 M217,119 l-6,6 M128,148 l-4,7 M297,179 l4,7 M146,204 l1,8 M262,153 l7,5 M128,197 l-8,2 M267,200 l8,0 M101,145 l5,6 M90,123 l7,3 M117,125 l-8,1 M278,127 l-0,8 M132,151 l7,3 M129,155 l-3,8 M262,156 l-6,5 M144,172 l-5,7 M106,160 l2,8 M284,212 l3,7 M288,197 l5,6 M269,184 l-8,3 M264,185 l-5,6 M219,118 l7,3 M260,122 l8,2 M112,206 l7,4 M95,202 l7,3 M276,185 l-7,4 M300,176 l-6,5 M98,195 l-0,8 M255,211 l8,2 M272,142 l7,4 M145,180 l-6,6 M200,215 l2,8 M254,134 l-5,7 M256,185 l-0,8 M287,133 l8,2 M255,210 l-0,8 M131,145 l6,5 \" stroke=\"#c8a27a\" stroke-width=\"1.5\"/><path d=\"M162,150 L238,150 L234,200 Q200.0,212 166,200 Z\" fill=\"#c9ccd1\"/><rect x=\"158\" y=\"146\" width=\"84\" height=\"6\" rx=\"2\" fill=\"#c9ccd1\"/><path d=\"M162,158 q-10,2 -10,10 q0,6 7,7\"/><path d=\"M238,158 q10,2 10,10 q0,6 -7,7\"/><path d=\"M156,146 L244,146 L240,138 Q200,132 160,138 Z\" fill=\"#c9ccd1\"/><rect x=\"194\" y=\"128\" width=\"12\" height=\"6\" rx=\"2\" fill=\"#c9ccd1\"/><path d=\"M100,124 Q200,104 300,124 Q300,134 200,132 Q100,134 100,124 Z\" fill=\"#ffffff\"/><rect x=\"60\" y=\"54\" width=\"280\" height=\"14\" fill=\"#d9b77e\"/><path d=\"M350,62 Q362,80 340,98\" stroke=\"#b23a2a\" stroke-width=\"2.5\"/><path d=\"M340,98 L343.8,89.8 L348.8,95.9 Z\" fill=\"#b23a2a\" stroke=\"#b23a2a\" stroke-width=\"1\"/></g><line x1=\"40\" y1=\"180\" x2=\"70\" y2=\"180\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"70\" cy=\"180\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"40\" cy=\"180\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"40\" y=\"184.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">1</text><line x1=\"105\" y1=\"200\" x2=\"120\" y2=\"190\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"120\" cy=\"190\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"105\" cy=\"200\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"105\" y=\"204.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">2</text><line x1=\"200\" y1=\"245\" x2=\"200\" y2=\"200\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"200\" cy=\"200\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"200\" cy=\"245\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"200\" y=\"249.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">3</text><line x1=\"200\" y1=\"90\" x2=\"200\" y2=\"120\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"200\" cy=\"120\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"200\" cy=\"90\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"200\" y=\"94.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">4</text><line x1=\"40\" y1=\"60\" x2=\"62\" y2=\"60\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"62\" cy=\"60\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"40\" cy=\"60\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"40\" y=\"64.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">5</text></svg>"
+  },
+  {
+   "id": "kit-solaroven",
+   "level": 2,
+   "title_el": "Ηλιακός φούρνος από κούτα, αλουμινόχαρτο και τζάμι",
+   "title_en": "Solar oven from a box, foil and glass",
+   "time_el": "2 ώρες για να τον φτιάξεις",
+   "time_en": "2 hours to build",
+   "why_el": "Ο ήλιος είναι δωρεάν καύσιμο. Τις ηλιόλουστες μέρες μαγειρεύεις ρύζι, όσπρια και ψωμί χωρίς ξύλα και χωρίς καπνό.",
+   "why_en": "The sun is free fuel. On sunny days you cook rice, beans and bread with no wood and no smoke.",
+   "need_el": [
+    "2 χαρτόκουτα (το ένα χωράει μέσα στο άλλο)",
+    "Τσαλακωμένη εφημερίδα ή άχυρο",
+    "Αλουμινόχαρτο, κόλλα ή ταινία",
+    "Τζάμι (από παλιά κορνίζα)",
+    "Μαύρη κατσαρόλα με καπάκι"
+   ],
+   "need_en": [
+    "2 cardboard boxes (one fits inside the other)",
+    "Crumpled newspaper or hay",
+    "Kitchen foil, glue or tape",
+    "A sheet of glass (from an old picture frame)",
+    "Black pot with lid"
+   ],
+   "steps_el": [
+    "Βάλε το μικρό κουτί μέσα στο μεγάλο. Γέμισε το κενό (5 εκ.) με εφημερίδα.",
+    "Ντύσε το μέσα μέρος του μικρού κουτιού με αλουμινόχαρτο, γυαλιστερό προς τα έξω.",
+    "Βάλε στον πάτο κάτι μαύρο: λαμαρίνα, πλακάκι ή μαύρο χαρτί.",
+    "Κόψε από ένα καπάκι μια πόρτα-ανακλαστήρα και ντύσε τη με αλουμινόχαρτο.",
+    "Βάλε την κατσαρόλα μέσα και το τζάμι από πάνω, να κλείνει καλά.",
+    "Γύρνα τον φούρνο προς τον ήλιο. Στήσε τον ανακλαστήρα να ρίχνει φως μέσα.",
+    "Μαγείρευε 10 π.μ.–3 μ.μ. Γύρνα τον προς τον ήλιο κάθε 30–60 λεπτά.",
+    "Χρόνοι: ρύζι 2 ώρες, μουλιασμένα όσπρια 3–5 ώρες, ψωμί 1½–2 ώρες."
+   ],
+   "steps_en": [
+    "Put the small box inside the big one. Fill the gap (5 cm) with newspaper.",
+    "Line the inside of the small box with foil, shiny side out.",
+    "Put something black on the floor: a metal sheet, tile or black paper.",
+    "Cut a reflector flap from a lid and cover it with foil.",
+    "Put the pot inside and the glass on top, closing it well.",
+    "Turn the oven to face the sun. Prop the reflector to bounce light inside.",
+    "Cook from 10 am to 3 pm. Turn it to the sun every 30–60 minutes.",
+    "Times: rice 2 hours, soaked beans 3–5 hours, bread 1½–2 hours."
+   ],
+   "tip_el": "Δύο τζάμια με λίγο κενό ανάμεσα κρατούν πιο πολύ ζέστη. Ένα θερμόμετρο φούρνου μέσα σου δείχνει αν φτάνεις τους 100–150 °C.",
+   "tip_en": "Two sheets of glass with a small gap keep more heat. An oven thermometer inside shows if you reach 100–150 °C.",
+   "warn_el": "Μην κοιτάς το φως του ανακλαστήρα: βλάπτει τα μάτια. Τζάμι και κατσαρόλα καίνε: φόρα γάντια. Το κρέας θέλει πάνω από 75 °C για ώρα· αν ο ήλιος χαθεί, τελείωσε το μαγείρεμα σε φωτιά.",
+   "warn_en": "Do not look into the reflector glare: it hurts the eyes. Glass and pot get very hot: wear gloves. Meat needs over 75 °C for a long time; if the sun goes, finish cooking on a fire.",
+   "fig_el": "① Εξωτερικό κουτί ② Μόνωση (εφημερίδα) ③ Αλουμινόχαρτο μέσα ④ Τζάμι από πάνω ⑤ Ανακλαστήρας με αλουμινόχαρτο ⑥ Μαύρη κατσαρόλα σε μαύρο πάτο ⑦ Ο ήλιος.",
+   "fig_en": "① Outer box ② Insulation (newspaper) ③ Foil lining ④ Glass on top ⑤ Foil reflector ⑥ Black pot on a black floor ⑦ The sun.",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 260\"><rect width=\"400\" height=\"260\" fill=\"#f6ecd6\"/><g fill=\"none\" stroke=\"#3b2a1a\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"10\" y1=\"222\" x2=\"390\" y2=\"222\"/><line x1=\"18\" y1=\"224\" x2=\"12\" y2=\"231\" stroke-width=\"1\"/><line x1=\"30\" y1=\"224\" x2=\"24\" y2=\"231\" stroke-width=\"1\"/><line x1=\"42\" y1=\"224\" x2=\"36\" y2=\"231\" stroke-width=\"1\"/><line x1=\"54\" y1=\"224\" x2=\"48\" y2=\"231\" stroke-width=\"1\"/><line x1=\"66\" y1=\"224\" x2=\"60\" y2=\"231\" stroke-width=\"1\"/><line x1=\"78\" y1=\"224\" x2=\"72\" y2=\"231\" stroke-width=\"1\"/><line x1=\"90\" y1=\"224\" x2=\"84\" y2=\"231\" stroke-width=\"1\"/><line x1=\"102\" y1=\"224\" x2=\"96\" y2=\"231\" stroke-width=\"1\"/><line x1=\"114\" y1=\"224\" x2=\"108\" y2=\"231\" stroke-width=\"1\"/><line x1=\"126\" y1=\"224\" x2=\"120\" y2=\"231\" stroke-width=\"1\"/><line x1=\"138\" y1=\"224\" x2=\"132\" y2=\"231\" stroke-width=\"1\"/><line x1=\"150\" y1=\"224\" x2=\"144\" y2=\"231\" stroke-width=\"1\"/><line x1=\"162\" y1=\"224\" x2=\"156\" y2=\"231\" stroke-width=\"1\"/><line x1=\"174\" y1=\"224\" x2=\"168\" y2=\"231\" stroke-width=\"1\"/><line x1=\"186\" y1=\"224\" x2=\"180\" y2=\"231\" stroke-width=\"1\"/><line x1=\"198\" y1=\"224\" x2=\"192\" y2=\"231\" stroke-width=\"1\"/><line x1=\"210\" y1=\"224\" x2=\"204\" y2=\"231\" stroke-width=\"1\"/><line x1=\"222\" y1=\"224\" x2=\"216\" y2=\"231\" stroke-width=\"1\"/><line x1=\"234\" y1=\"224\" x2=\"228\" y2=\"231\" stroke-width=\"1\"/><line x1=\"246\" y1=\"224\" x2=\"240\" y2=\"231\" stroke-width=\"1\"/><line x1=\"258\" y1=\"224\" x2=\"252\" y2=\"231\" stroke-width=\"1\"/><line x1=\"270\" y1=\"224\" x2=\"264\" y2=\"231\" stroke-width=\"1\"/><line x1=\"282\" y1=\"224\" x2=\"276\" y2=\"231\" stroke-width=\"1\"/><line x1=\"294\" y1=\"224\" x2=\"288\" y2=\"231\" stroke-width=\"1\"/><line x1=\"306\" y1=\"224\" x2=\"300\" y2=\"231\" stroke-width=\"1\"/><line x1=\"318\" y1=\"224\" x2=\"312\" y2=\"231\" stroke-width=\"1\"/><line x1=\"330\" y1=\"224\" x2=\"324\" y2=\"231\" stroke-width=\"1\"/><line x1=\"342\" y1=\"224\" x2=\"336\" y2=\"231\" stroke-width=\"1\"/><line x1=\"354\" y1=\"224\" x2=\"348\" y2=\"231\" stroke-width=\"1\"/><line x1=\"366\" y1=\"224\" x2=\"360\" y2=\"231\" stroke-width=\"1\"/><line x1=\"378\" y1=\"224\" x2=\"372\" y2=\"231\" stroke-width=\"1\"/><circle cx=\"55\" cy=\"50\" r=\"22\" fill=\"#f2a65a\"/><line x1=\"83\" y1=\"50\" x2=\"93\" y2=\"50\" stroke-width=\"1.5\"/><line x1=\"75\" y1=\"70\" x2=\"82\" y2=\"77\" stroke-width=\"1.5\"/><line x1=\"55\" y1=\"78\" x2=\"55\" y2=\"88\" stroke-width=\"1.5\"/><line x1=\"35\" y1=\"70\" x2=\"28\" y2=\"77\" stroke-width=\"1.5\"/><line x1=\"27\" y1=\"50\" x2=\"17\" y2=\"50\" stroke-width=\"1.5\"/><line x1=\"35\" y1=\"30\" x2=\"28\" y2=\"23\" stroke-width=\"1.5\"/><line x1=\"55\" y1=\"22\" x2=\"55\" y2=\"12\" stroke-width=\"1.5\"/><line x1=\"75\" y1=\"30\" x2=\"82\" y2=\"23\" stroke-width=\"1.5\"/><path d=\"M300,112 L346,22 L352,26 L306,114 Z\" fill=\"#c9ccd1\"/><path d=\"M100,222 L310,222 L310,110 L100,160 Z\" fill=\"#d9b77e\"/><path d=\"M116,210 L294,210 L294,128 L116,170 Z\" fill=\"#f6ecd6\"/><circle cx=\"108\" cy=\"190\" r=\"1.4\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"106\" cy=\"200\" r=\"1.4\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"110\" cy=\"175\" r=\"1.4\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"302\" cy=\"150\" r=\"1.4\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"300\" cy=\"180\" r=\"1.4\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"304\" cy=\"200\" r=\"1.4\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"150\" cy=\"216\" r=\"1.4\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"200\" cy=\"216\" r=\"1.4\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"260\" cy=\"216\" r=\"1.4\" fill=\"#3b2a1a\" stroke=\"none\"/><path d=\"M126,202 L284,202 L284,140 L126,178 Z\" fill=\"#c9ccd1\"/><rect x=\"130\" y=\"196\" width=\"150\" height=\"6\" fill=\"#3b2a1a\"/><path d=\"M178,196 L178,170 L238,170 L238,196 Z\" fill=\"#3b2a1a\"/><rect x=\"172\" y=\"164\" width=\"72\" height=\"7\" rx=\"2\" fill=\"#3b2a1a\"/><path d=\"M96,156 L312,104 L312,110 L96,162 Z\" fill=\"#bcd9e3\"/><path d=\"M80,72 Q120,100 160,132\" stroke=\"#b23a2a\" stroke-width=\"2\"/><path d=\"M160,132 L151.2,130.0 L156.1,123.9 Z\" fill=\"#b23a2a\" stroke=\"#b23a2a\" stroke-width=\"1\"/><path d=\"M88,52 Q220,40 320,70\" stroke=\"#b23a2a\" stroke-width=\"2\"/><path d=\"M320,70 L311.1,71.4 L313.4,63.9 Z\" fill=\"#b23a2a\" stroke=\"#b23a2a\" stroke-width=\"1\"/><path d=\"M320,70 Q280,100 245,125\" stroke=\"#b23a2a\" stroke-width=\"2\"/><path d=\"M245,125 L249.3,117.1 L253.9,123.5 Z\" fill=\"#b23a2a\" stroke=\"#b23a2a\" stroke-width=\"1\"/></g><line x1=\"340\" y1=\"240\" x2=\"300\" y2=\"215\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"300\" cy=\"215\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"340\" cy=\"240\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"340\" y=\"244.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">1</text><line x1=\"120\" y1=\"245\" x2=\"108\" y2=\"198\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"108\" cy=\"198\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"120\" cy=\"245\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"120\" y=\"249.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">2</text><line x1=\"345\" y1=\"160\" x2=\"284\" y2=\"160\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"284\" cy=\"160\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"345\" cy=\"160\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"345\" y=\"164.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">3</text><line x1=\"60\" y1=\"140\" x2=\"110\" y2=\"158\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"110\" cy=\"158\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"60\" cy=\"140\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"60\" y=\"144.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">4</text><line x1=\"380\" y1=\"60\" x2=\"340\" y2=\"45\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"340\" cy=\"45\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"380\" cy=\"60\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"380\" y=\"64.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">5</text><line x1=\"210\" y1=\"245\" x2=\"210\" y2=\"190\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"210\" cy=\"190\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"210\" cy=\"245\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"210\" y=\"249.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">6</text><line x1=\"20\" y1=\"100\" x2=\"40\" y2=\"66\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"40\" cy=\"66\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"20\" cy=\"100\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"20\" y=\"104.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">7</text></svg>"
+  },
+  {
+   "id": "kit-legumes",
+   "level": 1,
+   "title_el": "Όσπρια: μούλιασμα, μαγείρεμα με λίγο καύσιμο, φύτρα για βιταμίνες — και σπιτικό ξίδι",
+   "title_en": "Dried beans, lentils, chickpeas: soaking, low-fuel cooking, sprouting — and homemade vinegar",
+   "time_el": "1 μέρα (όσπρια) · 4–8 βδομάδες (ξίδι)",
+   "time_en": "1 day (beans) · 4–8 weeks (vinegar)",
+   "why_el": "Τα ξερά όσπρια κρατούν χρόνια και δίνουν πρωτεΐνη. Τα φύτρα δίνουν φρέσκες βιταμίνες και τον χειμώνα. Το ξίδι νοστιμίζει και καθαρίζει.",
+   "why_en": "Dried beans keep for years and give protein. Sprouts give fresh vitamins even in winter. Vinegar adds flavour and helps clean.",
+   "need_el": [
+    "Φασόλια, φακές, ρεβίθια",
+    "Λεκάνη, κατσαρόλα, θερμοκουτί αν έχεις",
+    "Γυάλινο βάζο, τούλι ή γάζα, λαστιχάκι",
+    "Για ξίδι: κρασί που περίσσεψε και λίγο ζωντανό ξίδι με «μάνα»"
+   ],
+   "need_en": [
+    "Beans, lentils, chickpeas",
+    "Bowl, pot, hay-box if you have one",
+    "Glass jar, net or gauze, rubber band",
+    "For vinegar: leftover wine and a little live vinegar with its «mother»"
+   ],
+   "steps_el": [
+    "Μούλιασε φασόλια και ρεβίθια 12 ώρες σε τριπλάσιο νερό. Οι φακές δεν θέλουν.",
+    "Πέτα το νερό, βάλε φρέσκο. Βράσε δυνατά 10 λεπτά.",
+    "Συνέχισε σε σιγανή φωτιά με καπάκι ή βάλε την κατσαρόλα στο θερμοκουτί 3–4 ώρες.",
+    "Φύτρα: μούλιασε φακές ή ρεβίθια μια νύχτα σε βάζο. Δέσε τούλι στο στόμιο.",
+    "Άδειασε το νερό. Γύρνα το βάζο λοξά ανάποδα να στραγγίζει.",
+    "Ξέπλενε 2 φορές τη μέρα. Σε 2–4 μέρες βγαίνουν φύτρα 1–2 εκ.",
+    "Ξίδι: γέμισε φαρδύ βάζο ως τα ¾ με κρασί και ρίξε λίγο ζωντανό ξίδι.",
+    "Σκέπασε με πανί και άφησε σε ζεστό, σκοτεινό μέρος 4–8 βδομάδες, ώσπου να μυρίσει δυνατό ξίδι."
+   ],
+   "steps_en": [
+    "Soak beans and chickpeas 12 hours in three times their volume of water. Lentils need none.",
+    "Pour off the water, add fresh. Boil hard for 10 minutes.",
+    "Simmer with the lid on, or put the pot in a hay-box for 3–4 hours.",
+    "Sprouts: soak lentils or chickpeas overnight in a jar. Tie net over the mouth.",
+    "Pour off the water. Tilt the jar upside down so it drains.",
+    "Rinse twice a day. In 2–4 days you get sprouts 1–2 cm long.",
+    "Vinegar: fill a wide jar ¾ with wine and add a little live vinegar.",
+    "Cover with a cloth and leave it warm and dark 4–8 weeks, until it smells of strong vinegar."
+   ],
+   "tip_el": "Η γλοιώδης πέτσα πάνω στο ξίδι είναι η «μάνα»: κράτα τη για το επόμενο βάζο.",
+   "tip_en": "The slimy skin on top of the vinegar is the «mother»: keep it for the next jar.",
+   "warn_el": "Τα κόκκινα φασόλια είναι τοξικά αν δεν βράσουν δυνατά 10 λεπτά — μην τα τρως ωμά ή φύτρα. Κουκιά: κίνδυνος για όσους έχουν κουκιαιμία. Πέτα φύτρα που γλιστράνε ή μυρίζουν. Το σπιτικό ξίδι δεν είναι σίγουρα δυνατό: μη το χρησιμοποιείς για κονσέρβες.",
+   "warn_en": "Red kidney beans are toxic unless boiled hard for 10 minutes — never eat them raw or sprouted. Broad beans: danger for people with favism (G6PD deficiency). Throw away slimy or smelly sprouts. Homemade vinegar may be too weak: do not use it for canning.",
+   "fig_el": "① Νερό τρεις φορές πάνω από τα όσπρια ② Τούλι δεμένο στο στόμιο ③ Βάζο λοξά ανάποδα, στραγγίζει σε μπολ ④ «Μάνα» του ξιδιού ⑤ Πανί δεμένο από πάνω ⑥ Κρασί που γίνεται ξίδι.",
+   "fig_en": "① Water three times above the beans ② Net tied over the mouth ③ Jar tilted upside down, draining into a bowl ④ Vinegar «mother» ⑤ Cloth tied on top ⑥ Wine turning into vinegar.",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 260\"><rect width=\"400\" height=\"260\" fill=\"#f6ecd6\"/><g fill=\"none\" stroke=\"#3b2a1a\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"133\" y1=\"15\" x2=\"133\" y2=\"245\" stroke-width=\"1\"/><line x1=\"266\" y1=\"15\" x2=\"266\" y2=\"245\" stroke-width=\"1\"/><path d=\"M10,140 Q10,212 67.0,212 Q124,212 124,140 Z\" fill=\"#d98e5c\"/><path d=\"M14,140 L120,140 Q117,170 100,190 L34,190 Q17,170 14,140 Z\" fill=\"#bcd9e3\" stroke=\"none\"/><line x1=\"10\" y1=\"140\" x2=\"124\" y2=\"140\"/><ellipse cx=\"45\" cy=\"196\" rx=\"6\" ry=\"4\" fill=\"#d9b77e\" stroke-width=\"1.2\"/><ellipse cx=\"58\" cy=\"199\" rx=\"6\" ry=\"4\" fill=\"#d9b77e\" stroke-width=\"1.2\"/><ellipse cx=\"72\" cy=\"199\" rx=\"6\" ry=\"4\" fill=\"#d9b77e\" stroke-width=\"1.2\"/><ellipse cx=\"86\" cy=\"196\" rx=\"6\" ry=\"4\" fill=\"#d9b77e\" stroke-width=\"1.2\"/><ellipse cx=\"52\" cy=\"189\" rx=\"6\" ry=\"4\" fill=\"#d9b77e\" stroke-width=\"1.2\"/><ellipse cx=\"66\" cy=\"191\" rx=\"6\" ry=\"4\" fill=\"#d9b77e\" stroke-width=\"1.2\"/><ellipse cx=\"80\" cy=\"189\" rx=\"6\" ry=\"4\" fill=\"#d9b77e\" stroke-width=\"1.2\"/><ellipse cx=\"94\" cy=\"190\" rx=\"6\" ry=\"4\" fill=\"#d9b77e\" stroke-width=\"1.2\"/><ellipse cx=\"40\" cy=\"188\" rx=\"6\" ry=\"4\" fill=\"#d9b77e\" stroke-width=\"1.2\"/><line x1=\"128\" y1=\"140\" x2=\"128\" y2=\"186\" stroke=\"#b23a2a\" stroke-width=\"1.5\"/><line x1=\"124\" y1=\"186\" x2=\"132\" y2=\"186\" stroke=\"#b23a2a\" stroke-width=\"1.5\"/><line x1=\"124\" y1=\"140\" x2=\"132\" y2=\"140\" stroke=\"#b23a2a\" stroke-width=\"1.5\"/><path d=\"M150,190 Q150,230 200.0,230 Q250,230 250,190 Z\" fill=\"#d98e5c\"/><g transform=\"translate(205,140) rotate(135)\"><rect x=\"-24\" y=\"-42\" width=\"48\" height=\"92\" rx=\"9\" fill=\"#ffffff\"/><rect x=\"-19\" y=\"-50\" width=\"38\" height=\"10\" rx=\"2\" fill=\"#ffffff\"/><ellipse cx=\"-10\" cy=\"0\" rx=\"5\" ry=\"3.5\" fill=\"#d9b77e\" stroke-width=\"1.2\"/><ellipse cx=\"8\" cy=\"10\" rx=\"5\" ry=\"3.5\" fill=\"#d9b77e\" stroke-width=\"1.2\"/><ellipse cx=\"-6\" cy=\"20\" rx=\"5\" ry=\"3.5\" fill=\"#d9b77e\" stroke-width=\"1.2\"/><ellipse cx=\"10\" cy=\"30\" rx=\"5\" ry=\"3.5\" fill=\"#d9b77e\" stroke-width=\"1.2\"/><ellipse cx=\"-12\" cy=\"36\" rx=\"5\" ry=\"3.5\" fill=\"#d9b77e\" stroke-width=\"1.2\"/><ellipse cx=\"4\" cy=\"-8\" rx=\"5\" ry=\"3.5\" fill=\"#d9b77e\" stroke-width=\"1.2\"/><path d=\"M-6,0 q6,4 10,-2\" stroke=\"#6f9a52\" stroke-width=\"1.5\"/><path d=\"M12,10 q6,4 10,-2\" stroke=\"#6f9a52\" stroke-width=\"1.5\"/><path d=\"M-2,20 q6,4 10,-2\" stroke=\"#6f9a52\" stroke-width=\"1.5\"/><path d=\"M-8,36 q6,4 10,-2\" stroke=\"#6f9a52\" stroke-width=\"1.5\"/><path d=\"M-24,-52 L24,-52 L22,-42 L-22,-42 Z\" fill=\"#ffffff\"/><line x1=\"-22\" y1=\"-44\" x2=\"22\" y2=\"-44\" stroke=\"#b23a2a\" stroke-width=\"1.5\"/></g><path d=\"M232,188 q-2,4 0,6 q2,-2 0,-6 Z\" fill=\"#bcd9e3\" stroke-width=\"1\"/><rect x=\"295\" y=\"98\" width=\"76\" height=\"122\" rx=\"9\" fill=\"#ffffff\"/><rect x=\"300\" y=\"90\" width=\"66\" height=\"10\" rx=\"2\" fill=\"#ffffff\"/><path d=\"M297,140 L369,140 L369,211 Q369,218 362,218 L304,218 Q297,218 297,211 Z\" fill=\"#d98e5c\" fill-opacity=\"0.65\" stroke-width=\"1.5\"/><rect x=\"298\" y=\"136\" width=\"70\" height=\"9\" rx=\"3\" fill=\"#f6ecd6\" stroke-width=\"1.2\"/><path d=\"M290,104 Q333,84 376,104 L372,118 Q333,106 294,118 Z\" fill=\"#ffffff\"/><line x1=\"296\" y1=\"110\" x2=\"370\" y2=\"110\" stroke=\"#b23a2a\" stroke-width=\"1.5\"/></g><line x1=\"25\" y1=\"60\" x2=\"128\" y2=\"150\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"128\" cy=\"150\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"25\" cy=\"60\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"25\" y=\"64.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">1</text><line x1=\"160\" y1=\"40\" x2=\"183\" y2=\"117\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"183\" cy=\"117\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"160\" cy=\"40\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"160\" y=\"44.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">2</text><line x1=\"245\" y1=\"40\" x2=\"222\" y2=\"145\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"222\" cy=\"145\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"245\" cy=\"40\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"245\" y=\"44.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">3</text><line x1=\"280\" y1=\"240\" x2=\"312\" y2=\"141\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"312\" cy=\"141\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"280\" cy=\"240\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"280\" y=\"244.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">4</text><line x1=\"380\" y1=\"60\" x2=\"360\" y2=\"100\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"360\" cy=\"100\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"380\" cy=\"60\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"380\" y=\"64.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">5</text><line x1=\"385\" y1=\"240\" x2=\"360\" y2=\"190\" stroke=\"#3b2a1a\" stroke-width=\"1\"/><circle cx=\"360\" cy=\"190\" r=\"2\" fill=\"#3b2a1a\"/><circle cx=\"385\" cy=\"240\" r=\"10\" fill=\"#3b2a1a\"/><text x=\"385\" y=\"244.5\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" fill=\"#ffffff\" text-anchor=\"middle\">6</text></svg>"
+  }
+ ]
+}

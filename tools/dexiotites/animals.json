@@ -1,0 +1,751 @@
+{
+ "ch": "animals",
+ "title_el": "Ζώα, Ψάρεμα & Τροφή από τη φύση",
+ "title_en": "Animals, Fishing & Food from nature",
+ "intro_el": "Οι παππούδες μας είχαν λίγες κότες, μια κατσίκα και ένα μελίσσι. Ήξεραν να ψαρεύουν με πετονιά και να μαζεύουν χόρτα, σαλιγκάρια και βότανα. Εδώ θα μάθεις αυτά τα απλά πράγματα, με σεβασμό στα ζώα, στη φύση και στους νόμους.",
+ "intro_en": "Our grandparents kept a few hens, a goat and a beehive. They fished with a hand line and gathered wild greens, snails and herbs. Here you will learn these simple skills, with respect for animals, nature and the law.",
+ "opener_svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 300\" fill=\"none\" stroke=\"#3b2a1a\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"0\" y=\"0\" width=\"400\" height=\"300\" fill=\"#f6ecd6\" stroke=\"none\"/><circle cx=\"335\" cy=\"55\" r=\"24\" fill=\"#f2a65a\"/><path d=\"M335 18v-8M335 92v8M298 55h-8M372 55h8M309 29l-6-6M361 29l6-6M309 81l-6 6M361 81l6 6\" stroke-width=\"1.5\"/><path d=\"M0 150C60 120 120 125 180 145C220 158 240 160 270 175V300H0Z\" fill=\"#a9c98b\"/><path d=\"M260 205H400V300H260Z\" fill=\"#bcd9e3\" stroke=\"none\"/><path d=\"M260 205H400M280 222q10-5 20 0t20 0M330 245q10-5 20 0t20 0M280 270q10-5 20 0t20 0\" stroke-width=\"1.5\"/><path d=\"M0 205H262C266 230 250 260 240 300H0Z\" fill=\"#c8a27a\"/><path d=\"M8 228l-8 8M24 228l-8 8M40 228l-8 8M56 228l-8 8M72 228l-8 8M88 228l-8 8M104 228l-8 8M120 228l-8 8M136 228l-8 8M152 228l-8 8M168 228l-8 8M184 228l-8 8M200 228l-8 8M216 228l-8 8M232 228l-8 8\" stroke-width=\"1.2\"/><path d=\"M62 210C66 180 64 160 60 140M68 210C70 182 74 162 80 145\" stroke-width=\"2.5\" fill=\"#d9b77e\"/><path d=\"M60 205L58 140H82L70 205Z\" fill=\"#d9b77e\"/><path d=\"M20 120C5 100 25 70 50 78C55 50 95 48 105 72C130 66 140 100 120 115C125 140 90 150 75 135C60 150 25 145 20 120Z\" fill=\"#6f9a52\"/><path d=\"M45 105c-3 0-5 3-5 6h10c0-3-2-6-5-6z\" fill=\"#d9b77e\" stroke-width=\"1.2\"/><path d=\"M85 95c-3 0-5 3-5 6h10c0-3-2-6-5-6z\" fill=\"#d9b77e\" stroke-width=\"1.2\"/><path d=\"M100 120c-3 0-5 3-5 6h10c0-3-2-6-5-6z\" fill=\"#d9b77e\" stroke-width=\"1.2\"/><path d=\"M65 122c-3 0-5 3-5 6h10c0-3-2-6-5-6z\" fill=\"#d9b77e\" stroke-width=\"1.2\"/><path d=\"M130 205V150H200V205\" fill=\"#d9b77e\"/><path d=\"M122 154L165 124L208 154Z\" fill=\"#d98e5c\"/><path d=\"M140 205V178H156V205\" fill=\"#3b2a1a\"/><path d=\"M175 165h16v12h-16z\" fill=\"#f6ecd6\"/><g transform=\"translate(225 192) scale(0.55 0.55)\"><path d=\"M-24 -6C-44 -18 -44 -40 -32 -42C-30 -30 -26 -20 -18 -14\" fill=\"#c8a27a\"/><path d=\"M-26 -8C-28 -26 -8 -30 8 -26C10 -38 16 -44 24 -42C32 -40 32 -32 30 -26C30 -8 20 6 2 8C-14 9 -26 4 -26 -8Z\" fill=\"#ffffff\"/><path d=\"M20 -44C20 -50 24 -50 25 -46C26 -51 30 -50 30 -45C33 -48 35 -45 32 -41\" fill=\"#e2603a\"/><path d=\"M31 -36L39 -33L31 -30\" fill=\"#f2a65a\"/><path d=\"M30 -28C33 -24 31 -20 28 -22\" fill=\"#e2603a\"/><circle cx=\"25\" cy=\"-36\" r=\"1.6\" fill=\"#3b2a1a\"/><path d=\"M-10 -16C0 -20 12 -14 10 -4C2 0 -8 -4 -10 -16Z\" stroke-width=\"1.5\"/><path d=\"M-4 8V22M-9 25L-4 22L1 25M8 7V22M3 25L8 22L13 25\" stroke-width=\"1.8\"/></g><g transform=\"translate(110 196) scale(-0.5 0.5)\"><path d=\"M-24 -6C-44 -18 -44 -40 -32 -42C-30 -30 -26 -20 -18 -14\" fill=\"#c8a27a\"/><path d=\"M-26 -8C-28 -26 -8 -30 8 -26C10 -38 16 -44 24 -42C32 -40 32 -32 30 -26C30 -8 20 6 2 8C-14 9 -26 4 -26 -8Z\" fill=\"#ffffff\"/><path d=\"M20 -44C20 -50 24 -50 25 -46C26 -51 30 -50 30 -45C33 -48 35 -45 32 -41\" fill=\"#e2603a\"/><path d=\"M31 -36L39 -33L31 -30\" fill=\"#f2a65a\"/><path d=\"M30 -28C33 -24 31 -20 28 -22\" fill=\"#e2603a\"/><circle cx=\"25\" cy=\"-36\" r=\"1.6\" fill=\"#3b2a1a\"/><path d=\"M-10 -16C0 -20 12 -14 10 -4C2 0 -8 -4 -10 -16Z\" stroke-width=\"1.5\"/><path d=\"M-4 8V22M-9 25L-4 22L1 25M8 7V22M3 25L8 22L13 25\" stroke-width=\"1.8\"/></g><path d=\"M20 205V175H50V205\" fill=\"#d9b77e\"/><path d=\"M16 175H54V168H16Z\" fill=\"#c9ccd1\"/><path d=\"M20 190H50\"/><path d=\"M28 202h14\" stroke-width=\"3\"/><path d=\"M240 300C238 260 250 215 275 200C300 205 305 230 300 300Z\" fill=\"#bdb5a6\"/><path d=\"M282 198L360 140\" stroke=\"#d9b77e\" stroke-width=\"4\"/><path d=\"M360 140Q375 190 372 250\" stroke-width=\"1\"/><g transform=\"translate(345 262) scale(0.6 0.6)\"><path d=\"M-30 0C-18 -14 14 -16 30 0C14 14 -18 14 -30 0Z\" fill=\"#c9ccd1\"/><path d=\"M-30 0L-44 -11L-40 0L-44 11Z\" fill=\"#c9ccd1\"/><path d=\"M16 -9C12 -3 12 3 16 9\" stroke-width=\"1.5\"/><circle cx=\"22\" cy=\"-3\" r=\"2\" fill=\"#3b2a1a\"/><path d=\"M-10 -9L-2 -14L6 -10\" stroke-width=\"1.5\"/></g><path d=\"M369 250l3 6\" stroke-width=\"1.5\"/><path d=\"M40 260c-6-12-14-14-18-12M40 260c2-14 8-18 14-18M40 260v-16\" stroke=\"#6f9a52\"/><path d=\"M110 260c-6-12-14-14-18-12M110 260c2-14 8-18 14-18M110 260v-16\" stroke=\"#6f9a52\"/><path d=\"M180 260c-6-12-14-14-18-12M180 260c2-14 8-18 14-18M180 260v-16\" stroke=\"#6f9a52\"/><path d=\"M145 285c3-10 12-12 18-8c6 6-6 14-18 8z\" fill=\"#d98e5c\"/><path d=\"M152 278c-4-4-2-8 2-8\" stroke-width=\"1.5\"/></svg>",
+ "skills": [
+  {
+   "id": "ani-coop",
+   "level": 2,
+   "title_el": "Μικρό κοτέτσι: κούρνια, φωλιά, ασφάλεια από αλεπού",
+   "title_en": "A small hen house: perch, nest box, fox-proof",
+   "time_el": "2–3 μέρες",
+   "time_en": "2–3 days",
+   "why_el": "Λίγες κότες δίνουν φρέσκα αυγά κάθε μέρα. Χρειάζονται όμως ένα στεγνό, ασφαλές σπίτι, αλλιώς τις τρώει η αλεπού ή το κουνάβι.",
+   "why_en": "A few hens give fresh eggs every day. But they need a dry, safe house, or a fox or marten will take them.",
+   "need_el": [
+    "ξύλα και σανίδες",
+    "κεραμίδια ή λαμαρίνα για στέγη",
+    "σίτα ηλεκτροσυγκολλητή (μάτι 13 mm)",
+    "καρφιά, βίδες, μεντεσέδες, σύρτη",
+    "άχυρο"
+   ],
+   "need_en": [
+    "wood and boards",
+    "tiles or metal sheet for the roof",
+    "welded wire mesh (13 mm holes)",
+    "nails, screws, hinges, a bolt",
+    "straw"
+   ],
+   "steps_el": [
+    "Διάλεξε στεγνό σημείο, με σκιά το καλοκαίρι. Για 5 κότες φτιάξε σπιτάκι περίπου 1 × 1,2 m.",
+    "Σήκωσε το πάτωμα 40–50 cm από το έδαφος, να μη μπαίνουν υγρασία και ποντίκια.",
+    "Βάλε στέγη με κλίση, να φεύγει η βροχή. Άφησε άνοιγμα αερισμού ψηλά, με σίτα.",
+    "Βάλε κούρνια (στρογγυλό ξύλο 4–5 cm) σε ύψος 50–60 cm. Λογάριασε 25 cm για κάθε κότα.",
+    "Φτιάξε φωλιά 30 × 30 cm, σε σκοτεινή γωνία. Μία φωλιά για κάθε 4 κότες. Στρώσε άχυρο.",
+    "Φτιάξε μικρή πόρτα με ράμπα. Κλείνε την με σύρτη κάθε βράδυ.",
+    "Περίφραξε αυλή 1–2 m² για κάθε κότα. Θάψε τη σίτα 30 cm στο χώμα και γύρισέ την προς τα έξω."
+   ],
+   "steps_en": [
+    "Pick a dry spot, shaded in summer. For 5 hens build a house about 1 × 1.2 m.",
+    "Raise the floor 40–50 cm off the ground, against damp and mice.",
+    "Give the roof a slope so rain runs off. Leave a high vent covered with mesh.",
+    "Fit a perch (round wood, 4–5 cm thick) 50–60 cm high. Allow 25 cm per hen.",
+    "Make a nest box 30 × 30 cm in a dark corner. One box per 4 hens. Add straw.",
+    "Make a small door with a ramp. Bolt it shut every evening.",
+    "Fence a run of 1–2 m² per hen. Bury the mesh 30 cm deep and bend it outwards."
+   ],
+   "tip_el": "Η αλεπού σκάβει κάτω από τον φράχτη. Η σίτα που γυρίζει προς τα έξω τη σταματά.",
+   "tip_en": "A fox digs under the fence. Mesh bent outwards under the soil stops it.",
+   "warn_el": "Το απλό κοτετσόσυρμα το σκίζει η αλεπού· βάλε γερή σίτα. Πρόσεχε τα καρφιά που εξέχουν. Πλένε τα χέρια μετά το καθάρισμα.",
+   "warn_en": "Foxes tear thin chicken wire; use strong welded mesh. Watch for sticking-out nails. Wash your hands after cleaning.",
+   "fig_el": "① κούρνια ② φωλιά με άχυρο ③ πόρτα με ράμπα (κλειστή τη νύχτα) ④ αερισμός ψηλά ⑤ αυλή με γερή σίτα ⑥ σίτα θαμμένη 30 cm και γυρισμένη έξω",
+   "fig_en": "① perch ② nest box with straw ③ door with ramp (shut at night) ④ high vent ⑤ run with strong mesh ⑥ mesh buried 30 cm and bent outwards",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 260\" fill=\"none\" stroke=\"#3b2a1a\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"0\" y=\"0\" width=\"400\" height=\"260\" fill=\"#f6ecd6\" stroke=\"none\"/><path d=\"M0 215H400V260H0Z\" fill=\"#c8a27a\" stroke=\"none\"/><path d=\"M0 215H400\"/><path d=\"M8 218l-8 8M22 218l-8 8M36 218l-8 8M50 218l-8 8M64 218l-8 8M78 218l-8 8M92 218l-8 8M106 218l-8 8M120 218l-8 8M134 218l-8 8M148 218l-8 8M162 218l-8 8M176 218l-8 8M190 218l-8 8M204 218l-8 8M218 218l-8 8M232 218l-8 8M246 218l-8 8M260 218l-8 8M274 218l-8 8M288 218l-8 8M302 218l-8 8M316 218l-8 8M330 218l-8 8M344 218l-8 8M358 218l-8 8M372 218l-8 8M386 218l-8 8\" stroke-width=\"1.2\"/><path d=\"M70 168V215M190 168V215\" stroke=\"#d9b77e\" stroke-width=\"7\"/><path d=\"M66 168V215M74 168V215M186 168V215M194 168V215\" stroke-width=\"1.5\"/><path d=\"M60 96H200V170H60Z\" fill=\"#d9b77e\"/><path d=\"M68 104H192V164H68Z\" fill=\"#f6ecd6\"/><path d=\"M48 100L130 56L212 100Z\" fill=\"#d98e5c\"/><path d=\"M118 74H142V88H118Z\" fill=\"#f6ecd6\"/><path d=\"M124 74V88M130 74V88M136 74V88\" stroke-width=\"1\"/><path d=\"M80 136H172\" stroke=\"#d9b77e\" stroke-width=\"7\"/><path d=\"M80 132H172M80 140H172M90 140V164M162 140V164\" stroke-width=\"1.5\"/><g transform=\"translate(116 122) scale(0.55 0.55)\"><path d=\"M-24 -6C-44 -18 -44 -40 -32 -42C-30 -30 -26 -20 -18 -14\" fill=\"#c8a27a\"/><path d=\"M-26 -8C-28 -26 -8 -30 8 -26C10 -38 16 -44 24 -42C32 -40 32 -32 30 -26C30 -8 20 6 2 8C-14 9 -26 4 -26 -8Z\" fill=\"#ffffff\"/><path d=\"M20 -44C20 -50 24 -50 25 -46C26 -51 30 -50 30 -45C33 -48 35 -45 32 -41\" fill=\"#e2603a\"/><path d=\"M31 -36L39 -33L31 -30\" fill=\"#f2a65a\"/><path d=\"M30 -28C33 -24 31 -20 28 -22\" fill=\"#e2603a\"/><circle cx=\"25\" cy=\"-36\" r=\"1.6\" fill=\"#3b2a1a\"/><path d=\"M-10 -16C0 -20 12 -14 10 -4C2 0 -8 -4 -10 -16Z\" stroke-width=\"1.5\"/><path d=\"M-4 8V22M-9 25L-4 22L1 25M8 7V22M3 25L8 22L13 25\" stroke-width=\"1.8\"/></g><g transform=\"translate(152 123) scale(0.5 0.5)\"><path d=\"M-24 -6C-44 -18 -44 -40 -32 -42C-30 -30 -26 -20 -18 -14\" fill=\"#c8a27a\"/><path d=\"M-26 -8C-28 -26 -8 -30 8 -26C10 -38 16 -44 24 -42C32 -40 32 -32 30 -26C30 -8 20 6 2 8C-14 9 -26 4 -26 -8Z\" fill=\"#ffffff\"/><path d=\"M20 -44C20 -50 24 -50 25 -46C26 -51 30 -50 30 -45C33 -48 35 -45 32 -41\" fill=\"#e2603a\"/><path d=\"M31 -36L39 -33L31 -30\" fill=\"#f2a65a\"/><path d=\"M30 -28C33 -24 31 -20 28 -22\" fill=\"#e2603a\"/><circle cx=\"25\" cy=\"-36\" r=\"1.6\" fill=\"#3b2a1a\"/><path d=\"M-10 -16C0 -20 12 -14 10 -4C2 0 -8 -4 -10 -16Z\" stroke-width=\"1.5\"/><path d=\"M-4 8V22M-9 25L-4 22L1 25M8 7V22M3 25L8 22L13 25\" stroke-width=\"1.8\"/></g><path d=\"M60 142H68V168H60Z\" fill=\"#3b2a1a\"/><path d=\"M60 168L22 215\"/><path d=\"M52 178l6 4M44 188l6 4M36 198l6 4\" stroke-width=\"1.5\"/><path d=\"M200 124L242 116V160H200Z\" fill=\"#d9b77e\"/><path d=\"M206 136H236V156H206Z\" fill=\"#f6ecd6\"/><path d=\"M207 154c8-6 20-6 29 0\" fill=\"#d9b77e\" stroke-width=\"1\"/><ellipse cx=\"216\" cy=\"149\" rx=\"5\" ry=\"6.5\" fill=\"#ffffff\" stroke-width=\"1.5\"/><ellipse cx=\"228\" cy=\"150\" rx=\"5\" ry=\"6.5\" fill=\"#ffffff\" stroke-width=\"1.5\"/><path d=\"M276 112V215M288 112V215M300 112V215M312 112V215M324 112V215M336 112V215M348 112V215M360 112V215M264 124H372M264 136H372M264 148H372M264 160H372M264 172H372M264 184H372M264 196H372M264 208H372\" stroke-width=\"0.8\"/><path d=\"M264 108V238M372 108V215\" stroke=\"#d9b77e\" stroke-width=\"6\"/><path d=\"M264 110H372\" stroke-width=\"2\"/><path d=\"M372 215V238H396\" stroke-dasharray=\"3 3\" stroke-width=\"2\"/><path d=\"M264 215V238\" stroke-dasharray=\"3 3\"/><g transform=\"translate(316 189) scale(0.6 0.6)\"><path d=\"M-24 -6C-44 -18 -44 -40 -32 -42C-30 -30 -26 -20 -18 -14\" fill=\"#c8a27a\"/><path d=\"M-26 -8C-28 -26 -8 -30 8 -26C10 -38 16 -44 24 -42C32 -40 32 -32 30 -26C30 -8 20 6 2 8C-14 9 -26 4 -26 -8Z\" fill=\"#ffffff\"/><path d=\"M20 -44C20 -50 24 -50 25 -46C26 -51 30 -50 30 -45C33 -48 35 -45 32 -41\" fill=\"#e2603a\"/><path d=\"M31 -36L39 -33L31 -30\" fill=\"#f2a65a\"/><path d=\"M30 -28C33 -24 31 -20 28 -22\" fill=\"#e2603a\"/><circle cx=\"25\" cy=\"-36\" r=\"1.6\" fill=\"#3b2a1a\"/><path d=\"M-10 -16C0 -20 12 -14 10 -4C2 0 -8 -4 -10 -16Z\" stroke-width=\"1.5\"/><path d=\"M-4 8V22M-9 25L-4 22L1 25M8 7V22M3 25L8 22L13 25\" stroke-width=\"1.8\"/></g><path d=\"M140 196L130 137M230 98L222 140M24 160L40 193M80 40L128 81M330 88L330 130M340 248L384 238\" stroke-width=\"1.2\"/><g fill=\"#3b2a1a\" stroke=\"none\"><circle cx=\"130\" cy=\"137\" r=\"2\"/><circle cx=\"140\" cy=\"196\" r=\"10\"/><circle cx=\"222\" cy=\"140\" r=\"2\"/><circle cx=\"230\" cy=\"98\" r=\"10\"/><circle cx=\"40\" cy=\"193\" r=\"2\"/><circle cx=\"24\" cy=\"160\" r=\"10\"/><circle cx=\"128\" cy=\"81\" r=\"2\"/><circle cx=\"80\" cy=\"40\" r=\"10\"/><circle cx=\"330\" cy=\"130\" r=\"2\"/><circle cx=\"330\" cy=\"88\" r=\"10\"/><circle cx=\"384\" cy=\"238\" r=\"2\"/><circle cx=\"340\" cy=\"248\" r=\"10\"/></g><g fill=\"#fff\" stroke=\"none\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" text-anchor=\"middle\"><text x=\"140\" y=\"200.5\">1</text><text x=\"230\" y=\"102.5\">2</text><text x=\"24\" y=\"164.5\">3</text><text x=\"80\" y=\"44.5\">4</text><text x=\"330\" y=\"92.5\">5</text><text x=\"340\" y=\"252.5\">6</text></g></svg>"
+  },
+  {
+   "id": "ani-hens",
+   "level": 1,
+   "title_el": "Κότες για αυγά: τροφή, νερό, φροντίδα",
+   "title_en": "Keeping hens for eggs: food, water, care",
+   "time_el": "15 λεπτά τη μέρα",
+   "time_en": "15 minutes a day",
+   "why_el": "Μια καλή κότα κάνει 4–6 αυγά την εβδομάδα. Τρώει αποφάγια και χόρτα και δίνει κοπριά για τον κήπο.",
+   "why_en": "A good hen lays 4–6 eggs a week. She eats scraps and weeds and gives manure for the garden.",
+   "need_el": [
+    "καθαρή ποτίστρα",
+    "ταΐστρα",
+    "σιτάρι, καλαμπόκι, κριθάρι",
+    "τσόφλια αυγών ή όστρακα",
+    "άμμο ή στάχτη για «μπάνιο»"
+   ],
+   "need_en": [
+    "a clean drinker",
+    "a feeder",
+    "wheat, maize, barley",
+    "eggshells or sea shells",
+    "sand or ash for a dust bath"
+   ],
+   "steps_el": [
+    "Δώσε σε κάθε κότα περίπου 120 g σπόρους τη μέρα, ένα φλιτζάνι.",
+    "Πρόσθεσε χόρτα, φλούδες λαχανικών και ψίχουλα. Όχι μουχλιασμένα ή αλμυρά φαγητά.",
+    "Άλλαζε το νερό κάθε μέρα. Μια κότα πίνει περίπου μισό λίτρο τη μέρα.",
+    "Ψήσε τα τσόφλια στον φούρνο, θρυμμάτισέ τα και άφησέ τα σε χωριστό μπολ. Κάνουν γερό το τσόφλι.",
+    "Άφησε μια γωνιά με ξερό χώμα ή στάχτη. Εκεί κάνουν «μπάνιο» και διώχνουν τις ψείρες.",
+    "Μάζευε τα αυγά κάθε μέρα. Άλλαζε το άχυρο όταν λερωθεί.",
+    "Κοίτα τις κότες κάθε μέρα. Μια κότα κουρασμένη, με φουσκωμένα φτερά, βάλ' τη χωριστά."
+   ],
+   "steps_en": [
+    "Give each hen about 120 g of grain a day, about one cup.",
+    "Add greens, vegetable peels and crumbs. No mouldy or salty food.",
+    "Change the water every day. A hen drinks about half a litre a day.",
+    "Bake eggshells in the oven, crush them and put them in a separate bowl. They make strong shells.",
+    "Leave a corner with dry soil or ash. Hens bathe there and get rid of lice.",
+    "Collect eggs every day. Change the straw when it gets dirty.",
+    "Look at your hens daily. Put a tired hen with puffed-up feathers on her own."
+   ],
+   "tip_el": "Το χειμώνα, με λίγο φως, κάνουν λιγότερα αυγά. Είναι φυσικό, δεν είναι αρρώστια.",
+   "tip_en": "In winter, with less daylight, hens lay fewer eggs. This is normal, not illness.",
+   "warn_el": "Πλένε τα χέρια μετά από κότες και αυγά (σαλμονέλα). Μην πλένεις τα αυγά πριν τα αποθηκεύσεις. Ψήνε τα αυγά καλά. Μη δίνεις μουχλιασμένη τροφή.",
+   "warn_en": "Wash your hands after touching hens or eggs (salmonella). Do not wash eggs before storing. Cook eggs well. Never feed mouldy food.",
+   "fig_el": "① ποτίστρα με καθαρό νερό ② ταΐστρα με σπόρους ③ μπολ με θρυμματισμένα τσόφλια ④ λάκκος με ξερό χώμα για μπάνιο ⑤ χόρτα",
+   "fig_en": "① drinker with clean water ② feeder with grain ③ bowl of crushed shells ④ dust-bath hollow ⑤ greens",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 260\" fill=\"none\" stroke=\"#3b2a1a\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"0\" y=\"0\" width=\"400\" height=\"260\" fill=\"#f6ecd6\" stroke=\"none\"/><path d=\"M0 190H400V260H0Z\" fill=\"#c8a27a\" stroke=\"none\"/><path d=\"M0 190H150M250 190H400\"/><path d=\"M8 193l-8 8M22 193l-8 8M36 193l-8 8M50 193l-8 8M64 193l-8 8M78 193l-8 8M92 193l-8 8M106 193l-8 8M120 193l-8 8M134 193l-8 8M148 193l-8 8\" stroke-width=\"1.2\"/><path d=\"M258 193l-8 8M272 193l-8 8M286 193l-8 8M300 193l-8 8M314 193l-8 8M328 193l-8 8M342 193l-8 8M356 193l-8 8M370 193l-8 8M384 193l-8 8M398 193l-8 8\" stroke-width=\"1.2\"/><path d=\"M150 190C160 214 240 214 250 190Z\" fill=\"#bdb5a6\"/><circle cx=\"165\" cy=\"198\" r=\"1.2\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"180\" cy=\"204\" r=\"1.2\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"198\" cy=\"200\" r=\"1.2\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"214\" cy=\"206\" r=\"1.2\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"230\" cy=\"199\" r=\"1.2\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"190\" cy=\"196\" r=\"1.2\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"222\" cy=\"194\" r=\"1.2\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"175\" cy=\"194\" r=\"1.2\" fill=\"#3b2a1a\" stroke=\"none\"/><g transform=\"translate(185 150) scale(1.5 1.5)\"><path d=\"M-24 -6C-44 -18 -44 -40 -32 -42C-30 -30 -26 -20 -18 -14\" fill=\"#c8a27a\"/><path d=\"M-26 -8C-28 -26 -8 -30 8 -26C10 -38 16 -44 24 -42C32 -40 32 -32 30 -26C30 -8 20 6 2 8C-14 9 -26 4 -26 -8Z\" fill=\"#ffffff\"/><path d=\"M20 -44C20 -50 24 -50 25 -46C26 -51 30 -50 30 -45C33 -48 35 -45 32 -41\" fill=\"#e2603a\"/><path d=\"M31 -36L39 -33L31 -30\" fill=\"#f2a65a\"/><path d=\"M30 -28C33 -24 31 -20 28 -22\" fill=\"#e2603a\"/><circle cx=\"25\" cy=\"-36\" r=\"1.6\" fill=\"#3b2a1a\"/><path d=\"M-10 -16C0 -20 12 -14 10 -4C2 0 -8 -4 -10 -16Z\" stroke-width=\"1.5\"/><path d=\"M-4 8V22M-9 25L-4 22L1 25M8 7V22M3 25L8 22L13 25\" stroke-width=\"1.8\"/></g><path d=\"M18 172H112L106 190H24Z\" fill=\"#d9b77e\"/><ellipse cx=\"30\" cy=\"176\" rx=\"2.4\" ry=\"1.5\" fill=\"#f2a65a\" stroke-width=\"0.8\"/><ellipse cx=\"42\" cy=\"175\" rx=\"2.4\" ry=\"1.5\" fill=\"#f2a65a\" stroke-width=\"0.8\"/><ellipse cx=\"55\" cy=\"177\" rx=\"2.4\" ry=\"1.5\" fill=\"#f2a65a\" stroke-width=\"0.8\"/><ellipse cx=\"68\" cy=\"175\" rx=\"2.4\" ry=\"1.5\" fill=\"#f2a65a\" stroke-width=\"0.8\"/><ellipse cx=\"80\" cy=\"176\" rx=\"2.4\" ry=\"1.5\" fill=\"#f2a65a\" stroke-width=\"0.8\"/><ellipse cx=\"94\" cy=\"175\" rx=\"2.4\" ry=\"1.5\" fill=\"#f2a65a\" stroke-width=\"0.8\"/><ellipse cx=\"36\" cy=\"179\" rx=\"2.4\" ry=\"1.5\" fill=\"#f2a65a\" stroke-width=\"0.8\"/><ellipse cx=\"62\" cy=\"179\" rx=\"2.4\" ry=\"1.5\" fill=\"#f2a65a\" stroke-width=\"0.8\"/><ellipse cx=\"88\" cy=\"179\" rx=\"2.4\" ry=\"1.5\" fill=\"#f2a65a\" stroke-width=\"0.8\"/><path d=\"M282 102C282 94 316 94 316 102V172H282Z\" fill=\"#bcd9e3\"/><path d=\"M282 120H316\" stroke-width=\"1\"/><path d=\"M270 172H328L324 186H274Z\" fill=\"#c9ccd1\"/><path d=\"M276 176H322\" stroke-width=\"1\"/><path d=\"M346 176H388C386 186 378 190 367 190C356 190 348 186 346 176Z\" fill=\"#d98e5c\"/><path d=\"M352 172l4-3l3 4z\" fill=\"#ffffff\" stroke-width=\"1\"/><path d=\"M360 170l4-3l3 4z\" fill=\"#ffffff\" stroke-width=\"1\"/><path d=\"M369 172l4-3l3 4z\" fill=\"#ffffff\" stroke-width=\"1\"/><path d=\"M376 169l4-3l3 4z\" fill=\"#ffffff\" stroke-width=\"1\"/><path d=\"M382 173l4-3l3 4z\" fill=\"#ffffff\" stroke-width=\"1\"/><path d=\"M126 190c-4-12 2-20 10-22M130 190c4-10 12-14 20-12M128 190c-2-14-12-18-20-14\" stroke=\"#6f9a52\"/><path d=\"M300 40L299 104M40 140L60 175M368 140L367 172M200 240L200 204M120 230L132 180\" stroke-width=\"1.2\"/><g fill=\"#3b2a1a\" stroke=\"none\"><circle cx=\"299\" cy=\"104\" r=\"2\"/><circle cx=\"300\" cy=\"40\" r=\"10\"/><circle cx=\"60\" cy=\"175\" r=\"2\"/><circle cx=\"40\" cy=\"140\" r=\"10\"/><circle cx=\"367\" cy=\"172\" r=\"2\"/><circle cx=\"368\" cy=\"140\" r=\"10\"/><circle cx=\"200\" cy=\"204\" r=\"2\"/><circle cx=\"200\" cy=\"240\" r=\"10\"/><circle cx=\"132\" cy=\"180\" r=\"2\"/><circle cx=\"120\" cy=\"230\" r=\"10\"/></g><g fill=\"#fff\" stroke=\"none\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" text-anchor=\"middle\"><text x=\"300\" y=\"44.5\">1</text><text x=\"40\" y=\"144.5\">2</text><text x=\"368\" y=\"144.5\">3</text><text x=\"200\" y=\"244.5\">4</text><text x=\"120\" y=\"234.5\">5</text></g></svg>"
+  },
+  {
+   "id": "ani-broody",
+   "level": 2,
+   "title_el": "Κλωσσοπούλια με κλώσσα (21 μέρες)",
+   "title_en": "Hatching chicks with a broody hen (21 days)",
+   "time_el": "21 μέρες",
+   "time_en": "21 days",
+   "why_el": "Με κλώσσα δεν χρειάζεσαι ρεύμα ούτε κλωσσομηχανή. Έτσι το κοτέτσι ανανεώνεται κάθε χρόνο μόνο του.",
+   "why_en": "With a broody hen you need no power and no incubator. Your flock renews itself every year.",
+   "need_el": [
+    "κότα που «κλωσσάει»",
+    "10–12 γονιμοποιημένα αυγά (υπάρχει κόκορας)",
+    "ήσυχη φωλιά",
+    "μολύβι",
+    "φακός",
+    "ρηχό πιατάκι, βότσαλα"
+   ],
+   "need_en": [
+    "a broody hen",
+    "10–12 fertile eggs (a rooster is needed)",
+    "a quiet nest",
+    "a pencil",
+    "a torch",
+    "a shallow dish, pebbles"
+   ],
+   "steps_el": [
+    "Κλώσσα είναι η κότα που δεν σηκώνεται από τη φωλιά και «κλουκίζει». Άφησέ τη 2 μέρες να το δείξει.",
+    "Διάλεξε καθαρά αυγά, έως 10 ημερών. Σημάδεψέ τα με μολύβι.",
+    "Βάλ' τα κάτω της το βράδυ. Δώσε νερό και τροφή κοντά στη φωλιά.",
+    "Τη 7η μέρα, στο σκοτάδι, φώτισε κάθε αυγό με τον φακό. Αν έχει φλεβίτσες, ζει.",
+    "Βγάλε τα αυγά που είναι εντελώς διάφανα. Δεν θα βγάλουν πουλί.",
+    "Από τη 18η μέρα μην την ενοχλείς. Τα πουλάκια βγαίνουν τη 19η–22η μέρα.",
+    "Μη βοηθάς το πουλί να σπάσει το τσόφλι. Συνήθως το βλάπτεις.",
+    "Δώσε νερό σε ρηχό πιατάκι με βότσαλα και ψιλοαλεσμένο καλαμπόκι ή σιτάρι."
+   ],
+   "steps_en": [
+    "A broody hen will not leave the nest and clucks. Give her 2 days to show it.",
+    "Choose clean eggs, up to 10 days old. Mark them with pencil.",
+    "Put them under her in the evening. Keep water and feed near the nest.",
+    "On day 7, in the dark, shine the torch through each egg. Little veins mean it is alive.",
+    "Remove eggs that are fully clear. They will not hatch.",
+    "From day 18 do not disturb her. Chicks hatch on days 19–22.",
+    "Do not help a chick out of the shell. You will usually harm it.",
+    "Give water in a shallow dish with pebbles, and finely ground maize or wheat."
+   ],
+   "tip_el": "Τα σημαδεμένα αυγά σε βοηθούν να βγάζεις τα καινούργια που θα γεννήσουν άλλες κότες στη φωλιά.",
+   "tip_en": "Marked eggs help you remove new eggs other hens lay in the same nest.",
+   "warn_el": "Τα πουλάκια πνίγονται εύκολα σε βαθύ νερό· βάλε πάντα βότσαλα. Κράτα γάτες και σκύλους μακριά. Πλένε τα χέρια.",
+   "warn_en": "Chicks drown easily in deep water; always add pebbles. Keep cats and dogs away. Wash your hands.",
+   "fig_el": "① κλώσσα στη φωλιά ② αυγό στον φακό με φλεβίτσες: ζει ③ διάφανο αυγό: βγάλ' το ④ πουλάκι την 21η μέρα ⑤ ρηχό νερό με βότσαλα",
+   "fig_en": "① broody hen on the nest ② egg in torchlight with veins: alive ③ clear egg: remove ④ chick on day 21 ⑤ shallow water with pebbles",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 260\" fill=\"none\" stroke=\"#3b2a1a\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"0\" y=\"0\" width=\"400\" height=\"260\" fill=\"#f6ecd6\" stroke=\"none\"/><path d=\"M133 12V248\" stroke-width=\"1\" stroke-dasharray=\"3 4\"/><path d=\"M266 12V248\" stroke-width=\"1\" stroke-dasharray=\"3 4\"/><path d=\"M12 80V178H122V80\" fill=\"#d9b77e\"/><path d=\"M18 86V172H116V86Z\" fill=\"#f6ecd6\"/><ellipse cx=\"67\" cy=\"160\" rx=\"46\" ry=\"14\" fill=\"#d9b77e\"/><path d=\"M28 156l8 4M46 166l8-3M84 165l9-4M98 156l8 4\" stroke-width=\"1\"/><ellipse cx=\"30\" cy=\"153\" rx=\"7\" ry=\"9\" fill=\"#ffffff\" stroke-width=\"1.5\"/><ellipse cx=\"104\" cy=\"153\" rx=\"7\" ry=\"9\" fill=\"#ffffff\" stroke-width=\"1.5\"/><g transform=\"translate(68 150) scale(0.95 0.95)\"><path d=\"M-24 -6C-44 -18 -44 -40 -32 -42C-30 -30 -26 -20 -18 -14\" fill=\"#c8a27a\"/><path d=\"M-26 -8C-28 -26 -8 -30 8 -26C10 -38 16 -44 24 -42C32 -40 32 -32 30 -26C30 -8 20 6 2 8C-14 9 -26 4 -26 -8Z\" fill=\"#ffffff\"/><path d=\"M20 -44C20 -50 24 -50 25 -46C26 -51 30 -50 30 -45C33 -48 35 -45 32 -41\" fill=\"#e2603a\"/><path d=\"M31 -36L39 -33L31 -30\" fill=\"#f2a65a\"/><path d=\"M30 -28C33 -24 31 -20 28 -22\" fill=\"#e2603a\"/><circle cx=\"25\" cy=\"-36\" r=\"1.6\" fill=\"#3b2a1a\"/><path d=\"M-10 -16C0 -20 12 -14 10 -4C2 0 -8 -4 -10 -16Z\" stroke-width=\"1.5\"/><path d=\"M-4 8V22M-9 25L-4 22L1 25M8 7V22M3 25L8 22L13 25\" stroke-width=\"1.8\"/></g><path d=\"M188 168H212V230H188Z\" fill=\"#c9ccd1\"/><path d=\"M184 162H216V172H184Z\" fill=\"#c9ccd1\"/><path d=\"M168 132l-10-6M232 132l10-6M200 72v-10M172 100h-10M228 100h10\" stroke=\"#f2a65a\" stroke-width=\"2.5\"/><ellipse cx=\"200\" cy=\"112\" rx=\"24\" ry=\"32\" fill=\"#f2a65a\"/><circle cx=\"198\" cy=\"112\" r=\"5\" fill=\"#e2603a\"/><path d=\"M198 112c-8-6-14-4-18 2M198 112c6-10 14-12 18-8M198 112c2 8 8 14 14 14M198 112c-6 6-8 14-6 20\" stroke=\"#b23a2a\" stroke-width=\"1.3\"/><ellipse cx=\"165\" cy=\"200\" rx=\"12\" ry=\"16\" fill=\"#ffffff\" stroke-width=\"1.5\"/><circle cx=\"165\" cy=\"200\" r=\"20\" stroke=\"#b23a2a\" stroke-width=\"3\"/><path d=\"M151.0 186.0L179.0 214.0\" stroke=\"#b23a2a\" stroke-width=\"3\"/><path d=\"M352 196c-10 0-16-6-16-14l5 4l4-6l4 5l5-6l4 6l5-5l4 6c0 6-6 10-15 10z\" fill=\"#ffffff\" stroke-width=\"1.5\"/><circle cx=\"318\" cy=\"160\" r=\"20\" fill=\"#f2a65a\"/><circle cx=\"336\" cy=\"136\" r=\"12\" fill=\"#f2a65a\"/><path d=\"M347 133l9 3l-9 3\" fill=\"#e2603a\"/><circle cx=\"339\" cy=\"132\" r=\"1.6\" fill=\"#3b2a1a\"/><path d=\"M304 158c8 6 18 4 22-4\" stroke-width=\"1.5\"/><path d=\"M312 179v12M306 194l6-3l6 3M324 178v13M318 194l6-3l6 3\" stroke-width=\"1.6\"/><ellipse cx=\"310\" cy=\"222\" rx=\"30\" ry=\"8\" fill=\"#bcd9e3\"/><circle cx=\"298\" cy=\"221\" r=\"3.5\" fill=\"#bdb5a6\" stroke-width=\"1\"/><circle cx=\"310\" cy=\"224\" r=\"3.5\" fill=\"#bdb5a6\" stroke-width=\"1\"/><circle cx=\"322\" cy=\"220\" r=\"3.5\" fill=\"#bdb5a6\" stroke-width=\"1\"/><path d=\"M110 40L80 112M245 40L205 108M150 245L162 214M380 110L340 140M375 240L335 222\" stroke-width=\"1.2\"/><g fill=\"#3b2a1a\" stroke=\"none\"><circle cx=\"80\" cy=\"112\" r=\"2\"/><circle cx=\"110\" cy=\"40\" r=\"10\"/><circle cx=\"205\" cy=\"108\" r=\"2\"/><circle cx=\"245\" cy=\"40\" r=\"10\"/><circle cx=\"162\" cy=\"214\" r=\"2\"/><circle cx=\"150\" cy=\"245\" r=\"10\"/><circle cx=\"340\" cy=\"140\" r=\"2\"/><circle cx=\"380\" cy=\"110\" r=\"10\"/><circle cx=\"335\" cy=\"222\" r=\"2\"/><circle cx=\"375\" cy=\"240\" r=\"10\"/></g><g fill=\"#fff\" stroke=\"none\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" text-anchor=\"middle\"><text x=\"110\" y=\"44.5\">1</text><text x=\"245\" y=\"44.5\">2</text><text x=\"150\" y=\"249.5\">3</text><text x=\"380\" y=\"114.5\">4</text><text x=\"375\" y=\"244.5\">5</text></g></svg>"
+  },
+  {
+   "id": "ani-rabbits",
+   "level": 1,
+   "title_el": "Κουνέλια: κλουβί, τροφή, καθαριότητα",
+   "title_en": "Keeping rabbits (hutch, food, cleanliness)",
+   "time_el": "15 λεπτά τη μέρα",
+   "time_en": "15 minutes a day",
+   "why_el": "Τα κουνέλια τρώνε κυρίως χόρτο και σανό, πολλαπλασιάζονται γρήγορα και δίνουν κρέας και κοπριά για τον κήπο.",
+   "why_en": "Rabbits eat mostly grass and hay, breed quickly and give meat and manure for the garden.",
+   "need_el": [
+    "κλουβί περίπου 1,5 × 0,6 × 0,6 m για κάθε ενήλικο",
+    "σανό",
+    "χόρτα και λαχανικά",
+    "ποτίστρα",
+    "συρτάρι για κοπριές"
+   ],
+   "need_en": [
+    "a hutch about 1.5 × 0.6 × 0.6 m per adult",
+    "hay",
+    "greens and vegetables",
+    "a water bottle",
+    "a droppings tray"
+   ],
+   "steps_el": [
+    "Στήσε το κλουβί σε σκιά, 50 cm πάνω από το έδαφος, μακριά από βροχή και αέρα.",
+    "Φτιάξε ένα κλειστό σκοτεινό κουτί για ύπνο και ένα μέρος με σίτα μπροστά.",
+    "Δώσε σανό χωρίς όριο. Είναι το 80% της τροφής τους.",
+    "Δώσε κάθε μέρα μια χούφτα στεγνά χόρτα ή λαχανικά. Άλλαζε την τροφή σιγά σιγά.",
+    "Νερό καθαρό πάντα. Το καλοκαίρι ένα κουνέλι πίνει έως μισό λίτρο.",
+    "Άδειαζε το συρτάρι κάθε μέρα. Η κοπριά πάει κατευθείαν στον κήπο.",
+    "Χώρισε τα αρσενικά από τα θηλυκά στους 3 μήνες, αλλιώς θα πολλαπλασιαστούν ανεξέλεγκτα."
+   ],
+   "steps_en": [
+    "Set the hutch in shade, 50 cm off the ground, away from rain and wind.",
+    "Make a closed dark sleeping box and a part with a wire front.",
+    "Give unlimited hay. It is 80% of their food.",
+    "Give a handful of dry greens or vegetables daily. Change food slowly.",
+    "Clean water always. In summer a rabbit drinks up to half a litre.",
+    "Empty the tray every day. The droppings go straight onto the garden.",
+    "Separate males from females at 3 months, or they will breed out of control."
+   ],
+   "tip_el": "Κουνελοκοπριά μπαίνει στον κήπο χωρίς χώνεμα. Δεν «καίει» τα φυτά.",
+   "tip_en": "Rabbit droppings can go on the garden without composting. They do not burn plants.",
+   "warn_el": "Ποτέ μη σηκώνεις κουνέλι από τα αυτιά. Πάνω από 28 °C κινδυνεύει από θερμοπληξία. Όχι βρεγμένα, ψεκασμένα ή μουχλιασμένα χόρτα.",
+   "warn_en": "Never lift a rabbit by its ears. Above 28 °C it risks heatstroke. No wet, sprayed or mouldy greens.",
+   "fig_el": "① κουτί για ύπνο ② μπροστινή σίτα ③ θήκη για σανό ④ ποτίστρα ⑤ συρτάρι για κοπριές ⑥ πόδια 50 cm",
+   "fig_en": "① sleeping box ② wire front ③ hay rack ④ water bottle ⑤ droppings tray ⑥ legs 50 cm",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 260\" fill=\"none\" stroke=\"#3b2a1a\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"0\" y=\"0\" width=\"400\" height=\"260\" fill=\"#f6ecd6\" stroke=\"none\"/><path d=\"M0 238H400V260H0Z\" fill=\"#c8a27a\" stroke=\"none\"/><path d=\"M0 238H400\"/><path d=\"M8 241l-8 8M22 241l-8 8M36 241l-8 8M50 241l-8 8M64 241l-8 8M78 241l-8 8M92 241l-8 8M106 241l-8 8M120 241l-8 8M134 241l-8 8M148 241l-8 8M162 241l-8 8M176 241l-8 8M190 241l-8 8M204 241l-8 8M218 241l-8 8M232 241l-8 8M246 241l-8 8M260 241l-8 8M274 241l-8 8M288 241l-8 8M302 241l-8 8M316 241l-8 8M330 241l-8 8M344 241l-8 8M358 241l-8 8M372 241l-8 8M386 241l-8 8\" stroke-width=\"1.2\"/><path d=\"M55 190V238M318 190V238\" stroke=\"#d9b77e\" stroke-width=\"7\"/><path d=\"M51 190V238M59 190V238M314 190V238M322 190V238\" stroke-width=\"1.5\"/><path d=\"M40 78H330V182H40Z\" fill=\"#d9b77e\"/><path d=\"M134 86H322V176H134Z\" fill=\"#f6ecd6\"/><g transform=\"translate(232 172) scale(1.0)\"><path d=\"M-30 0C-36 -20 -20 -32 0 -30C14 -29 22 -22 22 -10C22 0 14 4 0 4H-24C-30 4 -31 2 -30 0Z\" fill=\"#bdb5a6\"/><ellipse cx=\"26\" cy=\"-22\" rx=\"11\" ry=\"9\" fill=\"#bdb5a6\"/><path d=\"M22 -29C14 -46 14 -54 20 -52C26 -50 28 -40 27 -30\" fill=\"#bdb5a6\"/><path d=\"M27 -30C30 -48 34 -54 38 -50C40 -44 34 -36 31 -29\" fill=\"#bdb5a6\"/><circle cx=\"29\" cy=\"-24\" r=\"1.5\" fill=\"#3b2a1a\"/><circle cx=\"36\" cy=\"-20\" r=\"1.2\" fill=\"#3b2a1a\"/><circle cx=\"-30\" cy=\"-10\" r=\"5\" fill=\"#ffffff\"/><path d=\"M8 4C12 0 18 2 18 4\" stroke-width=\"1.5\"/></g><path d=\"M108 176V150C108 138 126 138 126 150V176Z\" fill=\"#3b2a1a\"/><path d=\"M130 82V180\" stroke-width=\"2.5\"/><path d=\"M140 92L170 92L160 128H150Z\" fill=\"#a9c98b\"/><path d=\"M144 92l9 34M152 92l4 34M160 92l-2 34M168 92l-8 34\" stroke-width=\"1\"/><path d=\"M142 96c4-8 8-10 12-4M156 94c4-8 10-8 12-2\" stroke=\"#6f9a52\" stroke-width=\"1.5\"/><path d=\"M146 86V176M158 86V176M170 86V176M182 86V176M194 86V176M206 86V176M218 86V176M230 86V176M242 86V176M254 86V176M266 86V176M278 86V176M290 86V176M302 86V176M314 86V176M134 98H322M134 110H322M134 122H322M134 134H322M134 146H322M134 158H322M134 170H322\" stroke-width=\"0.7\"/><path d=\"M292 96H312V140H292Z\" fill=\"#bcd9e3\"/><path d=\"M302 140V156l-4 4\" stroke-width=\"2.5\"/><path d=\"M290 100H314\" stroke-width=\"2.5\"/><path d=\"M28 76L342 58V68L28 86Z\" fill=\"#d98e5c\"/><path d=\"M42 182H332V192H42Z\" fill=\"#c9ccd1\"/><path d=\"M332 184h8v6h-8\" stroke-width=\"2.5\"/><path d=\"M85 215L85 140M230 30L230 104M160 30L156 100M375 118L312 118M375 200L338 188M270 220L316 215\" stroke-width=\"1.2\"/><g fill=\"#3b2a1a\" stroke=\"none\"><circle cx=\"85\" cy=\"140\" r=\"2\"/><circle cx=\"85\" cy=\"215\" r=\"10\"/><circle cx=\"230\" cy=\"104\" r=\"2\"/><circle cx=\"230\" cy=\"30\" r=\"10\"/><circle cx=\"156\" cy=\"100\" r=\"2\"/><circle cx=\"160\" cy=\"30\" r=\"10\"/><circle cx=\"312\" cy=\"118\" r=\"2\"/><circle cx=\"375\" cy=\"118\" r=\"10\"/><circle cx=\"338\" cy=\"188\" r=\"2\"/><circle cx=\"375\" cy=\"200\" r=\"10\"/><circle cx=\"316\" cy=\"215\" r=\"2\"/><circle cx=\"270\" cy=\"220\" r=\"10\"/></g><g fill=\"#fff\" stroke=\"none\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" text-anchor=\"middle\"><text x=\"85\" y=\"219.5\">1</text><text x=\"230\" y=\"34.5\">2</text><text x=\"160\" y=\"34.5\">3</text><text x=\"375\" y=\"122.5\">4</text><text x=\"375\" y=\"204.5\">5</text><text x=\"270\" y=\"224.5\">6</text></g></svg>"
+  },
+  {
+   "id": "ani-goat",
+   "level": 2,
+   "title_el": "Κατσίκα: άρμεγμα με το χέρι και βράσιμο γάλακτος",
+   "title_en": "Keeping a goat, milking by hand, boiling milk",
+   "time_el": "20 λεπτά, 2 φορές τη μέρα",
+   "time_en": "20 minutes, twice a day",
+   "why_el": "Μια κατσίκα δίνει 1–3 λίτρα γάλα τη μέρα. Τρώει θάμνους και χόρτα και ζει με λίγα.",
+   "why_en": "A goat gives 1–3 litres of milk a day. She eats shrubs and grass and needs little.",
+   "need_el": [
+    "κατσίκα που έχει γεννήσει",
+    "μαντρί με στέγη",
+    "καθαρό ανοξείδωτο κουβά",
+    "τουλπάνι (λεπτό πανί)",
+    "κατσαρόλα"
+   ],
+   "need_en": [
+    "a goat that has kidded",
+    "a pen with a roof",
+    "a clean stainless bucket",
+    "cheesecloth",
+    "a cooking pot"
+   ],
+   "steps_el": [
+    "Δώσε στεγνό μαντρί, νερό πάντα, σανό, βοσκή και λίγο αλάτι για γλείψιμο.",
+    "Πριν το άρμεγμα, πλύνε τα χέρια και σκούπισε το μαστάρι με ζεστό νερό.",
+    "Πέτα τις 2 πρώτες ριξιές από κάθε θηλή. Εκεί είναι τα μικρόβια.",
+    "Κλείσε τη βάση της θηλής με αντίχειρα και δείκτη. Μετά σφίξε τα άλλα δάχτυλα, από πάνω προς τα κάτω.",
+    "Άρμεγε ήρεμα, πρωί και βράδυ, την ίδια ώρα κάθε μέρα.",
+    "Σούρωσε το γάλα με τουλπάνι αμέσως.",
+    "Βράσε το: άφησέ το να φουσκώσει και κράτα το 2–3 λεπτά ανακατεύοντας. Μετά κρύωσέ το γρήγορα."
+   ],
+   "steps_en": [
+    "Give a dry pen, water always, hay, grazing and a salt lick.",
+    "Before milking, wash your hands and wipe the udder with warm water.",
+    "Throw away the first 2 squirts from each teat. That is where germs are.",
+    "Close the top of the teat with thumb and finger. Then squeeze the other fingers, top to bottom.",
+    "Milk calmly, morning and evening, at the same time each day.",
+    "Strain the milk through cheesecloth at once.",
+    "Boil it: let it rise and keep it 2–3 minutes, stirring. Then cool it fast."
+   ],
+   "tip_el": "Αν η κατσίκα κλωτσάει, δώσε της λίγο καρπό να τρώει την ώρα του αρμέγματος.",
+   "tip_en": "If the goat kicks, give her a little grain to eat while you milk.",
+   "warn_el": "Ποτέ ωμό γάλα: μπορεί να φέρει μελιταίο πυρετό (βρουκέλλωση). Πάντα βράσιμο. Μαστάρι ζεστό, σκληρό ή γάλα με θρόμβους: μην το πίνεις, φώναξε κτηνίατρο.",
+   "warn_en": "Never drink raw milk: it can carry brucellosis (Malta fever). Always boil. Hot, hard udder or lumpy milk: do not drink it, call a vet.",
+   "fig_el": "① θηλή στο μαστάρι ② καθαρός κουβάς ③ σούρωμα με τουλπάνι ④ βράσιμο του γάλακτος ⑤ φωτιά",
+   "fig_en": "① teat on the udder ② clean bucket ③ straining through cheesecloth ④ boiling the milk ⑤ fire",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 260\" fill=\"none\" stroke=\"#3b2a1a\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"0\" y=\"0\" width=\"400\" height=\"260\" fill=\"#f6ecd6\" stroke=\"none\"/><path d=\"M240 12V248\" stroke-width=\"1\" stroke-dasharray=\"3 4\"/><path d=\"M0 212H240\" /><path d=\"M8 215l-8 8M22 215l-8 8M36 215l-8 8M50 215l-8 8M64 215l-8 8M78 215l-8 8M92 215l-8 8M106 215l-8 8M120 215l-8 8M134 215l-8 8M148 215l-8 8M162 215l-8 8M176 215l-8 8M190 215l-8 8M204 215l-8 8M218 215l-8 8M232 215l-8 8\" stroke-width=\"1.2\"/><path d=\"M78 140V210M92 140V210M146 140V210M160 140V210\" stroke=\"#c8a27a\" stroke-width=\"8\"/><path d=\"M74 140V210M82 140V210M88 140V210M96 140V210M142 140V210M150 140V210M156 140V210M164 140V210\" stroke-width=\"1.3\"/><path d=\"M62 106l-10-16\" stroke-width=\"3\"/><ellipse cx=\"118\" cy=\"118\" rx=\"62\" ry=\"30\" fill=\"#c8a27a\"/><path d=\"M162 104C170 90 176 76 184 66L200 74C196 90 186 110 176 120Z\" fill=\"#c8a27a\"/><path d=\"M184 66C186 58 196 54 204 58L218 76C220 82 214 86 208 84L198 80Z\" fill=\"#c8a27a\"/><path d=\"M190 60C184 46 172 42 166 48\" stroke-width=\"3\"/><path d=\"M196 58C192 44 180 38 174 42\" stroke-width=\"2\"/><path d=\"M188 66l-12 4l10 4\" fill=\"#c8a27a\"/><circle cx=\"200\" cy=\"66\" r=\"1.8\" fill=\"#3b2a1a\"/><path d=\"M206 84l2 12l4-10\" stroke-width=\"1.5\"/><path d=\"M104 142C104 160 132 160 132 142Z\" fill=\"#d98e5c\"/><path d=\"M110 154v8M126 154v8\" stroke=\"#d98e5c\" stroke-width=\"5\"/><path d=\"M107 154v9h6v-9M123 154v9h6v-9\" stroke-width=\"1.3\"/><path d=\"M110 164v20M126 164v20\" stroke=\"#ffffff\" stroke-width=\"2\" stroke-dasharray=\"3 3\"/><path d=\"M98 184H140L136 210H102Z\" fill=\"#c9ccd1\"/><path d=\"M100 188C110 192 128 192 138 188\" fill=\"#ffffff\" stroke-width=\"1.2\"/><path d=\"M282 40H368L362 112H288Z\" fill=\"#ffffff\"/><path d=\"M276 38C300 50 350 50 374 38L370 56C350 64 300 64 280 56Z\" fill=\"#f6ecd6\" stroke-dasharray=\"2 3\"/><path d=\"M290 60H360L358 80H292Z\" fill=\"#ffffff\" stroke=\"none\"/><path d=\"M276 46H374\" stroke-width=\"2.5\"/><path d=\"M276 150H374V200C374 206 370 208 364 208H286C280 208 276 206 276 200Z\" fill=\"#c9ccd1\"/><path d=\"M266 152H276M374 152H384\" stroke-width=\"3\"/><path d=\"M280 158H370\" stroke-width=\"1.2\"/><circle cx=\"300\" cy=\"146\" r=\"3\" fill=\"#ffffff\" stroke-width=\"1\"/><circle cx=\"322\" cy=\"142\" r=\"3\" fill=\"#ffffff\" stroke-width=\"1\"/><circle cx=\"346\" cy=\"146\" r=\"3\" fill=\"#ffffff\" stroke-width=\"1\"/><circle cx=\"334\" cy=\"136\" r=\"3\" fill=\"#ffffff\" stroke-width=\"1\"/><path d=\"M303.0 238C303.0 218.2 320.6 214.24 325 198.4C331.6 216.22 347.0 218.2 347.0 238Z\" fill=\"#f2a65a\"/><path d=\"M316.2 238C316.2 226.12 325 224.14 327.2 216.22C333.8 226.12 336.0 230.08 333.8 238Z\" fill=\"#e2603a\"/><path d=\"M294.2 242L355.8 234M294.2 234L355.8 242\" stroke-width=\"5\" stroke=\"#d9b77e\"/><path d=\"M294.2 242L355.8 234M294.2 234L355.8 242\" stroke-width=\"1\"/><path d=\"M40 160L104 160M190 236L136 200M255 30L290 48M255 130L282 180M385 238L350 228\" stroke-width=\"1.2\"/><g fill=\"#3b2a1a\" stroke=\"none\"><circle cx=\"104\" cy=\"160\" r=\"2\"/><circle cx=\"40\" cy=\"160\" r=\"10\"/><circle cx=\"136\" cy=\"200\" r=\"2\"/><circle cx=\"190\" cy=\"236\" r=\"10\"/><circle cx=\"290\" cy=\"48\" r=\"2\"/><circle cx=\"255\" cy=\"30\" r=\"10\"/><circle cx=\"282\" cy=\"180\" r=\"2\"/><circle cx=\"255\" cy=\"130\" r=\"10\"/><circle cx=\"350\" cy=\"228\" r=\"2\"/><circle cx=\"385\" cy=\"238\" r=\"10\"/></g><g fill=\"#fff\" stroke=\"none\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" text-anchor=\"middle\"><text x=\"40\" y=\"164.5\">1</text><text x=\"190\" y=\"240.5\">2</text><text x=\"255\" y=\"34.5\">3</text><text x=\"255\" y=\"134.5\">4</text><text x=\"385\" y=\"242.5\">5</text></g></svg>"
+  },
+  {
+   "id": "ani-bees",
+   "level": 3,
+   "title_el": "Μέλισσες: η κυψέλη και το ασφαλές τρύγημα",
+   "title_en": "Bees: the hive and taking honey safely",
+   "time_el": "1 πρωινό (τρύγος)",
+   "time_en": "1 morning (harvest)",
+   "why_el": "Το μέλι δεν χαλάει ποτέ, είναι γλυκό και τροφή. Οι μέλισσες επικονιάζουν και τον κήπο σου.",
+   "why_en": "Honey never spoils and is a sweet food. Bees also pollinate your garden.",
+   "need_el": [
+    "κυψέλη με πλαίσια",
+    "στολή με μάσκα και γάντια",
+    "καπνιστήρι με ξερά φύλλα ή λινάτσα",
+    "ξέστρο",
+    "μαχαίρι, σίτα, δοχεία"
+   ],
+   "need_en": [
+    "a hive with frames",
+    "a suit with veil and gloves",
+    "a smoker with dry leaves or sacking",
+    "a hive tool",
+    "a knife, a sieve, jars"
+   ],
+   "steps_el": [
+    "Μάθε από μελισσοκόμο. Η κυψέλη έχει κάτω τη γονοφωλιά (μικρά) και πάνω το μελιτοθάλαμο.",
+    "Βάλε την κυψέλη με την είσοδο προς τον ήλιο του πρωινού, μακριά από δρόμους και σπίτια.",
+    "Τρύγα σε ζεστή, ήσυχη μέρα, το πρωί. Φόρεσε όλη τη στολή.",
+    "Δώσε 2–3 απαλές ριξιές καπνό στην είσοδο. Περίμενε 1 λεπτό.",
+    "Άνοιξε σιγά. Πάρε μόνο πλαίσια με μέλι σκεπασμένο με κερί κατά τα 3/4.",
+    "Άφησε τη γονοφωλιά και 15–20 kg μέλι για τον χειμώνα.",
+    "Κόψε το κερί, άφησε το μέλι να στραγγίσει σε σίτα και βάλ' το σε καθαρά βάζα."
+   ],
+   "steps_en": [
+    "Learn from a beekeeper. The bottom box is the brood (young), the top box holds honey.",
+    "Face the entrance to morning sun, away from roads and houses.",
+    "Harvest on a warm calm morning. Wear the full suit.",
+    "Give 2–3 gentle puffs of smoke at the entrance. Wait 1 minute.",
+    "Open slowly. Take only frames whose honey is three-quarters capped with wax.",
+    "Leave the brood box and 15–20 kg of honey for winter.",
+    "Cut off the wax caps, let the honey drain through a sieve and fill clean jars."
+   ],
+   "tip_el": "Κινήσου αργά. Οι μέλισσες θυμώνουν με απότομες κινήσεις και έντονες μυρωδιές.",
+   "tip_en": "Move slowly. Bees get angry at quick moves and strong smells.",
+   "warn_el": "Αλλεργία σε τσίμπημα (πρήξιμο στο πρόσωπο, δύσπνοια) = άμεσα 166 / 112. Οι αλλεργικοί δεν πλησιάζουν κυψέλες. Μην πολυκαπνίζεις: καις τις μέλισσες. Όχι μέλι σε μωρά κάτω του 1 έτους.",
+   "warn_en": "Sting allergy (swollen face, hard breathing) = call emergency (112) at once. Allergic people stay away from hives. Do not over-smoke: it burns bees. No honey for babies under 1 year.",
+   "fig_el": "① καπάκι ② μελιτοθάλαμος ③ γονοφωλιά ④ είσοδος ⑤ πλαίσιο με σκεπασμένο μέλι ⑥ καπνιστήρι",
+   "fig_en": "① roof ② honey box ③ brood box ④ entrance ⑤ frame with capped honey ⑥ smoker",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 260\" fill=\"none\" stroke=\"#3b2a1a\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"0\" y=\"0\" width=\"400\" height=\"260\" fill=\"#f6ecd6\" stroke=\"none\"/><path d=\"M0 232H400V260H0Z\" fill=\"#c8a27a\" stroke=\"none\"/><path d=\"M0 232H400\"/><path d=\"M8 235l-8 8M22 235l-8 8M36 235l-8 8M50 235l-8 8M64 235l-8 8M78 235l-8 8M92 235l-8 8M106 235l-8 8M120 235l-8 8M134 235l-8 8M148 235l-8 8M162 235l-8 8M176 235l-8 8M190 235l-8 8M204 235l-8 8M218 235l-8 8M232 235l-8 8M246 235l-8 8M260 235l-8 8M274 235l-8 8M288 235l-8 8M302 235l-8 8M316 235l-8 8M330 235l-8 8M344 235l-8 8M358 235l-8 8M372 235l-8 8M386 235l-8 8\" stroke-width=\"1.2\"/><path d=\"M66 208V232M174 208V232\" stroke=\"#d9b77e\" stroke-width=\"7\"/><path d=\"M56 204H184V212H56Z\" fill=\"#d9b77e\"/><path d=\"M60 146H180V204H60Z\" fill=\"#d9b77e\"/><path d=\"M60 96H180V146H60Z\" fill=\"#d9b77e\"/><path d=\"M54 82H186V96H54Z\" fill=\"#c9ccd1\"/><path d=\"M70 120H82M158 120H170M70 172H82M158 172H170\" stroke-width=\"3\"/><path d=\"M96 196H144V202H96Z\" fill=\"#3b2a1a\"/><ellipse cx=\"110\" cy=\"188\" rx=\"5\" ry=\"3\" fill=\"#f2a65a\" stroke-width=\"1\"/><path d=\"M109 185v6M112 185v6\" stroke-width=\"1\"/><path d=\"M110 185c-3-6 3-6 2 0\" stroke-width=\"0.8\" fill=\"#ffffff\"/><ellipse cx=\"128\" cy=\"182\" rx=\"5\" ry=\"3\" fill=\"#f2a65a\" stroke-width=\"1\"/><path d=\"M127 179v6M130 179v6\" stroke-width=\"1\"/><path d=\"M128 179c-3-6 3-6 2 0\" stroke-width=\"0.8\" fill=\"#ffffff\"/><ellipse cx=\"150\" cy=\"176\" rx=\"5\" ry=\"3\" fill=\"#f2a65a\" stroke-width=\"1\"/><path d=\"M149 173v6M152 173v6\" stroke-width=\"1\"/><path d=\"M150 173c-3-6 3-6 2 0\" stroke-width=\"0.8\" fill=\"#ffffff\"/><path d=\"M204 56H332V64H204Z\" fill=\"#d9b77e\"/><path d=\"M214 64H322V156H214Z\" fill=\"#d9b77e\"/><path d=\"M222 70H314V148H222Z\" fill=\"#f2a65a\"/><path d=\"M224 80l3-5h6l3 5l-3 5h-6zM239 80l3-5h6l3 5l-3 5h-6zM254 80l3-5h6l3 5l-3 5h-6zM269 80l3-5h6l3 5l-3 5h-6zM284 80l3-5h6l3 5l-3 5h-6zM299 80l3-5h6l3 5l-3 5h-6zM231 95l3-5h6l3 5l-3 5h-6zM246 95l3-5h6l3 5l-3 5h-6zM261 95l3-5h6l3 5l-3 5h-6zM276 95l3-5h6l3 5l-3 5h-6zM291 95l3-5h6l3 5l-3 5h-6zM224 110l3-5h6l3 5l-3 5h-6zM239 110l3-5h6l3 5l-3 5h-6zM254 110l3-5h6l3 5l-3 5h-6zM269 110l3-5h6l3 5l-3 5h-6zM284 110l3-5h6l3 5l-3 5h-6zM299 110l3-5h6l3 5l-3 5h-6zM231 125l3-5h6l3 5l-3 5h-6zM246 125l3-5h6l3 5l-3 5h-6zM261 125l3-5h6l3 5l-3 5h-6zM276 125l3-5h6l3 5l-3 5h-6zM291 125l3-5h6l3 5l-3 5h-6zM224 140l3-5h6l3 5l-3 5h-6zM239 140l3-5h6l3 5l-3 5h-6zM254 140l3-5h6l3 5l-3 5h-6zM269 140l3-5h6l3 5l-3 5h-6zM284 140l3-5h6l3 5l-3 5h-6zM299 140l3-5h6l3 5l-3 5h-6z\" stroke-width=\"0.9\" fill=\"#ffffff\" fill-opacity=\"0.35\"/><path d=\"M340 168H372V222H340Z\" fill=\"#c9ccd1\"/><path d=\"M340 168L348 150H364L372 168Z\" fill=\"#c9ccd1\"/><path d=\"M352 150l4-8\" stroke-width=\"3\"/><path d=\"M340 180L322 186V212L340 216Z\" fill=\"#d9b77e\"/><path d=\"M322 194l-6 4l6 4l-6 4\" stroke-width=\"1.3\"/><path d=\"M356 136c-8-6 0-12-4-18c-4-6 4-10 2-16M362 132c6-8 0-14 6-20\" stroke=\"#8a8278\" stroke-width=\"2\"/><path d=\"M30 70L56 89M30 120L60 120M30 172L60 172M120 250L120 200M268 28L268 98M385 196L372 196\" stroke-width=\"1.2\"/><g fill=\"#3b2a1a\" stroke=\"none\"><circle cx=\"56\" cy=\"89\" r=\"2\"/><circle cx=\"30\" cy=\"70\" r=\"10\"/><circle cx=\"60\" cy=\"120\" r=\"2\"/><circle cx=\"30\" cy=\"120\" r=\"10\"/><circle cx=\"60\" cy=\"172\" r=\"2\"/><circle cx=\"30\" cy=\"172\" r=\"10\"/><circle cx=\"120\" cy=\"200\" r=\"2\"/><circle cx=\"120\" cy=\"250\" r=\"10\"/><circle cx=\"268\" cy=\"98\" r=\"2\"/><circle cx=\"268\" cy=\"28\" r=\"10\"/><circle cx=\"372\" cy=\"196\" r=\"2\"/><circle cx=\"385\" cy=\"196\" r=\"10\"/></g><g fill=\"#fff\" stroke=\"none\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" text-anchor=\"middle\"><text x=\"30\" y=\"74.5\">1</text><text x=\"30\" y=\"124.5\">2</text><text x=\"30\" y=\"176.5\">3</text><text x=\"120\" y=\"254.5\">4</text><text x=\"268\" y=\"32.5\">5</text><text x=\"385\" y=\"200.5\">6</text></g></svg>"
+  },
+  {
+   "id": "ani-handline",
+   "level": 1,
+   "title_el": "Ψάρεμα με πετονιά και αγκίστρι",
+   "title_en": "Fishing with a hand line and hook",
+   "time_el": "1–3 ώρες",
+   "time_en": "1–3 hours",
+   "why_el": "Η θάλασσα δίνει τροφή όλο τον χρόνο. Με μια πετονιά και λίγα αγκίστρια ψαρεύεις χωρίς καλάμι.",
+   "why_en": "The sea gives food all year. With a line and a few hooks you can fish without a rod.",
+   "need_el": [
+    "πετονιά 0,25–0,30 mm",
+    "αγκίστρια Νο 10–12",
+    "βαρίδι 20–40 g",
+    "ξύλινο τυλιχτάρι",
+    "δόλωμα: σκουλήκι, γαρίδα, ψωμί"
+   ],
+   "need_en": [
+    "fishing line 0.25–0.30 mm",
+    "hooks size 10–12",
+    "a sinker 20–40 g",
+    "a wooden winder",
+    "bait: worm, shrimp, bread"
+   ],
+   "steps_el": [
+    "Τύλιξε 20–30 m πετονιά στο τυλιχτάρι.",
+    "Δέσε το βαρίδι στην άκρη. 30 cm πιο πάνω δέσε ένα παράμαλλο (κοντό κομμάτι πετονιά) με το αγκίστρι.",
+    "Κόμπος: πέρνα την πετονιά από την τρύπα, τύλιξέ τη 5 φορές γύρω της και πέρνα την άκρη ξανά πίσω από την πρώτη θηλιά.",
+    "Βρέξε τον κόμπο με σάλιο και τράβα σφιχτά. Κόψε την περίσσεια.",
+    "Βάλε το δόλωμα να σκεπάζει όλο το αγκίστρι.",
+    "Ρίξε από βράχο ή μόλο, κοντά σε πέτρες και φύκια. Καλύτερη ώρα: χάραμα και σούρουπο.",
+    "Κράτα την πετονιά στο δάχτυλο. Όταν νιώσεις τίναγμα, τράβα απότομα και μάζευε σταθερά."
+   ],
+   "steps_en": [
+    "Wind 20–30 m of line onto the winder.",
+    "Tie the sinker at the end. 30 cm above it, tie a short side line with the hook.",
+    "Knot: pass the line through the hook eye, wrap it 5 times round itself, then pass the end back through the first loop.",
+    "Wet the knot with spit and pull tight. Cut off the spare end.",
+    "Put bait on so it covers the whole hook.",
+    "Cast from a rock or pier, near stones and seaweed. Best times: dawn and dusk.",
+    "Hold the line on one finger. When you feel a tug, jerk once and pull in steadily."
+   ],
+   "tip_el": "Σκουλήκια βρίσκεις κάτω από πέτρες στην ακτή ή σκάβοντας στην υγρή άμμο.",
+   "tip_en": "Find worms under stones on the shore or by digging in wet sand.",
+   "warn_el": "Ο λαγοκέφαλος (ψάρι που φουσκώνει σαν μπάλα) είναι θανατηφόρος: ποτέ μην τον τρως. Δράκαινα και σκορπιός τσιμπάνε με αγκάθια. Πρόσεχε γλιστερούς βράχους. Τήρησε τους κανόνες του Λιμεναρχείου και άφηνε τα μικρά ψάρια.",
+   "warn_en": "Puffer fish (it blows up like a ball) is deadly: never eat it. Weever and scorpion fish sting with spines. Beware slippery rocks. Follow local fishing rules and release small fish.",
+   "fig_el": "① τυλιχτάρι ② πετονιά ③ αγκίστρι με δόλωμα ④ βαρίδι ⑤ κόμπος με 5 στροφές ⑥ βρέξε και τράβα σφιχτά",
+   "fig_en": "① winder ② line ③ baited hook ④ sinker ⑤ knot with 5 turns ⑥ wet it and pull tight",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 260\" fill=\"none\" stroke=\"#3b2a1a\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"0\" y=\"0\" width=\"400\" height=\"260\" fill=\"#f6ecd6\" stroke=\"none\"/><path d=\"M200 12V248\" stroke-width=\"1\" stroke-dasharray=\"3 4\"/><path d=\"M0 110H200V248H0Z\" fill=\"#bcd9e3\" stroke=\"none\"/><path d=\"M0 110H200M20 126q8-4 16 0t16 0M120 140q8-4 16 0t16 0\"/><path d=\"M0 248H200\" /><path d=\"M8 251l-8 8M22 251l-8 8M36 251l-8 8M50 251l-8 8M64 251l-8 8M78 251l-8 8M92 251l-8 8M106 251l-8 8M120 251l-8 8M134 251l-8 8M148 251l-8 8M162 251l-8 8M176 251l-8 8M190 251l-8 8\" stroke-width=\"1.2\"/><path d=\"M30 30H90V44H82V76H90V90H30V76H38V44H30Z\" fill=\"#d9b77e\"/><path d=\"M38 48H82\" stroke-width=\"1.2\"/><path d=\"M38 52H82\" stroke-width=\"1.2\"/><path d=\"M38 56H82\" stroke-width=\"1.2\"/><path d=\"M38 60H82\" stroke-width=\"1.2\"/><path d=\"M38 64H82\" stroke-width=\"1.2\"/><path d=\"M38 68H82\" stroke-width=\"1.2\"/><path d=\"M38 72H82\" stroke-width=\"1.2\"/><path d=\"M82 60C110 70 120 110 120 230\" stroke-width=\"1.2\"/><path d=\"M120 200C140 196 150 196 152 200\" stroke-width=\"1.2\"/><path d=\"M152 200V214C152 222 142 222 142 214l3 3\" stroke-width=\"1.8\"/><path d=\"M150 206c-6 2-8 8-2 10s10 4 4 10\" stroke=\"#d98e5c\" stroke-width=\"3.5\"/><path d=\"M120 228C112 240 114 246 120 246C126 246 128 240 120 228Z\" fill=\"#c9ccd1\"/><circle cx=\"300\" cy=\"74\" r=\"9\" stroke-width=\"2.5\" fill=\"none\"/><path d=\"M300 83V170C300 214 252 214 252 176l10 10\" stroke-width=\"3\" fill=\"none\"/><path d=\"M300 66V14\" stroke-width=\"1.5\"/><path d=\"M292 60C292 54 308 58 308 54\" stroke-width=\"1.6\"/><path d=\"M292 51C292 45 308 49 308 45\" stroke-width=\"1.6\"/><path d=\"M292 42C292 36 308 40 308 36\" stroke-width=\"1.6\"/><path d=\"M292 33C292 27 308 31 308 27\" stroke-width=\"1.6\"/><path d=\"M292 24C292 18 308 22 308 18\" stroke-width=\"1.6\"/><path d=\"M292 60C284 74 284 80 296 76\" stroke-width=\"1.6\"/><path d=\"M308 24C318 30 318 52 300 62\" stroke-width=\"1.6\" stroke-dasharray=\"3 3\"/><path d=\"M330 120V40\" stroke=\"#b23a2a\"/><path d=\"M-8 -5L0 0L-8 5\" stroke=\"#b23a2a\" transform=\"translate(330 40) rotate(-90)\"/><path d=\"M330 150V200\" stroke=\"#b23a2a\"/><path d=\"M-8 -5L0 0L-8 5\" stroke=\"#b23a2a\" transform=\"translate(330 200) rotate(90)\"/><path d=\"M110 35L90 45M165 120L115 140M180 180L152 208M80 220L116 236M248 40L292 44M375 120L332 120\" stroke-width=\"1.2\"/><g fill=\"#3b2a1a\" stroke=\"none\"><circle cx=\"90\" cy=\"45\" r=\"2\"/><circle cx=\"110\" cy=\"35\" r=\"10\"/><circle cx=\"115\" cy=\"140\" r=\"2\"/><circle cx=\"165\" cy=\"120\" r=\"10\"/><circle cx=\"152\" cy=\"208\" r=\"2\"/><circle cx=\"180\" cy=\"180\" r=\"10\"/><circle cx=\"116\" cy=\"236\" r=\"2\"/><circle cx=\"80\" cy=\"220\" r=\"10\"/><circle cx=\"292\" cy=\"44\" r=\"2\"/><circle cx=\"248\" cy=\"40\" r=\"10\"/><circle cx=\"332\" cy=\"120\" r=\"2\"/><circle cx=\"375\" cy=\"120\" r=\"10\"/></g><g fill=\"#fff\" stroke=\"none\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" text-anchor=\"middle\"><text x=\"110\" y=\"39.5\">1</text><text x=\"165\" y=\"124.5\">2</text><text x=\"180\" y=\"184.5\">3</text><text x=\"80\" y=\"224.5\">4</text><text x=\"248\" y=\"44.5\">5</text><text x=\"375\" y=\"124.5\">6</text></g></svg>"
+  },
+  {
+   "id": "ani-fishtrap",
+   "level": 1,
+   "title_el": "Παγίδα-μπουκάλι για μικρά ψάρια (μόνο όπου επιτρέπεται)",
+   "title_en": "Bottle trap for small fish (only where legal)",
+   "time_el": "30 λεπτά + λίγες ώρες",
+   "time_en": "30 minutes + a few hours",
+   "why_el": "Ένα πλαστικό μπουκάλι πιάνει μικρά ψαράκια και γαρίδες για δόλωμα ή για τηγάνι.",
+   "why_en": "A plastic bottle catches small fish and shrimp for bait or for the pan.",
+   "need_el": [
+    "πλαστικό μπουκάλι 1,5–2 λίτρων",
+    "μαχαίρι ή ψαλίδι",
+    "καρφί για τρύπες",
+    "σπάγκο",
+    "πέτρα",
+    "δόλωμα: ψωμί, ψίχα ψαριού"
+   ],
+   "need_en": [
+    "a 1.5–2 litre plastic bottle",
+    "a knife or scissors",
+    "a nail for holes",
+    "string",
+    "a stone",
+    "bait: bread, fish scraps"
+   ],
+   "steps_el": [
+    "Ρώτα πρώτα το Λιμεναρχείο ή τον δήμο. Σε πολλά μέρη οι παγίδες απαγορεύονται για ερασιτέχνες.",
+    "Κόψε το μπουκάλι εκεί που στενεύει ο λαιμός.",
+    "Γύρισε τον λαιμό ανάποδα και σπρώξ' τον μέσα, σαν χωνί. Δέσε τον με σπάγκο σε δύο σημεία.",
+    "Άνοιξε 8–10 τρυπίτσες με ζεστό καρφί, να φεύγει ο αέρας και να βουλιάζει.",
+    "Βάλε μέσα δόλωμα και μια μικρή πέτρα.",
+    "Βάλ' την σε ρηχό, ήσυχο νερό, με το χωνί προς το ρεύμα. Δέσε το σπάγκο σε βράχο.",
+    "Έλεγξέ την κάθε 1–2 ώρες. Άφησε ελεύθερα τα πολύ μικρά ψάρια."
+   ],
+   "steps_en": [
+    "First ask the port authority or council. In many places traps are banned for amateurs.",
+    "Cut the bottle where the neck starts to narrow.",
+    "Turn the neck around and push it inside like a funnel. Tie it with string in two places.",
+    "Make 8–10 small holes with a hot nail, so air escapes and it sinks.",
+    "Put bait and a small stone inside.",
+    "Set it in shallow calm water, funnel facing the current. Tie the string to a rock.",
+    "Check it every 1–2 hours. Let very small fish go."
+   ],
+   "tip_el": "Η ψίχα ψωμιού ζυμωμένη με λίγο τυρί μυρίζει δυνατά και φέρνει γρήγορα ψαράκια.",
+   "tip_en": "Bread dough mixed with a little cheese smells strong and brings fish quickly.",
+   "warn_el": "Μην αφήνεις ποτέ την παγίδα ξεχασμένη: σκοτώνει ζώα άσκοπα και ρυπαίνει. Πάρε πάντα το μπουκάλι μαζί σου. Πρόσεχε τις κομμένες άκρες του πλαστικού.",
+   "warn_en": "Never leave the trap forgotten: it kills animals for nothing and pollutes. Always take the bottle home. Watch the sharp cut edges.",
+   "fig_el": "Πάνω: κόψε στο κόκκινο και γύρισε τον λαιμό. ① χωνί προς τα μέσα ② δόλωμα ③ τρυπίτσες ④ σπάγκος στην ακτή ⑤ πέτρα για βάρος",
+   "fig_en": "Top: cut at the red line and turn the neck around. ① funnel pointing in ② bait ③ small holes ④ string to the shore ⑤ stone for weight",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 260\" fill=\"none\" stroke=\"#3b2a1a\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"0\" y=\"0\" width=\"400\" height=\"260\" fill=\"#f6ecd6\" stroke=\"none\"/><path d=\"M0 72H400V214H0Z\" fill=\"#bcd9e3\" stroke=\"none\"/><path d=\"M0 72H400M30 90q8-4 16 0t16 0M300 96q8-4 16 0t16 0\"/><path d=\"M0 214H400V260H0Z\" fill=\"#c8a27a\" stroke=\"none\"/><path d=\"M0 214H400\"/><path d=\"M8 217l-8 8M22 217l-8 8M36 217l-8 8M50 217l-8 8M64 217l-8 8M78 217l-8 8M92 217l-8 8M106 217l-8 8M120 217l-8 8M134 217l-8 8M148 217l-8 8M162 217l-8 8M176 217l-8 8M190 217l-8 8M204 217l-8 8M218 217l-8 8M232 217l-8 8M246 217l-8 8M260 217l-8 8M274 217l-8 8M288 217l-8 8M302 217l-8 8M316 217l-8 8M330 217l-8 8M344 217l-8 8M358 217l-8 8M372 217l-8 8M386 217l-8 8\" stroke-width=\"1.2\"/><path d=\"M160 22H196C204 22 210 28 210 36V50C210 58 204 64 196 64H160Z\" fill=\"#ffffff\"/><path d=\"M160 26L146 34H138V52H146L160 60\" fill=\"#ffffff\"/><path d=\"M168 18V68\" stroke=\"#b23a2a\" stroke-dasharray=\"4 3\" stroke-width=\"1.5\"/><path d=\"M222 40C240 30 256 34 264 44\" stroke=\"#b23a2a\"/><path d=\"M-8 -5L0 0L-8 5\" stroke=\"#b23a2a\" transform=\"translate(264 44) rotate(50)\"/><path d=\"M280 30L300 36V52L280 58Z\" fill=\"#ffffff\"/><path d=\"M300 38H308V50H300\" fill=\"#ffffff\"/><path d=\"M126 140C126 128 136 126 150 126H286C300 126 310 136 310 150V178C310 192 300 200 286 200H150C136 200 126 196 126 186Z\" fill=\"#ffffff\" fill-opacity=\"0.55\"/><path d=\"M126 140L170 156H180V170H170L126 186\" fill=\"#ffffff\" fill-opacity=\"0.7\"/><path d=\"M310 158H318V170H310\" stroke-width=\"2\"/><circle cx=\"210\" cy=\"132\" r=\"2\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"240\" cy=\"132\" r=\"2\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"270\" cy=\"132\" r=\"2\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"225\" cy=\"194\" r=\"2\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"255\" cy=\"194\" r=\"2\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"285\" cy=\"194\" r=\"2\" fill=\"#3b2a1a\" stroke=\"none\"/><path d=\"M232 176c4-8 18-8 22 0c-4 6-18 6-22 0z\" fill=\"#d9b77e\"/><circle cx=\"292\" cy=\"188\" r=\"9\" fill=\"#bdb5a6\"/><path d=\"M318 164C340 150 350 110 372 74\" stroke-width=\"1.3\"/><path d=\"M200 126V120M260 126V120\" stroke-width=\"2\"/><g transform=\"translate(80 166) scale(0.45 0.45)\"><path d=\"M-30 0C-18 -14 14 -16 30 0C14 14 -18 14 -30 0Z\" fill=\"#c9ccd1\"/><path d=\"M-30 0L-44 -11L-40 0L-44 11Z\" fill=\"#c9ccd1\"/><path d=\"M16 -9C12 -3 12 3 16 9\" stroke-width=\"1.5\"/><circle cx=\"22\" cy=\"-3\" r=\"2\" fill=\"#3b2a1a\"/><path d=\"M-10 -9L-2 -14L6 -10\" stroke-width=\"1.5\"/></g><g transform=\"translate(206 160) scale(0.3 0.3)\"><path d=\"M-30 0C-18 -14 14 -16 30 0C14 14 -18 14 -30 0Z\" fill=\"#c9ccd1\"/><path d=\"M-30 0L-44 -11L-40 0L-44 11Z\" fill=\"#c9ccd1\"/><path d=\"M16 -9C12 -3 12 3 16 9\" stroke-width=\"1.5\"/><circle cx=\"22\" cy=\"-3\" r=\"2\" fill=\"#3b2a1a\"/><path d=\"M-10 -9L-2 -14L6 -10\" stroke-width=\"1.5\"/></g><path d=\"M120 110L170 156M230 235L242 176M230 100L240 132M388 120L354 112M340 235L296 192\" stroke-width=\"1.2\"/><g fill=\"#3b2a1a\" stroke=\"none\"><circle cx=\"170\" cy=\"156\" r=\"2\"/><circle cx=\"120\" cy=\"110\" r=\"10\"/><circle cx=\"242\" cy=\"176\" r=\"2\"/><circle cx=\"230\" cy=\"235\" r=\"10\"/><circle cx=\"240\" cy=\"132\" r=\"2\"/><circle cx=\"230\" cy=\"100\" r=\"10\"/><circle cx=\"354\" cy=\"112\" r=\"2\"/><circle cx=\"388\" cy=\"120\" r=\"10\"/><circle cx=\"296\" cy=\"192\" r=\"2\"/><circle cx=\"340\" cy=\"235\" r=\"10\"/></g><g fill=\"#fff\" stroke=\"none\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" text-anchor=\"middle\"><text x=\"120\" y=\"114.5\">1</text><text x=\"230\" y=\"239.5\">2</text><text x=\"230\" y=\"104.5\">3</text><text x=\"388\" y=\"124.5\">4</text><text x=\"340\" y=\"239.5\">5</text></g></svg>"
+  },
+  {
+   "id": "ani-cleanfish",
+   "level": 1,
+   "title_el": "Καθάρισμα ψαριού και ψήσιμο σε ξύλο ή πέτρα",
+   "title_en": "Cleaning fish and cooking on a stick or stone",
+   "time_el": "30 λεπτά",
+   "time_en": "30 minutes",
+   "why_el": "Το ψάρι χαλάει γρήγορα. Αν το καθαρίσεις αμέσως και το ψήσεις καλά, είναι ασφαλές και νόστιμο.",
+   "why_en": "Fish spoils fast. Clean it at once and cook it well, and it is safe and tasty.",
+   "need_el": [
+    "κοφτερό μαχαίρι",
+    "ξύλο κοπής ή επίπεδη πέτρα",
+    "καθαρό νερό",
+    "χλωρό ξύλο ή πλακόπετρα",
+    "αλάτι"
+   ],
+   "need_en": [
+    "a sharp knife",
+    "a board or flat stone",
+    "clean water",
+    "a green stick or flat stone",
+    "salt"
+   ],
+   "steps_el": [
+    "Ξύσε τα λέπια με τη ράχη του μαχαιριού, από την ουρά προς το κεφάλι.",
+    "Κόψε την κοιλιά από την τρυπίτσα της ουράς ως τα βράγχια. Μη βυθίζεις πολύ τη λάμα.",
+    "Βγάλε τα εντόσθια και τα βράγχια με τα δάχτυλα.",
+    "Ξέπλυνε καλά μέσα και έξω. Θάψε τα εντόσθια ή βάλ' τα δόλωμα.",
+    "Αλάτισε. Πέρασε το ψάρι σε χλωρό ξύλο (όχι πικροδάφνη) από το στόμα.",
+    "Στήσε το ξύλο λοξά πάνω από κάρβουνα, όχι μέσα στη φλόγα. Γύρνα το κάθε 3–4 λεπτά.",
+    "Ή ζέστανε πλακόπετρα στη φωτιά 30 λεπτά και ψήσε το πάνω της.",
+    "Είναι έτοιμο όταν η σάρκα είναι άσπρη και ξεκολλάει από το κόκαλο."
+   ],
+   "steps_en": [
+    "Scrape off the scales with the back of the knife, from tail to head.",
+    "Cut the belly from the small vent hole to the gills. Do not push the blade deep.",
+    "Pull out the guts and gills with your fingers.",
+    "Rinse well inside and out. Bury the guts or keep them as bait.",
+    "Salt it. Push a green stick (never oleander) through the mouth.",
+    "Lean the stick over embers, not in the flame. Turn every 3–4 minutes.",
+    "Or heat a flat stone in the fire for 30 minutes and cook on it.",
+    "It is done when the flesh is white and comes off the bone."
+   ],
+   "tip_el": "Ψάρι με καθαρό μάτι, κόκκινα βράγχια και σφιχτή σάρκα είναι φρέσκο.",
+   "tip_en": "Clear eyes, red gills and firm flesh mean a fresh fish.",
+   "warn_el": "Κόβε πάντα μακριά από το σώμα σου. Πέτρα από ποτάμι ή βρεγμένη μπορεί να σκάσει στη φωτιά: μόνο στεγνή πέτρα. Πικροδάφνη είναι δηλητηριώδης. Ποτέ λαγοκέφαλο.",
+   "warn_en": "Always cut away from your body. River or wet stones can burst in fire: use only dry stone. Oleander is poisonous. Never eat puffer fish.",
+   "fig_el": "① ξύσε τα λέπια από ουρά προς κεφάλι ② κόψε την κοιλιά ③ εντόσθια έξω ④ ψάρι σε χλωρό ξύλο, λοξά ⑤ κάρβουνα",
+   "fig_en": "① scrape scales tail to head ② cut the belly ③ guts out ④ fish on a green stick, leaning ⑤ embers",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 260\" fill=\"none\" stroke=\"#3b2a1a\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"0\" y=\"0\" width=\"400\" height=\"260\" fill=\"#f6ecd6\" stroke=\"none\"/><path d=\"M133 12V248\" stroke-width=\"1\" stroke-dasharray=\"3 4\"/><path d=\"M266 12V248\" stroke-width=\"1\" stroke-dasharray=\"3 4\"/><path d=\"M0 205H400\" /><path d=\"M8 208l-8 8M22 208l-8 8M36 208l-8 8M50 208l-8 8M64 208l-8 8M78 208l-8 8M92 208l-8 8M106 208l-8 8M120 208l-8 8M134 208l-8 8M148 208l-8 8M162 208l-8 8M176 208l-8 8M190 208l-8 8M204 208l-8 8M218 208l-8 8M232 208l-8 8M246 208l-8 8M260 208l-8 8M274 208l-8 8M288 208l-8 8M302 208l-8 8M316 208l-8 8M330 208l-8 8M344 208l-8 8M358 208l-8 8M372 208l-8 8M386 208l-8 8\" stroke-width=\"1.2\"/><path d=\"M8 186H126V204H8Z\" fill=\"#d9b77e\"/><g transform=\"translate(70 156) scale(1.2 1.2)\"><path d=\"M-30 0C-18 -14 14 -16 30 0C14 14 -18 14 -30 0Z\" fill=\"#c9ccd1\"/><path d=\"M-30 0L-44 -11L-40 0L-44 11Z\" fill=\"#c9ccd1\"/><path d=\"M16 -9C12 -3 12 3 16 9\" stroke-width=\"1.5\"/><circle cx=\"22\" cy=\"-3\" r=\"2\" fill=\"#3b2a1a\"/><path d=\"M-10 -9L-2 -14L6 -10\" stroke-width=\"1.5\"/></g><path d=\"M40 150a4 4 0 0 1 8 0\" stroke-width=\"0.8\"/><path d=\"M50 158a4 4 0 0 1 8 0\" stroke-width=\"0.8\"/><path d=\"M60 150a4 4 0 0 1 8 0\" stroke-width=\"0.8\"/><path d=\"M70 158a4 4 0 0 1 8 0\" stroke-width=\"0.8\"/><path d=\"M80 150a4 4 0 0 1 8 0\" stroke-width=\"0.8\"/><path d=\"M90 158a4 4 0 0 1 8 0\" stroke-width=\"0.8\"/><path d=\"M62 110L104 90\" stroke=\"#c9ccd1\" stroke-width=\"5\"/><path d=\"M60 112l46-22\" stroke-width=\"1\" transform=\"translate(0 -3)\"/><path d=\"M100 92l18-9\" stroke=\"#d9b77e\" stroke-width=\"8\"/><path d=\"M30 128H92\" stroke=\"#b23a2a\"/><path d=\"M-8 -5L0 0L-8 5\" stroke=\"#b23a2a\" transform=\"translate(92 128) rotate(0)\"/><path d=\"M141 186H259V204H141Z\" fill=\"#d9b77e\"/><g transform=\"translate(205 156) scale(1.2 1.2)\"><path d=\"M-30 0C-18 -14 14 -16 30 0C14 14 -18 14 -30 0Z\" fill=\"#c9ccd1\"/><path d=\"M-30 0L-44 -11L-40 0L-44 11Z\" fill=\"#c9ccd1\"/><path d=\"M16 -9C12 -3 12 3 16 9\" stroke-width=\"1.5\"/><circle cx=\"22\" cy=\"-3\" r=\"2\" fill=\"#3b2a1a\"/><path d=\"M-10 -9L-2 -14L6 -10\" stroke-width=\"1.5\"/></g><path d=\"M190 168C200 172 214 172 224 166\" stroke=\"#b23a2a\" stroke-width=\"2.5\" stroke-dasharray=\"4 3\"/><path d=\"M224 166l20 -26\" stroke=\"#c9ccd1\" stroke-width=\"4\"/><path d=\"M242 142l12-16\" stroke=\"#d9b77e\" stroke-width=\"8\"/><path d=\"M286 238L388 132\" stroke=\"#d9b77e\" stroke-width=\"5\"/><path d=\"M286 238L388 132\" stroke-width=\"1\"/><g transform=\"translate(364 158) rotate(-46)\"><g transform=\"translate(0 0) scale(1.0 1.0)\"><path d=\"M-30 0C-18 -14 14 -16 30 0C14 14 -18 14 -30 0Z\" fill=\"#d98e5c\"/><path d=\"M-30 0L-44 -11L-40 0L-44 11Z\" fill=\"#d98e5c\"/><path d=\"M16 -9C12 -3 12 3 16 9\" stroke-width=\"1.5\"/><circle cx=\"22\" cy=\"-3\" r=\"2\" fill=\"#3b2a1a\"/><path d=\"M-10 -9L-2 -14L6 -10\" stroke-width=\"1.5\"/></g></g><path d=\"M330.0 232C330.0 218.5 342.0 215.8 345 205.0C349.5 217.15 360.0 218.5 360.0 232Z\" fill=\"#f2a65a\"/><path d=\"M339.0 232C339.0 223.9 345 222.55 346.5 217.15C351.0 223.9 352.5 226.6 351.0 232Z\" fill=\"#e2603a\"/><path d=\"M324.0 236L366.0 228M324.0 228L366.0 236\" stroke-width=\"5\" stroke=\"#d9b77e\"/><path d=\"M324.0 236L366.0 228M324.0 228L366.0 236\" stroke-width=\"1\"/><path d=\"M30 50L46 126M165 50L236 150M175 240L205 171M300 50L352 170M300 245L335 228\" stroke-width=\"1.2\"/><g fill=\"#3b2a1a\" stroke=\"none\"><circle cx=\"46\" cy=\"126\" r=\"2\"/><circle cx=\"30\" cy=\"50\" r=\"10\"/><circle cx=\"236\" cy=\"150\" r=\"2\"/><circle cx=\"165\" cy=\"50\" r=\"10\"/><circle cx=\"205\" cy=\"171\" r=\"2\"/><circle cx=\"175\" cy=\"240\" r=\"10\"/><circle cx=\"352\" cy=\"170\" r=\"2\"/><circle cx=\"300\" cy=\"50\" r=\"10\"/><circle cx=\"335\" cy=\"228\" r=\"2\"/><circle cx=\"300\" cy=\"245\" r=\"10\"/></g><g fill=\"#fff\" stroke=\"none\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" text-anchor=\"middle\"><text x=\"30\" y=\"54.5\">1</text><text x=\"165\" y=\"54.5\">2</text><text x=\"175\" y=\"244.5\">3</text><text x=\"300\" y=\"54.5\">4</text><text x=\"300\" y=\"249.5\">5</text></g></svg>"
+  },
+  {
+   "id": "ani-horta",
+   "level": 2,
+   "title_el": "Άγρια χόρτα της Ελλάδας",
+   "title_en": "Wild greens of Greece",
+   "time_el": "1–2 ώρες",
+   "time_en": "1–2 hours",
+   "why_el": "Τα χόρτα είναι δωρεάν, γεμάτα βιταμίνες και φυτρώνουν παντού από το φθινόπωρο ως την άνοιξη.",
+   "why_en": "Wild greens are free, full of vitamins and grow everywhere from autumn to spring.",
+   "need_el": [
+    "μαχαιράκι",
+    "σακούλα από ύφασμα",
+    "γάντια (για τσουκνίδα)",
+    "έναν ντόπιο που ξέρει"
+   ],
+   "need_en": [
+    "a small knife",
+    "a cloth bag",
+    "gloves (for nettles)",
+    "a local person who knows"
+   ],
+   "steps_el": [
+    "Μάθε τα φυτά με έναν ντόπιο, στο χωράφι. Μάζευε μόνο ό,τι ξέρεις 100%.",
+    "Ραδίκι: ροζέτα με δοντωτά φύλλα, κίτρινο λουλούδι, γαλατάκι στο κόψιμο. Βλίτα: όρθιο, οβάλ φύλλα, καλοκαίρι.",
+    "Γλιστρίδα: χοντρά σαρκώδη φυλλαράκια, κοκκινωπά βλαστάρια, ΧΩΡΙΣ γάλα. Τρώγεται και ωμή.",
+    "Τσουκνίδα: καρδιόσχημα δοντωτά φύλλα που τσιμπάνε. Μάζευε με γάντια τις κορυφές.",
+    "Σταμναγκάθι: αγκαθωτή «μπάλα», τρως τη ροζέτα του χειμώνα. Σπαράγγι: τρυφεροί βλαστοί την άνοιξη.",
+    "Κόψε με μαχαίρι, άφησε τη ρίζα. Μην παίρνεις όλα τα φυτά από ένα σημείο.",
+    "Πλύνε σε 3 νερά. Βράσε 5–10 λεπτά (την τσουκνίδα πάντα)."
+   ],
+   "steps_en": [
+    "Learn the plants in the field with a local person. Pick only what you know 100%.",
+    "Dandelion/chicory: rosette of toothed leaves, yellow flower, milky sap. Amaranth: upright, oval leaves, summer.",
+    "Purslane: thick fleshy leaves, reddish stems, NO milky sap. Can be eaten raw.",
+    "Nettle: heart-shaped toothed leaves that sting. Pick the tops with gloves.",
+    "Spiny chicory: a thorny 'ball'; eat its winter rosette. Wild asparagus: tender spring shoots.",
+    "Cut with a knife, leave the root. Do not take all plants from one spot.",
+    "Wash in 3 waters. Boil 5–10 minutes (nettles always)."
+   ],
+   "tip_el": "Τα πιο τρυφερά χόρτα είναι πριν βγάλουν λουλούδι.",
+   "tip_en": "Greens are most tender before they flower.",
+   "warn_el": "Το κώνειο (λευκές ομπρέλες, κόκκινες κηλίδες στο κοτσάνι, άσχημη μυρωδιά) σκοτώνει. Ο φλόμος και ο μανδραγόρας μοιάζουν με χόρτα. Η γαλατσίδα μοιάζει με γλιστρίδα αλλά βγάζει γάλα. Όχι από δρόμους ή ψεκασμένα χωράφια. Δηλητηρίαση: 210 7793777.",
+   "warn_en": "Hemlock (white umbrella flowers, red spots on stem, nasty smell) kills. Mandrake and other plants look like greens. Spurge looks like purslane but has milky sap. Never pick by roads or sprayed fields. Poisoning: call emergency (Greece 210 7793777).",
+   "fig_el": "① ραδίκι ② βλίτα ③ γλιστρίδα ④ τσουκνίδα ⑤ σταμναγκάθι ⑥ άγριο σπαράγγι ⑦ ΚΩΝΕΙΟ – θανατηφόρο ⑧ ΓΑΛΑΤΣΙΔΑ – βγάζει γάλα, όχι",
+   "fig_en": "① dandelion/chicory ② amaranth ③ purslane ④ nettle ⑤ spiny chicory ⑥ wild asparagus ⑦ HEMLOCK – deadly ⑧ SPURGE – milky sap, no",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 260\" fill=\"none\" stroke=\"#3b2a1a\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"0\" y=\"0\" width=\"400\" height=\"260\" fill=\"#f6ecd6\" stroke=\"none\"/><path d=\"M100 10V250M200 10V250M300 10V250M10 130H390\" stroke-width=\"1\" stroke-dasharray=\"3 4\"/><path d=\"M8 120H92M108 120H192M208 120H292M308 120H392M8 250H92M108 250H192M208 250H292M308 250H392\" stroke-width=\"1.5\"/><path d=\"M56 116V60\" stroke-width=\"1.5\"/><g fill=\"#6f9a52\" stroke-width=\"1.2\"><path d=\"M0 0L-6 -10L-2 -11L-8 -20L-3 -21L-7 -32L0 -42L5 -32L2 -26L7 -22L3 -16L6 -10Z\" transform=\"translate(50 118) rotate(-70)\"/><path d=\"M0 0L-6 -10L-2 -11L-8 -20L-3 -21L-7 -32L0 -42L5 -32L2 -26L7 -22L3 -16L6 -10Z\" transform=\"translate(50 118) rotate(-40)\"/><path d=\"M0 0L-6 -10L-2 -11L-8 -20L-3 -21L-7 -32L0 -42L5 -32L2 -26L7 -22L3 -16L6 -10Z\" transform=\"translate(50 118) rotate(-12)\"/><path d=\"M0 0L-6 -10L-2 -11L-8 -20L-3 -21L-7 -32L0 -42L5 -32L2 -26L7 -22L3 -16L6 -10Z\" transform=\"translate(50 118) rotate(15)\"/><path d=\"M0 0L-6 -10L-2 -11L-8 -20L-3 -21L-7 -32L0 -42L5 -32L2 -26L7 -22L3 -16L6 -10Z\" transform=\"translate(50 118) rotate(45)\"/><path d=\"M0 0L-6 -10L-2 -11L-8 -20L-3 -21L-7 -32L0 -42L5 -32L2 -26L7 -22L3 -16L6 -10Z\" transform=\"translate(50 118) rotate(72)\"/></g><circle cx=\"56\" cy=\"56\" r=\"9\" fill=\"#f2a65a\"/><circle cx=\"56\" cy=\"56\" r=\"3\" fill=\"#e2603a\" stroke-width=\"1\"/><path d=\"M150 120V30\" stroke-width=\"2\"/><g fill=\"#a9c98b\" stroke-width=\"1.2\"><path d=\"M0 0C-8 -6 -8 -20 0 -26C8 -20 8 -6 0 0Z\" transform=\"translate(150 110) rotate(-70) scale(1.1)\"/><path d=\"M0 0C-8 -6 -8 -20 0 -26C8 -20 8 -6 0 0Z\" transform=\"translate(150 96) rotate(70) scale(1.1)\"/><path d=\"M0 0C-8 -6 -8 -20 0 -26C8 -20 8 -6 0 0Z\" transform=\"translate(150 82) rotate(-65) scale(1.1)\"/><path d=\"M0 0C-8 -6 -8 -20 0 -26C8 -20 8 -6 0 0Z\" transform=\"translate(150 68) rotate(65) scale(1.1)\"/><path d=\"M0 0C-8 -6 -8 -20 0 -26C8 -20 8 -6 0 0Z\" transform=\"translate(150 54) rotate(-60) scale(1.1)\"/></g><path d=\"M150 30C146 24 146 16 150 10C154 16 154 24 150 30Z\" fill=\"#6f9a52\"/><path d=\"M250 118C236 110 224 108 214 112M250 118C262 106 276 104 286 108M250 118C248 102 254 92 262 86M250 118C240 100 232 92 224 90\" stroke=\"#d98e5c\" stroke-width=\"3\"/><g fill=\"#a9c98b\" stroke-width=\"1.2\"><ellipse cx=\"216\" cy=\"106\" rx=\"6\" ry=\"5\"/><ellipse cx=\"226\" cy=\"114\" rx=\"6\" ry=\"5\"/><ellipse cx=\"284\" cy=\"102\" rx=\"6\" ry=\"5\"/><ellipse cx=\"274\" cy=\"112\" rx=\"6\" ry=\"5\"/><ellipse cx=\"264\" cy=\"82\" rx=\"6\" ry=\"5\"/><ellipse cx=\"256\" cy=\"94\" rx=\"6\" ry=\"5\"/><ellipse cx=\"224\" cy=\"84\" rx=\"6\" ry=\"5\"/><ellipse cx=\"234\" cy=\"96\" rx=\"6\" ry=\"5\"/><ellipse cx=\"250\" cy=\"108\" rx=\"6\" ry=\"5\"/></g><path d=\"M350 120V24\" stroke-width=\"2\"/><g fill=\"#6f9a52\" stroke-width=\"1.2\"><path d=\"M0 0C-10 -2 -14 -12 -8 -18L-9 -22L-4 -22L-3 -26L0 -24L3 -26L4 -22L9 -22L8 -18C14 -12 10 -2 0 0Z\" transform=\"translate(350 104) rotate(-80)\"/><path d=\"M0 0C-10 -2 -14 -12 -8 -18L-9 -22L-4 -22L-3 -26L0 -24L3 -26L4 -22L9 -22L8 -18C14 -12 10 -2 0 0Z\" transform=\"translate(350 104) rotate(80)\"/><path d=\"M0 0C-10 -2 -14 -12 -8 -18L-9 -22L-4 -22L-3 -26L0 -24L3 -26L4 -22L9 -22L8 -18C14 -12 10 -2 0 0Z\" transform=\"translate(350 76) rotate(-75)\"/><path d=\"M0 0C-10 -2 -14 -12 -8 -18L-9 -22L-4 -22L-3 -26L0 -24L3 -26L4 -22L9 -22L8 -18C14 -12 10 -2 0 0Z\" transform=\"translate(350 76) rotate(75)\"/><path d=\"M0 0C-10 -2 -14 -12 -8 -18L-9 -22L-4 -22L-3 -26L0 -24L3 -26L4 -22L9 -22L8 -18C14 -12 10 -2 0 0Z\" transform=\"translate(350 50) rotate(-70)\"/><path d=\"M0 0C-10 -2 -14 -12 -8 -18L-9 -22L-4 -22L-3 -26L0 -24L3 -26L4 -22L9 -22L8 -18C14 -12 10 -2 0 0Z\" transform=\"translate(350 50) rotate(70)\"/></g><path d=\"M346 40l-4-2M354 60l4-2M346 88l-4-2M354 96l4-2\" stroke-width=\"1\"/><path d=\"M14 236C14 196 86 196 86 236Z\" fill=\"#a9c98b\" stroke-width=\"1.2\"/><path d=\"M50 236L83 230M50 236L81 221M50 236L75 213M50 236L68 207M50 236L59 203M50 236L50 202M50 236L41 203M50 236L32 207M50 236L25 213M50 236L19 221M50 236L17 230\" stroke-width=\"1\"/><path d=\"M79 227l3 -5M75 219l2 -6M69 213l0 -6M62 209l-2 -6M54 206l-3 -5M46 206l-4 -4M38 209l-5 -3M31 213l-6 -1M25 219l-6 1M21 227l-6 2\" stroke-width=\"1\"/><g fill=\"#6f9a52\" stroke-width=\"1.2\"><path d=\"M0 0L-6 -10L-2 -11L-8 -20L-3 -21L-7 -32L0 -42L5 -32L2 -26L7 -22L3 -16L6 -10Z\" transform=\"translate(50 248) rotate(-80) scale(0.55)\"/><path d=\"M0 0L-6 -10L-2 -11L-8 -20L-3 -21L-7 -32L0 -42L5 -32L2 -26L7 -22L3 -16L6 -10Z\" transform=\"translate(50 248) rotate(-60) scale(0.55)\"/><path d=\"M0 0L-6 -10L-2 -11L-8 -20L-3 -21L-7 -32L0 -42L5 -32L2 -26L7 -22L3 -16L6 -10Z\" transform=\"translate(50 248) rotate(60) scale(0.55)\"/><path d=\"M0 0L-6 -10L-2 -11L-8 -20L-3 -21L-7 -32L0 -42L5 -32L2 -26L7 -22L3 -16L6 -10Z\" transform=\"translate(50 248) rotate(80) scale(0.55)\"/></g><path d=\"M140 248V150M156 248V170M170 248V160\" stroke=\"#6f9a52\" stroke-width=\"4\"/><path d=\"M138 170l-3-4M142 160l3-4M138 192l-3-4M142 182l3-4M138 214l-3-4M142 204l3-4M138 236l-3-4M142 226l3-4M154 190l-3-4M158 180l3-4M154 212l-3-4M158 202l3-4M154 234l-3-4M158 224l3-4M168 180l-3-4M172 170l3-4M168 202l-3-4M172 192l3-4M168 224l-3-4M172 214l3-4\" stroke-width=\"1\"/><path d=\"M118 248c0-30 6-50 12-60M118 210l-8-4M118 220l8-6M120 200l-6-8M124 194l6-4\" stroke-width=\"1\"/><path d=\"M250 248V160\" stroke-width=\"2\"/><path d=\"M249 230v1M251 214v1M249 198v1M251 182v1\" stroke=\"#b23a2a\" stroke-width=\"3.5\"/><path d=\"M250 160L230 146M250 160L240 142M250 160L250 140M250 160L260 142M250 160L270 146\" stroke-width=\"1\"/><g fill=\"#ffffff\" stroke-width=\"1\"><circle cx=\"230\" cy=\"144\" r=\"5\"/><circle cx=\"240\" cy=\"140\" r=\"5\"/><circle cx=\"250\" cy=\"138\" r=\"5\"/><circle cx=\"260\" cy=\"140\" r=\"5\"/><circle cx=\"270\" cy=\"144\" r=\"5\"/></g><path d=\"M250 210L222 196M232 202l-4 6M240 206l-2 8M250 196L276 184M266 189l2 7M258 193l-2 7\" stroke=\"#6f9a52\" stroke-width=\"2\"/><circle cx=\"250\" cy=\"196\" r=\"40\" stroke=\"#b23a2a\" stroke-width=\"3\"/><path d=\"M222.0 168.0L278.0 224.0\" stroke=\"#b23a2a\" stroke-width=\"3\"/><path d=\"M350 248C336 238 326 236 316 240M350 248C364 236 376 234 386 238M350 248C350 232 354 222 360 216\" stroke=\"#d98e5c\" stroke-width=\"1.5\"/><g fill=\"#6f9a52\" stroke-width=\"1\"><circle cx=\"326\" cy=\"236\" r=\"3\"/><circle cx=\"336\" cy=\"240\" r=\"3\"/><circle cx=\"372\" cy=\"234\" r=\"3\"/><circle cx=\"380\" cy=\"240\" r=\"3\"/><circle cx=\"356\" cy=\"226\" r=\"3\"/><circle cx=\"362\" cy=\"218\" r=\"3\"/></g><path d=\"M360 216c3-2 5 2 3 6c-2 4-6 2-5-1\" fill=\"#ffffff\" stroke-width=\"1.2\"/><circle cx=\"350\" cy=\"226\" r=\"28\" stroke=\"#b23a2a\" stroke-width=\"3\"/><path d=\"M330.4 206.4L369.6 245.6\" stroke=\"#b23a2a\" stroke-width=\"3\"/><path d=\"M20 24L40 74M120 24L145 60M220 24L236 96M320 24L336 60M20 150L34 210M120 150L140 178M210 150L220 166M380 150L360 214\" stroke-width=\"1.2\"/><g fill=\"#3b2a1a\" stroke=\"none\"><circle cx=\"40\" cy=\"74\" r=\"2\"/><circle cx=\"20\" cy=\"24\" r=\"10\"/><circle cx=\"145\" cy=\"60\" r=\"2\"/><circle cx=\"120\" cy=\"24\" r=\"10\"/><circle cx=\"236\" cy=\"96\" r=\"2\"/><circle cx=\"220\" cy=\"24\" r=\"10\"/><circle cx=\"336\" cy=\"60\" r=\"2\"/><circle cx=\"320\" cy=\"24\" r=\"10\"/><circle cx=\"34\" cy=\"210\" r=\"2\"/><circle cx=\"20\" cy=\"150\" r=\"10\"/><circle cx=\"140\" cy=\"178\" r=\"2\"/><circle cx=\"120\" cy=\"150\" r=\"10\"/><circle cx=\"220\" cy=\"166\" r=\"2\"/><circle cx=\"210\" cy=\"150\" r=\"10\"/><circle cx=\"360\" cy=\"214\" r=\"2\"/><circle cx=\"380\" cy=\"150\" r=\"10\"/></g><g fill=\"#fff\" stroke=\"none\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" text-anchor=\"middle\"><text x=\"20\" y=\"28.5\">1</text><text x=\"120\" y=\"28.5\">2</text><text x=\"220\" y=\"28.5\">3</text><text x=\"320\" y=\"28.5\">4</text><text x=\"20\" y=\"154.5\">5</text><text x=\"120\" y=\"154.5\">6</text><text x=\"210\" y=\"154.5\">7</text><text x=\"380\" y=\"154.5\">8</text></g></svg>"
+  },
+  {
+   "id": "ani-snails",
+   "level": 1,
+   "title_el": "Σαλιγκάρια: μάζεμα μετά τη βροχή και «νηστεία»",
+   "title_en": "Collecting snails after rain and purging them",
+   "time_el": "1 ώρα + 7 μέρες",
+   "time_en": "1 hour + 7 days",
+   "why_el": "Μετά τη βροχή βγαίνουν πολλά σαλιγκάρια. Είναι καλή πρωτεΐνη, αν τα καθαρίσεις σωστά.",
+   "why_en": "Many snails come out after rain. They are good protein if cleaned properly.",
+   "need_el": [
+    "κουβά ή κουτί με τρύπες",
+    "σίτα για καπάκι",
+    "αλεύρι ή πίτουρο",
+    "θυμάρι",
+    "αλάτι, ξίδι",
+    "κατσαρόλα"
+   ],
+   "need_en": [
+    "a bucket or box with holes",
+    "mesh for a lid",
+    "flour or bran",
+    "thyme",
+    "salt, vinegar",
+    "a pot"
+   ],
+   "steps_el": [
+    "Μάζευε τη νύχτα ή το πρωί μετά τη βροχή. Μόνο μεγάλα, με σκληρό χείλος στο κέλυφος.",
+    "Όχι από δρόμους, σκουπίδια ή ψεκασμένα χωράφια.",
+    "Βάλ' τα σε κουβά με τρύπες και σίτα για καπάκι, σε δροσερό μέρος.",
+    "Για 5 μέρες τάιζέ τα αλεύρι και θυμάρι. Ψέκαζε λίγο νερό. Καθάριζε κάθε μέρα.",
+    "Τις 2 τελευταίες μέρες μην τους δίνεις τίποτα, να αδειάσουν.",
+    "Πέτα όσα είναι νεκρά: δεν κινούνται όταν τα αγγίζεις ή μυρίζουν άσχημα.",
+    "Πλύνε σε νερό με αλάτι και ξίδι, ξέπλυνε 3 φορές.",
+    "Βράσε τα τουλάχιστον 10–15 λεπτά πριν από κάθε συνταγή."
+   ],
+   "steps_en": [
+    "Collect at night or in the morning after rain. Only big ones, with a hard shell lip.",
+    "Not from roads, rubbish or sprayed fields.",
+    "Put them in a bucket with holes and a mesh lid, in a cool place.",
+    "For 5 days feed flour and thyme. Spray a little water. Clean daily.",
+    "Give nothing for the last 2 days, so they empty out.",
+    "Throw away dead ones: they do not move when touched or smell bad.",
+    "Wash in water with salt and vinegar, rinse 3 times.",
+    "Boil them for at least 10–15 minutes before any recipe."
+   ],
+   "tip_el": "Τα «κλειστά» σαλιγκάρια του καλοκαιριού (με λεπτή μεμβράνη) είναι ήδη καθαρά.",
+   "tip_en": "Sealed summer snails (with a thin film over the opening) are already clean.",
+   "warn_el": "Ποτέ ωμά ή μισοψημένα: έχουν παράσιτα. Πλένε τα χέρια. Τα νεκρά σαλιγκάρια δηλητηριάζουν. Μάζευε λίγα, να μείνουν και για του χρόνου.",
+   "warn_en": "Never raw or half-cooked: they carry parasites. Wash your hands. Dead snails can poison you. Take only a few, leave some for next year.",
+   "fig_el": "① ζωντανό σαλιγκάρι μετά τη βροχή ② κουβάς με σίτα για καπάκι ③ αλεύρι και θυμάρι ④ βράσιμο 10–15 λεπτά",
+   "fig_en": "① live snail after rain ② bucket with mesh lid ③ flour and thyme ④ boiling 10–15 minutes",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 260\" fill=\"none\" stroke=\"#3b2a1a\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"0\" y=\"0\" width=\"400\" height=\"260\" fill=\"#f6ecd6\" stroke=\"none\"/><path d=\"M170 12V248\" stroke-width=\"1\" stroke-dasharray=\"3 4\"/><path d=\"M300 12V248\" stroke-width=\"1\" stroke-dasharray=\"3 4\"/><path d=\"M0 210H170\"/><path d=\"M8 213l-8 8M22 213l-8 8M36 213l-8 8M50 213l-8 8M64 213l-8 8M78 213l-8 8M92 213l-8 8M106 213l-8 8M120 213l-8 8M134 213l-8 8M148 213l-8 8M162 213l-8 8\" stroke-width=\"1.2\"/><path d=\"M20 30c-2 4-3 7 0 8c3-1 2-4 0-8z\" fill=\"#bcd9e3\" stroke-width=\"1\"/><path d=\"M60 20c-2 4-3 7 0 8c3-1 2-4 0-8z\" fill=\"#bcd9e3\" stroke-width=\"1\"/><path d=\"M100 36c-2 4-3 7 0 8c3-1 2-4 0-8z\" fill=\"#bcd9e3\" stroke-width=\"1\"/><path d=\"M140 24c-2 4-3 7 0 8c3-1 2-4 0-8z\" fill=\"#bcd9e3\" stroke-width=\"1\"/><path d=\"M40 62c-2 4-3 7 0 8c3-1 2-4 0-8z\" fill=\"#bcd9e3\" stroke-width=\"1\"/><path d=\"M120 66c-2 4-3 7 0 8c3-1 2-4 0-8z\" fill=\"#bcd9e3\" stroke-width=\"1\"/><path d=\"M80 52c-2 4-3 7 0 8c3-1 2-4 0-8z\" fill=\"#bcd9e3\" stroke-width=\"1\"/><path d=\"M10 210C30 170 70 160 120 150C110 180 70 200 10 210Z\" fill=\"#a9c98b\"/><path d=\"M10 210C50 190 90 170 120 150\" stroke-width=\"1\"/><path d=\"M100 210C110 180 140 168 168 166C160 190 130 206 100 210Z\" fill=\"#6f9a52\"/><g transform=\"translate(62 186) scale(1.0 1.0)\"><path d=\"M-22 0C-22 -6 10 -6 18 -4C24 -12 26 -16 22 -22M18 -4L28 -18M18 -4C22 -2 24 0 20 2H-22Z\" fill=\"#bdb5a6\" stroke-width=\"1.5\"/><circle cx=\"22\" cy=\"-22\" r=\"1.6\" fill=\"#3b2a1a\"/><circle cx=\"28\" cy=\"-18\" r=\"1.6\" fill=\"#3b2a1a\"/><circle cx=\"0\" cy=\"-14\" r=\"13\" fill=\"#d98e5c\" stroke-width=\"1.6\"/><path d=\"M0 -14m-2 0a2 2 0 1 1 4 0a5 5 0 1 1 -9 1a8 8 0 1 1 16 -1\" stroke-width=\"1.2\"/></g><g transform=\"translate(128 196) scale(-0.8 0.8)\"><path d=\"M-22 0C-22 -6 10 -6 18 -4C24 -12 26 -16 22 -22M18 -4L28 -18M18 -4C22 -2 24 0 20 2H-22Z\" fill=\"#bdb5a6\" stroke-width=\"1.5\"/><circle cx=\"22\" cy=\"-22\" r=\"1.6\" fill=\"#3b2a1a\"/><circle cx=\"28\" cy=\"-18\" r=\"1.6\" fill=\"#3b2a1a\"/><circle cx=\"0\" cy=\"-14\" r=\"13\" fill=\"#d98e5c\" stroke-width=\"1.6\"/><path d=\"M0 -14m-2 0a2 2 0 1 1 4 0a5 5 0 1 1 -9 1a8 8 0 1 1 16 -1\" stroke-width=\"1.2\"/></g><path d=\"M186 104H284L276 220H194Z\" fill=\"#c9ccd1\"/><path d=\"M180 98H290V106H180Z\" fill=\"#ffffff\"/><path d=\"M188 98v8M196 98v8M204 98v8M212 98v8M220 98v8M228 98v8M236 98v8M244 98v8M252 98v8M260 98v8M268 98v8M276 98v8M284 98v8\" stroke-width=\"0.8\"/><circle cx=\"200\" cy=\"130\" r=\"1.8\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"270\" cy=\"130\" r=\"1.8\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"204\" cy=\"180\" r=\"1.8\" fill=\"#3b2a1a\" stroke=\"none\"/><circle cx=\"266\" cy=\"180\" r=\"1.8\" fill=\"#3b2a1a\" stroke=\"none\"/><path d=\"M178 102C176 110 182 112 186 108M292 102C294 110 288 112 284 108\" stroke-width=\"1.5\"/><path d=\"M206 200H244C242 210 238 214 225 214C212 214 208 210 206 200Z\" fill=\"#d98e5c\"/><path d=\"M210 200C216 192 234 192 240 200\" fill=\"#ffffff\"/><path d=\"M252 214C256 196 262 188 268 184M258 202l-6-4M262 194l6-2M264 190l-5-4\" stroke=\"#6f9a52\" stroke-width=\"1.5\"/><g transform=\"translate(224 150) scale(0.7 0.7)\"><path d=\"M-22 0C-22 -6 10 -6 18 -4C24 -12 26 -16 22 -22M18 -4L28 -18M18 -4C22 -2 24 0 20 2H-22Z\" fill=\"#bdb5a6\" stroke-width=\"1.5\"/><circle cx=\"22\" cy=\"-22\" r=\"1.6\" fill=\"#3b2a1a\"/><circle cx=\"28\" cy=\"-18\" r=\"1.6\" fill=\"#3b2a1a\"/><circle cx=\"0\" cy=\"-14\" r=\"13\" fill=\"#d98e5c\" stroke-width=\"1.6\"/><path d=\"M0 -14m-2 0a2 2 0 1 1 4 0a5 5 0 1 1 -9 1a8 8 0 1 1 16 -1\" stroke-width=\"1.2\"/></g><g transform=\"translate(258 130) scale(-0.6 0.6)\"><path d=\"M-22 0C-22 -6 10 -6 18 -4C24 -12 26 -16 22 -22M18 -4L28 -18M18 -4C22 -2 24 0 20 2H-22Z\" fill=\"#bdb5a6\" stroke-width=\"1.5\"/><circle cx=\"22\" cy=\"-22\" r=\"1.6\" fill=\"#3b2a1a\"/><circle cx=\"28\" cy=\"-18\" r=\"1.6\" fill=\"#3b2a1a\"/><circle cx=\"0\" cy=\"-14\" r=\"13\" fill=\"#d98e5c\" stroke-width=\"1.6\"/><path d=\"M0 -14m-2 0a2 2 0 1 1 4 0a5 5 0 1 1 -9 1a8 8 0 1 1 16 -1\" stroke-width=\"1.2\"/></g><path d=\"M314 160H386V206C386 212 382 214 376 214H324C318 214 314 212 314 206Z\" fill=\"#c9ccd1\"/><path d=\"M304 162H314M386 162H396\" stroke-width=\"3\"/><path d=\"M318 172H382\" stroke-width=\"1\"/><circle cx=\"332\" cy=\"152\" r=\"3\" fill=\"#bcd9e3\" stroke-width=\"1\"/><circle cx=\"350\" cy=\"146\" r=\"3\" fill=\"#bcd9e3\" stroke-width=\"1\"/><circle cx=\"368\" cy=\"152\" r=\"3\" fill=\"#bcd9e3\" stroke-width=\"1\"/><path d=\"M332.0 240C332.0 223.8 346.4 220.56 350 207.6C355.4 222.18 368.0 223.8 368.0 240Z\" fill=\"#f2a65a\"/><path d=\"M342.8 240C342.8 230.28 350 228.66 351.8 222.18C357.2 230.28 359.0 233.52 357.2 240Z\" fill=\"#e2603a\"/><path d=\"M324.8 244L375.2 236M324.8 236L375.2 244\" stroke-width=\"5\" stroke=\"#d9b77e\"/><path d=\"M324.8 244L375.2 236M324.8 236L375.2 244\" stroke-width=\"1\"/><path d=\"M30 120L58 178M236 50L236 98M194 240L220 206M330 80L350 160\" stroke-width=\"1.2\"/><g fill=\"#3b2a1a\" stroke=\"none\"><circle cx=\"58\" cy=\"178\" r=\"2\"/><circle cx=\"30\" cy=\"120\" r=\"10\"/><circle cx=\"236\" cy=\"98\" r=\"2\"/><circle cx=\"236\" cy=\"50\" r=\"10\"/><circle cx=\"220\" cy=\"206\" r=\"2\"/><circle cx=\"194\" cy=\"240\" r=\"10\"/><circle cx=\"350\" cy=\"160\" r=\"2\"/><circle cx=\"330\" cy=\"80\" r=\"10\"/></g><g fill=\"#fff\" stroke=\"none\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" text-anchor=\"middle\"><text x=\"30\" y=\"124.5\">1</text><text x=\"236\" y=\"54.5\">2</text><text x=\"194\" y=\"244.5\">3</text><text x=\"330\" y=\"84.5\">4</text></g></svg>"
+  },
+  {
+   "id": "ani-acorns",
+   "level": 2,
+   "title_el": "Βελανίδια, χαρούπια και άγριοι καρποί",
+   "title_en": "Acorns, carobs and wild fruits as food",
+   "time_el": "1–2 εβδομάδες (ξέπλυμα)",
+   "time_en": "1–2 weeks (leaching)",
+   "why_el": "Βελανιδιές και χαρουπιές υπάρχουν παντού. Ο καρπός τους, σωστά φτιαγμένος, γίνεται αλεύρι και γλυκό.",
+   "why_en": "Oaks and carob trees grow everywhere. Prepared right, their fruit becomes flour and sweetener.",
+   "need_el": [
+    "βελανίδια χωρίς τρύπες",
+    "χαρούπια ώριμα, καφέ",
+    "μεγάλο βάζο",
+    "καθαρό νερό",
+    "γουδί ή μύλο"
+   ],
+   "need_en": [
+    "acorns without holes",
+    "ripe brown carob pods",
+    "a big jar",
+    "clean water",
+    "a mortar or mill"
+   ],
+   "steps_el": [
+    "Μάζεψε βελανίδια το φθινόπωρο. Πέτα όσα έχουν τρύπα ή επιπλέουν στο νερό.",
+    "Σπάσε το τσόφλι και βγάλε τη ψίχα. Κόψ' τη σε μικρά κομμάτια.",
+    "Βάλ' τα σε βάζο με κρύο νερό. Το νερό γίνεται καφέ από τις τανίνες (την πίκρα).",
+    "Άλλαζε το νερό κάθε μέρα, για 7–14 μέρες, ώσπου να μην είναι πικρά.",
+    "Πιο γρήγορα: βράσε τα και άλλαζε το νερό 5–8 φορές, ώσπου να μείνει καθαρό.",
+    "Στέγνωσέ τα στον ήλιο ή σε χλιαρό φούρνο. Άλεσέ τα σε αλεύρι για ψωμί ή κουλούρια.",
+    "Χαρούπια: τρως τη σάρκα ωμή. Πέτα τους σκληρούς σπόρους. Βρασμένα δίνουν μέλι (χαρουπόμελο)."
+   ],
+   "steps_en": [
+    "Gather acorns in autumn. Throw away any with holes or that float in water.",
+    "Crack the shell and take out the kernel. Chop it small.",
+    "Put it in a jar of cold water. The water turns brown from tannins (bitterness).",
+    "Change the water every day, for 7–14 days, until no longer bitter.",
+    "Faster: boil them and change the water 5–8 times, until it stays clear.",
+    "Dry in the sun or a warm oven. Grind into flour for bread or biscuits.",
+    "Carobs: eat the flesh raw. Throw away the hard seeds. Boiled, they make a syrup."
+   ],
+   "tip_el": "Άλλα άγρια φρούτα: μούρα, φραγκόσυκα (βγάλε τα αγκάθια με κάψιμο), κούμαρα (λίγα, ζαλίζουν).",
+   "tip_en": "Other wild fruits: blackberries, prickly pears (burn off the spines), strawberry-tree fruit (only a few, they make you dizzy).",
+   "warn_el": "Ωμά, πικρά βελανίδια βλάπτουν τα νεφρά και το στομάχι: πάντα ξέπλυμα. Ποτέ άγνωστα μούρα: πολλά είναι δηλητηριώδη (π.χ. κισσός).",
+   "warn_en": "Raw bitter acorns harm the kidneys and stomach: always leach them. Never eat unknown berries: many are poisonous (e.g. ivy).",
+   "fig_el": "① βελανίδι και καθαρισμένη ψίχα ② χαρούπι ③ κομματάκια σε νερό ④ άλεσμα σε αλεύρι ⑤ άλλαζε το νερό κάθε μέρα",
+   "fig_en": "① acorn and shelled kernel ② carob pod ③ chopped kernels in water ④ grinding into flour ⑤ change the water every day",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 260\" fill=\"none\" stroke=\"#3b2a1a\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"0\" y=\"0\" width=\"400\" height=\"260\" fill=\"#f6ecd6\" stroke=\"none\"/><path d=\"M130 12V248\" stroke-width=\"1\" stroke-dasharray=\"3 4\"/><path d=\"M270 12V248\" stroke-width=\"1\" stroke-dasharray=\"3 4\"/><path d=\"M48 60C38 60 34 80 40 92C46 104 62 104 68 92C74 80 70 60 60 60Z\" fill=\"#d9b77e\"/><path d=\"M34 62C34 46 74 46 74 62C74 68 34 68 34 62Z\" fill=\"#c8a27a\"/><path d=\"M40 56l4 4M48 52l4 4M56 52l4 4M64 54l4 4\" stroke-width=\"1\"/><path d=\"M54 46v-8\" stroke-width=\"2.5\"/><path d=\"M88 84C84 74 92 66 100 70C106 74 110 86 104 94C96 100 90 94 88 84Z\" fill=\"#f2a65a\" fill-opacity=\"0.6\"/><path d=\"M94 74c2 6 4 12 6 18\" stroke-width=\"1\"/><path d=\"M16 170C40 140 90 128 118 136C122 144 120 150 112 150C80 150 50 170 20 180C12 182 12 176 16 170Z\" fill=\"#d98e5c\"/><ellipse cx=\"40\" cy=\"162\" rx=\"3\" ry=\"2\" fill=\"#c8a27a\" stroke-width=\"1\"/><ellipse cx=\"60\" cy=\"152\" rx=\"3\" ry=\"2\" fill=\"#c8a27a\" stroke-width=\"1\"/><ellipse cx=\"80\" cy=\"146\" rx=\"3\" ry=\"2\" fill=\"#c8a27a\" stroke-width=\"1\"/><ellipse cx=\"100\" cy=\"142\" rx=\"3\" ry=\"2\" fill=\"#c8a27a\" stroke-width=\"1\"/><path d=\"M118 136l6-8\" stroke-width=\"2\"/><path d=\"M160 70H240V80C250 86 250 90 250 100V214C250 222 244 226 236 226H164C156 226 150 222 150 214V100C150 90 150 86 160 80Z\" fill=\"#ffffff\"/><path d=\"M152 110H248V214C248 220 244 224 236 224H164C156 224 152 220 152 214Z\" fill=\"#d98e5c\" fill-opacity=\"0.35\" stroke=\"none\"/><path d=\"M152 110H248\" stroke-width=\"1\"/><path d=\"M162 210l6-4l6 3l-2 6l-7 1z\" fill=\"#d9b77e\" stroke-width=\"1\"/><path d=\"M178 214l6-4l6 3l-2 6l-7 1z\" fill=\"#d9b77e\" stroke-width=\"1\"/><path d=\"M196 208l6-4l6 3l-2 6l-7 1z\" fill=\"#d9b77e\" stroke-width=\"1\"/><path d=\"M214 214l6-4l6 3l-2 6l-7 1z\" fill=\"#d9b77e\" stroke-width=\"1\"/><path d=\"M230 206l6-4l6 3l-2 6l-7 1z\" fill=\"#d9b77e\" stroke-width=\"1\"/><path d=\"M170 198l6-4l6 3l-2 6l-7 1z\" fill=\"#d9b77e\" stroke-width=\"1\"/><path d=\"M204 196l6-4l6 3l-2 6l-7 1z\" fill=\"#d9b77e\" stroke-width=\"1\"/><path d=\"M186 200l6-4l6 3l-2 6l-7 1z\" fill=\"#d9b77e\" stroke-width=\"1\"/><path d=\"M222 196l6-4l6 3l-2 6l-7 1z\" fill=\"#d9b77e\" stroke-width=\"1\"/><path d=\"M156 64H244V72H156Z\" fill=\"#c9ccd1\"/><path d=\"M178 52C178 30 222 30 222 46\" stroke=\"#b23a2a\"/><path d=\"M-8 -5L0 0L-8 5\" stroke=\"#b23a2a\" transform=\"translate(222 50) rotate(90)\"/><path d=\"M222 20C190 10 170 20 166 36\" stroke=\"#b23a2a\"/><path d=\"M-8 -5L0 0L-8 5\" stroke=\"#b23a2a\" transform=\"translate(166 40) rotate(100)\"/><path d=\"M290 170H380C380 200 362 222 335 222C308 222 290 200 290 170Z\" fill=\"#bdb5a6\"/><path d=\"M286 166H384V172H286Z\" fill=\"#bdb5a6\"/><path d=\"M300 174C320 180 350 180 370 174\" fill=\"#ffffff\" stroke-width=\"1\"/><path d=\"M340 168L376 104\" stroke=\"#d9b77e\" stroke-width=\"10\"/><path d=\"M336 172l4-6\" stroke-width=\"2\"/><path d=\"M0 236H400\"/><path d=\"M8 239l-8 8M22 239l-8 8M36 239l-8 8M50 239l-8 8M64 239l-8 8M78 239l-8 8M92 239l-8 8M106 239l-8 8M120 239l-8 8M134 239l-8 8M148 239l-8 8M162 239l-8 8M176 239l-8 8M190 239l-8 8M204 239l-8 8M218 239l-8 8M232 239l-8 8M246 239l-8 8M260 239l-8 8M274 239l-8 8M288 239l-8 8M302 239l-8 8M316 239l-8 8M330 239l-8 8M344 239l-8 8M358 239l-8 8M372 239l-8 8M386 239l-8 8\" stroke-width=\"1.2\"/><path d=\"M105 30L70 76M30 210L50 166M200 250L200 214M380 70L352 140M270 30L225 40\" stroke-width=\"1.2\"/><g fill=\"#3b2a1a\" stroke=\"none\"><circle cx=\"70\" cy=\"76\" r=\"2\"/><circle cx=\"105\" cy=\"30\" r=\"10\"/><circle cx=\"50\" cy=\"166\" r=\"2\"/><circle cx=\"30\" cy=\"210\" r=\"10\"/><circle cx=\"200\" cy=\"214\" r=\"2\"/><circle cx=\"200\" cy=\"250\" r=\"10\"/><circle cx=\"352\" cy=\"140\" r=\"2\"/><circle cx=\"380\" cy=\"70\" r=\"10\"/><circle cx=\"225\" cy=\"40\" r=\"2\"/><circle cx=\"270\" cy=\"30\" r=\"10\"/></g><g fill=\"#fff\" stroke=\"none\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" text-anchor=\"middle\"><text x=\"105\" y=\"34.5\">1</text><text x=\"30\" y=\"214.5\">2</text><text x=\"200\" y=\"254.5\">3</text><text x=\"380\" y=\"74.5\">4</text><text x=\"270\" y=\"34.5\">5</text></g></svg>"
+  },
+  {
+   "id": "ani-herbs-collect",
+   "level": 1,
+   "title_el": "Μάζεμα και ξήρανση άγριων βοτάνων",
+   "title_en": "Collecting and drying wild herbs",
+   "time_el": "1 πρωινό + 1–2 εβδομάδες",
+   "time_en": "1 morning + 1–2 weeks",
+   "why_el": "Ρίγανη, θυμάρι, φασκόμηλο και τσάι του βουνού νοστιμίζουν το φαγητό και ζεσταίνουν τον χειμώνα.",
+   "why_en": "Oregano, thyme, sage and mountain tea flavour food and make warm drinks in winter.",
+   "need_el": [
+    "ψαλίδι ή μαχαιράκι",
+    "σπάγκο",
+    "σκιερό, αεριζόμενο μέρος",
+    "γυάλινα βάζα με καπάκι",
+    "χαρτάκια για ετικέτες"
+   ],
+   "need_en": [
+    "scissors or a small knife",
+    "string",
+    "a shady airy place",
+    "glass jars with lids",
+    "paper for labels"
+   ],
+   "steps_el": [
+    "Μάζευε λίγο πριν ανοίξουν όλα τα λουλούδια (Μάιος–Ιούλιος), πρωί αφού στεγνώσει η δροσιά.",
+    "Κόψε μόνο το πάνω τρίτο του φυτού. Ποτέ μην ξεριζώνεις.",
+    "Πάρε από λίγα φυτά, όχι από όλα. Μάζευε μόνο για το σπίτι σου.",
+    "Τίναξε τα έντομα και το χώμα. Μην πλένεις.",
+    "Δέσε μικρά ματσάκια, όσο ο αντίχειράς σου.",
+    "Κρέμασέ τα ανάποδα σε σκιά και αέρα, 1–2 εβδομάδες. Όχι στον ήλιο.",
+    "Όταν τρίβονται στα δάχτυλα, βάλ' τα σε γυάλινο βάζο με ετικέτα και ημερομηνία."
+   ],
+   "steps_en": [
+    "Pick just before all flowers open (May–July), in the morning once the dew dries.",
+    "Cut only the top third of the plant. Never pull up roots.",
+    "Take a little from many plants, not all from one. Pick only for your home.",
+    "Shake off insects and soil. Do not wash.",
+    "Tie small bunches, as thick as your thumb.",
+    "Hang them upside down in shade and air, 1–2 weeks. Not in the sun.",
+    "When they crumble in your fingers, store in a labelled, dated glass jar."
+   ],
+   "tip_el": "Τα βότανα κρατάνε το άρωμά τους έναν χρόνο. Μετά βάλ' τα στη φωτιά να μυρίσει το σπίτι.",
+   "tip_en": "Herbs keep their scent for one year. After that, burn them to scent the house.",
+   "warn_el": "Μόνο φυτά που ξέρεις σίγουρα. Το φασκόμηλο σε μεγάλη ποσότητα δεν κάνει σε έγκυες και επιληπτικούς. Παραδοσιακή χρήση μόνο, όχι αντί για γιατρό. Μεγάλες ποσότητες χρειάζονται άδεια.",
+   "warn_en": "Only plants you know for sure. Large amounts of sage are not for pregnant women or epileptics. Traditional use only, not instead of a doctor. Large harvests need a permit.",
+   "fig_el": "① κόψε στην κόκκινη γραμμή (πάνω τρίτο) ② μικρό ματσάκι δεμένο ③ κρεμασμένα ανάποδα σε σκιά ④ γυάλινο βάζο ⑤ η ρίζα μένει",
+   "fig_en": "① cut at the red line (top third) ② small tied bunch ③ hung upside down in shade ④ glass jar ⑤ the root stays",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 260\" fill=\"none\" stroke=\"#3b2a1a\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"0\" y=\"0\" width=\"400\" height=\"260\" fill=\"#f6ecd6\" stroke=\"none\"/><path d=\"M150 12V248\" stroke-width=\"1\" stroke-dasharray=\"3 4\"/><path d=\"M0 220H150\"/><path d=\"M8 223l-8 8M22 223l-8 8M36 223l-8 8M50 223l-8 8M64 223l-8 8M78 223l-8 8M92 223l-8 8M106 223l-8 8M120 223l-8 8M134 223l-8 8M148 223l-8 8\" stroke-width=\"1.2\"/><path d=\"M75 220Q52 180 29 133\" stroke-width=\"1.6\" stroke=\"#6f9a52\"/><path d=\"M75 220Q60 180 45 103\" stroke-width=\"1.6\" stroke=\"#6f9a52\"/><path d=\"M75 220Q70 180 65 87\" stroke-width=\"1.6\" stroke=\"#6f9a52\"/><path d=\"M75 220Q80 180 85 87\" stroke-width=\"1.6\" stroke=\"#6f9a52\"/><path d=\"M75 220Q90 180 105 103\" stroke-width=\"1.6\" stroke=\"#6f9a52\"/><path d=\"M75 220Q98 180 121 133\" stroke-width=\"1.6\" stroke=\"#6f9a52\"/><g fill=\"#a9c98b\" stroke-width=\"0.8\"><ellipse cx=\"50\" cy=\"181\" rx=\"4\" ry=\"2.5\"/><ellipse cx=\"51\" cy=\"168\" rx=\"4\" ry=\"2.5\"/><ellipse cx=\"37\" cy=\"155\" rx=\"4\" ry=\"2.5\"/><ellipse cx=\"38\" cy=\"142\" rx=\"4\" ry=\"2.5\"/><ellipse cx=\"58\" cy=\"167\" rx=\"4\" ry=\"2.5\"/><ellipse cx=\"61\" cy=\"150\" rx=\"4\" ry=\"2.5\"/><ellipse cx=\"48\" cy=\"132\" rx=\"4\" ry=\"2.5\"/><ellipse cx=\"52\" cy=\"115\" rx=\"4\" ry=\"2.5\"/><ellipse cx=\"66\" cy=\"160\" rx=\"4\" ry=\"2.5\"/><ellipse cx=\"73\" cy=\"140\" rx=\"4\" ry=\"2.5\"/><ellipse cx=\"63\" cy=\"120\" rx=\"4\" ry=\"2.5\"/><ellipse cx=\"70\" cy=\"100\" rx=\"4\" ry=\"2.5\"/><ellipse cx=\"76\" cy=\"160\" rx=\"4\" ry=\"2.5\"/><ellipse cx=\"85\" cy=\"140\" rx=\"4\" ry=\"2.5\"/><ellipse cx=\"79\" cy=\"120\" rx=\"4\" ry=\"2.5\"/><ellipse cx=\"88\" cy=\"100\" rx=\"4\" ry=\"2.5\"/><ellipse cx=\"84\" cy=\"167\" rx=\"4\" ry=\"2.5\"/><ellipse cx=\"97\" cy=\"150\" rx=\"4\" ry=\"2.5\"/><ellipse cx=\"94\" cy=\"132\" rx=\"4\" ry=\"2.5\"/><ellipse cx=\"106\" cy=\"115\" rx=\"4\" ry=\"2.5\"/><ellipse cx=\"92\" cy=\"181\" rx=\"4\" ry=\"2.5\"/><ellipse cx=\"107\" cy=\"168\" rx=\"4\" ry=\"2.5\"/><ellipse cx=\"105\" cy=\"155\" rx=\"4\" ry=\"2.5\"/><ellipse cx=\"120\" cy=\"142\" rx=\"4\" ry=\"2.5\"/></g><g fill=\"#ffffff\" stroke-width=\"1\"><circle cx=\"29\" cy=\"129\" r=\"4\"/><circle cx=\"45\" cy=\"99\" r=\"4\"/><circle cx=\"65\" cy=\"83\" r=\"4\"/><circle cx=\"85\" cy=\"83\" r=\"4\"/><circle cx=\"105\" cy=\"99\" r=\"4\"/><circle cx=\"121\" cy=\"129\" r=\"4\"/></g><path d=\"M10 116H140\" stroke=\"#b23a2a\" stroke-width=\"2\" stroke-dasharray=\"5 4\"/><path d=\"M110 92L132 112M110 112L132 92\" stroke=\"#c9ccd1\" stroke-width=\"4\"/><circle cx=\"104\" cy=\"88\" r=\"6\"/><circle cx=\"104\" cy=\"116\" r=\"6\"/><path d=\"M108 92l4 4M108 112l4-4\" stroke-width=\"2\"/><path d=\"M150 30H400\" stroke-width=\"3\"/><path d=\"M150 22H400V30H150Z\" fill=\"#d9b77e\"/><path d=\"M164 50H392\" stroke-width=\"1.2\"/><circle cx=\"164\" cy=\"50\" r=\"3\" fill=\"#3b2a1a\"/><circle cx=\"392\" cy=\"50\" r=\"3\" fill=\"#3b2a1a\"/><path d=\"M200 50V62\" stroke-width=\"1.2\"/><path d=\"M194 62H206V70H194Z\" fill=\"#d98e5c\" stroke-width=\"1.2\"/><path d=\"M195 70Q192 100 189 140\" stroke=\"#6f9a52\" stroke-width=\"1.4\"/><path d=\"M198 70Q197 100 196 140\" stroke=\"#6f9a52\" stroke-width=\"1.4\"/><path d=\"M202 70Q203 100 204 140\" stroke=\"#6f9a52\" stroke-width=\"1.4\"/><path d=\"M205 70Q208 100 211 140\" stroke=\"#6f9a52\" stroke-width=\"1.4\"/><g fill=\"#a9c98b\" stroke-width=\"0.8\"><ellipse cx=\"191\" cy=\"100\" rx=\"3.5\" ry=\"2.2\"/><ellipse cx=\"208\" cy=\"104\" rx=\"3.5\" ry=\"2.2\"/><ellipse cx=\"188\" cy=\"120\" rx=\"3.5\" ry=\"2.2\"/><ellipse cx=\"211\" cy=\"124\" rx=\"3.5\" ry=\"2.2\"/><ellipse cx=\"196\" cy=\"132\" rx=\"3.5\" ry=\"2.2\"/><ellipse cx=\"205\" cy=\"138\" rx=\"3.5\" ry=\"2.2\"/><ellipse cx=\"200\" cy=\"112\" rx=\"3.5\" ry=\"2.2\"/></g><path d=\"M260 50V62\" stroke-width=\"1.2\"/><path d=\"M254 62H266V70H254Z\" fill=\"#d98e5c\" stroke-width=\"1.2\"/><path d=\"M255 70Q252 100 249 140\" stroke=\"#6f9a52\" stroke-width=\"1.4\"/><path d=\"M258 70Q257 100 256 140\" stroke=\"#6f9a52\" stroke-width=\"1.4\"/><path d=\"M262 70Q263 100 264 140\" stroke=\"#6f9a52\" stroke-width=\"1.4\"/><path d=\"M265 70Q268 100 271 140\" stroke=\"#6f9a52\" stroke-width=\"1.4\"/><g fill=\"#a9c98b\" stroke-width=\"0.8\"><ellipse cx=\"251\" cy=\"100\" rx=\"3.5\" ry=\"2.2\"/><ellipse cx=\"268\" cy=\"104\" rx=\"3.5\" ry=\"2.2\"/><ellipse cx=\"248\" cy=\"120\" rx=\"3.5\" ry=\"2.2\"/><ellipse cx=\"271\" cy=\"124\" rx=\"3.5\" ry=\"2.2\"/><ellipse cx=\"256\" cy=\"132\" rx=\"3.5\" ry=\"2.2\"/><ellipse cx=\"265\" cy=\"138\" rx=\"3.5\" ry=\"2.2\"/><ellipse cx=\"260\" cy=\"112\" rx=\"3.5\" ry=\"2.2\"/></g><path d=\"M320 50V62\" stroke-width=\"1.2\"/><path d=\"M314 62H326V70H314Z\" fill=\"#d98e5c\" stroke-width=\"1.2\"/><path d=\"M315 70Q312 100 309 140\" stroke=\"#6f9a52\" stroke-width=\"1.4\"/><path d=\"M318 70Q317 100 316 140\" stroke=\"#6f9a52\" stroke-width=\"1.4\"/><path d=\"M322 70Q323 100 324 140\" stroke=\"#6f9a52\" stroke-width=\"1.4\"/><path d=\"M325 70Q328 100 331 140\" stroke=\"#6f9a52\" stroke-width=\"1.4\"/><g fill=\"#a9c98b\" stroke-width=\"0.8\"><ellipse cx=\"311\" cy=\"100\" rx=\"3.5\" ry=\"2.2\"/><ellipse cx=\"328\" cy=\"104\" rx=\"3.5\" ry=\"2.2\"/><ellipse cx=\"308\" cy=\"120\" rx=\"3.5\" ry=\"2.2\"/><ellipse cx=\"331\" cy=\"124\" rx=\"3.5\" ry=\"2.2\"/><ellipse cx=\"316\" cy=\"132\" rx=\"3.5\" ry=\"2.2\"/><ellipse cx=\"325\" cy=\"138\" rx=\"3.5\" ry=\"2.2\"/><ellipse cx=\"320\" cy=\"112\" rx=\"3.5\" ry=\"2.2\"/></g><path d=\"M318 180H372V188C378 192 378 196 378 200V236H312V200C312 196 312 192 318 188Z\" fill=\"#ffffff\"/><path d=\"M314 176H376V184H314Z\" fill=\"#c9ccd1\"/><path d=\"M314 208H376V234H314Z\" fill=\"#a9c98b\" stroke=\"none\"/><circle cx=\"322\" cy=\"216\" r=\"1.4\" fill=\"#6f9a52\" stroke=\"none\"/><circle cx=\"334\" cy=\"222\" r=\"1.4\" fill=\"#6f9a52\" stroke=\"none\"/><circle cx=\"346\" cy=\"214\" r=\"1.4\" fill=\"#6f9a52\" stroke=\"none\"/><circle cx=\"358\" cy=\"224\" r=\"1.4\" fill=\"#6f9a52\" stroke=\"none\"/><circle cx=\"368\" cy=\"216\" r=\"1.4\" fill=\"#6f9a52\" stroke=\"none\"/><circle cx=\"328\" cy=\"228\" r=\"1.4\" fill=\"#6f9a52\" stroke=\"none\"/><circle cx=\"352\" cy=\"230\" r=\"1.4\" fill=\"#6f9a52\" stroke=\"none\"/><path d=\"M300 236H400\"/><path d=\"M30 90L40 116M200 180L200 66M380 90L380 50M280 210L312 210M30 245L70 222\" stroke-width=\"1.2\"/><g fill=\"#3b2a1a\" stroke=\"none\"><circle cx=\"40\" cy=\"116\" r=\"2\"/><circle cx=\"30\" cy=\"90\" r=\"10\"/><circle cx=\"200\" cy=\"66\" r=\"2\"/><circle cx=\"200\" cy=\"180\" r=\"10\"/><circle cx=\"380\" cy=\"50\" r=\"2\"/><circle cx=\"380\" cy=\"90\" r=\"10\"/><circle cx=\"312\" cy=\"210\" r=\"2\"/><circle cx=\"280\" cy=\"210\" r=\"10\"/><circle cx=\"70\" cy=\"222\" r=\"2\"/><circle cx=\"30\" cy=\"245\" r=\"10\"/></g><g fill=\"#fff\" stroke=\"none\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" text-anchor=\"middle\"><text x=\"30\" y=\"94.5\">1</text><text x=\"200\" y=\"184.5\">2</text><text x=\"380\" y=\"94.5\">3</text><text x=\"280\" y=\"214.5\">4</text><text x=\"30\" y=\"249.5\">5</text></g></svg>"
+  },
+  {
+   "id": "ani-mushrooms",
+   "level": 1,
+   "title_el": "Μανιτάρια: ο χρυσός κανόνας",
+   "title_en": "Mushrooms: the golden rule",
+   "time_el": "—",
+   "time_en": "—",
+   "why_el": "Ένα μόνο λάθος μανιτάρι μπορεί να σκοτώσει μια οικογένεια. Ο κανόνας είναι απλός: δεν τρως ποτέ μανιτάρι αν δεν το επιβεβαιώσει ειδικός.",
+   "why_en": "One wrong mushroom can kill a whole family. The rule is simple: never eat a mushroom unless an expert confirms it.",
+   "need_el": [
+    "καλάθι (όχι σακούλα)",
+    "μαχαιράκι",
+    "έναν έμπειρο μανιταροσυλλέκτη ή μυκητολογικό σύλλογο"
+   ],
+   "need_en": [
+    "a basket (not a bag)",
+    "a small knife",
+    "an experienced mushroom expert or club"
+   ],
+   "steps_el": [
+    "Χρυσός κανόνας: αν δεν είσαι 100% σίγουρος, ΔΕΝ το τρως. Ποτέ.",
+    "Ο θανατίτης (πράσινο-λευκό καπέλο, άσπρα ελάσματα, δαχτυλίδι, «φλιτζάνι» στη βάση) είναι το πιο φονικό.",
+    "Βγάλε όλο το μανιτάρι μαζί με τη βάση του. Το «φλιτζάνι» κρύβεται στο χώμα.",
+    "Βάλε κάθε είδος χωριστά στο καλάθι. Ένα δηλητηριώδες χαλάει όλα τα άλλα.",
+    "Δείξε τα σε ειδικό, ένα ένα, πριν τα μαγειρέψεις.",
+    "Τα «κόλπα» δεν ισχύουν: ασημένιο κουτάλι, σκόρδο, ξεφλούδισμα, «το έφαγαν ζώα» – όλα ψέματα.",
+    "Πέτα όσα είναι παλιά, μαλακά ή φαγωμένα από σκουλήκια."
+   ],
+   "steps_en": [
+    "Golden rule: if you are not 100% sure, you DO NOT eat it. Ever.",
+    "The death cap (green-white cap, white gills, a ring, a 'cup' at the base) is the deadliest.",
+    "Lift the whole mushroom with its base. The 'cup' hides in the soil.",
+    "Keep each kind separate in the basket. One poisonous one spoils the rest.",
+    "Show them to an expert, one by one, before cooking.",
+    "The 'tricks' do not work: silver spoon, garlic, peeling, 'animals ate it' – all false.",
+    "Throw away old, soft or wormy ones."
+   ],
+   "tip_el": "Αγόραζε ή μάθε από μυκητολογικό σύλλογο. Στην αρχή μάθε καλά 2–3 ασφαλή είδη.",
+   "tip_en": "Buy, or learn from a mushroom club. At first, learn 2–3 safe kinds very well.",
+   "warn_el": "Τα συμπτώματα του θανατίτη έρχονται 6–24 ώρες μετά και μετά φαίνεται να περνάνε, ενώ το συκώτι καταστρέφεται. Αν φάγατε άγνωστο μανιτάρι: αμέσως 166 ή Κέντρο Δηλητηριάσεων 210 7793777, κρατήστε ένα κομμάτι.",
+   "warn_en": "Death cap symptoms come 6–24 hours later, then seem to pass while the liver is destroyed. If someone ate an unknown mushroom: call emergency (112) or poison control (Greece 210 7793777) at once; keep a piece.",
+   "fig_el": "Θανατίτης: ① καπέλο ② άσπρα ελάσματα ③ δαχτυλίδι ④ «φλιτζάνι» κρυμμένο στο χώμα ⑤ ποτέ στο πιάτο χωρίς ειδικό ⑥ σε δηλητηρίαση: αμέσως γιατρός",
+   "fig_en": "Death cap: ① cap ② white gills ③ ring ④ 'cup' hidden in the soil ⑤ never on the plate without an expert ⑥ if poisoned: doctor at once",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 260\" fill=\"none\" stroke=\"#3b2a1a\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"0\" y=\"0\" width=\"400\" height=\"260\" fill=\"#f6ecd6\" stroke=\"none\"/><path d=\"M250 12V248\" stroke-width=\"1\" stroke-dasharray=\"3 4\"/><path d=\"M0 170H250V260H0Z\" fill=\"#c8a27a\" stroke=\"none\"/><path d=\"M0 170H250\"/><path d=\"M8 173l-8 8M22 173l-8 8M36 173l-8 8M50 173l-8 8M64 173l-8 8M78 173l-8 8M92 173l-8 8M106 173l-8 8M120 173l-8 8M134 173l-8 8M148 173l-8 8M162 173l-8 8M176 173l-8 8M190 173l-8 8M204 173l-8 8M218 173l-8 8M232 173l-8 8M246 173l-8 8\" stroke-width=\"1.2\"/><path d=\"M108 168V100H138V168C142 182 146 196 138 204H108C100 196 104 182 108 168Z\" fill=\"#ffffff\"/><path d=\"M100 170C94 186 96 206 106 212H140C150 206 152 186 146 170C142 186 104 186 100 170Z\" fill=\"#ffffff\"/><path d=\"M104 196C112 200 134 200 142 196\" stroke-width=\"1\"/><path d=\"M108 120C96 132 98 140 104 140C112 134 134 134 142 140C148 140 150 132 138 120Z\" fill=\"#ffffff\"/><path d=\"M40 100C40 40 206 40 206 100Z\" fill=\"#a9c98b\"/><path d=\"M40 100C70 112 176 112 206 100\" fill=\"#ffffff\"/><path d=\"M52 103L112 109\" stroke-width=\"0.8\"/><path d=\"M61 103L114 109\" stroke-width=\"0.8\"/><path d=\"M70 103L115 109\" stroke-width=\"0.8\"/><path d=\"M79 103L116 109\" stroke-width=\"0.8\"/><path d=\"M88 103L118 109\" stroke-width=\"0.8\"/><path d=\"M97 103L119 109\" stroke-width=\"0.8\"/><path d=\"M106 103L120 109\" stroke-width=\"0.8\"/><path d=\"M115 103L122 109\" stroke-width=\"0.8\"/><path d=\"M124 103L123 109\" stroke-width=\"0.8\"/><path d=\"M133 103L124 109\" stroke-width=\"0.8\"/><path d=\"M142 103L126 109\" stroke-width=\"0.8\"/><path d=\"M151 103L127 109\" stroke-width=\"0.8\"/><path d=\"M160 103L129 109\" stroke-width=\"0.8\"/><path d=\"M169 103L130 109\" stroke-width=\"0.8\"/><path d=\"M178 103L131 109\" stroke-width=\"0.8\"/><path d=\"M187 103L133 109\" stroke-width=\"0.8\"/><path d=\"M196 103L134 109\" stroke-width=\"0.8\"/><path d=\"M80 60c10-6 24-8 36-6M130 54c10 0 20 2 28 6\" stroke-width=\"1.2\"/><ellipse cx=\"325\" cy=\"150\" rx=\"56\" ry=\"18\" fill=\"#ffffff\"/><ellipse cx=\"325\" cy=\"148\" rx=\"38\" ry=\"10\" stroke-width=\"1\"/><path d=\"M300 148c0-10 16-10 16 0z\" fill=\"#a9c98b\" stroke-width=\"1.2\"/><path d=\"M306 148v6h4v-6\" stroke-width=\"1.2\"/><path d=\"M318 148c0-10 16-10 16 0z\" fill=\"#a9c98b\" stroke-width=\"1.2\"/><path d=\"M324 148v6h4v-6\" stroke-width=\"1.2\"/><path d=\"M336 148c0-10 16-10 16 0z\" fill=\"#a9c98b\" stroke-width=\"1.2\"/><path d=\"M342 148v6h4v-6\" stroke-width=\"1.2\"/><circle cx=\"325\" cy=\"150\" r=\"62\" stroke=\"#b23a2a\" stroke-width=\"3\"/><path d=\"M281.6 106.6L368.4 193.4\" stroke=\"#b23a2a\" stroke-width=\"3\"/><path d=\"M300 228H350V248H300Z\" fill=\"#ffffff\"/><path d=\"M314 228V220H336V228\" stroke-width=\"1.5\"/><path d=\"M325 232V244M319 238h12\" stroke=\"#b23a2a\" stroke-width=\"2.5\"/><path d=\"M30 40L70 70M30 130L60 104M200 140L142 132M200 220L146 196M385 80L360 104M270 240L300 238\" stroke-width=\"1.2\"/><g fill=\"#3b2a1a\" stroke=\"none\"><circle cx=\"70\" cy=\"70\" r=\"2\"/><circle cx=\"30\" cy=\"40\" r=\"10\"/><circle cx=\"60\" cy=\"104\" r=\"2\"/><circle cx=\"30\" cy=\"130\" r=\"10\"/><circle cx=\"142\" cy=\"132\" r=\"2\"/><circle cx=\"200\" cy=\"140\" r=\"10\"/><circle cx=\"146\" cy=\"196\" r=\"2\"/><circle cx=\"200\" cy=\"220\" r=\"10\"/><circle cx=\"360\" cy=\"104\" r=\"2\"/><circle cx=\"385\" cy=\"80\" r=\"10\"/><circle cx=\"300\" cy=\"238\" r=\"2\"/><circle cx=\"270\" cy=\"240\" r=\"10\"/></g><g fill=\"#fff\" stroke=\"none\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" text-anchor=\"middle\"><text x=\"30\" y=\"44.5\">1</text><text x=\"30\" y=\"134.5\">2</text><text x=\"200\" y=\"144.5\">3</text><text x=\"200\" y=\"224.5\">4</text><text x=\"385\" y=\"84.5\">5</text><text x=\"270\" y=\"244.5\">6</text></g></svg>"
+  },
+  {
+   "id": "ani-seasalt",
+   "level": 1,
+   "title_el": "Θαλασσινό αλάτι από καθαρό νερό",
+   "title_en": "Making sea salt from clean sea water",
+   "time_el": "3–10 μέρες στον ήλιο",
+   "time_en": "3–10 days in the sun",
+   "why_el": "Χωρίς αλάτι δεν διατηρείς κρέας, ψάρι, ελιές και τυρί. Η θάλασσα το δίνει δωρεάν.",
+   "why_en": "Without salt you cannot preserve meat, fish, olives or cheese. The sea gives it for free.",
+   "need_el": [
+    "καθαροί κουβάδες",
+    "πανί βαμβακερό για φίλτρο",
+    "ρηχά πλατιά ταψιά (όχι αλουμίνιο)",
+    "ξύλινη σπάτουλα",
+    "γυάλινο βάζο"
+   ],
+   "need_en": [
+    "clean buckets",
+    "cotton cloth for a filter",
+    "wide shallow trays (not aluminium)",
+    "a wooden spatula",
+    "a glass jar"
+   ],
+   "steps_el": [
+    "Πάρε νερό από ανοιχτή, καθαρή θάλασσα. Μακριά από λιμάνια, εκβολές ποταμών και αποχετεύσεις.",
+    "Άφησέ το 1 ώρα να κατακαθίσει η άμμος.",
+    "Σούρωσέ το από διπλό πανί.",
+    "Γέμισε ρηχά ταψιά μόνο 2–3 cm. Σκέπασε με τούλι για σκόνη και έντομα.",
+    "Άφησέ τα στον ήλιο. Σε 3–10 μέρες το νερό φεύγει και μένει αλάτι.",
+    "Πιο γρήγορα: βράσε σε κατσαρόλα ώσπου να μείνει λίγο νερό, μετά άφησέ το να στεγνώσει.",
+    "Μάζεψε τα κρύσταλλα με ξύλινη σπάτουλα. Στέγνωσέ τα 1 μέρα και βάλ' τα σε γυάλινο βάζο."
+   ],
+   "steps_en": [
+    "Take water from open, clean sea. Far from ports, river mouths and sewage outlets.",
+    "Let it stand 1 hour so sand settles.",
+    "Strain it through a double cloth.",
+    "Fill shallow trays only 2–3 cm deep. Cover with net against dust and insects.",
+    "Leave them in the sun. In 3–10 days the water goes and salt is left.",
+    "Faster: boil in a pot until little water is left, then let it dry.",
+    "Collect the crystals with a wooden spatula. Dry for 1 day and store in a glass jar."
+   ],
+   "tip_el": "10 λίτρα θάλασσας δίνουν περίπου 300–350 g αλάτι.",
+   "tip_en": "10 litres of sea water give about 300–350 g of salt.",
+   "warn_el": "Βρώμικο νερό δίνει βρώμικο αλάτι: το βράσιμο δεν διώχνει πετρέλαια και χημικά. Μην αφήνεις φωτιά χωρίς επίβλεψη. Το πικρό υπόλοιπο υγρό στο τέλος πέτα το.",
+   "warn_en": "Dirty water gives dirty salt: boiling does not remove oil or chemicals. Never leave a fire unattended. Throw away the bitter liquid left at the end.",
+   "fig_el": "① νερό από καθαρή θάλασσα ② σούρωμα από πανί ③ ρηχό ταψί στον ήλιο ④ αλάτι σε μπολ να στεγνώσει",
+   "fig_en": "① water from clean sea ② straining through cloth ③ shallow tray in the sun ④ salt drying in a bowl",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 260\" fill=\"none\" stroke=\"#3b2a1a\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"0\" y=\"0\" width=\"400\" height=\"260\" fill=\"#f6ecd6\" stroke=\"none\"/><path d=\"M130 12V248\" stroke-width=\"1\" stroke-dasharray=\"3 4\"/><path d=\"M265 12V248\" stroke-width=\"1\" stroke-dasharray=\"3 4\"/><path d=\"M0 90H130V230H0Z\" fill=\"#bcd9e3\" stroke=\"none\"/><path d=\"M0 90H130M14 110q8-4 16 0t16 0M70 140q8-4 16 0t16 0\"/><path d=\"M80 230C84 190 100 170 130 166V230Z\" fill=\"#bdb5a6\"/><path d=\"M0 230H130\"/><path d=\"M8 233l-8 8M22 233l-8 8M36 233l-8 8M50 233l-8 8M64 233l-8 8M78 233l-8 8M92 233l-8 8M106 233l-8 8M120 233l-8 8\" stroke-width=\"1.2\"/><path d=\"M40 104H82L78 150H44Z\" fill=\"#c9ccd1\"/><path d=\"M42 116H80\" stroke-width=\"1\"/><path d=\"M40 104C40 80 82 80 82 104\" stroke-width=\"1.5\"/><path d=\"M160 120H240V214C240 220 236 224 230 224H170C164 224 160 220 160 214Z\" fill=\"#c9ccd1\"/><path d=\"M164 150H236\" stroke-width=\"1\"/><path d=\"M162 154H238V220H162Z\" fill=\"#bcd9e3\" stroke=\"none\"/><path d=\"M154 118C180 150 220 150 246 118\" fill=\"#ffffff\" stroke-dasharray=\"2 3\"/><path d=\"M154 122H246\" stroke-width=\"2.5\"/><path d=\"M176 40L218 54L214 80L184 84C176 76 172 60 176 40Z\" fill=\"#d98e5c\"/><path d=\"M218 54l12 10\" stroke-width=\"2.5\"/><path d=\"M226 68C228 82 210 100 200 126\" stroke=\"#bcd9e3\" stroke-width=\"4\"/><path d=\"M226 68C228 82 210 100 200 126\" stroke-width=\"0.8\"/><path d=\"M140 232H260\"/><circle cx=\"360\" cy=\"46\" r=\"18\" fill=\"#f2a65a\"/><path d=\"M360 18v-8M360 74v8M332 46h-8M388 46h8M340 26l-6-6M380 26l6-6M340 66l-6 6M380 66l6 6\" stroke-width=\"1.5\"/><path d=\"M340 80L320 120\" stroke=\"#b23a2a\"/><path d=\"M-8 -5L0 0L-8 5\" stroke=\"#b23a2a\" transform=\"translate(320 120) rotate(117)\"/><path d=\"M276 170H392L384 192H284Z\" fill=\"#bdb5a6\"/><path d=\"M282 174H386\" stroke-width=\"1\"/><path d=\"M284 176H384L380 186H288Z\" fill=\"#bcd9e3\" stroke=\"none\"/><rect x=\"296\" y=\"176\" width=\"6\" height=\"6\" fill=\"#ffffff\" stroke-width=\"1\" transform=\"rotate(15 296 176)\"/><rect x=\"312\" y=\"178\" width=\"6\" height=\"6\" fill=\"#ffffff\" stroke-width=\"1\" transform=\"rotate(15 312 178)\"/><rect x=\"328\" y=\"175\" width=\"6\" height=\"6\" fill=\"#ffffff\" stroke-width=\"1\" transform=\"rotate(15 328 175)\"/><rect x=\"346\" y=\"178\" width=\"6\" height=\"6\" fill=\"#ffffff\" stroke-width=\"1\" transform=\"rotate(15 346 178)\"/><rect x=\"364\" y=\"176\" width=\"6\" height=\"6\" fill=\"#ffffff\" stroke-width=\"1\" transform=\"rotate(15 364 176)\"/><rect x=\"304\" y=\"182\" width=\"6\" height=\"6\" fill=\"#ffffff\" stroke-width=\"1\" transform=\"rotate(15 304 182)\"/><rect x=\"338\" y=\"182\" width=\"6\" height=\"6\" fill=\"#ffffff\" stroke-width=\"1\" transform=\"rotate(15 338 182)\"/><path d=\"M318 204H386C384 216 372 222 352 222C332 222 320 216 318 204Z\" fill=\"#d98e5c\"/><path d=\"M324 204l6-6l6 4l6-5l6 5l6-6l6 5l6-4l6 4l6 3\" fill=\"#ffffff\" stroke-width=\"1.2\"/><path d=\"M290 204L304 150\" stroke=\"#d9b77e\" stroke-width=\"4\"/><path d=\"M300 166l-12-6\" stroke-width=\"2\"/><path d=\"M266 232H400\"/><path d=\"M30 40L60 104M150 70L180 132M290 120L300 178M380 245L360 216\" stroke-width=\"1.2\"/><g fill=\"#3b2a1a\" stroke=\"none\"><circle cx=\"60\" cy=\"104\" r=\"2\"/><circle cx=\"30\" cy=\"40\" r=\"10\"/><circle cx=\"180\" cy=\"132\" r=\"2\"/><circle cx=\"150\" cy=\"70\" r=\"10\"/><circle cx=\"300\" cy=\"178\" r=\"2\"/><circle cx=\"290\" cy=\"120\" r=\"10\"/><circle cx=\"360\" cy=\"216\" r=\"2\"/><circle cx=\"380\" cy=\"245\" r=\"10\"/></g><g fill=\"#fff\" stroke=\"none\" font-family=\"Georgia, serif\" font-size=\"13\" font-weight=\"bold\" text-anchor=\"middle\"><text x=\"30\" y=\"44.5\">1</text><text x=\"150\" y=\"74.5\">2</text><text x=\"290\" y=\"124.5\">3</text><text x=\"380\" y=\"249.5\">4</text></g></svg>"
+  }
+ ]
+}
