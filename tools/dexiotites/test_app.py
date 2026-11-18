@@ -42,7 +42,7 @@ async def main():
         hits = await pg.locator("#sr button[onclick*=\"dx/\"]").count(); print("search hits προζύμι", hits)
         if hits == 0: errs.append("search no dx hits")
         # PDF link reachable
-        for f in ["Dexiotites_Pappoudon.pdf", "Grandparents_Skills.pdf"]:
+        for f in ["Dexiotites_Pappou_Diamanti.pdf", "Grandpa_Diamantis_Skills.pdf"]:
             r = await pg.request.get(BASE + f); print(f, r.status, r.headers.get("content-length"))
         # existing pages still work
         for r in ["home", "cat/now", "cat/aid", "phones", "sos", "kit", "keep", "t/print", "comm", "panic", "me", "tools", "about", "legal"]:

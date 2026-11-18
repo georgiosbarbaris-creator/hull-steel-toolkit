@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build «Οι Δεξιότητες των Παππούδων» – app data JSON + EL/EN A4 PDFs."""
+"""Build «Οι Δεξιότητες του Παππού Διαμαντή» – app data JSON + EL/EN A4 PDFs."""
 import json, os, re, sys, html, asyncio
 from playwright.async_api import async_playwright
 
@@ -32,24 +32,24 @@ json.dump(app, open(f"{OUT}/dexiotites.json", "w", encoding="utf-8"), ensure_asc
 
 # ---------- PDF ----------
 T = {
- "el": dict(title="Οι Δεξιότητες<br>των Παππούδων", sub=f"Εγχειρίδιο αυτάρκειας – {N} γνώσεις του παλιού καιρού, βήμα βήμα με σχέδια",
-   free="ΔΩΡΕΑΝ – για το καλό όλων", app="Από την εφαρμογή «Επιβίωση 72+»",
+ "el": dict(title="Οι Δεξιότητες<br>του Παππού Διαμαντή", sub=f"Εγχειρίδιο αυτάρκειας – {N} γνώσεις του παλιού καιρού, βήμα βήμα με σχέδια",
+   free="ΔΩΡΕΑΝ – για το καλό όλων", ded="Αφιερωμένο στη μνήμη του παππού μου, Διαμαντή.", ded2="Για να μη χαθεί ποτέ η γνώση των παππούδων μας – και να περάσει στα παιδιά και στα εγγόνια μας.", sign="Γιώργος Μπαρμπαρής", ded3="Και ό,τι είναι φαγητό και τροφή, στη γιαγιά Μαρία και στη γιαγιά Αρετή.", app="Από την εφαρμογή «Επιβίωση 72+»",
    spons="Ευγενική χορηγία του Γιώργου Μπαρμπαρή – γιατί όσα σώζουν ζωές δεν έχουν τιμή.",
    copy="© 2026 Γεώργιος Μπαρμπαρής – Διανέμεται δωρεάν. Επιτρέπεται η εκτύπωση και η δωρεάν διανομή, όχι η πώληση.",
    how="Πώς να το χρησιμοποιήσεις", toc="Περιεχόμενα", need="Τι χρειάζεσαι", steps="Βήμα βήμα", why="Γιατί",
-   tip="Συμβουλή του παππού", warn="Προσοχή", fig="Το σχέδιο", lvl="Δυσκολία", time="Χρόνος", ch="Κεφάλαιο", pg="σελ.",
+   tip="Συμβουλή του παππού Διαμαντή", warn="Προσοχή", fig="Το σχέδιο", lvl="Δυσκολία", time="Χρόνος", ch="Κεφάλαιο", pg="σελ.",
    howtxt=["Τύπωσέ το σε Α4 και κράτα το σε φάκελο ή ντοσιέ, μακριά από υγρασία. Το χαρτί δουλεύει και όταν δεν υπάρχει ρεύμα.",
      "Κάθε σελίδα είναι μία δεξιότητα: γιατί χρειάζεται, τι υλικά θέλει, τα βήματα και ένα σχέδιο με αριθμούς ①②③.",
      "Οι τελείες ●○○ δείχνουν τη δυσκολία: ● εύκολο για όλους, ●● θέλει λίγη εξάσκηση, ●●● θέλει υπομονή και τέχνη.",
      "Δοκίμασε τις δεξιότητες ΤΩΡΑ, όσο όλα είναι καλά. Στην ανάγκη δεν είναι η ώρα για την πρώτη φορά.",
      "Μάθε τες στα παιδιά και στα εγγόνια. Μια γνώση που περνάει από χέρι σε χέρι δεν χάνεται ποτέ."],
    disc="Οι οδηγίες είναι γενικές πληροφορίες, όχι ιατρική ή επαγγελματική συμβουλή. Διάβαζε πάντα τις προειδοποιήσεις. Για σοβαρά θέματα υγείας πήγαινε σε γιατρό ή φαρμακοποιό. Τήρησε τους νόμους της περιοχής σου (ψάρεμα, συλλογή φυτών, φωτιά στην ύπαιθρο). Ο δημιουργός δεν φέρει ευθύνη για λάθος χρήση."),
- "en": dict(title="Grandparents'<br>Skills", sub=f"A self-reliance handbook – {N} old-time skills, step by step with drawings",
-   free="FREE – for the good of all", app="From the app «Survival 72+»",
+ "en": dict(title="Grandpa Diamantis'<br>Skills", sub=f"A self-reliance handbook – {N} old-time skills, step by step with drawings",
+   free="FREE – for the good of all", ded="Dedicated to the memory of my grandfather, Diamantis.", ded2="So that the knowledge of our grandparents is never lost – and passes on to our children and grandchildren.", sign="Georgios Barmparis", ded3="And all that is food and cooking, to Grandma Maria and Grandma Areti.", app="From the app «Survival 72+»",
    spons="Kindly sponsored by George Barbaris – because the things that save lives are priceless.",
    copy="© 2026 Georgios Barmparis – Distributed free. Printing and free sharing allowed, selling is not.",
    how="How to use this book", toc="Contents", need="What you need", steps="Step by step", why="Why",
-   tip="Grandpa's tip", warn="Careful", fig="The drawing", lvl="Difficulty", time="Time", ch="Chapter", pg="p.",
+   tip="Grandpa Diamantis' tip", warn="Careful", fig="The drawing", lvl="Difficulty", time="Time", ch="Chapter", pg="p.",
    howtxt=["Print it on A4 and keep it in a folder, away from damp. Paper works when there is no power.",
      "Each page is one skill: why it matters, what you need, the steps and a drawing with numbers ①②③.",
      "The dots ●○○ show difficulty: ● easy for anyone, ●● needs some practice, ●●● needs patience and skill.",
@@ -107,6 +107,9 @@ h2.sec{font-size:20pt;margin:0 0 4mm;color:#3b2a1a;border-bottom:2px solid #3b2a
 .end h2{font-size:24pt}
 """
 
+FOOD = ("preserve", "kitchen")
+GM = {"el": ["Συμβουλή της γιαγιάς Μαρίας", "Συμβουλή της γιαγιάς Αρετής"], "en": ["Grandma Maria's tip", "Grandma Areti's tip"]}
+GMDED = {"el": "Αφιερωμένο στη γιαγιά Μαρία και στη γιαγιά Αρετή", "en": "Dedicated to Grandma Maria and Grandma Areti"}
 def e(x): return html.escape(str(x or ""))
 def dots(n): n = int(n or 1); return "●" * n + "○" * (3 - n)
 
@@ -115,9 +118,13 @@ def build_html(L):
     # cover
     art = "".join(f"<div>{c['opener_svg']}</div>" for c in chs[:4])
     o.append(f"""<div class="page"><div class="cover"><div><div class="free">{t['free']}</div>
-    <h1 style="margin-top:6mm">{t['title']}</h1><div class="sub">{e(t['sub'])}</div></div>
+    <h1 style="margin-top:6mm">{t['title']}</h1><div class="sub">{e(t['sub'])}</div><div class="sub" style="font-size:11pt;margin-top:3mm">✝ {e(t['ded'])}</div></div>
     <div class="grid">{art}</div>
     <div class="foot"><b>{e(t['app'])}</b><br>{e(t['spons'])}<br>{e(t['copy'])}<br>v{VER} · {DATE}</div></div></div>""")
+    # dedication page
+    o.append(f"""<div class="page dedi"><div class="serif" style="text-align:center;padding-top:75mm">
+    <div style="font-size:30pt;color:#5a3e22">✝</div><div style="font-size:20pt;font-style:italic;margin:6mm 10mm;color:#3b2a1a">{e(t['ded'])}</div>
+    <div style="font-size:12.5pt;margin:4mm 20mm;color:#5a3e22">{e(t['ded2'])}</div><div style="font-size:13pt;margin:8mm 20mm 0;font-style:italic;color:#3b2a1a">♥ {e(t['ded3'])}</div><div style="font-size:12pt;margin-top:10mm">— {e(t['sign'])}</div></div></div>""")
     # how to use
     o.append(f"""<div class="page"><h2 class="sec">{t['how']}</h2><ol class="how">{''.join(f'<li>{e(x)}</li>' for x in t['howtxt'])}</ol>
     <div class="disc"><b>⚠ </b>{e(t['disc'])}</div>
@@ -127,12 +134,12 @@ def build_html(L):
         toc_entries.append(("ch", f"{i}. {c['title_' + L]}", "c_" + c["ch"]))
         items = "".join(f"<li>{e(s['title_' + L])}</li>" for s in c["skills"])
         o.append(f"""<div class="page opener" id="c_{c['ch']}"><div class="num">{t['ch']} {i}</div><h2>{e(c['title_' + L])}</h2>
-        <div class="art">{c['opener_svg']}</div><div class="intro">{e(c['intro_' + L])}</div><ol>{items}</ol></div>""")
+        {('<div class="intro" style="margin:0 0 4mm;font-size:13pt">♥ '+GMDED[L]+'</div>') if c['ch'] in FOOD else ''}<div class="art">{c['opener_svg']}</div><div class="intro">{e(c['intro_' + L])}</div><ol>{items}</ol></div>""")
         for j, s in enumerate(c["skills"], 1):
             toc_entries.append(("sk", f"{i}.{j} {s['title_' + L]}", "s_" + s["id"]))
             need = "".join(f"<li>{e(x)}</li>" for x in s["need_" + L])
             steps = "".join(f"<li>{e(x)}</li>" for x in s["steps_" + L])
-            tip = f'<div class="tipb"><span class="lbl">💡 {t["tip"]}: </span>{e(s["tip_" + L])}</div>' if s.get("tip_" + L) else ""
+            tip = f'<div class="tipb"><span class="lbl">💡 {(GM[L][(j-1)%2] if c["ch"] in FOOD else t["tip"])}: </span>{e(s["tip_" + L])}</div>' if s.get("tip_" + L) else ""
             warn = f'<div class="warnb"><span class="lbl">⚠ {t["warn"]}: </span>{e(s["warn_" + L])}</div>' if s.get("warn_" + L) else ""
             o.append(f"""<div class="page sk" id="s_{s['id']}"><div class="hd"><div><div class="tag">{c['icon']} {e(c['title_' + L])} · {i}.{j}</div>
             <h3>{e(s['title_' + L])}</h3></div><div class="meta">{t['lvl']}: {dots(s.get('level'))}<br>{t['time']}: {e(s.get('time_' + L))}</div></div>
@@ -140,7 +147,7 @@ def build_html(L):
             <div class="why"><span class="lbl">{t['why']}: </span>{e(s['why_' + L])}</div>
             <div class="row"><div class="need"><span class="lbl">{t['need']}</span><ul>{need}</ul></div>
             <div class="steps"><span class="lbl">{t['steps']}</span><ol>{steps}</ol></div></div>{tip}{warn}</div>""")
-    o.append(f"""<div class="end serif"><h2>{'Καλή δύναμη – και να τα μάθεις στα παιδιά σου.' if L=='el' else 'Stay strong – and teach this to your children.'}</h2>
+    o.append(f"""<div class="end serif"><h2>{'Καλή δύναμη – και να τα μάθεις στα παιδιά σου.' if L=='el' else 'Stay strong – and teach this to your children.'}</h2><p style="font-style:italic">✝ {e(t['ded'])}</p>
     <p>{e(t['spons'])}<br>{e(t['copy'])}<br>georgiosbarbaris-creator.github.io/hull-steel-toolkit/survival/</p></div>""")
     toc = ""
     for kind, label, anchor in toc_entries:
@@ -149,7 +156,7 @@ def build_html(L):
     doc = f"<!doctype html><html lang='{L}'><head><meta charset='utf-8'><style>{CSS}</style></head><body>{''.join(o)}</body></html>"
     return doc.replace("@@TOC@@", toc)
 
-FOOT = {"el": "Οι Δεξιότητες των Παππούδων · Επιβίωση 72+ · δωρεάν", "en": "Grandparents' Skills · Survival 72+ · free"}
+FOOT = {"el": "Οι Δεξιότητες του Παππού Διαμαντή · Επιβίωση 72+ · δωρεάν", "en": "Grandpa Diamantis' Skills · Survival 72+ · free"}
 
 FITJS = ("""()=>{const H=269*96/25.4,mm=96/25.4,out=[];
           for(const el of document.querySelectorAll('.sk')){const sv=el.querySelector('.fig svg');let m=98;
@@ -191,6 +198,6 @@ async def render(L, fname):
         open(f"{SK}/preview_{L}.html", "w").write(doc2)
         await b.close()
 
-asyncio.run(render("el", "Dexiotites_Pappoudon.pdf"))
-asyncio.run(render("en", "Grandparents_Skills.pdf"))
+asyncio.run(render("el", "Dexiotites_Pappou_Diamanti.pdf"))
+asyncio.run(render("en", "Grandpa_Diamantis_Skills.pdf"))
 print("chapters", len(chs), "skills", N)
