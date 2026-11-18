@@ -2116,7 +2116,7 @@ function setLang(l){try{localStorage.setItem('sv_lang',JSON.stringify(l))}catch(
 const encURI=s=>encodeURIComponent(trS(String(s)));
 const $=s=>document.querySelector(s),M=$('#m');
 const esc=s=>UX(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const APP_V='45',APP_D='18/11/2026';
+const APP_V='46',APP_D='18/11/2026';
 const LS={g(k,d){try{const v=localStorage.getItem('sv_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},s(k,v){try{localStorage.setItem('sv_'+k,JSON.stringify(v))}catch(e){}}};
 let fs=LS.g('fs',19);document.documentElement.style.setProperty('--fs',fs+'px');
 function fz(d){fs=Math.max(15,Math.min(28,fs+d*2));LS.s('fs',fs);document.documentElement.style.setProperty('--fs',fs+'px')}
@@ -2831,9 +2831,9 @@ function startGeo(){if(geoW!==null)return;if(!navigator.geolocation){$('#gps').t
   altUpd(pos);if(rec)trkAdd(pos);
   upd();draw();wxAlt()},e=>{const g=$('#gps');if(g)g.innerHTML=e.code===1?'❌ Δεν δόθηκε άδεια τοποθεσίας.<br><small class="muted">iPhone: Ρυθμίσεις → Απόρρητο → Υπηρεσίες τοποθεσίας → Safari → «Κατά τη χρήση».</small>':'Δεν βρέθηκε ακόμα θέση. Βγες σε ανοιχτό χώρο με θέα στον ουρανό.<br><small class="muted">Σε αεροπλάνο/πλοίο/αυτοκίνητο: κινητό στο παράθυρο. Η πρώτη θέση χωρίς internet θέλει 1–12 λεπτά – αν μπορείς, άνοιξε για 1 λεπτό δεδομένα ή Wi-Fi και μετά ξανά κλειστά.</small>'},{enableHighAccuracy:true,maximumAge:2000,timeout:60000})}
 /* v45: αν το κινητό ΔΕΝ δίνει ταχύτητα (π.χ. στο αεροπλάνο, από το παράθυρο, ή αδύναμο σήμα) τη βγάζουμε μόνοι μας:
-   απόσταση / χρόνο από θέση 5–60″ πριν. Μόνο αν η απόσταση ξεπερνά το λάθος των δύο θέσεων (αλλιώς είναι «τρέμουλο»). */
+   απόσταση / χρόνο από θέση 5″–3′ πριν (v46: 3′, γιατί στο αεροπλάνο το κινητό δίνει θέση αραιά). Μόνο αν η απόσταση ξεπερνά το λάθος των δύο θέσεων (αλλιώς είναι «τρέμουλο»). */
 let rawF=[];
-function spdFix(p){const t=p.t||Date.now();rawF.push({lat:p.lat,lon:p.lon,acc:p.acc||50,t});rawF=rawF.filter(f=>t-f.t<=60000);
+function spdFix(p){const t=p.t||Date.now();rawF.push({lat:p.lat,lon:p.lon,acc:p.acc||50,t});rawF=rawF.filter(f=>t-f.t<=180000);
  if(p.spd!=null&&!isNaN(p.spd)&&p.spd>=0)return;p.spd=null;
  for(const f of rawF){const dt=(t-f.t)/1000;if(dt<5)break;const d=dist(f,p);
   if(d>(f.acc+p.acc)*1.2){p.spd=d/dt;p.spdC=1;if(p.hd==null||isNaN(p.hd))p.hd=brg(f,p);return}
