@@ -2116,7 +2116,7 @@ function setLang(l){try{localStorage.setItem('sv_lang',JSON.stringify(l))}catch(
 const encURI=s=>encodeURIComponent(trS(String(s)));
 const $=s=>document.querySelector(s),M=$('#m');
 const esc=s=>UX(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const APP_V='43',APP_D='18/11/2026';
+const APP_V='44',APP_D='18/11/2026';
 const LS={g(k,d){try{const v=localStorage.getItem('sv_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},s(k,v){try{localStorage.setItem('sv_'+k,JSON.stringify(v))}catch(e){}}};
 let fs=LS.g('fs',19);document.documentElement.style.setProperty('--fs',fs+'px');
 function fz(d){fs=Math.max(15,Math.min(28,fs+d*2));LS.s('fs',fs);document.documentElement.style.setProperty('--fs',fs+'px')}
@@ -4395,7 +4395,7 @@ function dx(b){T('📜 '+L2('Δεξιότητες του Παππού Διαμα
  const c=DX.chapters.find(x=>x.ch===b);if(c)return dxCh(c);
  const f=dxFind(b);if(f)return dxSk(f);dxHome()}
 function dxHome(){const D2=dxDone(),tot=DX.chapters.reduce((a,c)=>a+c.skills.length,0),dn=Object.keys(D2).length,E=LANG==='en';
- M.innerHTML=`<div class="notr"><div class="box" style="text-align:center"><div style="font-size:2.4em">📜</div><b style="font-size:1.15em">${L2('Όσα ήξεραν οι παππούδες μας','What our grandparents knew')}</b><div style="font-style:italic;color:#d9b77e;margin-top:6px">✝ ${L2('Αφιερωμένο στη μνήμη του παππού μου, Διαμαντή.','Dedicated to the memory of my grandfather, Diamantis.')}<br><small>♥ ${L2('Και ό,τι είναι φαγητό, τροφή και δουλειές του σπιτιού – πλύσιμο, ράψιμο, πλέξιμο, σαπούνι – στη γιαγιά Μαρία και στη γιαγιά Αρετή.','And all that is food, cooking and the work of the home – washing, sewing, knitting, soap – to Grandma Maria and Grandma Areti.')}</small><br><small>— ${L2('Γιώργος Μπαρμπαρής','Georgios Barmparis')}</small></div>
+ M.innerHTML=`<div class="notr"><div class="box" style="text-align:center"><div style="font-size:2.4em">📜</div><b style="font-size:1.15em">${L2('Όσα ήξεραν οι παππούδες μας','What our grandparents knew')}</b><div style="font-style:italic;color:#d9b77e;margin-top:6px">✝ ${L2('Αφιερωμένο στη μνήμη του παππού μου, Διαμαντή.','Dedicated to the memory of my grandfather, Diamantis.')}<br><small>${L2('Και ό,τι είναι φαγητό, τροφή και δουλειές του σπιτιού – πλύσιμο, ράψιμο, πλέξιμο, σαπούνι – στη γιαγιά Μαρία ♥ και στη μνήμη της γιαγιάς Αρετής ✝.','And all that is food, cooking and the work of the home – washing, sewing, knitting, soap – to Grandma Maria ♥ and to the memory of Grandma Areti ✝.')}</small><br><small>— ${L2('Γιώργος Μπαρμπαρής','Georgios Barmparis')}</small></div>
  <div class="muted" style="margin-top:6px">${L2(`${tot} παλιές δεξιότητες για να ζήσεις και να ξαναχτίσεις τη ζωή σου χωρίς ρεύμα, μαγαζιά και internet. Απλά βήματα και ένα σχέδιο σε κάθε μία.`,`${tot} old skills to live and rebuild your life without power, shops or internet. Simple steps and a drawing for each one.`)}</div>
  <div class="bar" style="margin-top:10px"><i style="width:${Math.round(100*dn/tot)}%"></i></div><div class="muted">${L2('Τις έμαθα','Learned')}: <b>${dn}</b> / ${tot}</div></div>
  <div class="grid">${DX.chapters.map(c=>{const n=c.skills.filter(s=>D2[s.id]).length;return `<button class="tile" onclick="go('dx/${c.ch}')"><span class="e">${c.icon}</span>${esc(dxF(c,'title'))}<small>${c.skills.length} ${L2('δεξιότητες','skills')}${n?` · <span class="dxok">✔ ${n}</span>`:''}</small></button>`}).join('')}</div>
@@ -4404,7 +4404,7 @@ function dxHome(){const D2=dxDone(),tot=DX.chapters.reduce((a,c)=>a+c.skills.len
  <div class="tip">💡 ${L2('Μάθε τες τώρα, όσο όλα είναι καλά – και δείξ\' τες στα παιδιά σου. Πάτα «✔ Το έμαθα» σε όσες δοκιμάσεις.','Learn them now, while all is well – and show your children. Tap «✔ I learned it» on those you try.')}</div>
  <div class="warn" style="font-weight:400;font-size:.9em">⚠️ ${L2('Γενικές πληροφορίες, όχι ιατρική ή επαγγελματική συμβουλή. Διάβαζε πάντα την «Προσοχή». Τήρησε τους νόμους της περιοχής σου.','General information, not medical or professional advice. Always read «Careful». Follow your local laws.')}</div></div>`}
 function dxCh(c){const D2=dxDone();T(c.icon+' '+dxF(c,'title'));
- M.innerHTML=`<div class="notr">${DX_FOOD.includes(c.ch)?`<div style="text-align:center;font-style:italic;color:#d9b77e;margin:4px 0">♥ ${L2('Αφιερωμένο στη γιαγιά Μαρία και στη γιαγιά Αρετή','Dedicated to Grandma Maria and Grandma Areti')}</div>`:''}<div class="dxart">${c.opener_svg}</div><p>${esc(dxF(c,'intro'))}</p>
+ M.innerHTML=`<div class="notr">${DX_FOOD.includes(c.ch)?`<div style="text-align:center;font-style:italic;color:#d9b77e;margin:4px 0">${L2('Αφιερωμένο στη γιαγιά Μαρία ♥ και στη μνήμη της γιαγιάς Αρετής ✝','Dedicated to Grandma Maria ♥ and to the memory of Grandma Areti ✝')}</div>`:''}<div class="dxart">${c.opener_svg}</div><p>${esc(dxF(c,'intro'))}</p>
  ${c.skills.map((s,i)=>`<button class="row" onclick="go('dx/${s.id}')"><span class="e" style="font-size:1em;min-width:28px">${D2[s.id]?'<span class="dxok">✔</span>':(i+1)}</span><span><b>${esc(dxF(s,'title'))}</b><small>${dxDots(s.level)} · ${esc(dxF(s,'time'))}</small></span></button>`).join('')}
  <button class="btn" style="width:100%;margin-top:10px" onclick="go('dx')">📜 ${L2('Όλα τα κεφάλαια','All chapters')}</button></div>`}
 function dxSk(f){const {c,i,s}=f,D2=dxDone(),ok=!!D2[s.id];T(c.icon+' '+dxF(c,'title'));

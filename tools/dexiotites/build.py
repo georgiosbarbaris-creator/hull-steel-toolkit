@@ -33,7 +33,7 @@ json.dump(app, open(f"{OUT}/dexiotites.json", "w", encoding="utf-8"), ensure_asc
 # ---------- PDF ----------
 T = {
  "el": dict(title="Οι Δεξιότητες<br>του Παππού Διαμαντή", sub=f"Εγχειρίδιο αυτάρκειας – {N} γνώσεις του παλιού καιρού, βήμα βήμα με σχέδια",
-   free="ΔΩΡΕΑΝ – για το καλό όλων", ded="Αφιερωμένο στη μνήμη του παππού μου, Διαμαντή.", ded2="Για να μη χαθεί ποτέ η γνώση των παππούδων μας – και να περάσει στα παιδιά και στα εγγόνια μας.", sign="Γιώργος Μπαρμπαρής", ded3="Και ό,τι είναι φαγητό, τροφή και δουλειές του σπιτιού – πλύσιμο, ράψιμο, πλέξιμο, σαπούνι – στη γιαγιά Μαρία και στη γιαγιά Αρετή.", app="Από την εφαρμογή «Επιβίωση 72+»",
+   free="ΔΩΡΕΑΝ – για το καλό όλων", ded="Αφιερωμένο στη μνήμη του παππού μου, Διαμαντή.", ded2="Για να μη χαθεί ποτέ η γνώση των παππούδων μας – και να περάσει στα παιδιά και στα εγγόνια μας.", sign="Γιώργος Μπαρμπαρής", ded3="Και ό,τι είναι φαγητό, τροφή και δουλειές του σπιτιού – πλύσιμο, ράψιμο, πλέξιμο, σαπούνι – στη γιαγιά Μαρία ♥ και στη μνήμη της γιαγιάς Αρετής ✝.", app="Από την εφαρμογή «Επιβίωση 72+»",
    spons="Ευγενική χορηγία του Γιώργου Μπαρμπαρή – γιατί όσα σώζουν ζωές δεν έχουν τιμή.",
    copy="© 2026 Γεώργιος Μπαρμπαρής – Διανέμεται δωρεάν. Επιτρέπεται η εκτύπωση και η δωρεάν διανομή, όχι η πώληση.",
    how="Πώς να το χρησιμοποιήσεις", toc="Περιεχόμενα", need="Τι χρειάζεσαι", steps="Βήμα βήμα", why="Γιατί",
@@ -45,7 +45,7 @@ T = {
      "Μάθε τες στα παιδιά και στα εγγόνια. Μια γνώση που περνάει από χέρι σε χέρι δεν χάνεται ποτέ."],
    disc="Οι οδηγίες είναι γενικές πληροφορίες, όχι ιατρική ή επαγγελματική συμβουλή. Διάβαζε πάντα τις προειδοποιήσεις. Για σοβαρά θέματα υγείας πήγαινε σε γιατρό ή φαρμακοποιό. Τήρησε τους νόμους της περιοχής σου (ψάρεμα, συλλογή φυτών, φωτιά στην ύπαιθρο). Ο δημιουργός δεν φέρει ευθύνη για λάθος χρήση."),
  "en": dict(title="Grandpa Diamantis'<br>Skills", sub=f"A self-reliance handbook – {N} old-time skills, step by step with drawings",
-   free="FREE – for the good of all", ded="Dedicated to the memory of my grandfather, Diamantis.", ded2="So that the knowledge of our grandparents is never lost – and passes on to our children and grandchildren.", sign="Georgios Barmparis", ded3="And all that is food, cooking and the work of the home – washing, sewing, knitting, soap – to Grandma Maria and Grandma Areti.", app="From the app «Survival 72+»",
+   free="FREE – for the good of all", ded="Dedicated to the memory of my grandfather, Diamantis.", ded2="So that the knowledge of our grandparents is never lost – and passes on to our children and grandchildren.", sign="Georgios Barmparis", ded3="And all that is food, cooking and the work of the home – washing, sewing, knitting, soap – to Grandma Maria ♥ and to the memory of Grandma Areti ✝.", app="From the app «Survival 72+»",
    spons="Kindly sponsored by George Barbaris – because the things that save lives are priceless.",
    copy="© 2026 Georgios Barmparis – Distributed free. Printing and free sharing allowed, selling is not.",
    how="How to use this book", toc="Contents", need="What you need", steps="Step by step", why="Why",
@@ -110,7 +110,7 @@ h2.sec{font-size:20pt;margin:0 0 4mm;color:#3b2a1a;border-bottom:2px solid #3b2a
 FOOD = ("preserve", "kitchen")
 GM_SKILLS = ["water-ashlye","water-laundry","tool-sewing","tool-patch","tool-darning","tool-knitting","tool-broom","herb-soap","herb-disinfect","herb-dry","herb-infusion"]
 GM = {"el": ["Συμβουλή της γιαγιάς Μαρίας", "Συμβουλή της γιαγιάς Αρετής"], "en": ["Grandma Maria's tip", "Grandma Areti's tip"]}
-GMDED = {"el": "Αφιερωμένο στη γιαγιά Μαρία και στη γιαγιά Αρετή", "en": "Dedicated to Grandma Maria and Grandma Areti"}
+GMDED = {"el": "Αφιερωμένο στη γιαγιά Μαρία ♥ και στη μνήμη της γιαγιάς Αρετής ✝", "en": "Dedicated to Grandma Maria ♥ and to the memory of Grandma Areti ✝"}
 def e(x): return html.escape(str(x or ""))
 def dots(n): n = int(n or 1); return "●" * n + "○" * (3 - n)
 
@@ -125,7 +125,7 @@ def build_html(L):
     # dedication page
     o.append(f"""<div class="page dedi"><div class="serif" style="text-align:center;padding-top:75mm">
     <div style="font-size:30pt;color:#5a3e22">✝</div><div style="font-size:20pt;font-style:italic;margin:6mm 10mm;color:#3b2a1a">{e(t['ded'])}</div>
-    <div style="font-size:12.5pt;margin:4mm 20mm;color:#5a3e22">{e(t['ded2'])}</div><div style="font-size:13pt;margin:8mm 20mm 0;font-style:italic;color:#3b2a1a">♥ {e(t['ded3'])}</div><div style="font-size:12pt;margin-top:10mm">— {e(t['sign'])}</div></div></div>""")
+    <div style="font-size:12.5pt;margin:4mm 20mm;color:#5a3e22">{e(t['ded2'])}</div><div style="font-size:13pt;margin:8mm 20mm 0;font-style:italic;color:#3b2a1a">{e(t['ded3'])}</div><div style="font-size:12pt;margin-top:10mm">— {e(t['sign'])}</div></div></div>""")
     # how to use
     o.append(f"""<div class="page"><h2 class="sec">{t['how']}</h2><ol class="how">{''.join(f'<li>{e(x)}</li>' for x in t['howtxt'])}</ol>
     <div class="disc"><b>⚠ </b>{e(t['disc'])}</div>
@@ -135,7 +135,7 @@ def build_html(L):
         toc_entries.append(("ch", f"{i}. {c['title_' + L]}", "c_" + c["ch"]))
         items = "".join(f"<li>{e(s['title_' + L])}</li>" for s in c["skills"])
         o.append(f"""<div class="page opener" id="c_{c['ch']}"><div class="num">{t['ch']} {i}</div><h2>{e(c['title_' + L])}</h2>
-        {('<div class="intro" style="margin:0 0 4mm;font-size:13pt">♥ '+GMDED[L]+'</div>') if c['ch'] in FOOD else ''}<div class="art">{c['opener_svg']}</div><div class="intro">{e(c['intro_' + L])}</div><ol>{items}</ol></div>""")
+        {('<div class="intro" style="margin:0 0 4mm;font-size:13pt">'+GMDED[L]+'</div>') if c['ch'] in FOOD else ''}<div class="art">{c['opener_svg']}</div><div class="intro">{e(c['intro_' + L])}</div><ol>{items}</ol></div>""")
         for j, s in enumerate(c["skills"], 1):
             toc_entries.append(("sk", f"{i}.{j} {s['title_' + L]}", "s_" + s["id"]))
             need = "".join(f"<li>{e(x)}</li>" for x in s["need_" + L])
