@@ -2091,7 +2091,7 @@ function setLang(l){try{localStorage.setItem('sv_lang',JSON.stringify(l))}catch(
 const encURI=s=>encodeURIComponent(trS(String(s)));
 const $=s=>document.querySelector(s),M=$('#m');
 const esc=s=>UX(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const APP_V='47',APP_D='19/11/2026';
+const APP_V='48',APP_D='19/11/2026';
 const LS={g(k,d){try{const v=localStorage.getItem('sv_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},s(k,v){try{localStorage.setItem('sv_'+k,JSON.stringify(v))}catch(e){}}};
 let fs=LS.g('fs',19);document.documentElement.style.setProperty('--fs',fs+'px');
 function fz(d){fs=Math.max(15,Math.min(28,fs+d*2));LS.s('fs',fs);document.documentElement.style.setProperty('--fs',fs+'px')}
@@ -4493,6 +4493,67 @@ SIMG.w_knots=[
  {at:2,kn:'sheet',c:['Κόμπος σκότας σε 4 βήματα: «U» με το χοντρό, το λεπτό τυλίγεται και περνά κάτω από τον εαυτό του.','Sheet bend in 4 steps: a “U” in the thick rope, the thin one wraps around and tucks under itself.'],f:()=>knGrid('sheet')}];
 {const _fh=figH;figH=function(x){if(x&&x.kn&&window.__knApp)return knPlayer(x.kn);return _fh(x)}}
 {const _a=art;art=function(id){window.__knApp=1;try{return _a(id)}finally{window.__knApp=0}}}
+
+/* ===== v48: ΚΑΡΠΑ σε μικρό κινούμενο «βίντεο» – © 2026 Γεώργιος Μπαρμπαρής ===== */
+const CV={vc:'#d9cbb0',vs:'#b9aa8e',rs:IC.bl,rh:'#e0ac69',hd:IC.or};
+/* θύμα ξαπλωμένο ανάσκελα (πλάγια όψη), κεφάλι αριστερά */
+function cvVictim(chestCls){return `<path d="M84,141 L300,143" stroke="${CV.vs}" stroke-width="16" stroke-linecap="round"/>
+ <rect x="70" y="124" width="104" height="24" rx="11" fill="${CV.vc}" stroke="${IC.dk}" stroke-width="2"/>
+ <g class="${chestCls||''}"><rect x="84" y="120" width="52" height="12" rx="6" fill="${CV.vc}"/></g>
+ <circle cx="56" cy="134" r="14" fill="${CV.vc}" stroke="${IC.dk}" stroke-width="2"/><path d="M44,128 q-6,4 -4,10" stroke="${IC.dk}" stroke-width="2" fill="none"/>`}
+/* διασώστης γονατιστός στο πλάι, με ίσια χέρια πάνω από το στήθος */
+function cvLegs(){return `<path d="M168,146 L206,148" stroke="#2f6ccc" stroke-width="14" stroke-linecap="round"/><path d="M170,108 L158,146" stroke="#2f6ccc" stroke-width="16" stroke-linecap="round"/>`}
+function cvUp(cls,hands,hx){hx=hx||112;return `<g class="${cls||''}"><path d="M170,108 L122,70" stroke="${CV.rs}" stroke-width="20" stroke-linecap="round"/>
+ <path d="M120,72 L${hx},${hands||116}" stroke="${CV.rh}" stroke-width="9" stroke-linecap="round"/>
+ <circle cx="104" cy="54" r="13" fill="${CV.rh}" stroke="${IC.dk}" stroke-width="2"/>
+ <rect x="${hx-12}" y="${(hands||116)-2}" width="24" height="9" rx="4" fill="${CV.hd}" stroke="${IC.dk}" stroke-width="1.5"/></g>`}
+/* διασώστης γονατιστός ΠΙΣΩ από το θύμα (τα πόδια του κρύβονται πίσω από το σώμα) */
+function cvScene(chestCls,cls,hands){return cvLegs()+cvVictim(chestCls)+cvUp(cls,hands)}
+const CPR_V=[
+ {ms:4200,t:['Πρώτα ασφάλεια. Ταρακούνησε τους ώμους και φώναξε: «Είσαι καλά;»','Safety first. Shake the shoulders and shout: “Are you OK?”'],f:()=>iFloor(152)+`<g class="cvshake">${cvLegs()}</g>`+cvVictim()+`<g class="cvshake">${cvUp('',120,86)}</g>`+
+  `<path d="M150,22 h112 a10,10 0 0 1 10,10 v22 a10,10 0 0 1 -10,10 h-72 l-14,12 l2,-12 h-28 a10,10 0 0 1 -10,-10 v-22 a10,10 0 0 1 10,-10 z" fill="${IC.sn}"/>`+iT(206,48,L2('Είσαι καλά;','Are you OK?'),{s:16,b:1,c:IC.dk})},
+ {ms:4200,t:['Δεν απαντά και δεν αναπνέει κανονικά; Κάλεσε 112 με ανοιχτή ακρόαση.','No answer and not breathing normally? Call 112 on speaker.'],f:()=>{let h=iFloor(152)+cvVictim();
+  h+=`<g transform="translate(232,26)"><rect x="0" y="0" width="54" height="96" rx="9" fill="#1c2a3a" stroke="${IC.ln}" stroke-width="3"/><rect x="6" y="10" width="42" height="64" rx="3" fill="${IC.rd}"/>`+iT(27,50,'112',{b:1,s:17,c:'#fff'})+`<circle cx="27" cy="85" r="5" fill="${IC.ln}"/></g>`;
+  h+=`<g class="cvring" fill="none" stroke="${IC.yl}" stroke-width="3" stroke-linecap="round"><path d="M296,56 q10,18 0,36"/><path d="M306,48 q16,26 0,52"/><path d="M222,56 q-10,18 0,36"/><path d="M212,48 q-16,26 0,52"/></g>`;
+  h+=iT(92,96,'?',{b:1,s:30,c:IC.yl})+iT(130,40,L2('ανοιχτή ακρόαση','speaker on'),{s:12,c:IC.yl,b:1});return h}},
+ {ms:4600,t:['Βάση της παλάμης στο ΚΕΝΤΡΟ του στήθους. Το άλλο χέρι από πάνω, δάχτυλα πλεγμένα.','Heel of your hand in the CENTRE of the chest. Other hand on top, fingers locked.'],f:()=>{
+  let h=`<path d="M100,16 C70,40 70,140 96,172 L224,172 C250,140 250,40 220,16 Z" fill="${CV.vc}" stroke="${IC.dk}" stroke-width="2"/>`;
+  h+=`<path d="M160,24 L160,150" stroke="${CV.vs}" stroke-width="3"/><circle cx="124" cy="76" r="4" fill="${CV.vs}"/><circle cx="196" cy="76" r="4" fill="${CV.vs}"/>`;
+  h+=`<circle cx="160" cy="92" r="20" fill="none" stroke="${IC.rd}" stroke-width="3" stroke-dasharray="6 4"/><path d="M152,92 h16 M160,84 v16" stroke="${IC.rd}" stroke-width="3"/>`;
+  h+=`<g class="cvh1"><path d="M138,84 h40 a8,8 0 0 1 8,8 v12 a10,10 0 0 1 -10,10 h-36 a10,10 0 0 1 -10,-10 v-12 a8,8 0 0 1 8,-8 z" fill="${CV.rh}" stroke="${IC.dk}" stroke-width="2"/><path d="M178,92 L196,150" stroke="${CV.rh}" stroke-width="12" stroke-linecap="round"/></g>`;
+  h+=`<g class="cvh2"><path d="M142,72 h38 a8,8 0 0 1 8,8 v14 a10,10 0 0 1 -10,10 h-34 a10,10 0 0 1 -10,-10 v-14 a8,8 0 0 1 8,-8 z" fill="#f0c48a" stroke="${IC.dk}" stroke-width="2"/>`+[148,158,168,178].map(x=>`<path d="M${x},74 v18" stroke="${IC.dk}" stroke-width="1.5"/>`).join('')+`<path d="M182,82 L208,150" stroke="#f0c48a" stroke-width="12" stroke-linecap="round"/></g>`;
+  h+=iT(48,92,L2('κέντρο','centre'),{s:13,b:1,c:IC.rd})+iT(48,108,L2('στήθους','of chest'),{s:13,b:1,c:IC.rd})+iL(76,96,138,94,IC.rd,1.5);return h}},
+ {ms:6500,t:['Χέρια ΙΣΙΑ, ώμοι ακριβώς από πάνω. Πίεσε ΔΥΝΑΤΑ, 5–6 cm, και άφησε το στήθος να ανέβει.','Arms STRAIGHT, shoulders right above. Push HARD, 5–6 cm, and let the chest come back up.'],f:()=>iFloor(152)+cvScene('cvchest','cvpush',116)+
+  `<path d="M70,98 v24 M64,114 l6,8 l6,-8" stroke="${IC.yl}" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`+iT(70,90,'5–6 cm',{b:1,s:14,c:IC.yl})+iT(250,40,L2('ΔΥΝΑΤΑ','HARD'),{b:1,s:20,c:IC.rd})},
+ {ms:6500,t:['ΓΡΗΓΟΡΑ: 100–120 φορές το λεπτό (2 το δευτερόλεπτο). Μέτρα δυνατά 1, 2, 3… 30.','FAST: 100–120 times a minute (2 per second). Count out loud 1, 2, 3… 30.'],f:()=>iFloor(152)+cvScene('cvchest','cvpush',116)+
+  `<g transform="translate(262,46)"><g class="cvbeat"><path d="M0,10 C-14,-6 -30,8 0,30 C30,8 14,-6 0,10 Z" fill="${IC.rd}"/></g></g>`+iT(262,104,'100–120',{b:1,s:20,c:IC.ln})+iT(262,122,L2('/ λεπτό','/ minute'),{s:12,c:IC.gr})+iT(52,40,'1, 2, 3…',{b:1,s:18,c:IC.yl,a:'start'})},
+ {ms:5200,t:['Ήρθε απινιδωτής (AED); Άνοιξέ τον και κάνε ό,τι λέει. Μη σταματάς μέχρι το ΕΚΑΒ. Αλλάζετε κάθε 2 λεπτά.','Defibrillator (AED) here? Switch it on and do what it says. Don’t stop until the ambulance. Swap every 2 minutes.'],f:()=>{let h=iFloor(152)+cvScene('cvchest','cvpush',116);
+  h+=`<g transform="translate(222,30)"><rect x="0" y="0" width="78" height="62" rx="10" fill="${IC.gn}" stroke="${IC.dk}" stroke-width="2"/><path d="M14,30 c0,-12 16,-14 18,-3 c2,-11 18,-9 18,3 c0,10 -18,22 -18,22 c0,0 -18,-12 -18,-22 z" fill="#fff"/><path d="M36,18 l-6,14 h8 l-6,14" stroke="${IC.yl}" stroke-width="3" fill="none"/>`+iT(64,22,'AED',{b:1,s:11,c:'#fff'})+`</g>`;
+  h+=iClock(262,124,16)+iT(232,128,'2′',{b:1,s:16,c:IC.yl,a:'end'});return h}}];
+const CPR_CSS=`<style>.cvpush{animation:cvp .545s ease-in-out infinite}@keyframes cvp{0%,100%{transform:translateY(0)}45%{transform:translateY(7px)}}
+.cvchest{animation:cvc .545s ease-in-out infinite;transform-origin:110px 132px;transform-box:view-box}@keyframes cvc{0%,100%{transform:scaleY(1)}45%{transform:scaleY(.35)}}
+.cvshake{animation:cvs .5s ease-in-out infinite}@keyframes cvs{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+.cvring{animation:cvr .9s ease-in-out infinite}@keyframes cvr{0%,100%{opacity:.25}50%{opacity:1}}
+.cvh1{animation:cvd1 4.6s ease-out infinite}.cvh2{animation:cvd2 4.6s ease-out infinite}@keyframes cvd1{0%,10%{opacity:0;transform:translateY(-30px)}30%,100%{opacity:1;transform:translateY(0)}}@keyframes cvd2{0%,35%{opacity:0;transform:translateY(-30px)}55%,100%{opacity:1;transform:translateY(0)}}
+.cvbeat{animation:cvb .545s ease-in-out infinite;transform-box:fill-box;transform-origin:center}@keyframes cvb{0%,100%{transform:scale(1)}45%{transform:scale(1.25)}}</style>`;
+document.head.insertAdjacentHTML('beforeend',CPR_CSS);
+const VS={};
+function vPlayer(){setTimeout(()=>vGo(0,1),30);
+ return `<div class="fig notr kn" id="vcpr"><svg viewBox="0 0 320 180" role="img"></svg><div class="kndots"></div><div class="knt"></div>
+ <div class="tools" style="justify-content:center;margin:6px 0 2px"><button class="btn" onclick="vGo(-1)">◀</button><button class="btn p" id="vcpr_p" onclick="vPlay()">⏸ ${L2('Παύση','Pause')}</button><button class="btn" onclick="vGo(+1)">▶</button><button class="btn" onclick="vGo(0,1)">↺</button></div></div>`}
+function vShow(){const el=$('#vcpr');if(!el){clearTimeout(VS.tm);return}const n=CPR_V.length,S=CPR_V[VS.f];
+ el.querySelector('svg').innerHTML=S.f();el.querySelector('.knt').innerHTML=`<span class="n">${VS.f+1}</span> ${esc(S.t[LANG==='en'?1:0])}`;
+ el.querySelector('.kndots').innerHTML=Array.from({length:n},(_,i)=>`<i class="${i<=VS.f?'on':''}"></i>`).join('');
+ $('#vcpr_p').textContent=VS.play?'⏸ '+L2('Παύση','Pause'):'▶ '+L2('Παίξε','Play');
+ clearTimeout(VS.tm);if(VS.play)VS.tm=setTimeout(()=>{if(!$('#vcpr'))return;VS.f=(VS.f+1)%n;vShow()},S.ms)}
+function vGo(d,reset){const n=CPR_V.length;if(reset){VS.f=0;VS.play=1}else{VS.f=Math.min(n-1,Math.max(0,(VS.f||0)+d));VS.play=0}vShow()}
+function vPlay(){VS.play=!VS.play;vShow()}
+/* στο άρθρο ΚΑΡΠΑ: στην εφαρμογή το «βίντεο», στο χαρτί 4 βασικά καρέ */
+{const old=(SIMG.cpr||[]).filter(x=>!x.vid);
+ SIMG.cpr=[{at:-1,vid:1,c:['ΚΑΡΠΑ σε 4 εικόνες: έλεγξε – κάλεσε 112 – χέρια στο κέντρο – πίεσε δυνατά και γρήγορα.','CPR in 4 pictures: check – call 112 – hands in the centre – push hard and fast.'],f:()=>{let h='';[0,1,2,4].forEach((k,i)=>{const x=i%2*160,y=Math.floor(i/2)*90;h+=`<g transform="translate(${x},${y}) scale(.5)">${CPR_V[k].f()}</g><circle cx="${x+13}" cy="${y+13}" r="10" fill="${IC.yl}"/>`+iT(x+13,y+18,i+1,{b:1,s:13,c:IC.dk})});return h+iL(160,4,160,176,IC.sm,1)+iL(4,90,316,90,IC.sm,1)}}].concat(old.map(x=>Object.assign({},x,{at:99})))}
+{const _fh=figH;figH=function(x){if(x&&x.vid&&window.__knApp)return vPlayer();return _fh(x)}}
+/* στη σελίδα ρυθμού ΚΑΡΠΑ: κουμπί «Δες πώς γίνεται» */
+{const _c=cprPage;cprPage=function(){_c();const b=M.querySelector('#mb');if(b)b.insertAdjacentHTML('afterend',`<button class="btn notr" id="cvbtn" style="width:100%;margin:8px 0" onclick="this.outerHTML=vPlayer()">🎬 ${L2('Δες πώς γίνεται (μικρό βίντεο)','See how it’s done (short video)')}</button>`)}}
 
 if(rec){startGeo();wake(1)}/* v32: η οθόνη μένει ανοιχτή και όταν ξανανοίγεις την εφαρμογή ενώ καταγράφει */
 setTimeout(grdBar,300);
