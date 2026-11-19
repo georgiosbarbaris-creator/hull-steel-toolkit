@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="el"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Tilt & Roof Calculator · Overland’s Habit</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Tilt & Roof">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#1f1e1d">
+<script src="../crawl/data.js"></script>
+<script src="../crawl/vehicles2.js"></script>
+<script src="../crawl/extra.js"></script>
+<script src="roofdb.js"></script>
+<script src="guide.js"></script>
+<style>
+:root{--bg:#1a1918;--card:#262422;--line:#3d3935;--tx:#f5f0e8;--mut:#a8a29e;--red:#d9534f;--org:#d97757;--grn:#5f9e7a;--yel:#e8b86d;--blu:#6a9fb5}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--tx);font-family:-apple-system,system-ui,"Segoe UI",Roboto,Arial,sans-serif;font-size:18px;line-height:1.45}
+header{position:sticky;top:0;z-index:5;background:#1f1e1d;display:flex;align-items:center;gap:10px;padding:calc(env(safe-area-inset-top) + 10px) 12px 8px;border-bottom:1px solid var(--line)}
+header img{width:44px;height:44px;border-radius:10px}
+.tw{flex:1;min-width:0}header h1{font-size:1.08em;margin:0;white-space:nowrap}
+#tag{font-size:.72em;color:#c96442;font-style:italic;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hb{background:var(--card);color:var(--tx);border:1px solid var(--line);border-radius:12px;min-width:48px;height:44px;font-size:.9em;font-weight:800}
+main{padding:12px 12px calc(env(safe-area-inset-bottom) + 40px);max-width:760px;margin:0 auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin:0 0 14px}
+.card h2{font-size:1.05em;margin:0 0 10px;color:var(--org)}
+.card h2 b{display:inline-block;background:var(--org);color:#1a1918;border-radius:50%;width:1.6em;height:1.6em;text-align:center;line-height:1.6em;margin-right:6px;font-size:.85em}
+label{display:block;font-size:.78em;color:var(--mut);margin:0 0 3px}
+input,select{width:100%;font-size:1.05em;padding:11px 10px;border-radius:12px;border:1px solid var(--line);background:#1a1918;color:var(--tx);font-family:inherit}
+input:focus,select:focus{outline:2px solid var(--org);border-color:transparent}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.note{font-size:.8em;color:var(--mut);margin:8px 0 0}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px}
+.chip{background:#1a1918;color:var(--tx);border:1px solid var(--line);border-radius:999px;padding:9px 14px;font-size:.92em;font-weight:700;font-family:inherit}
+.chip.on{background:var(--org);border-color:var(--org);color:#1a1918}
+.btn{border:0;border-radius:12px;padding:12px 14px;font-size:.95em;font-weight:800;background:var(--blu);color:#fff;font-family:inherit}
+.btn.g{background:var(--grn)}.btn.r{background:#4a2b2a;color:#f3b9b7}.btn.o{background:var(--org);color:#1a1918}.btn.k{background:#1a1918;border:1px solid var(--line);color:var(--tx);padding:9px 11px;font-size:.85em}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.big3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center}
+.big2{display:grid;grid-template-columns:1fr 1fr;gap:8px;text-align:center}
+.kpi{background:#1a1918;border:1px solid var(--line);border-radius:14px;padding:10px 4px}
+.kpi .v{font-size:1.45em;font-weight:900;line-height:1.1}.kpi .l{font-size:.68em;color:var(--mut);margin-top:3px}
+.verdict{margin-top:10px;padding:10px 12px;border-radius:12px;background:#1a1918;border-left:5px solid var(--org);font-size:.92em}
+.verdict.ok{border-color:var(--grn)}.verdict.no{border-color:var(--red);background:#2e1c1b}.verdict.mid{border-color:var(--yel)}
+.opt{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}
+.opt:last-child{border-bottom:0}.opt .t{font-size:.9em}.opt .t small{display:block;color:var(--mut);font-size:.8em}
+.opt .n{font-size:1.15em;font-weight:900;color:var(--yel);text-align:right;white-space:nowrap}.opt .n small{display:block;font-size:.55em;color:var(--mut);font-weight:600}
+.it{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--line)}
+.it .t{flex:1;font-size:.9em;min-width:0}.it .t small{display:block;color:var(--mut);font-size:.78em}
+.it .q{display:flex;align-items:center;gap:6px}.it .q button{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:#1a1918;color:var(--tx);font-size:1.2em;font-weight:900}
+.it .q b{min-width:22px;text-align:center}.it input{width:70px;padding:7px 6px;font-size:.95em;text-align:right}
+.meter{height:14px;border-radius:7px;background:#1a1918;border:1px solid var(--line);overflow:hidden;margin:6px 0 2px;position:relative}
+.meter i{display:block;height:100%;border-radius:7px}
+.ml{display:flex;justify-content:space-between;font-size:.75em;color:var(--mut)}
+details{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:0 14px;margin:0 0 14px}
+#howto{border-color:var(--org)}
+summary{padding:14px 0;font-weight:800;color:var(--org);list-style:none;cursor:pointer}summary::-webkit-details-marker{display:none}
+summary:after{content:"＋";float:right;color:var(--mut)}details[open] summary:after{content:"－"}
+details .in{padding:0 0 14px;font-size:.93em}details p{margin:0 0 10px}
+details h4{margin:14px 0 6px;font-size:.98em;color:var(--yel)}details ul,details ol{margin:0 0 8px;padding-left:22px}details li{margin:0 0 6px}
+.s10{background:#2f2a24;border-radius:12px;padding:10px 12px;margin:0 0 10px;border-left:5px solid var(--yel)}
+.good{color:#8fd1a8}.bad{color:#f08a86}.warn{color:var(--yel)}
+.ck{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px dashed var(--line);font-size:.95em;color:var(--tx)}
+.ck input{width:24px;height:24px;flex:none;margin-top:1px;accent-color:var(--grn)}.ck.done span{color:var(--mut);text-decoration:line-through}
+table{width:100%;border-collapse:collapse;font-size:.86em}
+th{color:var(--mut);font-weight:600;font-size:.78em;text-align:right;padding:6px 4px}th:first-child,td:first-child{text-align:left}
+td{padding:8px 4px;border-top:1px solid var(--line);text-align:right;font-weight:700}
+.incl{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ibox{background:#1a1918;border:1px solid var(--line);border-radius:16px;padding:8px;text-align:center}
+.ibox svg{width:100%;height:auto;max-height:150px}
+.ibox .v{font-size:2.3em;font-weight:900;line-height:1}.ibox .s{font-size:.75em;color:var(--mut)}
+#iwarn{margin-top:10px;padding:12px;border-radius:12px;text-align:center;font-weight:800;background:#1a1918;border:1px solid var(--line)}
+#iwarn.r{background:#5a1f1c;border-color:var(--red);color:#fff;animation:bl .6s infinite alternate}
+@keyframes bl{to{background:#8a2a25}}
+.fs{position:fixed;inset:0;z-index:50;background:#000;padding:calc(env(safe-area-inset-top) + 8px) 10px 10px;display:flex;flex-direction:column}
+.fs .incl{flex:1}.fs .ibox .v{font-size:4em}
+footer{text-align:center;font-size:.78em;color:var(--mut);margin:20px 0 0;line-height:1.6}
+</style></head><body>
+<header><img src="icon-192.png" alt=""><div class="tw"><h1>Tilt & Roof Calculator</h1><div id="tag">Overland’s Habit · Adventure is a Habit…</div></div><button class="hb" id="lang"></button></header>
+<main id="app"></main>
+<script>
+/* Overland's Habit · Tilt & Roof Calculator · Created by George Barbaris
+   Φυσική: ΚΒ νέο = (M·h + Σ m·h_i)/(M+Σm) · γωνία ανατροπής άκαμπτη = atan(T/2h) (NHTSA SSF = T/2h)
+   πραγματική: tanθ ≈ 0,85·T/2h (TRB/NAS: ανάρτηση & λάστιχα ρίχνουν το όριο ~15%) · περιθώριο ασφαλείας 15°
+   Οροφή: δυναμικό = εν κινήσει (όριο κατασκευαστή) · εκτός δρόμου −33% (Yakima) · στατικό ≈ 3 × δυναμικό αν δεν δίνεται */
+let LANG=localStorage.getItem('tilt_lang')||((navigator.language||'el').startsWith('el')?'el':'en');
+const L=(el,en)=>LANG==='el'?el:en;
+const SR=Math.PI/180, COMPL=0.85, MARGIN=15, OFFRD=0.67, STATX=3;
+/* Είδη οροφής: kg ανά τεμάχιο, ht = ύψος του αντικειμένου (cm) πάνω στη σχάρα · rack = η ίδια η σχάρα */
+const ITEMS=[
+ {k:'rack',ic:'🟫',el:'Σχάρα / πλατφόρμα',en:'Roof rack / platform',kg:30,ht:0,rack:1,d:['Platform αλουμινίου 20–45 kg. Μετράει στο όριο οροφής!','Aluminium platform 20–45 kg. It counts towards the roof limit!']},
+ {k:'rtts',ic:'⛺',el:'Σκηνή οροφής soft-shell',en:'Soft-shell rooftop tent',kg:55,ht:30,d:['Συνήθως 45–65 kg (με στρώμα).','Usually 45–65 kg (with mattress).']},
+ {k:'rtth',ic:'🏕',el:'Σκηνή οροφής hard-shell',en:'Hard-shell rooftop tent',kg:70,ht:30,d:['Συνήθως 55–90 kg.','Usually 55–90 kg.']},
+ {k:'awn',ic:'⛱',el:'Τέντα (awning)',en:'Awning',kg:20,ht:15,d:['Πλαϊνή 2–2,5 m: 12–25 kg. 270°: 25–40 kg.','Side 2–2.5 m: 12–25 kg. 270°: 25–40 kg.']},
+ {k:'fuel',ic:'⛽',el:'Μπιτόνι καυσίμου 20 L γεμάτο',en:'Fuel jerrycan 20 L, full',kg:21,ht:35,d:['Diesel ~17 kg + δοχείο 4 kg. Καλύτερα ΟΧΙ στην οροφή.','Diesel ~17 kg + can 4 kg. Better NOT on the roof.']},
+ {k:'water',ic:'💧',el:'Νερό 20 L',en:'Water 20 L',kg:21,ht:35,d:['20 kg νερό + δοχείο. Χαμηλά μέσα στο αυτοκίνητο είναι καλύτερα.','20 kg of water + can. Low inside the car is better.']},
+ {k:'spare',ic:'🛞',el:'Ρεζέρβα (ζάντα + λάστιχο)',en:'Spare wheel (rim + tyre)',kg:32,ht:28,d:['265/70R17 με ζάντα ≈ 30–38 kg.','265/70R17 on a rim ≈ 30–38 kg.']},
+ {k:'boards',ic:'🟧',el:'Πλάκες ανάκτησης (ζευγάρι)',en:'Recovery boards (pair)',kg:8,ht:8,d:['Maxtrax ζευγάρι ≈ 7–9 kg.','Maxtrax pair ≈ 7–9 kg.']},
+ {k:'solar',ic:'☀️',el:'Ηλιακό πάνελ',en:'Solar panel',kg:12,ht:4,d:['Άκαμπτο 150–200 W ≈ 10–14 kg.','Rigid 150–200 W ≈ 10–14 kg.']},
+ {k:'box',ic:'🧳',el:'Μπαγκαζιέρα / κουτί (με τα πράγματα)',en:'Roof box / case (with contents)',kg:40,ht:40,d:['Άδεια 15–25 kg + ό,τι βάλεις μέσα.','Empty 15–25 kg + whatever you put in it.']},
+ {k:'wood',ic:'🪵',el:'Ξύλα / σακίδια / φτυάρι',en:'Firewood / bags / shovel',kg:15,ht:30,d:['Ό,τι άλλο δένεις πάνω.','Anything else you strap up there.']},
+ {k:'cust',ic:'✏️',el:'Δικό μου αντικείμενο',en:'My own item',kg:10,ht:20,d:['Γράψε τα κιλά στο κουτάκι.','Type the kilos in the box.']}];
+const DEF={vid:'',T:1.58,H:1.9,wb:2790,kerb:2100,gvw:2850,cab:250,lift:0,frac:0.40,front:52,dyn:100,rackLim:'',stat:'',statSrc:'',side:30,rackH:12,
+ items:{rack:1,rtts:1},kg:{},ppl:2,pkg:80,bed:8};
+let S={};try{S=JSON.parse(localStorage.getItem('tilt_state')||'{}')}catch(e){}
+let MY=[];try{MY=JSON.parse(localStorage.getItem('tilt_my')||'[]')}catch(e){}
+let CK={};try{CK=JSON.parse(localStorage.getItem('tilt_chk')||'{}')}catch(e){}
+S=Object.assign({},DEF,S);S.items=S.items||{};S.kg=S.kg||{};
+const save=()=>{try{localStorage.setItem('tilt_state',JSON.stringify(S))}catch(e){}};
+const num=x=>{const v=parseFloat(String(x).replace(',','.'));return isFinite(v)?v:NaN};
+const f=(x,d=0)=>isFinite(x)?x.toLocaleString(LANG==='el'?'el-GR':'en-GB',{minimumFractionDigits:d,maximumFractionDigits:d}):'–';
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+/* ===== Βάση οχημάτων: κοινή λίστα Crawl/Winch + στοιχεία οροφής ανά οικογένεια (roofdb.js) ===== */
+const fam=name=>{for(const r of (typeof ROOFDB!=='undefined'?ROOFDB:[]))if(new RegExp(r.re,'i').test(name))return r;return null};
+const DB=(()=>{const o=[],seen={};
+ const add=(id,name,gvw,curb,geo,fr)=>{if(seen[id])return;seen[id]=1;const r=fr||fam(name)||{};const g=geo||{};
+  const T=g.track?+g.track:(r.track?r.track/1000:0),H=g.h?+g.h:(r.h?r.h/1000:0),wb=g.wb?+g.wb:(r.wb||0);
+  o.push({id,name,gvw:+gvw||r.gvw||0,kerb:+curb||r.kerb||0,T,H,wb,dyn:r.dyn||0,stat:r.stat||0,ss:r.ss||'',side:r.side||0,rs:r.src||'',rv:r.v?1:0,fam:r.n||''});};
+ (typeof EXTRA!=='undefined'?EXTRA:[]).forEach(v=>add(v.id,v.name,v.kg,v.curb,v.geo));
+ (typeof VEH2!=='undefined'?VEH2:[]).forEach(v=>add(v.id,v.name,v.kg,v.curb,v.geo));
+ (typeof VEH!=='undefined'?VEH:[]).forEach(v=>add(v.id,v.name.replace(/\b([A-Z]{2,})\b/g,w=>w[0]+w.slice(1).toLowerCase()),v.gvw,v.curb,v.geo));
+ (typeof ROOFDB!=='undefined'?ROOFDB:[]).forEach((r,i)=>{if(r.add)add('rf'+i,r.n,r.gvw,r.kerb,null,r)});
+ return o.sort((a,b)=>a.name.localeCompare(b.name));})();
+const allV=()=>[...MY,...DB];
+const TRS=[['όπως το παραθέτουν','as quoted by'],['όπως το παραθέτει η','as quoted by'],['όπως το παραθέτει το','as quoted by'],['όπως το παραθέτει','as quoted by'],['όπως το παρουσιάζει','as presented'],['κατασκευαστής σχάρας','rack maker'],['εκτός δρόμου','off-road'],['δρόμος','road'],['στατικό','static'],['δυναμικό','dynamic'],['έλεγξε το εγχειρίδιο του δικού σου','check your own manual'],['έλεγξε το εγχειρίδιο','check the manual'],['εγχειρίδιο','manual'],['εκτίμηση','estimate'],['ΜΑΖΙ με τη σχάρα','INCLUDING the rack'],['από παρουσίαση','from launch material'],['ζεύγη ποδιών','pairs of feet'],['ανά ζεύγος','per pair'],['παρκαρισμένο επιτρέπεται περισσότερο (σκηνή)','more allowed when parked (tent)'],['σε φόρουμ γράφουν ως 200 kg, αναξιόπιστο','forums say up to 200 kg, unreliable'],['ανάλογα με το σύστημα','depending on the system'],['ο πίνακας Rhino-Rack δείχνει','the Rhino-Rack chart shows'],['Η Toyota γράφει λιγότερα','Toyota states less'],['το νέο Amarok είναι ίδια πλατφόρμα','the new Amarok is the same platform'],['με track kit','with track kit'],['επίσημο δελτίο τύπου','official press release'],['περιοδικό','magazine'],['όχι πάνω από 30° πλάγια, κατέβασε το φορτίο οροφής πριν από πλαγιά','not above 30° sideways, take the roof load down before a slope'],['η Jeep δεν θέλει φορτίο πάνω στο hardtop: σχάρα στο αμάξωμα','Jeep wants no load on the hardtop: body-mounted rack'],['για','for'],['και','and']];
+const trS=t=>LANG==='el'?t:TRS.reduce((a,[g,e])=>a.split(g).join(e),t);
+function applyV(v){if(!v)return;S.vid=v.id;
+ if(v.T)S.T=+(+v.T).toFixed(3);if(v.H)S.H=+(+v.H).toFixed(3);if(v.wb)S.wb=v.wb;if(v.gvw)S.gvw=v.gvw;
+ S.kerb=v.kerb||(v.gvw?Math.round(v.gvw*0.72):S.kerb);if(v.dyn)S.dyn=v.dyn;S.stat=v.stat||'';S.statSrc=v.ss||'';S.side=v.side||30;if(v.mine){Object.assign(S,v.st||{})}}
+if(!S.vid){const lc=DB.find(v=>/Land Cruiser 120 4\.0/i.test(v.name))||DB.find(v=>/Land Cruiser 120/i.test(v.name));if(lc)applyV(lc);}
+
+/* ===== Υπολογισμός ===== */
+function model(){
+ const T=num(S.T),H=num(S.H),lift=(num(S.lift)||0)/100,frac=num(S.frac)||0.4,wb=(num(S.wb)||2700)/1000,fr=(num(S.front)||52)/100;
+ const m0=(num(S.kerb)||0)+(num(S.cab)||0),h0=frac*H+lift,roofTop=H+lift,rackH=(num(S.rackH)||0)/100;
+ let road=0,mom=0,list=[];
+ ITEMS.forEach(it=>{const q=+S.items[it.k]||0;if(!q)return;const kg=(isFinite(num(S.kg[it.k]))?num(S.kg[it.k]):it.kg)*q;
+  const h=it.rack?roofTop+rackH/2:roofTop+rackH+it.ht/200;road+=kg;mom+=kg*h;list.push({it,q,kg,h});});
+ const ppl=(+S.ppl||0)*(num(S.pkg)||0)+(num(S.bed)||0),hp=roofTop+rackH+0.3; /* άνθρωποι μέσα στη σκηνή, ~30 cm πάνω από τη βάση */
+ const camp=road+ppl;
+ const cg=(m,mm)=>(m0*h0+mm)/(m0+m);
+ const h1=cg(road,mom),h2=cg(camp,mom+ppl*hp);
+ const rig=h=>Math.atan(T/(2*h))/SR,real=h=>Math.atan(COMPL*T/(2*h))/SR;
+ const dyn=num(S.dyn),rl=num(S.rackLim),dLim=Math.min(dyn||Infinity,rl||Infinity);
+ const sLim=num(S.stat)||(isFinite(dLim)?dLim*STATX:NaN);
+ const maker=num(S.side)||30;
+ const t0=real(h0),t1=real(h1),safe0=Math.min(maker,t0-MARGIN),safe1=Math.max(5,Math.min(maker,t1-MARGIN)-(t0-t1)*0);
+ /* μπρος–πίσω: ανηφόρα → ανατροπή γύρω από τον πίσω άξονα (απόσταση = wb·μερίδιο εμπρός), κατηφόρα → γύρω από τον μπροστινό */
+ const up=Math.atan(wb*fr/h1)/SR,dn=Math.atan(wb*(1-fr)/h1)/SR,up0=Math.atan(wb*fr/h0)/SR;
+ const pLim=Math.min(35,Math.min(up,dn)-MARGIN);
+ const tot=m0+road;
+ return{T,H,m0,h0,h1,h2,roofTop,road,camp,ppl,list,dLim,offLim:dLim*OFFRD,sLim,maker,
+  r0:rig(h0),r1:rig(h1),t0,t1,t2:real(h2),loss:t0-t1,safe0,safe1:Math.max(5,Math.min(maker-(t0-t1),t1-MARGIN)),
+  ssf0:T/(2*h0),ssf1:T/(2*h1),up,dn,up0,pLim,tot,gvw:num(S.gvw)};
+}
+const LIM={side:25,pitch:30};
+/* ===== Οθόνη ===== */
+function render(){
+ document.documentElement.lang=LANG;document.getElementById('lang').textContent=LANG==='el'?'EN':'ΕΛ';
+ const opt=v=>`<option value="${v.id}"${v.id===S.vid?' selected':''}>${esc(v.name)}</option>`;
+ const famOpt=[...new Set(DB.map(v=>v.name.split(' ')[0].replace(/-.*/,'')))];
+ document.getElementById('app').innerHTML=`
+<details${localStorage.getItem('tilt_seen')?'':' open'} id="howto"><summary>📖 ${L('Πώς τη χρησιμοποιώ; (1 λεπτό)','How do I use it? (1 minute)')}</summary><div class="in">
+ <div class="s10">${L('<b>Σ10:</b> Όσο πιο ψηλά βάζεις βάρος, τόσο πιο εύκολα γέρνει και αναποδογυρίζει το αυτοκίνητο, όπως ένα ποτήρι με νερό μόνο στο πάνω μέρος. Η εφαρμογή σου λέει <b>πόσο βάρος σηκώνει η οροφή</b> (στον δρόμο και παρκαρισμένο) και <b>πόσες μοίρες κλίσης χάνεις</b>.','<b>Like you are 10:</b> The higher you put weight, the easier the car leans and rolls over, like a glass with all the water at the top. The app tells you <b>how much the roof can carry</b> (driving and parked) and <b>how many degrees of slope you lose</b>.')}</div>
+ <ol><li>${L('Διάλεξε το αυτοκίνητό σου (ή γράψε τα στοιχεία του).','Pick your vehicle (or type its data).')}</li>
+ <li>${L('Πρόσθεσε ό,τι έχεις στην οροφή με τα <b>＋ / −</b>.','Add what is on your roof with <b>＋ / −</b>.')}</li>
+ <li>${L('Δες τα δύο φορτία: <b>δυναμικό</b> (οδηγείς) και <b>στατικό</b> (κοιμάστε στη σκηνή).','See both loads: <b>dynamic</b> (driving) and <b>static</b> (sleeping in the tent).')}</li>
+ <li>${L('Άνοιξε το <b>📐 κλισιόμετρο</b>: τα όρια συναγερμού βγαίνουν από το δικό σου φόρτωμα.','Open the <b>📐 inclinometer</b>: the alarm limits come from your own load.')}</li></ol>
+ <button class="btn o" onclick="localStorage.setItem('tilt_seen',1);document.getElementById('howto').open=false">👍 ${L('Κατάλαβα','Got it')}</button></div></details>
+
+<div class="card"><h2><b>1</b>${L('Το αυτοκίνητό σου','Your vehicle')}</h2>
+ <label>${L('Μοντέλο','Model')} (${DB.length} ${L('μοντέλα','models')})</label>
+ <input id="q" placeholder="🔎 ${L('Ψάξε… π.χ. Hilux, Jimny, Patrol','Search… e.g. Hilux, Jimny, Patrol')}" style="margin-bottom:8px">
+ <select id="vid"><option value="custom">✏️ ${L('Δικά μου νούμερα','My own numbers')}</option>${MY.length?`<optgroup label="${L('Τα δικά μου','My vehicles')}">${MY.map(opt).join('')}</optgroup>`:''}<optgroup label="${L('Λίστα','List')}">${DB.map(opt).join('')}</optgroup></select>
+ <div id="vsrc" class="note"></div>
+ <div class="grid" style="margin-top:10px">
+  <div><label>${L('Μετατρόχιο (m)','Track width (m)')}</label><input id="T" inputmode="decimal" value="${S.T}"></div>
+  <div><label>${L('Ύψος οχήματος χωρίς σχάρα (m)','Vehicle height, no rack (m)')}</label><input id="H" inputmode="decimal" value="${S.H}"></div>
+  <div><label>${L('Απόβαρο (kg)','Kerb weight (kg)')}</label><input id="kerb" inputmode="decimal" value="${S.kerb}"></div>
+  <div><label>${L('Μικτό (GVW) kg','Gross (GVW) kg')}</label><input id="gvw" inputmode="decimal" value="${S.gvw}"></div>
+  <div><label>${L('Μέσα: άτομα + φορτίο (kg)','Inside: people + cargo (kg)')}</label><input id="cab" inputmode="decimal" value="${S.cab}"></div>
+  <div><label>${L('Ανύψωση (lift) cm','Lift (cm)')}</label><input id="lift" inputmode="decimal" value="${S.lift}"></div>
+  <div><label>${L('Μεταξόνιο (mm)','Wheelbase (mm)')}</label><input id="wb" inputmode="decimal" value="${S.wb}"></div>
+  <div><label>${L('Όριο πλευρικής κλίσης κατασκευαστή (°)','Maker side-slope limit (°)')}</label><input id="side" inputmode="decimal" value="${S.side}"></div>
+ </div>
+ <details style="margin:10px 0 0;background:#1a1918"><summary style="font-size:.9em">⚙️ ${L('Για προχωρημένους','Advanced')}</summary><div class="in"><div class="grid">
+  <div><label>${L('Ύψος ΚΒ ÷ ύψος οχήματος','CG height ÷ vehicle height')}</label><input id="frac" inputmode="decimal" value="${S.frac}"></div>
+  <div><label>${L('Βάρος στον μπροστινό άξονα (%)','Weight on front axle (%)')}</label><input id="front" inputmode="decimal" value="${S.front}"></div></div>
+  <div class="note">${L('Τα SUV/pickup έχουν κέντρο βάρους (ΚΒ) περίπου στο 37–42% του ύψους τους. Βάλε 0,40 αν δεν ξέρεις (0,42 = πιο συντηρητικό). Αν ξέρεις το ύψος ΚΒ από μέτρηση, γράψε ΚΒ ÷ ύψος.','SUVs/pickups have their centre of gravity (CG) at about 37–42% of their height. Use 0.40 if unsure (0.42 = more conservative). If you know the measured CG height, enter CG ÷ height.')}</div></div></details>
+ <div class="row"><button class="btn g" id="sv">💾 ${L('Κράτα το ως δικό μου','Save as mine')}</button>${MY.some(v=>v.id===S.vid)?`<button class="btn r" id="del">🗑 ${L('Σβήσε','Delete')}</button>`:''}</div>
+</div>
+
+<div class="card"><h2><b>2</b>${L('Όρια οροφής','Roof limits')}</h2>
+ <div class="grid">
+  <div><label>${L('Δυναμικό όριο οροφής (kg) · οδηγείς','Dynamic roof limit (kg) · driving')}</label><input id="dyn" inputmode="decimal" value="${S.dyn}"></div>
+  <div><label>${L('Όριο σχάρας / μπάρες (kg) · αν το ξέρεις','Rack / bars limit (kg) · if known')}</label><input id="rackLim" inputmode="decimal" value="${S.rackLim}" placeholder="—"></div>
+  <div><label>${L('Στατικό όριο (kg) · παρκαρισμένο','Static limit (kg) · parked')}</label><input id="stat" inputmode="decimal" value="${S.stat}" placeholder="${L('αυτόματο','auto')}"></div>
+  <div><label>${L('Ύψος σχάρας πάνω από την οροφή (cm)','Rack height above the roof (cm)')}</label><input id="rackH" inputmode="decimal" value="${S.rackH}"></div>
+ </div>
+ <div class="note" id="limnote"></div>
+</div>
+
+<div class="card"><h2><b>3</b>${L('Τι έχεις στην οροφή','What is on your roof')}</h2>
+ ${ITEMS.map(it=>{const q=+S.items[it.k]||0,kg=isFinite(num(S.kg[it.k]))?num(S.kg[it.k]):it.kg;return `<div class="it"><div class="t">${it.ic} <b>${LANG==='el'?it.el:it.en}</b><small>${it.d[LANG==='el'?0:1]}</small></div>
+  <input data-kg="${it.k}" inputmode="decimal" value="${kg}" aria-label="kg"><span style="font-size:.75em;color:var(--mut)">kg</span>
+  <div class="q"><button data-m="${it.k}">−</button><b>${q}</b><button data-p="${it.k}">＋</button></div></div>`}).join('')}
+ <h4 style="margin:14px 0 6px;color:var(--yel)">😴 ${L('Στη σκηνή το βράδυ (μόνο στατικό)','In the tent at night (static only)')}</h4>
+ <div class="grid"><div><label>${L('Άτομα','People')}</label><input id="ppl" inputmode="decimal" value="${S.ppl}"></div>
+ <div><label>${L('Κιλά ανά άτομο','Kilos per person')}</label><input id="pkg" inputmode="decimal" value="${S.pkg}"></div>
+ <div><label>${L('Υπνόσακοι, μαξιλάρια (kg)','Sleeping bags, pillows (kg)')}</label><input id="bed" inputmode="decimal" value="${S.bed}"></div></div>
+</div>
+
+<div class="card"><h2><b>4</b>${L('Δυναμικό φορτίο · οδηγείς','Dynamic load · driving')}</h2><div id="dynout"></div></div>
+<div class="card"><h2><b>5</b>${L('Στατικό φορτίο · κατασκήνωση','Static load · camping')}</h2><div id="statout"></div></div>
+<div class="card"><h2><b>6</b>${L('Πόση κλίση χάνεις','How much slope you lose')}</h2><div id="tipout"></div></div>
+<div class="card"><h2><b>7</b>${L('Τι «νιώθει» η οροφή στο χώμα','What the roof “feels” off-road')}</h2><div id="gout"></div></div>
+
+<div class="card" id="incard"><h2>📐 ${L('Κλισιόμετρο','Inclinometer')}</h2>
+ <div class="chips" id="lmode"><button class="chip${(S.lmode||'road')==='road'?' on':''}" data-lm="road">🚙 ${L('Με το φόρτωμά μου','With my load')}</button><button class="chip${S.lmode==='empty'?' on':''}" data-lm="empty">⬜ ${L('Χωρίς οροφή','Without roof load')}</button></div>
+ <div class="incl"><div class="ibox"><div class="s">${L('Πλευρική (roll)','Side (roll)')}</div><svg viewBox="-80 -86 160 136" id="svr"></svg><div class="v" id="ir">—</div><div class="s" id="irl"></div></div>
+ <div class="ibox"><div class="s">${L('Μπρος–πίσω (pitch)','Front–back (pitch)')}</div><svg viewBox="-92 -86 184 136" id="svp"></svg><div class="v" id="ip">—</div><div class="s" id="ipl"></div></div></div>
+ <div id="iwarn">${L('Βάλε το κινητό σταθερά στη βάση του, πάτα «Ξεκίνα» και μετά «Μηδένισε» σε επίπεδο σημείο.','Fix the phone in its mount, tap “Start”, then “Zero” on level ground.')}</div>
+ <div class="row"><button class="btn o" id="igo">▶ ${L('Ξεκίνα','Start')}</button><button class="btn" id="iz">⊙ ${L('Μηδένισε (επίπεδο)','Zero (level)')}</button><button class="btn k" id="iz2">↻ ${L('Μηδενισμός 2 φορών','2-way zero')}</button></div>
+ <div class="row"><button class="btn k" id="imx">↺ ${L('Μηδένισε μέγιστα','Reset peaks')}</button><button class="btn k" id="ifs">⛶ ${L('Μεγάλη οθόνη','Full screen')}</button><button class="btn k" id="ixr">↔ ${L('Αντιστροφή Α/Δ','Flip L/R')}</button><button class="btn k" id="ixp">↕ ${L('Αντιστροφή μπρος/πίσω','Flip front/back')}</button><button class="btn k" id="isnd">${S.snd===0?'🔇':'🔊'} ${L('Ήχος','Sound')}</button></div>
+ <div class="note" id="imax"></div>
+ <div class="note">${L('Δοκιμή: γείρε το κινητό δεξιά: το αυτοκινητάκι πρέπει να γέρνει δεξιά. Αν όχι, «Αντιστροφή». 🟢 ως 60% του ορίου · 🟡 60–85% · 🔴 πάνω από 85% → ήχος & δόνηση. Η οθόνη μένει ανοιχτή όσο τρέχει.','Test: tilt the phone right: the little car must lean right. If not, tap “Flip”. 🟢 up to 60% of the limit · 🟡 60–85% · 🔴 above 85% → sound & vibration. The screen stays on while it runs.')}</div>
+</div>
+
+${GUIDE[LANG].map(([id,ic,t,h])=>`<details id="g_${id}"><summary>${ic} ${t}</summary><div class="in">${h.replace(/CHK:(\w+)/g,(m,k)=>chkHtml(k))}</div></details>`).join('')}
+<footer><b>Overland’s Habit</b> · Tilt & Roof Calculator · ${L('δωρεάν','free')}<br>${L('Διατίθεται μόνο μέσω Instagram: στείλε DM <b>TILT</b> στο @overlandshabit','Available only via Instagram: DM <b>TILT</b> to @overlandshabit')}<br>Created by George Barbaris<br>© 2026 George Barbaris · ${L('Με την επιφύλαξη παντός δικαιώματος','All rights reserved')}<br><a href="#" onclick="legalOpen();return false" style="color:var(--org)">⚖️ ${L('Όροι χρήσης & αποποίηση ευθύνης','Terms of use & disclaimer')}</a><br>${L('Θεωρητικοί υπολογισμοί. Ακολούθησε πάντα το εγχειρίδιο του οχήματος, της σχάρας και της σκηνής.','Theoretical calculations. Always follow the vehicle, rack and tent manuals.')}</footer>`;
+ bind();calc();drawCars();
+}
+function chkHtml(k){return `<div>${CHK[k].map((c,i)=>{const id=k+i,on=!!CK[id];return `<label class="ck${on?' done':''}"><input type="checkbox" data-ck="${id}"${on?' checked':''}><span>${c[LANG==='el'?0:1]}</span></label>`}).join('')}<button class="chip" style="padding:5px 10px;font-size:.75em;margin-top:6px" data-ckr="${k}">↺ ${L('Καθάρισε τη λίστα','Clear the list')}</button></div>`}
+function bind(){
+ const $=id=>document.getElementById(id);
+ ['T','H','kerb','gvw','cab','lift','wb','side','frac','front','dyn','rackLim','stat','rackH','ppl','pkg','bed'].forEach(k=>$(k).addEventListener('input',e=>{S[k]=e.target.value;
+  if(['T','H','kerb','gvw','wb','dyn','stat'].includes(k)&&!MY.some(v=>v.id===S.vid)&&S.vid!=='custom'){S.vid='custom';$('vid').value='custom';}
+  if(k==='stat')S.statSrc='';save();calc();}));
+ $('vid').onchange=e=>{const v=allV().find(x=>x.id===e.target.value);if(v)applyV(v);else S.vid='custom';save();render();};
+ $('q').addEventListener('input',e=>{const q=e.target.value.toLowerCase().trim(),sel=$('vid');let first=null;
+  [...sel.querySelectorAll('optgroup option')].forEach(o=>{const ok=!q||o.textContent.toLowerCase().includes(q);o.hidden=!ok;o.disabled=!ok;if(ok&&!first&&q)first=o;});
+  if(first&&first.value!==S.vid){const v=allV().find(x=>x.id===first.value);if(v){applyV(v);save();sel.value=v.id;['T','H','kerb','gvw','wb','dyn','stat','side'].forEach(k=>$(k).value=S[k]);calc();}}});
+ document.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{const k=b.dataset.p;S.items[k]=(+S.items[k]||0)+1;save();render();});
+ document.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{const k=b.dataset.m;S.items[k]=Math.max(0,(+S.items[k]||0)-1);save();render();});
+ document.querySelectorAll('[data-kg]').forEach(i=>i.addEventListener('input',()=>{S.kg[i.dataset.kg]=i.value;save();calc();}));
+ document.querySelectorAll('[data-lm]').forEach(c=>c.onclick=()=>{S.lmode=c.dataset.lm;save();document.querySelectorAll('[data-lm]').forEach(x=>x.classList.toggle('on',x===c));inShow();});
+ document.querySelectorAll('[data-ck]').forEach(c=>c.onchange=()=>{CK[c.dataset.ck]=c.checked?1:0;c.parentNode.classList.toggle('done',c.checked);localStorage.setItem('tilt_chk',JSON.stringify(CK));});
+ document.querySelectorAll('[data-ckr]').forEach(b=>b.onclick=()=>{const k=b.dataset.ckr;Object.keys(CK).forEach(x=>{if(x.startsWith(k)&&/^\d+$/.test(x.slice(k.length)))delete CK[x]});localStorage.setItem('tilt_chk',JSON.stringify(CK));
+  b.parentNode.querySelectorAll('input').forEach(i=>{i.checked=false;i.parentNode.classList.remove('done')});});
+ $('sv').onclick=()=>{const nm=prompt(L('Όνομα (π.χ. «Το Land Cruiser μου»)','Name (e.g. "My Land Cruiser")'),'');if(!nm)return;
+  const id='t'+Date.now(),st={};['T','H','kerb','gvw','cab','lift','wb','side','frac','front','dyn','rackLim','stat','rackH'].forEach(k=>st[k]=S[k]);
+  MY.push({id,name:nm,mine:1,st});localStorage.setItem('tilt_my',JSON.stringify(MY));S.vid=id;save();render();};
+ if($('del'))$('del').onclick=()=>{if(!confirm(L('Να σβηστεί;','Delete it?')))return;MY=MY.filter(v=>v.id!==S.vid);localStorage.setItem('tilt_my',JSON.stringify(MY));S.vid='custom';save();render();};
+ $('lang').onclick=()=>{LANG=LANG==='el'?'en':'el';localStorage.setItem('tilt_lang',LANG);render();};
+ $('igo').onclick=inGo;$('iz').onclick=inZero;$('iz2').onclick=inZero2;$('imx').onclick=()=>{IN.mp=IN.mr=0;inShow()};$('ifs').onclick=inFull;
+ $('ixr').onclick=()=>{S.xr=S.xr?0:1;save();inShow()};$('ixp').onclick=()=>{S.xp=S.xp?0:1;save();inShow()};
+ $('isnd').onclick=()=>{S.snd=S.snd===0?1:0;save();$('isnd').innerHTML=(S.snd===0?'🔇 ':'🔊 ')+L('Ήχος','Sound')};
+ if(IN.on)$('igo').textContent='⏹ '+L('Σταμάτα','Stop');
+}
+function meter(v,lim,lab){const p=lim>0?v/lim:0,c=p<=0.85?'var(--grn)':p<=1?'var(--yel)':'var(--red)';
+ return `<div class="meter"><i style="width:${Math.min(100,p*100)}%;background:${c}"></i></div><div class="ml"><span>${lab}</span><span><b style="color:var(--tx)">${f(v)} kg</b> / ${isFinite(lim)?f(lim)+' kg':'?'} (${isFinite(p)&&lim?f(p*100):'–'}%)</span></div>`}
+function calc(){
+ const $=id=>document.getElementById(id),R=model(),v=allV().find(x=>x.id===S.vid);
+ /* πηγή */
+ $('vsrc').innerHTML=v&&!v.mine?(v.fam?`${L('Οροφή από','Roof data from')}: <b>${esc(v.fam)}</b>${v.rv?' ✅':' ⚠️ '+L('εκτίμηση, έλεγξε το εγχειρίδιο','estimate, check your manual')}${v.rs?`<br><span style="font-size:.9em">${esc(trS(v.rs))}</span>`:''}`:`⚠️ ${L('Δεν έχουμε όριο οροφής για αυτό το μοντέλο: γράψε το από το εγχειρίδιο (συνήθως 50–100 kg).','We have no roof limit for this model: type it from your manual (usually 50–100 kg).')}`):'';
+ $('limnote').innerHTML=`${L('Δυναμικό = όταν το αυτοκίνητο κινείται (το γράφει το εγχειρίδιο). Ισχύει το <b>μικρότερο</b> από οροφή και σχάρα.','Dynamic = when the car is moving (it is in the manual). The <b>lower</b> of roof and rack applies.')} ${num(S.stat)?(S.statSrc?`${L('Στατικό από','Static from')}: ${esc(trS(S.statSrc))}.`:L('Στατικό: το δικό σου νούμερο.','Static: your own number.')):L(`Στατικό (αυτόματο) ≈ ${STATX} × δυναμικό (κανόνας Yakima/κατασκευαστών σχαρών) = <b>${f(R.sLim)} kg</b>. Έλεγξε και το όριο της σκηνής και της σχάρας.`,`Static (auto) ≈ ${STATX} × dynamic (Yakima/rack-maker rule) = <b>${f(R.sLim)} kg</b>. Also check the tent and rack limits.`)}`;
+ /* δυναμικό */
+ const dl=R.dLim,ok1=R.road<=R.offLim,ok2=R.road<=dl;
+ $('dynout').innerHTML=`<div class="big3"><div class="kpi"><div class="v">${f(R.road)}</div><div class="l">${L('kg στην οροφή','kg on the roof')}</div></div>
+  <div class="kpi"><div class="v ${ok2?'good':'bad'}">${isFinite(dl)?f(dl):'?'}</div><div class="l">${L('όριο στην άσφαλτο','limit on tarmac')}</div></div>
+  <div class="kpi"><div class="v ${ok1?'good':'bad'}">${isFinite(dl)?f(R.offLim):'?'}</div><div class="l">${L('όριο σε χώμα (−33%)','limit off-road (−33%)')}</div></div></div>
+  ${meter(R.road,dl,L('Άσφαλτος','Tarmac'))}${meter(R.road,R.offLim,L('Χώμα / κυματισμοί','Dirt / corrugations'))}
+  <div class="verdict ${ok1?'ok':ok2?'mid':'no'}">${!isFinite(dl)?L('Γράψε το δυναμικό όριο οροφής στο βήμα 2.','Enter the dynamic roof limit in step 2.'):ok1?L('✅ Μέσα στα όρια και για χώμα.','✅ Within limits, off-road too.'):ok2?L(`🟡 Εντάξει στην άσφαλτο, <b>πολύ βαρύ για χώμα</b>: βγάλε ${f(R.road-R.offLim)} kg από πάνω (μπιτόνια, ρεζέρβα, νερό μέσα στο αυτοκίνητο).`,`🟡 OK on tarmac, <b>too heavy for dirt</b>: take ${f(R.road-R.offLim)} kg off the roof (jerrycans, spare, water inside the car).`):L(`❌ <b>Υπερφορτωμένη οροφή</b> κατά ${f(R.road-dl)} kg ακόμη και για άσφαλτο. Κίνδυνος για οροφή, σχάρα, κολώνες και ανατροπή.`,`❌ <b>Overloaded roof</b> by ${f(R.road-dl)} kg even for tarmac. Risk to the roof, rack, pillars and of rollover.`)}</div>
+  ${R.list.length?`<table style="margin-top:10px"><tr><th>${L('Είδος','Item')}</th><th>kg</th><th>${L('ύψος ΚΒ','CG height')}</th></tr>${R.list.map(x=>`<tr><td>${x.it.ic} ${LANG==='el'?x.it.el:x.it.en}${x.q>1?' ×'+x.q:''}</td><td>${f(x.kg)}</td><td>${f(x.h,2)} m</td></tr>`).join('')}</table>`:''}
+  <div class="opt"><div class="t">${L('Συνολικό βάρος τώρα','Total weight now')}<small>${L('απόβαρο + μέσα + οροφή, σε σχέση με το μικτό','kerb + inside + roof, against GVW')}</small></div><div class="n ${R.tot>R.gvw?'bad':''}">${f(R.tot)} kg<small>GVW ${f(R.gvw)} kg${R.tot>R.gvw?' ❌':' · '+L('περισσεύουν','spare')+' '+f(R.gvw-R.tot)}</small></div></div>`;
+ /* στατικό */
+ const ok3=R.camp<=R.sLim;
+ $('statout').innerHTML=`<div class="big3"><div class="kpi"><div class="v">${f(R.camp)}</div><div class="l">${L('kg στην οροφή με κόσμο','kg on roof with people')}</div></div>
+  <div class="kpi"><div class="v ${ok3?'good':'bad'}">${isFinite(R.sLim)?f(R.sLim):'?'}</div><div class="l">${L('στατικό όριο','static limit')}</div></div>
+  <div class="kpi"><div class="v">${f(R.ppl)}</div><div class="l">${L('άνθρωποι + στρωσίδια','people + bedding')}</div></div></div>
+  ${meter(R.camp,R.sLim,L('Παρκαρισμένο, σκηνή ανοιχτή','Parked, tent open'))}
+  <div class="verdict ${ok3?'ok':'no'}">${ok3?L('✅ Η οροφή αντέχει το βράδυ. Παρκάρισε όσο πιο επίπεδα γίνεται (κάτω από 3–5°) και τράβα χειρόφρενο.','✅ The roof holds at night. Park as level as possible (under 3–5°) and set the handbrake.'):L(`❌ Πάνω από το στατικό όριο κατά ${f(R.camp-R.sLim)} kg. Λιγότερα άτομα στη σκηνή ή κατέβασε πράγματα από την οροφή πριν κοιμηθείτε.`,`❌ Above the static limit by ${f(R.camp-R.sLim)} kg. Fewer people in the tent, or take things off the roof before sleeping.`)}</div>
+  <div class="note">${L('Το στατικό όριο ισχύει <b>μόνο ακίνητο</b>. Ποτέ μην οδηγείς με κόσμο ή με το βάρος της κατασκήνωσης στην οροφή. Στη σκηνή μην πηδάτε, μπαίνετε ήρεμα από τη σκάλα.','The static limit is <b>only when stationary</b>. Never drive with people or the camp weight on the roof. In the tent, no jumping: climb in calmly from the ladder.')}</div>`;
+ /* κλίση */
+ const bar=(a,col)=>`<div class="meter" style="height:10px"><i style="width:${Math.min(100,a/60*100)}%;background:${col}"></i></div>`;
+ $('tipout').innerHTML=`<div class="big3"><div class="kpi"><div class="v">${f(R.t0,1)}°</div><div class="l">${L('ανατρέπεται χωρίς οροφή','tips over, no roof load')}</div></div>
+  <div class="kpi"><div class="v warn">${f(R.t1,1)}°</div><div class="l">${L('ανατρέπεται με το φορτίο','tips over, with the load')}</div></div>
+  <div class="kpi"><div class="v bad">−${f(R.loss,1)}°</div><div class="l">${L('χάνεις','you lose')}</div></div></div>
+  <div class="big2" style="margin-top:8px"><div class="kpi"><div class="v good">${f(Math.min(R.maker,R.t0-MARGIN))}°</div><div class="l">${L('ασφαλής πλευρική χωρίς οροφή','safe side slope, no roof load')}</div></div>
+  <div class="kpi"><div class="v ${R.safe1<20?'bad':'good'}">${f(R.safe1)}°</div><div class="l">${L('ασφαλής πλευρική ΜΕ το φορτίο','safe side slope WITH the load')}</div></div></div>
+  <div class="opt"><div class="t">${L('Ύψος κέντρου βάρους','Centre of gravity height')}<small>${L('ανεβαίνει όσο φορτώνεις ψηλά','rises as you load high')}</small></div><div class="n">${f(R.h0*100)} → ${f(R.h1*100)} cm<small>+${f((R.h1-R.h0)*1000)} mm</small></div></div>
+  <div class="opt"><div class="t">${L('Δείκτης ευστάθειας SSF (T ÷ 2h)','Static Stability Factor (T ÷ 2h)')}<small>${L('πόσα g πλάγια χρειάζονται για ανατροπή (NHTSA). Κανόνας LVVTA: κράτα τουλάχιστον το 95% του αρχικού','how many sideways g it takes to roll (NHTSA). LVVTA rule: keep at least 95% of the original')}</small></div><div class="n ${R.ssf1/R.ssf0<0.95?'bad':'good'}">${f(R.ssf0,2)} → ${f(R.ssf1,2)}<small>${f(R.ssf1/R.ssf0*100)}%</small></div></div>
+  <div class="opt"><div class="t">${L('Με κόσμο στη σκηνή (παρκαρισμένο)','With people in the tent (parked)')}<small>${L('γωνία ανατροπής','tip-over angle')}</small></div><div class="n">${f(R.t2,1)}°</div></div>
+  <div class="opt"><div class="t">${L('Ανηφόρα · ανατροπή προς τα πίσω','Uphill · tipping backwards')}<small>${L('η πρόσφυση τελειώνει πολύ νωρίτερα','traction runs out much earlier')}</small></div><div class="n">${f(R.up,0)}°<small>${L('χωρίς οροφή','no roof load')} ${f(R.up0,0)}°</small></div></div>
+  <div class="opt"><div class="t">${L('Κατηφόρα · ανατροπή προς τα εμπρός','Downhill · tipping forwards')}</div><div class="n">${f(R.dn,0)}°</div></div>
+  <div class="opt"><div class="t">${L('Όριο μπρος–πίσω για το κλισιόμετρο','Front–back limit for the inclinometer')}<small>${L('Land Rover: όχι συνεχώς πάνω από 35°','Land Rover: not continuously above 35°')}</small></div><div class="n">${f(R.pLim)}°</div></div>
+  <div class="verdict ${R.safe1>=25?'ok':R.safe1>=18?'mid':'no'}">${L(`Κάθε 10 kg στην οροφή σου κοστίζει περίπου <b>${f(R.road?R.loss/R.road*10:0,2)}°</b>. Πέτρα κάτω από τον πάνω τροχό ή λακκούβα κάτω από τον κάτω προσθέτουν 5–10° σε μια στιγμή: γι’ αυτό το περιθώριο ${MARGIN}°.`,`Every 10 kg on your roof costs about <b>${f(R.road?R.loss/R.road*10:0,2)}°</b>. A rock under the upper wheel or a hole under the lower one adds 5–10° in an instant: hence the ${MARGIN}° margin.`)}</div>
+  <div class="note">${L(`Υπολογισμός: γωνία = atan(0,85 × μετατρόχιο ÷ 2 × ύψος ΚΒ). Το 0,85 μετράει το «κάθισμα» της ανάρτησης και των λαστίχων (TRB/NAS). Χωρίς αυτό (άκαμπτο σώμα): ${f(R.r0,1)}° → ${f(R.r1,1)}°.`,`Formula: angle = atan(0.85 × track ÷ 2 × CG height). The 0.85 accounts for suspension and tyre squat (TRB/NAS). Without it (rigid body): ${f(R.r0,1)}° → ${f(R.r1,1)}°.`)}</div>`;
+ /* g */
+ const G=[[1,'🛣',L('Ακίνητο / ομαλός δρόμος','Parked / smooth road')],[1,'🛑',L('Φρενάρισμα πανικού (οριζόντια ώθηση)','Panic braking (horizontal push)')],[2,'🕳',L('Λακκούβα, χωματόδρομος','Pothole, dirt road')],[3,'〰️',L('Κυματισμοί (corrugations)','Corrugations')],[5,'💥',L('Σκληρό χτύπημα, πήδημα','Hard hit, jump')]];
+ $('gout').innerHTML=G.map(([g,ic,t])=>`<div class="opt"><div class="t">${ic} ${t}<small>≈ ${g} g</small></div><div class="n">${f(R.road*g)} kg<small>${L('δύναμη στα πόδια της σχάρας','force on the rack feet')}</small></div></div>`).join('')+
+  `<div class="note">${L('Γι’ αυτό το δυναμικό όριο είναι πολύ μικρότερο από το στατικό: στο χώμα κάθε κιλό «χτυπάει» σαν 2–3 κιλά, και σε σκληρό χτύπημα ακόμη περισσότερο. Ελέγχεις τις βίδες της σχάρας κάθε μέρα σε χωματόδρομο.','That is why the dynamic limit is much lower than the static one: off-road every kilo “hits” like 2–3 kilos, and on a hard hit even more. Check the rack bolts every day on dirt roads.')}</div>`;
+ inShow();drawCars();
+}
+/* ===== Κλισιόμετρο (accelerationIncludingGravity, όπως στο Overland app) ===== */
+const IN={on:false,p:0,r:0,mp:0,mr:0,raw:null,last:0,beep:0,wl:null,z2:null};
+function inLim(){const R=model();if((S.lmode||'road')==='empty')return{side:Math.round(Math.min(R.maker,R.t0-MARGIN)),pitch:Math.round(Math.min(35,Math.atan(((num(S.wb)||2700)/1000)*Math.min(num(S.front)||52,100-(num(S.front)||52))/100/R.h0)/SR-MARGIN))};
+ return{side:Math.round(R.safe1),pitch:Math.round(R.pLim)}}
+function rawAng(g,m){const ax=Math.abs(g[0]),ay=Math.abs(g[1]),az=Math.abs(g[2]);let pp,rr;
+ if(m==='flat'){const s=Math.sign(g[2])||1;pp=Math.atan2(g[1]*s,az)/SR;rr=Math.atan2(g[0]*s,az)/SR}
+ else if(m==='port'){const s=Math.sign(g[1])||1;pp=Math.atan2(g[2]*s,ay)/SR;rr=Math.atan2(g[0]*s,ay)/SR}
+ else{const s=Math.sign(g[0])||1;pp=Math.atan2(g[2]*s,ax)/SR;rr=Math.atan2(g[1]*s,ax)/SR}return[pp,rr]}
+function inMode(g){const ax=Math.abs(g[0]),ay=Math.abs(g[1]),az=Math.abs(g[2]);return az>=ax&&az>=ay?'flat':ay>=ax?'port':'land'}
+function inMotion(e){const a=e.accelerationIncludingGravity;if(!a||a.x==null)return;const g=[a.x,a.y,a.z];IN.raw=g;
+ const z=S.inz||null,m=z?z.m:inMode(g);let[pp,rr]=rawAng(g,m);if(z){pp-=z.p;rr-=z.r}rr=-rr;if(S.xp)pp=-pp;if(S.xr)rr=-rr;
+ IN.p=IN.p*.85+pp*.15;IN.r=IN.r*.85+rr*.15;IN.mp=Math.max(IN.mp,Math.abs(IN.p));IN.mr=Math.max(IN.mr,Math.abs(IN.r));
+ const now=Date.now();if(now-IN.last>120){IN.last=now;inShow()}}
+async function motionPerm(){if(typeof DeviceMotionEvent!=='undefined'&&typeof DeviceMotionEvent.requestPermission==='function'){try{return(await DeviceMotionEvent.requestPermission())!=='denied'}catch(e){return true}}return true}
+async function wake(){try{if('wakeLock' in navigator)IN.wl=await navigator.wakeLock.request('screen')}catch(e){}}
+async function inGo(){const b=document.getElementById('igo');
+ if(IN.on){IN.on=false;window.removeEventListener('devicemotion',inMotion,true);try{IN.wl&&IN.wl.release()}catch(e){}b.textContent='▶ '+L('Ξεκίνα','Start');return}
+ if(!(await motionPerm())){alert(L('Δεν δόθηκε άδεια για τους αισθητήρες κίνησης. Κλείσε και άνοιξε την εφαρμογή και πάτα «Επιτρέπεται».','Motion sensor permission was not given. Close and reopen the app and tap “Allow”.'));return}
+ if(typeof DeviceMotionEvent==='undefined'){alert(L('Αυτή η συσκευή δεν έχει αισθητήρα κλίσης.','This device has no tilt sensor.'));return}
+ window.addEventListener('devicemotion',inMotion,true);IN.on=true;wake();b.textContent='⏹ '+L('Σταμάτα','Stop');
+ setTimeout(()=>{if(IN.on&&!IN.raw)alert(L('Δεν έρχονται στοιχεία από τον αισθητήρα. Σε υπολογιστή δεν δουλεύει: άνοιξέ το στο κινητό.','No data from the sensor. It does not work on a computer: open it on the phone.'))},2500)}
+function inZero(){if(!IN.on||!IN.raw){alert(L('Πάτα πρώτα «Ξεκίνα».','Tap “Start” first.'));return}const g=IN.raw,m=inMode(g),[pp,rr]=rawAng(g,m);
+ S.inz={m,p:pp,r:rr};save();IN.p=IN.r=IN.mp=IN.mr=0;IN.z2=null;alert(L('✅ Μηδενίστηκε.','✅ Zeroed.'))}
+/* Μηδενισμός 2 φορών: μέτρηση, γύρνα το αυτοκίνητο 180° στο ίδιο σημείο, ξανά μέτρηση → ο μέσος όρος ακυρώνει την κλίση του εδάφους */
+function inZero2(){if(!IN.on||!IN.raw){alert(L('Πάτα πρώτα «Ξεκίνα».','Tap “Start” first.'));return}const g=IN.raw,m=inMode(g),[pp,rr]=rawAng(g,m);
+ if(!IN.z2){IN.z2={m,p:pp,r:rr};alert(L('1/2 ✅ Τώρα γύρνα το αυτοκίνητο ανάποδα (180°) πάνω στο ίδιο σημείο, ρόδες στα ίδια σημάδια, και πάτα ξανά «Μηδενισμός 2 φορών».','1/2 ✅ Now turn the car around (180°) on the same spot, wheels on the same marks, and tap “2-way zero” again.'));return}
+ S.inz={m,p:(IN.z2.p+pp)/2,r:(IN.z2.r+rr)/2};const gp=Math.abs(IN.z2.p-pp)/2,gr=Math.abs(IN.z2.r-rr)/2;IN.z2=null;save();IN.p=IN.r=IN.mp=IN.mr=0;
+ alert(L(`2/2 ✅ Μηδενίστηκε. Το έδαφος είχε κλίση περίπου ${f(gp,1)}° μπρος–πίσω και ${f(gr,1)}° πλάγια.`,`2/2 ✅ Zeroed. The ground sloped about ${f(gp,1)}° front–back and ${f(gr,1)}° sideways.`))}
+let AC=null;function beep(){if(S.snd===0)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.type='square';o.frequency.value=880;g.gain.value=.25;o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+.25)}catch(e){}}
+function inShow(){const r=document.getElementById('ir');if(!r)return;const Lm=inLim(),fr=Math.abs(IN.r)/Lm.side,fp=Math.abs(IN.p)/Lm.pitch,c=x=>x<.6?'#8fd1a8':x<.85?'#e8b86d':'#ff8a7a';
+ const p=document.getElementById('ip');
+ document.getElementById('irl').innerHTML=`${IN.on?(IN.r>0.5?L('γέρνει ΔΕΞΙΑ','leans RIGHT'):IN.r<-0.5?L('γέρνει ΑΡΙΣΤΕΡΑ','leans LEFT'):L('ίσιο','level'))+' · ':''}${L('όριο','limit')} <b>${Lm.side}°</b>`;
+ document.getElementById('ipl').innerHTML=`${IN.on?(IN.p>0.5?L('ΑΝΗΦΟΡΑ','UPHILL'):IN.p<-0.5?L('ΚΑΤΗΦΟΡΑ','DOWNHILL'):L('ίσιο','level'))+' · '+f(Math.tan(Math.abs(IN.p)*SR)*100)+'% · ':''}${L('όριο','limit')} <b>${Lm.pitch}°</b>`;
+ if(!IN.on)return;
+ r.textContent=f(Math.abs(IN.r),1)+'°';r.style.color=c(fr);p.textContent=f(Math.abs(IN.p),1)+'°';p.style.color=c(fp);
+ const cr=document.getElementById('crr'),cs=document.getElementById('crs');
+ if(cr)cr.setAttribute('transform',`rotate(${Math.max(-60,Math.min(60,IN.r))} 0 40)`);if(cs)cs.setAttribute('transform',`rotate(${Math.max(-60,Math.min(60,-IN.p))} 0 40)`);
+ document.getElementById('imax').innerHTML=`${L('Μέγιστα αυτής της διαδρομής','Peaks this run')}: ${L('πλευρική','side')} <b>${f(IN.mr,1)}°</b> · ${L('μπρος–πίσω','front–back')} <b>${f(IN.mp,1)}°</b>`;
+ const w=document.getElementById('iwarn'),hi=Math.max(fr,fp);
+ if(hi>=.85){w.className='r';w.innerHTML=fr>=fp?L('⚠️ ΚΟΝΤΑ ΣΤΟ ΟΡΙΟ ΠΛΕΥΡΙΚΗΣ ΚΛΙΣΗΣ · τιμόνι προς την κατηφόρα, λίγο γκάζι','⚠️ NEAR THE SIDE-SLOPE LIMIT · steer downhill, a little throttle'):L('⚠️ ΠΟΛΥ ΑΠΟΤΟΜΟ · ευθεία στην κλίση, low range, σταθερά','⚠️ VERY STEEP · straight on the slope, low range, steady');
+  if(Date.now()-IN.beep>1200){IN.beep=Date.now();beep();try{navigator.vibrate&&navigator.vibrate(200)}catch(e){}}}
+ else if(hi>=.6){w.className='';w.style.color='var(--yel)';w.textContent=L('🟡 Προσοχή: αργά, χωρίς απότομες κινήσεις.','🟡 Careful: slowly, no sudden moves.')}
+ else{w.className='';w.style.color='#8fd1a8';w.textContent=L('🟢 Μέσα στα όρια.','🟢 Within limits.')}}
+function drawCars(){const R=model(),q=x=>+S.items[x]||0,tent=q('rtts')||q('rtth'),rack=q('rack'),stuff=R.road>0;
+ const roofR=`${rack||stuff?'<rect x="-40" y="-52" width="80" height="6" rx="2" fill="#a8a29e"/>':''}${tent?'<rect x="-36" y="-70" width="72" height="18" rx="4" fill="#d97757"/>':stuff&&!rack?'<rect x="-30" y="-62" width="60" height="10" rx="3" fill="#d97757"/>':''}`;
+ const roofS=`${rack||stuff?'<rect x="-28" y="-46" width="74" height="6" rx="2" fill="#a8a29e"/>':''}${tent?'<rect x="-24" y="-64" width="66" height="18" rx="4" fill="#d97757"/>':''}`;
+ const a=document.getElementById('svr'),b=document.getElementById('svp');if(!a)return;
+ a.innerHTML=`<line x1="-78" y1="48" x2="78" y2="48" stroke="#3d3935" stroke-width="2"/><g id="crr"><rect x="-46" y="-40" width="92" height="56" rx="10" fill="#3a2a20" stroke="#d97757" stroke-width="3"/><rect x="-36" y="-32" width="72" height="22" rx="4" fill="#141312"/><rect x="-60" y="12" width="20" height="34" rx="5" fill="#f5f0e8"/><rect x="40" y="12" width="20" height="34" rx="5" fill="#f5f0e8"/>${roofR}<circle cx="0" cy="${(-R.h1*40/((R.H||1.9)/2)+40).toFixed(1)}" r="5" fill="#e8b86d"/></g>`;
+ b.innerHTML=`<line x1="-90" y1="48" x2="90" y2="48" stroke="#3d3935" stroke-width="2"/><g id="crs"><path d="M-70 22 L-70 -6 L-40 -8 L-25 -40 L46 -40 L56 -8 L74 -4 L74 22 Z" fill="#3a2a20" stroke="#d97757" stroke-width="3"/><rect x="-18" y="-35" width="54" height="20" rx="3" fill="#141312"/>${roofS}<circle cx="-45" cy="28" r="17" fill="#f5f0e8"/><circle cx="50" cy="28" r="17" fill="#f5f0e8"/><text x="66" y="-14" font-size="14" fill="#a8a29e">▶</text></g>`;
+ if(IN.on)inShow()}
+function inFull(){const c=document.getElementById('incard');if(c.classList.toggle('fs')){try{c.requestFullscreen&&c.requestFullscreen()}catch(e){}if(!IN.on)inGo()}else{try{document.fullscreenElement&&document.exitFullscreen()}catch(e){}}}
+document.addEventListener('visibilitychange',()=>{if(IN.on&&document.visibilityState==='visible')wake()});
+render();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js');
+</script>
+<script src="legal.js"></script>
+</body></html>
