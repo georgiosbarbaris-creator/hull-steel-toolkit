@@ -85,10 +85,10 @@ QX.forEach((q,i)=>q.id="x"+q.c+"_"+i);
 const ALLQ=Q.concat(QX);
 const SUBJ={
  naft:{name:"Ναυτιλία",icon:"⚓",calc:true,parts:[
-   {title:"Μέρος Α' – Βιβλίο Ναυτιλίας, κεφάλαια 1–9",ch:CHAPTERS.map(c=>({k:String(c.n),n:"Κεφ. "+c.n,num:c.n,t:c.t}))},
-   {title:"Μέρος Β' – Ζητήματα 8–16 (σελ. 23–53)",ch:CH_B.map(c=>({k:c.k,n:"Ζήτημα "+c.n.slice(1),num:c.n,t:c.t}))}]},
+   {title:"Βιβλίο Ναυτιλίας, κεφάλαια 1–9",ch:CHAPTERS.map(c=>({k:String(c.n),n:"Κεφ. "+c.n,num:c.n,t:c.t}))}]},
  dik:{name:"Ναυτικό Δίκαιο",icon:"⚖️",calc:false,parts:[
-   {title:"Ζητήματα 1–34",ch:CH_D.map(c=>({k:c.k,n:"Ζήτημα "+c.n,num:c.n,t:c.t}))}]}
+   {title:"Αρχείο 1 – Ζητήματα 1–34 (77 σελίδες)",ch:CH_D.map(c=>({k:c.k,n:"Ζήτημα "+c.n,num:c.n,t:c.t}))},
+   {title:"Αρχείο 2 (μικρό) – Ζητήματα 8–16 (σελ. 23–53)",ch:CH_B.map(c=>({k:c.k,n:"Αρχείο 2 · Ζήτημα "+c.n.slice(1),num:"Β"+c.n.slice(1),t:c.t}))}]}
 };
 const CH={}; for(const s in SUBJ) SUBJ[s].parts.forEach(p=>p.ch.forEach(c=>{c.s=s;CH[c.k]=c}));
 const chList=s=>SUBJ[s].parts.flatMap(p=>p.ch);
