@@ -1,0 +1,21 @@
+name: Build iOS (Επιβίωση 72+)
+# Ελέγχει ότι η εφαρμογή iOS χτίζεται. Υπογραφή/App Store: χρειάζεται Apple Developer account (βλ. native/README.md).
+on:
+  push:
+    paths: ['native/**', '.github/workflows/build-ios.yml']
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: brew install xcodegen
+      - run: cd native/ios && xcodegen generate
+      - name: Build για iOS Simulator (χωρίς υπογραφή)
+        run: |
+          cd native/ios
+          xcodebuild -project Survival72.xcodeproj -scheme Survival72 -configuration Debug \
+            -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build CODE_SIGNING_ALLOWED=NO build | tail -40
+          test -d build/Build/Products/Debug-iphonesimulator/Survival72.app
+          ls build/Build/Products/Debug-iphonesimulator/Survival72.app | head -30

@@ -6,3 +6,5 @@ dependencyResolutionManagement {
 rootProject.name = "HullSteelToolkit"
 include(":app")
 include(":thermo")
+include(":survivalapp")
+project(":survivalapp").projectDir = file("native/android")

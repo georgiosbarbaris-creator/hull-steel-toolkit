@@ -4,3 +4,6 @@ local.properties
 .idea/
 *.iml
 phone-check/
+native/ios/Survival72.xcodeproj/
+native/ios/build/
+*.jks

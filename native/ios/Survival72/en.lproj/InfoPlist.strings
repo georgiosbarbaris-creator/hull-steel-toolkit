@@ -1,0 +1,7 @@
+"CFBundleDisplayName" = "Survival 72+";
+"NSLocationWhenInUseUsageDescription" = "To send your location in an SOS, find shelters and water near you, and for the compass.";
+"NSCameraUsageDescription" = "To scan QR messages, for the torch/Morse and for photos of documents and the diary.";
+"NSMicrophoneUsageDescription" = "For messages over sound without a network and for recording evidence in danger.";
+"NSPhotoLibraryUsageDescription" = "To choose photos for documents and the diary.";
+"NSPhotoLibraryAddUsageDescription" = "To save photos and cards from the app.";
+"NSMotionUsageDescription" = "For the compass and direction.";
