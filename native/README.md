@@ -31,6 +31,17 @@
 - Σε Mac: `brew install xcodegen && cd native/ios && xcodegen generate && open Survival72.xcodeproj`.
 - Νέα έκδοση κελύφους: `MARKETING_VERSION` / `CURRENT_PROJECT_VERSION` στο `ios/project.yml`.
 
+## iOS → TestFlight (μετά την έγκριση της Apple)
+GitHub → Settings → Secrets and variables → Actions → New repository secret:
+| Name | Τι βάζεις |
+|---|---|
+| `APPLE_TEAM_ID` | Team ID (developer.apple.com/account → Membership details) |
+| `ASC_KEY_ID` | Key ID του API key (App Store Connect → Users and Access → Integrations) |
+| `ASC_ISSUER_ID` | Issuer ID (ίδια σελίδα) |
+| `ASC_KEY_P8` | όλο το περιεχόμενο του αρχείου `AuthKey_XXXX.p8` |
+
+Μετά: Actions → «iOS → TestFlight» → Run workflow. Σε ~15′ η έκδοση εμφανίζεται στο TestFlight.
+
 ## Ταυτότητα
 - Android `gr.barbaris.survival72` · iOS `gr.barbaris.survival72`
 - Όνομα: «Επιβίωση 72+» (ελληνικά) / «Survival 72+» (αγγλικά)

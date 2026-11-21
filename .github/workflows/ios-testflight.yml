@@ -1,0 +1,46 @@
+name: iOS → TestFlight (Επιβίωση 72+)
+# Χτίζει, υπογράφει και ανεβάζει την εφαρμογή iOS στο TestFlight.
+# Χρειάζεται τα GitHub secrets: APPLE_TEAM_ID, ASC_KEY_ID, ASC_ISSUER_ID, ASC_KEY_P8 (βλ. native/README.md).
+on:
+  workflow_dispatch:
+jobs:
+  testflight:
+    runs-on: macos-latest
+    env:
+      TEAM: ${{ secrets.APPLE_TEAM_ID }}
+      KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ISSUER: ${{ secrets.ASC_ISSUER_ID }}
+      P8: ${{ secrets.ASC_KEY_P8 }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Έλεγχος κλειδιών
+        run: |
+          for v in TEAM KEY_ID ISSUER P8; do [ -n "${!v}" ] || { echo "Λείπει το secret για $v – δες native/README.md"; exit 1; }; done
+      - run: brew install xcodegen
+      - name: Project + API key
+        run: |
+          cd native/ios && xcodegen generate
+          mkdir -p "$RUNNER_TEMP/keys"
+          printf '%s' "$P8" > "$RUNNER_TEMP/keys/AuthKey_$KEY_ID.p8"
+          sed -i '' "s/__TEAM_ID__/$TEAM/" ExportOptions.plist
+      - name: Archive (υπογραφή αυτόματα από την Apple)
+        run: |
+          cd native/ios
+          xcodebuild -project Survival72.xcodeproj -scheme Survival72 -configuration Release \
+            -destination 'generic/platform=iOS' -archivePath "$RUNNER_TEMP/Survival72.xcarchive" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$RUNNER_TEMP/keys/AuthKey_$KEY_ID.p8" \
+            -authenticationKeyID "$KEY_ID" -authenticationKeyIssuerID "$ISSUER" \
+            DEVELOPMENT_TEAM="$TEAM" CODE_SIGN_STYLE=Automatic \
+            CURRENT_PROJECT_VERSION=${{ github.run_number }} \
+            archive | tail -30
+      - name: Ανέβασμα στο TestFlight
+        run: |
+          cd native/ios
+          xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/Survival72.xcarchive" \
+            -exportOptionsPlist ExportOptions.plist -exportPath "$RUNNER_TEMP/export" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$RUNNER_TEMP/keys/AuthKey_$KEY_ID.p8" \
+            -authenticationKeyID "$KEY_ID" -authenticationKeyIssuerID "$ISSUER" | tail -30
+      - if: always()
+        run: rm -rf "$RUNNER_TEMP/keys"
