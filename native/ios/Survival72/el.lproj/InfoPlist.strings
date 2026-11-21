@@ -4,4 +4,4 @@
 "NSMicrophoneUsageDescription" = "Για μηνύματα μέσω ήχου χωρίς δίκτυο και για καταγραφή αποδείξεων σε κίνδυνο.";
 "NSPhotoLibraryUsageDescription" = "Για να διαλέξεις φωτογραφίες εγγράφων και ημερολογίου.";
 "NSPhotoLibraryAddUsageDescription" = "Για να αποθηκεύσεις φωτογραφίες και κάρτες της εφαρμογής.";
-"NSMotionUsageDescription" = "Για την πυξίδα και την κατεύθυνση.";
+"NSMotionUsageDescription" = "Για την πυξίδα, την κατεύθυνση και το βαρόμετρο (πρόγνωση καιρού).";

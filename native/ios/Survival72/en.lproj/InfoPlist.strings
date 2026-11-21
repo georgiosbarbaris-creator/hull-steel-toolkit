@@ -4,4 +4,4 @@
 "NSMicrophoneUsageDescription" = "For messages over sound without a network and for recording evidence in danger.";
 "NSPhotoLibraryUsageDescription" = "To choose photos for documents and the diary.";
 "NSPhotoLibraryAddUsageDescription" = "To save photos and cards from the app.";
-"NSMotionUsageDescription" = "For the compass and direction.";
+"NSMotionUsageDescription" = "For the compass, direction and the barometer (weather forecast).";

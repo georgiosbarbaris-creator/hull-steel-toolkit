@@ -12,7 +12,7 @@
 Άρα: **αλλαγή στο web → φτάνει αυτόματα και στις εφαρμογές.** Νέο build της εφαρμογής χρειάζεται μόνο για αλλαγές στο ίδιο το κέλυφος.
 
 ## Φάκελοι
-- `shared/shim.js` – γέφυρα σελίδας ↔ κινητού (κοινοποίηση, αποθήκευση PDF/.ics, εκτύπωση, οθόνη ανοιχτή, ανάγνωση στο Android). Μπαίνει **μόνο** μέσα στην εφαρμογή, ποτέ στο site.
+- `shared/shim.js` – γέφυρα σελίδας ↔ κινητού (κοινοποίηση, αποθήκευση PDF/.ics, εκτύπωση, οθόνη ανοιχτή, ανάγνωση στο Android, βαρόμετρο `nativeBaro.start()/stop()` → event `nativebaro` – από Android 1.2 / iOS 1.1). Μπαίνει **μόνο** μέσα στην εφαρμογή, ποτέ στο site.
 - `android/` – Android (Java, WebView). Module `:survivalapp` στο Gradle του repo.
 - `ios/` – iOS (Swift, WKWebView). Το Xcode project φτιάχνεται με XcodeGen από το `project.yml`.
 

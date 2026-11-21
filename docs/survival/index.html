@@ -2091,7 +2091,7 @@ function setLang(l){try{localStorage.setItem('sv_lang',JSON.stringify(l))}catch(
 const encURI=s=>encodeURIComponent(trS(String(s)));
 const $=s=>document.querySelector(s),M=$('#m');
 const esc=s=>UX(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const APP_V='49',APP_D='21/11/2026';
+const APP_V='50',APP_D='21/11/2026';
 const LS={g(k,d){try{const v=localStorage.getItem('sv_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},s(k,v){try{localStorage.setItem('sv_'+k,JSON.stringify(v))}catch(e){}}};
 let fs=LS.g('fs',19);document.documentElement.style.setProperty('--fs',fs+'px');
 function fz(d){fs=Math.max(15,Math.min(28,fs+d*2));LS.s('fs',fs);document.documentElement.style.setProperty('--fs',fs+'px')}
@@ -2729,11 +2729,11 @@ function wx(){T('Καιρός & Υψόμετρο');const L=LS.g('baro',[]);
  <button class="btn" onclick="go('a/w_weather')">📖 Σημάδια του καιρού χωρίς όργανα</button></div>`;
  startGeo();wxAlt();wxList()}
 function wxAdd(){const p=+$('#bp').value,h=+$('#bh').value||0;if(!(p>850&&p<1090)){alert('Γράψε πίεση σε hPa (π.χ. 1013.2).');return}LS.s('bh',h);
- const st=$('#bs').checked,q=st?qnh(p,h):p;const L=LS.g('baro',[]);L.push({t:Date.now(),p,h,q:+q.toFixed(1)});while(L.length>200)L.shift();LS.s('baro',L);$('#bp').value='';wxList()}
+ const st=$('#bs').checked,q=st?qnh(p,h):p;const L=LS.g('baro',[]);L.push({t:Date.now(),p,h,q:+q.toFixed(1)});while(L.length>500)L.shift();LS.s('baro',L);$('#bp').value='';wxList()}
 function wxDel(i){const L=LS.g('baro',[]);L.splice(i,1);LS.s('baro',L);wxList()}
 function wxList(){const L=LS.g('baro',[]),r=$('#wxr'),l=$('#wxl');if(!r)return;
  if(!L.length){r.innerHTML='<div class="muted" style="margin-top:8px">Καμία ένδειξη ακόμα. Κατέγραφε κάθε 1–3 ώρες για να φανεί η τάση.</div>';l.innerHTML='';return}
- const last=L[L.length-1];let ref=null;for(let i=L.length-2;i>=0;i--){if(last.t-L[i].t>=50*60000){ref=L[i];break}}
+ const last=L[L.length-1];let ref=null;for(let i=L.length-2;i>=0;i--){const dt=last.t-L[i].t;if(dt>6*3600000)break;if(dt>=50*60000){ref=L[i];if(dt>=3*3600000)break}}/* v50: η πιο κοντινή στις 3 ώρες */
  let h=`<div class="hd" style="font-size:2em;margin-top:8px">${last.q.toFixed(1)} hPa</div>`;
  if(ref){const hrs=(last.t-ref.t)/3600000,d3=(last.q-ref.q)/hrs*3,a=Math.abs(d3);
   const tr=a<=1?'Σταθερή':(d3<0?(a<=3.5?'Αργή πτώση':a<=6?'Γρήγορη πτώση':'Πολύ γρήγορη πτώση'):(a<=3.5?'Αργή άνοδος':a<=6?'Γρήγορη άνοδος':'Πολύ γρήγορη άνοδος'));
@@ -2748,7 +2748,7 @@ function wxList(){const L=LS.g('baro',[]),r=$('#wxr'),l=$('#wxl');if(!r)return;
  r.innerHTML=h;
  const sp=L.slice(-24);if(sp.length>1){const mn=Math.min(...sp.map(x=>x.q)),mx=Math.max(...sp.map(x=>x.q)),rg=Math.max(4,mx-mn),t0=sp[0].t,tr=Math.max(1,sp[sp.length-1].t-t0);
   l.innerHTML=`<svg viewBox="0 0 300 90" style="width:100%;background:#0a1522;border-radius:10px;margin:6px 0"><polyline fill="none" stroke="#fcbf49" stroke-width="2.5" points="${sp.map(x=>`${10+280*(x.t-t0)/tr},${80-70*(x.q-(mn+mx-rg)/2)/rg}`).join(' ')}"/><text x="6" y="12" font-size="10" fill="#a9b8c8">${mx.toFixed(1)}</text><text x="6" y="88" font-size="10" fill="#a9b8c8">${mn.toFixed(1)}</text></svg>`}
- l.innerHTML+=L.map((x,i)=>[x,i]).reverse().slice(0,12).map(([x,i])=>`<div class="wp"><b>${new Date(x.t).toLocaleString('el',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</b><span class="mono">${x.q.toFixed(1)}${x.q!==x.p?` <small class="muted">(${x.p} @${x.h}m)</small>`:''}</span><button class="btn" onclick="wxDel(${i})">🗑</button></div>`).join('')}
+ l.innerHTML+=L.map((x,i)=>[x,i]).reverse().slice(0,12).map(([x,i])=>`<div class="wp"><b>${new Date(x.t).toLocaleString(LANG==='en'?'en-GB':'el',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</b><span class="mono">${x.q.toFixed(1)}${x.q!==x.p?` <small class="muted">(${x.p} @${x.h}m)</small>`:''}</span><button class="btn" onclick="wxDel(${i})">🗑</button></div>`).join('')}
 function wxAlt(){const e=$('#alt');if(!e)return;if(!pos||pos.alt==null){if(pos)$('#alta').textContent='Το GPS δεν έδωσε ακόμα υψόμετρο – περίμενε λίγο σε ανοιχτό χώρο.';return}
  const a=pos.alt,acc=pos.altAcc;let s=LS.g('alt',null);
  if(!s)s={min:a,max:a,gain:0,last:a};else{s.min=Math.min(s.min,a);s.max=Math.max(s.max,a);if(acc==null||acc<25){const d=a-s.last;if(Math.abs(d)>=5){if(d>0)s.gain+=d;s.last=a}}}
@@ -4554,6 +4554,193 @@ function vPlay(){VS.play=!VS.play;vShow()}
 {const _fh=figH;figH=function(x){if(x&&x.vid&&window.__knApp)return vPlayer();return _fh(x)}}
 /* στη σελίδα ρυθμού ΚΑΡΠΑ: κουμπί «Δες πώς γίνεται» */
 {const _c=cprPage;cprPage=function(){_c();const b=M.querySelector('#mb');if(b)b.insertAdjacentHTML('afterend',`<button class="btn notr" id="cvbtn" style="width:100%;margin:8px 0" onclick="this.outerHTML=vPlayer()">🎬 ${L2('Δες πώς γίνεται (μικρό βίντεο)','See how it’s done (short video)')}</button>`)}}
+
+/* ===== v50: Βαρόμετρο κινητού (εφαρμογές iOS/Android) + Δελτίο καιρού + Θερμοκρασία χωρίς όργανα – © 2026 Γεώργιος Μπαρμπαρής ===== */
+const BR={on:false,v:null,err:'',watch:!!LS.g('bwatch',false),once:false,alarmT:0};
+const hasBaro=()=>!!window.nativeBaro;
+const onWx=()=>/^#?wx/.test(location.hash.slice(1)||'');
+function brStart(){if(!hasBaro())return;LS.s('bnat',1);if(!BR.on){BR.on=true;BR.err='';try{nativeBaro.start()}catch(e){}}}
+function brStop(){if(BR.on&&!BR.watch){BR.on=false;try{nativeBaro.stop()}catch(e){}}}
+function brH(){const i=$('#bh');const v=i&&i.value!==''?+i.value:+LS.g('bh',0);return isFinite(v)?v:0}
+document.addEventListener('nativebaro',e=>{const d=e.detail||{};
+ if(d.err){BR.err=d.err;BR.on=false;BR.once=false;brUI();return}
+ const v=+d.hPa;if(!(v>300&&v<1100))return;BR.err='';BR.v=v;brAuto(v);
+ if(BR.once&&!BR.watch&&!onWx()){BR.once=false;brStop()}
+ brUI()});
+/* αποθήκευση στο ιστορικό κάθε 10′ – το ίδιο ιστορικό με τις ενδείξεις που γράφεις με το χέρι */
+function brAuto(v){const L=LS.g('baro',[]),last=L[L.length-1],now=Date.now();
+ if(last&&now-last.t<10*60000)return;
+ const h=brH(),q=qnh(v,h);L.push({t:now,p:+v.toFixed(1),h,q:+q.toFixed(1),a:1});while(L.length>500)L.shift();LS.s('baro',L);
+ if($('#wxr'))wxList();brAlarm()}
+/* τάση: η ένδειξη που είναι πιο κοντά στις 3 ώρες πριν (όχι παλιότερη από 6 ώρες) */
+function brTrend(){const L=LS.g('baro',[]);if(L.length<2)return null;const last=L[L.length-1];let ref=null;
+ for(let i=L.length-2;i>=0;i--){const dt=last.t-L[i].t;if(dt>6*3600000)break;if(dt>=50*60000){ref=L[i];if(dt>=3*3600000)break}}
+ if(!ref)return null;const hrs=(last.t-ref.t)/3600000;return {last,d3:(last.q-ref.q)/hrs*3,hrs}}
+function brAlarm(){const tr=brTrend();if(!tr||tr.d3>-3||Date.now()-tr.last.t>3600000)return;
+ if(Date.now()-BR.alarmT<3600000)return;BR.alarmT=Date.now();try{navigator.vibrate&&navigator.vibrate([500,250,500,250,500])}catch(e){}}
+const brArrow=d=>d<=-3?'⬇️':d<-1?'↘️':d<=1?'➡️':d<3?'↗️':'⬆️';
+let brMode='';
+function brUI(){const b=$('#brbox');if(!b)return;
+ let mode;if(!window.NATIVE_APP)mode='web';else if(!hasBaro())mode='old';else if(BR.err)mode='e_'+BR.err;else if(BR.v==null)mode='wait';else mode='live';
+ if(mode!==brMode||!b.firstChild){brMode=mode;
+  if(mode==='web'){const and=/Android/i.test(navigator.userAgent);
+   b.innerHTML=`<div class="tip" style="margin-top:8px"><b>📱 ${L2('Αυτόματο βαρόμετρο: διαθέσιμο στην εφαρμογή iPhone / Android','Automatic barometer: available in the iPhone / Android app')}</b><br>${L2('Οι browsers (Safari, Chrome) δεν αφήνουν καμία σελίδα να διαβάσει τον αισθητήρα πίεσης. Η εφαρμογή «Επιβίωση 72+» τον διαβάζει μόνη της και βγάζει πρόγνωση.','Browsers (Safari, Chrome) do not let any web page read the pressure sensor. The «Survival 72+» app reads it by itself and gives a forecast.')}<br>${L2('Εδώ μπορείς να γράφεις ενδείξεις με το χέρι, πιο κάτω.','Here you can type readings by hand, below.')}</div>`+(and?`<a class="btn" style="display:block;text-align:center;text-decoration:none" href="https://github.com/georgiosbarbaris-creator/hull-steel-toolkit/releases/download/survival-latest/Epiviosi72.apk">⬇️ ${L2('Κατέβασε την εφαρμογή Android (δωρεάν)','Download the Android app (free)')}</a>`:'');return}
+  if(mode==='old'){b.innerHTML=`<div class="warn" style="font-weight:400">${L2('Ενημέρωσε την εφαρμογή (νέα έκδοση) για να διαβάζει το βαρόμετρο του κινητού. Μέχρι τότε γράψε ενδείξεις με το χέρι πιο κάτω.','Update the app (new version) so it can read the phone barometer. Until then, type readings by hand below.')}</div>`;return}
+  if(mode==='e_none'){b.innerHTML=`<div class="warn" style="font-weight:400">${L2('Αυτό το κινητό δεν έχει βαρόμετρο (αισθητήρα πίεσης). Γράψε ενδείξεις με το χέρι πιο κάτω – π.χ. από ρολόι, σταθμό ή VHF.','This phone has no barometer (pressure sensor). Type readings by hand below – e.g. from a watch, a station or VHF.')}</div>`;return}
+  if(mode==='e_denied'){b.innerHTML=`<div class="warn" style="font-weight:400">${L2('Χρειάζεται άδεια. Άνοιξε: Ρυθμίσεις → Επιβίωση 72+ → «Κίνηση & Γυμναστική» → ναι. Μετά πάτα «Ξεκίνα».','Permission needed. Open: Settings → Survival 72+ → «Motion & Fitness» → on. Then tap «Start».')}</div><button class="big org" onclick="BR.err='';brStart();brUI()">▶️ ${L2('Ξεκίνα','Start')}</button>`;return}
+  if(mode==='wait'){b.innerHTML=BR.on?`<div class="hd" style="font-size:1.6em;margin-top:8px">⏳</div><div class="muted" style="text-align:center">${L2('Διαβάζω τον αισθητήρα πίεσης…','Reading the pressure sensor…')}</div>`:`<div class="muted" style="margin-top:8px">${L2('Το κινητό σου έχει βαρόμετρο. Πάτα για να το διαβάσεις.','Your phone has a barometer. Tap to read it.')}</div><button class="big org" onclick="brStart();brUI()">▶️ ${L2('Διάβασε το βαρόμετρο','Read the barometer')}</button>`;return}
+  b.innerHTML=`<div style="text-align:center;margin-top:8px"><div class="muted">${L2('Πίεση στη θάλασσα (QNH)','Sea-level pressure (QNH)')}</div><div class="hd" id="brq">—</div>
+  <div class="muted" id="brf"></div><div id="brt" style="margin-top:6px"></div></div>
+  <button class="big ${BR.watch?'red':'grn'}" id="brw" onclick="brWatch()"></button>
+  <div class="muted" id="brwi"></div>`}
+ if(mode!=='live')return;
+ const h=brH(),q=qnh(BR.v,h);$('#brq').textContent=q.toFixed(1)+' hPa';
+ $('#brf').textContent=L2(`Στο σημείο σου (QFE): ${BR.v.toFixed(1)} hPa · υψόμετρο ${Math.round(h)} m`,`At your spot (QFE): ${BR.v.toFixed(1)} hPa · altitude ${Math.round(h)} m`);
+ const tr=brTrend(),t=$('#brt');
+ if(tr&&Date.now()-tr.last.t<2*3600000){const d=tr.d3;
+  t.innerHTML=`<b>${brArrow(d)} ${d>0?'+':''}${d.toFixed(1)} hPa / 3 ${L2('ώρες','hours')}</b>`+(d<=-3?`<div class="warn">⚠️ ${L2('Η πίεση πέφτει γρήγορα (πάνω από 3 hPa σε 3 ώρες). Έρχεται δυνατός άνεμος ή καταιγίδα. Ασφάλισε πράγματα και βρες καταφύγιο.','Pressure is falling fast (more than 3 hPa in 3 hours). Strong wind or a storm is coming. Secure things and find shelter.')}</div>`:'')}
+ else t.innerHTML=`<span class="muted">${L2('Η τάση φαίνεται μετά από 1 ώρα μετρήσεων. Γράφω μόνος μου κάθε 10 λεπτά, όσο η εφαρμογή είναι ανοιχτή.','The trend shows after 1 hour of readings. I record by myself every 10 minutes while the app is open.')}</span>`;
+ const w=$('#brw');w.textContent=BR.watch?'⏹️ '+L2('Σταμάτα τη βάρδια βαρόμετρου','Stop the barometer watch'):'🌙 '+L2('Βάρδια βαρόμετρου (όλη τη νύχτα)','Barometer watch (all night)');w.className='big '+(BR.watch?'red':'grn');
+ $('#brwi').innerHTML=BR.watch?L2('🟢 Η βάρδια τρέχει: η οθόνη μένει ανοιχτή και γράφω κάθε 10 λεπτά. Άφησε το κινητό στον φορτιστή, στο ίδιο μέρος.','🟢 The watch is running: the screen stays on and I record every 10 minutes. Leave the phone on the charger, in the same place.'):L2('Το κινητό μετράει μόνο όσο η εφαρμογή είναι ανοιχτή. Η «βάρδια» κρατάει την οθόνη ανοιχτή για να βλέπεις την τάση το πρωί.','The phone measures only while the app is open. The «watch» keeps the screen on so you see the trend in the morning.')}
+function brWatch(){BR.watch=!BR.watch;LS.s('bwatch',BR.watch);if(BR.watch){brStart();wake(1)}else{wakeRel();if(!onWx())brStop()}brUI()}
+/* η οθόνη μένει ανοιχτή όσο τρέχει η βάρδια – ακόμα κι αν άλλο εργαλείο ζητήσει να κλείσει */
+{const _wk=wake;wake=function(on){if(!on&&BR.watch)return _wk(1);return _wk(on)}}
+
+/* ---------- Δελτίο καιρού (Open-Meteo – δωρεάν, χωρίς λογαριασμό) ---------- */
+const WMO={0:['☀️','Καθαρός ουρανός','Clear sky'],1:['🌤️','Κυρίως καθαρός','Mainly clear'],2:['⛅','Λίγα σύννεφα','Partly cloudy'],3:['☁️','Συννεφιά','Overcast'],45:['🌫️','Ομίχλη','Fog'],48:['🌫️','Ομίχλη με πάχνη','Freezing fog'],51:['🌦️','Ψιχάλα','Light drizzle'],53:['🌦️','Ψιχάλα','Drizzle'],55:['🌧️','Πυκνή ψιχάλα','Dense drizzle'],56:['🧊','Παγωμένη ψιχάλα','Freezing drizzle'],57:['🧊','Παγωμένη ψιχάλα','Freezing drizzle'],61:['🌦️','Λίγη βροχή','Light rain'],63:['🌧️','Βροχή','Rain'],65:['🌧️','Δυνατή βροχή','Heavy rain'],66:['🧊','Παγωμένη βροχή','Freezing rain'],67:['🧊','Παγωμένη βροχή','Freezing rain'],71:['🌨️','Λίγο χιόνι','Light snow'],73:['🌨️','Χιόνι','Snow'],75:['❄️','Πυκνό χιόνι','Heavy snow'],77:['🌨️','Χιονόνερο','Snow grains'],80:['🌦️','Μπόρες','Rain showers'],81:['🌧️','Μπόρες','Rain showers'],82:['⛈️','Ισχυρές μπόρες','Violent showers'],85:['🌨️','Χιονόπτωση','Snow showers'],86:['❄️','Ισχυρή χιονόπτωση','Heavy snow showers'],95:['⛈️','Καταιγίδα','Thunderstorm'],96:['⛈️','Καταιγίδα με χαλάζι','Thunderstorm with hail'],99:['⛈️','Καταιγίδα με χαλάζι','Thunderstorm with hail']};
+const wmo=c=>{const x=WMO[c]||['🌡️','—','—'];return [x[0],L2(x[1],x[2])]};
+const bft=k=>{const i=[1,6,12,20,29,39,50,62,75,89,103,118].findIndex(v=>k<v);return i<0?12:i};
+const wdir=d=>L2(['Β','ΒΑ','Α','ΝΑ','Ν','ΝΔ','Δ','ΒΔ'],['N','NE','E','SE','S','SW','W','NW'])[Math.round(((d%360)+360)%360/45)%8];
+const DAYS=()=>L2(['Κυρ','Δευ','Τρί','Τετ','Πέμ','Παρ','Σάβ'],['Sun','Mon','Tue','Wed','Thu','Fri','Sat']);
+const r0=x=>Math.round(x);
+function wxfAge(o){const m=Math.round((Date.now()-o.t)/60000);if(m<2)return L2('μόλις τώρα','just now');if(m<60)return L2(`πριν ${m} λεπτά`,`${m} min ago`);const h=Math.round(m/60);if(h<48)return L2(`πριν ${h} ώρ${h===1?'α':'ες'}`,`${h} hour${h===1?'':'s'} ago`);return L2(`πριν ${Math.round(h/24)} μέρες`,`${Math.round(h/24)} days ago`)}
+const nowKey=()=>{const d=new Date(),p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:00`};
+async function wxfGet(lat,lon,name){
+ const u=`https://api.open-meteo.com/v1/forecast?latitude=${lat.toFixed(2)}&longitude=${lon.toFixed(2)}&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m,wind_direction_10m,wind_gusts_10m,pressure_msl&hourly=temperature_2m,precipitation_probability,weather_code,wind_speed_10m,wind_gusts_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,wind_speed_10m_max,wind_gusts_10m_max,wind_direction_10m_dominant&timezone=auto&forecast_days=7`;
+ const c=new AbortController(),tm=setTimeout(()=>c.abort(),15000);
+ try{const r=await fetch(u,{signal:c.signal,cache:'no-store'});if(!r.ok)throw new Error('http');const d=await r.json();if(!d||!d.daily)throw new Error('data');
+  const o={t:Date.now(),lat:+lat.toFixed(2),lon:+lon.toFixed(2),name:name||'',d};LS.s('wxf',o);return o}finally{clearTimeout(tm)}}
+function wxfPos(){return new Promise((ok,no)=>{if(pos&&pos.lat!=null&&Date.now()-(pos.t||0)<30*60000)return ok({lat:pos.lat,lon:pos.lon});if(!navigator.geolocation)return no(new Error('geo'));
+ navigator.geolocation.getCurrentPosition(p=>ok({lat:p.coords.latitude,lon:p.coords.longitude}),no,{enableHighAccuracy:false,timeout:15000,maximumAge:30*60000})})}
+let wxfBusy=false;
+async function wxfRefresh(useGps){if(wxfBusy)return;wxfBusy=true;LS.s('wxok',1);const s=$('#wxfs');
+ if(s)s.innerHTML=`<div class="muted" style="text-align:center">⏳ ${L2('Φέρνω το δελτίο…','Getting the forecast…')}</div>`;
+ try{let loc=LS.g('wxloc',null);
+  if(useGps||!loc||loc.gps){try{const p=await wxfPos();loc={lat:p.lat,lon:p.lon,name:'',gps:1};LS.s('wxloc',loc)}catch(e){if(!loc)throw new Error('nogps')}}
+  await wxfGet(loc.lat,loc.lon,loc.name)}
+ catch(e){wxfBusy=false;wxfShow(e&&e.message==='nogps'?L2('Δεν βρέθηκε η θέση σου. Άνοιξε την Τοποθεσία ή γράψε πόλη πιο κάτω.','Your location was not found. Turn on Location or type a town below.'):L2('Δεν φέρνω δελτίο τώρα (χωρίς internet;). Δείχνω το τελευταίο που έχω.','Cannot get a forecast now (no internet?). Showing the last one I have.'));return}
+ wxfBusy=false;wxfShow()}
+async function wxfFind(){const q=($('#wxq')||{}).value||'';if(q.trim().length<2)return;const l=$('#wxql');l.innerHTML=`<div class="muted">⏳</div>`;
+ try{const r=await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(q.trim())}&count=6&language=${LANG}&format=json`);const j=await r.json();const R=(j&&j.results)||[];
+  if(!R.length){l.innerHTML=`<div class="muted">${L2('Δεν βρέθηκε. Δοκίμασε άλλη γραφή.','Not found. Try another spelling.')}</div>`;return}
+  window.__wxR=R;l.innerHTML=R.map((x,i)=>`<button class="btn" style="display:block;width:100%;text-align:left;margin:4px 0" onclick="wxfPick(${i})">📍 ${esc(x.name)}<small class="muted"> ${esc([x.admin1,x.country].filter(Boolean).join(', '))}</small></button>`).join('')}
+ catch(e){l.innerHTML=`<div class="muted">${L2('Χρειάζεται internet για την αναζήτηση.','Search needs internet.')}</div>`}}
+function wxfPick(i){const x=(window.__wxR||[])[i];if(!x)return;LS.s('wxloc',{lat:x.latitude,lon:x.longitude,name:x.name,gps:0});$('#wxql').innerHTML='';$('#wxq').value='';wxfRefresh(false)}
+/* προειδοποιήσεις για σήμερα + 2 μέρες */
+function wxfWarn(d){const D=d.daily,W=[];if(!D)return W;
+ for(let i=0;i<Math.min(3,D.time.length);i++){const day=i===0?L2('Σήμερα','Today'):i===1?L2('Αύριο','Tomorrow'):DAYS()[new Date(D.time[i]+'T12:00').getDay()];
+  const g=D.wind_gusts_10m_max[i],p=D.precipitation_sum[i],c=D.weather_code[i],mn=D.temperature_2m_min[i],mx=D.temperature_2m_max[i];
+  if(c>=95)W.push(`⛈️ ${day}: ${L2('καταιγίδες. Μακριά από ψηλά σημεία, δέντρα και νερό.','thunderstorms. Stay away from high spots, trees and water.')}`);
+  if(g>=75)W.push(`🌬️ ${day}: ${L2(`πολύ δυνατός άνεμος (ριπές ${r0(g)} km/h). Ασφάλισε ό,τι πετάει. Όχι θάλασσα, όχι βουνό.`,`very strong wind (gusts ${r0(g)} km/h). Secure loose things. No sea, no mountain.`)}`);
+  else if(g>=55)W.push(`💨 ${day}: ${L2(`δυνατός άνεμος (ριπές ${r0(g)} km/h).`,`strong wind (gusts ${r0(g)} km/h).`)}`);
+  if(p>=30)W.push(`🌊 ${day}: ${L2(`πολλή βροχή (${r0(p)} mm). Κίνδυνος πλημμύρας – μην περνάς ρέματα και πλημμυρισμένους δρόμους.`,`a lot of rain (${r0(p)} mm). Flood risk – do not cross streams or flooded roads.`)}`);
+  if([71,73,75,77,85,86].includes(c))W.push(`❄️ ${day}: ${L2('χιόνι. Αλυσίδες στο αυτοκίνητο, ζεστά ρούχα, μην ξεκινάς χωρίς λόγο.','snow. Chains in the car, warm clothes, do not travel without reason.')}`);
+  if(mn<=0)W.push(`🧊 ${day}: ${L2(`παγετός (${r0(mn)}°). Πάγος στους δρόμους. Προστάτεψε σωλήνες, ζώα και φυτά.`,`frost (${r0(mn)}°). Ice on the roads. Protect pipes, animals and plants.`)}`);
+  if(mx>=37)W.push(`🥵 ${day}: ${L2(`καύσωνας (${r0(mx)}°). Νερό, σκιά, όχι κόπος 12:00–17:00. Πρόσεχε ηλικιωμένους και παιδιά.`,`heatwave (${r0(mx)}°). Water, shade, no hard work 12:00–17:00. Watch the elderly and children.`)}`)}
+ return W}
+function wxfNow(o){const d=o.d,H=d.hourly;if(Date.now()-o.t<90*60000&&d.current)return {T:d.current.temperature_2m,F:d.current.apparent_temperature,C:d.current.weather_code,WS:d.current.wind_speed_10m,WD:d.current.wind_direction_10m,G:d.current.wind_gusts_10m,RH:d.current.relative_humidity_2m,P:d.current.pressure_msl,fc:0};
+ if(!H)return null;const k=nowKey();let i=H.time.findIndex(t=>t>=k);if(i<0)return null;return {T:H.temperature_2m[i],C:H.weather_code[i],WS:H.wind_speed_10m[i],G:H.wind_gusts_10m[i],fc:1}}
+function wxfShow(msg){const s=$('#wxfs');if(!s)return;const o=LS.g('wxf',null);
+ const ctl=`<div class="tools" style="justify-content:center;margin-top:8px"><button class="btn" onclick="wxfRefresh(false)">↻ ${L2('Ανανέωση','Refresh')}</button><button class="btn" onclick="wxfRefresh(true)">📍 ${L2('Η θέση μου τώρα','My location now')}</button></div>
+ <div style="display:flex;gap:6px;margin-top:6px"><input id="wxq" placeholder="${L2('ή γράψε πόλη / χωριό…','or type a town / village…')}" onkeydown="if(event.key==='Enter')wxfFind()"><button class="btn" onclick="wxfFind()">🔎</button></div><div id="wxql"></div>`;
+ if(!LS.g('wxok',0)&&!o){s.innerHTML=`<div class="muted">${L2('Πρόγνωση για 7 μέρες στη θέση σου: θερμοκρασία, βροχή, άνεμος και προειδοποιήσεις.','7-day forecast at your location: temperature, rain, wind and warnings.')}</div>
+  <button class="big org" style="margin-top:8px" onclick="wxfRefresh(true)">🌦️ ${L2('Δείξε το δελτίο καιρού','Show the weather forecast')}</button>
+  <div style="display:flex;gap:6px;margin-top:6px"><input id="wxq" placeholder="${L2('ή γράψε πόλη / χωριό…','or type a town / village…')}" onkeydown="if(event.key==='Enter')wxfFind()"><button class="btn" onclick="wxfFind()">🔎</button></div><div id="wxql"></div>
+  <div class="muted" style="margin-top:6px">${L2('Χρειάζεται internet. Στέλνει μόνο τη θέση (στρογγυλεμένη, περίπου 1 km) στην υπηρεσία καιρού Open-Meteo. Τίποτε άλλο. Το δελτίο μένει στο κινητό για όταν δεν έχεις internet.','Needs internet. It sends only the location (rounded, about 1 km) to the Open-Meteo weather service. Nothing else. The forecast stays on the phone for when you have no internet.')}</div>`;return}
+ if(!o){s.innerHTML=(msg?`<div class="warn" style="font-weight:400">${msg}</div>`:'')+ctl;return}
+ const d=o.d,D=d.daily,n=wxfNow(o),old=Date.now()-o.t>6*3600000;let h='';
+ if(msg)h+=`<div class="warn" style="font-weight:400">${msg}</div>`;
+ h+=`<div class="muted" style="text-align:center">📍 ${o.name?esc(o.name):L2('Η θέση σου','Your location')} <span style="opacity:.7">(${o.lat.toFixed(2)}, ${o.lon.toFixed(2)})</span> · ${L2('ενημέρωση','updated')} ${wxfAge(o)}</div>`;
+ if(old)h+=`<div class="warn" style="font-weight:400">${L2('Παλιό δελτίο. Ανανέωσέ το όταν βρεις internet.','Old forecast. Refresh it when you find internet.')}</div>`;
+ if(n){const w=wmo(n.C);h+=`<div class="hd" style="margin-top:4px">${w[0]} ${r0(n.T)}°</div><div style="text-align:center"><b>${w[1]}</b>${n.fc?` <span class="muted">(${L2('πρόγνωση για τώρα','forecast for now')})</span>`:''}</div>
+  <div style="text-align:center;margin-top:4px">💨 ${r0(n.WS)} km/h · ${bft(n.WS)} Bft${n.WD!=null?' '+wdir(n.WD):''} · ${L2('ριπές','gusts')} ${r0(n.G)}${n.F!=null?`<br>🌡️ ${L2('Αισθητή','Feels like')} ${r0(n.F)}° · 💧 ${r0(n.RH)}% · ${r0(n.P)} hPa`:''}</div>`;
+  if(n.P!=null&&BR.v!=null){const q=qnh(BR.v,brH());h+=`<div class="muted" style="text-align:center">${L2('Το βαρόμετρό σου','Your barometer')}: ${q.toFixed(1)} hPa${Math.abs(q-n.P)>4?' – '+L2('μεγάλη διαφορά: έλεγξε το υψόμετρο πιο κάτω','big difference: check the altitude below'):''}</div>`}}
+ const W=wxfWarn(d);if(W.length)h+=`<div class="warn">${W.map(x=>`<div style="margin:3px 0">${x}</div>`).join('')}</div>`;
+ const H=d.hourly;if(H){const k=nowKey();let i0=H.time.findIndex(t=>t>=k);if(i0>=0){let st='';for(let i=i0;i<Math.min(H.time.length,i0+25);i+=3){const w=wmo(H.weather_code[i]);
+   st+=`<div style="min-width:62px;text-align:center;padding:6px 4px;border-right:1px solid var(--line)"><div class="muted">${H.time[i].slice(11,16)}</div><div style="font-size:1.5em">${w[0]}</div><b>${r0(H.temperature_2m[i])}°</b><div class="muted">💧${H.precipitation_probability[i]??'–'}%</div><div class="muted">💨${bft(H.wind_speed_10m[i])}</div></div>`}
+  h+=`<div style="margin-top:10px"><b>${L2('Επόμενες 24 ώρες','Next 24 hours')}</b></div><div style="display:flex;overflow-x:auto;background:#0a1522;border-radius:12px;margin-top:4px">${st}</div>`}}
+ h+=`<div style="margin-top:10px"><b>${L2('7 μέρες','7 days')}</b></div>`;
+ h+=D.time.map((t,i)=>{const w=wmo(D.weather_code[i]),dn=i===0?L2('Σήμερα','Today'):DAYS()[new Date(t+'T12:00').getDay()]+' '+t.slice(8,10);
+  return `<div class="wp" style="gap:6px"><b style="min-width:62px">${dn}</b><span style="font-size:1.4em">${w[0]}</span><span style="flex:1"><b>${r0(D.temperature_2m_min[i])}° / ${r0(D.temperature_2m_max[i])}°</b><br><small class="muted">💧 ${r0(D.precipitation_sum[i])} mm${D.precipitation_probability_max[i]!=null?' ('+D.precipitation_probability_max[i]+'%)':''} · 💨 ${bft(D.wind_speed_10m_max[i])} Bft ${wdir(D.wind_direction_10m_dominant[i])}</small></span></div>`}).join('');
+ h+=`<div class="muted" style="margin-top:6px">${L2('Πρόγνωση υπολογιστή (Open-Meteo.com, CC BY 4.0). Για επίσημες προειδοποιήσεις: ΕΜΥ και μηνύματα 112. Ο άνεμος σε Bft (Μποφόρ).','Computer forecast (Open-Meteo.com, CC BY 4.0). For official warnings: your national weather service and 112 alerts. Wind in Bft (Beaufort).')}</div>`;
+ s.innerHTML=h+ctl}
+
+/* ---------- Θερμοκρασία χωρίς όργανα ---------- */
+function tempxSvg(k){const W=(b)=>`<svg viewBox="0 0 320 150" style="width:100%;max-width:440px;display:block;margin:6px auto;background:${IC.bg};border-radius:12px">${b}</svg>`;let h='';
+ if(k==='cricket'){h+=`<g transform="translate(40,70)"><ellipse cx="40" cy="20" rx="42" ry="14" fill="${IC.wd}"/><circle cx="-2" cy="16" r="12" fill="${IC.gd}"/><path d="M-10,10 Q-40,-30 -20,-50" stroke="${IC.gd}" stroke-width="2" fill="none"/><path d="M-6,8 Q-20,-40 10,-55" stroke="${IC.gd}" stroke-width="2" fill="none"/><path d="M60,22 L95,-10 L100,30" stroke="${IC.gd}" stroke-width="5" fill="none" stroke-linejoin="round"/><path d="M30,30 L20,50 M50,30 L58,50" stroke="${IC.gd}" stroke-width="3"/>
+  <path d="M70,-30 q8,-8 16,0 M78,-42 q14,-12 28,0" stroke="${IC.yl}" stroke-width="3" fill="none"/></g>`;
+  h+=iClock(196,50,20)+iT(196,90,'25″',{b:1,s:16,c:IC.yl});
+  h+=`<rect x="232" y="30" width="80" height="80" rx="10" fill="${IC.sn}"/>`+iT(272,58,'N ÷ 3',{b:1,s:16,c:IC.dk})+iT(272,80,'+ 4',{b:1,s:16,c:IC.dk})+iT(272,102,'= °C',{b:1,s:16,c:IC.rd});
+  h+=iT(160,140,L2('μέτρα τα τιτιβίσματα σε 25 δευτερόλεπτα','count the chirps in 25 seconds'),{s:12})}
+ if(k==='breath'){h+=`<circle cx="80" cy="70" r="34" fill="${IC.sk2}"/><circle cx="92" cy="62" r="4" fill="${IC.dk}"/><path d="M50,46 q30,-30 62,-4" fill="${IC.rd}"/><rect x="46" y="44" width="70" height="8" rx="4" fill="${IC.rd}"/><ellipse cx="114" cy="80" rx="5" ry="4" fill="${IC.dk}"/>
+  <g fill="${IC.sn}" opacity=".85"><circle cx="140" cy="78" r="9"/><circle cx="158" cy="72" r="12"/><circle cx="180" cy="76" r="14"/><circle cx="200" cy="70" r="11"/></g>`;
+  h+=`<rect x="226" y="40" width="84" height="60" rx="10" fill="${IC.wt}"/>`+iT(268,68,L2('κάτω από','below'),{s:12})+iT(268,90,'~7 °C',{b:1,s:18,c:IC.sn})+iT(160,140,L2('βλέπεις την ανάσα σου σαν αχνό','you see your breath as a mist'),{s:12})}
+ if(k==='frost'){h+=`<rect x="0" y="100" width="320" height="50" fill="${IC.gn}" opacity=".6"/>`;for(let i=0;i<22;i++){const x=10+i*14;h+=`<path d="M${x},112 l-4,-26 M${x},112 l5,-22" stroke="${IC.sn}" stroke-width="2.5"/>`}
+  const star=(x,y,r)=>[0,60,120].map(a=>{const c=Math.cos(a*Math.PI/180)*r,s=Math.sin(a*Math.PI/180)*r;return `<path d="M${x-c},${y-s} L${x+c},${y+s}" stroke="${IC.sn}" stroke-width="3" stroke-linecap="round"/>`}).join('');
+  h+=star(60,44,18)+star(120,30,12)+`<circle cx="270" cy="34" r="16" fill="${IC.sn}"/>`+`<g fill="${IC.yl}">${[0,1,2,3,4].map(i=>`<circle cx="${200+i*14}" cy="${20+(i%2)*8}" r="1.8"/>`).join('')}</g>`;
+  h+=`<rect x="160" y="54" width="96" height="40" rx="10" fill="${IC.wt}"/>`+iT(208,80,'≤ 0 °C',{b:1,s:18,c:IC.sn})+iT(160,144,L2('πάχνη στο γρασίδι = παγωνιά στο έδαφος','frost on the grass = freezing at the ground'),{s:12,c:IC.dk,b:1})}
+ if(k==='bee'){h+=`<g transform="translate(70,70)"><ellipse cx="0" cy="0" rx="30" ry="20" fill="${IC.yl}"/><rect x="-12" y="-20" width="8" height="40" fill="${IC.dk}"/><rect x="6" y="-19" width="8" height="38" fill="${IC.dk}"/><circle cx="-34" cy="-2" r="12" fill="${IC.dk}"/><ellipse cx="-2" cy="-30" rx="16" ry="11" fill="${IC.sn}" opacity=".8"/><ellipse cx="16" cy="-28" rx="13" ry="9" fill="${IC.sn}" opacity=".8"/></g>`;
+  h+=`<rect x="150" y="34" width="150" height="70" rx="10" fill="${IC.sk}"/>`+iT(225,62,L2('δεν πετούν κάτω από','do not fly below'),{s:12})+iT(225,90,'~10–12 °C',{b:1,s:18,c:IC.yl})+iT(160,140,L2('μέλισσες στα λουλούδια = πάνω από ~12 °C','bees on flowers = above ~12 °C'),{s:12})}
+ if(k==='oil'){h+=`<path d="M70,30 h24 v16 q20,10 20,30 v52 q0,8 -8,8 h-48 q-8,0 -8,-8 v-52 q0,-20 20,-30 Z" fill="${IC.sn}" opacity=".25" stroke="${IC.sn}" stroke-width="2"/><rect x="58" y="78" width="48" height="56" rx="4" fill="${IC.yl}" opacity=".95"/><rect x="58" y="108" width="48" height="26" rx="4" fill="${IC.sn}" opacity=".85"/>`;
+  h+=`<rect x="150" y="30" width="160" height="44" rx="10" fill="${IC.sk}"/>`+iT(230,57,L2('θολώνει: κάτω από ~10 °C','turns cloudy: below ~10 °C'),{s:12,b:1});
+  h+=`<rect x="150" y="84" width="160" height="44" rx="10" fill="${IC.wt}"/>`+iT(230,111,L2('πήζει: κοντά στους ~4 °C','goes solid: near ~4 °C'),{s:12,b:1,c:IC.sn})}
+ if(k==='snow'){h+=`<rect x="0" y="80" width="320" height="70" fill="${IC.sn}"/>`;h+=`<path d="M60,60 q20,-12 40,0 l6,24 h-52 Z" fill="${IC.dk}"/><ellipse cx="80" cy="96" rx="26" ry="7" fill="${IC.gr}"/>`;
+  h+=iT(150,52,'«κρρρτς»',{b:1,s:18,c:IC.yl,a:'start'});
+  h+=`<rect x="150" y="96" width="160" height="40" rx="10" fill="${IC.wt}"/>`+iT(230,121,L2('τρίζει: κάτω από ~−10 °C','squeaks: below ~−10 °C'),{s:13,b:1,c:IC.sn})}
+ return W(h)}
+function tempx(){T('🦗 '+L2('Θερμοκρασία χωρίς όργανα','Temperature without instruments'));
+ const S=(k,t,steps)=>`<div class="box"><b>${t}</b>${tempxSvg(k)}${steps.map(x=>`<div class="li">${x}</div>`).join('')}</div>`;
+ M.innerHTML=`<div class="notr"><div class="tip">${L2('Κανένα κινητό δεν έχει θερμόμετρο για τον αέρα. Η «θερμοκρασία μπαταρίας» δείχνει πόσο ζεσταίνεται το κινητό, όχι ο καιρός. Όμως η φύση σού λέει τη θερμοκρασία – όπως τη διάβαζαν οι παππούδες μας.','No phone has a thermometer for the air. «Battery temperature» shows how warm the phone is, not the weather. But nature tells you the temperature – the way our grandparents read it.')}</div>
+ ${S('cricket','① '+L2('Τα τριζόνια – το ζωντανό θερμόμετρο','Crickets – the living thermometer'),[L2('Το βράδυ, άκου ένα τριζόνι.','In the evening, listen to one cricket.'),L2('Μέτρα πόσα «τρι» κάνει σε 25 δευτερόλεπτα.','Count how many «chirps» it makes in 25 seconds.'),L2('Διαίρεσε με 3 και πρόσθεσε 4. Αυτοί είναι οι βαθμοί °C.','Divide by 3 and add 4. That is degrees °C.'),L2('Παράδειγμα: 54 τιτιβίσματα → 54 ÷ 3 = 18 → 18 + 4 = <b>22 °C</b>.','Example: 54 chirps → 54 ÷ 3 = 18 → 18 + 4 = <b>22 °C</b>.'),L2('Κάτω από ~10 °C τα τριζόνια σωπαίνουν. Η μέτρηση είναι περίπου (±2 °C).','Below ~10 °C crickets go silent. The result is approximate (±2 °C).')])}
+ ${S('breath','② '+L2('Η ανάσα σου','Your breath'),[L2('Αν βλέπεις την ανάσα σου σαν αχνό, ο αέρας είναι περίπου κάτω από 7 °C.','If you see your breath as a mist, the air is roughly below 7 °C.'),L2('Με υγρασία φαίνεται και λίγο πιο πάνω. Με ξηρό αέρα, μόνο σε πιο κρύο.','In humid air it shows a bit higher. In dry air, only when colder.')])}
+ ${S('frost','③ '+L2('Πάχνη και δροσιά','Frost and dew'),[L2('Άσπρη πάχνη στο γρασίδι ή στο τζάμι του αυτοκινήτου: το έδαφος έπεσε στους 0 °C ή πιο κάτω.','White frost on the grass or the car window: the ground fell to 0 °C or lower.'),L2('Ο αέρας στο ύψος σου μπορεί να είναι λίγο πιο ζεστός (+1 έως +3 °C).','The air at your height may be a little warmer (+1 to +3 °C).'),L2('Νερό σε δοχείο έξω έγινε πάγος: σίγουρα κάτω από 0 °C.','Water in a pot outside turned to ice: surely below 0 °C.'),L2('Δροσιά ή πάχνη το πρωί = νύχτα καθαρή και χωρίς αέρα. Συνήθως ακολουθεί καλή μέρα.','Dew or frost in the morning = a clear, calm night. A fair day usually follows.')])}
+ ${S('bee','④ '+L2('Μέλισσες και έντομα','Bees and insects'),[L2('Μέλισσες πετούν στα λουλούδια: ο αέρας είναι πάνω από ~12 °C.','Bees flying to flowers: the air is above ~12 °C.'),L2('Καθόλου έντομα μέρα με ήλιο: μάλλον κάτω από ~10 °C.','No insects on a sunny day: probably below ~10 °C.'),L2('Μύγες και κουνούπια παντού: ζέστη, συνήθως πάνω από 20 °C.','Flies and mosquitoes everywhere: warm, usually above 20 °C.')])}
+ ${S('oil','⑤ '+L2('Το λάδι της κουζίνας','The kitchen olive oil'),[L2('Άφησε λίγο ελαιόλαδο σε διάφανο μπουκάλι έξω όλη τη νύχτα.','Leave a little olive oil in a clear bottle outside all night.'),L2('Θόλωσε: κάτω από ~10 °C. Έπηξε (σαν βούτυρο): κοντά ή κάτω από ~4 °C.','Cloudy: below ~10 °C. Solid (like butter): near or below ~4 °C.'),L2('Το λάδι δεν χαλάει – στη ζέστη ξαναγίνεται διάφανο.','The oil does not spoil – in the warmth it turns clear again.')])}
+ ${S('snow','⑥ '+L2('Το χιόνι κάτω από τα πόδια','The snow under your feet'),[L2('Χιόνι υγρό που κολλάει και κάνει μπάλες: γύρω στους 0 °C.','Wet snow that sticks and makes snowballs: around 0 °C.'),L2('Χιόνι σαν πούδρα που δεν κολλάει: κάτω από ~−5 °C.','Powder snow that does not stick: below ~−5 °C.'),L2('Τρίζει δυνατά όταν πατάς: πολύ κρύο, κάτω από ~−10 °C.','Squeaks loudly when you step: very cold, below ~−10 °C.')])}
+ <div class="box"><b>🌬️ ${L2('Ο αέρας κάνει το κρύο χειρότερο','Wind makes the cold worse')}</b>
+ <div class="li">${L2('Στους 0 °C με άνεμο 30 km/h, το σώμα νιώθει περίπου −6 °C.','At 0 °C with a 30 km/h wind, the body feels about −6 °C.')}</div>
+ <div class="li">${L2('Βρεγμένα ρούχα + αέρας = χάνεις ζέστη πολύ γρήγορα, ακόμα και στους +10 °C.','Wet clothes + wind = you lose heat very fast, even at +10 °C.')}</div>
+ <div class="warn">${L2('Τρέμουλο, μπερδεμένη ομιλία, αδέξια χέρια = αρχή υποθερμίας. Στεγνά ρούχα, κάλυψη από τον αέρα, ζεστό ρόφημα (όχι αλκοόλ). Αν χειροτερεύει: 112.','Shivering, slurred speech, clumsy hands = start of hypothermia. Dry clothes, shelter from the wind, a warm drink (no alcohol). If it gets worse: 112.')}</div></div>
+ <div class="muted">${L2('Όλα είναι εκτιμήσεις από τη φύση, όχι ακριβείς μετρήσεις. Με internet, το «Δελτίο καιρού» δίνει τη θερμοκρασία της περιοχής σου.','These are all estimates from nature, not exact measurements. With internet, the «Weather forecast» gives the temperature in your area.')}</div>
+ <button class="btn" style="margin-top:8px" onclick="go('wx')">🌦️ ${L2('Δελτίο καιρού & Βαρόμετρο','Weather forecast & Barometer')}</button></div>`}
+
+/* ---------- σελίδα Καιρός: δελτίο πάνω-πάνω, βαρόμετρο, μετά υψόμετρο ---------- */
+{const _wx=wx;wx=function(){_wx();
+ const bx=M.querySelectorAll(':scope>.box');if(bx.length>1)M.insertBefore(bx[1],bx[0]);
+ M.insertAdjacentHTML('afterbegin',`<div class="box notr"><b>🌦️ ${L2('Δελτίο καιρού','Weather forecast')}</b><div id="wxfs"></div></div>`);
+ const wn=[...M.querySelectorAll('.warn')].find(x=>/Safari|Chrome/.test(x.textContent));if(wn)wn.outerHTML=`<div id="brbox" class="notr"></div>`;
+ const bh=$('#bh');if(bh)bh.addEventListener('change',()=>{LS.s('bh',+bh.value||0);brUI()});
+ const sg=M.querySelector(`button[onclick="go('a/w_weather')"]`);if(sg)sg.insertAdjacentHTML('afterend',`<button class="btn notr" style="margin-left:6px" onclick="go('tempx')">🦗 ${L2('Θερμοκρασία χωρίς όργανα','Temperature without instruments')}</button>`);
+ brMode='';wxfShow();brUI();
+ if(hasBaro()&&(LS.g('bnat',0)||BR.watch))brStart();
+ const o=LS.g('wxf',null);if(LS.g('wxok',0)&&navigator.onLine&&(!o||Date.now()-o.t>30*60000))wxfRefresh(false)}}
+{const _r=render;render=function(r){const a=(r||'').split('/')[0];if(a!=='wx'&&!BR.watch)brStop();if(a==='tempx')return tempx();return _r(r)}}
+/* αρχική: γραμμή καιρού κάτω από το κόκκινο κουμπί */
+function wxStrip(){const o=LS.g('wxf',null);let t='',warn=0;
+ if(o){const n=wxfNow(o),D=o.d.daily;warn=wxfWarn(o.d).length;if(n){const w=wmo(n.C);t+=`${w[0]} <b>${r0(n.T)}°</b> ${o.name?esc(o.name):''}`}
+  if(D&&D.time.length>1){const w=wmo(D.weather_code[1]);t+=` · ${L2('Αύριο','Tomorrow')} ${w[0]} ${r0(D.temperature_2m_min[1])}°/${r0(D.temperature_2m_max[1])}°`}
+  if(Date.now()-o.t>3*3600000)t+=` <small class="muted">(${wxfAge(o)})</small>`}
+ else t=`🌦️ <b>${L2('Δελτίο καιρού','Weather forecast')}</b> <small class="muted">${L2('– πάτα για να το δεις','– tap to see it')}</small>`;
+ const L=LS.g('baro',[]),last=L[L.length-1];if(last&&Date.now()-last.t<3*3600000){const tr=brTrend();t+=` · ⏲️ ${r0(last.q)} hPa${tr?' '+brArrow(tr.d3):''}`;if(tr&&tr.d3<=-3)warn++}
+ if(warn)t+=`<div style="color:#ffb3b3;font-weight:700;margin-top:2px">⚠️ ${L2(`${warn} ${warn>1?'προειδοποιήσεις':'προειδοποίηση'} – πάτα`,`${warn} warning${warn>1?'s':''} – tap`)}</div>`;
+ return `<button id="wxst" class="btn notr" onclick="go('wx')" style="display:block;width:100%;text-align:left;margin:8px 0;${warn?'border-color:var(--red)':''}">${t}</button>`}
+{const _h=home;home=function(){_h();
+ const red=M.querySelector(`button[onclick="go('cat/now')"]`);if(red)red.insertAdjacentHTML('afterend',wxStrip());
+ const sm=M.querySelector(`.tile[onclick="go('wx')"] small`);if(sm){sm.textContent=L2('δελτίο, βαρόμετρο, ύψος','forecast, barometer, altitude');sm.classList.add('notr')}
+ const o=LS.g('wxf',null);if(LS.g('wxok',0)&&navigator.onLine&&LS.g('wxloc',null)&&(!o||Date.now()-o.t>60*60000)){const l=LS.g('wxloc',null);
+  wxfGet(l.lat,l.lon,l.name).then(()=>{const s=$('#wxst');if(s)s.outerHTML=wxStrip()}).catch(()=>{})}}}
+/* στην εκκίνηση: βάρδια που έτρεχε συνεχίζει · αλλιώς μία γρήγορη μέτρηση για το ιστορικό */
+if(hasBaro()){if(BR.watch){brStart();wake(1)}else if(LS.g('bnat',0)){BR.once=true;brStart()}}
 
 if(rec){startGeo();wake(1)}/* v32: η οθόνη μένει ανοιχτή και όταν ξανανοίγεις την εφαρμογή ενώ καταγράφει */
 setTimeout(grdBar,300);

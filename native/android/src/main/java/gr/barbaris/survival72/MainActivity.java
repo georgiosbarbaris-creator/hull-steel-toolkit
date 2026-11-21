@@ -7,6 +7,10 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -393,6 +397,7 @@ public class MainActivity extends Activity {
                             else getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                             break;
                         case "tts": speak(a.optString("id"), a.optString("text"), a.optString("lang"), a.optDouble("rate", 1)); break;
+                        case "baro": baro(a.optBoolean("on")); break;
                         case "ttsStop": ttsQueue.clear(); if (tts != null) tts.stop(); break;
                     }
                 } catch (Exception ignored) {}
@@ -535,6 +540,41 @@ public class MainActivity extends Activity {
     private void done(String id, boolean err) {
         runOnUiThread(() -> web.evaluateJavascript("window.__ttsEnd&&__ttsEnd(" + JSONObject.quote(id) + "," + err + ")", null));
     }
+
+
+    // ------------------------------------------------------------------ βαρόμετρο (Sensor.TYPE_PRESSURE, hPa)
+
+    private SensorManager sm;
+    private boolean baroWanted;
+    private double baroSum; private int baroN; private long baroLast;
+    private final SensorEventListener baroL = new SensorEventListener() {
+        @Override public void onSensorChanged(SensorEvent e) {
+            baroSum += e.values[0]; baroN++;
+            long now = System.currentTimeMillis();
+            if (now - baroLast >= 2000 && baroN > 0) {   // μέσος όρος κάθε 2″ – λιγότερος θόρυβος
+                double v = baroSum / baroN; baroSum = 0; baroN = 0; baroLast = now;
+                sendBaro(String.format(Locale.ROOT, "%.2f", v), "");
+            }
+        }
+        @Override public void onAccuracyChanged(Sensor s, int a) {}
+    };
+
+    private void baro(boolean on) {
+        baroWanted = on;
+        if (sm == null) sm = (SensorManager) getSystemService(SENSOR_SERVICE);
+        Sensor p = sm == null ? null : sm.getDefaultSensor(Sensor.TYPE_PRESSURE);
+        if (!on) { if (sm != null) sm.unregisterListener(baroL); return; }
+        if (p == null) { sendBaro("null", "none"); return; }
+        baroSum = 0; baroN = 0; baroLast = 0;
+        sm.registerListener(baroL, p, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    private void sendBaro(String v, String err) {
+        runOnUiThread(() -> web.evaluateJavascript("window.__baro&&__baro(" + v + "," + JSONObject.quote(err) + ")", null));
+    }
+
+    @Override protected void onPause() { super.onPause(); if (sm != null) sm.unregisterListener(baroL); }
+    @Override protected void onResume() { super.onResume(); if (baroWanted) baro(true); }
 
     // ------------------------------------------------------------------ βοηθητικά
 

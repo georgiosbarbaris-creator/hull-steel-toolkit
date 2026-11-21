@@ -2,7 +2,7 @@
    Μπαίνει πρώτο μέσα στο index.html ΜΟΝΟ όταν η σελίδα τρέχει μέσα στην εφαρμογή iOS/Android.
    Η web έκδοση (GitHub Pages) δεν το βλέπει ποτέ.
    Δίνει στη σελίδα ό,τι δεν έχει το WebView: κοινοποίηση, αποθήκευση αρχείων, εκτύπωση,
-   οθόνη ανοιχτή, ανάγνωση (Android). */
+   οθόνη ανοιχτή, ανάγνωση (Android), βαρόμετρο. */
 (function () {
   if (window.NATIVE_APP) return;
   var AND = !!window.SurvivalNative;
@@ -78,6 +78,18 @@
       }
     } });
   } catch (e) {}
+
+
+  /* ---- Βαρόμετρο (αισθητήρας πίεσης) – από την έκδοση Android 1.2 / iOS 1.1 ----
+     Η σελίδα καλεί nativeBaro.start()/stop() και ακούει το event «nativebaro» {hPa, err}.
+     err: 'none' = το κινητό δεν έχει βαρόμετρο, 'denied' = δεν δόθηκε άδεια (iOS Κίνηση). */
+  window.nativeBaro = {
+    start: function () { N('baro', { on: true }); },
+    stop: function () { N('baro', { on: false }); }
+  };
+  window.__baro = function (hPa, err) {
+    try { document.dispatchEvent(new CustomEvent('nativebaro', { detail: { hPa: hPa, err: err || '' } })); } catch (e) {}
+  };
 
   /* ---- Ανάγνωση κειμένου (μόνο Android – στο iOS δουλεύει μόνο του) ---- */
   if (AND) {

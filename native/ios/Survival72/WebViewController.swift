@@ -1,6 +1,7 @@
 // Επιβίωση 72+ – iOS.  Created by George Barbaris
 import UIKit
 import WebKit
+import CoreMotion
 
 @main
 final class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -17,6 +18,8 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 final class WebViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler {
     private var web: WKWebView!
     private let scheme = AppScheme()
+    private lazy var altimeter = CMAltimeter()
+    private var baroSum = 0.0, baroN = 0, baroLast = Date.distantPast
     private static let bg = UIColor(red: 0.039, green: 0.082, blue: 0.133, alpha: 1)
 
     override var preferredStatusBarStyle: UIStatusBarStyle { .lightContent }
@@ -132,10 +135,40 @@ final class WebViewController: UIViewController, WKNavigationDelegate, WKUIDeleg
             p.printInfo = info
             p.printFormatter = web.viewPrintFormatter()
             p.present(animated: true)
+        case "baro":
+            baro((a["on"] as? Bool) ?? false)
         case "wake":
             UIApplication.shared.isIdleTimerDisabled = (a["on"] as? Bool) ?? false
         default: break
         }
+    }
+
+    // MARK: βαρόμετρο (CMAltimeter – πίεση σε kPa → hPa)
+    private func baro(_ on: Bool) {
+        guard on else { altimeter.stopRelativeAltitudeUpdates(); return }
+        guard CMAltimeter.isRelativeAltitudeAvailable() else { sendBaro(nil, "none"); return }
+        let st = CMAltimeter.authorizationStatus()
+        if st == .denied || st == .restricted { sendBaro(nil, "denied"); return }
+        baroSum = 0; baroN = 0; baroLast = .distantPast
+        altimeter.stopRelativeAltitudeUpdates()
+        altimeter.startRelativeAltitudeUpdates(to: .main) { [weak self] d, err in
+            guard let self = self else { return }
+            if err != nil {
+                let st = CMAltimeter.authorizationStatus()
+                self.sendBaro(nil, (st == .denied || st == .restricted) ? "denied" : "none"); return
+            }
+            guard let d = d else { return }
+            self.baroSum += d.pressure.doubleValue * 10; self.baroN += 1
+            if Date().timeIntervalSince(self.baroLast) >= 2, self.baroN > 0 {   // μέσος όρος κάθε 2″
+                let v = self.baroSum / Double(self.baroN); self.baroSum = 0; self.baroN = 0; self.baroLast = Date()
+                self.sendBaro(v, "")
+            }
+        }
+    }
+
+    private func sendBaro(_ v: Double?, _ err: String) {
+        let val = v.map { String(format: "%.2f", locale: Locale(identifier: "en_US_POSIX"), $0) } ?? "null"
+        web.evaluateJavaScript("window.__baro&&__baro(\(val),'\(err)')", completionHandler: nil)
     }
 
     private func tmpFile(_ name: String?, _ d: Data) -> URL? {

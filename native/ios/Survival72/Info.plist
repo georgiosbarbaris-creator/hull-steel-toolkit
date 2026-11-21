@@ -24,6 +24,6 @@
 	<key>NSMicrophoneUsageDescription</key><string>Για μηνύματα μέσω ήχου χωρίς δίκτυο και για καταγραφή αποδείξεων σε κίνδυνο.</string>
 	<key>NSPhotoLibraryUsageDescription</key><string>Για να διαλέξεις φωτογραφίες εγγράφων και ημερολογίου.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key><string>Για να αποθηκεύσεις φωτογραφίες και κάρτες της εφαρμογής.</string>
-	<key>NSMotionUsageDescription</key><string>Για την πυξίδα και την κατεύθυνση.</string>
+	<key>NSMotionUsageDescription</key><string>Για την πυξίδα, την κατεύθυνση και το βαρόμετρο (πρόγνωση καιρού).</string>
 </dict>
 </plist>
