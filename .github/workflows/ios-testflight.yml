@@ -23,24 +23,23 @@ jobs:
           mkdir -p "$RUNNER_TEMP/keys"
           printf '%s' "$P8" > "$RUNNER_TEMP/keys/AuthKey_$KEY_ID.p8"
           sed -i '' "s/__TEAM_ID__/$TEAM/" ExportOptions.plist
-      - name: Archive (υπογραφή αυτόματα από την Apple)
+      - name: Archive (χωρίς υπογραφή – υπογράφεται στο ανέβασμα)
         run: |
+          set -o pipefail
           cd native/ios
           xcodebuild -project Survival72.xcodeproj -scheme Survival72 -configuration Release \
             -destination 'generic/platform=iOS' -archivePath "$RUNNER_TEMP/Survival72.xcarchive" \
-            -allowProvisioningUpdates \
-            -authenticationKeyPath "$RUNNER_TEMP/keys/AuthKey_$KEY_ID.p8" \
-            -authenticationKeyID "$KEY_ID" -authenticationKeyIssuerID "$ISSUER" \
-            DEVELOPMENT_TEAM="$TEAM" CODE_SIGN_STYLE=Automatic \
+            DEVELOPMENT_TEAM="$TEAM" CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO \
             CURRENT_PROJECT_VERSION=${{ github.run_number }} \
             archive | tail -30
-      - name: Ανέβασμα στο TestFlight
+      - name: Υπογραφή App Store (από την Apple) + ανέβασμα στο TestFlight
         run: |
+          set -o pipefail
           cd native/ios
           xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/Survival72.xcarchive" \
             -exportOptionsPlist ExportOptions.plist -exportPath "$RUNNER_TEMP/export" \
             -allowProvisioningUpdates \
             -authenticationKeyPath "$RUNNER_TEMP/keys/AuthKey_$KEY_ID.p8" \
-            -authenticationKeyID "$KEY_ID" -authenticationKeyIssuerID "$ISSUER" | tail -30
+            -authenticationKeyID "$KEY_ID" -authenticationKeyIssuerID "$ISSUER" 2>&1 | tail -40
       - if: always()
         run: rm -rf "$RUNNER_TEMP/keys"
