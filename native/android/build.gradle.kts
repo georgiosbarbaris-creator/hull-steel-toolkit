@@ -2,13 +2,13 @@ plugins { id("com.android.application") }
 // Επιβίωση 72+ – Android. Η σελίδα είναι η ΙΔΙΑ με το web (docs/survival) – δεν αλλάζει τίποτα εκεί.
 android {
     namespace = "gr.barbaris.survival72"
-    compileSdk = 34
+    compileSdk = 36
     defaultConfig {
         applicationId = "gr.barbaris.survival72"
         minSdk = 26
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        targetSdk = 36
+        versionCode = 2
+        versionName = "1.1"
     }
     // Offline αντίγραφο = docs/survival (όπως είναι τη στιγμή του build) + η native γέφυρα
     sourceSets { getByName("main") { assets.setSrcDirs(listOf("../../docs/survival", "../shared")) } }

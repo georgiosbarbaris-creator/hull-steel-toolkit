@@ -28,7 +28,12 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
+import android.widget.FrameLayout;
 import androidx.core.content.FileProvider;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -132,7 +137,26 @@ public class MainActivity extends Activity {
             else openExternal(url);
         });
         web.addJavascriptInterface(new Bridge(), "SurvivalNative");
-        setContentView(web);
+
+        // Android 15+: η εφαρμογή απλώνεται κάτω από τις μπάρες – κρατάμε τη σελίδα μέσα στο ορατό κομμάτι
+        FrameLayout root = new FrameLayout(this);
+        root.setBackgroundColor(0xFF0A1522);
+        root.addView(web, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        WindowCompat.getInsetsController(getWindow(), root).setAppearanceLightStatusBars(false);
+        WindowCompat.getInsetsController(getWindow(), root).setAppearanceLightNavigationBars(false);
+        ViewCompat.setOnApplyWindowInsetsListener(root, (v, wi) -> {
+            Insets b = wi.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout() | WindowInsetsCompat.Type.ime());
+            v.setPadding(b.left, b.top, b.right, b.bottom);
+            return WindowInsetsCompat.CONSUMED;
+        });
+        setContentView(root);
+
+        // «Πίσω» (Android 13+ με predictive back): πρώτα πίσω στη σελίδα, μετά έξοδος
+        if (Build.VERSION.SDK_INT >= 33) {
+            getOnBackInvokedDispatcher().registerOnBackInvokedCallback(android.window.OnBackInvokedDispatcher.PRIORITY_DEFAULT,
+                    () -> { if (web.canGoBack()) web.goBack(); else finish(); });
+        }
 
         if (saved != null) web.restoreState(saved);
         else web.loadUrl(BASE);

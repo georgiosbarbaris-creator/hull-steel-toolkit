@@ -16,7 +16,7 @@ jobs:
           if [ -n "$KS" ]; then echo "$KS" | base64 -d > "$RUNNER_TEMP/survival72.jks"; echo "SURVIVAL_KEYSTORE=$RUNNER_TEMP/survival72.jks" >> "$GITHUB_ENV"; echo "SIGNED=1" >> "$GITHUB_ENV"; else echo "Χωρίς κλειδί – δεν δημοσιεύεται APK Επιβίωσης"; fi
       - env:
           SURVIVAL_KEYSTORE_PASSWORD: ${{ secrets.SURVIVAL_KEYSTORE_PASSWORD }}
-        run: chmod +x gradlew && ./gradlew :app:assembleDebug :thermo:assembleDebug :survivalapp:assembleRelease --no-daemon
+        run: chmod +x gradlew && ./gradlew :app:assembleDebug :thermo:assembleDebug :survivalapp:assembleRelease :survivalapp:bundleRelease --no-daemon
       - uses: actions/upload-artifact@v4
         with:
           name: HullSteel-apk
@@ -36,7 +36,9 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: Epiviosi72-apk
-          path: native/android/build/outputs/apk/release/*.apk
+          path: |
+            native/android/build/outputs/apk/release/*.apk
+            native/android/build/outputs/bundle/release/*.aab
       - name: Publish Επιβίωση 72+ APK (stable download link)
         if: github.ref == 'refs/heads/main' && env.SIGNED == '1'
         env:
@@ -44,4 +46,5 @@ jobs:
         run: |
           cp native/android/build/outputs/apk/release/survivalapp-release.apk Epiviosi72.apk
           gh release view survival-latest >/dev/null 2>&1 || gh release create survival-latest --title "Επιβίωση 72+ / Survival 72+ (Android)" --notes "Δωρεάν για όλους. Κατέβασε το Epiviosi72.apk στο Android και εγκατέστησέ το. Free for everyone – download Epiviosi72.apk on Android and install it. © 2026 Γεώργιος Μπαρμπαρής"
-          gh release upload survival-latest Epiviosi72.apk --clobber
+          cp native/android/build/outputs/bundle/release/survivalapp-release.aab Epiviosi72-GooglePlay.aab
+          gh release upload survival-latest Epiviosi72.apk Epiviosi72-GooglePlay.aab --clobber
