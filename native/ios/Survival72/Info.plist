@@ -19,7 +19,7 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key><true/>
 	<key>UISupportedInterfaceOrientations</key><array><string>UIInterfaceOrientationPortrait</string><string>UIInterfaceOrientationLandscapeLeft</string><string>UIInterfaceOrientationLandscapeRight</string></array>
 	<key>UISupportedInterfaceOrientations~ipad</key><array><string>UIInterfaceOrientationPortrait</string><string>UIInterfaceOrientationPortraitUpsideDown</string><string>UIInterfaceOrientationLandscapeLeft</string><string>UIInterfaceOrientationLandscapeRight</string></array>
-	<key>NSLocationWhenInUseUsageDescription</key><string>Για να στείλεις τη θέση σου σε SOS, να βρεις καταφύγια και νερό κοντά σου και για την πυξίδα.</string>
+	<key>NSLocationWhenInUseUsageDescription</key><string>Για να στείλεις τη θέση σου σε SOS, να βρεις καταφύγια και νερό κοντά σου, για την πυξίδα και για το GPS (θέση, σημεία, γυρισμός πίσω). Η θέση μένει στο κινητό σου.</string>
 	<key>NSCameraUsageDescription</key><string>Για να σκανάρεις μηνύματα QR, για τον φακό/Morse και για φωτογραφίες εγγράφων και ημερολογίου.</string>
 	<key>NSMicrophoneUsageDescription</key><string>Για μηνύματα μέσω ήχου χωρίς δίκτυο και για καταγραφή αποδείξεων σε κίνδυνο.</string>
 	<key>NSPhotoLibraryUsageDescription</key><string>Για να διαλέξεις φωτογραφίες εγγράφων και ημερολογίου.</string>

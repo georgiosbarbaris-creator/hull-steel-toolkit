@@ -2,7 +2,7 @@
    Μπαίνει πρώτο μέσα στο index.html ΜΟΝΟ όταν η σελίδα τρέχει μέσα στην εφαρμογή iOS/Android.
    Η web έκδοση (GitHub Pages) δεν το βλέπει ποτέ.
    Δίνει στη σελίδα ό,τι δεν έχει το WebView: κοινοποίηση, αποθήκευση αρχείων, εκτύπωση,
-   οθόνη ανοιχτή, ανάγνωση (Android), βαρόμετρο. */
+   οθόνη ανοιχτή, ανάγνωση (Android), βαρόμετρο, GPS (δέκτης GNSS). */
 (function () {
   if (window.NATIVE_APP) return;
   var AND = !!window.SurvivalNative;
@@ -90,6 +90,61 @@
   window.__baro = function (hPa, err) {
     try { document.dispatchEvent(new CustomEvent('nativebaro', { detail: { hPa: hPa, err: err || '' } })); } catch (e) {}
   };
+
+  /* ---- GPS σαν Garmin (δέκτης GNSS του κινητού) – από την έκδοση Android 1.3 / iOS 1.2 ----
+     Αντικαθιστά το navigator.geolocation: ΟΛΗ η σελίδα (SOS, πυξίδα, καταγραφή, «Είμαι καλά») παίρνει θέση
+     κατευθείαν από τον δέκτη (iOS BestForNavigation, Android GPS_PROVIDER), όχι από τον browser.
+     Events: «nativegps» {fix|err}, «nativegnss» {n,u,l5,s:[[σύστημα,svid,dB-Hz,ύψος°,αζιμούθιο°,χρήση,L5]]} (μόνο Android). */
+  (function () {
+    var W = {}, wid = 0, last = null, running = false;
+    function need() {
+      var k = Object.keys(W).length > 0;
+      if (k && !running) { running = true; N('gps', { on: true }); }
+      else if (!k && running) { running = false; N('gps', { on: false }); }
+    }
+    function P(f) {
+      return { coords: { latitude: f.lat, longitude: f.lon, accuracy: f.acc, altitude: f.alt == null ? null : f.alt,
+        altitudeAccuracy: f.altAcc == null ? null : f.altAcc, heading: f.hd == null ? null : f.hd, speed: f.spd == null ? null : f.spd },
+        timestamp: f.t || Date.now(), native: f };
+    }
+    function E(code, msg) { return { code: code, message: msg, PERMISSION_DENIED: 1, POSITION_UNAVAILABLE: 2, TIMEOUT: 3 }; }
+    function ev(n, d) { try { document.dispatchEvent(new CustomEvent(n, { detail: d })); } catch (e) {} }
+    window.__gps = function (f, err) {
+      if (err) {
+        var e = E(err === 'denied' ? 1 : 2, err);
+        Object.keys(W).forEach(function (i) { var w = W[i]; try { w.no && w.no(e); } catch (x) {} });
+        ev('nativegps', { err: err }); return;
+      }
+      if (!f || !(Math.abs(f.lat) <= 90) || !(Math.abs(f.lon) <= 180)) return;
+      last = f;
+      Object.keys(W).forEach(function (i) { var w = W[i]; try { w && w.ok(P(f)); } catch (x) {} });
+      ev('nativegps', { fix: f });
+    };
+    window.__gnss = function (s) { window.__gnssLast = s; s.t = Date.now(); ev('nativegnss', s); };
+    window.__gnssFix = function (ms) { ev('nativegnss', { ttff: ms }); };
+    var geo = {
+      watchPosition: function (ok, no, o) {
+        var id = ++wid; W[id] = { ok: ok, no: no }; need();
+        if (last && Date.now() - (last.t || 0) < 5000) setTimeout(function () { if (W[id]) ok(P(last)); }, 0);
+        return id;
+      },
+      clearWatch: function (id) { delete W[id]; need(); },
+      getCurrentPosition: function (ok, no, o) {
+        o = o || {};
+        if (last && Date.now() - (last.t || 0) <= (o.maximumAge || 0)) { setTimeout(function () { ok(P(last)); }, 0); return; }
+        var id = ++wid, done = false, tm = null;
+        function end() { done = true; if (tm) clearTimeout(tm); delete W[id]; need(); }
+        W[id] = {
+          ok: function (p) { if (done) return; end(); ok(p); },
+          no: function (e) { if (done) return; end(); no && no(e); }
+        };
+        need();
+        if (o.timeout != null && isFinite(o.timeout)) tm = setTimeout(function () { if (done) return; end(); no && no(E(3, 'timeout')); }, o.timeout);
+      }
+    };
+    try { Object.defineProperty(navigator, 'geolocation', { value: geo, configurable: true }); } catch (e) {}
+    window.nativeGps = { app: window.NATIVE_APP, sats: AND };
+  })();
 
   /* ---- Ανάγνωση κειμένου (μόνο Android – στο iOS δουλεύει μόνο του) ---- */
   if (AND) {

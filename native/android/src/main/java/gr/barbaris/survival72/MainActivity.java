@@ -11,6 +11,12 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.GnssStatus;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Handler;
+import android.os.Looper;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -80,7 +86,7 @@ public class MainActivity extends Activity {
     static final String BASE = "https://" + HOST + PREFIX;
     static final long WAIT_MS = 3500;
 
-    private static final int REQ_FILE = 41, REQ_GEO = 51, REQ_MEDIA = 52;
+    private static final int REQ_FILE = 41, REQ_GEO = 51, REQ_MEDIA = 52, REQ_GPS = 53;
 
     private WebView web;
     private File liveDir;
@@ -346,6 +352,7 @@ public class MainActivity extends Activity {
     public void onRequestPermissionsResult(int code, String[] perms, int[] res) {
         boolean any = false;
         for (int r : res) if (r == PackageManager.PERMISSION_GRANTED) any = true;
+        if (code == REQ_GPS) { if (any) gpsOn(); else sendGpsErr("denied"); }
         if (code == REQ_GEO && geoCb != null) { geoCb.invoke(geoOrigin, any, false); geoCb = null; }
         if (code == REQ_MEDIA && mediaReq != null) {
             List<String> ok = new ArrayList<>();
@@ -398,6 +405,7 @@ public class MainActivity extends Activity {
                             break;
                         case "tts": speak(a.optString("id"), a.optString("text"), a.optString("lang"), a.optDouble("rate", 1)); break;
                         case "baro": baro(a.optBoolean("on")); break;
+                        case "gps": gps(a.optBoolean("on")); break;
                         case "ttsStop": ttsQueue.clear(); if (tts != null) tts.stop(); break;
                     }
                 } catch (Exception ignored) {}
@@ -573,8 +581,154 @@ public class MainActivity extends Activity {
         runOnUiThread(() -> web.evaluateJavascript("window.__baro&&__baro(" + v + "," + JSONObject.quote(err) + ")", null));
     }
 
-    @Override protected void onPause() { super.onPause(); if (sm != null) sm.unregisterListener(baroL); }
-    @Override protected void onResume() { super.onResume(); if (baroWanted) baro(true); }
+    @Override protected void onPause() { super.onPause(); if (sm != null) sm.unregisterListener(baroL); gpsOff(); }
+    @Override protected void onResume() { super.onResume(); if (baroWanted) baro(true); if (gpsWanted) gps(true); }
+
+    // ------------------------------------------------------------------ GPS (δέκτης GNSS του κινητού) – από την έκδοση 1.3
+    // Σαν Garmin: παίρνουμε τη θέση κατευθείαν από τον δέκτη GPS (GPS_PROVIDER), όχι από τον browser.
+    // Για να μη μείνει ποτέ χωρίς θέση (π.χ. μέσα σε σπίτι για SOS), κρατάμε και τη θέση δικτύου/fused,
+    // αλλά τη στέλνουμε ΜΟΝΟ όταν ο δέκτης GPS δεν έχει δώσει τίποτα τα τελευταία 10″.
+    // Δορυφόροι (GnssStatus): πλήθος, συστήματα (GPS, Galileo, GLONASS, BeiDou…), σήμα, L5.
+
+    private LocationManager lm;
+    private boolean gpsWanted, gpsRunning;
+    private long lastGpsFix, lastGnss;
+    private final ExecutorService altEx = Executors.newSingleThreadExecutor();
+
+    private LocationListener mkL(final boolean fromGps) {
+        return new LocationListener() {
+            @Override public void onLocationChanged(Location l) { onLoc(l, fromGps); }
+            @Override public void onStatusChanged(String p, int st, Bundle b) {}
+            @Override public void onProviderEnabled(String p) {}
+            @Override public void onProviderDisabled(String p) {}
+        };
+    }
+    private final LocationListener gpsL = mkL(true), netL = mkL(false);
+
+    private GnssStatus.Callback gnssCb;
+
+    private void gps(boolean on) {
+        gpsWanted = on;
+        if (lm == null) lm = (LocationManager) getSystemService(LOCATION_SERVICE);
+        if (!on) { gpsOff(); return; }
+        if (!has(Manifest.permission.ACCESS_FINE_LOCATION) && !has(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, REQ_GPS);
+            return;
+        }
+        gpsOn();
+    }
+
+    @SuppressWarnings("MissingPermission")
+    private void gpsOn() {
+        if (!gpsWanted || lm == null) return;
+        gpsOff();
+        boolean fine = has(Manifest.permission.ACCESS_FINE_LOCATION), any = false;
+        try {
+            if (fine && lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, gpsL, Looper.getMainLooper());
+                any = true;
+            }
+        } catch (Exception ignored) {}
+        String alt = (Build.VERSION.SDK_INT >= 31 && lm.getAllProviders().contains(LocationManager.FUSED_PROVIDER))
+                ? LocationManager.FUSED_PROVIDER : LocationManager.NETWORK_PROVIDER;
+        try {
+            if (lm.getAllProviders().contains(alt) && lm.isProviderEnabled(alt)) {
+                lm.requestLocationUpdates(alt, 2000, 0, netL, Looper.getMainLooper());
+                any = true;
+            }
+        } catch (Exception ignored) {}
+        if (!any) { sendGpsErr("off"); return; }
+        gpsRunning = true;
+        if (fine) {
+            try {
+                if (gnssCb == null) gnssCb = new GnssStatus.Callback() {
+                    @Override public void onSatelliteStatusChanged(GnssStatus st) { sendGnss(st); }
+                    @Override public void onFirstFix(int ttff) {
+                        runOnUiThread(() -> web.evaluateJavascript("window.__gnssFix&&__gnssFix(" + ttff + ")", null));
+                    }
+                };
+                lm.registerGnssStatusCallback(gnssCb, new Handler(Looper.getMainLooper()));
+            } catch (Exception ignored) {}
+        }
+        // γρήγορη πρώτη θέση: η τελευταία γνωστή, αν είναι φρέσκια (< 1′)
+        try {
+            Location g = fine ? lm.getLastKnownLocation(LocationManager.GPS_PROVIDER) : null;
+            if (g != null && System.currentTimeMillis() - g.getTime() < 60000) onLoc(g, true);
+        } catch (Exception ignored) {}
+    }
+
+    private void gpsOff() {
+        if (lm == null || !gpsRunning) return;
+        gpsRunning = false;
+        try { lm.removeUpdates(gpsL); } catch (Exception ignored) {}
+        try { lm.removeUpdates(netL); } catch (Exception ignored) {}
+        try { if (gnssCb != null) lm.unregisterGnssStatusCallback(gnssCb); } catch (Exception ignored) {}
+    }
+
+    private void onLoc(Location l, boolean fromGps) {
+        long now = System.currentTimeMillis();
+        if (fromGps) lastGpsFix = now;
+        else if (now - lastGpsFix < 10000) return;   // ο δέκτης GPS δουλεύει – δεν χρειάζεται η θέση δικτύου
+        if (Build.VERSION.SDK_INT >= 34 && l.hasAltitude() && !l.hasMslAltitude()) {
+            // υψόμετρο πάνω από τη θάλασσα (το GPS δίνει ύψος πάνω από το ελλειψοειδές – στην Ελλάδα ~35–40 m διαφορά)
+            final Location c = new Location(l);
+            altEx.submit(() -> {
+                try { new android.location.altitude.AltitudeConverter().addMslAltitudeToLocation(MainActivity.this, c); } catch (Exception ignored) {}
+                sendLoc(c, fromGps);
+            });
+            return;
+        }
+        sendLoc(l, fromGps);
+    }
+
+    private void sendLoc(Location l, boolean fromGps) {
+        try {
+            JSONObject o = new JSONObject();
+            o.put("lat", l.getLatitude()); o.put("lon", l.getLongitude());
+            o.put("acc", l.hasAccuracy() ? l.getAccuracy() : 999);
+            boolean msl = Build.VERSION.SDK_INT >= 34 && l.hasMslAltitude();
+            if (msl) {
+                o.put("alt", l.getMslAltitudeMeters());
+                if (l.hasMslAltitudeAccuracy()) o.put("altAcc", l.getMslAltitudeAccuracyMeters());
+            } else if (l.hasAltitude()) {
+                o.put("alt", l.getAltitude()); o.put("ell", 1);
+                if (l.hasVerticalAccuracy()) o.put("altAcc", l.getVerticalAccuracyMeters());
+            }
+            if (l.hasSpeed()) o.put("spd", l.getSpeed());
+            if (l.hasBearing() && l.hasSpeed() && l.getSpeed() > 0.5f) o.put("hd", l.getBearing());
+            o.put("t", l.getTime() > 0 ? l.getTime() : System.currentTimeMillis());
+            o.put("src", fromGps ? "gps" : "net");
+            final String js = "window.__gps&&__gps(" + o + ",'')";
+            runOnUiThread(() -> web.evaluateJavascript(js, null));
+        } catch (Exception ignored) {}
+    }
+
+    private void sendGnss(GnssStatus st) {
+        long now = System.currentTimeMillis();
+        if (now - lastGnss < 2000) return;
+        lastGnss = now;
+        try {
+            JSONArray a = new JSONArray();
+            int used = 0;
+            boolean l5 = false;
+            for (int i = 0; i < st.getSatelliteCount(); i++) {
+                boolean u = st.usedInFix(i), f5 = false;
+                if (st.hasCarrierFrequencyHz(i)) { float f = st.getCarrierFrequencyHz(i); f5 = f > 1.16e9f && f < 1.19e9f; }
+                if (u) { used++; if (f5) l5 = true; }
+                JSONArray s = new JSONArray();
+                s.put(st.getConstellationType(i)); s.put(st.getSvid(i)); s.put(Math.round(st.getCn0DbHz(i)));
+                s.put(Math.round(st.getElevationDegrees(i))); s.put(Math.round(st.getAzimuthDegrees(i))); s.put(u ? 1 : 0); s.put(f5 ? 1 : 0);
+                a.put(s);
+            }
+            JSONObject o = new JSONObject();
+            o.put("n", st.getSatelliteCount()); o.put("u", used); o.put("l5", l5); o.put("s", a);
+            web.evaluateJavascript("window.__gnss&&__gnss(" + o + ")", null);
+        } catch (Exception ignored) {}
+    }
+
+    private void sendGpsErr(String err) {
+        runOnUiThread(() -> web.evaluateJavascript("window.__gps&&__gps(null," + JSONObject.quote(err) + ")", null));
+    }
 
     // ------------------------------------------------------------------ βοηθητικά
 
@@ -603,6 +757,8 @@ public class MainActivity extends Activity {
     @Override protected void onDestroy() {
         if (tts != null) tts.shutdown();
         net.shutdownNow();
+        altEx.shutdownNow();
+        gpsOff();
         super.onDestroy();
     }
 }

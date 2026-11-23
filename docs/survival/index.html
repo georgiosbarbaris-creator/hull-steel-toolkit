@@ -2091,7 +2091,7 @@ function setLang(l){try{localStorage.setItem('sv_lang',JSON.stringify(l))}catch(
 const encURI=s=>encodeURIComponent(trS(String(s)));
 const $=s=>document.querySelector(s),M=$('#m');
 const esc=s=>UX(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const APP_V='50',APP_D='21/11/2026';
+const APP_V='51',APP_D='23/11/2026';
 const LS={g(k,d){try{const v=localStorage.getItem('sv_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},s(k,v){try{localStorage.setItem('sv_'+k,JSON.stringify(v))}catch(e){}}};
 let fs=LS.g('fs',19);document.documentElement.style.setProperty('--fs',fs+'px');
 function fz(d){fs=Math.max(15,Math.min(28,fs+d*2));LS.s('fs',fs);document.documentElement.style.setProperty('--fs',fs+'px')}
@@ -4742,6 +4742,239 @@ function wxStrip(){const o=LS.g('wxf',null);let t='',warn=0;
 /* στην εκκίνηση: βάρδια που έτρεχε συνεχίζει · αλλιώς μία γρήγορη μέτρηση για το ιστορικό */
 if(hasBaro()){if(BR.watch){brStart();wake(1)}else if(LS.g('bnat',0)){BR.once=true;brStart()}}
 
+/* ===== v51: 🛰️ GPS σαν Garmin – δέκτης GPS κινητού (εφαρμογές), φίλτρο Kalman, βαρομετρικό υψόμετρο, σημείο με μέσο όρο,
+   UTM / MGRS / ΕΓΣΑ87, υπολογιστής διαδρομής, δορυφόροι (Android) – © 2026 Γεώργιος Μπαρμπαρής ===== */
+/* συντεταγμένες: UTM, MGRS, ΕΓΣΑ87 */
+function gfTM(lat,lon,a,f,lon0,k0,FE,FN){const e2=f*(2-f),ep=e2/(1-e2),e4=e2*e2,e6=e4*e2,p=lat*Math.PI/180,s=Math.sin(p),c=Math.cos(p),t=Math.tan(p);
+ const N=a/Math.sqrt(1-e2*s*s),T=t*t,C=ep*c*c,A=(lon-lon0)*Math.PI/180*c;
+ const M=a*((1-e2/4-3*e4/64-5*e6/256)*p-(3*e2/8+3*e4/32+45*e6/1024)*Math.sin(2*p)+(15*e4/256+45*e6/1024)*Math.sin(4*p)-(35*e6/3072)*Math.sin(6*p));
+ const x=k0*N*(A+(1-T+C)*A**3/6+(5-18*T+T*T+72*C-58*ep)*A**5/120);
+ const y=k0*(M+N*t*(A*A/2+(5-T+9*C+4*C*C)*A**4/24+(61-58*T+T*T+600*C-330*ep)*A**6/720));
+ return [FE+x,FN+y]}
+function gfUTM(lat,lon){let z=Math.floor((lon+180)/6)+1;if(z>60)z=60;
+ if(lat>=56&&lat<64&&lon>=3&&lon<12)z=32;
+ if(lat>=72&&lat<84){if(lon>=0&&lon<9)z=31;else if(lon>=9&&lon<21)z=33;else if(lon>=21&&lon<33)z=35;else if(lon>=33&&lon<42)z=37}
+ const [E,N]=gfTM(lat,lon,6378137,1/298.257223563,z*6-183,0.9996,500000,lat<0?10000000:0);
+ const band='CDEFGHJKLMNPQRSTUVWXX'[Math.max(0,Math.min(20,Math.floor((lat+80)/8)))];
+ return {z,band,E,N}}
+function gfMGRS(lat,lon){if(lat<-80||lat>84)return null;const u=gfUTM(lat,lon),set=(u.z-1)%3,col=['ABCDEFGH','JKLMNPQR','STUVWXYZ'][set][Math.floor(u.E/1e5)-1];
+ const rows='ABCDEFGHJKLMNPQRSTUV',ri=(Math.floor(u.N/1e5)+(u.z%2?0:5))%20,row=rows[ri];
+ const p=v=>String(Math.floor(v%1e5)).padStart(5,'0');return `${u.z}${u.band} ${col}${row} ${p(u.E)} ${p(u.N)}`}
+/* WGS84 → ΕΓΣΑ87 (ΕΓΣΑ87/GGRS87, ελλειψοειδές GRS80, Εγκάρσια Μερκατορική, κεντρικός μεσημβρινός 24°) */
+function gfEGSA(lat,lon,h){h=h||0;const a=6378137,e2w=0.00669437999014,p=lat*Math.PI/180,l=lon*Math.PI/180;
+ const Nw=a/Math.sqrt(1-e2w*Math.sin(p)**2);let X=(Nw+h)*Math.cos(p)*Math.cos(l),Y=(Nw+h)*Math.cos(p)*Math.sin(l),Z=(Nw*(1-e2w)+h)*Math.sin(p);
+ X+=199.87;Y-=74.79;Z-=246.62;
+ const f=1/298.257222101,e2=f*(2-f),r=Math.hypot(X,Y);let la=Math.atan2(Z,r*(1-e2));
+ for(let i=0;i<6;i++){const N=a/Math.sqrt(1-e2*Math.sin(la)**2),hh=r/Math.cos(la)-N;la=Math.atan2(Z,r*(1-e2*N/(N+hh)))}
+ return gfTM(la*180/Math.PI,Math.atan2(Y,X)*180/Math.PI,a,f,24,0.9996,500000,0)}
+const GF={src:'',rough:0,err:'',sat:null,ttff:null,b:{hb:null,t:0,base:null},avg:null,on:false,ud:null,gr:[],last:0,lastRaw:null,rej:0};
+const KF={lat:null,lon:null,P:0,t:0,rej:0};
+const gfNat=()=>!!window.nativeGps;
+const gfCard=h=>L2(['Β','ΒΑ','Α','ΝΑ','Ν','ΝΔ','Δ','ΒΔ'],['N','NE','E','SE','S','SW','W','NW'])[Math.round(h/45)%8];
+/* φίλτρο Kalman για τη ζωντανή θέση: πετάει τα «άλματα» και τις κακές μετρήσεις, προβλέπει με ταχύτητα+πορεία (χωρίς καθυστέρηση) */
+function kfStep(p){const t=p.t||Date.now(),a=Math.max(1,p.acc||50);
+ if(KF.lat==null||t-KF.t>60000||KF.rej>=4){Object.assign(KF,{lat:p.lat,lon:p.lon,P:a*a,t,rej:0});return true}
+ const dt=Math.max(.05,(t-KF.t)/1000),sp=p.spd!=null&&!isNaN(p.spd)&&p.spd>=0?p.spd:null,sd=Math.sqrt(KF.P);
+ const maxJ=3*(a+sd)+(sp!=null?sp*1.5+5:300)*dt,j=dist(KF,p);
+ if(j>maxJ||(a>Math.max(60,5*sd)&&dt<30&&sd<30)){KF.rej++;return false}
+ KF.rej=0;
+ if(sp!=null&&sp>0.7&&p.hd!=null&&!isNaN(p.hd)){const m=sp*dt,h=rad(p.hd);KF.lat+=m*Math.cos(h)/110540;KF.lon+=m*Math.sin(h)/(111320*Math.cos(rad(KF.lat)))}
+ const q=sp!=null?Math.max(1,sp*.5):3;KF.P+=(q*dt)**2+q*q*dt;const K=KF.P/(KF.P+a*a);
+ KF.lat+=K*(p.lat-KF.lat);KF.lon+=K*(p.lon-KF.lon);KF.P*=1-K;KF.t=t;return true}
+/* νέο startGeo: ίδια συμπεριφορά, + φίλτρο, + τροφοδοσία της σελίδας GPS. Μέσα στις εφαρμογές το navigator.geolocation
+   είναι ο ίδιος ο δέκτης GPS του κινητού (shim.js) – άρα ΟΛΑ (SOS, πυξίδα, καταγραφή) γίνονται πιο ακριβή. */
+startGeo=function(){if(geoW!==null)return;if(!navigator.geolocation){const g=$('#gps');if(g)g.textContent=L2('Το κινητό δεν έχει GPS διαθέσιμο.','No GPS available on this device.');return}
+ if(hasBaro()&&(rec||GF.on))gfBaro(1);
+ geoW=navigator.geolocation.watchPosition(p=>{const c=p.coords,nf=p.native||{};
+  const raw={lat:c.latitude,lon:c.longitude,acc:c.accuracy,alt:c.altitude,altAcc:c.altitudeAccuracy,spd:c.speed,hd:c.heading,t:p.timestamp||Date.now()};
+  GF.src=nf.src||(gfNat()?'gps':'web');GF.rough=nf.rough?1:0;GF.err='';GF.lastRaw=raw;
+  if(!kfStep(raw)){GF.rej++;gfUI();return}
+  pos=Object.assign({},raw,{lat:KF.lat,lon:KF.lon,rlat:raw.lat,rlon:raw.lon,src:GF.src});spdFix(pos);
+  altUpd(raw);if(rec)trkAdd(Object.assign({},raw,{spd:pos.spd,hd:pos.hd}));
+  gfFix(raw);upd();draw();wxAlt();gfUI()},
+ e=>{GF.err=e&&e.code===1?'denied':(e&&e.message==='off'?'off':'');gfUI();const g=$('#gps');if(!g)return;
+  if(e.code===1)g.innerHTML='❌ '+L2('Δεν δόθηκε άδεια τοποθεσίας.','Location permission not given.')+'<br><small class="muted notr">'+gfPermTxt()+'</small>';
+  else g.innerHTML=L2('Δεν βρέθηκε ακόμα θέση. Βγες σε ανοιχτό χώρο με θέα στον ουρανό.','No position yet. Go outside with a clear view of the sky.')+'<br><small class="muted">'+L2('Η πρώτη θέση χωρίς internet θέλει 1–12 λεπτά.','The first fix without internet takes 1–12 minutes.')+'</small>'},
+ {enableHighAccuracy:true,maximumAge:2000,timeout:60000})};
+{const _s=stopGeo;stopGeo=function(){_s();if(!rec&&!GF.on)gfBaro(0)}}
+function gfPermTxt(){const app=window.NATIVE_APP;
+ if(app==='ios')return L2('iPhone: Ρυθμίσεις → Επιβίωση 72+ → Τοποθεσία → «Κατά τη χρήση» + «Ακριβής θέση».','iPhone: Settings → Survival 72+ → Location → «While Using» + «Precise Location».');
+ if(app==='android')return L2('Android: Ρυθμίσεις → Εφαρμογές → Επιβίωση 72+ → Άδειες → Τοποθεσία → «Κατά τη χρήση» + «Ακριβής τοποθεσία».','Android: Settings → Apps → Survival 72+ → Permissions → Location → «While using» + «Precise location».');
+ return L2('iPhone: Ρυθμίσεις → Απόρρητο → Υπηρεσίες τοποθεσίας → Safari → «Κατά τη χρήση». Android: άδεια τοποθεσίας στον Chrome.','iPhone: Settings → Privacy → Location Services → Safari → «While Using». Android: allow location in Chrome.')}
+
+/* ---- βαρομετρικό υψόμετρο (σαν Garmin): το βαρόμετρο δίνει τις ΑΛΛΑΓΕΣ ύψους (±1 m), το GPS δίνει τη βάση (αργός μέσος όρος) ---- */
+const gfHB=p=>44330.8*(1-Math.pow(p/1013.25,.190263));
+function gfBaro(on){if(!hasBaro())return;if(on){if(!BR.on){BR.on=true;BR.err='';try{nativeBaro.start()}catch(e){}}}else if(BR.on&&!BR.watch&&!onWx()){BR.on=false;try{nativeBaro.stop()}catch(e){}}}
+{const _b=brStop;brStop=function(){if(rec||GF.on)return;_b()}}
+document.addEventListener('nativebaro',e=>{const d=e.detail||{},v=+d.hPa;if(d.err||!(v>300&&v<1100))return;
+ const B=GF.b,hb=gfHB(v),now=Date.now();B.hb=hb;B.t=now;
+ if(B.base!=null){const f=B.base+hb;ALT_ORIG({alt:f,altAcc:3,t:now});gfUD(f)}gfUI()});
+const ALT_ORIG=altUpd;
+altUpd=function(p){if(!p||p.alt==null||isNaN(p.alt))return;const B=GF.b,now=Date.now();
+ if(B.hb!=null&&now-B.t<15000){const ac=p.altAcc!=null&&p.altAcc>0?p.altAcc:Math.max(8,(p.acc||10)*1.5);
+  if(ac<=30){const tgt=p.alt-B.hb;if(B.base==null)B.base=tgt;else B.base+=(ac<=10?.02:.008)*(tgt-B.base)}
+  if(B.base!=null){const f=B.base+B.hb;ALT_ORIG({alt:f,altAcc:3,t:p.t||now});gfUD(f);return}}
+ ALT_ORIG(p);if(ALT.v!=null)gfUD(ALT.v)};
+const gfBaroLive=()=>GF.b.base!=null&&GF.b.hb!=null&&Date.now()-GF.b.t<15000;
+/* ανάβαση / κατάβαση από το άνοιγμα της σελίδας ή από «Μηδένισε» (υστέρηση 2 m με βαρόμετρο, 5 m χωρίς) */
+function gfUD(h){if(h==null||isNaN(h))return;let U=GF.ud||LS.g('gfud',null);const th=gfBaroLive()?2:5;
+ if(!U)U={ref:h,up:0,dn:0,t0:Date.now()};const d=h-U.ref;if(d>=th){U.up+=d;U.ref=h}else if(d<=-th){U.dn-=d;U.ref=h}GF.ud=U;
+ if(pos){GF.gr.push([pos.lat,pos.lon,h]);if(GF.gr.length>120)GF.gr.shift()}
+ if(Date.now()-GF.last>5000){GF.last=Date.now();LS.s('gfud',U)}}
+function gfGrade(){const G=GF.gr;if(G.length<5||!pos)return null;const z=G[G.length-1];let d=0;
+ for(let i=G.length-2;i>=0;i--){d+=dist({lat:G[i+1][0],lon:G[i+1][1]},{lat:G[i][0],lon:G[i][1]});if(d>=40)return Math.round((z[2]-G[i][2])/d*100)}return null}
+
+/* ---- υπολογιστής διαδρομής (trip computer) ---- */
+function gfTrip(){return LS.g('gftrip',{d:0,mt:0,mx:0,t0:Date.now(),l:null})}
+function gfFix(raw){const T=gfTrip(),p=pos,now=p.t||Date.now();
+ if(GF.avg&&GF.avg.on)gfAvgAdd(raw);
+ if((p.acc||99)>30){LS.s('gftrip',T);return}
+ if(T.l){const dt=(now-T.l.t)/1000,dd=dist(T.l,p);const mv=p.spd!=null&&!p.spdC?p.spd>0.6:dd>Math.max(4,p.acc*.6);
+  if(dt>0&&dt<60){if(mv){T.d+=dd;T.mt+=dt}if(p.spd!=null&&!p.spdC&&p.spd<120)T.mx=Math.max(T.mx,p.spd)}
+  if(!mv&&dt<60&&dd<Math.max(4,p.acc*.6))return}
+ T.l={lat:p.lat,lon:p.lon,t:now};LS.s('gftrip',T)}
+function gfTripReset(){if(!confirm(L2('Μηδενισμός απόστασης, χρόνου, ταχυτήτων και ανάβασης;','Reset distance, time, speeds and climb?')))return;
+ LS.s('gftrip',{d:0,mt:0,mx:0,t0:Date.now(),l:null});GF.ud=null;LS.s('gfud',null);GF.gr=[];gfUI(1)}
+
+/* ---- σημάδεψε σημείο με μέσο όρο (waypoint averaging) ---- */
+function gfAvgStart(){GF.avg={on:true,t0:Date.now(),n:0,sw:0,sla:0,slo:0,mn:999,pts:[]};startGeo();wake(1);gfUI(1)}
+function gfAvgAdd(r){const A=GF.avg;if(!A||!A.on||!(r.acc>0)||r.acc>60)return;const w=1/(r.acc*r.acc);
+ A.n++;A.sw+=w;A.sla+=w*r.lat;A.slo+=w*r.lon;A.mn=Math.min(A.mn,r.acc);A.pts.push([r.lat,r.lon]);if(A.pts.length>400)A.pts.shift();
+ if(Date.now()-A.t0>=60000)gfAvgSave()}
+function gfAvgRes(){const A=GF.avg;if(!A||!A.n)return null;const lat=A.sla/A.sw,lon=A.slo/A.sw;let s=0;A.pts.forEach(q=>{s+=dist({lat,lon},{lat:q[0],lon:q[1]})**2});
+ const rms=Math.sqrt(s/A.pts.length);return {lat,lon,acc:Math.max(1.5,A.mn*.6,rms/Math.sqrt(Math.max(1,A.n/10)))}}
+function gfAvgSave(){const A=GF.avg;if(!A)return;A.on=false;const R=gfAvgRes();GF.avg=null;
+ if(!R){alert(L2('Δεν μαζεύτηκαν θέσεις GPS. Βγες σε ανοιχτό ουρανό και ξαναδοκίμασε.','No GPS positions collected. Go under open sky and try again.'));gfUI(1);return}
+ const n=prompt(L2(`Όνομα σημείου (ακρίβεια ±${Math.round(R.acc)} m) – π.χ. Αυτοκίνητο, Πηγή, Τραυματίας:`,`Point name (accuracy ±${Math.round(R.acc)} m) – e.g. Car, Spring, Casualty:`),L2('Σημείο ','Point ')+(LS.g('wps',[]).length+1));
+ if(n){const w=LS.g('wps',[]);w.push({n,lat:+R.lat.toFixed(7),lon:+R.lon.toFixed(7),t:Date.now(),a:Math.round(R.acc*10)/10});LS.s('wps',w);vib([80,60,80])}gfUI(1)}
+function gfAvgCancel(){GF.avg=null;gfUI(1)}
+
+/* ---- μορφές συντεταγμένων ---- */
+const GFF=[['dmm',()=>L2('Μοίρες-λεπτά (ναυτικά)','Deg-min (nautical)')],['dd',()=>L2('Δεκαδικές','Decimal')],['dms',()=>L2('Μοίρες-λεπτά-δεύτ.','Deg-min-sec')],['utm',()=>'UTM'],['mgrs',()=>L2('MGRS (διάσωση)','MGRS (rescue)')],['egsa',()=>L2('ΕΓΣΑ87 (Ελλάδα)','GGRS87 (Greece)')]];
+const gfInGR=(la,lo)=>la>33.5&&la<42.5&&lo>19&&lo<30.5;
+function gfFmt(k,la,lo){
+ if(k==='dd')return `${la.toFixed(6)}, ${lo.toFixed(6)}`;
+ if(k==='dms')return `${dms(la,'N','S')}  ${dms(lo,'E','W')}`;
+ if(k==='utm'){const u=gfUTM(la,lo);return `${u.z}${u.band}  E ${Math.round(u.E)}  N ${Math.round(u.N)}`}
+ if(k==='mgrs')return gfMGRS(la,lo)||'—';
+ if(k==='egsa'){if(!gfInGR(la,lo))return L2('μόνο μέσα στην Ελλάδα','only inside Greece');const [x,y]=gfEGSA(la,lo);return `X ${x.toFixed(1)}  Y ${y.toFixed(1)}`}
+ return `${ddm(la,'N','S')}  ${ddm(lo,'E','W')}`}
+function gfAll(la,lo){return GFF.map(f=>`${f[1]()}: ${gfFmt(f[0],la,lo)}`).join('\n')}
+function gfCopy(){if(!pos)return alert(L2('Περίμενε το GPS.','Wait for the GPS.'));const t=gfAll(pos.lat,pos.lon)+`\n±${Math.round(pos.acc)} m · https://maps.google.com/?q=${pos.lat.toFixed(6)},${pos.lon.toFixed(6)}`;
+ (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>alert(L2('Αντιγράφηκαν όλες οι μορφές.','All formats copied.')),()=>prompt(L2('Αντέγραψε:','Copy:'),t))}
+function gfSetF(k){LS.s('gff',k);gfUI(1)}
+
+/* ---- ποιότητα θέσης ---- */
+function gfQ(a){if(a==null)return ['—','#a9b8c8',0];if(a<=5)return [L2('Άριστη','Excellent'),'#2a9d8f',100];if(a<=10)return [L2('Πολύ καλή','Very good'),'#2a9d8f',80];
+ if(a<=20)return [L2('Καλή','Good'),'#8ac926',60];if(a<=50)return [L2('Μέτρια','Fair'),'#fcbf49',35];return [L2('Κακή','Poor'),'#d62828',15]}
+const GN={1:['GPS',['ΗΠΑ','USA'],'#3a86ff'],6:['Galileo',['Ευρώπη','Europe'],'#fcbf49'],3:['GLONASS',['Ρωσία','Russia'],'#d62828'],5:['BeiDou',['Κίνα','China'],'#f77f00'],4:['QZSS',['Ιαπωνία','Japan'],'#c77dff'],7:['NavIC',['Ινδία','India'],'#8ac926'],2:['SBAS',['EGNOS/διόρθωση','EGNOS/correction'],'#a9b8c8']};
+
+/* ---- η σελίδα ---- */
+function gpsPage(){T('🛰️ '+L2('GPS σαν Garmin','GPS like a Garmin'));GF.on=true;
+ M.innerHTML=`<div class="notr">
+ <div class="box" style="text-align:center"><div id="gfst"></div></div>
+ <div class="box"><b>📍 ${L2('Θέση','Position')}</b><div id="gfpos" class="coord mono" style="margin:8px 0;font-size:1.25em">…</div>
+  <div class="tools" id="gffm" style="justify-content:center"></div>
+  <div class="tools" style="justify-content:center"><button class="btn" onclick="gfCopy()">📋 ${L2('Αντιγραφή (όλες οι μορφές)','Copy (all formats)')}</button><button class="btn r" onclick="sendPos()">✉️ ${L2('Στείλε τη θέση (SMS)','Send position (SMS)')}</button></div></div>
+ <div id="gfavg"></div>
+ <div class="box"><b>🚶 ${L2('Κίνηση','Movement')}</b><div id="gfmv" style="margin-top:6px"></div></div>
+ <div class="box"><b>⛰️ ${L2('Υψόμετρο','Altitude')}</b><div id="gfal" style="margin-top:6px"></div>
+  <div class="tools" style="justify-content:center"><button class="btn" onclick="gfKnown()">📏 ${L2('Ξέρω το υψόμετρο εδώ','I know the altitude here')}</button></div></div>
+ <div class="box"><b>🧮 ${L2('Υπολογιστής διαδρομής','Trip computer')}</b><div id="gftr" style="margin-top:6px"></div>
+  <button class="btn" style="margin-top:6px" onclick="gfTripReset()">🔄 ${L2('Μηδένισε','Reset')}</button></div>
+ <div id="gfgo"></div>
+ <div class="box"><b>🛰️ ${L2('Δορυφόροι','Satellites')}</b><div id="gfsat" style="margin-top:6px"></div></div>
+ <div class="tools" style="justify-content:center"><button class="btn p" onclick="go('compass')">🧭 ${L2('Πυξίδα, σημεία & χάρτης','Compass, points & map')}</button><button class="btn g" onclick="go('t/back')">↩️ ${L2('Γύρνα πίσω (TracBack)','Track back')}</button></div>
+ <div class="tip"><b>${L2('Για ακρίβεια σαν Garmin:','For Garmin-like accuracy:')}</b><br>
+ ① ${L2('Ανοιχτός ουρανός – όχι μέσα σε σπίτι, φαράγγι ή πυκνό δάσος.','Open sky – not indoors, in a gorge or thick forest.')}<br>
+ ② ${L2('Μόλις ανοίξεις, περίμενε 1–2 λεπτά να «κλειδώσει».','After opening, wait 1–2 minutes for it to «lock».')}<br>
+ ③ ${L2('Κράτα το κινητό ψηλά (τσέπη στο στήθος, πάνω στο σακίδιο) – όχι στην πίσω τσέπη.','Keep the phone high (chest pocket, top of the pack) – not in a back pocket.')}<br>
+ ④ ${L2('Η οθόνη μένει ανοιχτή όσο είσαι εδώ. Με κλειδωμένο κινητό το GPS σταματά.','The screen stays on while you are here. With the phone locked, GPS stops.')}<br>
+ ⑤ ${L2('Το GPS δουλεύει ΧΩΡΙΣ internet. Το internet απλώς βοηθά την πρώτη θέση.','GPS works WITHOUT internet. Internet only speeds up the first fix.')}</div>
+ <div class="muted" style="text-align:center;font-size:.85em">${L2('Η θέση σου μένει μόνο στο κινητό σου.','Your position stays only on your phone.')}</div></div>`;
+ startGeo();if(hasBaro())gfBaro(1);wake(1);gfUI(1);
+ const iv=setInterval(()=>gfUI(),1000);TS.push(()=>{clearInterval(iv);GF.on=false;if(GF.avg)GF.avg=null;if(!rec)gfBaro(0)})}
+function gfKnown(){const cur=ALT.v;if(cur==null){alert(L2('Περίμενε πρώτα να βρεθεί υψόμετρο (GPS).','Wait for an altitude first (GPS).'));return}
+ const v=prompt(L2('Γράψε το σωστό υψόμετρο εδώ σε μέτρα (από πινακίδα, χάρτη, κορυφή, ή 0 δίπλα στη θάλασσα). Άδειο = χωρίς διόρθωση.','Type the correct altitude here in metres (from a sign, map, summit, or 0 by the sea). Empty = no correction.'),Math.round(cur+altOff()));
+ if(v===null)return;const n=parseFloat(String(v).replace(',','.'));LS.s('altOff',String(v).trim()===''||isNaN(n)?0:Math.round((n-cur)*10)/10);gfUI(1)}
+let gfFmK='';
+function gfUI(force){if(!GF.on||!$('#gfst'))return;const now=Date.now(),p=pos,app=window.NATIVE_APP;
+ /* κατάσταση */
+ const fresh=p&&now-(p.t||0)<15000;let st;
+ if(GF.err==='denied')st=`<div class="warn" style="font-weight:400;text-align:left">❌ ${L2('Δεν δόθηκε άδεια τοποθεσίας.','Location permission not given.')}<br>${gfPermTxt()}</div>`;
+ else if(GF.err==='off')st=`<div class="warn" style="font-weight:400;text-align:left">📴 ${L2('Η Τοποθεσία (GPS) του κινητού είναι κλειστή. Άνοιξέ την από το πάνω μενού του κινητού και ξαναμπές εδώ.','The phone Location (GPS) is off. Turn it on from the top menu of the phone and come back here.')}</div>`;
+ else if(!fresh)st=`<div class="hd" style="font-size:1.6em">📡 ${L2('Ψάχνω δορυφόρους…','Searching satellites…')}</div><div class="muted">${L2('Βγες σε ανοιχτό ουρανό. Η πρώτη θέση χωρίς internet θέλει 1–12 λεπτά.','Go under open sky. The first fix without internet takes 1–12 minutes.')}</div>`;
+ else{const q=gfQ(p.acc),r=Math.max(8,Math.min(46,8+Math.log10(Math.max(1,p.acc))*19));
+  st=`<svg viewBox="-50 -50 100 100" style="width:120px;height:120px"><circle r="48" fill="#0a1522" stroke="#2a4060"/><circle r="${r}" fill="${q[1]}" fill-opacity=".25" stroke="${q[1]}" stroke-width="2"/><circle r="4" fill="#3a86ff" stroke="#fff" stroke-width="1.5"/></svg>
+  <div class="hd" style="font-size:2.2em;color:${q[1]}">±${p.acc<10?p.acc.toFixed(1):Math.round(p.acc)} m</div><div><b>${L2('Ακρίβεια','Accuracy')}: ${q[0]}</b></div>
+  <div class="bar"><i style="width:${q[2]}%;background:${q[1]}"></i></div>
+  <div class="muted" style="font-size:.9em">${GF.src==='net'?'📶 '+L2('Θέση από κεραίες/Wi-Fi – ΟΧΙ από GPS. Βγες σε ανοιχτό ουρανό.','Position from cell/Wi-Fi – NOT GPS. Go under open sky.'):GF.src==='gps'?'🛰️ '+L2('Κατευθείαν από τον δέκτη GPS του κινητού','Straight from the phone GPS receiver'):'🌐 '+L2('GPS μέσω browser','GPS via the browser')} · ${L2('φίλτρο Kalman','Kalman filter')} ✓${GF.rej?` · ${L2('απορρίφθηκαν','rejected')} ${GF.rej} ${L2('κακές μετρήσεις','bad fixes')}`:''}</div>
+  ${GF.rough?`<div class="warn" style="font-weight:400;text-align:left">${L2('Το iPhone δίνει μόνο «κατά προσέγγιση» θέση. Ρυθμίσεις → Επιβίωση 72+ → Τοποθεσία → «Ακριβής θέση» ON.','The iPhone gives only «approximate» location. Settings → Survival 72+ → Location → «Precise Location» ON.')}</div>`:''}`}
+ if(!app)st+=`<div class="tip" style="text-align:left;margin-top:8px">📱 <b>${L2('Στην εφαρμογή iPhone / Android','In the iPhone / Android app')}</b>: ${L2('θέση κατευθείαν από τον δέκτη GPS (όχι από τον browser), βαρομετρικό υψόμετρο ±1 m και δορυφόροι (Android).','position straight from the GPS receiver (not the browser), barometric altitude ±1 m and satellites (Android).')}</div>`;
+ else if(!gfNat())st+=`<div class="warn" style="font-weight:400;text-align:left">${L2('Ενημέρωσε την εφαρμογή (νέα έκδοση) για GPS κατευθείαν από τον δέκτη. Μέχρι τότε δουλεύει μέσω browser.','Update the app (new version) for GPS straight from the receiver. Until then it works via the browser.')}</div>`;
+ $('#gfst').innerHTML=st;
+ /* μορφή συντεταγμένων */
+ const fk=LS.g('gff','dmm');if(force||gfFmK!==fk){gfFmK=fk;$('#gffm').innerHTML=GFF.map(f=>`<button class="btn ${f[0]===fk?'p':''}" style="font-size:.85em" onclick="gfSetF('${f[0]}')">${f[1]()}</button>`).join('')}
+ $('#gfpos').innerHTML=p?esc(gfFmt(fk,p.lat,p.lon)).replace(/  /g,'<br>'):'…';
+ /* σημείο με μέσο όρο */
+ const A=GF.avg,av=$('#gfavg');
+ if(A){const R=gfAvgRes(),s=Math.min(60,Math.floor((now-A.t0)/1000));
+  av.innerHTML=`<div class="box" style="text-align:center;border-color:var(--grn)"><b>📌 ${L2('Σημαδεύω το σημείο… μείνε ακίνητος','Marking the point… stay still')}</b>
+  <div class="hd" style="font-size:2em">${s} / 60″</div><div class="bar"><i style="width:${s/60*100}%"></i></div>
+  <div class="muted">${A.n} ${L2('μετρήσεις','fixes')}${R?` · ${L2('ακρίβεια τώρα','accuracy now')} ±${R.acc.toFixed(1)} m`:''}</div>
+  <div class="tools" style="justify-content:center"><button class="btn g" ${s<10?'disabled':''} onclick="gfAvgSave()">✅ ${L2('Αποθήκευσε τώρα','Save now')}</button><button class="btn" onclick="gfAvgCancel()">✖ ${L2('Άκυρο','Cancel')}</button></div></div>`}
+ else if(force||!av.firstChild)av.innerHTML=`<button class="big grn" onclick="gfAvgStart()">📌 ${L2('Σημάδεψε σημείο με ακρίβεια','Mark a precise point')}<small>${L2('μέσος όρος 60″ – αυτοκίνητο, πηγή, κατασκήνωση, τραυματίας','60″ average – car, spring, camp, casualty')}</small></button>`;
+ /* κίνηση */
+ const mv=$('#gfmv');if(p&&fresh){const sp=p.spd!=null&&p.spd>0.3?p.spd:0,hd=p.hd!=null&&!isNaN(p.hd)&&sp>0.5?p.hd:null;
+  mv.innerHTML=`<div style="display:flex;justify-content:space-around;text-align:center"><div><div class="muted">${L2('Ταχύτητα','Speed')}</div><div class="hd" style="font-size:1.8em">${(sp*3.6).toFixed(sp>8?0:1)}</div><div class="muted">km/h · ${(sp*1.94384).toFixed(1)} kn</div></div>
+  <div><div class="muted">${L2('Πορεία (COG)','Course (COG)')}</div><div class="hd" style="font-size:1.8em">${hd!=null?String(Math.round(hd)).padStart(3,'0')+'°':'—'}</div><div class="muted">${hd!=null?gfCard(hd)+' · '+L2('αληθής','true'):L2('κινήσου για πορεία','move to get course')}</div></div></div>`}
+ else mv.innerHTML='<div class="muted">—</div>';
+ /* υψόμετρο */
+ const al=$('#gfal'),cur=ALT.v!=null?ALT.v+altOff():null,U=GF.ud||LS.g('gfud',null),gr=gfGrade(),bl=gfBaroLive();
+ let ab='';if(app&&hasBaro()&&BR.err==='none')ab=L2('Αυτό το κινητό δεν έχει βαρόμετρο – υψόμετρο μόνο από GPS (±10–20 m).','This phone has no barometer – altitude from GPS only (±10–20 m).');
+ else if(app&&hasBaro()&&BR.err==='denied')ab=L2('Για βαρομετρικό υψόμετρο: Ρυθμίσεις → Επιβίωση 72+ → «Κίνηση & Γυμναστική» ON.','For barometric altitude: Settings → Survival 72+ → «Motion & Fitness» ON.');
+ else if(app&&hasBaro()&&!bl)ab=L2('Βαρόμετρο: περιμένω πρώτο υψόμετρο από GPS για να «δέσει»…','Barometer: waiting for a first GPS altitude to anchor…');
+ else if(!app)ab=L2('Βαρομετρικό υψόμετρο (±1 m): διαθέσιμο στην εφαρμογή.','Barometric altitude (±1 m): available in the app.');
+ al.innerHTML=`<div style="display:flex;justify-content:space-around;text-align:center"><div><div class="muted">${L2('Υψόμετρο','Altitude')}</div><div class="hd" style="font-size:1.8em">${cur!=null?Math.round(cur)+' m':'—'}</div><div class="muted" style="font-size:.85em">${bl?'⏲️ '+L2('βαρόμετρο + GPS','barometer + GPS'):'🛰️ GPS'}${altOff()?' · '+L2('διορθωμένο','corrected'):''}</div></div>
+  <div><div class="muted">${L2('Κλίση','Grade')}</div><div class="hd" style="font-size:1.8em">${gr!=null?(gr>0?'+':'')+gr+'%':'—'}</div><div class="muted" style="font-size:.85em">${gr==null?'':gr>=3?'⬆️ '+L2('ανηφόρα','uphill'):gr<=-3?'⬇️ '+L2('κατηφόρα','downhill'):'➡️ '+L2('ίσιωμα','flat')}</div></div></div>
+  <div style="text-align:center;margin-top:6px">⬆️ ${L2('Ανάβαση','Ascent')} <b>${U?Math.round(U.up):0} m</b> · ⬇️ ${L2('Κατάβαση','Descent')} <b>${U?Math.round(U.dn):0} m</b></div>
+  ${p&&p.alt!=null?`<div class="muted" style="text-align:center;font-size:.85em">GPS: ${Math.round(p.alt)} m${p.altAcc?` ±${Math.round(p.altAcc)} m`:''}${GF.b.hb!=null&&BR.v?` · ${L2('πίεση','pressure')} ${BR.v.toFixed(1)} hPa`:''}</div>`:''}
+  ${ab?`<div class="muted" style="font-size:.85em;margin-top:4px">${ab}</div>`:''}`;
+ /* υπολογιστής διαδρομής */
+ const Tr=gfTrip(),mt=Tr.mt,avg=mt>0?Tr.d/mt:0,hh=Math.floor(mt/3600),mm=Math.floor(mt%3600/60);
+ $('#gftr').innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;text-align:center">
+  <div><div class="muted">${L2('Απόσταση','Distance')}</div><b style="font-size:1.3em">${fmD(Tr.d)}</b></div>
+  <div><div class="muted">${L2('Χρόνος σε κίνηση','Moving time')}</div><b style="font-size:1.3em">${hh?hh+':'+String(mm).padStart(2,'0')+' '+L2('ώρ.','h'):mm+':'+String(Math.floor(mt%60)).padStart(2,'0')+' '+L2('λεπ.','min')}</b></div>
+  <div><div class="muted">${L2('Μέση ταχύτητα','Average speed')}</div><b style="font-size:1.3em">${(avg*3.6).toFixed(1)} km/h</b></div>
+  <div><div class="muted">${L2('Μέγιστη','Max')}</div><b style="font-size:1.3em">${(Tr.mx*3.6).toFixed(1)} km/h</b></div></div>
+  <div class="muted" style="font-size:.85em;text-align:center">${L2('από','since')} ${tdt(Tr.t0)}</div>`;
+ /* πήγαινε σε σημείο */
+ const w=LS.g('wps',[]),t=tgt!=null?w[tgt]:null,gg=$('#gfgo');
+ if(t&&p){const d=dist(p,t),b=brg(p,t),sp=p.spd!=null&&p.spd>0.5?p.spd:(avg>0.5?avg:1.2),eta=d/sp;
+  gg.innerHTML=`<div class="box" style="text-align:center;border-color:var(--yel)"><b>➡️ ${esc(t.n)}</b><div class="hd" style="font-size:2em">${fmD(d)}</div>
+  ${L2('Διόπτευση','Bearing')} <b>${String(Math.round(b)).padStart(3,'0')}° ${gfCard(b)}</b> · ${L2('Άφιξη σε','Arrive in')} ~<b>${eta<3600?Math.max(1,Math.round(eta/60))+' '+L2('λεπτά','min'):(eta/3600).toFixed(1)+' '+L2('ώρες','h')}</b>
+  <div class="muted">${L2('Απόσταση σε ευθεία γραμμή. Για βέλος πήγαινε στην Πυξίδα.','Straight-line distance. For the arrow go to the Compass.')}</div>
+  <button class="btn p" style="margin-top:6px" onclick="go('compass')">🧭 ${L2('Δείξε μου το βέλος','Show me the arrow')}</button></div>`}
+ else gg.innerHTML=w.length?`<div class="muted" style="text-align:center;margin:6px 0">${L2('Για «Πήγαινε σε σημείο» πάτα «➡️ Πάμε» σε ένα σημείο στην Πυξίδα.','For «Go to a point» tap «➡️ Go» on a point in the Compass.')}</div>`:'';
+ /* δορυφόροι */
+ const sb=$('#gfsat'),S=GF.sat;
+ if(app==='android'&&gfNat()){
+  if(!S||now-(S.t||0)>10000)sb.innerHTML=`<div class="muted">${L2('Περιμένω στοιχεία δορυφόρων…','Waiting for satellite data…')}</div>`;
+  else{const by={};S.s.forEach(x=>{const k=GN[x[0]]?x[0]:0;(by[k]=by[k]||[0,0])[0]++;if(x[5])by[k][1]++});
+   const sky=S.s.filter(x=>x[3]>0).map(x=>{const r=(90-x[3])/90*44,a=rad(x[4]),c=(GN[x[0]]||['','','#fff'])[2];return `<circle cx="${(r*Math.sin(a)).toFixed(1)}" cy="${(-r*Math.cos(a)).toFixed(1)}" r="${x[5]?3.2:2.2}" fill="${x[5]?c:'none'}" stroke="${c}" stroke-width="1"/>`}).join('');
+   sb.innerHTML=`<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center"><svg viewBox="-50 -50 100 100" style="width:150px;height:150px"><circle r="44" fill="#0a1522" stroke="#2a4060"/><circle r="29" fill="none" stroke="#2a4060"/><circle r="15" fill="none" stroke="#2a4060"/><text y="-45.5" text-anchor="middle" font-size="7" fill="#ff4d4d" font-weight="900">${L2('Β','N')}</text>${sky}</svg>
+   <div><div class="hd" style="font-size:1.6em">${S.u} / ${S.n}</div><div class="muted">${L2('σε χρήση / ορατοί','in use / visible')}</div>${S.l5?`<div>✅ <b>L1 + L5</b> <small class="muted">${L2('(διπλή συχνότητα – πιο ακριβές)','(dual frequency – more accurate)')}</small></div>`:''}${GF.ttff?`<div class="muted" style="font-size:.85em">${L2('Πρώτη θέση σε','First fix in')} ${Math.round(GF.ttff/1000)}″</div>`:''}</div></div>
+   ${[1,6,3,5,4,7,2].filter(k=>by[k]).map(k=>`<div style="margin:3px 0"><span style="color:${GN[k][2]}">●</span> <b>${GN[k][0]}</b> <small class="muted">${L2(GN[k][1][0],GN[k][1][1])}</small> – ${by[k][1]} / ${by[k][0]}</div>`).join('')}
+   <div class="muted" style="font-size:.85em">${L2('Γεμάτος κύκλος = σε χρήση. Στο κέντρο = πάνω από το κεφάλι σου.','Filled circle = in use. Centre = right above your head.')}</div>`}}
+ else if(app==='ios')sb.innerHTML=`<div class="muted">${L2('Το iPhone δεν δείχνει δορυφόρους σε εφαρμογές (κανόνας Apple). Χρησιμοποιεί όλα τα συστήματα (GPS, Galileo, GLONASS, BeiDou) – η «Ακρίβεια ±m» πάνω λέει το ίδιο.','The iPhone does not show satellites to apps (Apple rule). It uses all systems (GPS, Galileo, GLONASS, BeiDou) – the «Accuracy ±m» above tells the same.')}</div>`;
+ else sb.innerHTML=`<div class="muted">${L2('Χάρτης δορυφόρων: διαθέσιμος στην εφαρμογή Android.','Satellite sky view: available in the Android app.')}</div>`}
+document.addEventListener('nativegnss',e=>{const d=e.detail||{};if(d.ttff!=null){GF.ttff=d.ttff;return}GF.sat=d});
+document.addEventListener('nativegps',e=>{const d=e.detail||{};if(d.err){GF.err=d.err;gfUI()}});
+{const _r=render;render=function(r){const [a]=r.split('/');if(a==='gps')return gpsPage();return _r(r)}}
+{const _h=home;home=function(){_h();const c=M.querySelector(`button[onclick="go('compass')"]`);if(c)c.insertAdjacentHTML('beforebegin',`<button class="tile notr" onclick="go('gps')"><span class="e">🛰️</span>${L2('GPS σαν Garmin','GPS like a Garmin')}<small>${L2('ακρίβεια, υψόμετρο, σημεία','accuracy, altitude, points')}</small></button>`)}}
+{const _c=compass;compass=function(){_c();const b=$('#cbtns');if(b)b.insertAdjacentHTML('afterend',`<button class="btn p notr" style="width:100%;margin:6px 0" onclick="go('gps')">🛰️ ${L2('GPS σαν Garmin – ακρίβεια, υψόμετρο, UTM/MGRS/ΕΓΣΑ87','GPS like a Garmin – accuracy, altitude, UTM/MGRS/GGRS87')}</button>`)}}
+TOOLS.unshift(['gps','🛰️',L2('GPS σαν Garmin','GPS like a Garmin'),L2('ακρίβεια ±m, βαρομετρικό υψόμετρο, σημείο με μέσο όρο, UTM/MGRS/ΕΓΣΑ87','accuracy ±m, barometric altitude, averaged point, UTM/MGRS/GGRS87')]);
+{const _t=tool;tool=function(id){if(id==='gps')return go('gps');_t(id)}}
 if(rec){startGeo();wake(1)}/* v32: η οθόνη μένει ανοιχτή και όταν ξανανοίγεις την εφαρμογή ενώ καταγράφει */
 setTimeout(grdBar,300);
 $('#lgb').textContent=LANG==='en'?'ΕΛ':'EN';if(LANG==='en'){document.title='Survival 72+';window.__trAll()}render(location.hash.slice(1)||'home');

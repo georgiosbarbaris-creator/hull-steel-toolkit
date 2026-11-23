@@ -2,6 +2,7 @@
 import UIKit
 import WebKit
 import CoreMotion
+import CoreLocation
 
 @main
 final class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -15,11 +16,21 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 }
 
-final class WebViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler {
+final class WebViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler, CLLocationManagerDelegate {
     private var web: WKWebView!
     private let scheme = AppScheme()
     private lazy var altimeter = CMAltimeter()
     private var baroSum = 0.0, baroN = 0, baroLast = Date.distantPast
+    private var gpsWanted = false
+    private lazy var lm: CLLocationManager = {
+        let m = CLLocationManager()
+        m.delegate = self
+        m.desiredAccuracy = kCLLocationAccuracyBestForNavigation   // σαν Garmin: όλο το GNSS (GPS, Galileo, GLONASS, BeiDou, L5)
+        m.distanceFilter = kCLDistanceFilterNone
+        m.activityType = .otherNavigation
+        m.pausesLocationUpdatesAutomatically = false
+        return m
+    }()
     private static let bg = UIColor(red: 0.039, green: 0.082, blue: 0.133, alpha: 1)
 
     override var preferredStatusBarStyle: UIStatusBarStyle { .lightContent }
@@ -137,6 +148,8 @@ final class WebViewController: UIViewController, WKNavigationDelegate, WKUIDeleg
             p.present(animated: true)
         case "baro":
             baro((a["on"] as? Bool) ?? false)
+        case "gps":
+            gps((a["on"] as? Bool) ?? false)
         case "wake":
             UIApplication.shared.isIdleTimerDisabled = (a["on"] as? Bool) ?? false
         default: break
@@ -169,6 +182,49 @@ final class WebViewController: UIViewController, WKNavigationDelegate, WKUIDeleg
     private func sendBaro(_ v: Double?, _ err: String) {
         let val = v.map { String(format: "%.2f", locale: Locale(identifier: "en_US_POSIX"), $0) } ?? "null"
         web.evaluateJavaScript("window.__baro&&__baro(\(val),'\(err)')", completionHandler: nil)
+    }
+
+    // MARK: GPS (CoreLocation, kCLLocationAccuracyBestForNavigation) – από την έκδοση 1.2
+    // Η σελίδα το παίρνει μέσα από το navigator.geolocation (shim.js) → event «nativegps».
+    private func gps(_ on: Bool) {
+        gpsWanted = on
+        guard on else { lm.stopUpdatingLocation(); return }
+        switch lm.authorizationStatus {
+        case .notDetermined: lm.requestWhenInUseAuthorization()
+        case .denied, .restricted: sendGpsErr("denied")
+        default: lm.startUpdatingLocation()
+        }
+    }
+
+    func locationManagerDidChangeAuthorization(_ m: CLLocationManager) {
+        guard gpsWanted else { return }
+        switch m.authorizationStatus {
+        case .authorizedWhenInUse, .authorizedAlways: m.startUpdatingLocation()
+        case .denied, .restricted: sendGpsErr("denied")
+        default: break
+        }
+    }
+
+    func locationManager(_ m: CLLocationManager, didUpdateLocations locs: [CLLocation]) {
+        let rough = m.accuracyAuthorization == .reducedAccuracy
+        for l in locs where l.horizontalAccuracy >= 0 {
+            var o: [String: Any] = ["lat": l.coordinate.latitude, "lon": l.coordinate.longitude, "acc": l.horizontalAccuracy,
+                                    "t": Int64(l.timestamp.timeIntervalSince1970 * 1000), "src": "gps"]
+            if l.verticalAccuracy > 0 { o["alt"] = l.altitude; o["altAcc"] = l.verticalAccuracy }
+            if l.speed >= 0 { o["spd"] = l.speed }
+            if l.course >= 0 && l.speed > 0.5 { o["hd"] = l.course }
+            if rough { o["rough"] = 1 }
+            guard let d = try? JSONSerialization.data(withJSONObject: o), let j = String(data: d, encoding: .utf8) else { continue }
+            web.evaluateJavaScript("window.__gps&&__gps(\(j),'')", completionHandler: nil)
+        }
+    }
+
+    func locationManager(_ m: CLLocationManager, didFailWithError e: Error) {
+        if let c = e as? CLError, c.code == .denied { sendGpsErr("denied") }
+    }
+
+    private func sendGpsErr(_ err: String) {
+        web.evaluateJavaScript("window.__gps&&__gps(null,'\(err)')", completionHandler: nil)
     }
 
     private func tmpFile(_ name: String?, _ d: Data) -> URL? {
