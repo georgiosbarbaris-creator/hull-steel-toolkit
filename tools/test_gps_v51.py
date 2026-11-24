@@ -1,4 +1,4 @@
-"""Δοκιμή «GPS σαν Garmin» (v51) – web, προσομοίωση εφαρμογής Android (shim + ψεύτικος δέκτης), Αγγλικά, offline."""
+"""Δοκιμή «GPS Ακριβείας» (v51) – web, προσομοίωση εφαρμογής Android (shim + ψεύτικος δέκτης), Αγγλικά, offline."""
 import asyncio, subprocess, time, sys, os
 from playwright.async_api import async_playwright
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "docs")

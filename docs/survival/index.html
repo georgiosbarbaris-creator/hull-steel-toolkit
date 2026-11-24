@@ -2091,7 +2091,7 @@ function setLang(l){try{localStorage.setItem('sv_lang',JSON.stringify(l))}catch(
 const encURI=s=>encodeURIComponent(trS(String(s)));
 const $=s=>document.querySelector(s),M=$('#m');
 const esc=s=>UX(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const APP_V='51',APP_D='23/11/2026';
+const APP_V='52',APP_D='24/11/2026';
 const LS={g(k,d){try{const v=localStorage.getItem('sv_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},s(k,v){try{localStorage.setItem('sv_'+k,JSON.stringify(v))}catch(e){}}};
 let fs=LS.g('fs',19);document.documentElement.style.setProperty('--fs',fs+'px');
 function fz(d){fs=Math.max(15,Math.min(28,fs+d*2));LS.s('fs',fs);document.documentElement.style.setProperty('--fs',fs+'px')}
@@ -3951,7 +3951,7 @@ if(LANG==='en'){a.title=a.te;a.sub=a.se;a.blocks.forEach(b=>{b.k=b.x;b.x=b.e})}D
 if(LANG==='en')Object.assign(TRM,{"Επαφές έκτακτης ανάγκης":"Emergency contacts","📡 Βρίσκω τη θέση σου… (έως 4″)":"📡 Finding your location… (up to 4″)","αν δεν πατήσω «Έφτασα» → συναγερμός + SMS με θέση":"if I don't tap «I arrived» → alarm + SMS with location","🚶‍♀️ «Συνόδευσέ με σπίτι» πριν ξεκινήσεις. Αν δεν πατήσεις «Έφτασα», χτυπάει συναγερμός και ανοίγει έτοιμο SMS με τη θέση σου – πατάς «Αποστολή» εσύ ή όποιος σε βρει. Κράτα την εφαρμογή ανοιχτή.":"🚶‍♀️ «Walk me home» before you set off. If you don't tap «I arrived», an alarm rings and a ready SMS with your location opens – you (or whoever finds you) tap «Send». Keep the app open."});
 try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{})}catch(e){}
 
-/* ===================== v29: 📡 PLOTTER – σαν ραντάρ/Garmin: N-UP / H-UP / C-UP, RM / TM, κλίμακες, χάρτης OpenTopoMap offline ===================== */
+/* ===================== v29: 📡 PLOTTER – σαν ραντάρ/συσκευή GPS: N-UP / H-UP / C-UP, RM / TM, κλίμακες, χάρτης OpenTopoMap offline ===================== */
 const PLRM=[50,100,200,500,1000,2000,5000,10000,20000,50000],PLRN=[0.125,0.25,0.5,1,2,4,6,8,10,12,16,24,48].map(v=>v*1852);let PLR=PLRM;/* v31: και σε NM */
 let PL=Object.assign({o:'N',m:'RM',r:'A',map:0,c:null,u:'km'},LS.g('plot',{}));const plS=()=>LS.s('plot',PL);PLR=PL.u==='nm'?PLRN:PLRM;if(PL.r!=='A'&&!(PL.r>=0&&PL.r<PLR.length))PL.r='A';
 let plLast=0,plAvg=null;
@@ -4055,7 +4055,7 @@ function plHome(){if(!trk.length){alert(L2('Δεν υπάρχει καταγρα
 {const _o=onOr;onOr=function(e){_o(e);if(PL.o==='H'&&Date.now()-plLast>120)draw()}}
 /* οδηγός */
 (function(){const B=[
-['tip','Το plotter δουλεύει σαν το ραντάρ του βαποριού ή σαν ένα Garmin: εσύ, η διαδρομή σου, τα σημεία και ο στόχος σε κύκλους απόστασης. Δουλεύει χωρίς internet (ο χάρτης από κάτω μόνο αν τον κατεβάσεις πριν).','The plotter works like a ship’s radar or a Garmin: you, your track, your points and the target inside range rings. It works without internet (the background map only if you download it first).'],
+['tip','Το plotter δουλεύει σαν το ραντάρ του βαποριού ή σαν μια συσκευή GPS πεζοπορίας: εσύ, η διαδρομή σου, τα σημεία και ο στόχος σε κύκλους απόστασης. Δουλεύει χωρίς internet (ο χάρτης από κάτω μόνο αν τον κατεβάσεις πριν).','The plotter works like a ship’s radar or a hiking GPS unit: you, your track, your points and the target inside range rings. It works without internet (the background map only if you download it first).'],
 ['h','Πριν φύγεις – 1 λεπτό','Before you leave – 1 minute'],
 ['step','Βγες σε ανοιχτό χώρο. Περίμενε μέχρι η «Ακρίβεια» να γράψει ±10 m ή καλύτερα (πράσινο).','Go to an open spot. Wait until “Accuracy” shows ±10 m or better (green).'],
 ['step','Πάτα «⏺ Κατέγραφε τη διαδρομή μου». Το πρώτο σημείο γίνεται 🏁 Αφετηρία.','Press “⏺ Record my route”. The first point becomes 🏁 Start.'],
@@ -4073,7 +4073,7 @@ function plHome(){if(!trk.length){alert(L2('Δεν υπάρχει καταγρα
 ['h','Γύρισμα πίσω (π.χ. από 1 km)','Getting back (e.g. from 1 km)'],
 ['step','🏁 «Πίσω στην αφετηρία»: στόχος γίνεται η αφετηρία. Ακολούθα το κίτρινο βέλος – τα BRG/RNG δείχνουν πορεία και απόσταση.','🏁 “Back to start”: the start becomes the target. Follow the yellow arrow – BRG/RNG show bearing and distance.'],
 ['step','Σε βουνό, δάσος, καπνό, σκοτάδι: «↩️ Ίδιο δρόμο πίσω» – σε πηγαίνει σημείο-σημείο από τη διαδρομή που ήρθες (ασφαλέστερο από την ευθεία, που μπορεί να έχει γκρεμό ή ρέμα).','Mountain, forest, smoke, dark: “↩️ Same way back” – leads you point by point along the way you came (safer than the straight line, which may cross a cliff or stream).'],
-['step','Τα τελευταία 10–20 m κοίτα γύρω σου: το GPS του κινητού έχει λάθος ±5–10 m (ένα Garmin ±3–5 m).','For the last 10–20 m look around: phone GPS has ±5–10 m error (a Garmin ±3–5 m).'],
+['step','Τα τελευταία 10–20 m κοίτα γύρω σου: το GPS του κινητού έχει λάθος ±5–10 m (μια συσκευή GPS πεζοπορίας ±3–5 m).','For the last 10–20 m look around: phone GPS has ±5–10 m error (a hiking GPS unit ±3–5 m).'],
 ['h','Πόσο ακριβές είναι','How accurate it is'],
 ['li','Η εφαρμογή κρατάει μέσο όρο από πολλές μετρήσεις, πετάει τα «άλματα» και δεν γράφει τίποτα όταν στέκεσαι – έτσι η γραμμή δεν «τρέμει».','The app averages many readings, throws away “jumps” and records nothing while you stand still – so the line does not “shake”.'],
 ['li','Χειρότερο GPS: ανάμεσα σε ψηλά κτίρια, σε φαράγγι, μέσα σε πυκνό δάσος, μέσα σε αυτοκίνητο. Κράτα το κινητό ψηλά, στο πάνω μέρος του σακιδίου ή στο χέρι.','Worst GPS: between tall buildings, in a gorge, in dense forest, inside a car. Keep the phone high, on top of the backpack or in your hand.'],
@@ -4084,7 +4084,7 @@ const a={cat:'wild',id:'plotter',emoji:'📡',title:'Plotter – πώς γυρί
 if(LANG==='en'){a.title=a.te;a.sub=a.se;a.blocks.forEach(b=>{b.k=b.x;b.x=b.e})}D.push(a);byId[a.id]=a})();
 {const _a=art;art=function(id){_a(id);if(id==='plotter'){const h=M.querySelector('.tools');if(h)h.insertAdjacentHTML('afterend',`<button class="big blu notr" onclick="go('compass')">📡 ${L2('Άνοιξε το Plotter','Open the Plotter')}</button>`)}}}
 
-/* ===================== v30: ⛰️ ΥΨΟΜΕΤΡΙΚΗ – ανάβαση / κατάβαση / κλίση / προφίλ (σαν το Garmin) =====================
+/* ===================== v30: ⛰️ ΥΨΟΜΕΤΡΙΚΗ – ανάβαση / κατάβαση / κλίση / προφίλ (σαν συσκευή GPS) =====================
    Υψόμετρο GPS → φίλτρο Kalman (σβήνει το «τρέμουλο» ±10–20 m) → σε κάθε σημείο της διαδρομής (e).
    Ανάβαση/κατάβαση με κατώφλι 4 m (ο θόρυβος δεν «φουσκώνει» τα μέτρα), υψομετρικό προφίλ, πόσο ανεβαίνεις/κατεβαίνεις
    για να γυρίσεις από τον ίδιο δρόμο, διόρθωση υψομέτρου σε γνωστό σημείο. Created by George Barbaris */
@@ -4146,7 +4146,7 @@ function eleCal(){const cur=ALT.v!=null?ALT.v:(pos&&pos.alt!=null?pos.alt:null);
 /* ---- οδηγός Plotter: ενότητα υψομετρικής ---- */
 (function(){const a=byId['plotter'];if(!a)return;const add=[
 ['h','⛰️ Υψομετρική – πόσα μέτρα ανεβαίνεις και κατεβαίνεις','⛰️ Elevation – how many metres you climb and descend'],
-['li','↗ Ανάβαση / ↘ Κατάβαση: όλα τα μέτρα που ανέβηκες και κατέβηκες από την αφετηρία (σαν το «Total ascent / descent» του Garmin). Αυξομειώσεις κάτω από 4 m δεν μετράνε, για να μη «φουσκώνει» από τον θόρυβο του GPS.','↗ Ascent / ↘ Descent: all the metres you climbed and descended since the start (like Garmin “Total ascent / descent”). Ups and downs under 4 m are ignored so GPS noise does not inflate them.'],
+['li','↗ Ανάβαση / ↘ Κατάβαση: όλα τα μέτρα που ανέβηκες και κατέβηκες από την αφετηρία (σαν το «Total ascent / descent» των συσκευών GPS). Αυξομειώσεις κάτω από 4 m δεν μετράνε, για να μη «φουσκώνει» από τον θόρυβο του GPS.','↗ Ascent / ↘ Descent: all the metres you climbed and descended since the start (like the “Total ascent / descent” of GPS units). Ups and downs under 4 m are ignored so GPS noise does not inflate them.'],
 ['li','Κλίση %: πόσο ανηφορικό (+) ή κατηφορικό (−) είναι το κομμάτι που περπατάς τώρα. Πάνω από 20% είναι απότομο.','Grade %: how steep uphill (+) or downhill (−) the stretch you are on is. Over 20% is steep.'],
 ['li','Προφίλ: το ανάγλυφο της διαδρομής – αριστερά η αφετηρία 🏁, δεξιά εσύ 🔵, ▲ το ψηλότερο σημείο. Η πράσινη διακεκομμένη γραμμή = το ύψος της αφετηρίας.','Profile: the shape of your route – start 🏁 on the left, you 🔵 on the right, ▲ the highest point. The green dashed line = the height of the start.'],
 ['li','«Για να γυρίσεις από τον ίδιο δρόμο»: πόσο θα ανέβεις και θα κατέβεις στην επιστροφή. Αν κατέβηκες 300 m σε φαράγγι, θα τα ξανανέβεις – υπολόγισε χρόνο, νερό και δυνάμεις (≈ 1 ώρα για κάθε 300–400 m ανάβασης με σακίδιο).','“To go back the same way”: how much you will climb and descend on the way back. If you went 300 m down into a gorge you will climb it again – plan time, water and strength (≈ 1 hour per 300–400 m of climb with a backpack).'],
@@ -4181,7 +4181,7 @@ function plLog(keep){const e=$('#pllog');if(!e)return;if(e.innerHTML&&!keep){e.i
  e.innerHTML=`<div class="box" style="margin:6px 0"><b>📋 ${L2('Στίγματα & πορείες','Fixes & courses')}</b><div class="muted">${L2('Διαδρομή','Track')} <b>${plFmD(tl)}</b>${trk[0]&&trk[0].t?` · ${L2('από','since')} ${tnow(trk[0].t)}`:''}</div>
  ${R.length?`<table class="sunt"><tr><th>#</th><th>${L2('Θέση','Position')}</th><th>${L2('Πορεία · απόσταση · ταχύτητα από το προηγούμενο','Course · distance · speed from the previous')}</th></tr>${rows}</table>`:`<div class="muted">${L2('Πάτα «⏺ Κατέγραφε» στην αφετηρία και «🚩 MARK» σε κάθε στροφή, διασταύρωση ή σημάδι.','Press “⏺ Record” at the start and “🚩 MARK” at every turn, junction or landmark.')}</div>`}
  <div class="tools" style="margin:6px 0 0"><button class="btn" onclick="plGPX()">💾 GPX</button><button class="btn" onclick="$('#pllog').innerHTML=''">✖ ${L2('Κλείσε','Close')}</button></div></div>`}
-/* 💾 GPX – Garmin, Google Earth, OpenCPN, Navionics */
+/* 💾 GPX – συσκευές GPS, Google Earth, OpenCPN, Navionics */
 function plGPX(){const w=LS.g('wps',[]),o=typeof altOff==='function'?altOff():0,iso=t=>new Date(t).toISOString(),xe=s=>String(s).replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&apos;'}[c]));
  if(!trk.length&&!w.length){alert(L2('Δεν υπάρχει ακόμα διαδρομή ή σημείο για αποθήκευση.','There is no track or waypoint to save yet.'));return}
  const d=new Date(),p2=n=>String(n).padStart(2,'0'),ds=`${d.getFullYear()}-${p2(d.getMonth()+1)}-${p2(d.getDate())}_${p2(d.getHours())}${p2(d.getMinutes())}`;
@@ -4199,7 +4199,7 @@ function plGPX(){const w=LS.g('wps',[]),o=typeof altOff==='function'?altOff():0,
 (function(){const a=byId['plotter'];if(!a)return;const add=[
 ['li','⚓ NM / km: με «NM» οι κλίμακες γίνονται σε ναυτικά μίλια σαν ραντάρ (0.125 … 4 · 6 · 8 · 10 · 12 · 16 · 24 · 48 NM) και η ταχύτητα σε κόμβους (kn). Με «km» σε μέτρα/χιλιόμετρα.','⚓ NM / km: with “NM” ranges are in nautical miles like a radar (0.125 … 4 · 6 · 8 · 10 · 12 · 16 · 24 · 48 NM) and speed in knots (kn). With “km” in metres/kilometres.'],
 ['li','Πορείες από στίγμα σε στίγμα: η γαλάζια γραμμή ενώνει 🏁 → 🚩1 → 🚩2 → … → εσύ και γράφει πορεία ° και απόσταση – σαν το plotting στον χάρτη της γέφυρας. «📋 Στίγματα» = ημερολόγιο με ώρα, θέση, πορεία, απόσταση και ταχύτητα.','Courses from fix to fix: the light-blue line joins 🏁 → 🚩1 → 🚩2 → … → you and shows course ° and distance – like plotting on the chart on the bridge. “📋 Fixes” = a log with time, position, course, distance and speed.'],
-['li','💾 GPX: αποθηκεύει διαδρομή (με υψόμετρο) και σημεία σε αρχείο που ανοίγει σε Garmin, Google Earth, OpenCPN, Navionics.','💾 GPX: saves your track (with altitude) and waypoints to a file that opens in Garmin, Google Earth, OpenCPN, Navionics.']];
+['li','💾 GPX: αποθηκεύει διαδρομή (με υψόμετρο) και σημεία σε αρχείο που ανοίγει σε συσκευές GPS, Google Earth, OpenCPN και εφαρμογές χαρτών.','💾 GPX: saves your track (with altitude) and waypoints to a file that opens in GPS units, Google Earth, OpenCPN and map apps.']];
  const bl=add.map(([t,x,e])=>LANG==='en'?{t,x:e,k:x,e}:{t,x,e}),wi=a.blocks.findIndex(b=>/^🚩 MARK/.test(b.k||b.x));a.blocks.splice(wi<0?a.blocks.length:wi+1,0,...bl)})();
 
 /* ===================== v32: 💡 Οθόνη ανοιχτή & 🔋 Τσέπη στον Plotter – να μη σταματάει η καταγραφή =====================
@@ -4742,7 +4742,7 @@ function wxStrip(){const o=LS.g('wxf',null);let t='',warn=0;
 /* στην εκκίνηση: βάρδια που έτρεχε συνεχίζει · αλλιώς μία γρήγορη μέτρηση για το ιστορικό */
 if(hasBaro()){if(BR.watch){brStart();wake(1)}else if(LS.g('bnat',0)){BR.once=true;brStart()}}
 
-/* ===== v51: 🛰️ GPS σαν Garmin – δέκτης GPS κινητού (εφαρμογές), φίλτρο Kalman, βαρομετρικό υψόμετρο, σημείο με μέσο όρο,
+/* ===== v51: 🛰️ GPS Ακριβείας – δέκτης GPS κινητού (εφαρμογές), φίλτρο Kalman, βαρομετρικό υψόμετρο, σημείο με μέσο όρο,
    UTM / MGRS / ΕΓΣΑ87, υπολογιστής διαδρομής, δορυφόροι (Android) – © 2026 Γεώργιος Μπαρμπαρής ===== */
 /* συντεταγμένες: UTM, MGRS, ΕΓΣΑ87 */
 function gfTM(lat,lon,a,f,lon0,k0,FE,FN){const e2=f*(2-f),ep=e2/(1-e2),e4=e2*e2,e6=e4*e2,p=lat*Math.PI/180,s=Math.sin(p),c=Math.cos(p),t=Math.tan(p);
@@ -4802,7 +4802,7 @@ function gfPermTxt(){const app=window.NATIVE_APP;
  if(app==='android')return L2('Android: Ρυθμίσεις → Εφαρμογές → Επιβίωση 72+ → Άδειες → Τοποθεσία → «Κατά τη χρήση» + «Ακριβής τοποθεσία».','Android: Settings → Apps → Survival 72+ → Permissions → Location → «While using» + «Precise location».');
  return L2('iPhone: Ρυθμίσεις → Απόρρητο → Υπηρεσίες τοποθεσίας → Safari → «Κατά τη χρήση». Android: άδεια τοποθεσίας στον Chrome.','iPhone: Settings → Privacy → Location Services → Safari → «While Using». Android: allow location in Chrome.')}
 
-/* ---- βαρομετρικό υψόμετρο (σαν Garmin): το βαρόμετρο δίνει τις ΑΛΛΑΓΕΣ ύψους (±1 m), το GPS δίνει τη βάση (αργός μέσος όρος) ---- */
+/* ---- βαρομετρικό υψόμετρο (σαν συσκευή GPS): το βαρόμετρο δίνει τις ΑΛΛΑΓΕΣ ύψους (±1 m), το GPS δίνει τη βάση (αργός μέσος όρος) ---- */
 const gfHB=p=>44330.8*(1-Math.pow(p/1013.25,.190263));
 function gfBaro(on){if(!hasBaro())return;if(on){if(!BR.on){BR.on=true;BR.err='';try{nativeBaro.start()}catch(e){}}}else if(BR.on&&!BR.watch&&!onWx()){BR.on=false;try{nativeBaro.stop()}catch(e){}}}
 {const _b=brStop;brStop=function(){if(rec||GF.on)return;_b()}}
@@ -4870,7 +4870,7 @@ function gfQ(a){if(a==null)return ['—','#a9b8c8',0];if(a<=5)return [L2('Άρι
 const GN={1:['GPS',['ΗΠΑ','USA'],'#3a86ff'],6:['Galileo',['Ευρώπη','Europe'],'#fcbf49'],3:['GLONASS',['Ρωσία','Russia'],'#d62828'],5:['BeiDou',['Κίνα','China'],'#f77f00'],4:['QZSS',['Ιαπωνία','Japan'],'#c77dff'],7:['NavIC',['Ινδία','India'],'#8ac926'],2:['SBAS',['EGNOS/διόρθωση','EGNOS/correction'],'#a9b8c8']};
 
 /* ---- η σελίδα ---- */
-function gpsPage(){T('🛰️ '+L2('GPS σαν Garmin','GPS like a Garmin'));GF.on=true;
+function gpsPage(){T('🛰️ '+L2('GPS Ακριβείας','Precision GPS'));GF.on=true;
  M.innerHTML=`<div class="notr">
  <div class="box" style="text-align:center"><div id="gfst"></div></div>
  <div class="box"><b>📍 ${L2('Θέση','Position')}</b><div id="gfpos" class="coord mono" style="margin:8px 0;font-size:1.25em">…</div>
@@ -4885,7 +4885,7 @@ function gpsPage(){T('🛰️ '+L2('GPS σαν Garmin','GPS like a Garmin'));GF.
  <div id="gfgo"></div>
  <div class="box"><b>🛰️ ${L2('Δορυφόροι','Satellites')}</b><div id="gfsat" style="margin-top:6px"></div></div>
  <div class="tools" style="justify-content:center"><button class="btn p" onclick="go('compass')">🧭 ${L2('Πυξίδα, σημεία & χάρτης','Compass, points & map')}</button><button class="btn g" onclick="go('t/back')">↩️ ${L2('Γύρνα πίσω (TracBack)','Track back')}</button></div>
- <div class="tip"><b>${L2('Για ακρίβεια σαν Garmin:','For Garmin-like accuracy:')}</b><br>
+ <div class="tip"><b>${L2('Για μέγιστη ακρίβεια:','For best accuracy:')}</b><br>
  ① ${L2('Ανοιχτός ουρανός – όχι μέσα σε σπίτι, φαράγγι ή πυκνό δάσος.','Open sky – not indoors, in a gorge or thick forest.')}<br>
  ② ${L2('Μόλις ανοίξεις, περίμενε 1–2 λεπτά να «κλειδώσει».','After opening, wait 1–2 minutes for it to «lock».')}<br>
  ③ ${L2('Κράτα το κινητό ψηλά (τσέπη στο στήθος, πάνω στο σακίδιο) – όχι στην πίσω τσέπη.','Keep the phone high (chest pocket, top of the pack) – not in a back pocket.')}<br>
@@ -4971,9 +4971,9 @@ function gfUI(force){if(!GF.on||!$('#gfst'))return;const now=Date.now(),p=pos,ap
 document.addEventListener('nativegnss',e=>{const d=e.detail||{};if(d.ttff!=null){GF.ttff=d.ttff;return}GF.sat=d});
 document.addEventListener('nativegps',e=>{const d=e.detail||{};if(d.err){GF.err=d.err;gfUI()}});
 {const _r=render;render=function(r){const [a]=r.split('/');if(a==='gps')return gpsPage();return _r(r)}}
-{const _h=home;home=function(){_h();const c=M.querySelector(`button[onclick="go('compass')"]`);if(c)c.insertAdjacentHTML('beforebegin',`<button class="tile notr" onclick="go('gps')"><span class="e">🛰️</span>${L2('GPS σαν Garmin','GPS like a Garmin')}<small>${L2('ακρίβεια, υψόμετρο, σημεία','accuracy, altitude, points')}</small></button>`)}}
-{const _c=compass;compass=function(){_c();const b=$('#cbtns');if(b)b.insertAdjacentHTML('afterend',`<button class="btn p notr" style="width:100%;margin:6px 0" onclick="go('gps')">🛰️ ${L2('GPS σαν Garmin – ακρίβεια, υψόμετρο, UTM/MGRS/ΕΓΣΑ87','GPS like a Garmin – accuracy, altitude, UTM/MGRS/GGRS87')}</button>`)}}
-TOOLS.unshift(['gps','🛰️',L2('GPS σαν Garmin','GPS like a Garmin'),L2('ακρίβεια ±m, βαρομετρικό υψόμετρο, σημείο με μέσο όρο, UTM/MGRS/ΕΓΣΑ87','accuracy ±m, barometric altitude, averaged point, UTM/MGRS/GGRS87')]);
+{const _h=home;home=function(){_h();const c=M.querySelector(`button[onclick="go('compass')"]`);if(c)c.insertAdjacentHTML('beforebegin',`<button class="tile notr" onclick="go('gps')"><span class="e">🛰️</span>${L2('GPS Ακριβείας','Precision GPS')}<small>${L2('ακρίβεια, υψόμετρο, σημεία','accuracy, altitude, points')}</small></button>`)}}
+{const _c=compass;compass=function(){_c();const b=$('#cbtns');if(b)b.insertAdjacentHTML('afterend',`<button class="btn p notr" style="width:100%;margin:6px 0" onclick="go('gps')">🛰️ ${L2('GPS Ακριβείας – ακρίβεια, υψόμετρο, UTM/MGRS/ΕΓΣΑ87','Precision GPS – accuracy, altitude, UTM/MGRS/GGRS87')}</button>`)}}
+TOOLS.unshift(['gps','🛰️',L2('GPS Ακριβείας','Precision GPS'),L2('ακρίβεια ±m, βαρομετρικό υψόμετρο, σημείο με μέσο όρο, UTM/MGRS/ΕΓΣΑ87','accuracy ±m, barometric altitude, averaged point, UTM/MGRS/GGRS87')]);
 {const _t=tool;tool=function(id){if(id==='gps')return go('gps');_t(id)}}
 if(rec){startGeo();wake(1)}/* v32: η οθόνη μένει ανοιχτή και όταν ξανανοίγεις την εφαρμογή ενώ καταγράφει */
 setTimeout(grdBar,300);
