@@ -41,7 +41,7 @@ table.g .nm{position:sticky;left:0;background:var(--card);z-index:3;text-align:l
 table.g th.nm{z-index:4}
 table.g td.cell{cursor:pointer;font-weight:800;user-select:none}
 td.P{background:var(--P);color:var(--Pi)}td.A{background:var(--A);color:var(--Ai)}td.N{background:var(--N);color:var(--Ni)}td.R{background:var(--R);color:var(--Ri)}
-td.q{box-shadow:inset 0 0 0 3px var(--acc)}td.lk::after{content:"•";font-size:9px;vertical-align:super}
+td.q{box-shadow:inset 0 0 0 3px var(--acc)}
 td.err{outline:2px solid var(--bad);outline-offset:-2px}
 tr.cov td{font-size:11px;font-weight:700;height:24px}tr.cov td.short{background:#fde2e1;color:var(--bad)}tr.cov td.okc{color:var(--muted)}tr.cov td.one{background:#fff3d1;color:#9a6700}
 .tot{font-size:12px;font-weight:700;padding:0 6px!important;white-space:nowrap}
@@ -83,7 +83,8 @@ td.cell.away{background-image:repeating-linear-gradient(135deg,transparent 0 5px
 td.cell.hn::before{content:"";position:absolute;top:0;right:0;border:5px solid transparent;border-top-color:#e0577a;border-right-color:#e0577a}
 td.X{background:#e3e6ee;color:#253046}@media (prefers-color-scheme:dark){td.X{background:#3a4255;color:#e6e9f0}}
 td.cell.sm{font-size:min(calc(var(--fs)*.75),calc(var(--cw)*.38));letter-spacing:-.3px}
-.lsbar{display:none}
+.lsbar{display:none}#lsExit{display:none}body.ls.forced #lsExit{display:inline-block}
+@media (min-width:900px){main{max-width:none}}
 body.ls header,body.ls .nav,body.ls #v-month>.card:not(.gcard),body.ls .gcard>:not(.gridwrap):not(.lsbar){display:none!important}
 body.ls main{padding:0;max-width:none}
 body.ls .gcard{position:fixed;inset:0;margin:0;border:0;border-radius:0;padding:env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);display:flex;flex-direction:column;z-index:10}
@@ -121,8 +122,8 @@ body.ls table.g .nm{width:var(--nw);min-width:var(--nw);max-width:var(--nw)}
     <div class="row" style="margin-top:8px"><button class="btn sm" id="impReq">📥 Αιτήματα φυλάκων</button><button class="btn sm" id="sendLink">🔗 Link αιτήματος στους φύλακες</button></div>
   </div>
   <div class="card gcard" style="padding:10px">
-    <div class="lsbar"><span id="lsM" style="flex:1"></span><button id="lsUndo">↶ Αναίρεση</button><button id="lsGen">⚡ Γέμισε κενά</button></div>
-    <div class="row" style="flex-wrap:nowrap"><p class="note" style="flex:1;margin:0 2px">👆 <b>Πάτα ένα κουτάκι</b> για να γράψεις βάρδια, ώρα, κέντρο ή σημείωση.<br>📱 <b>Γύρνα το κινητό πλάγια</b> για να δεις όλο τον μήνα.</p><button class="undo" id="undo" title="Αναίρεση">↶</button></div>
+    <div class="lsbar"><span id="lsM" style="flex:1"></span><button id="lsUndo">↶ Αναίρεση</button><button id="lsGen">⚡ Γέμισε κενά</button><button id="lsExit">✕ Έξοδος</button></div>
+    <div class="row" style="flex-wrap:nowrap"><p class="note" style="flex:1;margin:0 2px">👆 <b>Πάτα ένα κουτάκι</b> για να γράψεις βάρδια, ώρα, κέντρο ή σημείωση.<br>📱 <b>Γύρνα το κινητό πλάγια</b> για να δεις όλο τον μήνα.</p><button class="undo" id="full" title="Όλη η οθόνη">⛶</button><button class="undo" id="undo" title="Αναίρεση">↶</button></div>
     <div class="gridwrap" style="margin-top:8px"><table class="g" id="grid"></table></div>
     <div class="legend" id="legend"></div>
   </div>
@@ -378,9 +379,14 @@ function rMonth(){const k=MK,D=dim(k),m=M(k),V=validate(k);feas();legend();$("#h
     s+=`<tr><td>${esc(p.name)}</td><td>${c("P")}</td><td>${c("A")}</td><td class="${c("N")>(C().maxN||99)?"bad":""}">${c("N")}</td><td>${ot||"–"}</td><td><b>${c("R")}</b></td><td>${c("L")+c("S")||"–"}</td><td>${tot?`${ok}/${tot}`:"–"}</td></tr>`;});
   $("#sum").innerHTML=s;fit();}
 /* full month on screen when the phone is sideways */
-function fit(){const t=$("#grid");if(!t)return;const ls=innerWidth>innerHeight&&innerHeight<620&&!$("#v-month").classList.contains("hide")&&!$("#mainApp").classList.contains("hide");
-  document.body.classList.toggle("ls",ls);$("#lsM").textContent=mName(MK);
-  if(!ls){["--cw","--rh","--fs","--nw"].forEach(v=>t.style.removeProperty(v));return;}
+let FORCE=false;
+function fit(){const t=$("#grid");if(!t)return;const onMonth=!$("#v-month").classList.contains("hide")&&!$("#mainApp").classList.contains("hide");
+  const ls=onMonth&&(FORCE||(innerWidth>innerHeight&&innerHeight<620));
+  document.body.classList.toggle("ls",ls);document.body.classList.toggle("forced",ls&&FORCE);$("#lsM").textContent=mName(MK);
+  if(!ls){["--cw","--rh","--fs","--nw"].forEach(v=>t.style.removeProperty(v));
+    if(onMonth&&innerWidth>=900){const W=t.parentElement.clientWidth,D=dim(MK),nw=Math.round(Math.min(200,Math.max(120,W*.13))),cw=Math.max(30,(W-nw-50-D-3)/D);const rh=Math.max(34,Math.min(56,cw*1.05));
+      t.style.setProperty("--cw",cw.toFixed(2)+"px");t.style.setProperty("--rh",rh.toFixed(1)+"px");t.style.setProperty("--fs",Math.max(13,Math.min(cw*.5,22)).toFixed(1)+"px");t.style.setProperty("--nw",nw+"px");}
+    return;}
   const w=$(".gcard .gridwrap"),W=w.clientWidth,H=w.clientHeight,D=dim(MK),n=S.staff.length,cov=t.querySelector("tr.cov")?3:0;
   const nw=Math.round(Math.min(160,Math.max(72,W*.15))),tw=22,cw=Math.max(12,(W-nw-tw-D-3)/D);
   const rh=Math.max(16,Math.min(64,(H-n-cov-6)/(1.25+n+cov*.62)));const fs=Math.max(9,Math.min(cw*.62,rh*.5,22));
@@ -391,7 +397,10 @@ const cyc=(seq,v)=>seq[(seq.indexOf(v||"")+1)%seq.length];
 const HIST=[];function snap(){HIST.push(JSON.stringify(S));if(HIST.length>40)HIST.shift();updUndo();}
 function updUndo(){[$("#undo"),$("#lsUndo")].forEach(b=>{if(b)b.disabled=!HIST.length;});}
 const doUndo=()=>{if(!HIST.length)return;S=JSON.parse(HIST.pop());save();rAll();updUndo();toast("↶ Αναιρέθηκε");};
-$("#undo").onclick=doUndo;$("#lsUndo").onclick=doUndo;$("#lsGen").onclick=()=>$("#gen").click();
+$("#undo").onclick=doUndo;
+$("#full").onclick=()=>{FORCE=true;try{document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen().catch(()=>{});}catch(e){}fit();};
+$("#lsExit").onclick=()=>{FORCE=false;try{document.fullscreenElement&&document.exitFullscreen();}catch(e){}fit();};
+document.addEventListener("fullscreenchange",()=>{if(!document.fullscreenElement&&FORCE){FORCE=false;fit();}});$("#lsUndo").onclick=doUndo;$("#lsGen").onclick=()=>$("#gen").click();
 /* ===== tap a box -> big simple picker ===== */
 let CK=null;
 $("#grid").addEventListener("click",e=>{const td=e.target.closest("td");if(!td)return;const pid=td.dataset.p;if(!pid)return;
