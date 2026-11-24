@@ -24,6 +24,7 @@
 	<key>NSMicrophoneUsageDescription</key><string>Για μηνύματα μέσω ήχου χωρίς δίκτυο και για καταγραφή αποδείξεων σε κίνδυνο.</string>
 	<key>NSPhotoLibraryUsageDescription</key><string>Για να διαλέξεις φωτογραφίες εγγράφων και ημερολογίου.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key><string>Για να αποθηκεύσεις φωτογραφίες και κάρτες της εφαρμογής.</string>
+	<key>NSBluetoothAlwaysUsageDescription</key><string>Για να στέλνεις και να λαμβάνεις μηνύματα και SOS με κοντινά κινητά χωρίς σήμα και χωρίς internet (Bluetooth). Τα μηνύματα δεν περνούν από κανέναν server.</string>
 	<key>NSMotionUsageDescription</key><string>Για την πυξίδα, την κατεύθυνση και το βαρόμετρο (πρόγνωση καιρού).</string>
 </dict>
 </plist>

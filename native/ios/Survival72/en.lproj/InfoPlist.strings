@@ -5,3 +5,4 @@
 "NSPhotoLibraryUsageDescription" = "To choose photos for documents and the diary.";
 "NSPhotoLibraryAddUsageDescription" = "To save photos and cards from the app.";
 "NSMotionUsageDescription" = "For the compass, direction and the barometer (weather forecast).";
+"NSBluetoothAlwaysUsageDescription" = "To send and receive messages and SOS with nearby phones without signal or internet (Bluetooth). Messages never pass through any server.";

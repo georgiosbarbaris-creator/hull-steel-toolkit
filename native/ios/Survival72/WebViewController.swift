@@ -22,6 +22,7 @@ final class WebViewController: UIViewController, WKNavigationDelegate, WKUIDeleg
     private lazy var altimeter = CMAltimeter()
     private var baroSum = 0.0, baroN = 0, baroLast = Date.distantPast
     private var gpsWanted = false
+    private var mesh: MeshBLE?
     private lazy var lm: CLLocationManager = {
         let m = CLLocationManager()
         m.delegate = self
@@ -150,10 +151,32 @@ final class WebViewController: UIViewController, WKNavigationDelegate, WKUIDeleg
             baro((a["on"] as? Bool) ?? false)
         case "gps":
             gps((a["on"] as? Bool) ?? false)
+        case "mesh":
+            meshOn((a["on"] as? Bool) ?? false)
+        case "meshSend":
+            if let d = a["data"] as? String { mesh?.send(d) }
         case "wake":
             UIApplication.shared.isIdleTimerDisabled = (a["on"] as? Bool) ?? false
         default: break
         }
+    }
+
+    // MARK: Μηνύματα Bluetooth (MeshBLE) – από την έκδοση 1.3
+    private func meshOn(_ on: Bool) {
+        if !on { mesh?.stop(); return }
+        if mesh == nil {
+            let m = MeshBLE()
+            m.onMessage = { [weak self] text, from in self?.js("window.__mesh&&__mesh", [text, from]) }
+            m.onState = { [weak self] s, n in self?.js("window.__meshState&&__meshState", [s, n]) }
+            m.onPeer = { [weak self] in self?.web.evaluateJavaScript("window.__meshPeer&&__meshPeer()", completionHandler: nil) }
+            mesh = m
+        }
+        mesh?.start()
+    }
+
+    private func js(_ fn: String, _ args: [Any]) {
+        guard let d = try? JSONSerialization.data(withJSONObject: args), let j = String(data: d, encoding: .utf8) else { return }
+        web.evaluateJavaScript("\(fn).apply(null,\(j))", completionHandler: nil)
     }
 
     // MARK: βαρόμετρο (CMAltimeter – πίεση σε kPa → hPa)

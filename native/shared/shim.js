@@ -2,7 +2,7 @@
    Μπαίνει πρώτο μέσα στο index.html ΜΟΝΟ όταν η σελίδα τρέχει μέσα στην εφαρμογή iOS/Android.
    Η web έκδοση (GitHub Pages) δεν το βλέπει ποτέ.
    Δίνει στη σελίδα ό,τι δεν έχει το WebView: κοινοποίηση, αποθήκευση αρχείων, εκτύπωση,
-   οθόνη ανοιχτή, ανάγνωση (Android), βαρόμετρο, GPS (δέκτης GNSS). */
+   οθόνη ανοιχτή, ανάγνωση (Android), βαρόμετρο, GPS (δέκτης GNSS), μηνύματα Bluetooth. */
 (function () {
   if (window.NATIVE_APP) return;
   var AND = !!window.SurvivalNative;
@@ -144,6 +144,22 @@
     };
     try { Object.defineProperty(navigator, 'geolocation', { value: geo, configurable: true }); } catch (e) {}
     window.nativeGps = { app: window.NATIVE_APP, sats: AND };
+  })();
+
+  /* ---- Μηνύματα χωρίς δίκτυο μέσω Bluetooth (BLE mesh) – από Android 1.4 / iOS 1.3 ----
+     Ο κώδικας του κινητού είναι μόνο «σωλήνας»: send(κείμενο) → σε όλους τους γείτονες.
+     Events: «nativemesh» {d: κείμενο, from}, «nativemeshstate» {s: on|off|denied|unsupported|starting|stopped, n: γείτονες},
+     «nativemeshpeer» (νέος γείτονας). Η αλυσίδα / TTL / διπλότυπα είναι στη σελίδα. */
+  (function () {
+    function ev(n, d) { try { document.dispatchEvent(new CustomEvent(n, { detail: d })); } catch (e) {} }
+    window.__mesh = function (d, from) { ev('nativemesh', { d: d, from: from }); };
+    window.__meshState = function (s, n) { window.__meshLast = { s: s, n: n }; ev('nativemeshstate', { s: s, n: n }); };
+    window.__meshPeer = function () { ev('nativemeshpeer', {}); };
+    window.nativeMesh = {
+      start: function () { N('mesh', { on: true }); },
+      stop: function () { N('mesh', { on: false }); },
+      send: function (s) { N('meshSend', { data: String(s) }); }
+    };
   })();
 
   /* ---- Ανάγνωση κειμένου (μόνο Android – στο iOS δουλεύει μόνο του) ---- */

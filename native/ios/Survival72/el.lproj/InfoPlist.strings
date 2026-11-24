@@ -5,3 +5,4 @@
 "NSPhotoLibraryUsageDescription" = "Για να διαλέξεις φωτογραφίες εγγράφων και ημερολογίου.";
 "NSPhotoLibraryAddUsageDescription" = "Για να αποθηκεύσεις φωτογραφίες και κάρτες της εφαρμογής.";
 "NSMotionUsageDescription" = "Για την πυξίδα, την κατεύθυνση και το βαρόμετρο (πρόγνωση καιρού).";
+"NSBluetoothAlwaysUsageDescription" = "Για να στέλνεις και να λαμβάνεις μηνύματα και SOS με κοντινά κινητά χωρίς σήμα και χωρίς internet (Bluetooth). Τα μηνύματα δεν περνούν από κανέναν server.";

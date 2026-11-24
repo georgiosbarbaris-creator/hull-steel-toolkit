@@ -7,8 +7,8 @@ android {
         applicationId = "gr.barbaris.survival72"
         minSdk = 26
         targetSdk = 36
-        versionCode = 4
-        versionName = "1.3"
+        versionCode = 5
+        versionName = "1.4"
     }
     // Offline αντίγραφο = docs/survival (όπως είναι τη στιγμή του build) + η native γέφυρα
     sourceSets { getByName("main") { assets.setSrcDirs(listOf("../../docs/survival", "../shared")) } }

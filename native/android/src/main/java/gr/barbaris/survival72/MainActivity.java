@@ -86,7 +86,7 @@ public class MainActivity extends Activity {
     static final String BASE = "https://" + HOST + PREFIX;
     static final long WAIT_MS = 3500;
 
-    private static final int REQ_FILE = 41, REQ_GEO = 51, REQ_MEDIA = 52, REQ_GPS = 53;
+    private static final int REQ_FILE = 41, REQ_GEO = 51, REQ_MEDIA = 52, REQ_GPS = 53, REQ_BLE = 54;
 
     private WebView web;
     private File liveDir;
@@ -353,6 +353,8 @@ public class MainActivity extends Activity {
         boolean any = false;
         for (int r : res) if (r == PackageManager.PERMISSION_GRANTED) any = true;
         if (code == REQ_GPS) { if (any) gpsOn(); else sendGpsErr("denied"); }
+        if (code == REQ_BLE) { boolean all = res.length > 0; for (int r : res) if (r != PackageManager.PERMISSION_GRANTED) all = false;
+            if (all) meshStart(); else meshState("denied", 0); }
         if (code == REQ_GEO && geoCb != null) { geoCb.invoke(geoOrigin, any, false); geoCb = null; }
         if (code == REQ_MEDIA && mediaReq != null) {
             List<String> ok = new ArrayList<>();
@@ -406,6 +408,8 @@ public class MainActivity extends Activity {
                         case "tts": speak(a.optString("id"), a.optString("text"), a.optString("lang"), a.optDouble("rate", 1)); break;
                         case "baro": baro(a.optBoolean("on")); break;
                         case "gps": gps(a.optBoolean("on")); break;
+                        case "mesh": mesh(a.optBoolean("on")); break;
+                        case "meshSend": if (meshBle != null) meshBle.send(a.optString("data")); break;
                         case "ttsStop": ttsQueue.clear(); if (tts != null) tts.stop(); break;
                     }
                 } catch (Exception ignored) {}
@@ -582,7 +586,44 @@ public class MainActivity extends Activity {
     }
 
     @Override protected void onPause() { super.onPause(); if (sm != null) sm.unregisterListener(baroL); gpsOff(); }
-    @Override protected void onResume() { super.onResume(); if (baroWanted) baro(true); if (gpsWanted) gps(true); }
+    @Override protected void onResume() { super.onResume(); if (baroWanted) baro(true); if (gpsWanted) gps(true); if (meshWanted && meshBle != null) meshBle.start(); }
+
+    // ------------------------------------------------------------------ Μηνύματα Bluetooth (MeshBLE) – από την έκδοση 1.4
+    private MeshBLE meshBle;
+    private boolean meshWanted;
+
+    private String[] blePerms() {
+        if (Build.VERSION.SDK_INT >= 31) return new String[]{Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_ADVERTISE, Manifest.permission.BLUETOOTH_CONNECT};
+        return new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
+    }
+
+    private void mesh(boolean on) {
+        meshWanted = on;
+        if (!on) { if (meshBle != null) meshBle.stop(); return; }
+        java.util.List<String> miss = new java.util.ArrayList<>();
+        for (String p : blePerms()) if (!has(p)) miss.add(p);
+        if (!miss.isEmpty()) { requestPermissions(miss.toArray(new String[0]), REQ_BLE); return; }
+        meshStart();
+    }
+
+    private void meshStart() {
+        if (!meshWanted) return;
+        if (meshBle == null) meshBle = new MeshBLE(this, new MeshBLE.Cb() {
+            @Override public void message(String text, String from) {
+                runOnUiThread(() -> web.evaluateJavascript("window.__mesh&&__mesh(" + JSONObject.quote(text) + "," + JSONObject.quote(from) + ")", null));
+            }
+            @Override public void state(String s, int n) { meshState(s, n); }
+            @Override public void peer() { runOnUiThread(() -> web.evaluateJavascript("window.__meshPeer&&__meshPeer()", null)); }
+        });
+        if (!meshBle.enabled()) {
+            try { startActivity(new Intent(android.bluetooth.BluetoothAdapter.ACTION_REQUEST_ENABLE)); } catch (Exception ignored) {}
+        }
+        meshBle.start();
+    }
+
+    private void meshState(String s, int n) {
+        runOnUiThread(() -> web.evaluateJavascript("window.__meshState&&__meshState(" + JSONObject.quote(s) + "," + n + ")", null));
+    }
 
     // ------------------------------------------------------------------ GPS (δέκτης GNSS του κινητού) – από την έκδοση 1.3
     // Σαν Garmin: παίρνουμε τη θέση κατευθείαν από τον δέκτη GPS (GPS_PROVIDER), όχι από τον browser.
@@ -758,6 +799,7 @@ public class MainActivity extends Activity {
         if (tts != null) tts.shutdown();
         net.shutdownNow();
         altEx.shutdownNow();
+        if (meshBle != null) meshBle.stop();
         gpsOff();
         super.onDestroy();
     }
