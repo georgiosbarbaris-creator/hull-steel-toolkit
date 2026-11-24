@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="el"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Air Down Calculator · Overland’s Habit</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Air Down">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#1f1e1d">
+<script src="../crawl/data.js"></script>
+<script src="../crawl/vehicles2.js"></script>
+<script src="../crawl/extra.js"></script>
+<script src="terrain.js"></script>
+<style>
+:root{--bg:#1a1918;--card:#262422;--line:#3d3935;--tx:#f5f0e8;--mut:#a8a29e;--red:#d9534f;--org:#d97757;--grn:#5f9e7a;--yel:#e8b86d;--blu:#6a9fb5}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--tx);font-family:-apple-system,system-ui,"Segoe UI",Roboto,Arial,sans-serif;font-size:18px;line-height:1.45}
+header{position:sticky;top:0;z-index:5;background:#1f1e1d;display:flex;align-items:center;gap:10px;padding:calc(env(safe-area-inset-top) + 10px) 12px 8px;border-bottom:1px solid var(--line)}
+header img{width:44px;height:44px;border-radius:10px}
+.tw{flex:1;min-width:0}header h1{font-size:1.08em;margin:0;white-space:nowrap}
+#tag{font-size:.72em;color:#c96442;font-style:italic;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hb{background:var(--card);color:var(--tx);border:1px solid var(--line);border-radius:12px;min-width:48px;height:44px;font-size:.9em;font-weight:800}
+main{padding:12px 12px calc(env(safe-area-inset-bottom) + 40px);max-width:760px;margin:0 auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin:0 0 14px}
+.card h2{font-size:1.05em;margin:0 0 10px;color:var(--org)}
+.card h2 b{display:inline-block;background:var(--org);color:#1a1918;border-radius:50%;width:1.6em;height:1.6em;text-align:center;line-height:1.6em;margin-right:6px;font-size:.85em}
+label{display:block;font-size:.78em;color:var(--mut);margin:0 0 3px}
+input,select{width:100%;font-size:1.05em;padding:11px 10px;border-radius:12px;border:1px solid var(--line);background:#1a1918;color:var(--tx);font-family:inherit}
+input:focus,select:focus{outline:2px solid var(--org);border-color:transparent}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.note{font-size:.8em;color:var(--mut);margin:8px 0 0}
+.sub{font-size:.78em;color:var(--mut);margin:10px 0 4px;font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 6px}
+.chip{background:#1a1918;color:var(--tx);border:1px solid var(--line);border-radius:999px;padding:9px 14px;font-size:.9em;font-weight:700;font-family:inherit}
+.chip.on{background:var(--org);border-color:var(--org);color:#1a1918}
+.tg{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.tb{background:#1a1918;border:1px solid var(--line);border-radius:14px;padding:10px 8px;color:var(--tx);font-family:inherit;font-size:.86em;font-weight:700;text-align:left;display:flex;gap:8px;align-items:center;min-height:54px}
+.tb span{font-size:1.5em}.tb.on{background:var(--org);color:#1a1918;border-color:var(--org)}
+.btn{border:0;border-radius:12px;padding:12px 14px;font-size:.95em;font-weight:800;background:var(--blu);color:#fff;font-family:inherit}
+.btn.g{background:var(--grn)}.btn.r{background:#4a2b2a;color:#f3b9b7}.btn.o{background:var(--org);color:#1a1918}.btn.k{background:#1a1918;border:1px solid var(--line);color:var(--tx);padding:9px 11px;font-size:.85em}
+.sos{display:block;width:100%;margin-top:12px;background:#b23b36;color:#fff;font-size:1.15em;padding:16px;border-radius:16px;border:0;font-weight:900;font-family:inherit;letter-spacing:.03em}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.ax{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.kpi{background:#1a1918;border:1px solid var(--line);border-radius:14px;padding:12px 6px;text-align:center}
+.kpi .l{font-size:.72em;color:var(--mut);font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.kpi .v{font-size:1.9em;font-weight:900;line-height:1.1;color:var(--yel)}.kpi .v small{font-size:.45em;color:var(--mut);font-weight:700}
+.kpi .s{font-size:.78em;color:var(--mut);margin-top:3px}.kpi .sp{font-size:.85em;margin-top:6px;font-weight:800;color:#8fd1a8}
+.verdict{margin-top:10px;padding:10px 12px;border-radius:12px;background:#1a1918;border-left:5px solid var(--org);font-size:.92em}
+.verdict.ok{border-color:var(--grn)}.verdict.no{border-color:var(--red);background:#2e1c1b}.verdict.mid{border-color:var(--yel)}.verdict.blu{border-color:var(--blu)}
+.lad{position:relative;height:26px;border-radius:8px;overflow:hidden;display:flex;margin:14px 0 2px;border:1px solid var(--line)}
+.lad i{display:block;height:100%}
+.ladw{position:relative}.mk{position:absolute;top:-6px;width:4px;height:38px;background:#fff;border-radius:2px;box-shadow:0 0 0 2px #000}
+.mkl{position:absolute;top:34px;transform:translateX(-50%);font-size:.72em;font-weight:900;white-space:nowrap}
+.lgd{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:.72em;color:var(--mut);margin-top:22px}
+.lgd b{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:middle}
+ul.tt{margin:6px 0 0;padding-left:20px;font-size:.9em}ul.tt li{margin:0 0 6px}
+.src{font-size:.74em;color:var(--mut);margin-top:8px;border-top:1px dashed var(--line);padding-top:6px}
+.ss{font-size:.78em;color:var(--yel);margin-top:6px}
+.law{background:#2e1c1b;border:1px solid #6b2e2b;border-radius:14px;padding:10px 12px;font-size:.86em;margin:0 0 12px}
+.law.y{background:#2f2a24;border-color:#6b5a3a}
+.law b{color:#f3b9b7}.law.y b{color:var(--yel)}
+.step{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--line);font-size:.92em}
+.step input{width:26px;height:26px;flex:none;margin-top:1px}.step .e{font-size:1.3em;flex:none}
+.step.done{opacity:.45}
+.timer{font-size:2.6em;font-weight:900;text-align:center;font-variant-numeric:tabular-nums;margin:6px 0}
+details{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:0 14px;margin:0 0 14px}
+#howto{border-color:var(--org)}
+summary{padding:14px 0;font-weight:800;color:var(--org);list-style:none;cursor:pointer}summary::-webkit-details-marker{display:none}
+summary:after{content:"＋";float:right;color:var(--mut)}details[open] summary:after{content:"－"}
+details .in{padding:0 0 14px;font-size:.93em}details p{margin:0 0 10px}
+details h4{margin:14px 0 6px;font-size:.98em;color:var(--yel)}details ul,details ol{margin:0 0 8px;padding-left:22px}details li{margin:0 0 6px}
+table{width:100%;border-collapse:collapse;font-size:.82em;margin:6px 0 10px}th,td{border-bottom:1px solid var(--line);padding:6px 4px;text-align:left;vertical-align:top}th{color:var(--mut);font-weight:700}
+.s10{background:#2f2a24;border-radius:12px;padding:10px 12px;margin:0 0 10px;border-left:5px solid var(--yel)}
+.good{color:#8fd1a8}.bad{color:#f08a86}.warn{color:var(--yel)}
+.ck{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:.92em}.ck input{width:24px;height:24px;flex:none}
+.log{padding:9px 0;border-bottom:1px solid var(--line);font-size:.88em;display:flex;gap:8px;align-items:flex-start}
+.log .t{flex:1}.log small{color:var(--mut);display:block}
+footer{text-align:center;font-size:.78em;color:var(--mut);margin:20px 0 0;line-height:1.6}
+@media (max-width:380px){.kpi .v{font-size:1.6em}}
+</style></head><body>
+<header><img src="icon-192.png" alt=""><div class="tw"><h1>Air Down Calculator</h1><div id="tag">Overland’s Habit · Adventure is a Habit…</div></div><button class="hb" id="lang"></button></header>
+<main id="app"></main>
+<script>
+/* Overland's Habit · Air Down Calculator · Created by George Barbaris
+   Λογική (AIRDOWN_BRAIN §12): στόχος = ετικέτα κολόνας × λόγος εδάφους (terrain.js) → clamp στα όρια:
+   χωρίς beadlock ελάχιστο 15 psi (γραμμή Overland’s Habit) · ελαστικό P ή ζάντα ≥19" → 20 (Toyo / BFG UK / Cooper)
+   φορτωμένο σε μαλακό έδαφος +4 psi (4X4 Australia: έως 25 στην άμμο φορτωμένος) · πάγος: χωρίς ξεφούσκωμα
+   ταχύτητα: καμπύλη Toyo AU κλιμακωμένη στην ετικέτα, κόβεται στο όριο εδάφους · κάτω από το ελάχιστο = βήμα ανθρώπου */
+let LANG=localStorage.getItem('air_lang')||((navigator.language||'el').startsWith('el')?'el':'en');
+const L=(el,en)=>LANG==='el'?el:en;
+const LL=a=>a?(LANG==='el'?a[0]:a[1]):'';
+const PSI_BAR=14.5038,PSI_KPA=6.89476;
+const DEF={vid:'',tyre:'265/70R17',lt:1,pf:33,pr:33,plEst:1,load:'n',bl:0,unit:'psi',cc:'gr',terr:'gravel',cur:'',hot:0,comp:'good'};
+let S={};try{S=JSON.parse(localStorage.getItem('air_state')||'{}')}catch(e){}
+S=Object.assign({},DEF,S);
+let MY=[];try{MY=JSON.parse(localStorage.getItem('air_my')||'[]')}catch(e){}
+let LOG=[];try{LOG=JSON.parse(localStorage.getItem('air_log')||'[]')}catch(e){}
+let CK={};try{CK=JSON.parse(localStorage.getItem('air_chk')||'{}')}catch(e){}
+let STUCKON=false,ST={};
+const save=()=>{try{localStorage.setItem('air_state',JSON.stringify(S))}catch(e){}};
+const num=x=>{const v=parseFloat(String(x).replace(',','.'));return isFinite(v)?v:NaN};
+const f=(x,d=0)=>isFinite(x)?x.toLocaleString(LANG==='el'?'el-GR':'en-GB',{minimumFractionDigits:d,maximumFractionDigits:d}):'–';
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const $=id=>document.getElementById(id);
+/* μονάδες: εσωτερικά πάντα psi */
+const toU=(p,u=S.unit)=>u==='bar'?p/PSI_BAR:u==='kpa'?p*PSI_KPA:p;
+const fromU=(v,u=S.unit)=>u==='bar'?v*PSI_BAR:u==='kpa'?v/PSI_KPA:v;
+const uN=(u=S.unit)=>u==='bar'?'bar':u==='kpa'?'kPa':'psi';
+const fu=(p,u=S.unit)=>u==='bar'?f(p/PSI_BAR,1):u==='kpa'?f(Math.round(p*PSI_KPA/5)*5):f(Math.round(p));
+const alt=p=>S.unit==='psi'?`${f(p/PSI_BAR,1)} bar`:`${f(Math.round(p))} psi`;
+
+/* ===== Βάση οχημάτων: η κοινή λίστα Crawl / Winch / Tilt ===== */
+const DB=(()=>{const o=[],seen={};
+ const add=(id,name,gvw,tyre,r)=>{if(seen[id])return;seen[id]=1;o.push({id,name,gvw:+gvw||0,tyre:tyre||'',D:r?r*2/0.0254:0})};
+ (typeof EXTRA!=='undefined'?EXTRA:[]).forEach(v=>add(v.id,v.name,v.kg,v.tyre));
+ (typeof VEH2!=='undefined'?VEH2:[]).forEach(v=>add(v.id,v.name,v.kg,v.tyre));
+ (typeof VEH!=='undefined'?VEH:[]).forEach(v=>add(v.id,v.name.replace(/\b([A-Z]{2,})\b/g,w=>w[0]+w.slice(1).toLowerCase()),v.gvw,v.tyre,v.r));
+ return o.sort((a,b)=>a.name.localeCompare(b.name));})();
+/* εκτίμηση ετικέτας από το μικτό βάρος (Jimny 26 psi, μεσαία 4x4 30–33, μεγάλα 34–36): ΜΟΝΟ αν ο χρήστης δεν έβαλε τη δική του */
+const estPl=g=>!g?33:g<1600?26:g<2300?30:g<2900?33:36;
+
+/* ===== Ελαστικό ===== */
+function tyre(){const s=String(S.tyre||'').toUpperCase().replace(/\s+/g,'');let m=s.match(/(\d{3})\/(\d{2,3})Z?R?F?(\d{2}(?:\.5)?)/);
+ if(m){const w=+m[1],a=+m[2],rim=+m[3],sh=w*a/100;return{ok:1,w,sh,rim,D:rim+2*sh/25.4}}
+ m=s.match(/(\d{2}(?:\.\d+)?)X(\d{1,2}(?:\.\d+)?)R?(\d{2}(?:\.5)?)/);
+ if(m){const D=+m[1],w=+m[2]*25.4,rim=+m[3],sh=(D-rim)/2*25.4;return{ok:1,w,sh,rim,D}}
+ const v=DB.find(x=>x.id===S.vid);return{ok:0,w:265,sh:185,rim:17,D:v&&v.D?v.D:31.6}}
+const vol=t=>t.w*t.sh*(t.rim*25.4+t.sh); /* ανάλογο του όγκου αέρα (τόρος) */
+const VREF=vol({w:255,sh:216.75,rim:16}); /* 255/85R16 του τεστ Overland Journal */
+
+/* ===== Υπολογισμός ===== */
+const TT=()=>TERR.find(t=>t.k===S.terr)||TERR[1];
+function floors(T,ty){let F=15,why=[];
+ if(S.bl){F=T.bl?T.bl[0]:8;return{F,why:[L('beadlock','beadlock')]}}
+ if(!S.lt){F=Math.max(F,20);why.push(L('ελαστικό επιβατικού (P)','passenger (P) tyre'))}
+ if(ty.rim>=19){F=Math.max(F,20);why.push(L(`ζάντα ${ty.rim}"`,`${ty.rim}" rim`))}
+ if(T.fl&&T.fl>F){F=T.fl;why.push(L('όριο εδάφους','terrain floor'))}
+ return{F,why}}
+function recov(ty){if(S.bl)return[6,10];if(!S.lt)return[12,15];if(ty.rim>=19)return[14,16];return[10,12]}
+function speed(p,pl,T,F){if(T.k==='road'&&p>=pl*.95)return 0;if(p<F-0.5)return 8;
+ const r=p/pl;let v=SPD[SPD.length-1][1];for(let i=0;i<SPD.length-1;i++){const[a,va]=SPD[i],[b,vb]=SPD[i+1];if(r<=a&&r>=b){v=vb+(va-vb)*(r-b)/(a-b);break}if(r>a){v=SPD[0][1];break}}
+ if(T.cap)v=Math.min(v,T.cap);return Math.max(5,Math.floor(v/5)*5)}
+function axle(pl,T,ty){const{F,why}=floors(T,ty);let hi=pl*T.hi,lo=pl*T.lo,clamp=0,load=0;
+ if(T.noair){return{hi:pl,lo:pl,F,why,clamp:0,load:0,shi:speed(pl,pl,T,F),slo:speed(pl,pl,T,F)}}
+ if(S.load==='h'&&T.soft){hi+=4;lo+=4;load=1}
+ if(S.load==='h'&&T.k==='road'){load=1}
+ hi=Math.min(hi,pl);lo=Math.min(lo,hi);
+ if(lo<F){clamp=lo<F-1?1:0;lo=F;if(hi<F+1)hi=Math.min(pl,F+1)}
+ hi=Math.round(hi);lo=Math.round(lo);if(lo>hi)lo=hi;
+ return{hi,lo,F,why,clamp,load,shi:speed(hi,pl,T,F),slo:speed(lo,pl,T,F)}}
+function model(){const T=TT(),ty=tyre(),pf=num(S.pf)||33,pr=num(S.pr)||pf;
+ return{T,ty,pf,pr,fr:axle(pf,T,ty),re:axle(pr,T,ty),rec:recov(ty)}}
+
+/* ===== Σχεδίαση ===== */
+function render(){
+ document.documentElement.lang=LANG;$('lang').textContent=LANG==='el'?'EN':'ΕΛ';
+ const opt=v=>`<option value="${v.id}"${v.id===S.vid?' selected':''}>${esc(v.name)}</option>`;
+ const chip=(key,val,txt)=>`<button class="chip${S[key]===val?' on':''}" onclick="setK('${key}',${typeof val==='string'?`'${val}'`:val})">${txt}</button>`;
+ $('app').innerHTML=`
+<details${localStorage.getItem('air_seen')?'':' open'} id="howto"><summary>📖 ${L('Πώς τη χρησιμοποιώ; (1 λεπτό)','How do I use it? (1 minute)')}</summary><div class="in">
+ <div class="s10">${L('<b>Σ10:</b> Ένα σκληρό ελαστικό είναι σαν τακούνι στην άμμο: βουλιάζει. Αν βγάλεις λίγο αέρα, το ελαστικό «μακραίνει» στο έδαφος, σαν χιονοπέδιλο, και πατάει από πάνω. Όμως όσο πιο μαλακό, τόσο πιο <b>αργά</b> πρέπει να πας, αλλιώς ζεσταίνεται ή φεύγει από τη ζάντα. Και <b>πάντα φουσκώνεις</b> πριν την άσφαλτο.','<b>Like you are 10:</b> A hard tyre is like a high heel in sand: it sinks. Let some air out and the tyre gets “longer” on the ground, like a snowshoe, and stays on top. But the softer it is, the <b>slower</b> you must go, or it heats up or comes off the rim. And you <b>always air up</b> before the tarmac.')}</div>
+ <ol><li>${L('Διάλεξε αυτοκίνητο και γράψε το ελαστικό σου.','Pick your vehicle and type your tyre size.')}</li>
+ <li>${L('Βάλε την πίεση της <b>ετικέτας στην κολόνα της πόρτας</b> (μπρος/πίσω).','Enter the <b>door-pillar placard</b> pressure (front/rear).')}</li>
+ <li>${L('Πάτα το έδαφος. Ξεκίνα από την <b>ΨΗΛΗ</b> τιμή και κατέβαινε 2 psi τη φορά μόνο αν χρειάζεται.','Tap the terrain. Start from the <b>UPPER</b> value and drop 2 psi at a time only if needed.')}</li>
+ <li>${L('Γράψε τι δείχνει το μανόμετρο: θα δεις σε ποια <b>ζώνη</b> είσαι και πόσο γρήγορα επιτρέπεται.','Type what your gauge reads: you will see which <b>zone</b> you are in and how fast you may go.')}</li>
+ <li>${L('Κόλλησες; Πάτα το κόκκινο <b>🆘 ΚΟΛΛΗΣΑ</b>.','Stuck? Tap the red <b>🆘 I’M STUCK</b>.')}</li></ol>
+ <button class="btn o" onclick="localStorage.setItem('air_seen',1);$('howto').open=false">👍 ${L('Κατάλαβα','Got it')}</button></div></details>
+
+<div class="card"><h2><b>1</b>${L('Αυτοκίνητο & ελαστικό','Vehicle & tyre')}</h2>
+ <label>${L('Μοντέλο','Model')} (${DB.length} ${L('μοντέλα','models')})</label>
+ <input id="q" placeholder="🔎 ${L('Ψάξε… π.χ. Hilux, Jimny, Land Cruiser','Search… e.g. Hilux, Jimny, Land Cruiser')}" style="margin-bottom:8px" oninput="filt()">
+ <select id="vid" onchange="pickV(this.value)"><option value="">✏️ ${L('Δικά μου νούμερα','My own numbers')}</option>${MY.length?`<optgroup label="${L('Τα δικά μου','My vehicles')}">${MY.map(opt).join('')}</optgroup>`:''}<optgroup label="${L('Λίστα','List')}">${DB.map(opt).join('')}</optgroup></select>
+ <div class="grid" style="margin-top:10px">
+  <div><label>${L('Ελαστικό (π.χ. 265/70R17 ή 33x12.5R15)','Tyre (e.g. 265/70R17 or 33x12.5R15)')}</label><input id="tyre" value="${esc(S.tyre)}" oninput="S.tyre=this.value;save();calc()"></div>
+  <div><label>${L('Κατασκευή','Construction')}</label><div class="chips">${chip('lt',1,'LT')}${chip('lt',0,L('P / επιβατικό','P / passenger'))}</div></div>
+ </div>
+ <div id="tyinfo" class="note"></div>
+ <div class="sub">${L('Πίεση ετικέτας (κρύα) · μονάδα','Placard pressure (cold) · unit')}</div>
+ <div class="chips">${chip('unit','psi','psi')}${chip('unit','bar','bar')}${chip('unit','kpa','kPa')}</div>
+ <div class="grid">
+  <div><label>${L('Μπροστά','Front')} (${uN()})</label><input id="pf" inputmode="decimal" value="${fu(num(S.pf)).replace(/\./g,'')}" oninput="setPl('pf',this.value)"></div>
+  <div><label>${L('Πίσω','Rear')} (${uN()})</label><input id="pr" inputmode="decimal" value="${fu(num(S.pr)).replace(/\./g,'')}" oninput="setPl('pr',this.value)"></div>
+ </div>
+ <div id="plnote" class="note"></div>
+ <div class="sub">${L('Φορτίο','Load')}</div>
+ <div class="chips">${chip('load','l',L('Ελαφρύ','Light'))}${chip('load','n',L('Κανονικό','Normal'))}${chip('load','h',L('Φορτωμένο / ταξίδι / τρέιλερ','Loaded / expedition / trailer'))}</div>
+ <div class="sub">Beadlock</div>
+ <div class="chips">${chip('bl',0,L('Όχι (κανονική ζάντα)','No (normal wheel)'))}${chip('bl',1,L('Ναι, πραγματικό / εσωτερικό','Yes, true / internal'))}</div>
+ <div class="sub">${L('Πού οδηγείς','Where you drive')}</div>
+ <div class="chips">${chip('cc','gr','🇬🇷 '+L('Ελλάδα','Greece'))}${chip('cc','ab','🌍 '+L('Εξωτερικό / εκδήλωση','Abroad / event'))}</div>
+ <div class="row"><button class="btn k" onclick="saveMy()">💾 ${L('Αποθήκευση ως «δικό μου»','Save as “mine”')}</button>${MY.some(v=>v.id===S.vid)?`<button class="btn k" onclick="delMy()">🗑 ${L('Διαγραφή','Delete')}</button>`:''}</div>
+</div>
+
+<div class="card"><h2><b>2</b>${L('Έδαφος','Terrain')}</h2>
+ <div class="tg">${TERR.map(t=>`<button class="tb${S.terr===t.k?' on':''}" onclick="setK('terr','${t.k}')"><span>${t.ic}</span>${LANG==='el'?t.el:t.en}</button>`).join('')}</div>
+</div>
+
+<div class="card" id="rescard"><h2><b>3</b>${L('Πόσο ξεφουσκώνω','How low do I go')}</h2><div id="res"></div></div>
+
+<div class="card" id="stuckcard" style="display:none;border-color:#b23b36"></div>
+
+<div class="card"><h2><b>4</b>${L('Τι δείχνει το μανόμετρο τώρα;','What does the gauge read now?')}</h2>
+ <div class="grid"><div><label>${L('Πίεση που μέτρησες','Pressure you measured')} (${uN()})</label><input id="cur" inputmode="decimal" value="${S.cur===''?'':fu(num(S.cur)).replace(/\./g,'')}" placeholder="${L('π.χ.','e.g.')} ${fu(18)}" oninput="S.cur=this.value===''?'':fromU(num(this.value));save();calcCur()"></div>
+ <div><label>${L('Ελαστικά','Tyres')}</label><div class="chips">${chip('hot',0,L('Κρύα','Cold'))}${chip('hot',1,L('Ζεστά','Hot'))}</div></div></div>
+ <div id="curres"></div>
+</div>
+
+<div class="card"><h2><b>5</b>${L('Ξεφούσκωμα & φούσκωμα: πόση ώρα','Airing down & up: how long')}</h2>
+ <div class="sub">${L('Τι κομπρεσέρ έχεις','Your compressor')}</div>
+ <div class="chips">${COMP.map(c=>chip('comp',c.k,LANG==='el'?c.el:c.en)).join('')}</div>
+ <div id="times"></div>
+</div>
+
+<div class="card"><h2><b>6</b>📒 ${L('Ημερολόγιο: τι δούλεψε σε μένα','Log: what worked for me')}</h2>
+ <p class="note" style="margin-top:0">${L('Ο καλύτερος οδηγός είναι το δικό σου ελαστικό. Γράψε τι πίεση έβαλες και πώς πήγε, και την επόμενη φορά θα το δεις εδώ.','The best guide is your own tyre. Write down what pressure you ran and how it went, and next time you will see it here.')}</p>
+ <div class="grid"><div><label>${L('Μπρος','Front')} (${uN()})</label><input id="lf" inputmode="decimal"></div><div><label>${L('Πίσω','Rear')} (${uN()})</label><input id="lr" inputmode="decimal"></div></div>
+ <div class="chips" style="margin-top:8px" id="lres">${[['ok','✅ '+L('Πέρασα άνετα','Easy')],['mid','⚠️ '+L('Δύσκολα','Hard work')],['no','❌ '+L('Κόλλησα','Got stuck')]].map(([k,t])=>`<button class="chip" data-k="${k}" onclick="[...this.parentNode.children].forEach(c=>c.classList.toggle('on',c===this))">${t}</button>`).join('')}</div>
+ <input id="ln" placeholder="${L('Σημείωση (π.χ. Πάρνηθα, χιόνι 30 cm)','Note (e.g. place, 30 cm snow)')}">
+ <div class="row"><button class="btn g" onclick="addLog()">➕ ${L('Καταχώριση για','Log for')} ${TT().ic} ${LANG==='el'?TT().el:TT().en}</button></div>
+ <div id="loglist"></div>
+</div>
+
+${learn()}
+<footer><b>Overland’s Habit</b> · Air Down Calculator · ${L('δωρεάν','free')}<br>${L('Διατίθεται μόνο μέσω Instagram: στείλε DM <b>AIR</b> στο @overlandshabit','Available only via Instagram: DM <b>AIR</b> to @overlandshabit')}<br>Created by George Barbaris<br>© 2026 George Barbaris · ${L('Με την επιφύλαξη παντός δικαιώματος','All rights reserved')}<br><a href="#" onclick="legalOpen();return false" style="color:var(--org)">⚖️ ${L('Όροι χρήσης & αποποίηση ευθύνης','Terms of use & disclaimer')}</a><br>${L('Ενδεικτικά εύρη από δημοσιευμένες πηγές. Ισχύουν πάντα οι οδηγίες του κατασκευαστή του ελαστικού και του οχήματος.','Indicative ranges from published sources. Your tyre and vehicle makers’ instructions always apply.')}</footer>`;
+ calc();if(STUCKON)showStuck();}
+
+function setK(k,v){S[k]=v;save();if(k==='terr'){STUCKON=false;ST={}}render();if(k==='terr')setTimeout(()=>$('rescard').scrollIntoView({behavior:'smooth',block:'start'}),50)}
+function setPl(k,v){const x=fromU(num(v));if(isFinite(x)&&x>5){S[k]=Math.round(x*10)/10;S.plEst=0;save();calc()}}
+function filt(){const q=$('q').value.toLowerCase().trim(),sel=$('vid');const words=q.split(/\s+/).filter(Boolean);
+ [...sel.querySelectorAll('option')].forEach(o=>{if(!o.value)return;o.hidden=words.length&&!words.every(w=>o.textContent.toLowerCase().includes(w))});
+ const first=[...sel.querySelectorAll('option')].find(o=>o.value&&!o.hidden);if(q.length>2&&first&&sel.value!==first.value){sel.value=first.value;pickV(first.value,1)}}
+function pickV(id,keep){S.vid=id;const m=MY.find(v=>v.id===id);
+ if(m){Object.assign(S,m.st)}else{const v=DB.find(x=>x.id===id);if(v){if(v.tyre)S.tyre=v.tyre;if(S.plEst||!keep){const p=estPl(v.gvw);S.pf=p;S.pr=S.load==='h'?p+3:p;S.plEst=1}}}
+ save();if(keep){const q=$('q').value;render();$('q').value=q;filt();$('q').focus()}else render()}
+function saveMy(){const v=DB.find(x=>x.id===S.vid),m=MY.find(x=>x.id===S.vid);const n=prompt(L('Όνομα για το δικό σου αυτοκίνητο:','Name for your vehicle:'),m?m.name:(v?v.name:'')+' · '+S.tyre);if(!n)return;
+ const st={tyre:S.tyre,lt:S.lt,pf:S.pf,pr:S.pr,bl:S.bl,plEst:0};
+ if(m){m.name=n;m.st=st}else{const id='my'+Date.now();MY.push({id,name:n,st});S.vid=id}
+ try{localStorage.setItem('air_my',JSON.stringify(MY))}catch(e){}save();render()}
+function delMy(){if(!confirm(L('Διαγραφή αυτού του αυτοκινήτου;','Delete this vehicle?')))return;MY=MY.filter(v=>v.id!==S.vid);S.vid='';try{localStorage.setItem('air_my',JSON.stringify(MY))}catch(e){}save();render()}
+
+function calc(){const M=model(),{T,ty,fr,re,pf,pr}=M;
+ const D=ty.D;
+ $('tyinfo').innerHTML=ty.ok?`${L('Πλαϊνό','Sidewall')} <b>${f(ty.sh)} mm</b> · ${L('ζάντα','rim')} <b>${f(ty.rim,ty.rim%1?1:0)}"</b> · ${L('διάμετρος','diameter')} <b>≈${f(D,1)}"</b>${ty.rim>=19?` · <span class="warn">${L('ζάντα ≥19": κοντό πλαϊνό, το ελάχιστο ανεβαίνει στα 20 psi (Toyo)','rim ≥19": short sidewall, the minimum rises to 20 psi (Toyo)')}</span>`:ty.sh<150?` · <span class="warn">${L('κοντό πλαϊνό: λιγότερο περιθώριο, μείνε στο πάνω μέρος του εύρους','short sidewall: less margin, stay at the top of the range')}</span>`:ty.sh>=210?` · <span class="good">${L('ψηλό πλαϊνό: αντέχει καλύτερα τη χαμηλή πίεση','tall sidewall: copes better with low pressure')}</span>`:''}${/LT/i.test(S.tyre)&&!S.lt?` · <span class="warn">${L('γράφει LT: διάλεξε LT','it says LT: pick LT')}</span>`:''}`:`<span class="warn">${L('Δεν αναγνωρίζω τη διάσταση. Γράψε π.χ. 265/70R17.','I can’t read that size. Type e.g. 265/70R17.')}</span>`;
+ $('plnote').innerHTML=S.plEst?`⚠️ <span class="warn">${L('Εκτίμηση από το βάρος. Γράψε την πίεση της <b>ετικέτας στην κολόνα της πόρτας</b>: όλοι οι υπολογισμοί ξεκινούν από αυτήν.','Estimated from weight. Type the <b>door-pillar placard</b> pressure: every calculation starts from it.')}</span>`:`✅ ${L('Η δική σου πίεση ετικέτας','Your own placard pressure')}: ${fu(pf)} / ${fu(pr)} ${uN()} (${alt(pf)} / ${alt(pr)})`;
+ const law=lawBox(T);
+ const big=S.bl&&T.big&&D>=37;
+ const ax=(name,a,pl)=>`<div class="kpi"><div class="l">${name}</div><div class="v">${T.noair?fu(pl):(a.hi===a.lo?fu(a.hi):`${fu(a.hi)}<small>→</small>${fu(a.lo)}`)} <small>${uN()}</small></div><div class="s">${T.noair?alt(pl):(a.hi===a.lo?alt(a.hi):`${alt(a.hi)} → ${alt(a.lo)}`)}</div><div class="sp">🏁 ${a.shi?`≤ ${a.shi}${a.slo!==a.shi?'→'+a.slo:''} km/h`:L('κανονική ταχύτητα','normal speed')}</div></div>`;
+ let w=[];
+ if(T.noair)w.push(`<div class="verdict no">🧊 <b>${L('Στον πάγο ΔΕΝ ξεφουσκώνεις.','Do NOT air down on ice.')}</b> ${L('Πίεση ετικέτας, αλυσίδες ή καρφιά, πολύ αργά.','Placard pressure, chains or studs, very slowly.')}</div>`);
+ if(fr.clamp&&!T.noair)w.push(`<div class="verdict mid">🛑 ${L('Το έδαφος θα ήθελε λιγότερο αέρα, αλλά σταματάς στα','The terrain would like less air, but you stop at')} <b>${fu(fr.F)} ${uN()}</b> (${fr.why.join(', ')||L('γενικό ελάχιστο χωρίς beadlock','general minimum without beadlocks')}). ${S.bl?'':L('Πιο κάτω = μόνο για ξεκόλλημα.','Lower = only to get unstuck.')}</div>`);
+ if(fr.load&&T.soft)w.push(`<div class="verdict blu">🎒 ${L('Φορτωμένο: +4 psi για να μη ζεσταθεί και κοπεί το πλαϊνό (4X4 Australia: έως 25 psi στην άμμο για ταξίδι με φορτίο). Το βαρύ βουλιάζει, αλλά και ζεσταίνεται.','Loaded: +4 psi so the sidewall does not overheat or cut (4X4 Australia: up to 25 psi in sand when loaded for a trip). Heavy sinks, but it also heats.')}</div>`);
+ if(!S.lt&&!T.noair&&T.k!=='road')w.push(`<div class="verdict mid">🚗 ${L('Ελαστικό επιβατικού (P): πιο μαλακό πλαϊνό, μένεις πιο ψηλά. Οι πίνακες των κατασκευαστών είναι για LT. Ρώτα τον κατασκευαστή του ελαστικού σου.','Passenger (P) tyre: softer sidewall, stay higher. Makers’ charts are for LT. Ask your tyre maker.')}</div>`);
+ if(S.bl&&T.bl)w.push(`<div class="verdict blu">🔩 ${L('Με beadlock σε αυτό το έδαφος μπορείς ως','With beadlocks on this terrain you can go to')} <b>${fu(T.bl[1])}→${fu(T.bl[0])} ${uN()}</b>${big?` · ${L('ελαστικό','tyre')} ≥37": <b>${fu(T.big[1])}→${fu(T.big[0])}</b>`:''}. ${L('Το beadlock κρατά το bead, ΟΧΙ το πλαϊνό ούτε τη ζάντα. Βήμα ανθρώπου, έλεγχος βιδών με δυναμόκλειδο.','A beadlock holds the bead, NOT the sidewall or the rim. Walking pace, check the bolts with a torque wrench.')}</div>`);
+ const last=LOG.filter(x=>x.t===T.k&&(!x.v||x.v===vName())).slice(-1)[0];
+ if(last)w.push(`<div class="verdict ok">📒 ${L('Την τελευταία φορά εδώ','Last time here')} (${new Date(last.d).toLocaleDateString(LANG==='el'?'el-GR':'en-GB')}): <b>${fu(last.f)}/${fu(last.r)} ${uN()}</b> ${last.res==='ok'?'✅':last.res==='no'?'❌':'⚠️'} ${esc(last.n||'')}</div>`);
+ $('res').innerHTML=`${law}
+ <div style="font-weight:800;margin-bottom:6px">${T.ic} ${LANG==='el'?T.el:T.en}</div>
+ <div class="ax">${ax(L('Μπροστά','Front'),fr,pf)}${ax(L('Πίσω','Rear'),re,pr)}</div>
+ ${T.noair||T.k==='road'?'':`<div class="note" style="text-align:center">${L('Ξεκίνα από την ΠΡΩΤΗ τιμή. Κατέβαινε 2 psi τη φορά μόνο αν παλεύει.','Start from the FIRST value. Drop 2 psi at a time only if it struggles.')}</div>`}
+ ${ladder(fr,pf,M.rec,null)}
+ <p style="font-size:.9em;margin:12px 0 4px">${LL(T.d)}</p>
+ ${w.join('')}
+ <ul class="tt">${T.t.map(x=>`<li>${LL(x)}</li>`).join('')}</ul>
+ ${T.ss?`<div class="ss">⚠️ SINGLE-SOURCE: ${LL(T.ss)}</div>`:''}
+ <div class="src">📚 ${L('Πηγές','Sources')}: ${T.src}</div>
+ ${T.k!=='road'?`<div class="verdict no" style="margin-top:12px">🛣️ <b>${L('Φούσκωσε πριν την άσφαλτο.','Air up before the tarmac.')}</b> ${L('Ελαστικά 25%+ ξεφούσκωτα εμπλέκονται ~3× συχνότερα σε ατύχημα με πρόβλημα ελαστικού (NHTSA). Η πίεση άμμου είναι 40–55% κάτω.','Tyres 25%+ under-inflated are ~3× as likely to be in a crash with a tyre problem (NHTSA). Sand pressure is 40–55% low.')}</div>`:''}
+ ${T.stuck?`<button class="sos" onclick="STUCKON=true;showStuck();$('stuckcard').scrollIntoView({behavior:'smooth'})">🆘 ${L('ΚΟΛΛΗΣΑ','I’M STUCK')}</button>`:''}`;
+ calcCur();times();logList();}
+
+function ladder(a,pl,rec,p){const T=TT();const max=pl*1.08,E=S.bl?4:rec[0],F=a.F,pc=x=>Math.max(0,Math.min(100,x/max*100));
+ const segs=T.noair?[[0,pl*.95,'#7a4a2a'],[pl*.95,max,'#5f9e7a']]:[[0,E,'#b23b36'],[E,F,'#d97757'],[F,a.lo-0.5,'#e8b86d'],[a.lo-0.5,a.hi+0.5,'#5f9e7a'],[a.hi+0.5,max,'#6a9fb5']];
+ const bar=segs.filter(s=>s[1]>s[0]).map(s=>`<i style="width:${pc(s[1])-pc(s[0])}%;background:${s[2]}"></i>`).join('');
+ const mark=isFinite(p)&&p!==null?`<div class="mk" style="left:calc(${pc(p)}% - 2px)"></div><div class="mkl" style="left:${pc(p)}%">▲ ${fu(p)}</div>`:'';
+ const tick=x=>`<div style="position:absolute;top:28px;left:${pc(x)}%;transform:translateX(-50%);font-size:.66em;color:var(--mut)">${fu(x)}</div>`;
+ return `<div class="ladw"><div class="lad">${bar}</div>${mark}${mark?'':(T.noair?[pl]:[E,F,a.lo,a.hi,pl]).filter((x,i,arr)=>arr.indexOf(x)===i&&x>0).map(tick).join('')}</div>
+ <div class="lgd">${T.noair?'':`<span><b style="background:#b23b36"></b>${L('κίνδυνος','danger')}</span><span><b style="background:#d97757"></b>${L('μόνο ξεκόλλημα','recovery only')}</span><span><b style="background:#e8b86d"></b>${L('χαμηλά, πολύ αργά','low, very slow')}</span>`}<span><b style="background:#5f9e7a"></b>${L('σωστό για το έδαφος','right for the terrain')}</span>${T.noair?'':`<span><b style="background:#6a9fb5"></b>${L('πιο σκληρό','firmer')}</span>`}</div>`}
+
+function zone(p,a,pl,rec){const T=TT(),E=S.bl?4:rec[0];
+ if(T.noair)return p>=pl*.93?['ok','🟢',L('Σωστά: στον πάγο μένεις στην πίεση ετικέτας.','Right: on ice you stay at placard pressure.')]:['no','🟠',L('Στον πάγο η χαμηλή πίεση ΜΕΙΩΝΕΙ την πρόσφυση. Φούσκωσε στην ετικέτα.','On ice low pressure REDUCES traction. Air up to placard.')];
+ if(p>pl*1.12)return['mid','🔵',L('Πάνω από την ετικέτα. Αν είναι ζεστά, είναι φυσιολογικό (+4–6 psi). Αν είναι κρύα, βγάλε αέρα.','Above the placard. If hot, that is normal (+4–6 psi). If cold, let some air out.')];
+ if(p>a.hi+1)return['blu','🔵',T.k==='road'?L('Πάνω από την ετικέτα.','Above placard.'):L(`Πιο σκληρό από όσο θέλει το έδαφος. Μπορείς να κατέβεις ως ${fu(a.hi)} ${uN()}.`,`Firmer than the terrain wants. You can go down to ${fu(a.hi)} ${uN()}.`)];
+ if(p>=a.lo-0.5)return['ok','🟢',L('Σωστό για αυτό το έδαφος.','Right for this terrain.')];
+ if(p>=a.F-0.5)return['mid','🟡',L('Πιο χαμηλά από όσο χρειάζεται το έδαφος. Γίνεται, αλλά πιο αργά και χωρίς απότομα τιμόνια.','Lower than the terrain needs. It works, but slower and with no sharp steering.')];
+ if(p>=E-0.5)return['no','🟠',S.bl?L('Πολύ χαμηλά ακόμα και με beadlock: το πλαϊνό και η ζάντα κινδυνεύουν.','Very low even with beadlocks: the sidewall and rim are at risk.'):L('ΖΩΝΗ ΞΕΚΟΛΛΗΜΑΤΟΣ: μόνο για να βγεις. Βήμα ανθρώπου, ρόδες ίσιες, το πολύ ~10 λεπτά, και ξαναφούσκωμα αμέσως μόλις βγεις.','RECOVERY ZONE: only to get out. Walking pace, wheels straight, ~10 minutes at most, and air up as soon as you are out.')];
+ return['no','🔴',L('ΚΙΝΔΥΝΟΣ: το bead μπορεί να φύγει και η ζάντα να ακουμπήσει. Μην κινείσαι πέρα από λίγα μέτρα. Φούσκωσε ΤΩΡΑ.','DANGER: the bead can come off and the rim can touch down. Do not move more than a few metres. Air up NOW.')]}
+function calcCur(){const el=$('curres');if(!el)return;const M=model(),p0=num(S.cur);
+ if(!isFinite(p0)){el.innerHTML=`<p class="note">${L('Γράψε τι δείχνει το μανόμετρο (μπροστά ελαστικό) για να δεις τη ζώνη σου.','Type your gauge reading (front tyre) to see your zone.')}</p>`;return}
+ const hd=S.hot?(S.lt?6:4):0,p=p0-hd,[cls,ic,txt]=zone(p,M.fr,M.pf,M.rec),sp=speed(p,M.pf,M.T,M.fr.F);
+ el.innerHTML=`${ladder(M.fr,M.pf,M.rec,p)}<div class="verdict ${cls}" style="margin-top:12px">${ic} <b>${fu(p0)} ${uN()}</b> (${alt(p0)}) · ${txt}<br>🏁 ${L('Μέγιστη ταχύτητα σε αυτή την πίεση','Max speed at this pressure')}: <b>${sp?(sp<=8?L('βήμα ανθρώπου (~5–8 km/h)','walking pace (~5–8 km/h)'):'≤ '+sp+' km/h'):L('κανονική','normal')}</b></div>
+ ${S.hot?`<div class="note">🌡️ ${L(`Ζεστά ελαστικά: υπολόγισα ~${hd} psi λιγότερο για «κρύα» τιμή. Αν ξεφουσκώσεις ζεστά, το πρωί θα δείχνουν λιγότερο: ξαναμέτρα πριν ξεκινήσεις.`,`Hot tyres: I took ~${hd} psi off for a “cold” value. If you air down hot, they will read lower in the morning: re-check before you set off.`)}</div>`:''}`}
+
+function times(){const el=$('times');if(!el)return;const M=model(),c=COMP.find(x=>x.k===S.comp)||COMP[1],vf=vol(M.ty)/VREF;
+ const drop=Math.max(0,M.pf-M.fr.lo),cur=num(S.cur),from=isFinite(cur)&&cur<M.pf?cur:M.fr.lo,up=Math.max(0,M.pf-from);
+ const ref33=vol({w:285,sh:213.75,rim:16}),dsec=60*(drop/27)*(vol(M.ty)/ref33);
+ const r=x=>Math.max(1,Math.round(x));
+ el.innerHTML=`<div class="ax" style="margin-top:8px"><div class="kpi"><div class="l">⬇️ ${L('Ξεφούσκωμα','Air down')}</div><div class="v" style="font-size:1.4em">${drop<1?'–':'~'+r(dsec*4/60)+'′'}</div><div class="s">${drop<1?L('δεν χρειάζεται','not needed'):L(`${fu(M.pf)}→${fu(M.fr.lo)} ${uN()}, ~${r(dsec)}″ ανά ελαστικό με βγαλμένη βαλβίδα`,`${fu(M.pf)}→${fu(M.fr.lo)} ${uN()}, ~${r(dsec)} s per tyre with the core out`)}</div></div>
+ <div class="kpi"><div class="l">⬆️ ${L('Φούσκωμα 4 ελαστικών','Air up 4 tyres')}</div><div class="v" style="font-size:1.4em">${up<1?'–':'~'+r(c.min*up/20*vf)+'–'+r(c.max*up/20*vf)+'′'}</div><div class="s">${up<1?L('δεν χρειάζεται','not needed'):`${fu(from)}→${fu(M.pf)} ${uN()} · ${LL(c.n)}`}</div></div></div>
+ <ul class="tt" style="margin-top:10px">
+ <li>${L('Ξεφουσκωτής που βγάζει τη βαλβίδα: 33" από 40 σε ~13 psi σε 60″ (Unsealed 4X4). Αυτόματοι βιδωτοί: πιο αργοί, βάλε και τους 4 μαζί.','Core-removal deflator: 33" from 40 to ~13 psi in 60 s (Unsealed 4X4). Screw-on automatic ones are slower: fit all 4 at once.')}</li>
+ <li>${L('Μέτρα με κανονικό μανόμετρο, όχι με το μάτι. Το «φούσκωμα» του πλαϊνού είναι οπτικός έλεγχος, όχι κανόνας: τα χαμηλά προφίλ σχεδόν δεν φουσκώνουν ακόμα κι όταν είναι επικίνδυνα χαμηλά.','Use a real gauge, not your eyes. Sidewall bulge is a visual check, not a rule: low profiles barely bulge even when dangerously low.')}</li>
+ <li>${L('Μεγάλο κομπρεσέρ τραβάει έως ~50 A: μηχανή αναμμένη. Μην ξεφουσκώνεις αν δεν έχεις πώς να ξαναφουσκώσεις (BFGoodrich).','A big compressor draws up to ~50 A: engine running. Never air down if you can’t air up again (BFGoodrich).')}</li>
+ <li>${L('Ο χρόνος είναι εκτίμηση από δοκιμές (Overland Journal, 4X4 Australia), κλιμακωμένη στον όγκο του ελαστικού σου.','Times are estimates from tests (Overland Journal, 4X4 Australia), scaled to your tyre volume.')}</li></ul>`}
+
+/* ===== Ξεκόλλημα ===== */
+function showStuck(){const M=model(),T=M.T,el=$('stuckcard');if(!T.stuck){el.style.display='none';return}
+ const steps=STUCK[T.stuck],rec=M.rec,lo=Math.min(rec[0],M.fr.lo-1),hi=Math.min(rec[1],M.fr.lo-1);
+ el.style.display='block';
+ el.innerHTML=`<h2 style="color:#f08a86">🆘 ${L('Κόλλησα','I’m stuck')} · ${T.ic} ${LANG==='el'?T.el:T.en}</h2>
+ <div class="kpi" style="border-color:#b23b36"><div class="l">${L('Πίεση ξεκολλήματος (και στα 4)','Recovery pressure (all 4)')}</div><div class="v" style="color:#f08a86">${fu(Math.max(hi,lo))}<small>→</small>${fu(lo)} <small>${uN()}</small></div><div class="s">${alt(Math.max(hi,lo))} → ${alt(lo)} · ${L('βήμα ανθρώπου · ρόδες ίσιες','walking pace · wheels straight')}</div></div>
+ <div class="note">${S.bl?L('Με beadlock: το bead μένει, αλλά πλαϊνό και ζάντα κινδυνεύουν.','With beadlocks: the bead stays, but the sidewall and rim are at risk.'):L('Toyo: 8–12 psi μόνο για ξεκόλλημα στην άμμο, για λίγο. Arrive Alive: 10 psi όριο σχεδόν πάντα. Ο Στρατός ΗΠΑ στη δική του έκτακτη πίεση βάζει όριο 8 km/h και ΜΟΝΟ 10 λεπτά.','Toyo: 8–12 psi only to get unstuck in sand, briefly. Arrive Alive: 10 psi floor almost always. The US Army caps its own emergency pressure at 8 km/h and ONLY 10 minutes.')}</div>
+ <div style="margin-top:10px">${steps.map((s,i)=>`<label class="step${ST[i]?' done':''}"><input type="checkbox"${ST[i]?' checked':''} onchange="ST[${i}]=this.checked;this.parentNode.classList.toggle('done',this.checked)"><span class="e">${s[0]}</span><span>${LANG==='el'?s[1]:s[2]}</span></label>`).join('')}</div>
+ <div class="sub" style="text-align:center">⏱️ ${L('Χρονόμετρο χαμηλής πίεσης (λογική Στρατού ΗΠΑ: 10 λεπτά)','Low-pressure timer (US Army logic: 10 minutes)')}</div>
+ <div class="timer" id="tmr">${tmrTxt()}</div>
+ <div class="row" style="justify-content:center"><button class="btn o" onclick="tmrGo()">${TM.on?'⏹ '+L('Σταμάτα','Stop'):'▶️ '+L('Ξεκίνα 10′','Start 10 min')}</button><button class="btn k" onclick="STUCKON=false;ST={};tmrStop();$('stuckcard').style.display='none'">✅ ${L('Βγήκα','I’m out')}</button></div>`}
+let TM={on:0,end:0,id:0};
+function tmrTxt(){if(!TM.on)return '10:00';const s=Math.max(0,Math.round((TM.end-Date.now())/1000));return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function tmrGo(){if(TM.on){tmrStop();showStuck();return}TM={on:1,end:Date.now()+600000,id:setInterval(()=>{const t=$('tmr');if(t)t.textContent=tmrTxt();if(Date.now()>=TM.end){tmrStop();beep();try{navigator.vibrate&&navigator.vibrate([300,150,300,150,300])}catch(e){}alert(L('⏱️ 10 λεπτά σε πίεση ξεκολλήματος. Ξαναφούσκωσε τώρα στην πίεση του εδάφους.','⏱️ 10 minutes on recovery pressure. Air up now to the terrain pressure.'));showStuck()}},1000)};showStuck()}
+function tmrStop(){clearInterval(TM.id);TM={on:0,end:0,id:0}}
+let AC=null;function beep(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();[0,.35,.7].forEach(t=>{const o=AC.createOscillator(),g=AC.createGain();o.type='square';o.frequency.value=880;g.gain.value=.25;o.connect(g);g.connect(AC.destination);o.start(AC.currentTime+t);o.stop(AC.currentTime+t+.25)})}catch(e){}}
+
+/* ===== Ημερολόγιο ===== */
+const vName=()=>{const m=MY.find(v=>v.id===S.vid)||DB.find(v=>v.id===S.vid);return m?m.name:''};
+function addLog(){const lf=fromU(num($('lf').value)),lr=fromU(num($('lr').value)),r=document.querySelector('#lres .chip.on');
+ if(!isFinite(lf)){alert(L('Γράψε τουλάχιστον την μπροστινή πίεση.','Type at least the front pressure.'));return}
+ LOG.push({d:Date.now(),v:vName(),t:S.terr,f:lf,r:isFinite(lr)?lr:lf,res:r?r.dataset.k:'mid',n:$('ln').value.trim()});
+ try{localStorage.setItem('air_log',JSON.stringify(LOG))}catch(e){}$('lf').value=$('lr').value=$('ln').value='';calc()}
+function delLog(i){if(!confirm(L('Διαγραφή καταχώρισης;','Delete entry?')))return;LOG.splice(i,1);try{localStorage.setItem('air_log',JSON.stringify(LOG))}catch(e){}calc()}
+function logList(){const el=$('loglist');if(!el)return;if(!LOG.length){el.innerHTML='';return}
+ el.innerHTML=`<div class="sub">${L('Οι καταχωρίσεις σου','Your entries')} (${LOG.length})</div>`+LOG.map((x,i)=>[x,i]).reverse().slice(0,30).map(([x,i])=>{const T=TERR.find(t=>t.k===x.t)||{ic:'',el:'',en:''};return `<div class="log"><span>${x.res==='ok'?'✅':x.res==='no'?'❌':'⚠️'}</span><div class="t"><b>${T.ic} ${LANG==='el'?T.el:T.en}</b> · ${fu(x.f)}/${fu(x.r)} ${uN()}<small>${new Date(x.d).toLocaleDateString(LANG==='el'?'el-GR':'en-GB')} · ${esc(x.v||'')}${x.n?' · '+esc(x.n):''}</small></div><button class="btn k" onclick="delLog(${i})">🗑</button></div>`}).join('')}
+
+/* ===== Νομικό πλαίσιο Ελλάδας ===== */
+function lawBox(T){if(S.cc!=='gr')return '';
+ if(['beach','sand','vsoft'].includes(T.k))return `<div class="law">⚖️ <b>${L('Στην Ελλάδα δεν οδηγείς σε παραλίες και αμμοθίνες.','In Greece you do not drive on beaches and dunes.')}</b> ${L('Ο ν. 3937/2011 (άρθρο 13 παρ. 4) απαγορεύει την κίνηση οχημάτων εκτός οδικού δικτύου σε αιγιαλό, αμμοθίνες, ποτάμια και ρέματα, ακτές λιμνών, δάση, λιβάδια. Στις ~250 «απάτητες» παραλίες (λίστα 2026) απαγορεύεται ακόμα και η παρουσία οχημάτων. Οι πιέσεις παρακάτω είναι για <b>αδειοδοτημένες εκδηλώσεις</b> (π.χ. Baja Greece, Hellas Rally Raid) ή για <b>ταξίδι στο εξωτερικό</b>, όπου επιτρέπεται.','Greek Law 3937/2011 (Art. 13(4)) bans vehicles off the road network on the foreshore, dunes, rivers and streams, lake shores, forests and meadows. On the ~250 “untouched” beaches (2026 list) even the presence of vehicles is banned. The pressures below are for <b>permitted events</b> (e.g. Baja Greece, Hellas Rally Raid) or <b>trips abroad</b> where it is allowed.')}</div>`;
+ if(['gravel','corr','dirt','mud','rock','sharp','snowd'].includes(T.k))return `<div class="law y">🌲 <b>${L('Μόνο σε υπάρχοντες δρόμους και χωματόδρομους.','Only on existing roads and tracks.')}</b> ${L('Απαγορεύεται η δημιουργία νέων διαδρομών με όχημα σε δάση και λιβάδια (ν. 3937/2011, άρθρο 13 παρ. 4β). Τις ημέρες υψηλού κινδύνου πυρκαγιάς τα δάση και οι δασικοί δρόμοι κλείνουν (ν. 4926/2022, άρθρο 129), με πρόστιμο (π.χ. 300 €, Δυτ. Μακεδονία 2026). Δες τον χάρτη κινδύνου στο civilprotection.gr πριν φύγεις.','Creating new tracks with vehicles in forests and meadows is banned (Law 3937/2011, Art. 13(4)(b)). On high fire-risk days forests and forest roads close (Law 4926/2022, Art. 129), with fines (e.g. €300, Western Macedonia 2026). Check the risk map at civilprotection.gr before you go.')}</div>`;
+ return ''}
+
+/* ===== Μάθε περισσότερα ===== */
+function learn(){const kit=[['gauge',L('Μανόμετρο που δείχνει ως 5 psi (το Cape Cod το κάνει υποχρεωτικό)','Gauge that reads down to 5 psi (Cape Cod makes it mandatory)')],['defl',L('Ξεφουσκωτής (με αφαίρεση βαλβίδας = γρήγορος)','Deflator (core removal = fast)')],['comp',L('Κομπρεσέρ που φουσκώνει το δικό σου ελαστικό','Compressor able to fill your tyre')],['core',L('Ανταλλακτικές βαλβίδες (cores) & καπάκια','Spare valve cores & caps')],['shov',L('Φτυάρι (όχι πλαστικό)','Shovel (not plastic)')],['board',L('Πλάκες ανάκτησης','Recovery boards')],['strap',L('Ιμάντας ανάκτησης + shackles με πιστοποίηση','Rated recovery strap + shackles')],['base',L('Βάση για γρύλο στην άμμο','Jack base for sand')],['ratch',L('Ιμάντας με καστάνια (για να κάτσει bead)','Ratchet strap (to reseat a bead)')],['soap',L('Σαπουνόνερο σε ψεκαστήρα','Soapy water in a spray bottle')],['plug',L('Κιτ επισκευής ελαστικού (plugs)','Tyre plug kit')]];
+ return `
+<details><summary>🎯 ${L('Ζώνες ταχύτητας & το «τρίγωνο»','Speed zones & the “triangle”')}</summary><div class="in">
+ <div class="s10">${L('<b>Σ10:</b> Το μαλακό ελαστικό λυγίζει σε κάθε στροφή της ρόδας. Λύγισμα = ζέστη. Όσο πιο γρήγορα, τόσο περισσότερα λυγίσματα το λεπτό, τόσο πιο πολλή ζέστη.','<b>Like you are 10:</b> A soft tyre bends every time the wheel turns. Bending = heat. The faster you go, the more bends per minute, the more heat.')}</div>
+ <ul><li><b>${L('Κάτω από ~40 km/h','Below ~40 km/h')}</b>: ${L('αργά και τεχνικά (άμμος, πέτρα, μονοπάτια). Εδώ κερδίζει η χαμηλή πίεση.','slow and technical (sand, rock, trails). Low pressure wins here.')}</li>
+ <li><b>40–60 km/h</b>: ${L('«το κενό». Συμβιβασμός: ή πιο αργά, ή πιο σκληρή διαδρομή.','“the gap”. A compromise: slower, or a harsher ride.')}</li>
+ <li><b>${L('Πάνω από ~60 km/h','Above ~60 km/h')}</b>: ${L('γρήγοροι δρόμοι, ρυμούλκηση. Πιο ψηλή πίεση.','fast roads, towing. Higher pressure.')}</li></ul>
+ <p>🔺 <b>${L('ΦΟΡΤΙΟ · ΤΑΧΥΤΗΤΑ · ΜΑΛΑΚΟ ΕΔΑΦΟΣ','LOAD · SPEED · SOFT GROUND')}</b>: ${L('αλλάζεις μία γωνία, ακολουθούν οι άλλες δύο. Διάλεξε την πίεση για αυτό που <b>πας</b> να οδηγήσεις, όχι για αυτό που μόλις οδήγησες.','change one corner and the other two follow. Pick the pressure for what you are <b>about</b> to drive, not what you just drove.')}</p>
+ <h4>${L('Πίεση ↔ ταχύτητα (κατασκευαστές)','Pressure ↔ speed (makers)')}</h4>
+ <table><tr><th>${L('Πηγή','Source')}</th><th>${L('Πίεση','Pressure')}</th><th>${L('Μέγιστη','Max')}</th></tr>
+ <tr><td>Toyo AU</td><td>−20%</td><td>80 km/h</td></tr><tr><td>Toyo AU</td><td>~25 psi</td><td>60–70</td></tr><tr><td>Toyo AU</td><td>18 psi</td><td>~50</td></tr><tr><td>Toyo AU</td><td>15 psi</td><td>~40</td></tr><tr><td>Toyo AU</td><td>12 (${L('έκτακτη','emergency')})</td><td>25</td></tr>
+ <tr><td>BFGoodrich AU</td><td>&lt;20 psi</td><td>≤25</td></tr><tr><td>BFGoodrich UK</td><td>${L('ποτέ','never')} &lt;1,5 bar</td><td>${L('στα 1,5 bar','at 1.5 bar')} ≤20</td></tr>
+ <tr><td>Land Rover Discovery</td><td>Emergency Soft</td><td>40</td></tr><tr><td>US Army FMTV</td><td>${L('άμμος','sand')} 22 (${L('δρόμος','road')} 60)</td><td>19</td></tr><tr><td>US Army FMTV</td><td>${L('έκτακτη','emergency')} 16</td><td>8, ${L('ΜΟΝΟ 10 λεπτά','ONLY 10 min')}</td></tr></table>
+ <p class="note">${L('Η εφαρμογή χρησιμοποιεί την καμπύλη της Toyo, κλιμακωμένη στη δική σου πίεση ετικέτας, και την κόβει στο όριο κάθε εδάφους. Η BFGoodrich AU είναι αυστηρότερη (≤25 km/h κάτω από 20 psi): αν θες περιθώριο, ακολούθα αυτήν.','The app uses Toyo’s curve, scaled to your placard pressure, capped by each terrain’s limit. BFGoodrich AU is stricter (≤25 km/h below 20 psi): if you want margin, follow that.')}</p>
+</div></details>
+
+<details><summary>🔬 ${L('Γιατί δουλεύει (η επιστήμη)','Why it works (the science)')}</summary><div class="in">
+ <ul><li>${L('<b>Το αποτύπωμα μακραίνει, δεν φαρδαίνει.</b> 40→15 psi: από 19 σε 33 cm μήκος, ίδιο πλάτος 23,5 cm, ~+74% επιφάνεια (Expedition Portal/ARB, μία δοκιμή). US Army CRREL: +40% από 26 σε 15 psi.','<b>The footprint gets longer, not wider.</b> 40→15 psi: 19 to 33 cm long, same 23.5 cm width, ~+74% area (Expedition Portal/ARB, one test). US Army CRREL: +40% from 26 to 15 psi.')}</li>
+ <li>${L('<b>Πίεση στο έδαφος ≈ πίεση ελαστικού</b>, χοντρικά. Ένα 4x4 στα 15 psi πατάει σαν ένα άρμα M1 Abrams (~15 psi)!','<b>Ground pressure ≈ tyre pressure</b>, roughly. A 4x4 at 15 psi presses like an M1 Abrams tank (~15 psi)!')}</li>
+ <li>${L('<b>Άμμος:</b> το σκληρό ελαστικό βουλιάζει και σπρώχνει «τοίχο» άμμου μπροστά του. Δοκιμή Στρατού ΗΠΑ 1984 (σοβιετικό ZIL): 35→15 psi, ~2/3 περισσότερη έλξη σε χοντρή άμμο, μόνο ~8% σε σκληρό χώμα. Το ξεφούσκωμα είναι εργαλείο για ΜΑΛΑΚΟ έδαφος.','<b>Sand:</b> a hard tyre sinks and pushes a wall of sand ahead. US Army test 1984 (Soviet ZIL): 35→15 psi, ~2/3 more pull in coarse sand, only ~8% on firm loam. Airing down is a tool for SOFT ground.')}</li>
+ <li>${L('<b>Ζέστη:</b> οι πίνακες φορτίου των περισσότερων LT δεν κατεβαίνουν κάτω από 35 psi. Στα 18 psi το ελαστικό σηκώνει «στα χαρτιά» περίπου το μισό. Αυτό που το κρατά ζωντανό είναι η ΧΑΜΗΛΗ ΤΑΧΥΤΗΤΑ.','<b>Heat:</b> most LT load tables don’t go below 35 psi. At 18 psi the tyre is rated for roughly half its load “on paper”. What keeps it alive is LOW SPEED.')}</li>
+ <li>${L('<b>Χιόνι & πάγος:</b> στο βαθύ χιόνι επίπλευση. Στο ρηχό ανεβαίνει η αντίσταση κύλισης, στον πάγο πέφτει η πρόσφυση (CRREL).','<b>Snow & ice:</b> flotation in deep snow. In shallow snow rolling resistance rises, on ice traction drops (CRREL).')}</li>
+ <li>${L('<b>Λιγότερη ζημιά στη φύση:</b> φορτηγά υλοτομίας με χαμηλή πίεση (USDA Forest Service): αυλάκια 8 mm αντί 133 mm, διάβρωση −80%.','<b>Less damage to nature:</b> low-pressure logging trucks (USDA Forest Service): ruts 8 mm instead of 133 mm, erosion −80%.')}</li></ul>
+</div></details>
+
+<details><summary>🛞 ${L('Ξεζαντάρισμα: πώς γίνεται & πώς το διορθώνεις','De-beading: how it happens & how to fix it')}</summary><div class="in">
+ <div class="s10">${L('<b>Σ10:</b> Το χείλος του ελαστικού (bead) κάθεται στη ζάντα και το κρατάει <b>κυρίως ο αέρας</b>. Βγάζεις αέρα και στρίβεις απότομα; Η πλάγια δύναμη το σπρώχνει μέσα και ο αέρας φεύγει με ένα «πουφ».','<b>Like you are 10:</b> The tyre’s edge (bead) sits on the rim and is held there <b>mainly by air</b>. Let air out and turn sharply? The side force pushes it in and the air leaves with a “pouf”.')}</div>
+ <ul><li>${L('Συνήθως <b>μπροστινό</b> ελαστικό, σε <b>χαμηλή ταχύτητα</b>: γρήγορη κλειστή στροφή, όπισθεν σε μαλακή άμμο, πλάγια κλίση, τέρμα τιμόνι στο κόλλημα.','Usually a <b>front</b> tyre, at <b>low speed</b>: a quick tight turn, reversing in soft sand, a side slope, full lock while stuck.')}</li>
+ <li>${L('Στις ΗΠΑ τα ελαστικά επιβατικών/LT πρέπει να αντέχουν πλάγιο σπρώξιμο ~7–11 kN (700–1.100 kg) με κανονική πίεση (FMVSS 109). Με χαμηλή πίεση η αντοχή πέφτει (NHTSA 2013).','In the US, car/LT tyres must withstand a ~7–11 kN (700–1,100 kg) side push at normal pressure (FMVSS 109). At low pressure the resistance drops (NHTSA 2013).')}</li>
+ <li>${L('<b>Ψηλό πλαϊνό</b> (35" σε ζάντα 16") αντέχει χαμηλά. <b>Ζάντα 20"</b>: κοντό πλαϊνό, η ζάντα πιο κοντά στο έδαφος. Γι’ αυτό η Toyo ανέβασε το σημείο προσοχής από 15 σε 20 psi.','<b>Tall sidewall</b> (35" on a 16" rim) copes with low pressure. <b>20" rim</b>: short sidewall, rim closer to the ground. That is why Toyo moved its caution point from 15 to 20 psi.')}</li></ul>
+ <h4>${L('Επανατοποθέτηση στο πεδίο','Reseating in the field')}</h4>
+ <ol><li>${L('Τάκοι στους τροχούς, γρύλος σε σταθερή βάση. ΠΟΤΕ μέρος του σώματος κάτω από αυτοκίνητο στον γρύλο.','Chock the wheels, jack on a solid base. NEVER any part of your body under a car on a jack.')}</li>
+ <li>${L('Καθάρισε άμμο/λάσπη από το bead και το χείλος της ζάντας.','Clean sand/mud off the bead and the rim lip.')}</li>
+ <li>${L('Ιμάντας με καστάνια γύρω από το κέντρο του πέλματος: σφίγγεις λίγο-λίγο, τα bead ανοίγουν προς τη ζάντα.','Ratchet strap around the middle of the tread: tighten a click at a time, the beads spread out to the rim.')}</li>
+ <li>${L('Σαπουνόνερο, βγαλμένη βαλβίδα για μέγιστη ροή, γρήγορο φούσκωμα.','Soapy water, valve core out for maximum flow, inflate fast.')}</li>
+ <li>${L('«Σκάει» στη θέση του: ξαναβάζεις βαλβίδα, φουσκώνεις, ελέγχεις ότι και τα δύο bead κάθονται ομοιόμορφα. Μετά βγάζεις τον ιμάντα.','It pops into place: refit the core, inflate, check both beads sit evenly. Then remove the strap.')}</li></ol>
+ <div class="verdict no">⛔ ${L('<b>Ποτέ πάνω από ~40 psi</b> για να κάτσει bead, σώμα μακριά (NIOSH: εργάτης πετάχτηκε 3 m με 80 psi). <b>ΟΧΙ σπρέι και φωτιά</b>: έτσι καίγονται άνθρωποι και χάνουν δάχτυλα.','<b>Never above ~40 psi</b> to seat a bead, body clear (NIOSH: a worker was thrown 3 m at 80 psi). <b>NO spray and fire</b>: that is how people get burned and lose fingers.')}</div>
+</div></details>
+
+<details><summary>🔩 Beadlock</summary><div class="in">
+ <ul><li>${L('<b>Πραγματικό beadlock:</b> δαχτυλίδι (συχνά αλουμίνιο) με ~20–32 βίδες σφίγγει το εξωτερικό bead. Τώρα το κρατάει το σφίξιμο, όχι ο αέρας. Rock crawling: ~5–8 psi.','<b>True beadlock:</b> a ring (often aluminium) with ~20–32 bolts clamps the outer bead. Now the clamp holds it, not the air. Rock crawling: ~5–8 psi.')}</li>
+ <li>${L('Βίδες δαχτυλιδιού: περίπου 10–50 Nm ανάλογα με το μέγεθος, πολύ λιγότερο από τα μπουλόνια. ΠΑΝΤΑ η τιμή του κατασκευαστή, με δυναμόκλειδο, σταυρωτά. Έλεγχος συχνά: Method κάθε 250 μίλια, WELD κάθε μήνα.','Ring bolts: roughly 10–50 Nm depending on size, far less than wheel nuts. ALWAYS the maker’s figure, torque wrench, star pattern. Check often: Method every 250 miles, WELD monthly.')}</li>
+ <li>${L('<b>Beadlock ≠ ασφαλές στο μηδέν.</b> Κρατά το bead, όχι το πλαϊνό ούτε τη ζάντα.','<b>Beadlock ≠ safe at zero.</b> It holds the bead, not the sidewall or the rim.')}</li>
+ <li>${L('Άλλα είδη: εσωτερικό διπλό (Hutchinson), φουσκωτό εσωτερικό (Staun, Coyote), ICON InnerLock με πείρους (ΗΠΑ ~2022, Αυστραλία 2025· «DOT compliant» κατά τον κατασκευαστή). Τα «simulated» είναι διακοσμητικά και δεν σφίγγουν τίποτα.','Other types: internal double (Hutchinson), inflatable internal (Staun, Coyote), ICON InnerLock with pins (US ~2022, Australia 2025; “DOT compliant” per the maker). “Simulated” ones are decorative and clamp nothing.')}</li>
+ <li>${L('Ντακάρ: τα κορυφαία 4x4 απαγορεύεται να έχουν beadlock και δεν αλλάζουν πίεση εν κινήσει (FIA Art. 285). Σταματούν για να την αλλάξουν.','Dakar: the top 4x4s are banned from beadlocks and can’t change pressure on the move (FIA Art. 285). They stop to change it.')}</li>
+ <li>${L('<b>Νομικά:</b> Αυστραλία όχι εγκεκριμένα για δρόμο· ΗΠΑ «off-road only» (ακόμα και η Ford για το Bronco). Ελλάδα/ΕΕ: κανένα κείμενο δεν αναφέρει beadlock. Στο ΚΤΕΟ ζάντες και ελαστικά πρέπει να ταιριάζουν με την έγκριση του οχήματος· για δημόσιο δρόμο ρώτα ΚΤΕΟ και ασφαλιστική.','<b>Legal:</b> Australia not approved for road; US “off-road only” (even Ford for the Bronco). Greece/EU: no text names beadlocks. At inspection, wheels and tyres must match the vehicle’s approval; for public roads ask your inspection centre and insurer.')}</li></ul>
+</div></details>
+
+<details><summary>⚠️ ${L('Κίνδυνοι, TPMS, εγγύηση','Risks, TPMS, warranty')}</summary><div class="in">
+ <ol><li>${L('<b>Η επιστροφή στην άσφαλτο</b> χωρίς φούσκωμα. Το πιο θανατηφόρο λάθος δεν είναι στον αμμόλοφο.','<b>Going back on tarmac</b> without airing up. The deadliest mistake is not on the dune.')}</li>
+ <li>${L('Κοψίματα στο πλαϊνό από κοφτερή πέτρα.','Sidewall cuts from sharp rock.')}</li><li>${L('Η ζάντα χτυπά σε πέτρα όταν το ελαστικό είναι πολύ μαλακό.','The rim hits rock when the tyre is too soft.')}</li><li>${L('Άμμος ή λάσπη στο bead: αργή διαρροή.','Sand or mud in the bead: slow leak.')}</li></ol>
+ <ul><li>${L('<b>TPMS:</b> υποχρεωτικό σε κάθε νέο επιβατικό στην ΕΕ από 1/11/2014. Θα ανάψει όταν ξεφουσκώσεις: εκτός δρόμου, αναμενόμενο. Στον δρόμο, εντολή. Δεν βλέπει κόψιμο: κοίτα τα ελαστικά σε κάθε στάση.','<b>TPMS:</b> mandatory on every new passenger car in the EU since 1/11/2014. It will light up when you air down: off-road, expected. On the road, an order. It can’t see a cut: look at the tyres at every stop.')}</li>
+ <li>${L('<b>ΚΤΕΟ:</b> ελαστικό εμφανώς ξεφούσκωτο ή TPMS που δεν λειτουργεί καταγράφεται ως ελάττωμα (Οδηγία 2014/45/ΕΕ).','<b>Inspection:</b> an obviously under-inflated tyre or a faulty TPMS is a listed defect (Directive 2014/45/EU).')}</li>
+ <li>${L('<b>Εγγύηση:</b> κανείς κατασκευαστής δεν λέει ότι το ξεφούσκωμα την ακυρώνει, αλλά πολλοί εξαιρούν τη ζημιά από «λάθος πίεση». Με δική σου ευθύνη.','<b>Warranty:</b> no maker says airing down voids it, but many exclude damage from “improper inflation”. At your own risk.')}</li></ul>
+</div></details>
+
+<details><summary>🇬🇷 ${L('Ελλάδα: τι λέει ο νόμος','Greece: what the law says')}</summary><div class="in">
+ <ul><li>${L('<b>Ν. 3937/2011, άρθρο 13 παρ. 4:</b> απαγορεύεται η κίνηση μηχανοκίνητων εκτός οδικού δικτύου σε οικολογικά ευαίσθητες εκτάσεις: αιγιαλός, αμμοθίνες, ποτάμια και ρέματα, ακτές λιμνών, δάση, λιβάδια, βοσκότοποι, και μονοπάτια σε αυτές.','<b>Law 3937/2011, Art. 13(4):</b> motor vehicles are banned off the road network in ecologically sensitive areas: foreshore, dunes, rivers and streams, lake shores, forests, meadows, pastures and trails in them.')}</li>
+ <li>${L('<b>Απάτητες παραλίες:</b> ~250 στη λίστα του 2026 (ΥΑ ΥΠΕΝ/ΓΔΠΠ, ΦΕΚ Β΄ 2646/12-05-2026): απαγορεύεται ακόμα και η παρουσία οχημάτων.','<b>Untouched beaches:</b> ~250 on the 2026 list: even the presence of vehicles is banned.')}</li>
+ <li>${L('<b>Ημέρες υψηλού κινδύνου πυρκαγιάς:</b> κλείσιμο δασών και δασικών δρόμων (ν. 4926/2022, άρθρο 129), με πρόστιμο.','<b>High fire-risk days:</b> forests and forest roads close (Law 4926/2022, Art. 129), with fines.')}</li>
+ <li>${L('Το ελληνικό έδαφος για εμάς: <b>χαλίκι, δασικοί δρόμοι, πέτρα, χιόνι, πάντα σε υπάρχοντες δρόμους</b>. Η άμμος είναι για αδειοδοτημένες εκδηλώσεις ή το εξωτερικό.','Greek terrain for us: <b>gravel, forest roads, rock, snow, always on existing roads</b>. Sand is for permitted events or abroad.')}</li>
+ <li>${L('Δεν υπάρχει νόμιμη τιμή πίεσης ελαστικών εκτός δρόμου, ούτε στην Ελλάδα ούτε αλλού. Μόνο οδηγίες.','There is no legal off-road tyre pressure, in Greece or anywhere. Only guidance.')}</li></ul>
+</div></details>
+
+<details><summary>💥 ${L('Μύθοι','Myths')}</summary><div class="in">
+ <ol><li>${L('«Όσο πιο χαμηλά, τόσο καλύτερα παντού.» <b>Όχι:</b> στον πάγο και στο ρηχό χιόνι χειροτερεύει, στο σκληρό χώμα κερδίζεις ~8%.','“The lower the better, everywhere.” <b>No:</b> on ice and shallow snow it gets worse, on firm ground you gain ~8%.')}</li>
+ <li>${L('«Το φούσκωμα του πλαϊνού μου λέει πόσο έχω.» <b>Όχι:</b> μανόμετρο.','“The sidewall bulge tells me what I have.” <b>No:</b> use a gauge.')}</li>
+ <li>${L('«Με beadlock πάω στο μηδέν άφοβα.» <b>Όχι:</b> πλαϊνό και ζάντα κινδυνεύουν.','“With beadlocks I can run zero without fear.” <b>No:</b> sidewall and rim are at risk.')}</li>
+ <li>${L('«Ξεφουσκώνω μόνο τα πίσω.» <b>Όχι:</b> και τα 4 (δοκιμή Unsealed 4X4: με όλα χαμηλά η έλξη ανέβηκε πολύ περισσότερο).','“I only air down the rears.” <b>No:</b> all 4 (Unsealed 4X4 test: with all low the pull rose far more).')}</li>
+ <li>${L('«Θα πάω έτσι μέχρι την επόμενη πόλη.» <b>Όχι:</b> κάθε χιλιόμετρο ασφάλτου ανεβάζει ζέστη, το τιμόνι γίνεται αόριστο, κι ένα απότομο τιμόνι βγάζει το bead. Κουβάλα κομπρεσέρ.','“I’ll just drive to the next town like this.” <b>No:</b> every km of tarmac builds heat, the steering goes vague, and one swerve can pop the bead. Carry a compressor.')}</li></ol>
+ <h4>${L('Η διαμάχη «10 ή 18 psi;»','The “10 or 18 psi?” debate')}</h4>
+ <p>${L('Έχουν δίκιο και οι δύο, ο καθένας για το δικό του ελαστικό, φορτίο, ζάντα και τεχνική. Οι κατασκευαστές μένουν ψηλά (Cooper ~20–22, BFG UK ≥1,5 bar, Jeep & Land Rover 15 στην άμμο). Οι έμπειροι στον Κόλπο και στην Αυστραλία πάνε 10–12 με μεγάλα LT και τεχνική. Η γραμμή Overland’s Habit: 15 το ελάχιστο χωρίς beadlock· κάτω από 15 μόνο για ξεκόλλημα.','Both are right, each for their own tyre, load, rim and technique. Makers stay high (Cooper ~20–22, BFG UK ≥1.5 bar, Jeep & Land Rover 15 in sand). Experienced drivers in the Gulf and Australia go 10–12 with big LTs and technique. The Overland’s Habit line: 15 minimum without beadlocks; below 15 only to get unstuck.')}</p>
+</div></details>
+
+<details><summary>🎒 ${L('Τι έχω μαζί (λίστα)','What I carry (checklist)')}</summary><div class="in">
+ ${kit.map(([k,t])=>`<label class="ck"><input type="checkbox"${CK[k]?' checked':''} onchange="CK['${k}']=this.checked;try{localStorage.setItem('air_chk',JSON.stringify(CK))}catch(e){}">${t}</label>`).join('')}
+</div></details>
+
+<details><summary>🌍 ${L('Fun facts','Fun facts')}</summary><div class="in">
+ <ul><li>${L('Martha’s Vineyard (ΗΠΑ): <b>υποχρεωτικά ≤15 psi</b> πριν μπεις στην παραλία. Cape Cod: υποχρεωτικό μανόμετρο που δείχνει ως 5 psi.','Martha’s Vineyard (US): <b>mandatory ≤15 psi</b> before entering the beach. Cape Cod: mandatory gauge that reads to 5 psi.')}</li>
+ <li>${L('K’gari (Αυστραλία): δεν δίνει psi, αλλά επιτρέπει 80 km/h στην παραλία.','K’gari (Australia): gives no psi, but allows 80 km/h on the beach.')}</li>
+ <li>${L('Hilux της Arctic Trucks στην Ανταρκτική: ελαστικά 44" στα 2–3 psi, ~1/10 της πίεσης δρόμου.','Arctic Trucks Hilux in Antarctica: 44" tyres at 2–3 psi, ~1/10 of road pressure.')}</li>
+ <li>${L('Το αμερικανικό DUKW του Β΄ Παγκοσμίου ήταν το πρώτο όχημα όπου ο οδηγός άλλαζε πίεση μέσα από την καμπίνα.','The WWII American DUKW was the first vehicle where the driver changed pressure from the cab.')}</li>
+ <li>${L('Ο Ralph Bagnold άνοιξε τον δρόμο στην οδήγηση με χαμηλή πίεση στη Λιβυκή έρημο τη δεκαετία του ’30, με Ford Model A.','Ralph Bagnold pioneered low-pressure driving in the Libyan Desert in the 1930s, in Model A Fords.')}</li></ul>
+</div></details>
+
+<details><summary>📚 ${L('Πώς υπολογίζει & πηγές','How it calculates & sources')}</summary><div class="in">
+ <p>${L('Στόχος = πίεση ετικέτας × ποσοστό εδάφους. Μετά: ελάχιστο 15 psi χωρίς beadlock (γραμμή Overland’s Habit), 20 psi με ελαστικό P ή ζάντα ≥19" (Toyo, Cooper, BFG UK), +4 psi όταν είσαι φορτωμένος σε μαλακό έδαφος (4X4 Australia), καθόλου ξεφούσκωμα στον πάγο (CRREL). Ταχύτητα: καμπύλη Toyo κλιμακωμένη στη δική σου ετικέτα. Δείχνει πάντα εύρος, όχι «μαγικό αριθμό». Κάθε αριθμός έχει ≥2 πηγές· όπου έχει μία, γράφει SINGLE-SOURCE.','Target = placard pressure × terrain percentage. Then: minimum 15 psi without beadlocks (Overland’s Habit line), 20 psi with a P tyre or ≥19" rim (Toyo, Cooper, BFG UK), +4 psi when loaded on soft ground (4X4 Australia), no airing down on ice (CRREL). Speed: Toyo curve scaled to your placard. It always shows a range, never a “magic number”. Every figure has ≥2 sources; where it has one, it says SINGLE-SOURCE.')}</p>
+ <p class="note">Bridgestone AU · Toyo Tires AU (The 20 per cent rule, Airing down) · Cooper Tires AU · BFGoodrich AU/UK · Land Rover · Jeep Wrangler manual · US Army TM 9-2320-366-10-1 (FMTV) · DTIC ADP004399 (TACOM 1984) · US Army CRREL 83-27, 90-9, 92-7 · Expedition Portal / Overland Journal · Unsealed 4X4 · 4X4 Australia · WhichCar · OVR · GearJunkie · Arctic Trucks · NHTSA DOT HS 811 617 · eCFR FMVSS 109 · NIOSH · FIA Art. 285 · NPS Cape Cod / Assateague / Hatteras / Lookout · USDA Forest Service · ν. 3937/2011 · ν. 4926/2022 · Οδηγία 2014/45/ΕΕ · Κανονισμός (ΕΕ) 523/2012</p>
+ <p class="note">${L('Έρευνα: Overland’s Habit, Νοέμβριος 2026 (YouTube #8 «Air Down or De-Bead?»).','Research: Overland’s Habit, November 2026 (YouTube #8 “Air Down or De-Bead?”).')}</p>
+</div></details>`}
+
+$('lang').onclick=()=>{LANG=LANG==='el'?'en':'el';localStorage.setItem('air_lang',LANG);render()};
+render();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js');
+</script>
+<script src="legal.js"></script>
+</body></html>
