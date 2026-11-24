@@ -2091,7 +2091,7 @@ function setLang(l){try{localStorage.setItem('sv_lang',JSON.stringify(l))}catch(
 const encURI=s=>encodeURIComponent(trS(String(s)));
 const $=s=>document.querySelector(s),M=$('#m');
 const esc=s=>UX(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const APP_V='52',APP_D='24/11/2026';
+const APP_V='53',APP_D='24/11/2026';
 const LS={g(k,d){try{const v=localStorage.getItem('sv_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},s(k,v){try{localStorage.setItem('sv_'+k,JSON.stringify(v))}catch(e){}}};
 let fs=LS.g('fs',19);document.documentElement.style.setProperty('--fs',fs+'px');
 function fz(d){fs=Math.max(15,Math.min(28,fs+d*2));LS.s('fs',fs);document.documentElement.style.setProperty('--fs',fs+'px')}
@@ -4975,6 +4975,124 @@ document.addEventListener('nativegps',e=>{const d=e.detail||{};if(d.err){GF.err=
 {const _c=compass;compass=function(){_c();const b=$('#cbtns');if(b)b.insertAdjacentHTML('afterend',`<button class="btn p notr" style="width:100%;margin:6px 0" onclick="go('gps')">🛰️ ${L2('GPS Ακριβείας – ακρίβεια, υψόμετρο, UTM/MGRS/ΕΓΣΑ87','Precision GPS – accuracy, altitude, UTM/MGRS/GGRS87')}</button>`)}}
 TOOLS.unshift(['gps','🛰️',L2('GPS Ακριβείας','Precision GPS'),L2('ακρίβεια ±m, βαρομετρικό υψόμετρο, σημείο με μέσο όρο, UTM/MGRS/ΕΓΣΑ87','accuracy ±m, barometric altitude, averaged point, UTM/MGRS/GGRS87')]);
 {const _t=tool;tool=function(id){if(id==='gps')return go('gps');_t(id)}}
+/* ===== v53: 📡 Μηνύματα Bluetooth (δίκτυο από κινητό σε κινητό, χωρίς σήμα / internet) – iOS 1.3+ / Android 1.4+
+   Ο κώδικας του κινητού (MeshBLE) είναι μόνο «σωλήνας». Εδώ: αλυσίδα (TTL), διπλότυπα, αποθήκευση-προώθηση,
+   γείτονες, SOS με θέση, οικογένεια με κρυπτογράφηση (tweetnacl secretbox). Φαίνεται ΜΟΝΟ στην εφαρμογή. – © 2026 Γεώργιος Μπαρμπαρής ===== */
+const MS={on:false,st:{s:'',n:0},nb:{},seen:new Map(),hiT:null,lastPeer:0,ch:LS.g('msch','all'),key:null,tag:null};
+const msNat=()=>!!window.nativeMesh;
+const msHex=a=>Array.from(a).map(x=>x.toString(16).padStart(2,'0')).join('');
+const msId=()=>{const a=new Uint8Array(6);crypto.getRandomValues(a);return msHex(a)};
+const msB64=a=>{let s='';a.forEach(c=>s+=String.fromCharCode(c));return btoa(s)};
+const msUnB64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+const msName=()=>(LS.g('msname','')||LS.g('me',{}).name||'').trim().slice(0,24)||L2('Χωρίς όνομα','No name');
+function msSeen(i){if(MS.seen.has(i))return true;MS.seen.set(i,1);if(MS.seen.size>4000){const it=MS.seen.keys();for(let n=0;n<800;n++)MS.seen.delete(it.next().value)}return false}
+LS.g('mshist',[]).forEach(m=>MS.seen.set(m.i,1));LS.g('msfwd',[]).forEach(f=>MS.seen.set(f.p.i,1));
+/* οικογένεια: ίδιος κωδικός = ίδιο κλειδί. Οι άλλοι απλώς προωθούν χωρίς να μπορούν να διαβάσουν. */
+function msNacl(cb){if(window.nacl)return cb(window.nacl);const s=document.createElement('script');s.src='nacl-fast.min.js';s.onload=()=>cb(window.nacl||null);s.onerror=()=>cb(null);document.head.appendChild(s)}
+function msKeys(cb){const c=String(LS.g('mscode','')).trim().toLowerCase();if(c.length<6){MS.key=MS.tag=null;cb&&cb();return}
+ msNacl(n=>{if(!n){MS.key=MS.tag=null;cb&&cb();return}const enc=new TextEncoder();MS.key=n.hash(enc.encode('sv72-fam-key:'+c)).slice(0,32);MS.tag=msHex(n.hash(enc.encode('sv72-fam-tag:'+c)).slice(0,4));cb&&cb()})}
+function msSeal(o){const n=window.nacl;if(!n||!MS.key)return null;const no=n.randomBytes(24);return {e:msB64(n.secretbox(new TextEncoder().encode(JSON.stringify(o)),no,MS.key)),o:msB64(no)}}
+function msOpen(p){const n=window.nacl;if(!n||!MS.key||p.g!==MS.tag)return null;try{const b=n.secretbox.open(msUnB64(p.e),msUnB64(p.o),MS.key);return b?JSON.parse(new TextDecoder().decode(b)):null}catch(e){return null}}
+/* έλεγχος πακέτου (ό,τι έρχεται από τον αέρα είναι ξένο) */
+function msOk(p){return p&&p.v===1&&typeof p.i==='string'&&/^[0-9a-f]{8,16}$/.test(p.i)&&['m','sos','ok','hi'].includes(p.k)&&Number.isInteger(p.t)&&p.t>=0&&p.t<=15&&typeof p.n==='string'&&p.n.length<=24&&(p.x==null||typeof p.x==='string'&&p.x.length<=400)&&(p.la==null||isFinite(p.la)&&Math.abs(p.la)<=90)&&(p.lo==null||isFinite(p.lo)&&Math.abs(p.lo)<=180)&&(p.g==null||/^[0-9a-f]{8}$/.test(p.g)&&typeof p.e==='string'&&p.e.length<2000&&typeof p.o==='string')}
+function msTx(p){try{window.nativeMesh.send(JSON.stringify(p))}catch(e){}}
+function msFwdAdd(p){if(p.k==='hi')return;const now=Date.now();let F=LS.g('msfwd',[]).filter(f=>now-f.ts<(f.p.k==='sos'?6:2)*3600e3&&f.p.i!==p.i);F.push({p,ts:now});
+ const sos=F.filter(f=>f.p.k==='sos').slice(-10),rest=F.filter(f=>f.p.k!=='sos').slice(-30);LS.s('msfwd',sos.concat(rest))}
+function msHistAdd(m){const H=LS.g('mshist',[]);if(H.some(x=>x.i===m.i))return;H.push(m);LS.s('mshist',H.slice(-200))}
+/* αποστολή από εμένα */
+function msSendKind(k,x,cb){if(!MS.on){alert(L2('Άνοιξε πρώτα τα μηνύματα Bluetooth (πράσινο κουμπί).','Turn on Bluetooth messages first (green button).'));return}
+ const fam=MS.ch==='fam'&&k!=='sos',withPos=k!=='m'||LS.g('msshare',false);
+ const go=f=>{const p={v:1,i:msId(),k,t:k==='sos'?12:7,h:0,n:msName(),ts:Date.now()};const body={};if(x)body.x=String(x).slice(0,280);
+  if(withPos&&f){body.la=+f.lat.toFixed(6);body.lo=+f.lon.toFixed(6);body.a=Math.round(f.acc||0)}
+  if(fam){if(!MS.key){alert(L2('Βάλε πρώτα τον κωδικό της οικογένειας.','Set the family code first.'));return}const s=msSeal(body);if(!s)return;p.g=MS.tag;Object.assign(p,s)}else Object.assign(p,body);
+  msSeen(p.i);msHistAdd(Object.assign({i:p.i,k,n:p.n,ts:p.ts,h:0,me:1,ch:fam?'fam':'all'},body));msFwdAdd(p);msTx(p);vib(40);msUI();cb&&cb()};
+ if(withPos)fixNow(f=>go(f));else go(null)}
+/* λήψη */
+document.addEventListener('nativemesh',e=>{const d=e.detail||{};let p;try{p=JSON.parse(d.d)}catch(x){return}if(!msOk(p))return;
+ if(p.k==='hi'){if(p.t!==0)return;MS.nb[String(d.from).slice(0,64)]={n:p.n,ts:Date.now(),la:p.la,lo:p.lo};msUI();return}
+ if(msSeen(p.i))return;
+ let body=p,ch='all';if(p.g){body=msOpen(p);ch='fam'}
+ if(body){const m={i:p.i,k:p.k,n:p.n,ts:Math.min(p.ts||Date.now(),Date.now()),h:(p.h||0)+1,ch,rt:Date.now()};
+  if(typeof body.x==='string')m.x=body.x.slice(0,280);if(isFinite(body.la)&&isFinite(body.lo)){m.la=+body.la;m.lo=+body.lo;m.a=+body.a||0}
+  msHistAdd(m);if(p.k==='sos')msAlarm(m);else{vib([60,60,60]);msToast(m)}msUI()}
+ if(p.t>0){const q=Object.assign({},p,{t:p.t-1,h:(p.h||0)+1});msFwdAdd(q);setTimeout(()=>msTx(q),80+Math.random()*420)}});
+document.addEventListener('nativemeshstate',e=>{MS.st=e.detail||{};msUI()});
+document.addEventListener('nativemeshpeer',()=>{if(!MS.on)return;msHello();const now=Date.now();if(now-MS.lastPeer<5000)return;MS.lastPeer=now;
+ const F=LS.g('msfwd',[]);F.forEach((f,j)=>setTimeout(()=>msTx(f.p),300+j*150))});
+function msHello(){if(!MS.on)return;const p={v:1,i:msId(),k:'hi',t:0,n:msName(),ts:Date.now()};if(LS.g('msshare',false)&&pos&&Date.now()-(pos.t||0)<120e3){p.la=+pos.lat.toFixed(5);p.lo=+pos.lon.toFixed(5)}msTx(p)}
+function msStart(){if(!msNat())return;MS.on=true;LS.s('mson',1);msKeys();try{nativeMesh.start()}catch(e){}clearInterval(MS.hiT);MS.hiT=setInterval(msHello,30000);setTimeout(msHello,1500);msUI(1)}
+function msStop(){MS.on=false;LS.s('mson',0);clearInterval(MS.hiT);try{nativeMesh.stop()}catch(e){}MS.nb={};msUI(1)}
+/* SOS που έλαβα – κόκκινη μπάρα σε όποια σελίδα κι αν είσαι */
+function msAlarm(m){vib([600,200,600,200,600,200,600]);try{for(let k=0;k<4;k++)setTimeout(()=>beep(880,350,.9),k*700)}catch(e){}
+ let b=$('#msalarm');if(!b){b=document.createElement('div');b.id='msalarm';b.className='notr';b.style.cssText='position:fixed;left:8px;right:8px;top:8px;z-index:9999;background:#d62828;color:#fff;border-radius:14px;padding:12px;box-shadow:0 6px 24px #000a;font-size:1.05em';document.body.appendChild(b)}
+ const far=m.la!=null&&pos?` · ${fmD(dist(pos,{lat:m.la,lon:m.lo}))} ${gfCard(brg(pos,{lat:m.la,lon:m.lo}))}`:'';
+ b.innerHTML=`<b style="font-size:1.25em">🆘 SOS – ${esc(m.n)}</b><div>${m.x?esc(m.x)+'<br>':''}${hm(m.ts)}${far}${m.h>1?` · ${L2('μέσω','via')} ${m.h-1} ${L2(m.h===2?'κινητού':'κινητών',m.h===2?'phone':'phones')}`:''}${m.la!=null?`<br><span class="mono">${ddm(m.la,'N','S')} ${ddm(m.lo,'E','W')}</span>`:''}</div>
+ <div class="tools" style="margin-top:8px">${m.la!=null?`<button class="btn" onclick="msGoTo('${m.i}')">🧭 ${L2('Πήγαινε','Go there')}</button>`:''}<a class="btn" href="tel:112">📞 112</a>${m.la!=null?`<button class="btn" onclick="msSms('${m.i}')">✉️ ${L2('Στείλ’ το με SMS','Forward by SMS')}</button>`:''}<button class="btn" onclick="this.closest('#msalarm').remove()">✖</button></div>`}
+function msToast(m){let t=document.createElement('div');t.className='notr';t.style.cssText='position:fixed;left:12px;right:12px;bottom:14px;z-index:9998;background:#16324f;color:#fff;border:1px solid #3a86ff;border-radius:12px;padding:10px;box-shadow:0 6px 18px #000a';
+ t.innerHTML=`${m.k==='ok'?'✅':'💬'} <b>${esc(m.n)}</b>${m.ch==='fam'?' 👨‍👩‍👧':''}: ${esc(m.k==='ok'?L2('Είμαι καλά','I am OK'):(m.x||''))}`;t.onclick=()=>{t.remove();go('mesh')};document.body.appendChild(t);setTimeout(()=>t.remove(),6000)}
+function msFind(i){return LS.g('mshist',[]).find(m=>m.i===i)}
+function msGoTo(i){const m=msFind(i);if(!m||m.la==null)return;const w=LS.g('wps',[]);w.push({n:(m.k==='sos'?'SOS ':'')+m.n,lat:m.la,lon:m.lo,t:Date.now()});LS.s('wps',w);tgt=null;setTgt(w.length-1);const a=$('#msalarm');if(a)a.remove();go('compass')}
+function msSms(i){const m=msFind(i);if(!m)return;const t=`SOS ${m.n} ${hm(m.ts)}: ${m.x||''} ${m.la.toFixed(5)},${m.lo.toFixed(5)} (${ddm(m.la,'N','S')} ${ddm(m.lo,'E','W')}) https://maps.google.com/?q=${m.la.toFixed(6)},${m.lo.toFixed(6)}`;location.href='sms:?&body='+encodeURIComponent(t)}
+/* σελίδα */
+function msStateTxt(){const s=MS.st.s,app=window.NATIVE_APP;
+ if(!MS.on)return L2('Κλειστό. Πάτα το πράσινο κουμπί.','Off. Tap the green button.');
+ if(s==='off')return '📴 '+L2('Το Bluetooth είναι κλειστό. Άνοιξέ το από το πάνω μενού του κινητού.','Bluetooth is off. Turn it on from the top menu of the phone.');
+ if(s==='denied')return '❌ '+(app==='ios'?L2('Δεν δόθηκε άδεια Bluetooth. Ρυθμίσεις → Επιβίωση 72+ → Bluetooth ON.','No Bluetooth permission. Settings → Survival 72+ → Bluetooth ON.'):L2('Δεν δόθηκε άδεια. Ρυθμίσεις → Εφαρμογές → Επιβίωση 72+ → Άδειες → «Συσκευές σε κοντινή απόσταση» → Να επιτρέπεται.','Permission not given. Settings → Apps → Survival 72+ → Permissions → «Nearby devices» → Allow.'));
+ if(s==='unsupported')return L2('Αυτό το κινητό δεν υποστηρίζει Bluetooth LE.','This phone does not support Bluetooth LE.');
+ if(s==='on')return MS.st.n?`📶 <b>${MS.st.n}</b> ${L2(MS.st.n===1?'κινητό κοντά σου':'κινητά κοντά σου','phone'+(MS.st.n===1?'':'s')+' near you')}`:'🔎 '+L2('Ψάχνω κινητά κοντά σου… (πρέπει να έχουν την εφαρμογή και ανοιχτά τα μηνύματα)','Looking for phones near you… (they need the app with messages turned on)');
+ return '⏳ '+L2('Ξεκινάει…','Starting…')}
+function msItem(m){const far=m.la!=null&&pos?`${fmD(dist(pos,{lat:m.la,lon:m.lo}))} ${gfCard(brg(pos,{lat:m.la,lon:m.lo}))}`:'';
+ const ic=m.k==='sos'?'🆘':m.k==='ok'?'✅':'💬',col=m.k==='sos'?'var(--red)':m.me?'var(--blu)':'';
+ return `<div class="box" style="margin:6px 0;${col?'border-color:'+col:''}"><div style="display:flex;justify-content:space-between;gap:6px"><b>${ic} ${m.me?L2('Εγώ','Me'):esc(m.n)}</b><small class="muted">${hm(m.ts)}${m.me?'':' · '+(m.h<=1?L2('απευθείας','direct'):L2('μέσω ','via ')+(m.h-1)+' '+L2(m.h===2?'κινητού':'κινητών',m.h===2?'phone':'phones'))}</small></div>
+ ${m.k==='ok'?`<div>${L2('Είμαι καλά','I am OK')}</div>`:''}${m.k==='sos'?`<div><b>${L2('ΧΡΕΙΑΖΕΤΑΙ ΒΟΗΘΕΙΑ','NEEDS HELP')}</b></div>`:''}${m.x?`<div style="white-space:pre-wrap">${esc(m.x)}</div>`:''}
+ ${m.la!=null?`<div class="muted" style="font-size:.9em">📍 ${ddm(m.la,'N','S')} ${ddm(m.lo,'E','W')}${m.a?` ±${m.a} m`:''}${far?' · '+far:''} ${m.me?'':`<button class="btn" style="padding:2px 8px" onclick="msGoTo('${m.i}')">🧭</button>`}</div>`:''}</div>`}
+function msUI(force){if(!$('#mspg'))return;const now=Date.now();
+ $('#msst').innerHTML=msStateTxt();
+ const nb=Object.values(MS.nb).filter(x=>now-x.ts<90e3);$('#msnb').innerHTML=MS.on&&nb.length?nb.map(x=>`<span style="display:inline-block;background:#16324f;border:1px solid #2a4060;border-radius:99px;padding:3px 10px;margin:2px">📱 ${esc(x.n)}${x.la!=null&&pos?' · '+fmD(dist(pos,{lat:x.la,lon:x.lo})):''}</span>`).join(' '):'';
+ $('#mstg').innerHTML=MS.on?`<button class="big grn" onclick="msStop()">🟢 ${L2('ΕΝΕΡΓΟ – πάτα για κλείσιμο','ON – tap to turn off')}</button>`:`<button class="big" style="background:#2a9d8f;color:#fff" onclick="msStart()">▶️ ${L2('Άνοιξε τα μηνύματα Bluetooth','Turn on Bluetooth messages')}</button>`;
+ const fam=MS.ch==='fam';$('#mschs').innerHTML=`<button class="btn ${fam?'':'p'}" onclick="msCh('all')">👥 ${L2('Όλοι κοντά','Everyone near')}</button><button class="btn ${fam?'p':''}" onclick="msCh('fam')">👨‍👩‍👧 ${L2('Οικογένεια','Family')}</button>`;
+ const code=String(LS.g('mscode','')).trim();
+ $('#msfam').innerHTML=fam?(code.length>=6?`<div class="muted">🔒 ${L2('Κρυπτογραφημένα: τα διαβάζουν μόνο όσοι έχουν τον ίδιο κωδικό. Οι άλλοι απλώς τα μεταφέρουν.','Encrypted: only people with the same code can read them. Others only carry them.')} <button class="btn" style="padding:2px 8px" onclick="msCode()">${L2('Αλλαγή κωδικού','Change code')}</button></div>`:`<div class="warn" style="font-weight:400">${L2('Συμφωνήστε ΟΛΟΙ στην οικογένεια τον ίδιο κωδικό (φράση 6+ γραμμάτων, π.χ. «σπίτι-λαγονήσι-1985»). Μόνο όσοι τον έχουν διαβάζουν τα μηνύματα.','EVERYONE in the family agrees the same code (a phrase of 6+ letters). Only people who have it can read the messages.')}<br><button class="btn p" onclick="msCode()">🔑 ${L2('Βάλε κωδικό οικογένειας','Set family code')}</button></div>`):'';
+ const H=LS.g('mshist',[]).filter(m=>(m.ch||'all')===(fam?'fam':'all')||m.k==='sos').slice(-60).reverse();
+ $('#mslist').innerHTML=H.length?H.map(msItem).join(''):`<div class="muted">${L2('Κανένα μήνυμα ακόμα.','No messages yet.')}</div>`}
+function msCh(c){MS.ch=c;LS.s('msch',c);msUI(1)}
+function msCode(){const v=prompt(L2('Κωδικός οικογένειας (6+ γράμματα, ίδιος σε όλους – μικρά/κεφαλαία δεν παίζουν ρόλο):','Family code (6+ letters, the same for everyone – case does not matter):'),LS.g('mscode',''));if(v===null)return;
+ if(v.trim()&&v.trim().length<6){alert(L2('Τουλάχιστον 6 γράμματα.','At least 6 letters.'));return}LS.s('mscode',v.trim());msKeys(()=>msUI(1))}
+function msSendTxt(){const t=$('#mstxt');const x=(t.value||'').trim();if(!x)return;msSendKind('m',x,()=>{t.value=''})}
+function msSOS(){if(!confirm(L2('Να σταλεί SOS με τη θέση σου σε ΟΛΑ τα κινητά κοντά σου (και μέσω αυτών πιο μακριά);','Send SOS with your position to ALL phones near you (and through them further)?')))return;
+ const x=prompt(L2('Τι συμβαίνει; (προαιρετικό – π.χ. «τραυματίας, πόδι», «παγιδευμένοι 3 άτομα»)','What is happening? (optional – e.g. «injured leg», «3 people trapped»)'),'')||'';msSendKind('sos',x,()=>alert(L2('Το SOS στάλθηκε. Θα ξαναστέλνεται αυτόματα σε κάθε νέο κινητό που πλησιάζει.','SOS sent. It will be re-sent automatically to every new phone that comes near.')))}
+function msPage(){T('📡 '+L2('Μηνύματα Bluetooth','Bluetooth messages'));
+ if(!msNat()){M.innerHTML=`<div class="notr"><div class="tip">📱 ${L2('Τα μηνύματα Bluetooth δουλεύουν μόνο στην εφαρμογή iPhone / Android (νέα έκδοση).','Bluetooth messages work only in the iPhone / Android app (new version).')}</div></div>`;return}
+ M.innerHTML=`<div class="notr" id="mspg">
+ <div class="muted">${L2('Μηνύματα από κινητό σε κινητό <b>χωρίς σήμα και χωρίς internet</b>. Κάθε κινητό τα δίνει παρακάτω, σαν αλυσίδα.','Phone-to-phone messages <b>without signal or internet</b>. Every phone passes them on, like a chain.')}</div>
+ <div id="mstg" style="margin:8px 0"></div>
+ <div class="box"><div id="msst"></div><div id="msnb" style="margin-top:6px"></div></div>
+ <div class="grid2" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0">
+  <button class="big" style="background:#d62828;color:#fff" onclick="msSOS()">🆘 SOS<small>${L2('με τη θέση μου','with my position')}</small></button>
+  <button class="big grn" onclick="msSendKind('ok','')">✅ ${L2('Είμαι καλά','I am OK')}<small>${L2('με τη θέση μου','with my position')}</small></button></div>
+ <div class="tools" id="mschs" style="justify-content:center"></div><div id="msfam"></div>
+ <div class="box"><textarea id="mstxt" maxlength="280" rows="2" style="width:100%" placeholder="${L2('Γράψε μήνυμα…','Write a message…')}"></textarea>
+  <button class="btn p" style="width:100%;margin-top:6px" onclick="msSendTxt()">📤 ${L2('Στείλε','Send')}</button></div>
+ <div id="mslist"></div>
+ <div class="box"><b>👤 ${L2('Εγώ','Me')}</b><div style="margin-top:6px">${L2('Το όνομά μου:','My name:')} <input id="msnm" maxlength="24" value="${esc(LS.g('msname','')||LS.g('me',{}).name||'')}" onchange="LS.s('msname',this.value.trim())" style="width:60%"></div>
+  <label style="display:block;margin-top:6px"><input type="checkbox" ${LS.g('msshare',false)?'checked':''} onchange="LS.s('msshare',this.checked)"> ${L2('Δείχνω τη θέση μου στους κοντινούς και στα μηνύματα (το SOS και το «Είμαι καλά» στέλνουν πάντα θέση)','Show my position to people near me and in messages (SOS and «I am OK» always send position)')}</label></div>
+ <div class="tip"><b>${L2('Πώς δουλεύει','How it works')}</b><br>
+ ① ${L2('Απόσταση ανά κινητό: 10–50 m (σε ανοιχτό χώρο έως ~100 m).','Range per phone: 10–50 m (in the open up to ~100 m).')}<br>
+ ② ${L2('Κάθε κινητό με την εφαρμογή ξαναστέλνει το μήνυμα – 10 κινητά στη σειρά καλύπτουν ένα χωριό.','Every phone with the app re-sends the message – 10 phones in a row cover a village.')}<br>
+ ③ ${L2('Όποιος πλησιάσει αργότερα, παίρνει τα πρόσφατα μηνύματα και τα SOS (έως 6 ώρες).','Anyone who comes near later gets the recent messages and SOS (up to 6 hours).')}<br>
+ ④ ${L2('Κράτα την εφαρμογή ανοιχτή. Με κλειδωμένο κινητό δεν λειτουργεί πάντα.','Keep the app open. With the phone locked it does not always work.')}<br>
+ ⑤ ${L2('Πες σε οικογένεια και γείτονες να έχουν την εφαρμογή ΤΩΡΑ – στην κρίση δεν υπάρχει internet για να την κατεβάσουν.','Tell family and neighbours to get the app NOW – in a crisis there is no internet to download it.')}<br>
+ ⑥ ${L2('Δεν αντικαθιστά το 112. Αν έχεις λίγο σήμα, κάλεσε ή στείλε SMS.','It does not replace 112. If you have a little signal, call or send an SMS.')}</div>
+ <div class="muted" style="text-align:center;font-size:.85em">${L2('Τα μηνύματα δεν περνούν από κανέναν server. Μένουν μόνο στα κινητά.','Messages never pass through any server. They stay only on the phones.')}</div></div>`;
+ if(window.__meshLast)MS.st=window.__meshLast;msUI(1);const iv=setInterval(()=>msUI(),5000);TS.push(()=>clearInterval(iv))}
+{const _r=render;render=function(r){const [a]=r.split('/');if(a==='mesh')return msPage();return _r(r)}}
+if(msNat()){
+ {const _h=home;home=function(){_h();const c=M.querySelector(`button[onclick="go('comm')"]`);if(c)c.insertAdjacentHTML('beforebegin',`<button class="tile notr" onclick="go('mesh')" style="grid-column:1/-1"><span class="e">📡</span>${L2('Μηνύματα Bluetooth','Bluetooth messages')}${MS.on?' 🟢':''}<small>${L2('κινητό σε κινητό, χωρίς σήμα – SOS, οικογένεια','phone to phone, no signal – SOS, family')}</small></button>`)}}
+ {const _c=comm;comm=function(s){_c(s);if(!s){const f=M.querySelector('button.row');if(f)f.insertAdjacentHTML('beforebegin',`<button class="row notr" onclick="go('mesh')" style="border-color:var(--grn)"><span class="e">📡</span><span><b>${L2('Μηνύματα Bluetooth (αλυσίδα)','Bluetooth messages (chain)')}</b><small>${L2('10–100 m ανά κινητό · περνάει από κινητό σε κινητό · SOS με θέση','10–100 m per phone · passes phone to phone · SOS with position')}</small></span></button>`)}}}
+ TOOLS.unshift(['mesh','📡',L2('Μηνύματα Bluetooth','Bluetooth messages'),L2('κινητό σε κινητό χωρίς σήμα, SOS, οικογένεια','phone to phone without signal, SOS, family')]);
+ {const _t=tool;tool=function(id){if(id==='mesh')return go('mesh');_t(id)}}
+ if(LS.g('mson',0))setTimeout(msStart,1200);
+}
 if(rec){startGeo();wake(1)}/* v32: η οθόνη μένει ανοιχτή και όταν ξανανοίγεις την εφαρμογή ενώ καταγράφει */
 setTimeout(grdBar,300);
 $('#lgb').textContent=LANG==='en'?'ΕΛ':'EN';if(LANG==='en'){document.title='Survival 72+';window.__trAll()}render(location.hash.slice(1)||'home');
