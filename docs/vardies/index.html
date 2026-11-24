@@ -83,9 +83,22 @@ td.cell.away{background-image:repeating-linear-gradient(135deg,transparent 0 5px
 td.cell.hn::before{content:"";position:absolute;top:0;right:0;border:5px solid transparent;border-top-color:#e0577a;border-right-color:#e0577a}
 td.X{background:#e3e6ee;color:#253046}@media (prefers-color-scheme:dark){td.X{background:#3a4255;color:#e6e9f0}}
 td.cell.sm{font-size:min(calc(var(--fs)*.75),calc(var(--cw)*.38));letter-spacing:-.3px}
-.lsbar{display:none}#lsExit{display:none}body.ls.forced #lsExit{display:inline-block}
+.lsbar{display:none}
+#pal{background:var(--card);border-top:2px solid var(--line);padding:6px 8px;display:flex;flex-direction:column;gap:5px;position:fixed;left:0;right:0;bottom:calc(58px + env(safe-area-inset-bottom));z-index:9;box-shadow:0 -3px 10px rgba(0,0,0,.08)}
+#v-month{padding-bottom:120px}.palT{font:700 13.5px system-ui;color:var(--pri);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prow{display:flex;gap:5px;overflow-x:auto;align-items:center;flex-wrap:nowrap;-webkit-overflow-scrolling:touch}
+.prow input{padding:7px 9px;font-size:15px}
+.pb{flex:0 0 auto;min-width:50px;height:44px;padding:0 10px;border-radius:10px;border:2px solid transparent;background:var(--bg);color:var(--ink);font:800 16px system-ui;cursor:pointer;white-space:nowrap}
+.pb small{font-size:11px;font-weight:600;opacity:.85;margin-left:3px}.pb.on{border-color:var(--ink)}.pb:disabled{opacity:.35}
+.pb.P{background:var(--P);color:var(--Pi)}.pb.A{background:var(--A);color:var(--Ai)}.pb.N{background:var(--N);color:var(--Ni)}.pb.R{background:var(--R);color:var(--Ri)}
+.pb.L{background:#cfe3ff;color:#0b3d91}.pb.S{background:#f3d1ff;color:#6a1b7a}.pb.X{background:#e3e6ee;color:#253046}
+.pc{flex:0 0 auto;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:18px;padding:6px 12px;font:600 14px system-ui;cursor:pointer;white-space:nowrap}.pc.on{background:var(--pri);border-color:var(--pri);color:#fff}
+.pl{font-size:12.5px;color:var(--muted);flex:0 0 auto}
+table.g td.selc{outline:3px solid #e0577a!important;outline-offset:-3px}
+#palMore .prow{flex-wrap:wrap}#palMore input{flex:1 1 120px}
+body.ls #pal{position:static;box-shadow:none;padding:3px 6px;gap:3px}body.ls .pb{height:34px;font-size:14px;min-width:42px}body.ls .palT{font-size:12px}#lsExit{display:none}body.ls.forced #lsExit{display:inline-block}
 @media (min-width:900px){main{max-width:none}}
-body.ls header,body.ls .nav,body.ls #v-month>.card:not(.gcard),body.ls .gcard>:not(.gridwrap):not(.lsbar){display:none!important}
+body.ls header,body.ls .nav,body.ls #v-month>.card:not(.gcard),body.ls .gcard>:not(.gridwrap):not(.lsbar):not(#pal){display:none!important}
 body.ls main{padding:0;max-width:none}
 body.ls .gcard{position:fixed;inset:0;margin:0;border:0;border-radius:0;padding:env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);display:flex;flex-direction:column;z-index:10}
 body.ls .lsbar{display:flex;align-items:center;gap:8px;padding:3px 6px;height:34px;font:700 14px system-ui;color:var(--pri)}
@@ -125,6 +138,15 @@ body.ls table.g .nm{width:var(--nw);min-width:var(--nw);max-width:var(--nw)}
     <div class="lsbar"><span id="lsM" style="flex:1"></span><button id="lsUndo">↶ Αναίρεση</button><button id="lsGen">⚡ Γέμισε κενά</button><button id="lsExit">✕ Έξοδος</button></div>
     <div class="row" style="flex-wrap:nowrap"><p class="note" style="flex:1;margin:0 2px">👆 <b>Πάτα ένα κουτάκι</b> για να γράψεις βάρδια, ώρα, κέντρο ή σημείωση.<br>📱 <b>Γύρνα το κινητό πλάγια</b> για να δεις όλο τον μήνα.</p><button class="undo" id="full" title="Όλη η οθόνη">⛶</button><button class="undo" id="undo" title="Αναίρεση">↶</button></div>
     <div class="gridwrap" style="margin-top:8px"><table class="g" id="grid"></table></div>
+    <div id="pal">
+      <div id="palT" class="palT">👆 Πάτα ένα κουτάκι στο πρόγραμμα</div>
+      <div class="prow" id="palSh"></div>
+      <div id="palMore" class="hide">
+        <div class="prow"><input id="ckFree" placeholder="άλλη ώρα, π.χ. 9-5" style="max-width:170px"><button class="pb" id="ckFreeGo">Βάλε ώρα</button>
+          <input id="ckNote" placeholder="σημείωση" style="max-width:220px"><button class="pb" id="ckNoteGo">✓ Σημείωση</button></div>
+        <div class="prow"><span class="pl">Πού:</span><span id="ckLoc" class="prow"></span><span class="pl">Ζήτησε:</span><span id="ckReq" class="prow"></span></div>
+      </div>
+    </div>
     <div class="legend" id="legend"></div>
   </div>
   <div class="card">
@@ -211,15 +233,6 @@ body.ls table.g .nm{width:var(--nw);min-width:var(--nw);max-width:var(--nw)}
   <div class="row" style="margin-top:14px"><button class="btn p" id="p_save">Αποθήκευση</button><button class="btn d" id="p_del">Διαγραφή</button></div>
 </div></div>
 
-<div class="modal" id="ck"><div class="box">
-  <div class="row" style="justify-content:space-between;flex-wrap:nowrap"><h2 style="margin:0" id="ckT"></h2><button class="btn sm" data-close>✕</button></div>
-  <div class="pk" id="ckSh"></div>
-  <div class="row" style="flex-wrap:nowrap"><input id="ckFree" placeholder="άλλη ώρα, π.χ. 9-5"><button class="btn" id="ckFreeGo">Βάλε</button></div>
-  <div class="note" style="margin-top:12px">Πού δουλεύει</div><div class="opt" id="ckLoc"></div>
-  <label>Σημείωση (προαιρετικό)<input id="ckNote" placeholder="π.χ. αλλαγή με Νίκο"></label>
-  <div class="note" style="margin-top:12px">Ο φύλακας ζήτησε</div><div class="opt" id="ckReq"></div>
-  <div class="row" style="margin-top:6px"><button class="btn p" id="ckOk" style="flex:1">✓ OK</button><button class="btn d" id="ckClr">🧽 Σβήσιμο</button></div>
-</div></div>
 <div class="modal" id="im"><div class="box">
   <div class="row" style="justify-content:space-between"><h2 style="margin:0">📥 Αιτήματα φυλάκων</h2><button class="btn sm" data-close>✕</button></div>
   <p class="note">Αντέγραψε το μήνυμα που σου έστειλε ο φύλακας (Viber/WhatsApp) και επικόλλησέ το εδώ. Μπορείς να βάλεις πολλά μαζί.</p>
@@ -352,7 +365,7 @@ function validate(k){const D=dim(k),m=M(k),cf=C(),out=[],cellErr={},pm=S.months[
   return{out,cellErr,planned};}
 
 /* ================= MONTH VIEW ================= */
-$("#month").value=MK;$("#month").onchange=e=>{if(e.target.value){MK=e.target.value;rMonth();}};
+$("#month").value=MK;$("#month").onchange=e=>{if(e.target.value){MK=e.target.value;CK=null;rMonth();}};
 function feas(){const D=dim(MK),cf=C(),m=M(),n=S.staff.length;let T=0;for(let d=0;d<D;d++){const x=need(MK,d);T+=x.P+x.A+x.N;}
   let mn=0,mx=0,Tm=0;for(let d=0;d<D;d++){const x=need(MK,d);SH.forEach(s=>Tm+=Math.min(x[s],minNeed(s)));}S.staff.forEach(p=>{const[a,b,L]=offRange(m,p.id,D);mn+=D-L-b;mx+=D-L-a;});
   let msg=`${mName(MK)}: ${D} μέρες · χρειάζονται <b>${T}</b> βάρδιες · ${n} φύλακες.`;
@@ -370,7 +383,8 @@ function rMonth(){const k=MK,D=dim(k),m=M(k),V=validate(k);feas();legend();$("#h
       h+=`<td class="cell ${v} ${!v&&r?"rq":""} ${lb.length>2?"sm":""} ${lo&&WK(v)?"away":""} ${nt?"hn":""} ${isWE(k,d)?"we":""} ${r==="R"?"q":r?"qw":""} ${lk[d]?"lk":""} ${V.cellErr[p.id+"_"+d]?"err":""}" data-p="${p.id}" data-d="${d}"${nt?` title="${esc(nt)}"`:""}>${show}</td>`;}
     h+=`<td class="tot">${a.some(Boolean)?a.filter(v=>v==="R").length:"–"}</td></tr>`;});
   if(S.staff.length&&V.planned){SH.forEach(s=>{h+=`<tr class="cov"><td class="nm">${SHN[s]}</td>`;for(let d=0;d<D;d++){const c=S.staff.filter(p=>atMain(m,p.id,d,s)).length,nd=need(k,d)[s];h+=`<td class="${c<Math.min(nd,minNeed(s))?"short":c<nd?"one":"okc"}">${c}/${nd}</td>`;}h+="<td class='tot'></td></tr>";});}
-  $("#grid").innerHTML=h+"</tbody>";
+  const gw=$("#grid").parentElement,sl=gw.scrollLeft,stp=gw.scrollTop;$("#grid").innerHTML=h+"</tbody>";gw.scrollLeft=sl;gw.scrollTop=stp;
+  if(CK){const td=$(`#grid td.cell[data-p="${CK.pid}"][data-d="${CK.d}"]`);if(td&&CK.d<D)td.classList.add("selc");else CK=null;}rPal();
   $("#val").innerHTML=V.planned?V.out.map(([c,t])=>`<li class="${c}">${c==="ok"?"✔":c==="bad"?"✗":"⚠"} ${esc(t)}</li>`).join(""):'<li class="note">Δεν έχει βγει πρόγραμμα ακόμα.</li>';
   let s="<tr><th>Φύλακας</th><th>Π</th><th>Α</th><th>Ν</th><th>Άλλο</th><th>Ρεπό</th><th>ΑΔ/ΑΣ</th><th>Αιτήματα</th></tr>";
   S.staff.forEach(p=>{const a=m.plan[p.id]||[];const c=x=>a.filter(v=>v===x).length;const R=m.req[p.id]||{};let tot=0,ok=0;
@@ -380,7 +394,7 @@ function rMonth(){const k=MK,D=dim(k),m=M(k),V=validate(k);feas();legend();$("#h
   $("#sum").innerHTML=s;fit();}
 /* full month on screen when the phone is sideways */
 let FORCE=false;
-function fit(){const t=$("#grid");if(!t)return;const onMonth=!$("#v-month").classList.contains("hide")&&!$("#mainApp").classList.contains("hide");
+function fit(){const t=$("#grid");if(!t)return;const ae=document.activeElement;if(ae&&ae.tagName==="INPUT"&&ae.closest("#pal"))return;const onMonth=!$("#v-month").classList.contains("hide")&&!$("#mainApp").classList.contains("hide");
   const ls=onMonth&&(FORCE||(innerWidth>innerHeight&&innerHeight<620));
   document.body.classList.toggle("ls",ls);document.body.classList.toggle("forced",ls&&FORCE);$("#lsM").textContent=mName(MK);
   if(!ls){["--cw","--rh","--fs","--nw"].forEach(v=>t.style.removeProperty(v));
@@ -401,33 +415,40 @@ $("#undo").onclick=doUndo;
 $("#full").onclick=()=>{FORCE=true;try{document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen().catch(()=>{});}catch(e){}fit();};
 $("#lsExit").onclick=()=>{FORCE=false;try{document.fullscreenElement&&document.exitFullscreen();}catch(e){}fit();};
 document.addEventListener("fullscreenchange",()=>{if(!document.fullscreenElement&&FORCE){FORCE=false;fit();}});$("#lsUndo").onclick=doUndo;$("#lsGen").onclick=()=>$("#gen").click();
-/* ===== tap a box -> big simple picker ===== */
-let CK=null;
+/* ===== tap a box -> it gets selected; the buttons bar (not on top of the program) writes into it ===== */
+let CK=null,MORE=false;
 $("#grid").addEventListener("click",e=>{const td=e.target.closest("td");if(!td)return;const pid=td.dataset.p;if(!pid)return;
-  if(td.classList.contains("nm")){openP(pid);return;}openCell(pid,+td.dataset.d);});
-function openCell(pid,d){const m=M(),p=S.staff.find(x=>x.id===pid);if(!p)return;
-  CK={pid,d,loc:gx(m,"loc",pid,d),req:rq(m,pid,d)};
-  $("#ckT").textContent=`${p.name} · ${WDN[dow(MK,d)]} ${d+1}/${+MK.slice(5)}`;
-  const cur=lv(m,pid,d)||(m.plan[pid]||[])[d]||"",cc=gx(m,"cust",pid,d);
-  $("#ckSh").innerHTML=SH.map(s=>`<button data-v="${s}" class="${s} ${cur===s&&!cc?"on":""}">${C().showHours?hrs(s):GR[s]}<small>${C().showHours?SHN[s]:hrs(s)}</small></button>`).join("")+
-    `<button data-v="R" class="R ${cur==="R"?"on":""}">Ρεπό<small>Ρ</small></button><button data-v="L" class="L ${cur==="L"?"on":""}">Άδεια<small>ΑΔ</small></button><button data-v="S" class="S ${cur==="S"?"on":""}">Ασθένεια<small>ΑΣ</small></button>`+
-    C().presets.map((x,i)=>`<button data-pr="${i}" class="${x.c||"X"} ${cc===x.t?"on":""}">${esc(x.t)}<small>${x.c?"σαν "+SHN[x.c]:"άλλη ώρα"}</small></button>`).join("");
-  $("#ckFree").value=cc&&!C().presets.some(x=>x.t===cc)?cc:"";$("#ckNote").value=gx(m,"note",pid,d);ckOpts();$("#ck").classList.add("on");}
-function ckOpts(){const L=[["",C().main],...C().locs.map(x=>[x,x])];
-  $("#ckLoc").innerHTML=L.map(([v,t])=>`<button data-l="${esc(v)}" class="${CK.loc===v?"on":""}">${esc(t)}</button>`).join("");
-  $("#ckReq").innerHTML=[["","—"],["R","Ρεπό"],["W","Θέλει δουλειά"]].map(([v,t])=>`<button data-q="${v}" class="${(CK.req==="R"||CK.req==="W"?CK.req:"")===v?"on":""}">${t}</button>`).join("");}
-$("#ckLoc").addEventListener("click",e=>{const b=e.target.closest("[data-l]");if(!b)return;CK.loc=b.dataset.l;ckOpts();});
-$("#ckReq").addEventListener("click",e=>{const b=e.target.closest("[data-q]");if(!b)return;CK.req=b.dataset.q;ckOpts();});
-$("#ckSh").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;if(b.dataset.pr!==undefined){const x=C().presets[+b.dataset.pr];applyCell(x.c||"X",x.t);}else applyCell(b.dataset.v,"");});
-$("#ckFreeGo").onclick=()=>{const t=$("#ckFree").value.trim();if(!t){toast("Γράψε την ώρα, π.χ. 9-5");$("#ckFree").focus();return;}applyCell("X",t);};
-$("#ckOk").onclick=()=>applyCell(null);
-$("#ckClr").onclick=()=>{const{pid,d}=CK,m=M();snap();if(m.plan[pid])m.plan[pid][d]="";["leave","cust","loc","note"].forEach(f=>sx(m,f,pid,d,""));if(m.lock[pid])m.lock[pid][d]=0;
-  save();$("#ck").classList.remove("on");rMonth();toast("Σβήστηκε");};
-$("#ck").addEventListener("click",e=>{if(e.target.id==="ck"||e.target.hasAttribute("data-close"))$("#ck").classList.remove("on");});
-function applyCell(v,cust){const{pid,d}=CK,m=M(),D=dim(MK);snap();const a=m.plan[pid]=m.plan[pid]||Array(D).fill("");
+  if(td.classList.contains("nm")){openP(pid);return;}selCell(pid,+td.dataset.d);});
+function selCell(pid,d){const m=M();CK={pid,d,loc:gx(m,"loc",pid,d),req:rq(m,pid,d)};
+  $$("#grid td.selc").forEach(x=>x.classList.remove("selc"));const td=$(`#grid td.cell[data-p="${pid}"][data-d="${d}"]`);if(td){td.classList.add("selc");try{td.scrollIntoView({block:"nearest",inline:"nearest"});}catch(e){}}
+  $("#ckNote").value=gx(m,"note",pid,d);const cc=gx(m,"cust",pid,d);$("#ckFree").value=cc&&!C().presets.some(x=>x.t===cc)?cc:"";rPal();}
+function rPal(){const m=M(),p=CK&&S.staff.find(x=>x.id===CK.pid);
+  if(!p){CK=null;$("#palT").textContent="👆 Πάτα ένα κουτάκι στο πρόγραμμα";}
+  else $("#palT").textContent=`✏️ ${p.name} · ${WDN[dow(MK,CK.d)]} ${CK.d+1}/${+MK.slice(5)}`;
+  const cur=p?(lv(m,p.id,CK.d)||(m.plan[p.id]||[])[CK.d]||""):"",cc=p?gx(m,"cust",p.id,CK.d):"",dis=p?"":"disabled";
+  $("#palSh").innerHTML=SH.map(s=>`<button class="pb ${s} ${cur===s&&!cc?"on":""}" data-v="${s}" ${dis}>${C().showHours?hrs(s):GR[s]}<small>${C().showHours?GR[s]:hrs(s)}</small></button>`).join("")+
+    `<button class="pb R ${cur==="R"?"on":""}" data-v="R" ${dis}>Ρεπό</button><button class="pb L ${cur==="L"?"on":""}" data-v="L" ${dis}>Άδεια</button><button class="pb S ${cur==="S"?"on":""}" data-v="S" ${dis}>Ασθένεια</button>`+
+    C().presets.map((x,i)=>`<button class="pb ${x.c||"X"} ${cc===x.t?"on":""}" data-pr="${i}" ${dis}>${esc(x.t)}</button>`).join("")+
+    `<button class="pb" data-clr="1" ${dis}>🧽</button><button class="pb" data-more="1">${MORE?"▾ Λιγότερα":"⋯ Ώρα · Κέντρο · Σημείωση"}</button>`;
+  $("#palMore").classList.toggle("hide",!MORE);
+  const Lc=[["",C().main],...C().locs.map(x=>[x,x])];
+  $("#ckLoc").innerHTML=Lc.map(([v,t])=>`<button class="pc ${CK&&CK.loc===v?"on":""}" data-l="${esc(v)}" ${dis}>${esc(t)}</button>`).join("");
+  const rv=CK&&(CK.req==="R"||CK.req==="W")?CK.req:"";
+  $("#ckReq").innerHTML=[["","—"],["R","Ρεπό"],["W","Δουλειά"]].map(([v,t])=>`<button class="pc ${rv===v?"on":""}" data-q="${v}" ${dis}>${t}</button>`).join("");}
+$("#palSh").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
+  if(b.dataset.more){MORE=!MORE;rPal();fit();return;}if(!CK)return;
+  if(b.dataset.clr){clearSel();return;}
+  if(b.dataset.pr!==undefined){const x=C().presets[+b.dataset.pr];applyCell(x.c||"X",x.t,true);}else applyCell(b.dataset.v,"",true);});
+$("#ckLoc").addEventListener("click",e=>{const b=e.target.closest("[data-l]");if(!b||!CK)return;CK.loc=b.dataset.l;applyCell(null);});
+$("#ckReq").addEventListener("click",e=>{const b=e.target.closest("[data-q]");if(!b||!CK)return;CK.req=b.dataset.q;applyCell(null);});
+$("#ckFreeGo").onclick=()=>{if(!CK){toast("Πάτα πρώτα ένα κουτάκι");return;}const t=$("#ckFree").value.trim();if(!t){toast("Γράψε την ώρα, π.χ. 9-5");return;}applyCell("X",t);$("#ckFree").blur();};
+$("#ckNoteGo").onclick=()=>{if(!CK){toast("Πάτα πρώτα ένα κουτάκι");return;}applyCell(null);$("#ckNote").blur();toast("Σημείωση ✔");};
+function clearSel(){const{pid,d}=CK,m=M();snap();if(m.plan[pid])m.plan[pid][d]="";["leave","cust","loc","note"].forEach(f=>sx(m,f,pid,d,""));if(m.lock[pid])m.lock[pid][d]=0;
+  save();rMonth();selCell(pid,d);}
+function applyCell(v,cust,adv){const{pid,d}=CK,m=M(),D=dim(MK);snap();const a=m.plan[pid]=m.plan[pid]||Array(D).fill("");
   if(v!==null){sx(m,"leave",pid,d,(v==="L"||v==="S")?v:"");a[d]=v;sx(m,"cust",pid,d,cust||"");(m.lock[pid]=m.lock[pid]||[])[d]=1;}
   const now=lv(m,pid,d)||a[d];sx(m,"loc",pid,d,WK(now)?CK.loc:"");sx(m,"note",pid,d,$("#ckNote").value.trim());sx(m,"req",pid,d,CK.req);
-  save();$("#ck").classList.remove("on");rMonth();}
+  save();rMonth();selCell(pid,d);}
 $("#gen").onclick=()=>{if(!S.staff.length){toast("Πρόσθεσε πρώτα φύλακες (👥)");return;}const b=$("#gen");b.disabled=true;b.textContent="⏳ Υπολογισμός…";
   snap();setTimeout(()=>{const r=solve(MK),m=M();m.plan=r.plan;save();rMonth();b.disabled=false;b.textContent="⚡ Γέμισε τα κενά";
     const V=validate(MK);toast(V.out.every(x=>x[0]==="ok")?"✔ Το πρόγραμμα βγήκε σωστό":"Βγήκε — δες τον έλεγχο από κάτω",2800);},50);};
