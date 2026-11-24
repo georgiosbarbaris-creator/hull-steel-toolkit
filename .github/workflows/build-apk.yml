@@ -48,3 +48,11 @@ jobs:
           gh release view survival-latest >/dev/null 2>&1 || gh release create survival-latest --title "Επιβίωση 72+ / Survival 72+ (Android)" --notes "Δωρεάν για όλους. Κατέβασε το Epiviosi72.apk στο Android και εγκατέστησέ το. Free for everyone – download Epiviosi72.apk on Android and install it. © 2026 Γεώργιος Μπαρμπαρής"
           cp native/android/build/outputs/bundle/release/survivalapp-release.aab Epiviosi72-GooglePlay.aab
           gh release upload survival-latest Epiviosi72.apk Epiviosi72-GooglePlay.aab --clobber
+      - name: Publish Επιβίωση 72+ BETA APK (κλάδος ble-mesh – μόνο για δοκιμή)
+        if: github.ref == 'refs/heads/ble-mesh' && env.SIGNED == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp native/android/build/outputs/apk/release/survivalapp-release.apk Epiviosi72-beta.apk
+          gh release view survival-beta >/dev/null 2>&1 || gh release create survival-beta --prerelease --target ble-mesh --title "Επιβίωση 72+ BETA (Android) – Μηνύματα Bluetooth" --notes "ΔΟΚΙΜΑΣΤΙΚΗ έκδοση με μηνύματα Bluetooth. Για δοκιμή μόνο. © 2026 Γεώργιος Μπαρμπαρής"
+          gh release upload survival-beta Epiviosi72-beta.apk --clobber
