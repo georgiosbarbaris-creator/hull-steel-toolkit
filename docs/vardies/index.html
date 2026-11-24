@@ -401,7 +401,7 @@ function openCell(pid,d){const m=M(),p=S.staff.find(x=>x.id===pid);if(!p)return;
   $("#ckT").textContent=`${p.name} · ${WDN[dow(MK,d)]} ${d+1}/${+MK.slice(5)}`;
   const cur=lv(m,pid,d)||(m.plan[pid]||[])[d]||"",cc=gx(m,"cust",pid,d);
   $("#ckSh").innerHTML=SH.map(s=>`<button data-v="${s}" class="${s} ${cur===s&&!cc?"on":""}">${C().showHours?hrs(s):GR[s]}<small>${C().showHours?SHN[s]:hrs(s)}</small></button>`).join("")+
-    `<button data-v="R" class="R ${cur==="R"?"on":""}">Ρ<small>ρεπό</small></button><button data-v="L" class="L ${cur==="L"?"on":""}">ΑΔ<small>άδεια</small></button><button data-v="S" class="S ${cur==="S"?"on":""}">ΑΣ<small>ασθένεια</small></button>`+
+    `<button data-v="R" class="R ${cur==="R"?"on":""}">Ρεπό<small>Ρ</small></button><button data-v="L" class="L ${cur==="L"?"on":""}">Άδεια<small>ΑΔ</small></button><button data-v="S" class="S ${cur==="S"?"on":""}">Ασθένεια<small>ΑΣ</small></button>`+
     C().presets.map((x,i)=>`<button data-pr="${i}" class="${x.c||"X"} ${cc===x.t?"on":""}">${esc(x.t)}<small>${x.c?"σαν "+SHN[x.c]:"άλλη ώρα"}</small></button>`).join("");
   $("#ckFree").value=cc&&!C().presets.some(x=>x.t===cc)?cc:"";$("#ckNote").value=gx(m,"note",pid,d);ckOpts();$("#ck").classList.add("on");}
 function ckOpts(){const L=[["",C().main],...C().locs.map(x=>[x,x])];
