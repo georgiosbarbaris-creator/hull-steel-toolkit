@@ -73,7 +73,7 @@ table.g td.cell{-webkit-touch-callout:none;-webkit-user-select:none}
 .cal button.L{background:#cfe3ff;color:#0b3d91}.cal button.S{background:#f3d1ff;color:#6a1b7a}
 .legend{display:flex;gap:6px;flex-wrap:wrap;font-size:12px;margin:6px 0}.legend span{padding:2px 7px;border-radius:8px;font-weight:700}
 /* ===== v5: απλό πλέγμα, μεγάλα κουτάκια, όλος ο μήνας στο πλάγιο ===== */
-table.g{--cw:40px;--rh:42px;--fs:15px;--nw:118px;table-layout:fixed}
+table.g{--cw:40px;--rh:42px;--fs:15px;--nw:118px;table-layout:fixed;width:max-content}
 table.g td.cell,table.g th:not(.nm){width:var(--cw);min-width:var(--cw);max-width:var(--cw);overflow:hidden}
 table.g td.cell{height:var(--rh);font-size:var(--fs);line-height:1.05;position:relative;white-space:nowrap}
 table.g .nm{width:var(--nw);min-width:var(--nw);max-width:var(--nw);font-size:calc(var(--fs)*.82)}
@@ -104,7 +104,8 @@ body.ls main{padding:0;max-width:none}
 body.ls .gcard{position:fixed;inset:0;margin:0;border:0;border-radius:0;padding:env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);display:flex;flex-direction:column;z-index:10}
 body.ls .lsbar{display:flex;align-items:center;gap:8px;padding:3px 6px;height:34px;font:700 14px system-ui;color:var(--pri)}
 body.ls .lsbar button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:3px 10px;font:700 13px system-ui}
-body.ls .gridwrap{flex:1;max-height:none;border:0;border-radius:0;overflow:hidden}
+body.ls .gridwrap{flex:1;max-height:none;border:0;border-radius:0;overflow-x:auto;overflow-y:auto;-webkit-overflow-scrolling:touch}
+table.g .nm{box-shadow:2px 0 4px rgba(0,0,0,.12)}
 body.ls table.g td.lk::after{display:none}
 body.ls table.g thead th{height:calc(var(--rh)*1.25);padding:0}body.ls table.g .tot{width:22px;min-width:22px;max-width:22px;padding:0!important;font-size:calc(var(--fs)*.7)}
 body.ls table.g .nm{padding:0 4px}
@@ -136,8 +137,8 @@ body.ls table.g .nm{width:var(--nw);min-width:var(--nw);max-width:var(--nw)}
     <div class="row" style="margin-top:8px"><button class="btn sm" id="impReq">📥 Αιτήματα φυλάκων</button><button class="btn sm" id="sendLink">🔗 Link αιτήματος στους φύλακες</button></div>
   </div>
   <div class="card gcard" style="padding:10px">
-    <div class="lsbar"><span id="lsM" style="flex:1"></span><button id="lsUndo">↶ Αναίρεση</button><button id="lsGen">⚡ Γέμισε κενά</button><button id="lsExit">✕ Έξοδος</button></div>
-    <div class="row" style="flex-wrap:nowrap"><p class="note" style="flex:1;margin:0 2px">👆 <b>Πάτα ένα κουτάκι</b> για να γράψεις βάρδια, ώρα, κέντρο ή σημείωση.<br>📱 <b>Γύρνα το κινητό πλάγια</b> για να δεις όλο τον μήνα.</p><button class="undo" id="full" title="Όλη η οθόνη">⛶</button><button class="undo" id="undo" title="Αναίρεση">↶</button></div>
+    <div class="lsbar"><span id="lsM" style="flex:1"></span><button id="lsUndo">↶ Αναίρεση</button><button id="lsZoom" class="zoomB">🔍 Μεγάλα</button><button id="lsGen">⚡ Γέμισε κενά</button><button id="lsExit">✕ Έξοδος</button></div>
+    <div class="row" style="flex-wrap:nowrap"><p class="note" style="flex:1;margin:0 2px">👆 <b>Πάτα ένα κουτάκι</b> για να γράψεις βάρδια, ώρα, κέντρο ή σημείωση.<br>📱 <b>Γύρνα το κινητό πλάγια</b> για να δεις όλο τον μήνα.</p><button class="undo zoomB" id="zoom" title="Μεγάλα κουτάκια / όλος ο μήνας">🔍</button><button class="undo" id="full" title="Όλη η οθόνη">⛶</button><button class="undo" id="undo" title="Αναίρεση">↶</button></div>
     <div id="pal">
       <div id="palT" class="palT">👆 Πάτα ένα κουτάκι στο πρόγραμμα</div>
       <div class="prow" id="palSh"></div>
@@ -396,12 +397,12 @@ function fit(){const t=$("#grid");if(!t)return;const ae=document.activeElement;i
   const ls=onMonth&&(FORCE||(innerWidth>innerHeight&&innerHeight<620));
   document.body.classList.toggle("ls",ls);document.body.classList.toggle("forced",ls&&FORCE);$("#lsM").textContent=mName(MK);
   if(!ls){["--cw","--rh","--fs","--nw"].forEach(v=>t.style.removeProperty(v));
-    if(onMonth&&innerWidth>=900){const W=t.parentElement.clientWidth,D=dim(MK),nw=Math.round(Math.min(200,Math.max(120,W*.13))),cw=Math.max(30,(W-nw-50-D-3)/D);const rh=Math.max(34,Math.min(56,cw*1.05));
+    if(onMonth&&innerWidth>=900){const W=t.parentElement.clientWidth,D=dim(MK),nw=Math.round(Math.min(200,Math.max(120,W*.13))),cw=Math.max(30,(W-nw-50-D-3)/D)*(C().zoom?1.7:1);const rh=Math.max(34,Math.min(56,cw*1.05));
       t.style.setProperty("--cw",cw.toFixed(2)+"px");t.style.setProperty("--rh",rh.toFixed(1)+"px");t.style.setProperty("--fs",Math.max(13,Math.min(cw*.5,22)).toFixed(1)+"px");t.style.setProperty("--nw",nw+"px");}
     return;}
   const w=$(".gcard .gridwrap"),W=w.clientWidth,H=w.clientHeight,D=dim(MK),n=S.staff.length,cov=t.querySelector("tr.cov")?3:0;
-  const nw=Math.round(Math.min(160,Math.max(72,W*.15))),tw=22,cw=Math.max(12,(W-nw-tw-D-3)/D);
-  const rh=Math.max(16,Math.min(64,(H-n-cov-6)/(1.25+n+cov*.62)));const fs=Math.max(9,Math.min(cw*.62,rh*.5,22));
+  const nw=Math.round(Math.min(160,Math.max(72,W*.15))),tw=22,cw=Math.max(12,(W-nw-tw-D-3)/D)*(C().zoom?2:1);
+  const rh=Math.max(16,Math.min(64,(H-n-cov-6-(C().zoom?14:0))/(1.25+n+cov*.62)));const fs=Math.max(9,Math.min(cw*.62,rh*.5,22));
   t.style.setProperty("--cw",cw.toFixed(2)+"px");t.style.setProperty("--rh",rh.toFixed(1)+"px");t.style.setProperty("--fs",fs.toFixed(1)+"px");t.style.setProperty("--nw",nw+"px");}
 let fitT;addEventListener("resize",()=>{clearTimeout(fitT);fitT=setTimeout(fit,120);});addEventListener("orientationchange",()=>setTimeout(fit,300));
 const cyc=(seq,v)=>seq[(seq.indexOf(v||"")+1)%seq.length];
@@ -411,6 +412,9 @@ function updUndo(){[$("#undo"),$("#lsUndo")].forEach(b=>{if(b)b.disabled=!HIST.l
 const doUndo=()=>{if(!HIST.length)return;S=JSON.parse(HIST.pop());save();rAll();updUndo();toast("↶ Αναιρέθηκε");};
 $("#undo").onclick=doUndo;
 $("#full").onclick=()=>{FORCE=true;try{document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen().catch(()=>{});}catch(e){}fit();};
+const zoomLbl=()=>{$("#lsZoom").textContent=C().zoom?"📅 Όλος ο μήνας":"🔍 Μεγάλα";$("#zoom").textContent=C().zoom?"📅":"🔍";};
+const doZoom=()=>{C().zoom=!C().zoom;save();zoomLbl();fit();const td=CK&&$(`#grid td.cell[data-p="${CK.pid}"][data-d="${CK.d}"]`);if(td)try{td.scrollIntoView({block:"nearest",inline:"center"});}catch(e){}};
+$("#lsZoom").onclick=doZoom;$("#zoom").onclick=doZoom;zoomLbl();
 $("#lsExit").onclick=()=>{FORCE=false;try{document.fullscreenElement&&document.exitFullscreen();}catch(e){}fit();};
 document.addEventListener("fullscreenchange",()=>{if(!document.fullscreenElement&&FORCE){FORCE=false;fit();}});$("#lsUndo").onclick=doUndo;$("#lsGen").onclick=()=>$("#gen").click();
 /* ===== tap a box -> it gets selected; the buttons bar (not on top of the program) writes into it ===== */
