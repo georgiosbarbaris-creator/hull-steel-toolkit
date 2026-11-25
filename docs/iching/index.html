@@ -42,6 +42,7 @@ h2{font-size:17px;margin:0 0 8px}h3{font-size:15px;margin:14px 0 4px;color:var(-
 .big{font-size:34px;font-weight:800;color:var(--red);line-height:1}
 .hname{font-size:19px;font-weight:800}.pin{color:var(--muted);font-style:italic}
 .answer{border:2px solid var(--gold);background:linear-gradient(180deg,rgba(184,134,11,.08),transparent)}
+.aiOut{overflow-wrap:anywhere;white-space:normal}.aiOut p{white-space:pre-wrap}
 .quote{border-left:3px solid var(--red);padding:2px 10px;margin:6px 0}
 nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom);z-index:6}
 nav button{flex:1;background:transparent;color:var(--muted);border-radius:0;padding:10px 4px;font-size:12px;font-weight:600}
@@ -219,7 +220,7 @@ async function ai(e,out){let key="";try{key=localStorage.getItem("risq_api_key")
  const tmp=document.createElement("div");tmp.innerHTML=ans.html;
  const facts=`Ερώτηση: ${e.q||"(γενικός χρησμός)"}\nΕξάγραμμο ${a.p} «${P[3]}» (${P[2]}). Τρίγραμμα: ${TRI[P[1]][1]} κάτω, ${TRI[P[0]][1]} πάνω.\nΚρίση: ${P[4]}\nΕικόνα: ${P[5]}\nΚινούμενες γραμμές: ${a.chg.map(i=>(i+1)+": "+P[6][i]).join(" | ")||"καμία"}\n${R?`Μεταβαίνει στο ${a.r} «${R[3]}»: ${R[4]}`:""}\nΚύρια απάντηση (κανόνες Zhu Xi): ${ans.rule} ${tmp.innerText}`;
  try{const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"content-type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
-  body:JSON.stringify({model:"claude-haiku-5-5",max_tokens:900,system:"Είσαι σοφός, προσγειωμένος ερμηνευτής του I Ching και γράφεις στα ελληνικά. Εφάρμοσε τον χρησμό στη συγκεκριμένη ερώτηση: 2-3 σύντομες παράγραφοι σε δεύτερο πρόσωπο, με βάση την κύρια απάντηση, τις εικόνες του εξαγράμμου και την κατεύθυνση της αλλαγής. Δώσε πρακτική στάση και μία ερώτηση για στοχασμό. Μην επινοείς κείμενα του βιβλίου, μην υπόσχεσαι βέβαιες προβλέψεις, και για υγεία, νομικά ή οικονομικά θέματα πρότεινε και ειδικό. Μόνο το κείμενο.",messages:[{role:"user",content:facts}]})});
+  body:JSON.stringify({model:"claude-haiku-5-5",max_tokens:3000,system:"Είσαι σοφός, προσγειωμένος ερμηνευτής του I Ching και γράφεις στα ελληνικά. Εφάρμοσε τον χρησμό στη συγκεκριμένη ερώτηση: 2-3 σύντομες παράγραφοι (έως ~250 λέξεις συνολικά) σε δεύτερο πρόσωπο, με βάση την κύρια απάντηση, τις εικόνες του εξαγράμμου και την κατεύθυνση της αλλαγής. Δώσε πρακτική στάση και μία ερώτηση για στοχασμό. Μην επινοείς κείμενα του βιβλίου, μην υπόσχεσαι βέβαιες προβλέψεις, και για υγεία, νομικά ή οικονομικά θέματα πρότεινε και ειδικό. Μόνο το κείμενο.",messages:[{role:"user",content:facts}]})});
   const j=await r.json().catch(()=>({}));if(!r.ok){const m=(j.error&&j.error.message)||"";const err=new Error(
    r.status===401?"Το API key δεν είναι έγκυρο (401). Βάλε νέο key από console.anthropic.com → API Keys.":
    /credit balance/i.test(m)?"Ο λογαριασμός API δεν έχει υπόλοιπο. Στο console.anthropic.com → Billing βάλε credits (π.χ. 5$).":
@@ -228,7 +229,7 @@ async function ai(e,out){let key="";try{key=localStorage.getItem("risq_api_key")
    r.status===429?"Πολλά αιτήματα ή όριο λογαριασμού (429). Δοκίμασε σε λίγο. "+m:
    r.status===529||r.status>=500?"Ο server της Anthropic είναι φορτωμένος ("+r.status+"). Δοκίμασε ξανά σε λίγο.":
    "Σφάλμα "+r.status+": "+m);err.keyIssue=r.status===401||r.status===403||/credit balance/i.test(m);throw err}
-  const txt=(j.content||[]).filter(c=>c.type==="text").map(c=>c.text).join("").trim();
+  let txt=(j.content||[]).filter(c=>c.type==="text").map(c=>c.text).join("").trim();if(j.stop_reason==="max_tokens")txt+=" …\n\n(Η ερμηνεία κόπηκε λόγω μήκους — πάτα ξανά ✨ για νέα.)";
   out.innerHTML=`<h3>✨ Για την ερώτησή σου</h3>${txt.split(/\n\s*\n/).map(p=>`<p style="margin:4px 0 8px">${esc(p)}</p>`).join("")}`;
   const J=store.get("ic_journal",[]);const x=J.find(q=>q.id===e.id);if(x){x.ai=txt;store.set("ic_journal",J)}
  }catch(err){const net=err instanceof TypeError;
