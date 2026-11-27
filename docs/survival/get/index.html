@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Επιβίωση 72+ · Survival 72+ – Λήψη / Download</title>
+<meta name="description" content="Κατέβασε δωρεάν την εφαρμογή Επιβίωση 72+ για iPhone ή Android. Free download for iPhone or Android.">
+<meta name="theme-color" content="#0b1724">
+<link rel="icon" href="../icon-192.png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<style>
+  :root{--navy:#0b1724;--red:#d92b2b;--ora:#ff8000;--yel:#f5b942;--grey:#b8c4d0}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--navy);color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans",sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+  .top{width:100%;background:var(--red);border-bottom:5px solid var(--ora);text-align:center;font-weight:800;letter-spacing:.5px;padding:14px 10px;font-size:17px}
+  main{width:100%;max-width:460px;padding:22px 18px 30px;text-align:center}
+  .logo{width:96px;height:96px;border-radius:22px;display:block;margin:6px auto 12px}
+  h1{margin:0;font-size:30px}
+  .sub{color:var(--grey);margin:4px 0 14px;font-size:15px}
+  .hook{color:var(--yel);font-weight:800;font-size:21px;margin:0 0 6px}
+  .badge{display:inline-block;background:var(--ora);color:var(--navy);font-weight:800;border-radius:30px;padding:8px 16px;font-size:13px;margin:8px 0 22px}
+  .btn{display:flex;align-items:center;gap:14px;width:100%;text-decoration:none;color:#fff;border-radius:16px;padding:16px 18px;margin:0 0 12px;font-size:18px;font-weight:700;text-align:left;border:2px solid transparent}
+  .btn small{display:block;font-weight:400;font-size:13px;opacity:.85;margin-top:2px}
+  .btn .ic{font-size:28px;width:34px;text-align:center;flex:none}
+  .app{background:var(--red)}
+  .app.mine{border-color:var(--yel);box-shadow:0 0 0 4px rgba(245,185,66,.25)}
+  .web{background:#1c2b3c}
+  .soc{background:#14212f;border-color:#2a3b4f}
+  h2{font-size:14px;color:var(--grey);text-transform:uppercase;letter-spacing:1px;margin:26px 0 10px;font-weight:700}
+  .note{color:var(--grey);font-size:12.5px;line-height:1.5;margin-top:4px}
+  footer{color:var(--grey);font-size:11.5px;line-height:1.6;padding:10px 18px 26px;text-align:center;max-width:460px}
+</style>
+</head>
+<body>
+<div class="top">ΣΕΙΣΜΟΣ. ΦΩΤΙΑ. BLACKOUT.</div>
+<main>
+  <img class="logo" src="../icon-512.png" alt="Επιβίωση 72+">
+  <h1>Επιβίωση 72+</h1>
+  <div class="sub">Survival 72+ Emergency Guide</div>
+  <p class="hook">Είσαι έτοιμος για τις πρώτες 72 ώρες;</p>
+  <div class="sub" style="margin:0">Are you ready for the first 72 hours?</div>
+  <div class="badge">ΔΩΡΕΑΝ · ΧΩΡΙΣ ΔΙΑΦΗΜΙΣΕΙΣ · ΧΩΡΙΣ INTERNET</div>
+
+  <a id="ios" class="btn app" href="https://apps.apple.com/app/id6837738252">
+    <span class="ic">📱</span><span>iPhone – App Store<small>Λήψη δωρεάν · Free download</small></span></a>
+  <a id="android" class="btn app" href="https://github.com/georgiosbarbaris-creator/hull-steel-toolkit/releases/download/survival-latest/Epiviosi72.apk">
+    <span class="ic">🤖</span><span>Android – APK<small>Αν ζητηθεί: «Να επιτρέπεται από αυτή την πηγή» · Allow from this source</small></span></a>
+  <a class="btn web" href="../">
+    <span class="ic">🌐</span><span>Άνοιξε στο web<small>Open in the browser – any device</small></span></a>
+
+  <h2>Overland's Habit</h2>
+  <a class="btn soc" href="https://www.youtube.com/@overlandshabit">
+    <span class="ic">▶️</span><span>YouTube<small>@overlandshabit</small></span></a>
+  <a class="btn soc" href="https://www.instagram.com/overlandshabit">
+    <span class="ic">📸</span><span>Instagram<small>@overlandshabit</small></span></a>
+  <p class="note">Ακολούθησε για νέες εκδόσεις, συμβουλές και ταξίδια.<br>Follow for updates, tips and trips.</p>
+</main>
+<footer>Ευγενική χορηγία George Barbaris – γιατί τα πράγματα που σώζουν ζωές είναι ανεκτίμητα.<br>© 2026 Γεώργιος Μπαρμπαρής</footer>
+<script>
+  // Highlight the right store button for this phone
+  (function(){
+    var ua = navigator.userAgent || "";
+    var ios = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    var and = /Android/i.test(ua);
+    var a = document.getElementById("ios"), b = document.getElementById("android");
+    if (ios) { a.classList.add("mine"); }
+    else if (and) { b.classList.add("mine"); a.parentNode.insertBefore(b, a); }
+  })();
+</script>
+</body>
+</html>
